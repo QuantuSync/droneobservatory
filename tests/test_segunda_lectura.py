@@ -395,13 +395,9 @@ def test_con_el_tope_agotado_los_candidatos_esperan(
     })  # fmt: skip
     hecho = segunda.paso_horario(otro, AHORA, VOCABULARIO_MODELOS)
     assert cliente.pedidas == [] and hecho["decididos"] == [] and "tope" in hecho["experto"]
-    # Al día siguiente, de madrugada, no: el tope del experto se guarda para los escalados del
-    # resto del día (margen_escalados).
+    # Al día siguiente, ya de madrugada (el margen de los escalados es fijo, no un reparto por
+    # horas que deje la mañana sin experto), el candidato pasa.
     hecho = segunda.paso_horario(almacen, datetime(2026, 10, 16, 1, 17, tzinfo=UTC),
-                                 VOCABULARIO_MODELOS)  # fmt: skip
-    assert cliente.pedidas == [] and "escalados" in hecho["experto"]
-    # A mediodía, con el experto por debajo del ritmo del día, el candidato pasa.
-    hecho = segunda.paso_horario(almacen, datetime(2026, 10, 16, 13, 17, tzinfo=UTC),
                                  VOCABULARIO_MODELOS)  # fmt: skip
     assert len(cliente.pedidas) == 1 and len(hecho["decididos"]) == 1
 
@@ -507,18 +503,22 @@ def test_rectificacion_con_el_tope_de_la_capa_agotado_espera(tmp_path: Path) -> 
 
 
 def test_margen_para_los_escalados_del_resto_del_dia() -> None:
-    """La segunda lectura solo gasta del experto lo que va por debajo del ritmo del día."""
-    assert coste.margen_escalados(datetime(2026, 10, 19, 0, 0, tzinfo=UTC)) == 0.30
-    assert coste.margen_escalados(datetime(2026, 10, 19, 12, 0, tzinfo=UTC)) == 0.15
-    mediodia = datetime(2026, 10, 19, 12, 0, tzinfo=UTC)
-    coste.comprobar_segunda(0.08, 0.0, 0.05, mediodia)
-    with pytest.raises(coste.LimiteGasto, match="escalados"):
-        coste.comprobar_segunda(0.11, 0.0, 0.05, mediodia)
+    """La segunda lectura solo gasta del experto lo que deja libre el margen fijo de los escalados
+    (sin reparto por horas que deje la mañana sin experto)."""
+    margen = coste.MARGEN_ESCALADOS_USD
+    libre = coste.LIMITE_EXPERTO_DIARIO_USD - margen
+    assert coste.margen_escalados(datetime(2026, 10, 19, 0, 0, tzinfo=UTC)) == margen
+    assert coste.margen_escalados(datetime(2026, 10, 19, 12, 0, tzinfo=UTC)) == margen
+    # Al final del día, solo lo que corresponde a lo que queda de él.
+    assert coste.margen_escalados(datetime(2026, 10, 19, 23, 0, tzinfo=UTC)) < margen
+    for momento in (datetime(2026, 10, 19, 0, 30, tzinfo=UTC),
+                    datetime(2026, 10, 19, 12, 0, tzinfo=UTC)):  # fmt: skip
+        coste.comprobar_segunda(libre - 0.06, 0.0, 0.05, momento)
+        with pytest.raises(coste.LimiteGasto, match="escalados"):
+            coste.comprobar_segunda(libre - 0.04, 0.0, 0.05, momento)
     # Su modo, como mucho 0,10 USD al día.
     with pytest.raises(coste.LimiteGasto, match="segunda_lectura"):
-        coste.comprobar_segunda(0.0, 0.08, 0.05, mediodia)
-    with pytest.raises(coste.LimiteGasto, match="escalados"):
-        coste.comprobar_segunda(0.0, 0.0, 0.05, datetime(2026, 10, 19, 0, 30, tzinfo=UTC))
+        coste.comprobar_segunda(0.0, 0.08, 0.05, datetime(2026, 10, 19, 12, 0, tzinfo=UTC))
 
 
 def test_fecha_sin_apoyo_sola_no_va_al_experto() -> None:

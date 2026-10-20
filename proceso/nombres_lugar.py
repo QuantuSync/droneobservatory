@@ -335,6 +335,27 @@ def nombre_base(texto: str) -> str:
     return _CORTE.sub("", texto).strip(" .«»\"'")
 
 
+# «Puerto de X», «Port of X», «Aeropuerto de X»: el nombre genérico de una instalación.
+_GENERICO = re.compile(
+    r"^(?:puerto|aeropuerto|base aérea|base|central|port|airport|air base|harbour|harbor)"
+    r"(?:\s+(?:de|del|of|de la))?\s+(?P<x>.+)$",
+    re.IGNORECASE,
+)
+
+
+def traduccion_inventada(base: str, escrito: Bilingue) -> bool:
+    """Un nombre de instalación traducido que no lleva su nombre propio: «Puerto de Ems» por
+    «Eemshaven» (Wikidata, 20 de octubre de 2026). Los nombres propios de puertos, aeropuertos,
+    bases y centrales no se traducen (Eemshaven, Schiphol); los exónimos de las ciudades salen
+    de las tablas."""
+    palabras = set(clave(base).split())
+    for texto in escrito.values():
+        generico = _GENERICO.match(texto)
+        if generico and not set(clave(generico.group("x")).split()) <= palabras:
+            return True
+    return False
+
+
 def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | None:
     k = clave(base)
     if not k:
@@ -345,8 +366,9 @@ def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | N
     if k in _mares():
         return _mares()[k]
     guardado = _cache().get(clave_cache(pais, base))
-    if isinstance(guardado, dict) and _bilingue(guardado):
-        return _bilingue(guardado)
+    escrito = _bilingue(guardado) if isinstance(guardado, dict) else None
+    if escrito is not None and not traduccion_inventada(base, escrito):
+        return escrito
     if en_otro_pais and len(global_.get(k, [])) == 1:
         return global_[k][0][1]
     return None

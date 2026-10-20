@@ -33,6 +33,12 @@ Volkel / Volkel Air Base).
 4. La regla: un nombre en alfabeto latino sin palabras de otro idioma se deja como está; si no, la
    localidad del aeropuerto o de la instalación, la región o el país.
 
+Los nombres propios de puertos, aeropuertos, bases y centrales no se traducen (Eemshaven, Schiphol,
+Rotterdam); solo los exónimos de las ciudades que dan las tablas (Núremberg, Copenhague). Un nombre
+guardado de Wikidata del tipo «Puerto de X» / «Port of X» cuyo X no es una palabra del nombre
+original es una traducción inventada y no se usa (`traduccion_inventada`; el 20 de octubre de 2026,
+«Puerto de Ems» por Eemshaven): queda el nombre tal como lo escribe la fuente.
+
 ## Qué se publica
 
 Cada incidente publicado lleva el campo `nombres` (esquema 1.17.0, se genera al publicar y no se

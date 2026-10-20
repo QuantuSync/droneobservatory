@@ -36,7 +36,7 @@ from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import cita_titular, fechas
+from proceso import buques, cita_titular, fechas
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
 from proceso.fronteras import nombres_del_pais
@@ -269,9 +269,39 @@ def aplicar_reglas(documento: Documento) -> Documento:
     elif datos.get("dron_estatal") and datos.get("entrada_exterior") and demostrada:
         resultado["tipo"] = "incursion"
         resultado["origen_demostrado_por"] = demostrada
+    elif alcanzado_en_el_mar(resultado):
+        # Un buque alcanzado por un dron en el mar (impacto, explosión, restos a bordo) nunca es
+        # un sobrevuelo: el dron era de un ataque y llegó desde el mar (proceso/buques.py).
+        resultado["tipo"] = "incursion"
+        if fisicas:
+            resultado["origen_demostrado_por"] = sorted(fisicas)
     else:
         resultado["tipo"] = "sobrevuelo"
     return resultado
+
+
+def alcanzado_en_el_mar(documento: Documento) -> bool:
+    """Un buque alcanzado por un dron en el mar, según el titular y las frases de sus fuentes."""
+    textos = buques.textos_de(documento)
+    return buques.alcanzado(textos) and buques.en_el_mar(textos)
+
+
+def lugar_sin_buque(lugar: Documento, textos: list[str]) -> Documento:
+    """El lugar del suceso sin el nombre de un buque (proceso/buques.py): si el lugar es el nombre
+    del barco, pasa a ser la zona marítima que nombran las fuentes (o el mar), sin punto, a nivel
+    de región. El 20 de octubre de 2026 el buque Chelsea 3 salió como lugar del suceso."""
+    nombres = [lugar.get("suceso"), lugar.get("localidad")]
+    if not any(buques.es_nombre_de_buque(n, textos) for n in nombres if n):
+        return lugar
+    zona = buques.zona_maritima(textos)
+    nuevo: Documento = {
+        "pais": lugar["pais"],
+        "nivel": "region",
+        "suceso": zona[0] if zona else "mar",
+    }
+    if lugar.get("region"):
+        nuevo["region"] = lugar["region"]
+    return nuevo
 
 
 def construir(
@@ -308,6 +338,14 @@ def construir(
         tiempo["fin"] = _instante(fin_ficha, "minuto")
         tiempo["duracion_min"] = int((fin_ficha - _leer_instante(inicio)).total_seconds()) // 60
     lugar = documento_lugar(ubicacion, ficha.valor("localidad"))
+    textos_buque = [str(c.get("frase") or "") for c in ficha.campos.values()]
+    textos_buque += [str(a.get("titular") or "") for a in articulos]
+    textos_buque += [ficha.titulo_es or "", ficha.titulo_en or ""]
+    sin_buque = lugar_sin_buque(lugar, textos_buque)
+    if sin_buque is not lugar:
+        lugar = sin_buque
+        ubicacion = Ubicacion(ubicacion.pais, "region", nombre=sin_buque["suceso"],
+                              region=sin_buque.get("region"))  # fmt: skip
     objetivo = ubicacion.sitio
     datos_objetivo: Documento | None = None
     if objetivo is not None:
@@ -433,6 +471,19 @@ def _dias_de(instante: Documento, pais: str) -> tuple[str, set[date]]:
     return "hora", {dia}
 
 
+def ventana_pasada(documento: Documento) -> set[date]:
+    """Los días en que puede caer un inicio de pasado sin día («la semana pasada»), leídos del
+    motivo de su origen (proceso/fechas.ventana_de_motivo); vacío si no lo es."""
+    origen = documento["tiempo"].get("origen_inicio") or {}
+    if documento["tiempo"]["inicio"]["precision"] != APROXIMADA:
+        return set()
+    ventana = fechas.ventana_de_motivo(str(origen.get("motivo") or ""))
+    if ventana is None:
+        return set()
+    desde, hasta = ventana
+    return {desde + timedelta(days=n) for n in range((hasta - desde).days + 1)}
+
+
 def misma_ventana(a: Documento, b: Documento) -> bool:
     """`a` empezó antes o a la vez que `b`.
 
@@ -458,6 +509,9 @@ def misma_ventana(a: Documento, b: Documento) -> bool:
     if "fin" in a["tiempo"]:
         # Un suceso que pasa de medianoche abarca también el día de su fin.
         dias_a.add(_dia_local(ultima_actividad(a), pais))
+    # Un pasado sin día («la semana pasada»): cualquier día de su ventana (proceso/fechas.py).
+    dias_a |= ventana_pasada(a)
+    dias_b |= ventana_pasada(b)
     if clase_a == clase_b == "dia":
         return abs((min(dias_b) - min(dias_a)).days) <= 1
     return bool(dias_a & dias_b)

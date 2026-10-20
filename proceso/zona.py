@@ -40,6 +40,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from esquema import Documento
+from proceso import buques
 from proceso.deduccion import geo
 
 if TYPE_CHECKING:
@@ -210,6 +211,11 @@ def clasificar(incidente: Documento) -> Documento:
     if "ataque" in incidente:
         return {"grupo": FRONTERA, "motivo": "ataque"}
     lugar = incidente.get("lugar", {})
+    en_el_mar = buques.en_el_mar(buques.textos_de(incidente))
+    if lugar.get("pais") in PAISES_COSTA_MAR_NEGRO and en_el_mar:
+        # Un buque en el mar de un país con costa en el mar Negro: nunca el interior (el 20 de
+        # octubre de 2026 el buque Chelsea 3 salió como «interior»).
+        return {"grupo": FRONTERA, "motivo": "costa_mar_negro"}
     punto = lugar.get("punto")
     situado = (punto["lat"], punto["lon"]) if punto else _lugar_nombrado(incidente)
     if situado is not None:

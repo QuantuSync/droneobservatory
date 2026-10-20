@@ -471,7 +471,7 @@ def test_el_tope_de_gasto_para_las_llamadas() -> None:
             "salida": 0,
             "escritura_cache": 0,
             "lectura_cache": 0,
-            "coste": 0.15,
+            "coste": coste.LIMITE_CONTROL_DIARIO_USD,
         }
     )
     servicio = Servicio()

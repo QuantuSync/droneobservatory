@@ -95,31 +95,50 @@ def test_el_peor_caso_cuenta_el_razonamiento_del_modelo() -> None:
 
 
 def test_tope_diario_del_experto_y_reserva_critica() -> None:
-    assert coste.LIMITE_EXPERTO_DIARIO_USD == 0.30
+    assert coste.LIMITE_EXPERTO_DIARIO_USD == 1.50
     assert coste.RESERVA_CRITICA_DIARIA_USD == 0.50
-    assert coste.comprobar_experto(0.25, 0.04) is coste.Tramo.NORMAL
+    assert coste.comprobar_experto(1.45, 0.04) is coste.Tramo.NORMAL
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_experto(0.28, 0.05)
-    # Un caso crítico no espera: usa la reserva, hasta 0,80 USD en el día.
-    assert coste.comprobar_experto(0.28, 0.05, critico=True) is coste.Tramo.RESERVA
-    assert coste.comprobar_experto(0.2, 0.05, critico=True) is coste.Tramo.NORMAL
+        coste.comprobar_experto(1.48, 0.05)
+    # Un caso crítico no espera: usa la reserva, hasta 2,00 USD en el día.
+    assert coste.comprobar_experto(1.48, 0.05, critico=True) is coste.Tramo.RESERVA
+    assert coste.comprobar_experto(1.2, 0.05, critico=True) is coste.Tramo.NORMAL
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_experto(0.78, 0.05, critico=True)
+        coste.comprobar_experto(1.98, 0.05, critico=True)
     assert coste.reparto_experto(0.23) == {"normal": 0.23, "reserva": 0.0}
-    assert coste.reparto_experto(0.5) == {"normal": 0.3, "reserva": pytest.approx(0.2)}
+    assert coste.reparto_experto(1.7) == {"normal": 1.5, "reserva": pytest.approx(0.2)}
 
 
 def test_la_espera_del_critico_es_hasta_la_recogida_siguiente_y_la_normal_hasta_el_dia() -> None:
     assert coste.espera_experto(AHORA, critico=True) == (
         (AHORA + timedelta(minutes=50)).strftime("%Y-%m-%dT%H:%M:%SZ")
     )
-    assert coste.espera_experto(AHORA, critico=False).endswith("T00:00:00Z")
-    # Una espera anotada con un tope menor que el de ahora vence en cuanto el tope sube; con el
-    # de ahora o uno mayor (el de 1,00 USD hasta el 19 de octubre de 2026), a su hora.
+    # La normal, hasta la misma hora del día siguiente (su tope ya se renovó a las 00:00 UTC).
+    assert coste.espera_experto(AHORA, critico=False) == (
+        (AHORA + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    )
+    # Una espera anotada con un tope menor que el de ahora vence en cuanto el tope sube (las de
+    # 0,30 o 1,00 USD de antes del 20 de octubre de 2026, y las de antes del 15 sin tope); con el
+    # de ahora, a su hora.
+    tope = coste.LIMITE_EXPERTO_DIARIO_USD
     assert coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", 0.10)
-    assert not coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", None)
-    assert not coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", 1.0)
-    assert coste.espera_vencida("2026-10-15T03:00:00Z", "2026-10-15T04:00:00Z", 1.0)
+    assert coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", None)
+    assert coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", 1.0)
+    assert not coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", tope)
+    assert coste.espera_vencida("2026-10-15T03:00:00Z", "2026-10-15T04:00:00Z", tope)
+
+
+def test_dos_esperas_normales_de_horas_distintas_vencen_a_horas_distintas() -> None:
+    # El 20 de octubre de 2026 todas las esperas vencían a las 00:00 y se comían el tope de la
+    # madrugada.
+    temprana = coste.espera_experto(AHORA.replace(hour=3, minute=17), critico=False)
+    tardia = coste.espera_experto(AHORA.replace(hour=17, minute=17), critico=False)
+    assert temprana != tardia
+    assert temprana.endswith("T03:17:00Z") and tardia.endswith("T17:17:00Z")
+    tope = coste.LIMITE_EXPERTO_DIARIO_USD
+    entre = (AHORA + timedelta(days=1)).replace(hour=10).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert coste.espera_vencida(temprana, entre, tope)
+    assert not coste.espera_vencida(tardia, entre, tope)
 
 
 def test_lo_critico_para_el_gasto_del_experto() -> None:
@@ -432,12 +451,12 @@ def test_la_poca_seguridad_va_al_experto_al_ritmo_de_su_tope_y_si_no_vale_el_bas
 ) -> None:
     dudosa = ficha_ejemplo(**SIN_CIERRE, pais=campo("DK", "Københavns Lufthavn", 0.5))
     peticion = _peticion(almacen)
-    # A mediodía, con el experto por debajo de la mitad de su tope del día, la decide él.
+    # Con el experto lejos de su tope del día menos el margen de los escalados, la decide él.
     cliente = Cliente(dudosa, ficha_ejemplo(**SIN_CIERRE))
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [BASE, EXPERTO] and hechas.escalados == [peticion.candidato["id"]]
-    # Por encima del ritmo, vale la ficha del base: ni espera ni experto.
-    _gasto_experto(almacen, 0.20, "horario")
+    # Dentro del margen que se deja a los escalados, vale la ficha del base: ni espera ni experto.
+    _gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD - coste.MARGEN_ESCALADOS_USD, "horario")
     otra = extraccion.Peticion(**{**peticion.__dict__, "candidato": {
         **peticion.candidato, "id": "otro"}})  # fmt: skip
     cliente = Cliente(dudosa, ficha_ejemplo(**SIN_CIERRE))
@@ -599,14 +618,14 @@ def test_el_resumen_dice_llamadas_escaladas_y_gasto_de_cada_modelo(tmp_path: Pat
     )
     assert "proveedor" not in linea and "haiku" not in linea.lower()
     # El gasto del experto en su tope normal y en la reserva crítica, por día UTC. El tope normal
-    # del 13 de octubre: su parte del mes (2,70 USD) entre los 19 días que quedaban.
+    # del 13 de octubre: el diario, porque su parte del mes da de sobra para los días que quedan.
     assert datos["experto"]["2026-10-13"] == {
-        "normal": 0.03, "reserva": 0.0, "limite": pytest.approx(2.70 / 19, abs=1e-6),
-        "reserva_limite": 0.5,
+        "normal": 0.03, "reserva": 0.0,
+        "limite": pytest.approx(coste.LIMITE_EXPERTO_DIARIO_USD, abs=1e-6), "reserva_limite": 0.5,
     }  # fmt: skip
     (experto,) = visitas.lineas_experto(control)
     assert experto == (
-        "  Experto: tope normal 0,0300 de 0,14 USD; reserva crítica 0,0000 de 0,50 USD"
+        "  Experto: tope normal 0,0300 de 1,50 USD; reserva crítica 0,0000 de 0,50 USD"
     )
 
 

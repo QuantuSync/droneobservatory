@@ -113,6 +113,31 @@ def _afirmar(titulo: str, idioma: str) -> str:
     return _mayuscula(resultado, titulo)
 
 
+# En inglés el calificativo va delante de todo el grupo del dron: «Mystery drones» → «Possible
+# mystery drones», «Narco-drones» → «Possible narco-drones» (no «Mystery possible drones» ni
+# «Narco-possible drones», 20 de octubre de 2026). No se salta un determinante, un número ni una
+# preposición.
+_COMPUESTO_EN = re.compile(r"(?:[\w’']+-)+$")
+_PALABRA_ANTES_EN = re.compile(r"([A-Za-z][\w’']*)\s+$")
+_GENTILICIOS_EN = ("ian", "ish", "ese", "an", "ch", "i")
+_NO_MODIFICA_EN = frozenset({
+    "a", "an", "the", "of", "over", "at", "near", "by", "with", "and", "after", "for", "from",
+    "in", "on", "into", "above", "around", "two", "three", "four", "five", "several", "multiple",
+    "many", "more", "some", "other", "unknown", "than", "dozen", "numerous",
+})  # fmt: skip
+
+
+def _inicio_del_grupo(titulo: str, inicio: int) -> int:
+    """Dónde empieza en inglés el grupo nominal que acaba en «drone(s)»."""
+    compuesto = _COMPUESTO_EN.search(titulo[:inicio])
+    if compuesto is not None:
+        inicio = compuesto.start()
+    anterior = _PALABRA_ANTES_EN.search(titulo[:inicio])
+    if anterior is not None and anterior.group(1).lower() not in _NO_MODIFICA_EN:
+        inicio = anterior.start(1)
+    return inicio
+
+
 def _como_posible(titulo: str, idioma: str) -> str:
     m = _DRON[idioma].search(titulo)
     if m is None:
@@ -120,10 +145,19 @@ def _como_posible(titulo: str, idioma: str) -> str:
     palabra = m.group(1)
     plural = palabra.lower().endswith("s") and palabra.lower() != "dron"
     calificativo = ("posibles" if plural else "posible") if idioma == "es" else "possible"
-    al_inicio = m.start() == 0
-    nuevo = f"{calificativo} {palabra.lower()}"
-    resultado = titulo[: m.start()] + nuevo + titulo[m.end() :]
-    return _mayuscula(resultado, titulo) if al_inicio else resultado
+    inicio = _inicio_del_grupo(titulo, m.start()) if idioma == "en" else m.start()
+    grupo = titulo[inicio : m.start()] + palabra.lower()
+    primera = grupo.split()[0].split("-")[0]
+    if (
+        inicio == 0
+        and titulo[m.end() + 1 : m.end() + 2].islower()
+        and not primera.lower().endswith(_GENTILICIOS_EN)
+    ):
+        # Al principio de un titular en minúsculas: «Mystery drones spotted» → «Possible
+        # mystery drones spotted» (pero «Possible Russian drones»).
+        grupo = grupo[:1].lower() + grupo[1:]
+    resultado = titulo[:inicio] + f"{calificativo} {grupo}" + titulo[m.end() :]
+    return _mayuscula(resultado, titulo) if inicio == 0 else resultado
 
 
 def ajustar(titulo: str, presencia: str | None, idioma: str) -> str:

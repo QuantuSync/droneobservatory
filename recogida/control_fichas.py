@@ -63,6 +63,7 @@ from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import (
     atribucion,
     autoridades,
+    buques,
     escalado,
     incidentes,
     lugar_preciso,
@@ -893,6 +894,12 @@ def por_verificar(
             ):
                 resultado.append(incidente)
             continue
+        fallos = reglas.fallos_de_ficha(incidente)
+        if fallos and (previa is None or previa.get("fallos") != fallos):
+            # Un fallo conocido de la ficha (buque como lugar, fecha de publicación con «la
+            # semana pasada»…): se verifica con el experto aunque sus fuentes no cambien.
+            resultado.append(incidente)
+            continue
         if previa is not None and previa.get("huella") == reglas.huella_fuentes(incidente):
             continue
         if (
@@ -921,7 +928,8 @@ def peticion_verificacion(ctx: Contexto, incidente: Documento) -> Peticion:
                     peticiones.MAX_SALIDA_VERIFICAR,
                     {"huella": reglas.huella_fuentes(incidente), "vista": vista,
                      "comprobar": fuentes.comprobar,
-                     "critico": critico(incidente)})  # fmt: skip
+                     "critico": critico(incidente),
+                     "fallos": reglas.fallos_de_ficha(incidente)})  # fmt: skip
 
 
 def critico(incidente: Documento) -> bool:
@@ -1012,6 +1020,8 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
         "datos": {k: list(v) for k, v in comprobada.datos.items()},
         "sin_comprobar": sorted(set(respuesta) - set(comprobada.datos)),
     }  # fmt: skip
+    if peticion.datos.get("fallos"):
+        ctx.nuevas[peticion.clave]["fallos"] = peticion.datos["fallos"]
     if ctx.llamador.ultimo_modelo:
         ctx.nuevas[peticion.clave]["modelo"] = ctx.llamador.ultimo_modelo
     if ctx.llamador.ultimos_motivos:
@@ -1021,12 +1031,13 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
 
 def motivos_verificacion(peticion: Peticion) -> Callable[[dict[str, Any]], list[str]]:
     """Los motivos para escalar la verificación (proceso/escalado.py): que contradiga la ficha
-    en un dato clave; si además es un caso crítico, se anota."""
+    en un dato clave (si además es un caso crítico, se anota) o que la ficha tenga un fallo
+    conocido (proceso/control_fichas.fallos_de_ficha): esa va siempre al experto."""
 
     def motivos(respuesta: dict[str, Any]) -> list[str]:
         return escalado.motivos_verificacion(
             contradice(peticion.datos["vista"], respuesta), bool(peticion.datos.get("critico"))
-        )
+        ) + [f"{escalado.MOTIVO_FALLO_FICHA}: {f}" for f in peticion.datos.get("fallos", [])]
 
     return motivos
 
@@ -1168,6 +1179,12 @@ def reglas_deterministas(ctx: Contexto) -> None:
             if preciso is not None:
                 nuevo = preciso
                 motivos.append(f"lugar en {preciso['lugar']['suceso']}, la instalación de la ficha")
+        sin_buque = incidentes.lugar_sin_buque(nuevo["lugar"], buques.textos_de(nuevo))
+        if sin_buque is not nuevo["lugar"]:
+            nuevo = {**nuevo, "lugar": sin_buque}
+            motivos.append(f"lugar {sin_buque['suceso']}: el nombre de un buque no es un lugar")
+        if nuevo.get("tipo") == "sobrevuelo" and incidentes.alcanzado_en_el_mar(nuevo):
+            motivos.append("buque alcanzado por un dron en el mar: no es un sobrevuelo")
         bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
         if bajado is not None:
             nuevo = bajado

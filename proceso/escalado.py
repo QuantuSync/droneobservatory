@@ -382,6 +382,10 @@ def motivos_union(decision: dict[str, Any], une_publicada: str | None) -> list[s
     return [f"publicada: la unión retira {une_publicada}"] if juntos and une_publicada else []
 
 
+# Un fallo conocido de la ficha que encuentra el control (proceso/control_fichas.fallos_de_ficha).
+MOTIVO_FALLO_FICHA = "fallo_ficha"
+
+
 def motivos_verificacion(
     contradice: list[str], critico: bool, sin_cita: list[str] | None = None
 ) -> list[str]:

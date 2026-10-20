@@ -79,7 +79,8 @@ def test_sin_margen_del_experto_el_descarte_dudoso_espera_y_no_bloquea_nada(
     espera: dict[str, Any] = extraccion.esperan_experto(almacen)[peticion.candidato["id"]]
     assert espera["revision"] and not espera.get("critico")
     assert any(m.startswith(escalado.MOTIVO_DUDOSO) for m in espera["motivos"])
-    assert espera["hasta"].endswith("T00:00:00Z")
+    # Hasta la misma hora del día siguiente, no a medianoche.
+    assert espera["hasta"] == (AHORA + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
     # Otro candidato sigue: uno seguro de que no es incidente vale el base, sin esperar.
     otro = _peticion_texto(almacen, LLANO, "otro")
     segura = Cliente(SEGURA, ficha_ejemplo())

@@ -220,13 +220,17 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   nunca contra el de la recogida horaria ni el de otro modo (`Almacen.gastado` no suma las llamadas
   escaladas). El 14 de octubre de 2026, cuatro candidatos esperaron porque la llamada al experto no
   cabía en el tope de la horaria (0,26 de 0,30 USD) aunque el experto tenía margen.
-- **Tope normal del experto: lo que le toca de su parte del mes, como mucho 0,30 USD al día**
-  (UTC), sumando todos los modos (`coste.tope_experto`, `LIMITE_EXPERTO_DIARIO_USD`,
-  `Almacen.gastado_modelo`). Antes de cada llamada se suma lo que lleva gastado hoy y el peor caso.
-  Fue 0,30 USD hasta el 15 de octubre de 2026 (ese día, tras 8 escalados, los pares duplicados del
-  mar Negro y la ficha de Mihail Kogălniceanu esperaron al día siguiente) y 1,00 USD del 15 al 19
-  de octubre, que se gastaba casi entero cada día. Lo que esperaba entonces es crítico y ahora usa
-  la reserva; lo que no es crítico y es opcional va al ritmo del tope o se queda con el base.
+- **Tope normal del experto: 1,50 USD al día** (UTC, desde el 20 de octubre de 2026), sumando
+  todos los modos (`coste.tope_experto`, `LIMITE_EXPERTO_DIARIO_USD`, `Almacen.gastado_modelo`),
+  mientras lo que queda de su parte del mes deje al menos 0,50 USD a cada día que queda
+  (`MINIMO_EXPERTO_DIARIO_USD`); si el mes va tan deprisa que no da, el tope de hoy baja. Antes de
+  cada llamada se suma lo que lleva gastado hoy y el peor caso. Fue 0,30 USD hasta el 15 de octubre
+  de 2026, 1,00 USD del 15 al 19 y otra vez 0,30 del 19 al 20: con 0,30 casi todo lo decidió el
+  modelo base y salieron fichas mal publicadas (el buque Chelsea 3 como lugar, una nota de «la
+  semana pasada» como suceso nuevo, «Puerto de Ems» por Eemshaven). Lo que no es crítico y es
+  opcional usa el tope dejando libre un margen fijo de 0,30 USD para los escalados que no pueden
+  esperar (`MARGEN_ESCALADOS_USD`), no un reparto por horas: el 20 de octubre a las 11:45 UTC ese
+  reparto dejó a Chelsea 3 sin el experto.
 - **Reserva crítica: 0,50 USD al día** aparte (`RESERVA_CRITICA_DIARIA_USD`), solo para los casos
   críticos (`escalado.es_critico`, y `control_fichas.critico` para las fichas ya publicadas):
   - incursiones o sucesos en bases e instalaciones militares de países de la OTAN o en Moldavia (la
@@ -254,9 +258,10 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   horas sin poder resolverse, la vigilancia abre la incidencia (`experto_critico`).
 - **Un caso que no es crítico** y no cabe en el tope normal espera al día siguiente en vez de
   publicarse con la respuesta del base, y nunca frena lo demás:
-  - una ficha nueva: el candidato no se publica y queda en el cursor `esperan_experto` hasta las
-    00:00 UTC; al día siguiente va de los primeros. Si el experto falla (caído, error), espera solo
-    hasta la recogida siguiente;
+  - una ficha nueva: el candidato no se publica y queda en el cursor `esperan_experto` hasta la
+    misma hora del día siguiente (desde el 20 de octubre de 2026; antes, hasta las 00:00 UTC, y
+    todas las esperas vencían a la vez y se comían el tope de la madrugada); entonces va de los
+    primeros. Si el experto falla (caído, error), espera solo hasta la recogida siguiente;
   - un par dudoso: queda «dudoso» con `espera_experto` (no se da por distinto a las 6 horas) y la
     ficha nueva sigue retenida, sin el límite de 6 horas, hasta que decida el experto;
   - una verificación que contradice la ficha: no se aplica nada hasta que la repita el experto; la
@@ -280,6 +285,32 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   candidatos es gratuito y no decide nada.
 
 ### Tope mensual
+
+**Desde el 20 de octubre de 2026: 60 USD al mes.** El plan del responsable incluye 200 USD de
+créditos de la API al mes (vinculados a la organización del observatorio el 20 de octubre; caducan
+cada ciclo y no se acumulan; el saldo comprado queda detrás). Con 10 USD y el experto a 0,30 al día
+casi todo lo decidía el modelo base desde el 19 de octubre a las 22:41 UTC, y salieron fichas mal
+publicadas. Topes de cada día desde entonces:
+
+| Qué | Antes | Ahora |
+|---|---|---|
+| Tope mensual (`TOPE_MENSUAL_USD`) | 10 (octubre, 38) | 60 (octubre también: lo ya gastado cuenta) |
+| Experto, tope normal | 0,30 al día | 1,50 al día (como poco 0,50 a cada día que queda) |
+| Experto, reserva crítica | 0,50 al día | 0,50 al día |
+| Segunda búsqueda (declaraciones e incidentes que faltan) | 2 casos, 0,12 al día | 20 casos, 0,80 al día |
+| Control de las fichas, base / su cupo del experto | 0,15 / 0,06 al día | 0,25 / 0,25 al día |
+| Reparto del mes | experto 2,70, horaria 3,00, control 2,40, segunda búsqueda 1,10 | experto 40, horaria 4, control 6, segunda búsqueda 6, Ucrania 0,20, rectificaciones 0,30, otros 3,50 |
+
+Gasto esperado: unos 1,0-1,5 USD al día del experto (lo medido del 15 al 19 de octubre con tope de
+1 USD: de 0,69 a 1,44), unos 0,10 de la recogida horaria, 0,10-0,20 del control y hasta 0,40 de la
+segunda búsqueda (0,019 USD por caso de media): unos 40-55 USD al mes, por debajo de los 60. Los
+descartes dudosos del base van al experto en el momento (cabe en el tope). Un mismo candidato no
+vuelve al experto por otra entrega de la segunda lectura si el experto ya lo extrajo con los mismos
+artículos en las 12 horas anteriores (`recogida/segunda_busqueda.ya_con_experto`; la noche del 20
+de octubre el de Núremberg y el de Pasvalio fueron dos veces).
+
+Lo de abajo describe el funcionamiento, que no cambia; las cifras de entonces se conservan como
+historia.
 
 Desde el 19 de octubre de 2026, **todo lo que se gasta en la API en el mes (UTC) cuenta contra 10
 USD** (`TOPE_MENSUAL_USD`; la variable `EODI_TOPE_MENSUAL_USD` lo cambia), también lo de las

@@ -486,6 +486,25 @@
       "conserva": "EODI-2025-00015",
       "motivo": "el mismo suceso: uno o dos drones dentro y fuera de la valla de la base aérea de Karup (Dinamarca) el viernes 26 de septiembre de 2025 desde las 20:15 hora local, durante varias horas, confirmados por la policía de Midt- og Vestjylland (spiegel.de: «Konkret bestätigte ein Polizeisprecher etwa verbotene Drohnenflüge um und auch über dem Militärflugplatz Karup am Freitagabend»); EODI-2025-00288 tiene el mismo titular y comparte tres fuentes (spiegel.de dos veces y agenzianova.com), pero se quedó solo con el país",
       "motivo_en": "the same event: one or two drones inside and outside the fence of Karup air base (Denmark) on Friday 26 September 2025 from 20:15 local time, for several hours, confirmed by Midt- og Vestjylland police (spiegel.de: «Konkret bestätigte ein Polizeisprecher etwa verbotene Drohnenflüge um und auch über dem Militärflugplatz Karup am Freitagabend»); EODI-2025-00288 has the same headline and shares three sources (spiegel.de twice and agenzianova.com), but was left with the country only"
+    },
+    {
+      "registros": [
+        "EODI-2026-00512",
+        "EODI-2026-00642",
+        "EODI-2026-00639"
+      ],
+      "conserva": "EODI-2026-00512",
+      "motivo": "el mismo suceso: el ataque con drones de la noche del lunes 12 al martes 13 de octubre de 2026 a dos mercantes en la zona económica exclusiva búlgara del mar Negro, el Alfa Watan (hundido frente a Krapets) y el Chelsea 3 («поразен на 13 октомври на 17 мили източно от град Бяла», alcanzado el 13 de octubre a 17 millas al este de Byala; aviso a Varna Traffic a las 01:57, fakti.bg); 00642 lo cuenta con fuentes de varios países («Drones golpean dos buques frente a la costa búlgara», con 00643, 00644 y 00646 ya unidas) y el experto lo dio por el mismo suceso el 20 de octubre (mismo día y sitio); 00639 es la nota del 20 de octubre sobre los restos hallados en el Chelsea 3 («the drone-struck merchant vessel Chelsea 3», novinite.com) y la declaración del ministro de Transporte, Georgi Peev: no es un dron nuevo sino el del 13 de octubre (el experto: mismo día y mismo sitio; «distinto» solo porque 00512 cuenta los dos buques), y sus fuentes pasan a 00512",
+      "motivo_en": "the same event: the drone attack on the night of Monday 12 to Tuesday 13 October 2026 on two merchant ships in Bulgaria's Black Sea exclusive economic zone, the Alfa Watan (sunk off Krapets) and the Chelsea 3 (struck on 13 October 17 miles east of Byala; Varna Traffic alerted at 01:57, fakti.bg); 00642 reports it with sources from several countries (00643, 00644 and 00646 already merged into it) and the expert model judged it the same event on 20 October (same day and place); 00639 is the 20 October report on the debris found aboard the Chelsea 3 («the drone-struck merchant vessel Chelsea 3», novinite.com) with the statement of Transport Minister Georgi Peev: not a new drone but the 13 October one (the expert: same day and same place; «different» only because 00512 covers both ships), and its sources move to 00512"
+    },
+    {
+      "registros": [
+        "EODI-2026-00515",
+        "EODI-2026-00632"
+      ],
+      "conserva": "EODI-2026-00515",
+      "motivo": "el mismo suceso: la alerta por un posible dron en el aeropuerto de Núremberg (EDDN) la madrugada del martes 13 de octubre de 2026; 00632 es una nota de nordbayern.de del 19 de octubre que lo recuerda como de la semana anterior («Erst letzte Woche meldeten mehrere Piloten unabhängig voneinander mutmaßliche Drohnensichtungen am Flughafen Nürnberg»), no un suceso nuevo del 19 (el experto, el 20 de octubre: «una noticia posterior que habla de esos avistamientos como de la semana pasada, sin ser un hecho nuevo»); su fuente pasa a 00515, cuya presencia sigue sin confirmar",
+      "motivo_en": "the same event: the alert over a possible drone at Nuremberg airport (EDDN) in the early hours of Tuesday 13 October 2026; 00632 is a nordbayern.de report of 19 October that recalls it as the previous week's («Erst letzte Woche meldeten mehrere Piloten unabhängig voneinander mutmaßliche Drohnensichtungen am Flughafen Nürnberg»), not a new event on the 19th (the expert model, 20 October: a later report about those sightings «last week», not a new fact); its source moves to 00515, whose drone presence remains unconfirmed"
     }
   ],
   "reextraer": [
@@ -2564,6 +2583,14 @@
     },
     {
       "incidente": "EODI-2025-00058",
+      "inicio": {
+        "valor": "2025-09-27T10:10Z",
+        "precision": "hora",
+        "cita": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest, nadat piloten en vliegtuigspotters dachten dat ze een drone hadden gezien.",
+        "motivo": "nos.nl, sábado 27 de septiembre de 2025: «vanmiddag» y «rond 12.10 uur meerdere meldingen van piloten binnenkwamen bij de luchtverkeersleiding» (12:10 hora de Ámsterdam, UTC+2)",
+        "fin": "2025-09-27T10:55Z",
+        "fin_cita": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest, nadat piloten en vliegtuigspotters dachten dat ze een drone hadden gezien."
+      },
       "titulo": {
         "es": "Posible dron, probablemente un globo, cierra 45 minutos una pista de Schiphol",
         "en": "Possible drone, probably a balloon, closes a Schiphol runway for 45 minutes"
@@ -2803,6 +2830,12 @@
     },
     {
       "incidente": "EODI-2026-00515",
+      "inicio": {
+        "valor": "2026-10-13T00:00Z",
+        "precision": "dia",
+        "cita": "Mehrere Piloten meldeten am Flughafen in Nürnberg die Sichtung von Drohnen.",
+        "motivo": "merkur.de (13 de octubre de 2026): «in der Nacht auf Dienstag (13. Oktober)»; el inicio decía el 12, el día anterior al que escribe la fuente"
+      },
       "presencia": {
         "valor": "no_confirmada",
         "cita": "allerdings konnte eine Drohne nicht gefunden werden.",
@@ -2980,6 +3013,39 @@
       "motivo": {
         "es": "Tras separar el desvío del domingo 19 (EODI-2025-00468), la ficha es la de las esperas del sábado 18 de octubre de 2025 (noticiasfuerteventura.com); el titular hablaba del desvío.",
         "en": "After separating Sunday 19's diversion (EODI-2025-00468), the record is Saturday 18 October 2025's holding (noticiasfuerteventura.com); the headline spoke of the diversion."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00637",
+      "titulo": {
+        "es": "Posibles drones sobre Eemshaven y otros lugares de la provincia de Groninga",
+        "en": "Possible drones over Eemshaven and elsewhere in Groningen province"
+      },
+      "motivo": {
+        "es": "El nombre del puerto es Eemshaven («Mystery drones spotted over Eemshaven, elsewhere in Groningen province», nltimes.nl): «Puerto de Ems» era una traducción inventada, y la fuente habla también de otros lugares de la provincia de Groninga; el titular en inglés tenía «Mystery possible drones».",
+        "en": "The port is called Eemshaven («Mystery drones spotted over Eemshaven, elsewhere in Groningen province», nltimes.nl): «Puerto de Ems» was an invented translation, and the source also speaks of other places in Groningen province; the English headline read «Mystery possible drones»."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00261",
+      "titulo": {
+        "es": "Un dron Gerbera cae sobre una casa en Cuhureștii de Jos, en Moldavia",
+        "en": "A Gerbera drone crashes onto a house in Cuhureștii de Jos, Moldova"
+      },
+      "motivo": {
+        "es": "El titular en español decía «Una dronă» (rumano) y los dos hablaban de un Shahed: tras la separación de EODI-2025-00453, esta ficha es la del dron Gerbera caído sobre la casa del guarda de un huerto en Cuhureștii de Jos (Florești) el 25 de noviembre de 2025.",
+        "en": "The Spanish headline read «Una dronă» (Romanian) and both spoke of a Shahed: after the separation of EODI-2025-00453, this record is the Gerbera drone that fell on an orchard guard's house in Cuhureștii de Jos (Florești) on 25 November 2025."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00464",
+      "titulo": {
+        "es": "Posibles narcodrones sobrevuelan la cárcel de Botafuegos, en Algeciras",
+        "en": "Possible narco-drones fly over Botafuegos prison in Algeciras"
+      },
+      "motivo": {
+        "es": "El titular en inglés decía «Narco-possible drones» (el «possible» se metía dentro de la palabra) y el español no decía que el dron está sin confirmar.",
+        "en": "The English headline read «Narco-possible drones» (the «possible» went inside the word) and the Spanish one did not say the drone is unconfirmed."
       }
     }
   ],
