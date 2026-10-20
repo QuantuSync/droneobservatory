@@ -276,10 +276,10 @@ mes), casi todo en el experto de la recogida horaria (4,50 USD en 172 llamadas).
 
 - **Reparto** (`REPARTO_MENSUAL_USD`, desde el 20 de octubre de 2026): experto 3,30 (con la
   reserva crítica: lo que gasta un caso crítico se resta del tope normal de los días que quedan);
-  recogida horaria (base) 3,00; control de las fichas (base) 1,80; partes de Ucrania 0,10;
+  recogida horaria (base) 3,00; control de las fichas (base) 1,80; partes de Ucrania 0,20;
   rectificaciones 0,30; cupo de la segunda búsqueda 1,10 (`segunda_busqueda`, docs/segunda_lectura.md);
-  otros 0,40 (lo que no es de ningún modo de cada día: sesiones, catálogo vivo; cuenta pero no se
-  frena aquí). Antes: experto 4,30, horaria 2,80, control 2,00, Ucrania 0,20. Medido del 15 al 20 de
+  otros 0,30 (lo que no es de ningún modo de cada día: sesiones, catálogo vivo; cuenta pero no se
+  frena aquí). Antes: experto 4,30, horaria 2,80, control 2,00, otros 0,40. Medido del 15 al 20 de
   octubre, por día: base de la recogida 0,068 a 0,125 (media 0,10); base del control 0,037 a 0,119
   (0,07); Ucrania 0,002. Desde el corte del 19 de octubre (22:41 UTC) ningún caso crítico de verdad
   usó la reserva: las cuatro veces que se usó eran entregas de la segunda lectura, que ya no la
