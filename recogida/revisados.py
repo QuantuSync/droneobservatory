@@ -324,6 +324,26 @@ def con_citas(incidente: Documento, citas: list[Documento]) -> Documento:
     return resultado
 
 
+def _fuente_de_la_presencia(incidente: Documento, presencia: Documento) -> str | None:
+    """La fuente de la cita de una presencia revisada cuando el extractor, al leer de nuevo la
+    noticia, se quedó con otra frase suya: con el enlace de la revisión, la misma fuente con la
+    frase revisada (se añade una vez a la ficha). Sin el enlace o sin esa fuente en la ficha, None
+    (EODI-2026-00515: el 20 de octubre de 2026 schwaebische.de pasó a dar otra frase y la ficha
+    volvió a «Dron confirmado» sin que nadie lo revisara)."""
+    enlace = presencia.get("enlace")
+    misma = next((f for f in incidente["fuentes"] if enlace and f.get("enlace") == enlace), None)
+    if misma is None:
+        return None
+    clave = hashlib.sha256(f"{enlace}\n{presencia['cita']}".encode()).hexdigest()[:16]
+    fuente_id = PREFIJO_REVISADA + clave
+    if not any(f["id"] == fuente_id for f in incidente["fuentes"]):
+        incidente["fuentes"].append({
+            **copy.deepcopy(misma), "id": fuente_id, "frase_origen": presencia["cita"],
+            "replicas": 0, "campos_respaldados": ["presencia_dron"],
+        })  # fmt: skip
+    return fuente_id
+
+
 def con_titular(incidente: Documento, revision: Documento, instante: Documento) -> Documento:
     """El titular revisado y, si la revisión lo dice, la presencia y el estado con su cita."""
     resultado = copy.deepcopy(incidente)
@@ -332,7 +352,7 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
     fuentes = {f["frase_origen"]: f["id"] for f in resultado["fuentes"]}
     presencia = revision.get("presencia")
     if presencia and resultado.get("presencia_dron") != presencia["valor"]:
-        fuente_id = fuentes.get(presencia["cita"])
+        fuente_id = fuentes.get(presencia["cita"]) or _fuente_de_la_presencia(resultado, presencia)
         if fuente_id is not None:
             resultado["presencia_dron"] = presencia["valor"]
             afirmacion = {

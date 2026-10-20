@@ -231,6 +231,12 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   Si el tope normal no da, estos casos usan la reserva y no esperan (`coste.comprobar_experto`
   devuelve el tramo). Lo que el experto gasta en el día por encima de su tope normal es de la
   reserva.
+- **Lo crítico no espera por ningún otro tope** (desde el 20 de octubre de 2026): con el tope del
+  modo agotado (el del control o el de la recogida horaria), el caso crítico que ya esperaba al
+  experto va directo a él, sin la llamada del base que ya no cabe (motivo `critico_sin_base`;
+  `control_fichas.Llamador.llamar`, `extraccion.experto_sin_base`); lo que no es crítico espera como
+  antes. Con el tope mensual agotado, igual: solo la reserva. De madrugada, los casos críticos no
+  van en el lote del base: van en llamadas directas (`control_fichas.directas_criticas`).
 - **Si se agota también la reserva**, el caso crítico no espera al día siguiente: se reintenta en
   cada recogida (`espera_experto` a 50 minutos), sale en el resumen diario y, si lleva más de 6
   horas sin poder resolverse, la vigilancia abre la incidencia (`experto_critico`).
@@ -249,6 +255,11 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   Cada espera de un caso crítico lleva `critico`. Un par o una verificación cuya espera vence
   vuelve en la recogida horaria siguiente aunque sus fichas ya no sean nuevas
   (`control_fichas.esperas_vencidas`), sin esperar a la pasada de madrugada.
+- Una espera que ya no está en juego (una de sus fichas se unió a otra o se retiró, o el par ya no
+  es candidato) no retiene ninguna ficha ni cuenta como caso crítico esperando
+  (`control_fichas.espera_vigente`): el 20 de octubre de 2026 el par EODI-2025-00438|00444 siguió
+  esperando después de que la regla de fusión uniera 00438 a 00444, retuvo 00444 y abrió la
+  incidencia del experto. La decisión no se borra.
 - **Segunda lectura** (desde el 18 de octubre de 2026): lo que marca la capa secundaria
   ([`docs/segunda_lectura.md`](segunda_lectura.md)) lo revisa el experto con el modo
   `segunda_lectura`, como mucho 0,10 USD al día (0,30 hasta el 19 de octubre de 2026: de 30
@@ -304,8 +315,9 @@ total por encima de 10 USD. Calidad en la prueba comparativa con las reglas nuev
 
 - **Madrugada** (una pasada al día): los pares y las verificaciones de las últimas 48 horas
   van por lote (`repaso` con alcance «noche»), sin el cerrojo mientras el lote se procesa (3 horas
-  como mucho); lo que el base pide escalar se repite con el experto, dentro de su tope: los casos
-  críticos en llamadas directas y los demás en un segundo lote, a mitad de precio
+  como mucho); los casos críticos no esperan al lote: el base los lee en llamadas directas (desde
+  el 20 de octubre de 2026). Lo que el base pide escalar se repite con el experto, dentro de su
+  tope: los casos críticos en llamadas directas y los demás en un segundo lote, a mitad de precio
   (`control_fichas.lote_experto`, desde el 19 de octubre de 2026). Tope de la revisión: `TOPE_NOCHE_USD` (0,08 USD). Después, las citas sin traducir,
   también por lote, con su propio tope (`TOPE_NOCHE_CITAS_USD`, 0,05 USD, unas 500 citas en el
   peor caso): lo nuevo de cada día son unas 15 a 30 citas de la capa de Ucrania (medido el 14 de
