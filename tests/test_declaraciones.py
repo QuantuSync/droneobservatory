@@ -383,3 +383,13 @@ def test_la_cita_que_remite_a_la_oracion_anterior_la_lleva() -> None:
     sin_dron = SWR.replace("einer Drohnensichtung", "eines Gewitters")
     (igual,) = declaraciones.validas([declaracion], [sin_dron])
     assert igual["frase"] == "Das teilte die Polizei Offenburg mit."
+
+
+def test_la_duda_sobre_la_procedencia_no_deja_abierto_el_dron() -> None:
+    # EODI-2026-00238 (Tulcea): «aparatul ar fi posibil de proveniență rusească»; el ejército
+    # estableció que eran restos de un dron.
+    assert not declaraciones.abierto(
+        "aparatul ar fi posibil de proveniență rusească, iar în urma verificărilor s-a decis "
+        "detonarea acestuia"
+    )
+    assert declaraciones.abierto("aparatul ar fi posibil o dronă")
