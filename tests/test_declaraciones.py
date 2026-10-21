@@ -346,3 +346,14 @@ def test_la_revision_confirma_la_presencia_de_lo_ya_guardado_con_su_fuente() -> 
     assert "criterio de presencia" in motivo["nuevo"]["motivo"]
     # Idempotente: otra pasada no cambia nada.
     assert presencia.revisar(almacen, despues, MODELOS) == ([], [])
+
+
+def test_la_sospecha_sobre_el_autor_no_deja_abierto_el_dron() -> None:
+    # EODI-2026-00559: el Gobierno búlgaro da por hechos los ataques con drones; lo que sospecha
+    # es quién está detrás.
+    assert declaraciones.atribuye_dron(
+        "Bulgaria said Wednesday it suspected Russia was behind a series of devastating drone "
+        "attacks on commercial vessels near its Black Sea coast"
+    )
+    assert declaraciones.abierto("suspected drone over the airport")
+    assert declaraciones.abierto("possibly a drone behind the hangar")

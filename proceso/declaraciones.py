@@ -231,11 +231,22 @@ _INFRACCION = re.compile(
 )
 
 
+# La sospecha sobre quién está detrás («Bulgaria said it suspected Russia was behind a series of
+# devastating drone attacks», EODI-2026-00559) no deja abierto que fueran drones: lo abierto es
+# el autor (la atribución tiene su propio estado).
+_AUTOR = re.compile(
+    r"^\W*(?:\w+\W+){0,3}(?:was|were|is|are|of\s+being|to\s+be|estaba|estaban|está|steck\w*)"
+    r"\s+(?:behind|responsible|dahinter|verantwortlich|detrás|responsable\w*)",
+    re.IGNORECASE,
+)
+
+
 def abierto(*textos: str) -> bool:
     """Si alguno de los textos deja abierto que fuera un dron."""
     for texto in textos:
         for duda in ABIERTO.finditer(texto or ""):
-            if not _INFRACCION.search(texto[duda.end() : duda.end() + 40]):
+            despues = texto[duda.end() : duda.end() + 40]
+            if not _INFRACCION.search(despues) and not _AUTOR.search(despues):
                 return True
     return False
 
