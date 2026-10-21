@@ -48,7 +48,8 @@ def test_las_reglas_de_la_recogida_han_puesto_sus_valores(incidentes: dict[str, 
     pista = incidentes["EODI-2025-00003"]
     assert pista["consecuencias"]["cierre"]["valor"] == "si"
     assert pista["tipo"] == "interrupcion_aeroportuaria"
-    assert pista["presencia_dron"] == "confirmada"
+    # Un cierre es una actuación, no una atribución: el dron sigue sin confirmar.
+    assert pista["presencia_dron"] == "no_confirmada"
     assert incidentes["EODI-2025-00004"]["ataque"]["id"] == "EODI-UA-2025-0001"
 
 
