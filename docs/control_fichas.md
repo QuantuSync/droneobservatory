@@ -97,6 +97,12 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
      también «se buscó y no se encontró nada» sin nombrar el dron («niets meer gevonden»,
      «nichts gefunden», «nothing was found», «nic nie znaleziono»…) en las 23 lenguas que lee el
      observatorio, salvo que lo buscado fuera una persona o un vehículo;
+   - si una autoridad atribuye el suceso a drones (una declaración suya que habla de drones sin
+     dejarlo abierto, o su propio documento), no encontrarlos no lo cambia: no encontrar pruebas no
+     demuestra que no hubiera dron (EODI-2025-00066, Volkel: Defensa dispara a los drones y «no
+     fueron encontrados»). Ni «no se encontró» ni «posible» bajan esa presencia ni la llevan al
+     experto; lo que desmiente una autoridad no lo cambia la verificación: va a la cola de las
+     rectificaciones oficiales (docs/rectificaciones.md), donde decide el experto;
    - si ninguna de sus fuentes cuenta un suceso (contenido patrocinado o de socio, opinión,
      análisis, explicativo, entrevista o resumen, según su página: docs/modelos.md, «Lo que no es
      un suceso no es ficha»), la ficha se repite con el experto, que decide si se retira;

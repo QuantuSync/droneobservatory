@@ -65,6 +65,9 @@ TOPE_MENSUAL_USD = 0.30
 MOTIVO_ESCALADO = "publicada: rectificación oficial de la presencia"
 # Lo que entra en la cola desde el barrido diario de la segunda lectura.
 ORIGEN_SEGUNDA = "segunda_lectura"
+# Lo que desmiente una autoridad en una ficha atribuida por otra, desde la verificación de las
+# fichas (recogida/control_fichas.py): lo paga el modo de las rectificaciones.
+ORIGEN_VERIFICACION = "verificacion"
 # Presencias que puede rectificar el barrido diario y antigüedad mínima (días).
 PRESENCIAS_DIARIAS = frozenset({"confirmada", "no_confirmada", "no_acreditada"})
 _FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -520,10 +523,10 @@ def clave_titular(elegido: Documento) -> str:
     return f"mensual:{elegido['incidente']}:{fuente['id']}"
 
 
-def encolar(almacen: Almacen, elegidos: list[Documento]) -> list[str]:
-    """Lo que eligió el barrido diario de la segunda lectura, a la misma cola que lo de la búsqueda
-    mensual, sin lo que ya está en ella ni lo que el experto ya decidió. Devuelve las claves
-    nuevas."""
+def encolar(almacen: Almacen, elegidos: list[Documento], origen: str = ORIGEN_SEGUNDA) -> list[str]:
+    """Lo que eligió el barrido diario de la segunda lectura (o lo que desmiente una autoridad,
+    desde la verificación de las fichas), a la misma cola que lo de la búsqueda mensual, sin lo
+    que ya está en ella ni lo que el experto ya decidió. Devuelve las claves nuevas."""
     cursor = dict(almacen.cursor(CURSOR_MENSUAL) or {})
     pendientes = list(cursor.get("pendientes") or [])
     en_cola = {clave_titular(p) for p in pendientes}
@@ -533,7 +536,7 @@ def encolar(almacen: Almacen, elegidos: list[Documento]) -> list[str]:
         clave = clave_titular(elegido)
         if clave in en_cola or clave in decididas:
             continue
-        pendientes.append({**elegido, "origen": ORIGEN_SEGUNDA})
+        pendientes.append({**elegido, "origen": origen})
         en_cola.add(clave)
         nuevas.append(clave)
     if nuevas:

@@ -9,7 +9,10 @@
   distintos de una misma oleada: se deshizo.
 - La verificación de una ficha: lo que dicen sus fuentes de cada dato, con la frase literal. Una
   frase que no está en el texto de su fuente no cuenta. Con lo que queda se corrige la ficha:
-  la presencia no se queda confirmada si una fuente cuenta que no se encontró el dron; el número
+  la presencia no se queda confirmada si una fuente cuenta que no se encontró el dron, salvo que
+  una autoridad atribuya el suceso a drones (no encontrar el dron no demuestra que no lo hubiera:
+  una presencia atribuida por una autoridad la cambia solo otra autoridad, por las rectificaciones
+  con el experto, y lo que desmiente una autoridad queda para ellas); el número
   de drones solo si alguna fuente lo da; el cierre y su duración, solo con frase; la hora, solo
   con frase; el lugar sin punto gana el sitio que nombra la frase. Nunca sube un estado ni
   confirma una presencia: eso lo deciden las reglas de siempre con las fuentes oficiales.
@@ -36,6 +39,7 @@ from proceso.noticias import (
     normalizar,
 )
 from proceso.presencia import (
+    atribuida_por_autoridad,
     documento_oficial_decide,
     presencias_revisadas,
     pruebas_fisicas_confirmadas,
@@ -350,6 +354,9 @@ class Correccion:
     # Lo que se cita en «Qué dice la fuente»: campo público -> (fuente, frase).
     respaldos: dict[str, tuple[str, str]] = field(default_factory=dict)
     dudas: list[str] = field(default_factory=list)
+    # Lo que desmiente una autoridad en una ficha que otra atribuyó a drones: (fuente, frase), para
+    # las rectificaciones oficiales con el experto (recogida/rectificaciones.py).
+    rectificar: tuple[str, str] | None = None
 
 
 def _sin_afirmaciones(documento: Documento, campo: str) -> list[Documento]:
@@ -368,6 +375,17 @@ def _presencia(c: Correccion, v: Verificada) -> None:
         return
     valor, fuente, frase = dato
     c.respaldos["presencia_dron"] = (fuente, frase)
+    if valor in NIEGAN and d.get("presencia_dron") == "confirmada" and atribuida_por_autoridad(d):
+        # No encontrar el dron no demuestra que no lo hubiera: la presencia que atribuyó una
+        # autoridad no la baja la verificación. Lo que desmiente una autoridad va a las
+        # rectificaciones oficiales (el experto, con su paso en presencia_historial).
+        origen: Documento = next((f for f in d.get("fuentes", []) if f.get("id") == fuente), {})
+        if valor == "desmentido" and declaraciones.de_autoridad(origen):
+            c.rectificar = (fuente, frase)
+            c.dudas.append(f"una autoridad dice «{frase}»: queda para las rectificaciones")
+        else:
+            c.dudas.append(f"una fuente dice «{frase}», pero una autoridad lo atribuye a drones")
+        return
     if (
         valor in NIEGAN
         and d.get("presencia_dron") == "confirmada"

@@ -939,6 +939,7 @@ def peticion_verificacion(ctx: Contexto, incidente: Documento) -> Peticion:
                     {"huella": reglas.huella_fuentes(incidente), "vista": vista,
                      "comprobar": fuentes.comprobar,
                      "critico": critico(incidente),
+                     "autoridad": presencia.atribuida_por_autoridad(incidente),
                      "fallos": reglas.fallos_de_ficha(incidente)})  # fmt: skip
 
 
@@ -979,22 +980,31 @@ _PRESENCIA_CONTRARIA = {
     "confirmada": {"no_hallado", "desmentido", "posible"},
     "no_confirmada": {"no_hallado", "desmentido"},
     "descartada": {"confirmada"},
+    # Atribuida a drones por una autoridad: no encontrarlos no la contradice; un desmentido, sí
+    # (va a las rectificaciones oficiales, proceso/control_fichas._presencia).
+    "atribuida": {"desmentido"},
     # Rectificada por una autoridad oficial (proceso/rectificaciones.py): la cambia solo otra
     # rectificación, nunca la verificación de sus fuentes.
     "no_acreditada": set(),
 }
 
 
-def contradice(vista: dict[str, Any], respuesta: dict[str, Any]) -> list[str]:
+def contradice(vista: dict[str, Any], respuesta: dict[str, Any],
+               autoridad: bool = False) -> list[str]:  # fmt: skip
     """Los datos clave en que la verificación del modelo contradice la ficha (los dos con
-    valor y distintos): presencia del dron, número de drones y cierre."""
+    valor y distintos): presencia del dron, número de drones y cierre. Con `autoridad` (una
+    autoridad atribuye el suceso a drones), la presencia confirmada solo la contradice un
+    desmentido."""
 
     def valor(clave: str) -> Any:
         dato = respuesta.get(clave)
         return dato.get("valor") if isinstance(dato, dict) else None
 
     contra = []
-    if valor("presencia") in _PRESENCIA_CONTRARIA.get(str(vista.get("presencia_dron")), set()):
+    actual_presencia = str(vista.get("presencia_dron"))
+    if autoridad and actual_presencia == "confirmada":
+        actual_presencia = "atribuida"
+    if valor("presencia") in _PRESENCIA_CONTRARIA.get(actual_presencia, set()):
         contra.append("presencia")
     drones = str(valor("drones") or "").replace(" ", "")
     actual = str(vista.get("drones") or "")
@@ -1046,7 +1056,8 @@ def motivos_verificacion(peticion: Peticion) -> Callable[[dict[str, Any]], list[
 
     def motivos(respuesta: dict[str, Any]) -> list[str]:
         return escalado.motivos_verificacion(
-            contradice(peticion.datos["vista"], respuesta), bool(peticion.datos.get("critico"))
+            contradice(peticion.datos["vista"], respuesta, bool(peticion.datos.get("autoridad"))),
+            bool(peticion.datos.get("critico")),
         ) + [f"{escalado.MOTIVO_FALLO_FICHA}: {f}" for f in peticion.datos.get("fallos", [])]
 
     return motivos
@@ -1111,6 +1122,8 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
         )
         if correccion.dudas:
             ctx.resultado.dudas[incidente["id"]] = correccion.dudas
+        if correccion.rectificar is not None:
+            _a_rectificaciones(ctx.almacen, incidente, *correccion.rectificar)
         if not correccion.cambios:
             continue
         nuevo = incidentes.aplicar_reglas(correccion.incidente)
@@ -1119,6 +1132,20 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
         if decision.get("modelo"):
             nuevo = anotar_modelos(nuevo, correccion.cambios, str(decision["modelo"]))
         _guardar(ctx, incidente, nuevo, "; ".join(correccion.cambios))
+
+
+def _a_rectificaciones(almacen: Almacen, incidente: Documento, fuente_id: str, frase: str) -> None:
+    """Lo que desmiente una autoridad en una ficha que otra atribuyó a drones, a la cola de las
+    rectificaciones oficiales: lo decide el experto (recogida/rectificaciones.py)."""
+    from recogida import rectificaciones as seguimiento
+
+    fuente = next((f for f in incidente["fuentes"] if f["id"] == fuente_id), None)
+    if fuente is None or not fuente.get("enlace"):
+        return
+    elegido = {"incidente": incidente["id"], "titular": frase, "url": fuente["enlace"],
+               "medio": fuente.get("medio") or "", "fecha": fuente["fecha"]["valor"],
+               "idioma": fuente.get("idioma") or "und"}  # fmt: skip
+    seguimiento.encolar(almacen, [elegido], seguimiento.ORIGEN_VERIFICACION)
 
 
 def _inicio_revisado_vigente(incidente: Documento, revisado: Documento | None) -> bool:

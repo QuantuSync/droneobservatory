@@ -2511,6 +2511,18 @@
         "fecha": "2026-10-19",
         "en": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html (original)"
       }
+    },
+    {
+      "incidente": "EODI-2025-00238",
+      "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314",
+      "medio": "ekstrabladet.dk",
+      "fecha": "2025-09-26",
+      "idioma": "da",
+      "frase": "Det blev lukket her 23.40, og det er under mistanke om, at man mener måske at have set en drone",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314 (original)"
+      }
     }
   ],
   "titulares": [
@@ -3046,6 +3058,35 @@
       "motivo": {
         "es": "El titular en inglés decía «Narco-possible drones» (el «possible» se metía dentro de la palabra) y el español no decía que el dron está sin confirmar.",
         "en": "The English headline read «Narco-possible drones» (the «possible» went inside the word) and the Spanish one did not say the drone is unconfirmed."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00066",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "The Dutch military opened fire at drones over Volkel Air Base in the east of the country"
+      },
+      "motivo": {
+        "es": "El Ministerio de Defensa dice que los militares dispararon contra drones sobre la base de Volkel (newsday.com) y Defensie cuenta los drones que vio ese fin de semana (nrc.nl). Que después no se encontraran («niet teruggevonden») no demuestra que no hubiera drones: el control de las fichas bajó la presencia el 19 y el 20 de octubre de 2026 por error.",
+        "en": "The Ministry of Defence says the military opened fire at drones over Volkel air base (newsday.com) and Defensie counts the drones it saw that weekend (nrc.nl). That they were not found afterwards («niet teruggevonden») does not show there were no drones: the record check lowered the drone presence by mistake on 19 and 20 October 2026."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00238",
+      "inicio": {
+        "valor": "2025-09-25T21:40Z",
+        "precision": "minuto",
+        "cita": "Det blev lukket her 23.40, og det er under mistanke om, at man mener måske at have set en drone",
+        "motivo": "ekstrabladet.dk: el espacio aéreo de Aalborg se cerró «sent torsdag aften», el jueves 25 de septiembre de 2025, a las 23.40 hora de Dinamarca (UTC+2); las 21:44 venían de la nota de la policía de la noche anterior (miércoles 24)"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Det blev lukket her 23.40, og det er under mistanke om, at man mener måske at have set en drone",
+        "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+      },
+      "motivo": {
+        "es": "Es el segundo cierre de Aalborg, la noche del jueves 25 de septiembre de 2025. El jefe de guardia de la policía de Jutlandia del Norte dice que «quizá» se vio un dron y que, tras buscar, no se encontró nada: no atribuye el suceso a drones. La nota de la policía «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) es de la noche anterior, el miércoles 24, y no sirve para esta ficha.",
+        "en": "This is the second Aalborg closure, on the night of Thursday 25 September 2025. The North Jutland police duty officer says a drone was «maybe» seen and that, after searching, nothing was found: police do not attribute the event to drones. The police note «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) is about the previous night, Wednesday 24, and does not support this record."
       }
     }
   ],

@@ -73,6 +73,20 @@ def documento_oficial_decide(incidente: Documento) -> bool:
     )
 
 
+def atribuida_por_autoridad(incidente: Documento) -> bool:
+    """Una autoridad atribuye el suceso a drones: una declaración suya habla de drones sin dejarlo
+    abierto (lo que dice en su propio documento lo cubre documento_oficial_decide). Que después no
+    se encontraran (EODI-2025-00066, Volkel: Defensa dispara a los drones y «no fueron
+    encontrados») no lo cambia: no encontrar pruebas no demuestra que no hubiera dron. Una
+    declaración que no nombra el dron («un objeto misterioso», EODI-2026-00515) no basta."""
+    return any(
+        declaraciones.de_autoridad(f)
+        and declaraciones.habla_de_drones(frase := str(f.get("frase_origen") or ""))
+        and not declaraciones.abierto(frase)
+        for f in incidente["fuentes"]
+    )
+
+
 def autoridad_lo_deja_abierto(incidente: Documento) -> bool:
     """Todas las autoridades que cita el incidente lo dejan abierto."""
     autoridades = [f for f in incidente["fuentes"] if declaraciones.de_autoridad(f)]
@@ -658,8 +672,8 @@ MOTIVO_NO_HALLADO = (
 def quitar_por_no_hallado(incidente: Documento) -> Documento:
     """La presencia sin confirmar si una fuente cuenta que no se encontró el dron, con la
     afirmación «no_confirmada» de esa fuente. El mismo incidente si no hay nada que quitar: la
-    presencia revisada a mano, el documento propio de una autoridad y las pruebas físicas que
-    confirma una autoridad mandan."""
+    presencia revisada a mano, el documento propio de una autoridad, las pruebas físicas que
+    confirma una autoridad y la atribución a drones de una autoridad mandan."""
     fuente = no_hallado(incidente)
     if (
         fuente is None
@@ -667,6 +681,9 @@ def quitar_por_no_hallado(incidente: Documento) -> Documento:
         or incidente["id"] in presencias_revisadas()
         or documento_oficial_decide(incidente)
         or pruebas_fisicas_confirmadas(incidente)
+        # Lo atribuyó a drones una autoridad: no encontrarlos no lo cambia (lo cambia solo otra
+        # autoridad, por las rectificaciones con el experto).
+        or atribuida_por_autoridad(incidente)
     ):
         return incidente
     afirmacion = {
