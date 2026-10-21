@@ -502,8 +502,10 @@ class Almacen:
         y la presencia los decide un solo sitio a partir de las pruebas (proceso/decidir.py)."""
         from proceso import decidir
 
-        entrada = rectificaciones.mantener(documento, self.incidente(documento["id"]))
-        documento = decidir.aplicar(entrada)
+        guardado = self.incidente(documento["id"])
+        entrada = rectificaciones.mantener(documento, guardado)
+        negadas = frozenset(self._negadas_por_el_control(documento["id"]))
+        documento = decidir.aplicar(entrada, negadas)
         documento = sin_afirmaciones_repetidas(documento)
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:
@@ -520,11 +522,31 @@ class Almacen:
                 },
             )
             self._guardar_afirmaciones(documento["id"], documento.get("afirmaciones", []))
-        if documento is not entrada:
-            # Lo que cambió la decisión queda en el historial con la regla que lo decide.
+        # Lo que cambió la decisión queda en el historial con la regla que lo decide, solo si
+        # cambia lo guardado (o, en el alta, lo que proponía el documento): un paso que vuelve a
+        # proponer lo mismo no engorda el historial.
+        previo = guardado or entrada
+        if documento is not entrada and any(
+            antes is not None and antes != despues
+            for antes, despues in (
+                (previo["estado"].get("actual"), documento["estado"]["actual"]),
+                (previo.get("presencia_dron"), documento.get("presencia_dron")),
+            )
+        ):
             from proceso import presencia
 
-            presencia.anotar(self, entrada, documento, decidir.motivo(entrada))
+            presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas))
+
+    def _negadas_por_el_control(self, id_: str) -> set[str]:
+        """Las fuentes del incidente en que la verificación vigente del control de las fichas lee
+        que no se encontró el dron o que se desmiente (proceso/presencia.negadas_por_el_control)."""
+        from proceso import presencia
+
+        decision = self.controles(f"verificacion:{id_}").get(f"verificacion:{id_}") or {}
+        dato = (decision.get("datos") or {}).get("presencia")
+        if decision.get("anulada") or not isinstance(dato, list) or len(dato) < 2:
+            return set()
+        return {str(dato[1])} if dato[0] in presencia.NIEGAN_CONTROL else set()
 
     def guardar_ataque_ucrania(self, documento: Documento, ahora: datetime) -> None:
         errores = validar_ataque_ucrania(documento, ahora)
