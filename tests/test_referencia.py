@@ -13,7 +13,7 @@ from esquema import Documento
 from proceso import auditoria_fichas, referencia
 
 # Discrepancias conocidas el 21 de octubre de 2026. Solo puede bajar.
-TOPE_DISCREPANCIAS = 80
+TOPE_DISCREPANCIAS = 64
 PRESENCIAS = {"confirmada", "no_confirmada", "no_acreditada", "descartada"}
 ESTADOS = {"notificado", "confirmado", "atribuido", "desmentido"}
 TIPOS = {"incursion", "interrupcion_aeroportuaria", "sobrevuelo"}
@@ -64,10 +64,10 @@ def test_la_referencia_cubre_cada_valor_y_las_fichas_obligatorias() -> None:
     fichas, _ = referencia.cargar()
     valores = [{c: v["valor"] for c, v in f["valores"].items()} for f in fichas]
     assert {v.get("presencia_dron") for v in valores} >= PRESENCIAS
-    # Ningún «desmentido» de las 50 resiste sus fuentes (EODI-2026-00007 y EODI-2025-00357 son
-    # discrepancias): el valor se cubre con lo que tienen hoy las fichas.
+    # Ningún «desmentido» de las 50 resiste sus fuentes: EODI-2026-00007 y EODI-2025-00357 solo
+    # negaban el dron, y desde el 21 de octubre de 2026 ya no lo son (tests/test_decidir.py).
     hoy = {referencia.valores(d)["estado"] for d in _copias().values()}
-    assert {v.get("estado") for v in valores} | hoy >= ESTADOS
+    assert {v.get("estado") for v in valores} | hoy >= ESTADOS - {"desmentido"}
     assert {v.get("tipo") for v in valores} >= TIPOS
     assert {v.get("pais") for v in valores} >= PAISES
     assert {"frontera", "interior"} <= {v.get("zona") for v in valores}

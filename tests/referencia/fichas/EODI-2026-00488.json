@@ -9,6 +9,11 @@
    "campo": "presencia_dron",
    "fuente_id": "gdelt-7eb7f2f3e23b5781",
    "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-b7fa639b84211d3d-declaracion-1",
+   "valor": "confirmada"
   }
  ],
  "consecuencias": {
@@ -23,7 +28,7 @@
   }
  },
  "estado": {
-  "actual": "notificado",
+  "actual": "confirmado",
   "historial": [
    {
     "estado": "notificado",
@@ -32,6 +37,14 @@
      "valor": "2026-10-06T13:45Z"
     },
     "fuente_id": "gdelt-0e85097175ea3edd"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-10-06T00:00Z"
+    },
+    "fuente_id": "revisada-b7fa639b84211d3d-declaracion-1"
    }
   ]
  },
@@ -78,6 +91,24 @@
    "id": "gdelt-7eb7f2f3e23b5781",
    "idioma": "es",
    "medio": "biobiochile.cl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-10-06T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania, en las cercan\u00edas de la frontera fluvial con Rumania.",
+   "id": "revisada-b7fa639b84211d3d-declaracion-1",
+   "idioma": "es",
+   "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en biobiochile.cl)"
   }
  ],
  "id": "EODI-2026-00488",
@@ -111,7 +142,7 @@
   "nombre": "Aeroportul Internat\u0326ional \u201eMihail Koga\u0306lniceanu\u201d Constant\u0326a",
   "oaci": "LRCK"
  },
- "presencia_dron": "no_confirmada",
+ "presencia_dron": "confirmada",
  "pruebas": {
   "dron_estatal": false,
   "entrada_exterior": false,

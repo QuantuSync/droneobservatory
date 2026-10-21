@@ -3240,6 +3240,177 @@
         "categoria": "policia",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2026-00131",
+      "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html",
+      "medio": "larazon.es",
+      "fecha": "2026-03-11",
+      "idioma": "es",
+      "frase": "Un portavoz del aeropuerto explicó a la AFP que la actividad se detuvo \"por motivos de seguridad\" durante unos treinta minutos, después de que se observara \"un objeto volador no identificado\"",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Flughafen Berlin Brandenburg",
+        "pais": "DE",
+        "categoria": "aeropuerto",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00488",
+      "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml",
+      "medio": "biobiochile.cl",
+      "fecha": "2026-10-06",
+      "idioma": "es",
+      "frase": "el Ministerio de Defensa de Rumania indicó que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio aéreo de Ucrania, en las cercanías de la frontera fluvial con Rumania.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00112",
+      "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion",
+      "medio": "in.gr",
+      "fecha": "2025-10-05",
+      "idioma": "el",
+      "frase": "«Σήμερα το βράδυ, στις 22:16, οι ειδικοί του αεροδρομίου έλαβαν πληροφορίες από εκπροσώπους της Oro Navigacija ότι η εναέρια κυκλοφορία έχει προσωρινά ανασταλεί λόγω, σύμφωνα με τις πληροφορίες μας, πιθανής σειράς αερόστατων",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion (original)"
+      },
+      "declaracion": {
+        "autoridad": "Vilniaus oro uostas",
+        "pais": "LT",
+        "categoria": "aeropuerto",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00378",
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
+      "medio": "adevarul.ro",
+      "fecha": "2025-01-30",
+      "idioma": "ro",
+      "frase": "Sistemele de monitorizare și supraveghere ale Ministerului Apărării Naționale au semnalat evoluț\u0069a unor drone în spațiul aerian ucrainean, pe trasee de zbor în apropierea frontierei cu România.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00043",
+      "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
+      "medio": "la.lv",
+      "fecha": "2025-10-21",
+      "idioma": "lv",
+      "frase": "“Rīgas lidosta šodien plkst. 14.20 sniedza atbildīgajiem dienestiem informāciju par iespējamu bezpilota lidaparāta atrašanos lidojumu ierobežojumu zonā – Gaviezes ielas rajonā, kas tika pamanīts ar lidostas tehniskajiem līdzekļiem,” informēja Rīgas lidosta.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme (original)"
+      },
+      "declaracion": {
+        "autoridad": "Rīgas lidosta",
+        "pais": "LV",
+        "categoria": "aeropuerto",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00152",
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html",
+      "medio": "adevarul.ro",
+      "fecha": "2026-06-05",
+      "idioma": "ro",
+      "frase": "Drona marină care a explodat în această dimineață în Portul Constanța făcea parte, alături de alte mijloace similare de luptă, dintr-o operațiune militară condusă de Ucraina împotriva agresiunii ruse.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "autoria",
+        "autor": "Ucraina",
+        "autor_tipo": "estado",
+        "autor_pais": "UA"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00140",
+      "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
+      "medio": "mil.lv",
+      "fecha": "2026-08-15",
+      "idioma": "lv",
+      "frase": "Nacionālie bruņotie spēki informē, ka 14. augustā Balvu novada Rugāju apkārtnē tika notriekts Ukrainas bezpilota lidaparāts, kas Latvijas gaisa telpā no Baltkrievijas teritorijas ielidoja",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats (original)"
+      },
+      "declaracion": {
+        "autoridad": "Nacionālie bruņotie spēki",
+        "pais": "LV",
+        "categoria": "fuerzas_armadas",
+        "afirma": "autoria",
+        "autor": "Ukraina",
+        "autor_tipo": "estado",
+        "autor_pais": "UA"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00233",
+      "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
+      "medio": "gov.pl",
+      "fecha": "2025-09-10",
+      "idioma": "pl",
+      "frase": "W środę nad ranem polska przestrzeń powietrzna została naruszona przez rosyjskie drony. To sytuacja bez precedensu.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly (original)"
+      },
+      "declaracion": {
+        "autoridad": "Kancelaria Prezesa Rady Ministrów",
+        "pais": "PL",
+        "categoria": "gobierno",
+        "afirma": "autoria",
+        "autor": "Rosja",
+        "autor_tipo": "estado",
+        "autor_pais": "RU"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00233",
+      "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140",
+      "medio": "indianexpress.com",
+      "fecha": "2025-09-10",
+      "idioma": "en",
+      "frase": "The Polish military has confirmed that some of the drones were shot down, while searches are ongoing for potential crash sites.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Dowództwo Operacyjne Rodzajów Sił Zbrojnych",
+        "pais": "PL",
+        "categoria": "fuerzas_armadas",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [
@@ -3830,6 +4001,30 @@
       "motivo": {
         "es": "Es el segundo cierre de Aalborg, la noche del jueves 25 de septiembre de 2025. El jefe de guardia de la policía de Jutlandia del Norte dice que «quizá» se vio un dron y que, tras buscar, no se encontró nada: no atribuye el suceso a drones. La nota de la policía «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) es de la noche anterior, el miércoles 24, y no sirve para esta ficha.",
         "en": "This is the second Aalborg closure, on the night of Thursday 25 September 2025. The North Jutland police duty officer says a drone was «maybe» seen and that, after searching, nothing was found: police do not attribute the event to drones. The police note «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) is about the previous night, Wednesday 24, and does not support this record."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00228",
+      "presencia": {
+        "valor": "no_acreditada",
+        "cita": "I enkelte efterforskninger har det hverken kunnet påvises eller afvises, at der har været tale om droner. Dette gør sig bl.a. gældende for så vidt angår efterforskningerne i Københavns Politi og Nordjyllands Politi.",
+        "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25"
+      },
+      "motivo": {
+        "es": "Rigspolitiet cerró el 25 de junio de 2026 todas las investigaciones de los distritos y dice que en las de Nordjyllands Politi (las de los cierres de Aalborg) no se pudo probar ni descartar que fueran drones: no acreditada.",
+        "en": "On 25 June 2026 the Danish National Police closed all the district investigations and says that in those of North Jutland Police (the Aalborg closures) it could neither be shown nor ruled out that they were drones: not established."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00378",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "„Datele furnizate de sistemele radar ale Forţelor Aeriene Române nu au indicat pătrunderi ale ţintelor aeriene monitorizate în spaţiul aerian naţional”, anunță Ministerul Apărării din România.",
+        "enlace": "https://libertatea.ro/stiri/oameni-tulcea-treziti-mesaj-ro-alert-doua-avioane-f-16-decolat-baza-aeriana-borcea-atac-rusesc-drone-5176380"
+      },
+      "motivo": {
+        "es": "El Ministerio de Defensa rumano sitúa los drones en el espacio aéreo ucraniano y dice que el radar no detectó entradas en el espacio aéreo nacional: el suceso (la alerta) está confirmado, el dron en Rumanía no.",
+        "en": "The Romanian Ministry of Defence places the drones in Ukrainian airspace and says radar detected no entry into national airspace: the event (the alert) is confirmed, a drone in Romania is not."
       }
     }
   ],

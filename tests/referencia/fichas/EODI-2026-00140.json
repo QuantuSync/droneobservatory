@@ -48,7 +48,7 @@
   }
  },
  "estado": {
-  "actual": "confirmado",
+  "actual": "atribuido",
   "historial": [
    {
     "estado": "notificado",
@@ -65,6 +65,14 @@
      "valor": "2026-08-14T07:30Z"
     },
     "fuente_id": "gdelt-4e5496763e49f993-declaracion-1"
+   },
+   {
+    "estado": "atribuido",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-08-15T00:00Z"
+    },
+    "fuente_id": "revisada-14a37d8d48a60f05-declaracion-1"
    }
   ]
  },
@@ -786,6 +794,24 @@
    "id": "revisada-ce0ef4f0dbb2097c",
    "idioma": "en",
    "medio": "Fuerzas Armadas Nacionales de Letonia"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-08-15T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Nacion\u0101lie bru\u0146otie sp\u0113ki inform\u0113, ka 14. august\u0101 Balvu novada Rug\u0101ju apk\u0101rtn\u0113 tika notriekts Ukrainas bezpilota lidapar\u0101ts, kas Latvijas gaisa telp\u0101 no Baltkrievijas teritorijas ielidoja",
+   "id": "revisada-14a37d8d48a60f05-declaracion-1",
+   "idioma": "lv",
+   "medio": "Nacion\u0101lie bru\u0146otie sp\u0113ki (declaraci\u00f3n oficial citada en mil.lv)"
   }
  ],
  "id": "EODI-2026-00140",

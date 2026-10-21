@@ -309,6 +309,8 @@ def _declaracion(cita: Documento) -> dict[str, Any]:
         "afirma": declaracion["afirma"],
         "cita_literal": True,
         "frase": cita["frase"],
+        # La autoría que afirma la autoridad (proceso/atribucion.evaluar), si la revisión la da.
+        **{c: declaracion[c] for c in ("autor", "autor_tipo", "autor_pais") if c in declaracion},
     }
 
 

@@ -15,7 +15,7 @@
   "numero": "desconocido"
  },
  "estado": {
-  "actual": "notificado",
+  "actual": "confirmado",
   "historial": [
    {
     "estado": "notificado",
@@ -24,6 +24,14 @@
      "valor": "2025-10-21T19:00Z"
     },
     "fuente_id": "gdelt-fd32ff19006f6c5e"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-10-21T00:00Z"
+    },
+    "fuente_id": "revisada-2a818bbfb815a83f-declaracion-1"
    }
   ]
  },
@@ -110,6 +118,24 @@
    "id": "gdelt-8758f6cc87c21fa1",
    "idioma": "lv",
    "medio": "diena.lv"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-10-21T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u201cR\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos lidojumu ierobe\u017eojumu zon\u0101 \u2013 Gaviezes ielas rajon\u0101, kas tika paman\u012bts ar lidostas tehniskajiem l\u012bdzek\u013ciem,\u201d inform\u0113ja R\u012bgas lidosta.",
+   "id": "revisada-2a818bbfb815a83f-declaracion-1",
+   "idioma": "lv",
+   "medio": "R\u012bgas lidosta (declaraci\u00f3n oficial citada en la.lv)"
   }
  ],
  "id": "EODI-2025-00043",

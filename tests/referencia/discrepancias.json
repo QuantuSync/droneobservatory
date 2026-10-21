@@ -2,15 +2,6 @@
  "discrepancias": [
   {
    "id": "EODI-2025-00228",
-   "campo": "presencia_dron",
-   "ficha": "confirmada",
-   "correcto": "no_acreditada",
-   "cita": "I enkelte efterforskninger har det hverken kunnet p\u00e5vises eller afvises, at der har v\u00e6ret tale om droner. Dette g\u00f8r sig bl.a. g\u00e6ldende for s\u00e5 vidt ang\u00e5r efterforskningerne i K\u00f8benhavns Politi og Nordjyllands Politi.",
-   "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25",
-   "motivo": "Comunicado de Rigspolitiet del 25/06/2026 (le\u00eddo entero): \u00aballe efterforskninger nu afsluttet i samtlige af landets politikredse\u00bb. No nombra Aalborg; la atribuci\u00f3n a este suceso es por deducci\u00f3n: las investigaciones de Nordjyllands Politi de septiembre de 2025 son las de los cierres de Aalborg (24-25 y 25-26 de septiembre). Ninguna otra noticia le\u00edda ni buscada (tv2kosmopol, thestar/Reuters) nombra Aalborg en el cierre."
-  },
-  {
-   "id": "EODI-2025-00228",
    "campo": "drones",
    "ficha": {
     "max": 10,
@@ -57,15 +48,6 @@
   },
   {
    "id": "EODI-2025-00203",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "De marechaussee meldde vanmiddag dat er rond 12.10 uur meerdere meldingen van piloten binnenkwamen bij de luchtverkeersleiding.",
-   "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon",
-   "motivo": "Estado: la Marechaussee (autoridad) da cuenta de los avisos de los pilotos y del cierre de la pista, as\u00ed que el incidente est\u00e1 confirmado aunque luego diga que no era un dron (eso solo cambia la presencia). Objetivo: falta el OACI EHAM. 12.10 hora local = 10:10 UTC del 27. Schiphol est\u00e1 en el municipio de Haarlemmermeer, pero las fuentes dicen Amsterdam; se mantiene \u00c1msterdam."
-  },
-  {
-   "id": "EODI-2025-00203",
    "campo": "objetivo",
    "ficha": {
     "categoria": "aeropuerto",
@@ -81,15 +63,6 @@
    "motivo": "Estado: la Marechaussee (autoridad) da cuenta de los avisos de los pilotos y del cierre de la pista, as\u00ed que el incidente est\u00e1 confirmado aunque luego diga que no era un dron (eso solo cambia la presencia). Objetivo: falta el OACI EHAM. 12.10 hora local = 10:10 UTC del 27. Schiphol est\u00e1 en el municipio de Haarlemmermeer, pero las fuentes dicen Amsterdam; se mantiene \u00c1msterdam."
   },
   {
-   "id": "EODI-2025-00357",
-   "campo": "estado",
-   "ficha": "desmentido",
-   "correcto": "confirmado",
-   "cita": "Un porte-parole a confirm\u00e9 \u00e0 l'ANP ces informations rapport\u00e9es par le journal De Limburger. Il a pr\u00e9cis\u00e9 que ces recherches n'avaient permis de retrouver aucun drone.",
-   "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U",
-   "motivo": "El portavoz de la Koninklijke Marechaussee confirma los avisos de drones y la b\u00fasqueda (\u00abLa mar\u00e9chauss\u00e9e royale n\u00e9erlandaise ... a men\u00e9, le week-end dernier, des recherches \u00e0 la suite de signalements de drones pr\u00e8s du centre de commandement de l'Otan \u00e0 Brunssum ainsi qu'\u00e0 l'a\u00e9roport de Maastricht-Aix-la-Chapelle\u00bb): una autoridad declara que el incidente (los avisos) ocurri\u00f3. Que no encontraran el dron afecta a la presencia, no al estado."
-  },
-  {
    "id": "EODI-2026-00648",
    "campo": "lugar",
    "ficha": null,
@@ -99,15 +72,6 @@
    "motivo": "J\u00f3zef\u00f3w de la gmina Niepor\u0119t (powiat legionowski), no el de Otwock. Coordenadas aproximadas seg\u00fan Wikipedia en polaco (\u00abJ\u00f3zef\u00f3w (powiat legionowski)\u2026 wie\u015b so\u0142ecka\u2026 w gminie Niepor\u0119t\u00bb): 52.392222 N, 20.980833 E."
   },
   {
-   "id": "EODI-2026-00131",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "Un portavoz del aeropuerto explic\u00f3 a la AFP que la actividad se detuvo \"por motivos de seguridad\" durante unos treinta minutos, despu\u00e9s de que se observara \"un objeto volador no identificado\"",
-   "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html",
-   "motivo": "estado: hoy notificado; propongo confirmado porque el portavoz del aeropuerto (operador, fuente oficial seg\u00fan el encargo) declara la suspensi\u00f3n por el objeto avistado. Si el operador del aeropuerto no cuenta como autoridad, quedar\u00eda notificado (la Bundespolizei, seg\u00fan RTL, no confirm\u00f3 el lugar del objeto). Hora: restricciones levantadas poco despu\u00e9s de las 19:10 (18:10 GMT). zona: deriva del lugar"
-  },
-  {
    "id": "EODI-2026-00322",
    "campo": "tipo",
    "ficha": "sobrevuelo",
@@ -115,24 +79,6 @@
    "cita": "Wegen einer mutma\u00dflichen Drohnensichtung ist der Flugbetrieb am Hamburger Flughafen kurzzeitig unterbrochen worden. F\u00fcr rund 15 Minuten seien am Samstagabend keine Starts und Landungen m\u00f6glich gewesen, sagte ein Polizeisprecher.",
    "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f",
    "motivo": "zeit.de le\u00eddo por web.archive.org (el original bloquea). ndr.de devolvi\u00f3 p\u00e1gina sin el texto. Presencia: la polic\u00eda no hall\u00f3 dron y dice que \u00abpodr\u00eda\u00bb haber sido un globo aerost\u00e1tico; al ser formulaci\u00f3n hipot\u00e9tica se deja no_confirmada (si se lee como \u00abla autoridad dice que era un globo\u00bb, ser\u00eda descartada)."
-  },
-  {
-   "id": "EODI-2026-00488",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania, en las cercan\u00edas de la frontera fluvial con Rumania.",
-   "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml",
-   "motivo": "El suceso no es en el aeropuerto/base de Mihail Kog\u0103lniceanu (de all\u00ed solo despegaron los cazas espa\u00f1oles): ocurre sobre la frontera del Danubio, norte y este del condado de Tulcea, as\u00ed que objetivo null, lugar no es Constanza (las fuentes solo dan el condado de Tulcea, sin localidad: null) y la cabecera \u00abAeropuerto de Constanza\u00bb es falsa. D\u00eda: RO-Alert a las 02:20 hora de Ruman\u00eda (UTC+3) = 23:20 "
-  },
-  {
-   "id": "EODI-2026-00488",
-   "campo": "presencia_dron",
-   "ficha": "no_confirmada",
-   "correcto": "confirmada",
-   "cita": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania",
-   "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml",
-   "motivo": "El suceso no es en el aeropuerto/base de Mihail Kog\u0103lniceanu (de all\u00ed solo despegaron los cazas espa\u00f1oles): ocurre sobre la frontera del Danubio, norte y este del condado de Tulcea, as\u00ed que objetivo null, lugar no es Constanza (las fuentes solo dan el condado de Tulcea, sin localidad: null) y la cabecera \u00abAeropuerto de Constanza\u00bb es falsa. D\u00eda: RO-Alert a las 02:20 hora de Ruman\u00eda (UTC+3) = 23:20 "
   },
   {
    "id": "EODI-2026-00488",
@@ -173,15 +119,6 @@
    "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
    "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097",
    "motivo": "El suceso no es en el aeropuerto/base de Mihail Kog\u0103lniceanu (de all\u00ed solo despegaron los cazas espa\u00f1oles): ocurre sobre la frontera del Danubio, norte y este del condado de Tulcea, as\u00ed que objetivo null, lugar no es Constanza (las fuentes solo dan el condado de Tulcea, sin localidad: null) y la cabecera \u00abAeropuerto de Constanza\u00bb es falsa. D\u00eda: RO-Alert a las 02:20 hora de Ruman\u00eda (UTC+3) = 23:20 "
-  },
-  {
-   "id": "EODI-2026-00152",
-   "campo": "estado",
-   "ficha": "confirmado",
-   "correcto": "atribuido",
-   "cita": "Drona marin\u0103 care a explodat \u00een aceast\u0103 diminea\u021b\u0103 \u00een Portul Constan\u021ba f\u0103cea parte, al\u0103turi de alte mijloace similare de lupt\u0103, dintr-o opera\u021biune militar\u0103 condus\u0103 de Ucraina \u00eempotriva agresiunii ruse.",
-   "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html",
-   "motivo": "Estado: el presidente Nicu\u0219or Dan y el Gobierno (comunicado con la cronolog\u00eda) atribuyen el dron a una operaci\u00f3n militar de Ucrania que perdi\u00f3 su control: seg\u00fan la definici\u00f3n del encargo (autoridad atribuye el dron a un Estado) es \u00abatribuido\u00bb, aunque Ucrania no sea el agresor. Objetivo: el dron estaba y explot\u00f3 dentro del puerto (muelle 78), as\u00ed que es instalaci\u00f3n concreta (puerto), no null. Drone"
   },
   {
    "id": "EODI-2026-00152",
@@ -281,7 +218,7 @@
    "correcto": "atribuido",
    "cita": "Datele preliminare rezultate \u00een urma evalu\u0103rilor efectuate de speciali\u015fti indic\u0103 faptul c\u0103 fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u0163ia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026",
    "enlace": "https://www.bursa.ro/mapn-incarcatura-exploziva-identificata-si-detonata-controlat-la-rachelu-tulcea-fragmentele-provin-dintr-o-drona-rusa-88444954",
-   "motivo": "El valor no cambia, cambia la cita: bursa.ro (Agerpres) cierra esa frase con \u00abconform MApN\u00bb, y financialintelligence.ro reproduce el comunicado del MApN con la misma frase; no son \u00abspeciali\u0219ti\u00bb an\u00f3nimos sino la evaluaci\u00f3n que comunica el MApN. En digi24 la frase quedaba fuera de las comillas del MApN."
+   "motivo": "Se explica y se queda: el MApN lo dice con reserva (\u00abDatele preliminare ... indic\u0103 faptul c\u0103 fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u0163ia Rus\u0103\u00bb), y la regla de atribuci\u00f3n (proceso/atribucion.py) no atribuye con una expresi\u00f3n de duda (\u00abindic\u0103\u00bb). Atribuido cuando el MApN lo afirme sin reserva; hasta entonces la ficha dice confirmado."
   },
   {
    "id": "EODI-2026-00238",
@@ -353,33 +290,6 @@
    "motivo": "En el mar: el estrecho de \u00d6resund, no Malm\u00f6 (puerto de escala del portaaviones)."
   },
   {
-   "id": "EODI-2026-00007",
-   "campo": "estado",
-   "ficha": "desmentido",
-   "correcto": "confirmado",
-   "cita": "Flytrafikken ved flyplassen i Litauens hovedstad Vilnius er stanset etter en mulig droneobservasjon i landets luftrom. Det opplyser det nasjonale kriseh\u00e5ndteringssenteret, if\u00f8lge Reuters.",
-   "enlace": "https://nettavisen.no/nyheter/flyplass-i-vilnius-stengt-etter-droneobservasjon-nato-sender-jagerfly-pa-vingene/s/80-95-75005",
-   "motivo": "Estado: la alerta y la suspensi\u00f3n de vuelos ocurrieron y las anuncia el centro nacional de crisis; lo que se rectifica es la causa (p\u00e1jaros, no dron), que seg\u00fan el encargo no cambia el estado: confirmado, no desmentido. Presencia descartada (era otra cosa). Alerta poco despu\u00e9s de las 13:00 locales (10:00 UTC). Xinhua le\u00eddo en web.archive.org (el original no respondi\u00f3)."
-  },
-  {
-   "id": "EODI-2025-00112",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "\u00ab\u03a3\u03ae\u03bc\u03b5\u03c1\u03b1 \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5, \u03c3\u03c4\u03b9\u03c2 22:16, \u03bf\u03b9 \u03b5\u03b9\u03b4\u03b9\u03ba\u03bf\u03af \u03c4\u03bf\u03c5 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03bf\u03bc\u03af\u03bf\u03c5 \u03ad\u03bb\u03b1\u03b2\u03b1\u03bd \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03b1\u03c0\u03cc \u03b5\u03ba\u03c0\u03c1\u03bf\u03c3\u03ce\u03c0\u03bf\u03c5\u03c2 \u03c4\u03b7\u03c2 Oro Navigacija \u03cc\u03c4\u03b9 \u03b7 \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03b1 \u03ba\u03c5\u03ba\u03bb\u03bf\u03c6\u03bf\u03c1\u03af\u03b1 \u03ad\u03c7\u03b5\u03b9 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03ac \u03b1\u03bd\u03b1\u03c3\u03c4\u03b1\u03bb\u03b5\u03af \u03bb\u03cc\u03b3\u03c9, \u03c3\u03cd\u03bc\u03c6\u03c9\u03bd\u03b1 \u03bc\u03b5 \u03c4\u03b9\u03c2 \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03bc\u03b1\u03c2, \u03c0\u03b9\u03b8\u03b1\u03bd\u03ae\u03c2 \u03c3\u03b5\u03b9\u03c1\u03ac\u03c2 \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03c9\u03bd",
-   "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion",
-   "motivo": "estado: el aeropuerto (Lietuvos oro uostai, empresa estatal operadora) declara el cierre y su causa ante BNS y en Facebook; eso es una autoridad oficial que declara que el incidente (el cierre) ocurri\u00f3, as\u00ed que pasa de notificado a confirmado. Que la causa fueran globos solo afecta a la presencia (descartada). La hora local 22:16 = 19:16 UTC (EEST); lavenir escribe \u00ab21H16 GMT\u00bb, que es un error de "
-  },
-  {
-   "id": "EODI-2025-00164",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "They saw red flashing lights in the area of the Lakenheath ATZ (which, at the time, they believed were drones) at a height in excess of 1500ft.",
-   "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf",
-   "motivo": "estado: hoy notificado; propongo confirmado porque el informe oficial del UK Airprox Board recoge el avistamiento de la tripulaci\u00f3n policial (el suceso ocurri\u00f3 aunque la causa se rectifique a un F-15; rectificar la causa no cambia el estado). Adem\u00e1s el MOD confirm\u00f3 haber investigado la actividad de drones en las bases. El punto de m\u00e1xima aproximaci\u00f3n fue 2 NM al NE de Newmarket, pero los supuestos"
-  },
-  {
    "id": "EODI-2025-00164",
    "campo": "drones",
    "ficha": 1,
@@ -387,15 +297,6 @@
    "cita": "However, after analysis, it was clear to members that the track of the F15 had correlated with the perceived position of the \u2018drone\u2019 and that they had actually sighted a fast-moving object at distance",
    "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf",
    "motivo": "El UK Airprox Board (y la investigaci\u00f3n de RAPCON de Lakenheath: \u00abthe police helicopter pilot was likely reporting, and reacting to, activity of the F15s\u00bb) concluye que el \u00abdron\u00bb era un F-15; CF3: \u00abperceiving them to be drones\u00bb. La autoridad dice que no hubo dron \u2192 desconocido, no 1."
-  },
-  {
-   "id": "EODI-2025-00225",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "Zwar sei ein Detektionsger\u00e4t f\u00fcr Drohnen angeschlagen, was h\u00e4ufiger geschehe. Daraufhin sei die Milit\u00e4rpolizei ausger\u00fcckt, um nachzuschauen, ob irgendetwas zu sehen sei.",
-   "enlace": "https://www.t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html",
-   "motivo": "El portavoz de la OTAN reconoce que salt\u00f3 el detector de drones y sali\u00f3 la polic\u00eda militar: el incidente (la alarma) ocurri\u00f3 \u2192 confirmado, no desmentido. Lo que niega es el dron (\u00abWir gehen davon aus, es war keine Drohne\u00bb; quiz\u00e1 un p\u00e1jaro), que va en presencia (descartada). Rectificar la causa no cambia el estado. (Lo dice el \u00abNato-Sprecher in Geilenkirchen\u00bb de la frase anterior del art\u00edculo.)"
   },
   {
    "id": "EODI-2025-00225",
@@ -553,15 +454,6 @@
   },
   {
    "id": "EODI-2025-00378",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "Sistemele de monitorizare \u0219i supraveghere ale Ministerului Ap\u0103r\u0103rii Na\u021bionale au semnalat evolu\u021bia unor drone \u00een spa\u021biul aerian ucrainean, pe trasee de zbor \u00een apropierea frontierei cu Rom\u00e2nia.",
-   "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
-   "motivo": "El MApN declara el suceso (drones en espacio a\u00e9reo ucraniano junto a la frontera, F-16 desde Borcea, RO-Alert en Tulcea por aviso del MApN); no atribuye a un Estado un dron en Ruman\u00eda."
-  },
-  {
-   "id": "EODI-2025-00378",
    "campo": "objetivo",
    "ficha": {
     "categoria": "base_militar",
@@ -665,24 +557,6 @@
   },
   {
    "id": "EODI-2025-00233",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "atribuido",
-   "cita": "W \u015brod\u0119 nad ranem polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. To sytuacja bez precedensu.",
-   "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
-   "motivo": "Palabras del primer ministro Donald Tusk en la reuni\u00f3n extraordinaria del Gobierno (autoridad polaca); sustituye la cita del ministerio ruso."
-  },
-  {
-   "id": "EODI-2025-00233",
-   "campo": "presencia_dron",
-   "ficha": "no_confirmada",
-   "correcto": "confirmada",
-   "cita": "The Polish military has confirmed that some of the drones were shot down, while searches are ongoing for potential crash sites.",
-   "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140",
-   "motivo": "estado: el Gobierno polaco (Tusk, Sikorski: \u00abNous n'avons aucun doute sur le fait que ce n'\u00e9tait pas accidentel\u00bb) dice que los drones los envi\u00f3 Rusia \u2192 atribuido, no notificado. presencia: el ej\u00e9rcito confirma drones derribados \u2192 confirmada, no no_confirmada. tipo/objetivo: la ficha trata del cierre del aeropuerto Chopin (EPWA), que se cerr\u00f3 y desvi\u00f3 vuelos por la operaci\u00f3n contra los drones; \u00abotr"
-  },
-  {
-   "id": "EODI-2025-00233",
    "campo": "drones",
    "ficha": "desconocido",
    "correcto": {
@@ -701,15 +575,6 @@
    "cita": "Polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. W zwi\u0105zku z tym ruch nad Lotniskiem Chopina, Lotniskiem Modlin i okolicznymi regionami zosta\u0142 wstrzymany",
    "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina",
    "motivo": "estado: el Gobierno polaco (Tusk, Sikorski: \u00abNous n'avons aucun doute sur le fait que ce n'\u00e9tait pas accidentel\u00bb) dice que los drones los envi\u00f3 Rusia \u2192 atribuido, no notificado. presencia: el ej\u00e9rcito confirma drones derribados \u2192 confirmada, no no_confirmada. tipo/objetivo: la ficha trata del cierre del aeropuerto Chopin (EPWA), que se cerr\u00f3 y desvi\u00f3 vuelos por la operaci\u00f3n contra los drones; \u00abotr"
-  },
-  {
-   "id": "EODI-2026-00140",
-   "campo": "estado",
-   "ficha": "confirmado",
-   "correcto": "atribuido",
-   "cita": "Nacion\u0101lie bru\u0146otie sp\u0113ki inform\u0113, ka 14. august\u0101 Balvu novada Rug\u0101ju apk\u0101rtn\u0113 tika notriekts Ukrainas bezpilota lidapar\u0101ts, kas Latvijas gaisa telp\u0101 no Baltkrievijas teritorijas ielidoja",
-   "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
-   "motivo": "estado: hoy confirmado; las Fuerzas Armadas Nacionales de Letonia (comunicado del 20-08-2026 en mil.lv y mod.gov.lv) declaran que el dron era ucraniano: una autoridad oficial atribuye el dron a un Estado, as\u00ed que atribuido (aunque fuera desviado por la guerra electr\u00f3nica rusa). efe.com le\u00eddo por web.archive.org. zona: deriva del lugar."
   },
   {
    "id": "EODI-2025-00071",
@@ -795,15 +660,6 @@
    "cita": "un intento de introducci\u00f3n de sustancias estupefacientes y objetos prohibidos en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
    "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html",
    "motivo": "Objetivo: una c\u00e1rcel es categor\u00eda \u00abotra\u00bb seg\u00fan el encargo; hoy est\u00e1 \u00abgubernamental\u00bb. Inicio: las fuentes (16-1-2026, viernes) solo dicen que ocurri\u00f3 \u00abrecientemente\u00bb; el 16 de enero es el d\u00eda de la noticia, no consta el del suceso, por eso comprobado=false."
-  },
-  {
-   "id": "EODI-2025-00043",
-   "campo": "estado",
-   "ficha": "notificado",
-   "correcto": "confirmado",
-   "cita": "\u201cR\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos lidojumu ierobe\u017eojumu zon\u0101 \u2013 Gaviezes ielas rajon\u0101, kas tika paman\u012bts ar lidostas tehniskajiem l\u012bdzek\u013ciem,\u201d inform\u0113ja R\u012bgas lidosta.",
-   "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
-   "motivo": "Estado: el aeropuerto (autoridad aeroportuaria) declara oficialmente la detecci\u00f3n con sus medios t\u00e9cnicos y LGS par\u00f3 los vuelos ~5 minutos, as\u00ed que confirmado (hoy notificado) e interrupci\u00f3n aeroportuaria (hoy sobrevuelo). Presencia: el aeropuerto habla de \u00abposible\u00bb dron y dice que en su recinto \u00abdronu nav un nav bijis\u00bb; la polic\u00eda no constat\u00f3 su presencia en la zona (no cierra una investigaci\u00f3n):"
   },
   {
    "id": "EODI-2025-00043",
