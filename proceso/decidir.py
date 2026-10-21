@@ -86,7 +86,9 @@ def _abierta(incidente: Documento, negadas: frozenset[str]) -> bool:
     return bool(negadas & {str(f["id"]) for f in incidente.get("fuentes", [])})
 
 
-def decidir_presencia(incidente: Documento, negadas: frozenset[str] = frozenset()) -> Decision:
+def decidir_presencia(
+    incidente: Documento, negadas: frozenset[str] = frozenset(), confirmada: bool = False
+) -> Decision:
     """La presencia del dron por orden de prioridad:
 
     1. rectificación: el último paso de `presencia_historial` (una autoridad lo rectificó; lo
@@ -125,7 +127,9 @@ def decidir_presencia(incidente: Documento, negadas: frozenset[str] = frozenset(
             rectificaciones.DESCARTADA
         ):
             return Decision(rectificaciones.DESCARTADA, str(afirmacion["fuente_id"]), "descartada")
-    for fuente in [] if _abierta(incidente, negadas) else fuentes:
+    # Lo que la deja abierta impide confirmarla de nuevo, pero no baja la que ya estaba confirmada
+    # (`confirmada`, lo guardado): eso lo hacen las rectificaciones y el criterio de presencia.
+    for fuente in fuentes if confirmada or not _abierta(incidente, negadas) else []:
         # Una autoridad lo atribuye a un dron sin dejarlo abierto.
         if declaraciones.de_autoridad(fuente) and declaraciones.atribuye_dron(
             str(fuente.get("frase_origen") or "")
@@ -139,7 +143,9 @@ def decidir_presencia(incidente: Documento, negadas: frozenset[str] = frozenset(
     return Decision("no_confirmada", None, "sin_autoridad")
 
 
-def aplicar(incidente: Documento, negadas: frozenset[str] = frozenset()) -> Documento:
+def aplicar(
+    incidente: Documento, negadas: frozenset[str] = frozenset(), confirmada: bool = False
+) -> Documento:
     """El incidente con el estado y la presencia que deciden sus pruebas, y el titular coherente
     con la presencia (proceso/titulares.py). Sin cambios si ya los tenía."""
     resultado = _historial_vigente(incidente)
@@ -151,7 +157,7 @@ def aplicar(incidente: Documento, negadas: frozenset[str] = frozenset()) -> Docu
         resultado["estado"]["actual"] = estado.valor
         if estado.valor != Estado.DESMENTIDO:
             resultado.get("control", {}).pop("motivo_desmentido", None)
-    presencia = decidir_presencia(resultado, negadas)
+    presencia = decidir_presencia(resultado, negadas, confirmada)
     if presencia.valor != resultado.get("presencia_dron"):
         resultado = titulares.ajustar_incidente(
             {**copy.deepcopy(resultado), "presencia_dron": presencia.valor}
@@ -159,14 +165,16 @@ def aplicar(incidente: Documento, negadas: frozenset[str] = frozenset()) -> Docu
     return resultado
 
 
-def motivo(incidente: Documento, negadas: frozenset[str] = frozenset()) -> str:
+def motivo(
+    incidente: Documento, negadas: frozenset[str] = frozenset(), confirmada: bool = False
+) -> str:
     """El motivo del cambio que hace `aplicar`, para el historial: el del criterio de presencia
     si es una presencia sin base (proceso/presencia.py); si no, la regla que decide."""
     from proceso import presencia
 
     if presencia.sin_base(incidente):
         return presencia.motivo_sin_base(incidente)
-    estado, decision = decidir_estado(incidente), decidir_presencia(incidente, negadas)
+    estado, decision = decidir_estado(incidente), decidir_presencia(incidente, negadas, confirmada)
     return (
         f"un solo sitio decide (proceso/decidir.py): estado por {estado.regla}, presencia "
         f"{decision.valor} por {decision.regla}"
