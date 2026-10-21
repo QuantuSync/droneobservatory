@@ -3,7 +3,7 @@
 Solo lee y no llama a nada: las mismas reglas que corrigen las fichas, pasadas sobre todas. Corre
 en cada control de las fichas (recogida/control_fichas.escribir_estado); sus recuentos salen en
 el resumen diario y, si alguno sube respecto al día anterior, el aviso de silencio lo cuenta
-(recogida/silencio.py). A mano: `python -m recogida.control_fichas auditoria`.
+(recogida/silencio.py). A mano: `python -m recogida.auditoria_fichas`.
 
 - **A, cabecera**: la cabecera de la ficha en la web (el nombre de la instalación o, si no la
   hay, el titular: web/src/componentes/FichaIncidente.tsx) tiene menos de 3 palabras, o un
