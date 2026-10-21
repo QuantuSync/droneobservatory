@@ -163,6 +163,8 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
     assert frozenset({"EODI-2025-00344", "EODI-2025-00447"}) in unir
     assert frozenset({"EODI-2026-00141", "EODI-2026-00531"}) in unir
     assert frozenset({"EODI-2026-00527", "EODI-2026-00159"}) in unir
+    # Copenhague: las notas del 7 de octubre de 2025 hablan del cierre del 22 de septiembre.
+    assert frozenset({"EODI-2025-00154", "EODI-2025-00097"}) in unir
 
 
 def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(

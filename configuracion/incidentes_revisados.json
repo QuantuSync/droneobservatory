@@ -505,6 +505,15 @@
       "conserva": "EODI-2026-00515",
       "motivo": "el mismo suceso: la alerta por un posible dron en el aeropuerto de Núremberg (EDDN) la madrugada del martes 13 de octubre de 2026; 00632 es una nota de nordbayern.de del 19 de octubre que lo recuerda como de la semana anterior («Erst letzte Woche meldeten mehrere Piloten unabhängig voneinander mutmaßliche Drohnensichtungen am Flughafen Nürnberg»), no un suceso nuevo del 19 (el experto, el 20 de octubre: «una noticia posterior que habla de esos avistamientos como de la semana pasada, sin ser un hecho nuevo»); su fuente pasa a 00515, cuya presencia sigue sin confirmar",
       "motivo_en": "the same event: the alert over a possible drone at Nuremberg airport (EDDN) in the early hours of Tuesday 13 October 2026; 00632 is a nordbayern.de report of 19 October that recalls it as the previous week's («Erst letzte Woche meldeten mehrere Piloten unabhängig voneinander mutmaßliche Drohnensichtungen am Flughafen Nürnberg»), not a new event on the 19th (the expert model, 20 October: a later report about those sightings «last week», not a new fact); its source moves to 00515, whose drone presence remains unconfirmed"
+    },
+    {
+      "registros": [
+        "EODI-2025-00154",
+        "EODI-2025-00097"
+      ],
+      "conserva": "EODI-2025-00154",
+      "motivo": "el mismo suceso: el cierre del espacio aéreo del aeropuerto de Copenhague la noche del lunes 22 de septiembre de 2025; 00097 se abrió con las notas del 7 de octubre en las que el aeropuerto dice que sus datos documentan drones aquella noche («luftrommet ble stengt i flere timer 22. september»), no un suceso nuevo del 7 de octubre; sus fuentes pasan a 00154, cuya presencia sigue como la dejó la policía danesa el 25 de junio de 2026",
+      "motivo_en": "the same event: the closure of Copenhagen airport's airspace on the night of Monday 22 September 2025; 00097 was opened from the reports of 7 October in which the airport says its data documented drones that night (\"luftrommet ble stengt i flere timer 22. september\"), not a new event on 7 October; its sources move to 00154, whose drone presence stays as the Danish police left it on 25 June 2026"
     }
   ],
   "reextraer": [
