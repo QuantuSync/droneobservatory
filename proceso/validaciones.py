@@ -257,11 +257,15 @@ def errores_ubicacion(documento: Documento) -> list[Error]:
 def errores_presencia(documento: Documento) -> list[Error]:
     """Coherencia del criterio de presencia: un incidente confirmado o atribuido cuya fuente
     oficial atribuye el suceso a un dron (sin dejarlo abierto) tiene el dron confirmado. Lo que
-    dice una autoridad en su propio documento sobre la presencia manda."""
-    from proceso import declaraciones
+    dice una autoridad en su propio documento sobre la presencia manda, y también la presencia
+    revisada a mano con su cita (EODI-2025-00378: el MApN sitúa los drones en el espacio aéreo
+    ucraniano)."""
+    from proceso import decidir, declaraciones
 
     estado = _dict(documento.get("estado")).get("actual")
     if estado not in (Estado.CONFIRMADO, Estado.ATRIBUIDO):
+        return []
+    if documento.get("id") in decidir.presencias_revisadas():
         return []
     if documento.get("presencia_dron") != "no_confirmada":
         return []

@@ -125,6 +125,11 @@ def _revisadas() -> dict[str, str]:
     }
 
 
+def presencias_revisadas() -> dict[str, str]:
+    """{incidente: presencia} revisada a mano con su cita: manda también en la validación."""
+    return _revisadas()
+
+
 def _abierta(incidente: Documento, negadas: frozenset[str]) -> bool:
     """Lo que deja abierta la presencia aunque una autoridad la atribuya a un dron (las mismas
     condiciones que proceso/presencia.pendientes): un desmentido,
