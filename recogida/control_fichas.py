@@ -1216,6 +1216,11 @@ def reglas_deterministas(ctx: Contexto) -> None:
             if preciso is not None:
                 nuevo = preciso
                 motivos.append(f"lugar en {preciso['lugar']['suceso']}, la instalación de la ficha")
+        if incidentes.objetivo_es_la_localidad(nuevo.get("objetivo"), nuevo["lugar"]):
+            nuevo = {k: v for k, v in nuevo.items() if k != "objetivo"}
+            motivos.append(
+                "sin objetivo: «otra» con el nombre de la localidad no es una instalación"
+            )
         sin_buque = incidentes.lugar_sin_buque(nuevo["lugar"], buques.textos_de(nuevo))
         if sin_buque is not nuevo["lugar"]:
             nuevo = {**nuevo, "lugar": sin_buque}
@@ -2388,6 +2393,7 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "experto": gasto_experto(almacen, ahora, anterior.get("experto") or {}),
         "api": gasto_api(almacen, ahora, anterior.get("api") or {}),
         "criticos_esperando": criticos_esperando(almacen),
+        "auditoria": auditoria_del_dia(almacen, ahora, anterior.get("auditoria") or {}),
     }
     if segunda is not None:
         datos["segunda_lectura"] = segunda
@@ -2397,6 +2403,26 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
     temporal = ruta.with_suffix(".tmp")
     temporal.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
     temporal.replace(ruta)
+
+
+# Días que se guardan de la auditoría de las fichas (proceso/auditoria_fichas.py).
+DIAS_AUDITORIA = 3
+
+
+def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
+    """Los recuentos de la auditoría de las fichas vigentes, por día (el último de cada día) y los
+    identificadores de ahora. Un fallo de la auditoría no para el control: queda lo de antes."""
+    from proceso import auditoria_fichas
+
+    try:
+        resultado = auditoria_fichas.auditar(almacen.incidentes())
+    except Exception as error:
+        registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])
+        return anterior
+    dias = {d: v for d, v in (anterior.get("dias") or {}).items()
+            if d >= coste.dia(ahora - timedelta(days=DIAS_AUDITORIA))}  # fmt: skip
+    dias[coste.dia(ahora)] = auditoria_fichas.recuentos(resultado)
+    return {"fecha": _iso(ahora), "dias": dict(sorted(dias.items())), "ids": resultado}
 
 
 # Días (de Madrid) que se guardan del gasto por modelo.

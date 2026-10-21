@@ -65,8 +65,22 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    base el 19/10/2026: de 176 incidentes con objetivo OACI del nomenclátor y punto, solo cambia
    ese. Las cárceles no están en el nomenclátor (no tienen código ni tipo propio), así que la regla
    aún no las alcanza.
+
+   Desde el 21 de octubre de 2026: con el punto del candidato (el de la ciudad) y un objetivo
+   «otra» con el nombre de la ciudad, la instalación que nombra sin duda el titular pasa a ser el
+   lugar y el objetivo, con su categoría y su OACI (EODI-2026-00131, «aeropuerto de Berlín»:
+   Berlin Brandenburg, EDDB; EODI-2026-00322, Hamburgo: EDDH), si el punto está a 30 km o menos.
+   Y un objetivo «otra» que se llama como la localidad del suceso no es una instalación: no se
+   guarda (EODI-2026-00648, «Józefów · Otro lugar»; también al crear la ficha,
+   `incidentes.objetivo_es_la_localidad`). La cabecera de la ficha en la web es el nombre de la
+   instalación solo si tiene categoría propia; si no, el titular, una sola vez.
 3. **Estado.** Confirmado o atribuido solo con un paso de una fuente oficial (una autoridad, leída
-   o citada); si no, vuelve a notificado con el motivo en los dos idiomas.
+   o citada); si no, vuelve a notificado con el motivo en los dos idiomas. Una declaración cuya
+   cita solo dice quién habla y el verbo de decir («Podinsp. Marta Sulowska z Komendy Stołecznej
+   Policji przekazała», EODI-2026-00648; `declaraciones.sin_afirmacion`, en las lenguas que lee
+   el observatorio) no es una fuente oficial: ni da el estado ni confirma la presencia hasta que
+   tenga una cita con lo que dijo. El extractor guarda entonces la frase que sigue en el texto
+   («… że pracownicy Wojskowego Instytutu …»), o descarta la declaración si no la hay.
 4. **Duplicados** (también entre idiomas). Pares candidatos: del mismo país; del mismo día o la
    misma noche si las dos fechas las escribe una fuente (a 30 horas como mucho), o a 48 horas si
    alguna es solo la de publicación (entonces cuenta también la primera noticia); en el mismo
@@ -301,6 +315,18 @@ una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales
   unió, las que retuvo y lo que gastó, con hasta 5 ejemplos.
 - La vigilancia solo abre incidencia («control_fichas») si el propio control falla 3 pasadas
   seguidas; lo que corrige o retiene no es un problema.
+
+## Auditoría de las fichas (desde el 21 de octubre de 2026)
+
+`proceso/auditoria_fichas.py` cuenta, en cada pasada del control y sin llamar a nada, las fichas
+vigentes con cada fallo conocido: A, cabecera de una palabra; B, instalación no reconocida; C,
+cita de autoridad vacía; D, titular sin respaldo; E, presencia sin base; F, lugar (buque, mar
+marcado como interior, fecha de publicación cuando una fuente da otra); G, nombres (punto anterior
+sin nombre, titular publicado con otra forma de la ciudad). Los recuentos del día y los
+identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
+cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
+vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
+base: `python -m recogida.auditoria_fichas [--base …] [--json]`.
 
 ## Correcciones a mano
 

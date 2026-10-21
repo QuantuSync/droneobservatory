@@ -670,7 +670,10 @@ def fallos_de_ficha(incidente: Documento) -> list[str]:
 
 
 def oficial(fuente: Documento) -> bool:
-    """Fuente oficial: una autoridad, leída directamente o citada por un medio."""
+    """Fuente oficial: una autoridad, leída directamente o citada por un medio. No la que solo
+    guarda quién habla y el verbo de decir (proceso/declaraciones.cita_vacia)."""
+    if declaraciones.cita_vacia(fuente):
+        return False
     return bool(fuente.get("es_autoridad")) or fuente.get("fiabilidad") in {"A", "B"}
 
 

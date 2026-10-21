@@ -2523,6 +2523,36 @@
         "fecha": "2026-10-21",
         "en": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314 (original)"
       }
+    },
+    {
+      "incidente": "EODI-2026-00648",
+      "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+      "medio": "wiadomosci.gazeta.pl",
+      "fecha": "2026-10-20",
+      "idioma": "pl",
+      "frase": "pracownicy Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki utracili łączność z maszyną ćwiczebną, co doprowadziło do jej upadku na działkę w Józefowie.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Komenda Stołeczna Policji",
+        "pais": "PL",
+        "categoria": "policia",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00648",
+      "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+      "medio": "wiadomosci.gazeta.pl",
+      "fecha": "2026-10-20",
+      "idioma": "pl",
+      "frase": "Stołeczna policja uspokaja, że to nie rosyjski dron, tylko maszyna ćwiczebna Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki, z którą operatorzy stracili łączność.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html (original)"
+      }
     }
   ],
   "titulares": [

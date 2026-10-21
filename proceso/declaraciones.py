@@ -121,13 +121,25 @@ def de_autoridad(fuente: Documento) -> bool:
     abc.es)»)."""
     medio = str(fuente.get("medio", ""))
     citada = _CITADA.match(medio)
-    return bool(fuente.get("es_autoridad")) and not no_es_autoridad(
-        citada["autoridad"] if citada else medio
+    return (
+        bool(fuente.get("es_autoridad"))
+        and not no_es_autoridad(citada["autoridad"] if citada else medio)
+        and not cita_vacia(fuente)
+    )
+
+
+def cita_vacia(fuente: Documento) -> bool:
+    """Una fuente de autoridad cuya cita no dice nada: solo quién habla y el verbo de decir
+    (EODI-2026-00648). No vale como declaración: ni confirma el estado ni la presencia."""
+    return bool(fuente.get("es_autoridad")) and sin_afirmacion(
+        str(fuente.get("frase_origen") or "")
     )
 
 
 def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> list[dict[str, Any]]:
-    """Las declaraciones cuya frase está en el texto de su fuente, con la frase recortada."""
+    """Las declaraciones cuya frase está en el texto de su fuente, con la frase recortada. Una
+    frase que solo dice quién habla («… przekazała») se cambia por lo que dijo, si el texto lo
+    trae detrás, o la declaración no vale."""
     resultado = []
     for declaracion in declaraciones:
         numero = declaracion.get("fuente")
@@ -137,8 +149,69 @@ def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> l
         if _normal(frase) not in _normal(textos[numero - 1]):
             continue
         palabras = frase.split()[:MAX_PALABRAS_FRASE]
+        if sin_afirmacion(" ".join(palabras)):
+            # Solo quién habla: vale lo que dijo, si el texto lo trae detrás; si no, nada.
+            contenido = _con_contenido(" ".join(palabras), textos[numero - 1])
+            if contenido is None:
+                continue
+            palabras = contenido.split()
         resultado.append({**declaracion, "frase": " ".join(palabras)})
     return resultado
+
+
+# Verbos de decir (y de confirmar) con que acaba una cita que no dice nada: solo quién habla
+# («Podinsp. Marta Sulowska z Komendy Stołecznej Policji przekazała», EODI-2026-00648).
+_DECIR = (
+    r"dijo|declaró|afirmó|explicó|informó|señaló|indicó|aseguró|confirmó|añadió|precisó|detalló|"
+    r"comunicó|manifestó|apuntó|said|says|stated|states|told|explained|reported|added|"
+    r"confirmed|announced|noted|declared|sagte|sagt|erklärte|erklärt|teilte mit|bestätigte|"
+    r"berichtete|betonte|sagte am \w+|a déclaré|a dit|a indiqué|a précisé|a expliqué|"
+    r"a confirmé|a affirmé|déclare|indique|précise|explique|ha dichiarato|ha detto|ha spiegato|"
+    r"ha confermato|ha riferito|ha affermato|dichiara|spiega|przekazała|przekazał|oznajmiła|"
+    r"oznajmił|powiedziała|powiedział|poinformowała|poinformował|potwierdziła|potwierdził|"
+    r"wyjaśniła|wyjaśnił|dodała|dodał|przekazuje|mówi|zei|zegt|verklaarde|meldde|liet weten|"
+    r"bevestigde|sagde|siger|oplyste|oplyser|udtalte|bekræfter|bekræftede|sa|sier|opplyser|"
+    r"opplyste|säger|uppgav|uppger|bekräftade|disse|afirmou|declarou|explicou|informou|"
+    r"confirmou|a declarat|a spus|a precizat|a explicat|a confirmat|a transmis|sakė|teigė|"
+    r"pranešė|patvirtino|sacīja|paziņoja|ütles|teatas|sanoi|kertoi|řekl|řekla|uvedl|uvedla|"
+    r"sdělil|sdělila|povedal|povedala|uviedol|uviedla|заявив|заявила|повідомив|повідомила|"
+    r"сказав|сказала|заявил|сообщил|сообщила|сказал|δήλωσε|ανέφερε|mondta|közölte|заяви|"
+    r"каза|съобщи"
+)
+_SIN_AFIRMACION = re.compile(
+    rf"^[^,;:\"«»“”„]{{0,160}}?(?<!\w)(?:{_DECIR})(?!\w)"
+    r"(?:\s+(?:[\"„“«][^\"”»]{0,40}[\"”»]|w rozmowie z \S+|to \S+|a \S+|à \S+))?"
+    r"[\s:,.…\"»”–—-]*$",
+    re.IGNORECASE,
+)
+
+
+def sin_afirmacion(frase: str) -> bool:
+    """La cita no afirma nada: solo quién habla y el verbo de decir, sin lo que dijo («… z Komendy
+    Stołecznej Policji przekazała», «The police said:»). Una declaración así no confirma el
+    estado ni la presencia hasta tener una cita con contenido."""
+    return bool(_SIN_AFIRMACION.match(frase.strip()))
+
+
+def _con_contenido(frase: str, texto: str) -> str | None:
+    """Lo que dijo quien habla en una cita partida: la frase del texto que sigue al verbo de decir
+    (hasta el final de la oración, como mucho MAX_PALABRAS_FRASE palabras), literal. None si el
+    texto no lo trae."""
+    patron = r"\s+".join(re.escape(p) for p in frase.split())
+    encontrada = re.search(patron, texto, re.IGNORECASE)
+    if encontrada is None:
+        return None
+    resto = texto[encontrada.end() :]
+    # Lo que sigue al verbo: el destinatario entre comillas y «że», «que», «that», «dass»…
+    inicio = re.match(r"[\s:,]*(?:[\"„“«][^\"”»]{0,40}[\"”»][\s,]*)?"
+                      r"(?:(?:że|ze|que|that|dass|che|dat|at|att|kad|jog)(?!\w)|qu')?\s*",
+                      resto)  # fmt: skip
+    resto = resto[inicio.end() if inicio else 0 :]
+    oracion = re.split(r"(?<=[.!?])\s|\n", resto, maxsplit=1)[0].strip(' "”»')
+    contenido = " ".join(oracion.split()[:MAX_PALABRAS_FRASE]).rstrip(",;:")
+    if len(contenido.split()) < 3:
+        return None
+    return contenido if _normal(contenido) in _normal(texto) else None
 
 
 def habla_de_drones(frase: str) -> bool:
