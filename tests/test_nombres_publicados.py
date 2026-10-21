@@ -95,8 +95,8 @@ def test_ninguna_fecha_contradictoria() -> None:
             "EODI-2026-00268",
             {"es": "RAF Akrotiri", "en": "RAF Akrotiri"},
             {
-                "es": "RAF Akrotiri (base británica), Chipre",
-                "en": "RAF Akrotiri (British base), Cyprus",
+                "es": "Akrotiri (base británica), Chipre",
+                "en": "Akrotiri (British base), Cyprus",
             },
         ),
     ],
