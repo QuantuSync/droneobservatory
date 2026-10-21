@@ -563,6 +563,25 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2026-00158",
+      "enlace": "https://www.mapn.ro/cpresa/19420_x",
+      "medio": "mapn.ro",
+      "fecha": "2026-09-29",
+      "idioma": "ro",
+      "frase": "drona a avut încărcătură explozivă, care s-a detonat automat în momentul impactului cu solul.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://www.mapn.ro/cpresa/19420_x (original)"
+      },
+      "oficial": true,
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
       "incidente": "EODI-2025-00444",
       "enlace": "https://nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370",
       "medio": "nrc.nl",
