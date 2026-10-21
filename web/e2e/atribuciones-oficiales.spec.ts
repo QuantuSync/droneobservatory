@@ -25,8 +25,17 @@ const TELEFONOS = [
 const ESCRITORIO = { nombre: "escritorio", width: 1440, height: 900 };
 const ES = textos("es");
 
-/** Las atribuciones aplicadas, con su autoridad escrita, su cita y su enlace. */
-const APLICADAS = [
+/** Las atribuciones aplicadas: a qué país (Rusia si no se dice) y, las primeras, con su autoridad
+ * escrita, su cita y su enlace. */
+const APLICADAS: {
+  id: string;
+  pais?: string;
+  actor?: string;
+  autoridad?: string;
+  cita?: string;
+  enlace?: string;
+  investigacion?: string;
+}[] = [
   {
     id: "EODI-2026-00134",
     autoridad: "el Gobierno federal alemán (Bundesregierung)",
@@ -55,9 +64,16 @@ const APLICADAS = [
       "https://www.presidency.ro/ro/media/comunicate-de-presa/declaratia-de-presa-a-presedintelui-romaniei-nicusor-dan-in-urma-incidentului-grav-cauzat-de-o-drona-ruseasca-in-galati",
     investigacion: "anchetă completă",
   },
+  // Desde el 21 de octubre de 2026, con las citas revisadas de tests/referencia/fichas.json:
+  // Varsovia (el primer ministro de Polonia), Rugāji (las Fuerzas Armadas de Letonia, dron
+  // ucraniano llegado desde Bielorrusia) y el puerto de Constanza (el MApN, dron marino de una
+  // operación ucraniana).
+  { id: "EODI-2025-00233" },
+  { id: "EODI-2026-00140", pais: "UA", actor: "Ucrania" },
+  { id: "EODI-2026-00152", pais: "UA", actor: "Ucrania" },
 ];
-/** Constanza, Buzău, Lituania y Wunstorf: sin atribuir. */
-const SIN_ATRIBUIR = ["EODI-2026-00152", "EODI-2026-00125", "EODI-2026-00090", "EODI-2026-00276"];
+/** Buzău, Lituania y Wunstorf: sin atribuir. */
+const SIN_ATRIBUIR = ["EODI-2026-00125", "EODI-2026-00090", "EODI-2026-00276"];
 const SENALA = /\b(rus[oa]s?|russian|ucranian[oa]s?|ukrainian|controlad[oa]|controlled|respaldad[oa]|backed)\b/i;
 
 async function preparar(contexto: BrowserContext, baseURL: string | undefined) {
@@ -114,12 +130,17 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
         await entrar(page, `/${aplicada.id}`);
         const ficha = page.getByRole("complementary", { name: new RegExp(aplicada.id) });
         await expect(ficha).toBeVisible();
-        // Junto al estado, el marcador con la bandera rusa y a quién se atribuye.
+        // Junto al estado, el marcador con la bandera del país y a quién se atribuye.
+        const actor = aplicada.actor ?? "Rusia";
         const marca = ficha.locator("[data-estado-atribuido] svg[data-atribuido]");
-        await expect(marca).toHaveAttribute("data-atribuido", "RU");
-        await expect(ficha.locator("[data-estado-atribuido]")).toContainText("Rusia");
+        await expect(marca).toHaveAttribute("data-atribuido", aplicada.pais ?? "RU");
+        await expect(ficha.locator("[data-estado-atribuido]")).toContainText(actor);
+        if (aplicada.autoridad === undefined || aplicada.cita === undefined || aplicada.enlace === undefined) {
+          await capturar(page, `ficha-${aplicada.id}-${nombre}`);
+          continue;
+        }
         // A quién, según quién (traducida, con el original), la cita literal y su enlace.
-        await expect(ficha).toContainText(ES.ficha.atribuidoA("Rusia", aplicada.autoridad));
+        await expect(ficha).toContainText(ES.ficha.atribuidoA(actor, aplicada.autoridad));
         // Desde el 14 de octubre de 2026 la cita va traducida, con el original en «Ver original».
         const atribucion = ficha.locator("[data-cita-atribucion]").first().locator("xpath=ancestor::dd[1]");
         await expect(atribucion.locator("[data-cita-original]")).toHaveText(`«${aplicada.cita}»`);
@@ -170,7 +191,7 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       await capturar(page, `filtros-${nombre}`);
     });
 
-    test(`${nombre}: Constanza, Buzău, Lituania y Wunstorf, sin atribuir y sin señalar a nadie`, async ({
+    test(`${nombre}: Buzău, Lituania y Wunstorf, sin atribuir y sin señalar a nadie`, async ({
       page,
       context,
       baseURL,
