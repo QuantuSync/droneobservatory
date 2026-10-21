@@ -162,3 +162,18 @@ def test_el_homonimo_lo_decide_la_fuente() -> None:
     jozefow = decidir.decidir_datos(_copia("EODI-2026-00648"))["lugar"]
     assert jozefow["localidad"] == "Józefów"
     assert abs(jozefow["punto"]["lat"] - 52.38) < 0.05
+
+
+def test_la_presencia_revisada_manda_sobre_la_cita_revisada() -> None:
+    # Tulcea: la cita revisada del MApN confirma la alerta; la revisión de la presencia, con el
+    # radar sin entradas en el espacio aéreo nacional, dice que el dron no está confirmado.
+    tulcea = _copia("EODI-2025-00378")
+    tulcea["afirmaciones"] = [
+        *tulcea.get("afirmaciones", []),
+        {
+            "campo": "presencia_dron",
+            "valor": "confirmada",
+            "fuente_id": "revisada-94fd17f7c9b21fcd-declaracion-1",
+        },
+    ]
+    assert decidir.aplicar(tulcea, frozenset(), True)["presencia_dron"] == "no_confirmada"

@@ -162,13 +162,15 @@ def decidir_presencia(
     if pasos:
         return Decision(str(pasos[-1]["valor"]), pasos[-1].get("fuente_id"), "rectificacion")
     fuentes = incidente.get("fuentes", [])
+    # La presencia revisada a mano manda sobre lo que afirma una cita revisada: la cita del MApN
+    # en EODI-2025-00378 confirma la alerta, y la revisión dice que el dron no entró en Rumanía.
+    if incidente["id"] in _revisadas():
+        return Decision(_revisadas()[incidente["id"]], REVISADA + "titular", "revision")
     for afirmacion in incidente.get("afirmaciones", []):
         if afirmacion.get("campo") == "presencia_dron" and str(
             afirmacion.get("fuente_id", "")
         ).startswith(REVISADA):
             return Decision(str(afirmacion["valor"]), str(afirmacion["fuente_id"]), "revision")
-    if incidente["id"] in _revisadas():
-        return Decision(_revisadas()[incidente["id"]], REVISADA + "titular", "revision")
     for fuente in fuentes:
         if fuente.get("documento_oficial") and "presencia_dron" in fuente.get(
             "campos_respaldados", []
