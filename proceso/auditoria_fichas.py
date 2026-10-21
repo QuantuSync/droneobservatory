@@ -27,7 +27,7 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
 
 import re
 from collections.abc import Callable, Iterable
-from datetime import datetime
+from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from esquema import Documento
@@ -158,8 +158,12 @@ def _fecha_de_publicacion(incidente: Documento) -> bool:
             continue
         zona = fechas.zona(fuente.get("pais") or incidente["lugar"].get("pais")) or ZoneInfo("UTC")
         frase = str(fuente.get("frase_origen") or "")
+        propia = publicacion.astimezone(zona).date()
         for lectura in fechas.leer(frase, publicacion, zona, fuente.get("idioma")):
-            if lectura.origen == "explicita" and lectura.dia.isoformat() != dia:
+            # La fecha de la propia nota («– DW – 10.11.2025», EODI-2025-00125) no es la del
+            # suceso.
+            if lectura.origen == "explicita" and lectura.dia not in (date.fromisoformat(dia),
+                                                                       propia):  # fmt: skip
                 return True
     return False
 

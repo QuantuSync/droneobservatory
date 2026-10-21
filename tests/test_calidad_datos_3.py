@@ -809,3 +809,25 @@ def test_el_vocabulario_describe_cada_indicador_y_cada_origen_del_inicio() -> No
     assert set(vocabulario["origenes_inicio"]) == {
         "explicita", "relativa", "oficial", "parte", "publicacion",
     }  # fmt: skip
+
+
+def test_sin_inicio_en_la_ficha_vale_el_dia_que_escribe_una_frase() -> None:
+    # EODI-2025-00153 (Riga): la nota del 6 de febrero de 2025 habla del incidente «2025. gada
+    # 13. janvārī»; la ficha no dio el inicio y quedaba la fecha de publicación.
+    articulos = [
+        {"url": "https://lsm.lv/1", "fecha": "2025-02-06T10:00:00Z", "pais": "LV", "idioma": "lv",
+         "titular": "Incidents ar bezpilota gaisa kuģi Rīgas lidostā"},
+    ]  # fmt: skip
+    campos = {"lugar_suceso": {"valor": "Rīgas lidosta", "fuente": 1, "frase": (
+        "2025. gada 13. janvārī Rīgas lidostā notikušā bezpilota gaisa kuģu (BGK) incidenta laikā"
+    )}}  # fmt: skip
+    hecho = fechas.inicio_de_ficha(campos, [], articulos, "2025-02-06T10:00:00Z", "LV")
+    assert (hecho.valor, hecho.precision, hecho.origen) == (
+        momento("2025-01-13T00:00"), "dia", "explicita",
+    )  # fmt: skip
+    # Dos días escritos distintos: no se sabe cuál; queda la publicación.
+    campos["tipo"] = {"valor": "sobrevuelo", "fuente": 1, "frase": "un nuevo dron el 2 de febrero"}
+    articulos[0]["idioma"] = "es"
+    campos["lugar_suceso"]["frase"] = "el incidente del 13 de enero en el aeropuerto de Riga"
+    hecho = fechas.inicio_de_ficha(campos, [], articulos, "2025-02-06T10:00:00Z", "LV")
+    assert hecho.origen == "publicacion"

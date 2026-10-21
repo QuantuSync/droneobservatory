@@ -488,6 +488,25 @@ def inicio_de_ficha(
         if pasado is not None:
             return pasado
         local = publicacion.astimezone(medio or zona_suceso).strftime("%Y-%m-%d %H:%M")
+        # Una frase escribe el día, anterior a la publicación («2025. gada 13. janvārī Rīgas
+        # lidostā», EODI-2025-00153, publicada el 6 de febrero): el suceso es de ese día, si
+        # todas las que lo escriben dicen el mismo.
+        idioma = primero.get("idioma") if primero else None
+        hoy = publicacion.astimezone(medio or zona_suceso).date()
+        escritos = {
+            lectura.dia
+            for frase in frases_ficha
+            for lectura in leer(frase, publicacion, medio or zona_suceso, idioma)
+            if lectura.origen == EXPLICITA and lectura.dia < hoy
+        }
+        if len(escritos) == 1:
+            dia = next(iter(escritos))
+            return Resolucion(
+                datetime.combine(dia, time(0, 0), UTC), "dia", EXPLICITA,
+                f"la ficha no da el inicio; una frase escribe el día {dia} (nota publicada el "
+                f"{local}, hora local del medio)",
+                corregido=True,
+            )  # fmt: skip
         return Resolucion(
             publicacion, "aproximada", PUBLICACION,
             f"la ficha no da el inicio: fecha de publicación de la primera nota ({local}, hora "
