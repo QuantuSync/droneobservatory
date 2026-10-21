@@ -350,10 +350,15 @@ def precisar(incidente: Documento, nom: Nomenclator, ahora: datetime) -> Documen
         resultado = {**incidente, "lugar": {**nuevo, "geocodificacion": "nomenclator"}}
         return None if resultado == incidente else resultado
     objetivo = Objetivo.de_lugar(sitio)
+    actual = str((incidente.get("objetivo") or {}).get("nombre") or "")
+    # El nombre que ya lleva la ficha es uno de los de la instalación («Brians 1», de una revisión
+    # con su cita): se conserva. Si no, cada hora lo cambiaban la revisión y esta regla
+    # (EODI-2025-00463, hasta el 21 de octubre de 2026).
+    propio = normalizar(actual) in {normalizar(n) for n in (sitio.nombre, *sitio.alias)}
     datos_objetivo: Documento = {
         **{k: v for k, v in (incidente.get("objetivo") or {}).items() if k == "uso"},
         "categoria": objetivo.categoria,
-        "nombre": objetivo.nombre,
+        "nombre": actual if actual and propio else objetivo.nombre,
     }
     if objetivo.oaci and objetivo.categoria == "aeropuerto":
         datos_objetivo["oaci"] = objetivo.oaci
