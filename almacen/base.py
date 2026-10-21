@@ -498,8 +498,12 @@ class Almacen:
     ) -> None:
         """Guarda la versión nueva del incidente. Las afirmaciones repetidas no se escriben, y una
         versión igual a la guardada no deja cambio en el historial. Lo que rectificó una autoridad
-        oficial en la presencia del dron se conserva (proceso/rectificaciones.mantener)."""
-        documento = rectificaciones.mantener(documento, self.incidente(documento["id"]))
+        oficial en la presencia del dron se conserva (proceso/rectificaciones.mantener). El estado
+        y la presencia los decide un solo sitio a partir de las pruebas (proceso/decidir.py)."""
+        from proceso import decidir
+
+        entrada = rectificaciones.mantener(documento, self.incidente(documento["id"]))
+        documento = decidir.aplicar(entrada)
         documento = sin_afirmaciones_repetidas(documento)
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:
@@ -516,6 +520,11 @@ class Almacen:
                 },
             )
             self._guardar_afirmaciones(documento["id"], documento.get("afirmaciones", []))
+        if documento is not entrada:
+            # Lo que cambió la decisión queda en el historial con la regla que lo decide.
+            from proceso import presencia
+
+            presencia.anotar(self, entrada, documento, decidir.motivo(entrada))
 
     def guardar_ataque_ucrania(self, documento: Documento, ahora: datetime) -> None:
         errores = validar_ataque_ucrania(documento, ahora)
