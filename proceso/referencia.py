@@ -61,7 +61,8 @@ def valores(documento: Documento) -> dict[str, Any]:
     """Los datos de la ficha tal y como se publican."""
     ficha = incidentes.aplicar_reglas(documento)
     # El estado y la presencia, como los decide el guardado (proceso/decidir.py).
-    ficha = coherencia.coherente(decidir.aplicar(ficha))
+    confirmada = ficha.get("presencia_dron") == "confirmada"
+    ficha = coherencia.coherente(decidir.aplicar(ficha, confirmada=confirmada))
     objetivo = ficha.get("objetivo")
     if not objetivo or incidentes.objetivo_es_la_localidad(objetivo, ficha.get("lugar") or {}):
         objetivo = None

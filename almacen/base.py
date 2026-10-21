@@ -505,7 +505,8 @@ class Almacen:
         guardado = self.incidente(documento["id"])
         entrada = rectificaciones.mantener(documento, guardado)
         negadas = frozenset(self._negadas_por_el_control(documento["id"]))
-        documento = decidir.aplicar(entrada, negadas)
+        confirmada = guardado is not None and guardado.get("presencia_dron") == "confirmada"
+        documento = decidir.aplicar(entrada, negadas, confirmada)
         documento = sin_afirmaciones_repetidas(documento)
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:
@@ -535,7 +536,7 @@ class Almacen:
         ):
             from proceso import presencia
 
-            presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas))
+            presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas, confirmada))
 
     def _negadas_por_el_control(self, id_: str) -> set[str]:
         """Las fuentes del incidente en que la verificación vigente del control de las fichas lee
