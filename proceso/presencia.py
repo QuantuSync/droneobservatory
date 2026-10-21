@@ -2,13 +2,15 @@
 
 Dos valores para los incidentes vigentes (además de descartada, que no se toca):
 
-- confirmada: una autoridad competente (gestor aeroportuario, gestor de navegación aérea,
-  policía, fuerzas armadas, ministerio, gobierno, fiscalía, autoridad de aviación civil) actúa
-  o declara atribuyendo el suceso a un dron: su declaración citada (proceso/declaraciones.py)
-  o un cierre por dron que cuenta la fuente («stilgelegd na melding drone»). No se piden
-  restos, grabación ni detección por sensor;
+- confirmada: una autoridad (gestor aeroportuario, gestor de navegación aérea, policía, fuerzas
+  armadas, ministerio, gobierno, fiscalía, autoridad de aviación civil) dice que lo que se vio,
+  detectó, derribó o causó el efecto era un dron: su declaración citada lo nombra
+  (proceso/declaraciones.atribuye_dron). No se piden restos, grabación ni detección por sensor;
 - no_confirmada: la propia autoridad lo deja abierto («posible dron», «objeto no
-  identificado», «se investiga si era un dron») o ninguna autoridad lo atribuye a un dron.
+  identificado», «se investiga si era un dron»), actúa sin atribuirlo (un cierre, cazas o una
+  patrulla no son atribución: desde el 21 de octubre de 2026 la actuación ya no la confirma) o
+  solo lo cuentan la prensa o los testigos. La confirmada sin base pasa a no_confirmada
+  (quitar_sin_base), salvo las dudosas (dudosa_por), que van al experto.
 
 Si una fuente cuenta que se buscó el dron y no se encontró («allerdings konnte eine Drohne nicht
 gefunden werden», «Politiet fandt ingen droner»), la presencia no puede quedar confirmada: ni
@@ -81,8 +83,7 @@ def atribuida_por_autoridad(incidente: Documento) -> bool:
     declaración que no nombra el dron («un objeto misterioso», EODI-2026-00515) no basta."""
     return any(
         declaraciones.de_autoridad(f)
-        and declaraciones.habla_de_drones(frase := str(f.get("frase_origen") or ""))
-        and not declaraciones.abierto(frase)
+        and declaraciones.atribuye_dron(str(f.get("frase_origen") or ""))
         for f in incidente["fuentes"]
     )
 
@@ -426,23 +427,10 @@ def por_actuacion(incidente: Documento) -> Documento | None:
 
 
 def aplicar(incidente: Documento) -> Documento:
-    """El incidente con la presencia confirmada por la actuación de la autoridad (un cierre o una
-    intervención por dron), si el criterio lo
-    alcanza y nada lo impide (desmentido, documento oficial, autoridad que lo deja abierto), y
-    con el titular coherente con la presencia."""
-    incidente = cierre_de_pista(incidente)
-    resultado = incidente
-    if (
-        incidente.get("presencia_dron") == "no_confirmada"
-        and incidente["estado"]["actual"] != Estado.DESMENTIDO
-        and not documento_oficial_decide(incidente)
-        and not autoridad_lo_deja_abierto(incidente)
-    ):
-        fuente = por_actuacion(incidente)
-        if fuente is not None:
-            resultado = {**incidente, "afirmaciones": list(incidente.get("afirmaciones", []))}
-            declaraciones.confirmar_presencia(resultado, fuente["id"])
-    return titulares.ajustar_incidente(resultado)
+    """El incidente con el cierre de una pista registrado como cierre y el titular coherente con
+    la presencia. La actuación de la autoridad (un cierre, cazas, una patrulla) no confirma la
+    presencia: no es atribución (desde el 21 de octubre de 2026)."""
+    return titulares.ajustar_incidente(cierre_de_pista(incidente))
 
 
 def _declaraciones_del_candidato(almacen: Almacen, candidato: str) -> dict[str, dict[str, Any]]:
@@ -559,10 +547,6 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
                     fuente["frase_origen"],
                 )  # fmt: skip
                 break
-        if cambio is None and (actua := por_actuacion(incidente)) is not None:
-            cambio = Cambio(
-                incidente["id"], actua["id"], "", "", "actuacion", actua["frase_origen"]
-            )
         if cambio is not None:
             resultado.append((incidente, cambio))
     return resultado
@@ -636,6 +620,31 @@ def revisar(
             fallidos.append(incidente["id"])
             continue
         anotar(almacen, incidente, documento, MOTIVO_CITA_VACIA)
+    # Confirmada sin que ninguna autoridad la atribuya a drones (la puso el extractor, la
+    # actuación de la autoridad o una regla anterior): sin confirmar, salvo las dudosas.
+    todos = almacen.incidentes()
+    por_id = {i["id"]: i for i in todos}
+    absorbidos: dict[str, list[str]] = {}
+    for fusion in almacen.fusiones():
+        if not fusion["revertida"]:
+            absorbidos.setdefault(fusion["destino"], []).append(fusion["absorbido"])
+    for incidente in todos:
+        if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
+            continue
+        documento = quitar_sin_base(incidente)
+        if documento is incidente or dudosa(
+            almacen, incidente, _candidatos(incidente, por_id, absorbidos)
+        ):
+            continue
+        documento = titulares.ajustar_incidente(documento)
+        documento = {**documento, "control": {**documento["control"],
+                                              "ultima_actualizacion": instante}}  # fmt: skip
+        try:
+            almacen.guardar_incidente(documento, ahora, modelos)
+        except DocumentoInvalido:
+            fallidos.append(incidente["id"])
+            continue
+        anotar(almacen, incidente, documento, MOTIVO_SIN_BASE)
     # Una fuente cuenta que se buscó el dron y no se encontró: la presencia no queda confirmada.
     for incidente in almacen.incidentes():
         if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
@@ -687,6 +696,65 @@ MOTIVO_NO_HALLADO = (
     "criterio de presencia: una fuente cuenta que no se encontró el dron; la presencia no "
     "queda confirmada"
 )
+
+
+MOTIVO_SIN_BASE = (
+    "criterio de presencia: ninguna autoridad dice que fuera un dron (solo la prensa o los "
+    "testigos, o una medida de la autoridad sin atribuirlo); la presencia no queda confirmada"
+)
+
+
+def sin_base(incidente: Documento) -> bool:
+    """Confirmada sin base: ninguna autoridad la atribuye a drones (atribuida_por_autoridad), ni
+    lo dice en su propio documento, ni hay pruebas físicas que confirme una autoridad, ni está
+    revisada a mano o rectificada por una autoridad (presencia_historial). Lo mismo que cuenta la
+    comprobación E de la auditoría (proceso/auditoria_fichas.py)."""
+    return (
+        incidente.get("presencia_dron") == "confirmada"
+        and incidente["id"] not in presencias_revisadas()
+        and not incidente.get("presencia_historial")
+        and not atribuida_por_autoridad(incidente)
+        and not documento_oficial_decide(incidente)
+        and not pruebas_fisicas_confirmadas(incidente)
+    )
+
+
+def quitar_sin_base(incidente: Documento) -> Documento:
+    """Sin confirmar la presencia que ninguna autoridad atribuye a drones, sin las afirmaciones
+    «confirmada» (el extractor la daba por la actuación de la autoridad o por la prensa,
+    EODI-2025-00049: «au fost suspendate temporar aterizările»). El mismo incidente si tiene
+    base."""
+    if not sin_base(incidente):
+        return incidente
+    return {
+        **incidente,
+        "presencia_dron": "no_confirmada",
+        "afirmaciones": [
+            a for a in incidente.get("afirmaciones", [])
+            if not (a["campo"] == "presencia_dron" and a["valor"] == "confirmada")
+        ],
+    }  # fmt: skip
+
+
+def dudosa_por(incidente: Documento, conocidas: dict[str, dict[str, Any]]) -> bool:
+    """La regla no decide (va al experto o a la revisión a mano, y la presencia se queda como
+    está): una autoridad afirma los drones según el extractor («drones»), pero su cita guardada
+    no los nombra (EODI-2025-00340, Bundeswehr: «Das bestätigte eine Sprecherin»); o hay pruebas
+    físicas del dron (restos, derribo, explosión) que solo cuenta la prensa (EODI-2025-00312,
+    «Dronă militară de tip Gerbera a fost găsită pe un câmp»). `conocidas`: las declaraciones del
+    incidente por el identificador de su fuente (_declaraciones_del_candidato)."""
+    if set((incidente.get("pruebas") or {}).get("evidencia", [])) & PRUEBAS_FISICAS:
+        return True
+    autoridades = {f["id"] for f in incidente["fuentes"] if declaraciones.de_autoridad(f)}
+    return any(d.get("afirma") == "drones" and id_ in autoridades for id_, d in conocidas.items())
+
+
+def dudosa(almacen: Almacen, incidente: Documento, candidatos: set[str] | None = None) -> bool:
+    """dudosa_por con las declaraciones guardadas de sus candidatos (por omisión, el suyo)."""
+    conocidas: dict[str, dict[str, Any]] = {}
+    for candidato in sorted(candidatos or {str(incidente["control"].get("candidato"))}):
+        conocidas |= _declaraciones_del_candidato(almacen, candidato)
+    return dudosa_por(incidente, conocidas)
 
 
 def quitar_por_no_hallado(incidente: Documento) -> Documento:

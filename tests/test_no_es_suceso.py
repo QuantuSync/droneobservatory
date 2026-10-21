@@ -12,7 +12,7 @@ from modelo import coste, ficha, paginas
 from proceso import extraccion, no_es_suceso
 from tests.test_extraccion import AHORA, MODELOS, campo, ficha_ejemplo
 from tests.test_modelos import BASE, EXPERTO, Cliente, _peticion
-from tests.test_nada_se_retira import _publicada, _respuesta_base, _sigue_publicada
+from tests.test_nada_se_retira import POLICIA, _publicada, _respuesta_base, _sigue_publicada
 
 DELFI_00539 = (
     "https://delfi.lt/projektai/pulsas/poveikis/"
@@ -184,7 +184,9 @@ def test_el_modelo_ve_lo_que_dice_la_pagina() -> None:
 def test_la_00539_no_se_publica_y_no_gasta_en_el_experto(almacen: Almacen) -> None:
     peticion = _fuentes_00539(_peticion(almacen))
     # El base la da por suceso, como pasó el 14 de octubre de 2026.
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    cliente = Cliente(
+        ficha_ejemplo(declaraciones=[POLICIA]), ficha_ejemplo(declaraciones=[POLICIA])
+    )
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [BASE]
     assert hechas.incidentes == [None] and not almacen.incidentes()
@@ -205,7 +207,9 @@ def test_con_duda_decide_el_experto(almacen: Almacen) -> None:
 
 def test_si_el_experto_ve_un_suceso_se_publica(almacen: Almacen) -> None:
     peticion = _opinion(_peticion(almacen))
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    cliente = Cliente(
+        ficha_ejemplo(declaraciones=[POLICIA]), ficha_ejemplo(declaraciones=[POLICIA])
+    )
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [BASE, EXPERTO] and hechas.incidentes[0] is not None
 
@@ -280,7 +284,9 @@ def test_lo_que_el_experto_mantuvo_no_se_le_vuelve_a_mandar(almacen: Almacen) ->
     peticion, id_ = _publicada(almacen)
     peticion = _opinion(peticion)
     # El experto la ve con el motivo de la página y la mantiene.
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    cliente = Cliente(
+        ficha_ejemplo(declaraciones=[POLICIA]), ficha_ejemplo(declaraciones=[POLICIA])
+    )
     extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [BASE, EXPERTO]
     _sigue_publicada(almacen, id_)

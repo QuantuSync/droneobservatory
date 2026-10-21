@@ -71,6 +71,7 @@ def a_servicio(datos: dict[str, Any]) -> dict[str, Any]:
         ],
         "titulo_es": datos["titulo_es"],
         "titulo_en": datos["titulo_en"],
+        "declaraciones": datos.get("declaraciones", []),
     }
 
 
@@ -394,8 +395,9 @@ def test_de_la_ficha_al_incidente(almacen: Almacen) -> None:
     assert validar_incidente(incidente, AHORA, MODELOS) == []
     assert incidente["tipo"] == "interrupcion_aeroportuaria"
     assert incidente["estado"]["actual"] == "notificado"
-    # El aeropuerto cerró por los drones: la autoridad actúa atribuyendo el suceso a un dron.
-    assert incidente["presencia_dron"] == "confirmada"
+    # El aeropuerto cerró por los drones, pero solo lo cuenta la prensa: el cierre no es
+    # atribución de una autoridad (desde el 21 de octubre de 2026).
+    assert incidente["presencia_dron"] == "no_confirmada"
     assert (incidente["objetivo"]["categoria"], incidente["objetivo"]["oaci"]) == (
         "aeropuerto",
         "EKCH",

@@ -52,7 +52,7 @@ def test_la_reapertura_de_la_misma_noche_no_se_separa() -> None:
     assert not repeticion(candidato, articulo, filtro())
 
 
-def test_el_cierre_de_una_pista_es_un_cierre_y_confirma_la_presencia() -> None:
+def test_el_cierre_de_una_pista_es_un_cierre_pero_no_confirma_la_presencia() -> None:
     # EODI-2025-00058, Schiphol (aex.ru).
     documento = inc("EODI-2025-00058", "2025-07-26T18:00Z", "hora",
                     "Luchthaven Schiphol", (52.327, 4.758), "NL")  # fmt: skip
@@ -69,9 +69,10 @@ def test_el_cierre_de_una_pista_es_un_cierre_y_confirma_la_presencia() -> None:
     con_cierre = presencia.cierre_de_pista(documento)
     assert con_cierre["consecuencias"]["cierre"]["valor"] == "si"
     assert con_cierre["tipo"] == "interrupcion_aeroportuaria"
+    # El cierre lo cuenta la prensa: no es atribución de una autoridad.
     resultado = presencia.aplicar(documento)
-    assert resultado["presencia_dron"] == "confirmada"
-    assert resultado["titulo"]["es"].startswith("Drones cierran una pista")
+    assert resultado["presencia_dron"] == "no_confirmada"
+    assert resultado["consecuencias"]["cierre"]["valor"] == "si"
     assert validar_incidente(resultado, AHORA, VOCABULARIO_MODELOS) == []
 
 

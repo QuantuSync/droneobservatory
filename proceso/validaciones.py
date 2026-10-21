@@ -288,8 +288,8 @@ def errores_presencia(documento: Documento) -> list[Error]:
         if (
             fuente.get("id") in confirmantes
             and declaraciones.de_autoridad(fuente)
-            and declaraciones.habla_de_drones(frase)
-            and not declaraciones.abierto(frase, contexto.get(fuente.get("enlace"), ""))
+            and declaraciones.atribuye_dron(frase)
+            and not declaraciones.abierto(contexto.get(fuente.get("enlace"), ""))
         ):
             return [Error("presencia_dron", f"la fuente oficial {fuente.get('id')} atribuye el "
                           "suceso a un dron y la presencia no está confirmada")]  # fmt: skip

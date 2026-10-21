@@ -21,7 +21,7 @@ modelo). Pruebas: `tests/test_rectificaciones.py`.
 
 | Valor | Cuándo |
 |---|---|
-| `confirmada` | una autoridad competente actúa o declara atribuyendo el suceso a un dron |
+| `confirmada` | una autoridad dice que lo que se vio, detectó, derribó o causó el efecto era un dron (una medida suya sin atribuirlo no basta) |
 | `no_confirmada` | la autoridad lo deja abierto o solo lo cuentan la prensa o los testigos |
 | `no_acreditada` | una autoridad oficial cierra su investigación sin pruebas del dron, o retira su afirmación sin decir que fuera otra cosa |
 | `descartada` | una autoridad lo niega o dice que era otra cosa (un avión, un helicóptero) |

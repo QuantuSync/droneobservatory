@@ -198,12 +198,13 @@ presa, estadio, industrial, gubernamental u otra) y objetivo_nombre: la instalac
 «nombre; categoría; país; latitud; longitud», con coordenadas aproximadas en grados \
 decimales. Si no sabes dónde está, no lo incluyas.
 - drones: número de drones como «N» o «mínimo-máximo» («varios» es 2-10; «un enjambre», 5-50).
-- presencia_dron: confirmada si una autoridad competente (gestor aeroportuario, gestor de \
-navegación aérea, policía, fuerzas armadas, ministerio, gobierno, fiscalía, autoridad de aviación \
-civil) actúa o declara atribuyendo el suceso a un dron: un cierre por dron, un aviso de dron que \
-comunica, una intervención por dron; no hacen falta restos, grabación ni detección por sensor. \
-no_confirmada si la propia autoridad lo deja abierto («posible dron», «objeto no identificado», \
-«se investiga si era un dron») o si solo lo cuentan la prensa o los testigos. descartada si una \
+- presencia_dron: confirmada solo si una autoridad (gestor aeroportuario, gestor de navegación \
+aérea, policía, fuerzas armadas, ministerio, gobierno, fiscalía, autoridad de aviación civil) dice \
+que lo que se vio, detectó, derribó o causó el efecto era un dron o varios; no hacen falta restos, \
+grabación ni detección por sensor, y que después no lo encontrara no lo cambia. no_confirmada si \
+la propia autoridad lo deja abierto («posible dron», «objeto no identificado», «se investiga si \
+era un dron»), si actúa sin atribuirlo (un cierre, cazas o una patrulla no son atribución) o si \
+solo lo cuentan la prensa o los testigos. descartada si una \
 autoridad dice que no lo era (un globo, un avión, una estrella).
 - dron_estatal: true si la fuente dice que el dron es militar o de un Estado (un dron ruso o \
 ucraniano de la guerra lo es), nombra un modelo militar (Shahed, Geran, Gerbera) o dice que \

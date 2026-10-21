@@ -66,12 +66,16 @@ _CON_DRONES = frozenset({"incidente", "autoria"})
 # Formas que el filtro de noticias no recoge por la declinación (genitivo griego) o por ser
 # el adjetivo y no el nombre («bezpilotní letoun»).
 _DRONES_DECLINADOS = re.compile(
-    r"(?<!\w)(μη επανδρωμέν\w*|bezpilot\w*|беспилот\w*|безпілот\w*)", re.IGNORECASE
+    r"(?<!\w)(μη επανδρωμέν\w*|bezpilot\w*|беспилот\w*|безпілот\w*|bepilo[tč]\w*|"
+    # El modelo del dron de la guerra: «Un obiect zburător de tip Shahed 138 (Geran 2)»
+    # (EODI-2026-00171); el lituano «bepiločio orlaivio» (EODI-2026-00037).
+    r"shahed\w*|geran\w*|gerbera\w*)",
+    re.IGNORECASE,
 )
 # La autoridad lo deja abierto: posible, presunto o sospechoso; objeto no identificado; se
 # investiga si era un dron; no confirma que lo fuera.
 ABIERTO = re.compile(
-    r"(?<!\w)(?:possibl\w*|posibl\w*|possív\w*|mogelijk\w*|möglich\w*|eventuel\w*|"
+    r"(?<!\w)(?:possibl\w*|posibl\w*|posibil\w*|possív\w*|mogelijk\w*|möglich\w*|eventuel\w*|"
     r"potenziel\w*|potential\w*|potencial\w*|potentiel\w*|"
     r"mulig\w*|möjlig\w*|mahdollis\w*|możliw\w*|ewentualn\w*|pravděpodob\w*|tikėtin\w*|"
     r"galim\w*|iespējam\w*|võimalik\w*|πιθαν\w*|можлив\w*|возможн\w*|"
@@ -236,11 +240,30 @@ def abierto(*textos: str) -> bool:
     return False
 
 
+# El dron negado: «no drone was detected on radar» (EODI-2025-00203), «n'avaient permis de
+# retrouver aucun drone» (EODI-2025-00357). Nombrarlo así no lo atribuye a un dron.
+_DRON_NEGADO = re.compile(
+    r"(?<!\w)(?:no|not\s+a|kein\w*|aucun\w*|ingen|geen|żadn\w*|nessun\w*|ningún|ninguna?|"
+    r"nici\s+o|nicio)\s+(?:\w+\s+)?(?:drones?|drohne\w*|dron\w*|droner?|droon\w*|drony)(?!\w)",
+    re.IGNORECASE,
+)
+
+
+def atribuye_dron(frase: str) -> bool:
+    """La frase de una autoridad atribuye lo que pasó a un dron: lo nombra sin negarlo y sin
+    dejarlo abierto. Una medida que no lo nombra («au fost suspendate temporar aterizările»,
+    EODI-2025-00049) o una confirmación sin contenido («bestätigte den Vorfall») no basta."""
+    return habla_de_drones(_DRON_NEGADO.sub(" ", frase)) and not abierto(frase)
+
+
 def confirma_dron(declaracion: dict[str, Any], contexto: str = "") -> bool:
-    """Si la autoridad da por hecho el dron: afirma que hubo drones (drones), o una autoridad
-    competente confirma o atribuye el suceso (incidente, autoria), que es un suceso de dron.
+    """Si la autoridad da por hecho el dron: su frase lo nombra sin negarlo (atribuye_dron) y
+    afirma que hubo drones (drones), o confirma o atribuye el suceso (incidente, autoria) una
+    autoridad competente. Una medida o una confirmación que no nombra el dron no lo atribuye.
     No si la frase o el `contexto` (la frase de la noticia que la cita) lo dejan abierto."""
     if abierto(str(declaracion.get("frase", "")), contexto):
+        return False
+    if not atribuye_dron(str(declaracion.get("frase", ""))):
         return False
     if declaracion["afirma"] == "drones":
         return True
