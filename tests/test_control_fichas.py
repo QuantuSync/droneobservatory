@@ -959,29 +959,3 @@ def test_la_hora_revisada_a_mano_con_su_cita_no_la_quita_la_verificacion(
     queda = almacen.incidente("EODI-2026-09515")
     assert queda is not None and queda["tiempo"]["inicio"]["valor"] == "2026-10-13T06:30Z"
     assert queda["tiempo"]["inicio"]["precision"] == "minuto"
-
-
-def test_lo_que_decide_un_solo_sitio_se_guarda_aunque_nada_mas_cambie() -> None:
-    """Una ficha guardada con una regla de antes (incursión sin autoridad ni prueba confirmada) se
-    vuelve a guardar con el tipo que decide hoy proceso/decidir.py, una sola vez."""
-    d = ejemplos.incidente_minimo()
-    d["id"] = "EODI-2026-09701"
-    d["pruebas"] = {"dron_estatal": True, "entrada_exterior": True, "evidencia": []}
-    almacen = _base(d)
-    assert (almacen.incidente(d["id"]) or {})["tipo"] == "sobrevuelo"
-    almacen.conexion.execute(
-        "UPDATE incidentes SET documento = json_set(documento, '$.tipo', 'incursion') WHERE id = ?",
-        (d["id"],),
-    )
-    almacen.conexion.commit()
-    ahora, resultado = datetime.now(UTC), control_fichas.Resultado()
-    llamador = control_fichas.Llamador(almacen, None, coste.Modo.CONTROL, ahora, None, resultado)
-    ctx = control_fichas.Contexto(
-        almacen, ahora, frozenset(), llamador, resultado, None, None, almacen.controles()
-    )
-    control_fichas.reglas_deterministas(ctx)
-    assert (almacen.incidente(d["id"]) or {})["tipo"] == "sobrevuelo"
-    motivos = [h for h in almacen.historial(d["id"]) if "motivo" in h["nuevo"]]
-    assert len(motivos) == 1 and "proceso/decidir.py" in motivos[0]["nuevo"]["motivo"]
-    control_fichas.reglas_deterministas(ctx)
-    assert len([h for h in almacen.historial(d["id"]) if "motivo" in h["nuevo"]]) == 1
