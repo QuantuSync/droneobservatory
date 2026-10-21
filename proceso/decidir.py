@@ -12,6 +12,7 @@ vez que se guarda, así que lo que escriba otro paso antes no es lo que queda.
 
 import copy
 from dataclasses import dataclass
+from functools import cache
 
 from esquema import Documento
 from proceso import competencia, declaraciones, incidentes, rectificaciones, titulares
@@ -54,7 +55,30 @@ def _afirmada(incidente: Documento, fuente_id: str) -> str | None:
     return None
 
 
-def decidir_presencia(incidente: Documento) -> Decision:
+@cache
+def _revisadas() -> frozenset[str]:
+    from proceso import presencia
+
+    return presencia.presencias_revisadas()
+
+
+def _abierta(incidente: Documento, negadas: frozenset[str]) -> bool:
+    """Lo que deja abierta la presencia aunque una autoridad la atribuya a un dron (las mismas
+    condiciones que proceso/presencia.pendientes): un desmentido, la revisión a mano que la deja
+    abierta, una fuente que cuenta que no se encontró el dron sin pruebas físicas, o una fuente
+    en que el control de las fichas lee que no se encontró o que se desmiente."""
+    from proceso import presencia
+
+    if incidente["estado"]["actual"] == Estado.DESMENTIDO or incidente["id"] in _revisadas():
+        return True
+    if presencia.no_hallado(incidente) is not None and not (
+        presencia.pruebas_fisicas_confirmadas(incidente)
+    ):
+        return True
+    return bool(negadas & {str(f["id"]) for f in incidente.get("fuentes", [])})
+
+
+def decidir_presencia(incidente: Documento, negadas: frozenset[str] = frozenset()) -> Decision:
     """La presencia del dron por orden de prioridad:
 
     1. rectificación: el último paso de `presencia_historial` (una autoridad lo rectificó; lo
@@ -64,7 +88,9 @@ def decidir_presencia(incidente: Documento) -> Decision:
     3. documento oficial: la autoridad lo dice en su propio documento;
     4. descartada: una fuente afirma que era otra cosa (la autoridad, o la noticia que cuenta lo
        que concluyó);
-    5. una autoridad lo atribuye a un dron, o pruebas físicas con el suceso confirmado: confirmada;
+    5. una autoridad lo atribuye a un dron (salvo lo que la deja abierta, `_abierta`; `negadas`
+       son las fuentes en que el control de las fichas lee que no se encontró el dron), o
+       pruebas físicas con el suceso confirmado: confirmada;
     6. si no, no confirmada (lo dejan abierto o solo lo cuentan la prensa o los testigos).
     """
     pasos = [p for p in incidente.get("presencia_historial") or [] if not p.get("parcial")]
@@ -89,7 +115,7 @@ def decidir_presencia(incidente: Documento) -> Decision:
             rectificaciones.DESCARTADA
         ):
             return Decision(rectificaciones.DESCARTADA, str(afirmacion["fuente_id"]), "descartada")
-    for fuente in fuentes:
+    for fuente in [] if _abierta(incidente, negadas) else fuentes:
         # Una autoridad lo atribuye a un dron sin dejarlo abierto.
         if declaraciones.de_autoridad(fuente) and declaraciones.atribuye_dron(
             str(fuente.get("frase_origen") or "")
@@ -103,7 +129,7 @@ def decidir_presencia(incidente: Documento) -> Decision:
     return Decision("no_confirmada", None, "sin_autoridad")
 
 
-def aplicar(incidente: Documento) -> Documento:
+def aplicar(incidente: Documento, negadas: frozenset[str] = frozenset()) -> Documento:
     """El incidente con el estado y la presencia que deciden sus pruebas, y el titular coherente
     con la presencia (proceso/titulares.py). Sin cambios si ya los tenía."""
     resultado = _historial_vigente(incidente)
@@ -115,7 +141,7 @@ def aplicar(incidente: Documento) -> Documento:
         resultado["estado"]["actual"] = estado.valor
         if estado.valor != Estado.DESMENTIDO:
             resultado.get("control", {}).pop("motivo_desmentido", None)
-    presencia = decidir_presencia(resultado)
+    presencia = decidir_presencia(resultado, negadas)
     if presencia.valor != resultado.get("presencia_dron"):
         resultado = titulares.ajustar_incidente(
             {**copy.deepcopy(resultado), "presencia_dron": presencia.valor}
@@ -123,14 +149,14 @@ def aplicar(incidente: Documento) -> Documento:
     return resultado
 
 
-def motivo(incidente: Documento) -> str:
+def motivo(incidente: Documento, negadas: frozenset[str] = frozenset()) -> str:
     """El motivo del cambio que hace `aplicar`, para el historial: el del criterio de presencia
     si es una presencia sin base (proceso/presencia.py); si no, la regla que decide."""
     from proceso import presencia
 
     if presencia.sin_base(incidente):
         return presencia.motivo_sin_base(incidente)
-    estado, decision = decidir_estado(incidente), decidir_presencia(incidente)
+    estado, decision = decidir_estado(incidente), decidir_presencia(incidente, negadas)
     return (
         f"un solo sitio decide (proceso/decidir.py): estado por {estado.regla}, presencia "
         f"{decision.valor} por {decision.regla}"
