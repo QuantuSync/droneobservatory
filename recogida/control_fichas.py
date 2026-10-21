@@ -64,6 +64,7 @@ from proceso import (
     atribucion,
     autoridades,
     buques,
+    decidir,
     escalado,
     incidentes,
     lugar_preciso,
@@ -1202,8 +1203,16 @@ def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -
     return True
 
 
+# Lo que decide `proceso/decidir.py` al guardar: si cambia con las reglas de hoy, la ficha se
+# vuelve a guardar aunque ningún otro paso la toque.
+DECIDIDOS = ("tipo", "objetivo", "lugar", "tiempo", "drones", "titulo", "estado",
+             "presencia_dron", "consecuencias")  # fmt: skip
+
+
 def reglas_deterministas(ctx: Contexto) -> None:
-    """El lugar que nombra el titular y el estado sin fuente oficial, sin llamar a nada."""
+    """El lugar que nombra el titular y el estado sin fuente oficial, sin llamar a nada, y lo que
+    decide un solo sitio (proceso/decidir.py) con las reglas de hoy."""
+    negadas = presencia.negadas_por_el_control(ctx.almacen)
     for incidente in _activos(ctx.almacen):
         nuevo = incidente
         motivos = []
@@ -1231,7 +1240,15 @@ def reglas_deterministas(ctx: Contexto) -> None:
             motivos.append("estado sin fuente oficial: notificado")
         if motivos:
             nuevo = incidentes.aplicar_reglas(nuevo)
-            _guardar(ctx, incidente, nuevo, "; ".join(motivos))
+        decidido = decidir.aplicar(
+            nuevo,
+            frozenset(negadas.get(incidente["id"], set())),
+            incidente.get("presencia_dron") == "confirmada",
+        )
+        if not motivos and any(decidido.get(c) != incidente.get(c) for c in DECIDIDOS):
+            motivos.append("lo que deciden sus fuentes con las reglas de hoy (proceso/decidir.py)")
+        if motivos:
+            _guardar(ctx, incidente, decidido, "; ".join(motivos))
 
 
 # --- Citas ---------------------------------------------------------------------------------
