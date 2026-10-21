@@ -117,6 +117,13 @@ def test_la_incursion_la_demuestra_una_autoridad() -> None:
     # Chelsea 3: un buque alcanzado en el mar; ninguna autoridad dice que estuviera en aguas
     # búlgaras.
     assert decidir.aplicar(_copia("EODI-2026-00512"))["tipo"] == "sobrevuelo"
+    # Sulina (EODI-2026-00541): en el mar sí cuenta la autoridad que dice que el radar siguió al
+    # dron en el espacio aéreo nacional.
+    sulina = _copia("EODI-2026-00512")
+    sulina["fuentes"][5]["frase_origen"] = (
+        "Radarele au detectat o dronă în spațiul aerian național, la sud-est de Sulina."
+    )
+    assert decidir.aplicar(sulina)["tipo"] == "incursion"
 
 
 def test_sin_dron_segun_la_autoridad_el_numero_es_desconocido() -> None:
