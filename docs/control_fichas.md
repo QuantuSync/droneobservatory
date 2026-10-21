@@ -80,7 +80,10 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    Policji przekazała», EODI-2026-00648; `declaraciones.sin_afirmacion`, en las lenguas que lee
    el observatorio) no es una fuente oficial: ni da el estado ni confirma la presencia hasta que
    tenga una cita con lo que dijo. El extractor guarda entonces la frase que sigue en el texto
-   («… że pracownicy Wojskowego Instytutu …»), o descarta la declaración si no la hay.
+   («… że pracownicy Wojskowego Instytutu …»), o descarta la declaración si no la hay. Si la
+   ficha ya estaba bajada a notificado por esa cita vacía, la cita revisada de la autoridad que
+   afirma el suceso (`incidentes_revisados.json`, citas) la vuelve a confirmar
+   (`revisados.reconfirmar`).
 4. **Duplicados** (también entre idiomas). Pares candidatos: del mismo país; del mismo día o la
    misma noche si las dos fechas las escribe una fuente (a 30 horas como mucho), o a 48 horas si
    alguna es solo la de publicación (entonces cuenta también la primera noticia); en el mismo

@@ -202,3 +202,37 @@ def test_el_resumen_lleva_la_auditoria() -> None:
     dias = {"2026-10-20": {"A": 5, "C": 2}, "2026-10-21": {"A": 4, "C": 2}}
     assert visitas.lineas_auditoria(dias) == ["  Auditoría de fichas: A 4 (-1), C 2"]
     assert visitas.lineas_auditoria({}) == []
+
+
+def test_la_cita_revisada_de_la_autoridad_vuelve_a_confirmar() -> None:
+    """EODI-2026-00648: la cita revisada de la policía llegó con la ficha aún confirmada por la
+    cita vacía (sin paso propio en el historial) y el control la bajó a notificado; la cita
+    revisada la vuelve a confirmar, una vez."""
+    from recogida import revisados
+
+    cita: dict[str, Any] = {
+        "incidente": "EODI-2026-09648",
+        "enlace": "https://wiadomosci.gazeta.pl/polska/jozefow.html",
+        "medio": "wiadomosci.gazeta.pl",
+        "fecha": "2026-10-20",
+        "idioma": "pl",
+        "frase": CONTENIDO,
+        "declaracion": {"autoridad": "Komenda Stołeczna Policji", "pais": "PL",
+                        "categoria": "policia", "afirma": "incidente"},
+    }  # fmt: skip
+    instante = ejemplos.instante("2026-10-21T06:00Z")
+    con = revisados.con_citas(_jozefow(), [cita])
+    assert con["estado"]["actual"] == "confirmado"
+    bajado = reglas.bajar_estado(con, ejemplos.instante("2026-10-21T05:17Z"))
+    assert bajado is not None and bajado["estado"]["actual"] == "notificado"
+    vuelto = revisados.reconfirmar(bajado, [cita], instante)
+    assert vuelto["estado"]["actual"] == "confirmado"
+    paso = vuelto["estado"]["historial"][-1]
+    assert paso["fuente_id"] == revisados.fuente_de_cita(cita, bajado)["id"]
+    assert reglas.bajar_estado(vuelto, instante) is None
+    assert revisados.reconfirmar(vuelto, [cita], instante) is vuelto
+    # Una cita revisada sin declaración, o que niega el suceso, no confirma nada.
+    prensa = {k: v for k, v in cita.items() if k != "declaracion"}
+    assert revisados.reconfirmar(bajado, [prensa], instante) is bajado
+    niega = {**cita, "declaracion": {**cita["declaracion"], "afirma": "niega_incidente"}}
+    assert revisados.reconfirmar(bajado, [niega], instante) is bajado

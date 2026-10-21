@@ -90,7 +90,7 @@ ABIERTO = re.compile(
 # Confianza de la afirmación de presencia que deja la regla: la frase es literal, comprobada
 # en el texto de la noticia (validas), y la regla no interpreta nada más.
 CONFIANZA_REGLA = 1.0
-_CONFIRMAN = frozenset({"incidente", "drones"})
+CONFIRMAN = frozenset({"incidente", "drones"})
 
 
 def _normal(texto: str) -> str:
@@ -373,7 +373,7 @@ def _aplicar_nuevas(
     por_frase: list[Documento] = []
     for declaracion, origen in sorted(nuevas, key=lambda n: orden[n[0]["afirma"]]):
         afirma = declaracion["afirma"]
-        if afirma in _CONFIRMAN:
+        if afirma in CONFIRMAN:
             _transitar(resultado, Estado.CONFIRMADO, origen)
         contexto = str(por_enlace.get(origen["enlace"], {}).get("frase_origen", ""))
         if afirma == "drones" and confirma_dron(declaracion, contexto):
