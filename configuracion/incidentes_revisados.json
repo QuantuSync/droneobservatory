@@ -3411,6 +3411,63 @@
         "categoria": "fuerzas_armadas",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2025-00212",
+      "enlace": "https://mfa.gov.md/ro/content/mae-condamna-ferm-incalcarea-spatiului-aerian-al-republicii-moldova-si-convoaca-ambasadorul",
+      "medio": "mfa.gov.md",
+      "fecha": "2025-02-13",
+      "idioma": "ro",
+      "frase": "condamnă cu fermitate încălcarea repetată a spațiului aerian național de către drone lansate în urma atacurilor rusești",
+      "comprobada": {
+        "fecha": "2026-10-22",
+        "en": "https://mfa.gov.md/ro/content/mae-condamna-ferm-incalcarea-spatiului-aerian-al-republicii-moldova-si-convoaca-ambasadorul (original)"
+      },
+      "oficial": true,
+      "declaracion": {
+        "autoridad": "Ministerul Afacerilor Externe",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00208",
+      "enlace": "https://www.mapn.ro/cpresa/19185_informa%C8%9Bie-de-presa",
+      "medio": "mapn.ro",
+      "fecha": "2026-03-26",
+      "idioma": "ro",
+      "frase": "La ora 00.44, o dronă deviată de apărarea antiaeriană ucraineană a pătruns în spațiul aerian național pe distanța de aproximativ 4 kilometri.",
+      "comprobada": {
+        "fecha": "2026-10-22",
+        "en": "https://www.mapn.ro/cpresa/19185_informa%C8%9Bie-de-presa (original)"
+      },
+      "oficial": true,
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00299",
+      "enlace": "https://www.mapn.ro/cpresa/18733_comunicat-de-presa",
+      "medio": "mapn.ro",
+      "fecha": "2025-01-17",
+      "idioma": "ro",
+      "frase": "Sistemele de monitorizare și supraveghere ale Ministerului Apărării Naționale au semnalat încălcări ale spațiului aerian românesc",
+      "comprobada": {
+        "fecha": "2026-10-22",
+        "en": "https://www.mapn.ro/cpresa/18733_comunicat-de-presa (original)"
+      },
+      "oficial": true,
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "incidente"
+      }
     }
   ],
   "titulares": [
