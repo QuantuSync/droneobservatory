@@ -687,3 +687,36 @@ def test_un_alta_cuya_fecha_ya_no_valida_se_retira_sin_borrarse() -> None:
     guardado = leido(almacen.documento_oficial(documento["id"]))
     assert guardado["sucesos"][0]["cruce"] == "no_valido"
     assert extraccion_oficial.revalidar_altas(almacen, AHORA, VOCABULARIO_MODELOS) == []
+
+
+def test_un_enlace_por_una_hora_sin_dia_se_deshace_y_la_fuente_sale_del_incidente() -> None:
+    # Aalborg (EODI-2025-00238): la nota de Nordjyllands Politi publicada a la 01:05 del jueves
+    # 25 de septiembre de 2025 dice «modtog klokken 21:44 en anmeldelse» (las 21:44 del
+    # miércoles); el extractor le puso el día de la publicación y la enlazó con el cierre del
+    # jueves.
+    almacen = base_con_heathrow()
+    documento = procesar(almacen, recogido(), [suceso_heathrow()], [])
+    detalle.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
+    antes = almacen.incidente("EODI-2025-00134")
+    assert antes is not None and any(f["enlace"] == documento["enlace"] for f in antes["fuentes"])
+    (cruce,) = [s for s in documento["sucesos"] if s.get("incidente") == "EODI-2025-00134"]
+    # Con un día que la frase dice de otra forma («late on Friday evening»), el enlace vale.
+    cruce["datos"]["inicio"] = {**cruce["datos"]["inicio"],
+                                "frase": "late on Friday evening at 21:44"}  # fmt: skip
+    assert not extraccion_oficial.sin_dia(cruce["datos"]["inicio"], documento)
+    cruce["datos"]["inicio"] = {**cruce["datos"]["inicio"],
+                                "frase": "the police received a report at 21:44"}  # fmt: skip
+    assert extraccion_oficial.sin_dia(cruce["datos"]["inicio"], documento)
+    almacen.guardar_documento_oficial(documento, AHORA)
+    assert recogida_detalle.quitar_sin_dia(almacen, AHORA, VOCABULARIO_MODELOS) == [
+        "EODI-2025-00134"
+    ]
+    despues = leido(almacen.incidente("EODI-2025-00134"))
+    assert not any(f["enlace"] == documento["enlace"] for f in despues["fuentes"])
+    guardado = leido(almacen.documento_oficial(documento["id"]))
+    assert guardado["sucesos"][0]["cruce"] == "no_valido"
+    # Idempotente, y la revisión de detalle no la vuelve a poner.
+    assert recogida_detalle.quitar_sin_dia(almacen, AHORA, VOCABULARIO_MODELOS) == []
+    detalle.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
+    otra = leido(almacen.incidente("EODI-2025-00134"))
+    assert not any(f["enlace"] == documento["enlace"] for f in otra["fuentes"])

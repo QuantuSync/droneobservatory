@@ -563,6 +563,25 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2025-00228",
+      "enlace": "https://politi.dk/nordjyllands-politi/nyhedsliste/250925-pm1/2025/09/25",
+      "medio": "politi.dk",
+      "fecha": "2025-09-25",
+      "idioma": "da",
+      "frase": "Nordjyllands Politi modtog klokken 21:44 en anmeldelse om flere uidentificerede droner i luftrummet over Aalborg Lufthavn.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://politi.dk/nordjyllands-politi/nyhedsliste/250925-pm1/2025/09/25 (original, publicada el 25 de septiembre de 2025 a la 01:05: las 21:44 son del miércoles 24)"
+      },
+      "oficial": true,
+      "declaracion": {
+        "autoridad": "Nordjyllands Politi",
+        "pais": "DK",
+        "categoria": "policia",
+        "afirma": "incidente"
+      }
+    },
+    {
       "incidente": "EODI-2026-00158",
       "enlace": "https://www.mapn.ro/cpresa/19420_x",
       "medio": "mapn.ro",

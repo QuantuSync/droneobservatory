@@ -240,6 +240,7 @@ class Incorporacion:
     extraidos: int = 0
     lotes: int = 0
     retirados: list[str] = field(default_factory=list)
+    desenlazados: list[str] = field(default_factory=list)
     parada: str | None = None
     revision: detalle.Revision | None = None
 
@@ -248,7 +249,7 @@ class Incorporacion:
         return (
             f"encuentros={self.encuentros} documentos={self.documentos} "
             f"estadisticas={self.estadisticas} extraidos={self.extraidos} lotes={self.lotes} "
-            f"altas_retiradas={len(self.retirados)} "
+            f"altas_retiradas={len(self.retirados)} desenlazados_sin_dia={len(self.desenlazados)} "
             f"parada={self.parada or 'ninguna'}; {revision}"
         )
 
@@ -369,8 +370,47 @@ def incorporar(
             if extraidos.parada is not None:
                 hecho.parada = f"{extraidos.parada}: {extraidos.motivo[:120]}"
     hecho.retirados = extraccion_oficial.revalidar_altas(almacen, ahora, modelos)
+    hecho.desenlazados = quitar_sin_dia(almacen, ahora, modelos)
     hecho.revision = detalle.revisar(almacen, ahora, modelos)
     return hecho
+
+
+MOTIVO_SIN_DIA = (
+    "fuente oficial quitada: su frase no da el día del suceso y se enlazó por el día de su "
+    "publicación (proceso/extraccion_oficial.sin_dia)"
+)
+
+
+def quitar_sin_dia(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
+    """Quita de cada incidente la fuente oficial que se le enlazó por una fecha sin día
+    (extraccion_oficial.desenlazar_sin_dia), con lo que solo ella sostenía (revisados.sin_fuentes)
+    y el motivo en el historial. Devuelve los incidentes cambiados."""
+    from proceso.presencia import TABLA_MOTIVOS
+    from recogida import revisados
+
+    cambiados = []
+    for id_, enlace in extraccion_oficial.desenlazar_sin_dia(almacen, ahora):
+        anterior = almacen.incidente(id_)
+        if anterior is None:
+            continue
+        nuevo = revisados.sin_fuentes(anterior, {enlace})
+        if nuevo is None or nuevo == anterior:
+            continue
+        nuevo["control"]["ultima_actualizacion"] = {
+            "valor": ahora.astimezone(UTC).strftime("%Y-%m-%dT%H:%MZ"),
+            "precision": "minuto",
+        }
+        try:
+            almacen.guardar_incidente(nuevo, ahora, modelos)
+        except DocumentoInvalido:
+            registro.warning("sin guardar al quitar la fuente sin día de %s", id_)
+            continue
+        campos = ("estado", "presencia_dron", "tiempo")
+        antes = {c: anterior.get(c) for c in campos if anterior.get(c) != nuevo.get(c)}
+        almacen.anotar_motivo(TABLA_MOTIVOS, id_, {**antes, "fuente": enlace},
+                              {c: nuevo.get(c) for c in antes}, MOTIVO_SIN_DIA)  # fmt: skip
+        cambiados.append(id_)
+    return cambiados
 
 
 def estados(raiz: Path | None = None) -> dict[str, EstadoFuente]:
