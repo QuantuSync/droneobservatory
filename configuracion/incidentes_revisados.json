@@ -5975,6 +5975,64 @@
         }
       },
       "motivo": "El nomenclátor de instalaciones casó «Летище „Васил Левски“» con el estadio Vasil Levski de Karlovo (estadio:way/169361657); el aeropuerto es LBSF, en Sofía."
+    },
+    {
+      "incidente": "EODI-2025-00380",
+      "lugar": {
+        "nombre": "Sturkö",
+        "nivel": "localidad",
+        "lat": 56.11306,
+        "lon": 15.66139,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00380",
+        "enlace": "https://www.tv4.se/artikel/61uXTKKdXW7MPHvEtKLzaC/larm-om-droenare-oever-karlskrona-skaergard",
+        "medio": "tv4.se",
+        "fecha": "2025-09-26",
+        "idioma": "sv",
+        "frase": "Under torsdagskvällen larmade flera boende på Sturkö och Tjurkö, två öar i Karlskrona, om misstänkt drönaraktivitet.",
+        "comprobada": {
+          "fecha": "2026-10-22",
+          "en": "https://www.tv4.se/artikel/61uXTKKdXW7MPHvEtKLzaC/larm-om-droenare-oever-karlskrona-skaergard (original)"
+        }
+      },
+      "cambio": {
+        "motivo": {
+          "es": "Los drones se vieron sobre las islas de Sturkö y Tjurkö, a unos kilómetros de la base naval de Karlskrona.",
+          "en": "The drones were seen over the islands of Sturkö and Tjurkö, a few kilometres from the Karlskrona naval base."
+        }
+      },
+      "motivo": "El punto era el de Karlskrona; los avisos fueron de vecinos de Sturkö y Tjurkö (radio de 5 km para las dos islas)."
+    },
+    {
+      "incidente": "EODI-2026-00277",
+      "lugar": {
+        "nombre": "Botoșanița Mare",
+        "nivel": "localidad",
+        "lat": 47.87528,
+        "lon": 26.10583,
+        "radio_km": 2
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00277",
+        "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+        "medio": "dcnews.ro",
+        "fecha": "2026-09-12",
+        "idioma": "ro",
+        "frase": "a fost identificat un obiect zburător prăbușit, în zona localității Botoșenița Mare, județul Suceava, într-un lan de porumb.",
+        "comprobada": {
+          "fecha": "2026-10-22",
+          "en": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html (original)"
+        }
+      },
+      "cambio": {
+        "motivo": {
+          "es": "El punto era el de la ciudad de Suceava; el dron cayó en un maizal de Botoșanița Mare, unos 30 km al norte.",
+          "en": "The point was Suceava city; the drone fell in a cornfield at Botoșanița Mare, about 30 km to the north."
+        }
+      },
+      "motivo": "Botoșanița Mare (municipio de Calafindești), el pueblo que nombra el Ministerio de Defensa; la prensa lo escribe Botoșenița."
     }
   ],
   "separar": [
@@ -8653,11 +8711,11 @@
       "incidente": "EODI-2026-00277",
       "campo": "lugar",
       "valor": {
-        "localidad": "Boto\u0219eni\u021ba Mare"
+        "localidad": "Boto\u0219ani\u021ba Mare"
       },
       "cita": "Drona s-a pr\u0103bu\u0219it \u00eentr-un lan de porumb din zona localit\u0103\u021bii Boto\u0219eni\u021ba Mare din jude\u021bul Suceava.",
       "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
-      "motivo": "el dron cay\u00f3 en Boto\u0219eni\u021ba Mare (Suceava), no en la ciudad de Suceava"
+      "motivo": "el dron cay\u00f3 en Boto\u0219ani\u021ba Mare (municipio de Calafinde\u0219ti, Suceava; la prensa escribe Boto\u0219eni\u021ba), no en la ciudad de Suceava"
     },
     {
       "incidente": "EODI-2026-00278",
@@ -9050,13 +9108,10 @@
     {
       "incidente": "EODI-2025-00380",
       "campo": "objetivo",
-      "valor": {
-        "categoria": "base_militar",
-        "nombre": "Karlskrona \u00d6rlogsbas"
-      },
-      "cita": "Suspected drones spotted near Karlskrona naval base",
-      "enlace": "https://sverigesradio.se/artikel/suspected-drones-spotted-near-karlskrona-naval-base",
-      "motivo": "la base naval de Karlskrona, nombre \u00fanico del nomencl\u00e1tor"
+      "valor": null,
+      "cita": "Omr\u00e5det d\u00e4r dr\u00f6narna syntes ligger n\u00e5gra kilometer fr\u00e5n Marinbasen i Karlskrona.",
+      "enlace": "https://www.tv4.se/artikel/61uXTKKdXW7MPHvEtKLzaC/larm-om-droenare-oever-karlskrona-skaergard",
+      "motivo": "los drones se vieron sobre las islas de Sturk\u00f6 y Tjurk\u00f6, a unos kil\u00f3metros de la base naval de Karlskrona: no la sobrevolaron (revisi\u00f3n a mano de la muestra del 22 de octubre de 2026)"
     },
     {
       "incidente": "EODI-2025-00395",
