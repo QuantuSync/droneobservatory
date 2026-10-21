@@ -2595,6 +2595,32 @@
   ],
   "titulares": [
     {
+      "incidente": "EODI-2025-00109",
+      "inicio": {
+        "valor": "2025-10-03T00:00Z",
+        "precision": "dia",
+        "cita": "Am gestrigen Freitagmorgen (03. Oktober 2025) kam es am Frankfurter Flughafen auf Grund eines kurzzeitigen Drohnenflugs zu einem Polizeieinsatz",
+        "motivo": "la policía federal (presseportal.de) escribe el día: «Freitagmorgen (03. Oktober 2025)»"
+      },
+      "motivo": {
+        "es": "La ficha no daba el inicio y tomó la fecha de publicación (4 de octubre de 2025); la nota de la policía dice que fue la mañana del viernes 3 de octubre.",
+        "en": "The record had no start time and took the publication date (4 October 2025); the police note says it was on the morning of Friday 3 October."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00153",
+      "inicio": {
+        "valor": "2025-01-13T00:00Z",
+        "precision": "dia",
+        "cita": "2025. gada 13. janvārī Rīgas lidostā notikušā bezpilota gaisa kuģu (BGK) incidenta laikā",
+        "motivo": "el Ministerio de Defensa de Letonia (sam.gov.lv) escribe el día: «2025. gada 13. janvārī»"
+      },
+      "motivo": {
+        "es": "La ficha no daba el inicio y tomó la fecha de publicación (6 de febrero de 2025); la nota del Ministerio de Defensa sitúa el incidente de Riga el 13 de enero.",
+        "en": "The record had no start time and took the publication date (6 February 2025); the Defence Ministry note dates the Riga incident to 13 January."
+      }
+    },
+    {
       "incidente": "EODI-2025-00444",
       "inicio": {
         "valor": "2025-11-22T00:00Z",

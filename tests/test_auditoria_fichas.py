@@ -253,3 +253,22 @@ def test_e_no_cuenta_como_atribucion_el_dron_negado() -> None:
     assert not auditoria_fichas._e(documento)
     documento["fuentes"][1]["frase_origen"] = "Een drone werd waargenomen boven de luchthaven."
     assert auditoria_fichas._e(documento)
+
+
+def test_f_no_cuenta_la_fecha_de_la_propia_nota() -> None:
+    # EODI-2025-00125 (Doel): el titular de DW lleva su propia fecha («10.11.2025»); el suceso
+    # es del 9, que dice otra nota («ieri a tarda sera»). Riga (EODI-2025-00153) sí cuenta.
+    documento = _jozefow()
+    documento["lugar"]["pais"] = "BE"
+    documento["tiempo"] = {
+        "inicio": {"valor": "2025-11-09T20:00Z", "precision": "aproximada"},
+        "origen_inicio": {"tipo": "publicacion", "motivo": "fecha de publicación"},
+    }
+    fuente = documento["fuentes"][0]
+    fuente.update(fecha={"valor": "2025-11-10T01:45Z", "precision": "minuto"}, idioma="ru",
+                  pais="DE", frase_origen="В Бельгии над АЭС Doel заметили три беспилотника – "
+                  "DW – 10.11.2025")  # fmt: skip
+    assert not auditoria_fichas._fecha_de_publicacion(documento)
+    fuente.update(idioma="lv", pais="LV", frase_origen="2025. gada 13. janvārī Rīgas lidostā "
+                  "notikušā bezpilota gaisa kuģu incidenta laikā")  # fmt: skip
+    assert auditoria_fichas._fecha_de_publicacion(documento)
