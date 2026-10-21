@@ -11,6 +11,7 @@ import pytest
 
 from almacen.base import Almacen
 from esquema import Documento
+from exportacion import procedencia
 from exportacion.geojson import exportar
 from modelo import cliente as servicio_extractor
 from modelo import coste, ficha_oficial
@@ -713,6 +714,9 @@ def test_un_enlace_por_una_hora_sin_dia_se_deshace_y_la_fuente_sale_del_incident
     ]
     despues = leido(almacen.incidente("EODI-2025-00134"))
     assert not any(f["enlace"] == documento["enlace"] for f in despues["fuentes"])
+    # Lo que la nota aportaba al detalle oficial se va con ella: la exportación sigue valiendo.
+    assert antes.get("detalle_oficial") and not despues.get("detalle_oficial")
+    procedencia.procedencia_incidente(despues, procedencia.Fichas.de(almacen))
     guardado = leido(almacen.documento_oficial(documento["id"]))
     assert guardado["sucesos"][0]["cruce"] == "no_valido"
     # Idempotente, y la revisión de detalle no la vuelve a poner.
