@@ -1225,8 +1225,6 @@ def reglas_deterministas(ctx: Contexto) -> None:
         if sin_buque is not nuevo["lugar"]:
             nuevo = {**nuevo, "lugar": sin_buque}
             motivos.append(f"lugar {sin_buque['suceso']}: el nombre de un buque no es un lugar")
-        if nuevo.get("tipo") == "sobrevuelo" and incidentes.alcanzado_en_el_mar(nuevo):
-            motivos.append("buque alcanzado por un dron en el mar: no es un sobrevuelo")
         bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
         if bajado is not None:
             nuevo = bajado

@@ -6,6 +6,7 @@ import json
 
 from esquema import Documento
 from proceso import decidir, referencia
+from proceso.presencia import REVISADOS
 from recogida import revisados
 
 INSTANTE = {"valor": "2026-10-21T15:00Z", "precision": "minuto"}
@@ -82,3 +83,75 @@ def test_la_presencia_revisada_y_las_aeronaves_no_tripuladas() -> None:
     # Tulcea: el MApN detectó por radar «dos aeronaves no tripuladas».
     tulcea, citas = _sin_revision("EODI-2026-00488")
     assert decidir.aplicar(revisados.con_citas(tulcea, citas))["presencia_dron"] == "confirmada"
+
+
+# --- Los demás datos (decidir_datos y el tipo), una prueba por causa --------------------------
+
+
+def test_el_objetivo_toma_el_oaci_del_nomenclator_y_la_carcel_es_otra() -> None:
+    # Kleine-Brogel: base aérea con OACI (EBBL) en el nomenclátor; la ficha no lo tenía.
+    kleine_brogel = decidir.decidir_objetivo(_copia("EODI-2025-00080"))
+    assert kleine_brogel is not None
+    assert (kleine_brogel["categoria"], kleine_brogel["oaci"]) == ("aeropuerto", "EBBL")
+    # Schiphol: el nombre de la ficha está dentro del del nomenclátor (Luchthaven Schiphol).
+    schiphol = decidir.decidir_objetivo(_copia("EODI-2025-00203"))
+    assert schiphol is not None and schiphol["oaci"] == "EHAM"
+    # Mendizábal: una cárcel es «otra», no «gubernamental».
+    carcel = decidir.decidir_objetivo(_copia("EODI-2026-00625"))
+    assert carcel is not None and carcel["categoria"] == "otra"
+
+
+def test_el_objetivo_que_nombra_el_titular() -> None:
+    # Varsovia: el titular nombra el aeropuerto que cerró y la ficha no tenía objetivo.
+    varsovia = decidir.decidir_objetivo(_copia("EODI-2025-00233"))
+    assert varsovia is not None and varsovia["oaci"] == "EPWA"
+
+
+def test_la_incursion_la_demuestra_una_autoridad() -> None:
+    # Kleine-Brogel: confirmado, pero nadie dice de dónde venían los drones.
+    assert decidir.aplicar(_copia("EODI-2025-00080"))["tipo"] == "sobrevuelo"
+    # Moldavia: el Ministerio de Defensa cuenta que el Shahed sobrevoló su espacio aéreo.
+    assert decidir.aplicar(_copia("EODI-2026-00112"))["tipo"] == "incursion"
+    # Constanza: solo fuentes anónimas, sin autoridad.
+    assert decidir.aplicar(_copia("EODI-2025-00395"))["tipo"] == "sobrevuelo"
+    # Chelsea 3: un buque alcanzado en el mar; ninguna autoridad dice que estuviera en aguas
+    # búlgaras.
+    assert decidir.aplicar(_copia("EODI-2026-00512"))["tipo"] == "sobrevuelo"
+
+
+def test_sin_dron_segun_la_autoridad_el_numero_es_desconocido() -> None:
+    # Lakenheath: el UK Airprox Board concluye que el «dron» era un F-15.
+    assert decidir.decidir_drones(_copia("EODI-2025-00164")) == "desconocido"
+
+
+def test_las_revisiones_de_datos_con_su_cita() -> None:
+    # Riga: el aeropuerto paró los vuelos unos minutos (cierre revisado): interrupción.
+    assert decidir.aplicar(_copia("EODI-2025-00043"))["tipo"] == "interrupcion_aeroportuaria"
+    # Sofía: el viernes por la noche, 7 de febrero, no el día de las noticias.
+    sofia = decidir.decidir_datos(_copia("EODI-2025-00124"))
+    assert sofia["tiempo"]["inicio"]["valor"].startswith("2025-02-07")
+    # Dublín era el destino del avión: el dron estaba frente a la costa de Wicklow.
+    wicklow = decidir.decidir_datos(_copia("EODI-2026-00278"))
+    assert wicklow["lugar"]["localidad"] == "costa de Wicklow"
+    # Una ficha con el mismo identificador y sin esas fuentes (una de prueba) no las toma.
+    ajena = _copia("EODI-2025-00124")
+    ajena["fuentes"] = []
+    ajena["lugar"] = {**ajena["lugar"], "pais": "ES"}
+    assert decidir.decidir_datos(ajena)["tiempo"] == ajena["tiempo"]
+
+
+def test_cada_revision_de_datos_lleva_cita_y_enlace() -> None:
+    datos = json.loads(REVISADOS.read_text(encoding="utf-8"))["datos"]
+    for revision in datos:
+        assert revision["campo"] in decidir.CAMPOS_REVISABLES
+        assert revision["motivo"]
+        if revision["valor"] != "desconocido":
+            assert revision["cita"] and revision["enlace"].startswith("http"), revision
+            assert len(revision["cita"].split()) <= 25, revision
+
+
+def test_el_homonimo_lo_decide_la_fuente() -> None:
+    # Józefów «w gminie Nieporęt»: el pueblo de Nieporęt, no la ciudad de junto a Otwock.
+    jozefow = decidir.decidir_datos(_copia("EODI-2026-00648"))["lugar"]
+    assert jozefow["localidad"] == "Józefów"
+    assert abs(jozefow["punto"]["lat"] - 52.38) < 0.05

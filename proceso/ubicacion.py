@@ -27,6 +27,8 @@ si ninguno vale y alguno se halló, el incidente no se publica.
 
 import gzip
 import json
+import math
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import cache
@@ -269,6 +271,106 @@ def localidad_pequena(nombre: str, pais: str, region: str | None) -> Objetivo | 
         return None
     fila = filas[ids[0]]
     return Objetivo(ids[0], "otra", fila[0], pais, fila[2], fila[3], RADIO_PEQUENA_KM)
+
+
+# El municipio (gmina, comuna, Gemeinde…) que la fuente escribe junto a la localidad: «w
+# Józefowie w gminie Nieporęt» (EODI-2026-00648).
+_MUNICIPIO = re.compile(
+    r"(?<!\w)(?:gmin(?:ie|a|y)|comun(?:a|ei)|gemeinde|municipality of|municipio de|"
+    r"t[eé]rmino municipal de|commune de|kommune|kunta|obec|op[cć]ina|općini|obcina|"
+    r"savivaldyb[eė]s?|novad[aā]?|vald)\s+(\w[\w-]*)(?:\s+(\w[\w-]*))?",
+    re.IGNORECASE,
+)
+# Lo más lejos que está la localidad de la sede del municipio que la nombra.
+RADIO_MUNICIPIO_KM = 12.0
+
+
+def _con_ese_nombre(nombre: str, pais: str, nom: Nomenclator) -> list[Objetivo]:
+    """Todas las localidades del país con ese nombre: la del nomenclátor (la más poblada) y
+    las homónimas pequeñas (configuracion/localidades_pequenas.json.gz)."""
+    normal = normalizar(nombre)
+    salida = [
+        Objetivo.de_lugar(nom.lugares[i]) for i in localidades_declinadas(nombre, nom)
+        if nom.lugares[i].pais == pais and normalizar(nom.lugares[i].nombre) == normal
+    ]  # fmt: skip
+    indice, filas = localidades_pequenas()
+    for id_ in indice.get(normal, ()):
+        fila = filas[id_]
+        if fila[1] == pais:
+            salida.append(Objetivo(id_, "otra", fila[0], pais, fila[2], fila[3], RADIO_PEQUENA_KM))
+    return salida
+
+
+def _km(a: Objetivo, b: Objetivo) -> float:
+    f1, f2 = math.radians(a.lat), math.radians(b.lat)
+    h = (
+        math.sin((f2 - f1) / 2) ** 2
+        + math.cos(f1) * math.cos(f2) * math.sin(math.radians(b.lon - a.lon) / 2) ** 2
+    )
+    return 2 * 6371.0 * math.asin(math.sqrt(h))
+
+
+def homonimo_de_la_fuente(
+    nombre: str, pais: str, textos: tuple[str, ...], nom: Nomenclator
+) -> Objetivo | None:
+    """Con varias localidades del país que se llaman así, la que está junto al municipio que la
+    fuente escribe con ella («Józefów w gminie Nieporęt»: el pueblo de Nieporęt, no la ciudad
+    de junto a Otwock, que es la que guarda el nomenclátor por ser la más poblada). None si
+    no hay homónimas o ninguna frase lo decide."""
+    candidatos = _con_ese_nombre(nombre, pais, nom)
+    if len(candidatos) < 2:
+        return None
+    raiz = normalizar(nombre)[: max(4, len(normalizar(nombre)) - 2)]
+    for texto in textos:
+        if raiz not in normalizar(texto):
+            continue
+        for encontrado in _MUNICIPIO.finditer(texto):
+            palabras = [encontrado.group(1)]
+            if encontrado.group(2) and encontrado.group(2)[:1].isupper():
+                palabras.append(f"{encontrado.group(1)} {encontrado.group(2)}")
+            for municipio in reversed(palabras):
+                if normalizar(municipio) == normalizar(nombre):
+                    continue
+                sedes = _con_ese_nombre(municipio, pais, nom)
+                pares = [(_km(c, s), c) for c in candidatos for s in sedes]
+                if pares:
+                    distancia, elegido = min(pares, key=lambda p: p[0])
+                    if distancia <= RADIO_MUNICIPIO_KM:
+                        return elegido
+    return None
+
+
+def lugar_del_homonimo(incidente: dict[str, Any], nom: Nomenclator) -> dict[str, Any] | None:
+    """El lugar de una ficha guardada que situó una localidad por su nombre en la homónima que
+    no es: el de la que deciden sus fuentes (homonimo_de_la_fuente), o None si ya era esa."""
+    lugar = incidente.get("lugar") or {}
+    nombre = lugar.get("localidad") or lugar.get("suceso")
+    punto = lugar.get("punto")
+    if not nombre or not punto or lugar.get("geocodificacion") not in {
+        "localidad", "localidad_pequena",
+    }:  # fmt: skip
+        return None
+    textos = tuple(
+        str(f.get(c) or "")
+        for f in incidente.get("fuentes", [])
+        for c in ("frase_origen", "titular")
+    )
+    elegido = homonimo_de_la_fuente(str(nombre), str(lugar.get("pais")), textos, nom)
+    if elegido is None:
+        return None
+    actual = Objetivo(
+        "", "otra", str(nombre), str(lugar.get("pais")), punto["lat"], punto["lon"], 0
+    )
+    if _km(actual, elegido) < 1:
+        return None
+    return {
+        **lugar,
+        "punto": {"lat": round(elegido.lat, DECIMALES), "lon": round(elegido.lon, DECIMALES)},
+        "radio_km": elegido.radio_km,
+        "geocodificacion": "localidad_pequena"
+        if elegido.id in localidades_pequenas()[1]
+        else "localidad",
+    }
 
 
 def otra_region(sitio: Objetivo, region: str | None) -> bool:

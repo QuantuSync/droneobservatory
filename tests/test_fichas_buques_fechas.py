@@ -82,10 +82,11 @@ def test_en_el_mar_el_lugar_es_la_zona_maritima() -> None:
     assert incidentes.lugar_sin_buque(varna, [TITULAR, FRASE]) is varna
 
 
-def test_un_buque_alcanzado_en_el_mar_no_es_un_sobrevuelo() -> None:
+def test_un_buque_alcanzado_en_el_mar_es_sobrevuelo_sin_autoridad_que_diga_que_entro() -> None:
+    # Ninguna autoridad dice que el Chelsea 3 estuviera en aguas búlgaras (EODI-2026-00512).
     resultado = incidentes.aplicar_reglas(chelsea())
-    assert resultado["tipo"] == "incursion"
-    assert resultado["origen_demostrado_por"] == ["restos"]
+    assert resultado["tipo"] == "sobrevuelo"
+    assert "origen_demostrado_por" not in resultado
     # Un avistamiento sobre un aeropuerto sigue siendo sobrevuelo.
     otro = chelsea()
     otro["titulo"] = {"es": "Drones sobre el aeropuerto de Varna", "en": "Drones over Varna"}
@@ -144,7 +145,7 @@ def test_la_nota_de_la_semana_pasada_cae_en_la_ventana_del_suceso_registrado() -
 def test_el_control_encuentra_los_cuatro_fallos() -> None:
     documento = chelsea()
     assert reglas.fallos_de_ficha(documento) == [
-        reglas.BUQUE_COMO_LUGAR, reglas.ALCANZADO_COMO_SOBREVUELO, reglas.INTERIOR_EN_EL_MAR,
+        reglas.BUQUE_COMO_LUGAR, reglas.INTERIOR_EN_EL_MAR,
     ]  # fmt: skip
     nota = _aeropuerto(
         "EODI-2026-00632", {"valor": "2026-10-19T21:15Z", "precision": "aproximada"},

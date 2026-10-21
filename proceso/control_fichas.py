@@ -623,6 +623,8 @@ def aplicar(
 # Los cuatro fallos del 20 de octubre de 2026 (Chelsea 3, Núremberg): el control los busca en cada
 # ficha y la manda al experto.
 BUQUE_COMO_LUGAR = "buque_como_lugar"
+# Un buque alcanzado en el mar como sobrevuelo ya no es un fallo: es sobrevuelo salvo que una
+# autoridad diga que estaba en aguas del país (docs/control_fichas.md, «tipo»).
 ALCANZADO_COMO_SOBREVUELO = "alcanzado_como_sobrevuelo"
 INTERIOR_EN_EL_MAR = "interior_en_el_mar"
 PUBLICACION_CON_PASADO = "fecha_de_publicacion_con_pasado"
@@ -643,8 +645,6 @@ def fallos_de_ficha(incidente: Documento) -> list[str]:
                     "localidad"), dict) else []  # fmt: skip
     if any(buques.es_nombre_de_buque(n, textos) for n in nombres if n):
         fallos.append(BUQUE_COMO_LUGAR)
-    if incidente.get("tipo") == "sobrevuelo" and incidentes.alcanzado_en_el_mar(incidente):
-        fallos.append(ALCANZADO_COMO_SOBREVUELO)
     if (incidente.get("zona") or {}).get("grupo") == "interior" and buques.en_el_mar(textos):
         fallos.append(INTERIOR_EN_EL_MAR)
     tiempo = incidente.get("tiempo") or {}
