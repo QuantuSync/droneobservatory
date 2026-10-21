@@ -10,7 +10,10 @@ en cada uno de estos casos:
 - **sin_llamadas**: la extracción lleva más de 3 horas sin llamar al modelo y desde entonces han
   entrado noticias candidatas;
 - **dudosos**: un descarte dudoso del modelo base (proceso/escalado.descarte_dudoso) que lleva más
-  de 48 horas esperando al experto (uno por candidato).
+  de 48 horas esperando al experto (uno por candidato);
+- **auditoria**: una comprobación de la auditoría de las fichas (proceso/auditoria_fichas.py) con
+  más fichas hoy que el día anterior (una por comprobación y día; lo guarda el control de las
+  fichas en ~/.eodi/control.json).
 
 Cada caso se avisa una vez y no vuelve a avisarse hasta que se resuelve (deja de darse). Lo ya
 avisado queda en ~/.eodi/silencio.json (EODI_SILENCIO_ESTADO la cambia en pruebas). Nunca cambia el
@@ -42,6 +45,7 @@ DUDOSO_LARGO = timedelta(hours=48)
 MIN_CANDIDATAS = 3
 TITULO = "EODI · Silencio en la recogida"
 TITULO_DUDOSO = "EODI · Descarte dudoso sin experto"
+TITULO_AUDITORIA = "EODI · Auditoría de las fichas"
 
 
 @dataclass(frozen=True)
@@ -55,6 +59,8 @@ class Medidas:
     # Por candidato que espera al experto por el tope: desde cuándo y sus motivos.
     esperas: dict[str, dict[str, Any]] = field(default_factory=dict)
     saldo_desde: str | None = None
+    # Los recuentos de la auditoría de las fichas por día (recogida/control_fichas.py).
+    auditoria: dict[str, dict[str, int]] = field(default_factory=dict)
 
 
 def _iso(momento: datetime) -> str:
@@ -68,6 +74,10 @@ def medir(almacen: Almacen, ahora: datetime) -> Medidas:
         if isinstance(e, dict) and e.get("por") == "tope"
     }  # fmt: skip
     saldo = _leer(cliente.ruta_saldo())
+    # El estado del control de las fichas, junto al del silencio (~/.eodi/control.json).
+    auditoria = (_leer(ruta_estado().parent / "control.json").get("auditoria") or {}).get(
+        "dias"
+    ) or {}
     return Medidas(
         ultima_alta=almacen.ultima_alta("incidentes"),
         candidatas_24h=almacen.articulos_candidatos_desde(_iso(ahora - SIN_INCIDENTES)),
@@ -75,6 +85,7 @@ def medir(almacen: Almacen, ahora: datetime) -> Medidas:
         candidatas_tras_llamada=almacen.articulos_candidatos_desde(ultima) if ultima else 0,
         esperas=esperas,
         saldo_desde=saldo.get("desde"),
+        auditoria=auditoria if isinstance(auditoria, dict) else {},
     )
 
 
@@ -121,6 +132,15 @@ def avisos(medidas: Medidas, ahora: datetime) -> dict[str, tuple[str, str]]:
             f"{medidas.ultima_llamada}) y han entrado {medidas.candidatas_tras_llamada} noticias "
             "candidatas."
         ))  # fmt: skip
+    dias = sorted(medidas.auditoria)
+    if len(dias) >= 2:
+        hoy, ayer = medidas.auditoria[dias[-1]], medidas.auditoria[dias[-2]]
+        for clave in sorted(hoy):
+            if int(hoy[clave]) > int(ayer.get(clave, hoy[clave])):
+                casos[f"auditoria:{clave}:{dias[-1]}"] = (TITULO_AUDITORIA, (
+                    f"La comprobación {clave} de la auditoría de las fichas sube: {ayer[clave]} "
+                    f"fichas el {dias[-2]}, {hoy[clave]} hoy."
+                ))  # fmt: skip
     for id_, espera in sorted(medidas.esperas.items()):
         if _dudoso(espera) and str(espera.get("desde", "")) < hace(DUDOSO_LARGO):
             casos[f"dudoso:{id_}"] = (TITULO_DUDOSO, (

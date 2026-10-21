@@ -681,6 +681,7 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "experto": (datos.get("experto") or {}).get(dia.isoformat()),
         "api": (datos.get("api") or {}).get(dia.isoformat()),
         "criticos_esperando": list(datos.get("criticos_esperando") or []),
+        "auditoria": (datos.get("auditoria") or {}).get("dias") or {},
     }  # fmt: skip
 
 
@@ -704,12 +705,31 @@ def lineas_control(control: Documento | None) -> list[str]:
         lineas.append(f"  Retenidas por el control: {', '.join(control['retenidas'][:LIMITE])}")
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
+    lineas += lineas_auditoria(control.get("auditoria") or {})
     return (
         lineas
         + lineas_api(control.get("api"))
         + lineas_modelos(control.get("modelos"))
         + lineas_experto(control)
     )
+
+
+def lineas_auditoria(dias: Documento) -> list[str]:
+    """La auditoría de las fichas (proceso/auditoria_fichas.py): los recuentos del último día
+    con lo que cambian respecto al anterior."""
+    if not dias:
+        return []
+    orden = sorted(dias)
+    hoy = dias[orden[-1]]
+    ayer = dias[orden[-2]] if len(orden) > 1 else {}
+
+    def cambio(clave: str) -> str:
+        if clave not in ayer:
+            return ""
+        diferencia = int(hoy[clave]) - int(ayer[clave])
+        return f" ({diferencia:+d})" if diferencia else ""
+
+    return ["  Auditoría de fichas: " + ", ".join(f"{c} {hoy[c]}{cambio(c)}" for c in sorted(hoy))]
 
 
 def lineas_api(api: Documento | None) -> list[str]:

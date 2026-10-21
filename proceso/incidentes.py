@@ -286,6 +286,17 @@ def alcanzado_en_el_mar(documento: Documento) -> bool:
     return buques.alcanzado(textos) and buques.en_el_mar(textos)
 
 
+def objetivo_es_la_localidad(objetivo: Documento | None, lugar: Documento) -> bool:
+    """Un objetivo «otra» que se llama como la localidad del suceso no es una instalación: es el
+    lugar. No se guarda como objetivo (EODI-2026-00648, «Józefów · Otro lugar»)."""
+    nombre = normalizar(str((objetivo or {}).get("nombre") or ""))
+    return (
+        (objetivo or {}).get("categoria") == "otra"
+        and bool(nombre)
+        and nombre in {normalizar(str(lugar[c])) for c in ("localidad", "suceso") if lugar.get(c)}
+    )
+
+
 def lugar_sin_buque(lugar: Documento, textos: list[str]) -> Documento:
     """El lugar del suceso sin el nombre de un buque (proceso/buques.py): si el lugar es el nombre
     del barco, pasa a ser la zona marítima que nombran las fuentes (o el mar), sin punto, a nivel
@@ -357,6 +368,8 @@ def construir(
         if ficha.valor("objetivo_nombre"):
             datos_objetivo["nombre"] = ficha.valor("objetivo_nombre")
     sitio = objetivo.nombre if objetivo else ubicacion.nombre or ubicacion.pais
+    if objetivo_es_la_localidad(datos_objetivo, lugar):
+        datos_objetivo = None
     drones: Documento = {"numero": _rango(ficha.valor("drones"))}
     if ficha.valor("modelo_dron") in modelos_validos:
         drones["modelo"] = ficha.valor("modelo_dron")

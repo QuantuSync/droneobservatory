@@ -620,6 +620,22 @@ def revisar(
             fallidos.append(incidente["id"])
             continue
         anotar(almacen, incidente, documento, MOTIVO_ABIERTO)
+    # La confirmaba solo una cita de autoridad vacía (el verbo de decir sin lo que dijo).
+    for incidente in almacen.incidentes():
+        if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
+            continue
+        documento = quitar_por_cita_vacia(incidente)
+        if documento is incidente:
+            continue
+        documento = titulares.ajustar_incidente(documento)
+        documento = {**documento, "control": {**documento["control"],
+                                              "ultima_actualizacion": instante}}  # fmt: skip
+        try:
+            almacen.guardar_incidente(documento, ahora, modelos)
+        except DocumentoInvalido:
+            fallidos.append(incidente["id"])
+            continue
+        anotar(almacen, incidente, documento, MOTIVO_CITA_VACIA)
     # Una fuente cuenta que se buscó el dron y no se encontró: la presencia no queda confirmada.
     for incidente in almacen.incidentes():
         if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
@@ -663,6 +679,10 @@ MOTIVO_ABIERTO = (
 )
 
 
+MOTIVO_CITA_VACIA = (
+    "criterio de presencia: la cita de la autoridad que la confirmaba solo dice quién habla, no "
+    "lo que dijo; la presencia no queda confirmada"
+)
 MOTIVO_NO_HALLADO = (
     "criterio de presencia: una fuente cuenta que no se encontró el dron; la presencia no "
     "queda confirmada"
@@ -726,6 +746,33 @@ def quitar_por_actuacion(incidente: Documento) -> Documento:
         **incidente,
         "presencia_dron": "no_confirmada",
         "afirmaciones": [a for a in incidente.get("afirmaciones", []) if a not in de_regla],
+    }
+
+
+def quitar_por_cita_vacia(incidente: Documento) -> Documento:
+    """Sin la confirmación que solo daba una cita de autoridad vacía (quién habla y el verbo de
+    decir: «… Komendy Stołecznej Policji przekazała», EODI-2026-00648). El mismo incidente si
+    alguna otra fuente la sostiene o no hay nada que quitar."""
+    if (
+        incidente.get("presencia_dron") != "confirmada"
+        or incidente["id"] in presencias_revisadas()
+        or documento_oficial_decide(incidente)
+        or pruebas_fisicas_confirmadas(incidente)
+        or atribuida_por_autoridad(incidente)
+    ):
+        return incidente
+    fuentes = {f["id"]: f for f in incidente["fuentes"]}
+    confirman = [
+        a for a in incidente.get("afirmaciones", [])
+        if a["campo"] == "presencia_dron" and a["valor"] == "confirmada"
+    ]  # fmt: skip
+    vacias = [a for a in confirman if declaraciones.cita_vacia(fuentes.get(a["fuente_id"], {}))]
+    if not vacias or len(vacias) < len(confirman):
+        return incidente
+    return {
+        **incidente,
+        "presencia_dron": "no_confirmada",
+        "afirmaciones": [a for a in incidente.get("afirmaciones", []) if a not in vacias],
     }
 
 

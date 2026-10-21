@@ -227,8 +227,11 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
       ? undefined
       : porFuente.get(pasoAtribuido.fuente_id);
   const titulo = incidente.titulo[idioma];
-  // Los nombres de lugar, como se escriben en el idioma de la página (datos/nombres.ts).
-  const nombre = objetivoEscrito(incidente, idioma) ?? titulo;
+  // Los nombres de lugar, como se escriben en el idioma de la página (datos/nombres.ts). La
+  // cabecera es la instalación solo si es una de verdad (con categoría propia, no «otra»): si
+  // no, el titular, sin repetirlo debajo (EODI-2026-00648, «Józefów · Otro lugar»).
+  const instalacion = objetivo !== undefined && objetivo.categoria !== "otra";
+  const nombre = (instalacion ? objetivoEscrito(incidente, idioma) : null) ?? titulo;
   const modelo = modeloEscrito(drones?.modelo);
   const vuelos: [RangoODesconocido | undefined, string, string][] = [
     [consecuencias?.vuelos_desviados, t.ficha.vuelosDesviados, "consecuencias.vuelos_desviados"],

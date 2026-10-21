@@ -235,10 +235,20 @@ def _afinable(incidente: Documento, sitio: Lugar, nom: Nomenclator) -> bool:
             or lugar.get("geocodificacion") == "oficial"
             or objetivo.get("categoria") in CATEGORIAS_INSTALACION
         )
+    if objetivo.get("categoria") in CATEGORIAS_INSTALACION:
+        return False
     if (
-        lugar.get("geocodificacion") not in GEOCODIFICACION_GENERICA
-        or objetivo.get("categoria") in CATEGORIAS_INSTALACION
+        lugar.get("geocodificacion") == "candidato"
+        and objetivo.get("categoria") in (None, "otra")
+        and distancia_km(lugar["punto"]["lat"], lugar["punto"]["lon"], sitio.lat, sitio.lon)
+        <= DISTANCIA_CIUDAD_KM
     ):
+        # El titular nombra sin duda la instalación («aeropuerto de Berlín») y la ficha solo
+        # tiene el punto del candidato (el de la ciudad) y un objetivo «otra» con el nombre de la
+        # ciudad (EODI-2026-00131, «Berlín · Otro lugar»; EODI-2026-00322,
+        # Hamburgo): el punto y el objetivo pasan a la instalación.
+        return True
+    if lugar.get("geocodificacion") not in GEOCODIFICACION_GENERICA:
         return False
     nombres = {
         normalizar(str(n))
