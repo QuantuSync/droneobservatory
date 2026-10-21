@@ -278,6 +278,14 @@ _AUTOR = re.compile(
     r"\s+(?:behind|responsible|dahinter|verantwortlich|detrás|responsable\w*)",
     re.IGNORECASE,
 )
+# Tampoco la duda sobre su procedencia: «aparatul ar fi posibil de proveniență rusească»
+# (EODI-2026-00238): lo abierto es de dónde venía, no que fuera un dron.
+_PROCEDENCIA = re.compile(
+    r"^\W*(?:\w+\W+){0,2}(?:de\s+proveniență|de\s+proveniența|of\s+\w+\s+origin|"
+    r"russischer\s+herkunft|de\s+origen|di\s+provenienza|d['’]origine|"
+    r"rosyjskiego\s+pochodzenia|from\s+russia|russian-made|rusesc\w*|rusească)",
+    re.IGNORECASE,
+)
 
 
 def abierto(*textos: str) -> bool:
@@ -285,7 +293,7 @@ def abierto(*textos: str) -> bool:
     for texto in textos:
         for duda in ABIERTO.finditer(texto or ""):
             despues = texto[duda.end() : duda.end() + 40]
-            if not _INFRACCION.search(despues) and not _AUTOR.search(despues):
+            if not any(r.search(despues) for r in (_INFRACCION, _AUTOR, _PROCEDENCIA)):
                 return True
     return False
 
