@@ -158,6 +158,8 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
     });
 
     test(`${nombre}: ampliada de cada atribuido, junto a los círculos`, async ({ browser, baseURL }) => {
+      // Una ficha por atribuido: con los siete del 21 de octubre de 2026 no cabe en 90 s.
+      test.slow();
       const contexto = await browser.newContext({
         viewport: { width: tamano.width, height: tamano.height },
         isMobile: telefono,
