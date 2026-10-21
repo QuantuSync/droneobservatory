@@ -3468,6 +3468,18 @@
         "categoria": "ministerio",
         "afirma": "incidente"
       }
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828",
+      "medio": "focus-news.net",
+      "fecha": "2026-03-09",
+      "idioma": "bg",
+      "frase": "Дрон няма, не сме установили в този сигнал дрон - категорично заяви главен комисар Любомир Николов относно сигнала в събота за прелитащ дрон",
+      "comprobada": {
+        "fecha": "2026-10-22",
+        "en": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828 (original)"
+      }
     }
   ],
   "titulares": [
@@ -4082,6 +4094,22 @@
       "motivo": {
         "es": "El Ministerio de Defensa rumano sitúa los drones en el espacio aéreo ucraniano y dice que el radar no detectó entradas en el espacio aéreo nacional: el suceso (la alerta) está confirmado, el dron en Rumanía no.",
         "en": "The Romanian Ministry of Defence places the drones in Ukrainian airspace and says radar detected no entry into national airspace: the event (the alert) is confirmed, a drone in Romania is not."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "titulo": {
+        "es": "Cierre del aeropuerto de Sofía por un aviso de dron que la policía descarta",
+        "en": "Sofia airport closed over a drone report that police later ruled out"
+      },
+      "presencia": {
+        "valor": "descartada",
+        "cita": "Дрон няма, не сме установили в този сигнал дрон - категорично заяви главен комисар Любомир Николов относно сигнала в събота за прелитащ дрон",
+        "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+      },
+      "motivo": {
+        "es": "Presencia descartada: el lunes 9 de marzo de 2026 el director de la policía de Sofía, Lyubomir Nikolov, dijo que en el aviso del sábado 7 no había dron. El cierre del espacio aéreo de esa tarde sigue en la ficha con sus fuentes.",
+        "en": "Drone presence ruled out: on Monday 9 March 2026 the Sofia police director, Lyubomir Nikolov, said there was no drone in the report of Saturday 7. The airspace closure that afternoon stays in the record with its sources."
       }
     }
   ],
@@ -5902,6 +5930,35 @@
         }
       },
       "motivo": "La central está en el término de Cofrentes; en Jalance se localizó al piloto."
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "lugar": {
+        "nombre": "Sofia",
+        "nivel": "instalacion",
+        "lat": 42.69548,
+        "lon": 23.41779,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00064",
+        "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+        "medio": "frognews.bg",
+        "fecha": "2026-03-07",
+        "idioma": "bg",
+        "frase": "Въздушното пространство над летище „Васил Левски“ – София е било затворено за кратко в събота следобед заради засечен дрон в района на летището.",
+        "comprobada": {
+          "fecha": "2026-10-22",
+          "en": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html (original)"
+        }
+      },
+      "cambio": {
+        "motivo": {
+          "es": "El punto era el del estadio Vasil Levski de Karlovo, que se llama como el aeropuerto; el suceso es en el aeropuerto Vasil Levski de Sofía.",
+          "en": "The point was the Vasil Levski stadium in Karlovo, which has the same name as the airport; the event is at Sofia's Vasil Levski airport."
+        }
+      },
+      "motivo": "El nomenclátor de instalaciones casó «Летище „Васил Левски“» con el estadio Vasil Levski de Karlovo (estadio:way/169361657); el aeropuerto es LBSF, en Sofía."
     }
   ],
   "separar": [
@@ -8332,6 +8389,70 @@
             "gdelt-98e7d5be9e056c7b",
             "gdelt-48bfae7c11056194"
           ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "distintos": true,
+      "motivo": {
+        "es": "junta dos sucesos distintos en el aeropuerto Vasil Levski de Sofía desde que se le unió EODI-2026-00357 (21 de octubre de 2026), que ya los mezclaba: el cierre del espacio aéreo del sábado 7 de marzo de 2026 por la tarde por un aviso de dron, que el lunes 9 la policía de Sofía dijo que no era un dron (focus-news.net), y los tres avisos de dron del domingo 8 por la noche, a las 23:03, a las 23:27 y a las 00:15, que confirmó el aeropuerto sin efecto en los vuelos (bgonair.bg, focus-news.net).",
+        "en": "it merges two different events at Sofia's Vasil Levski airport since EODI-2026-00357, which already mixed them, was joined to it (21 October 2026): the airspace closure on the afternoon of Saturday 7 March 2026 over a drone report, which Sofia police said on Monday 9 was not a drone (focus-news.net), and the three drone reports on the night of Sunday 8, at 23:03, 23:27 and 00:15, confirmed by the airport with no effect on flights (bgonair.bg, focus-news.net)."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-07",
+          "pais": "BG",
+          "descripcion": "Cierre del espacio aéreo del aeropuerto Vasil Levski de Sofía por un aviso de dron, sábado 7 de marzo de 2026 por la tarde; el lunes 9 la policía de Sofía dice que no había dron",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-507737c27ff00fb0",
+            "gdelt-507737c27ff00fb0-declaracion-1",
+            "gdelt-507737c27ff00fb0-declaracion-2",
+            "gdelt-28b4fe959bb55bcb",
+            "gdelt-1665d6b0e221d75d",
+            "gdelt-1665d6b0e221d75d-declaracion-1",
+            "gdelt-eb227c80ce633957",
+            "gdelt-fa8b4fdc60594ac7",
+            "gdelt-e06af0e8408a59ae",
+            "gdelt-2620bda4ea36dfc3",
+            "gdelt-430510788f1dfb2c",
+            "gdelt-af69cc921ca736f2",
+            "gdelt-361e0ba62239fa70",
+            "gdelt-d2b4baa61b6647c5",
+            "gdelt-0fbfc449edf2f8c8",
+            "gdelt-902a184f6cf47f3e",
+            "revisada-e39d4bea49d9c546",
+            "gdelt-a663ac8c26ed1a93",
+            "gdelt-00161837a8abc552",
+            "gdelt-00161837a8abc552-declaracion-1",
+            "gdelt-1bce8ef328109e33",
+            "gdelt-32213768c870f2a9",
+            "gdelt-e820be826c6388c9",
+            "gdelt-eb12aa87cfb01f7f",
+            "gdelt-5ccd28bbe0b71b73",
+            "gdelt-229f8d265e19e5f9",
+            "gdelt-5a22bd36bc7116eb",
+            "gdelt-f2d58e2cfd4f59b9",
+            "gdelt-31dad4c8298299d7",
+            "gdelt-ccd21b5470ed1bec"
+          ],
+          "lugar": "LBSF"
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-08T21:03Z",
+          "pais": "BG",
+          "descripcion": "Tres avisos de dron junto al aeropuerto Vasil Levski de Sofía el domingo 8 de marzo de 2026 por la noche (23:03, 23:27 y 00:15, hora local), confirmados por el aeropuerto, sin efecto en los vuelos",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1db405884abd4850",
+            "gdelt-1db405884abd4850-declaracion-1",
+            "gdelt-334bebfbe6a3ca08",
+            "gdelt-00af61ba693d5cf9"
+          ],
+          "lugar": "LBSF"
         }
       ]
     }
