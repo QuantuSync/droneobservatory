@@ -28,7 +28,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, ficha_oficial
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import detalle, extraccion, incidentes
+from proceso import detalle, extraccion, fechas, incidentes
 from proceso.extraccion import Parada, Servicio, ServicioLotes, prefijos_genericos
 from proceso.fronteras import paises
 from proceso.validacion_oficial import Suceso, dia_en_frase, validar_cifra, validar_suceso
@@ -319,6 +319,47 @@ def revalidar_altas(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) 
         if cambiado:
             almacen.guardar_documento_oficial({**documento, "sucesos": sucesos}, ahora)
     return retirados
+
+
+MOTIVO_SIN_DIA_ENLACE = (
+    "la frase de la hora no da el día (ni lo escribe ni dice «el viernes», «anoche»): el día era "
+    "el de la publicación y podía ser otro suceso"
+)
+
+
+def sin_dia(inicio: Documento, documento: Documento) -> bool:
+    """La frase de la fecha del suceso no da el día: ni lo escribe ni lo dice de otra forma
+    («Der blev sent fredag aften observeret», «Mandag aften»). Es la nota de Nordjyllands Politi
+    publicada a la 01:05 del 25 de septiembre de 2025 («modtog klokken 21:44 en anmeldelse»):
+    las 21:44 eran del miércoles 24 y el día que leyó el extractor, el de la publicación."""
+    frase = str(inicio.get("frase") or "")
+    if dia_en_frase(str(inicio["valor"]), frase):
+        return False
+    publicacion = datetime.fromisoformat(str(documento["fecha"])[:10]).replace(tzinfo=UTC)
+    zona = fechas.zona(documento.get("pais")) or UTC
+    return not fechas.leer(frase, publicacion, zona, documento.get("idioma"))
+
+
+def desenlazar_sin_dia(almacen: Almacen, ahora: datetime) -> list[tuple[str, str]]:
+    """Los sucesos citados que se enlazaron con un incidente que ya estaba por una fecha cuya
+    frase no da el día (sin_dia) dejan de estar enlazados: el día era el de la publicación y
+    el incidente, quizá otro suceso (EODI-2025-00238, Aalborg). El suceso queda como no válido
+    con su motivo. Devuelve (incidente, enlace del documento) de cada uno, para quitar la
+    fuente del incidente (recogida/detalle.py); idempotente."""
+    quitados = []
+    for documento in almacen.documentos_oficiales("extraido"):
+        cambiado = False
+        sucesos = []
+        for suceso in documento.get("sucesos", []):
+            inicio = suceso["datos"].get("inicio")
+            if suceso["cruce"] == "existente" and inicio is not None and sin_dia(inicio, documento):
+                quitados.append((str(suceso["incidente"]), str(documento["enlace"])))
+                suceso = {**suceso, "cruce": "no_valido", "motivos": [MOTIVO_SIN_DIA_ENLACE]}
+                cambiado = True
+            sucesos.append(suceso)
+        if cambiado:
+            almacen.guardar_documento_oficial({**documento, "sucesos": sucesos}, ahora)
+    return quitados
 
 
 @dataclass
