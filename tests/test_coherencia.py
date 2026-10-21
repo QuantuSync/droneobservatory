@@ -38,6 +38,23 @@ def test_quien_confirma_tambien_avisa() -> None:
     assert doc["estado"]["historial"][0]["fecha"]["valor"] == "2026-08-26T16:45Z"
 
 
+def test_un_desmentido_no_presta_su_fuente_al_confirmado() -> None:
+    # EODI-2025-00124, Sofía: la aviación civil confirma (07:00) y el director del aeropuerto lo
+    # niega en una noticia anterior (06:30). La web enseñaba los dos pasos con la frase del
+    # director.
+    doc = incidente(
+        fecha("2025-02-12T00:00Z", "dia"),
+        ("notificado", fecha("2025-02-12T06:30Z"), "gdelt-3384c43bdd9b2564"),
+        ("confirmado", fecha("2025-02-12T07:00Z"), "gdelt-f374f4ebc0fc0121-declaracion-2"),
+        ("desmentido", fecha("2025-02-12T06:30Z"), "gdelt-3384c43bdd9b2564-declaracion-1"),
+    )
+    arreglado = coherencia.coherente(doc)
+    pasos = arreglado["estado"]["historial"]
+    assert [p["fuente_id"] for p in pasos] == [p["fuente_id"] for p in doc["estado"]["historial"]]
+    assert pasos[2]["fecha"] == fecha("2025-02-12T07:00Z")
+    assert coherencia.contradicciones(arreglado) == []
+
+
 def test_un_suceso_no_empieza_despues_de_su_primer_aviso() -> None:
     # EODI-2025-00001: noticias del 27 de diciembre, suceso fechado el 28 (solo el día).
     doc = incidente(

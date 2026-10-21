@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from almacen.base import Almacen
-from proceso import competencia, declaraciones
+from proceso import competencia, declaraciones, presencia
 from proceso.estados import errores_historial
 from recogida import revisados
 from tests import ejemplos
@@ -127,7 +127,8 @@ def test_si_lo_niega_la_competente_el_desmentido_vale() -> None:
         "pais": "BE",
         "categoria": "navegacion_aerea",
         "afirma": "niega_incidente",
-        "frase": SKEYES,
+        # Una negación de verdad (declaraciones.niega).
+        "frase": "Skeyes erklärte, es habe keinen Vorfall gegeben.",
     }
     pares = [
         (confirma, declaraciones.fuente(confirma, noticia, 1)),
@@ -210,3 +211,102 @@ def test_el_motivo_corregido_cambia_solo_el_texto_del_paso_ya_aplicado() -> None
     assert nuevo["estado"]["historial"][-1]["motivo"] == revision["estado"]["motivo"]
     assert nuevo["estado"]["historial"][-1]["fecha"] == aplicada["estado"]["historial"][-1]["fecha"]
     assert "Brussels Airport" not in revision["estado"]["motivo"]["es"]
+
+
+AVIACION = (
+    "Дронът, който преди дни влезе на територията на летището и затрудни кацането и излитането "
+    "на шест самолета"
+)
+DIRECTOR = "няма инцидент и няма проблем"
+PREFECTURA = "La prefettura ha precisato che è prematuro correlare l'episodio a una azione di Mosca"
+
+
+def _desmentida(
+    id_: str, confirma: dict[str, Any], niega: dict[str, Any], enlace: str
+) -> dict[str, Any]:
+    """Una ficha guardada antes de la regla: confirmada por una autoridad y desmentida después
+    por otra, con el desmentido como último paso."""
+    documento = _bruselas()
+    documento["id"] = id_
+    noticia = _noticia(enlace, "gdelt-3384c43bdd9b2564")
+    documento["fuentes"] = [noticia]
+    documento["estado"]["historial"][0]["fuente_id"] = noticia["id"]
+    a, b = declaraciones.fuente(confirma, noticia, 1), declaraciones.fuente(niega, noticia, 2)
+    documento["fuentes"] += [a, b]
+    documento["estado"] = {
+        "actual": "desmentido",
+        "historial": [
+            documento["estado"]["historial"][0],
+            {"estado": "confirmado", "fecha": a["fecha"], "fuente_id": a["id"]},
+            {"estado": "desmentido", "fecha": b["fecha"], "fuente_id": b["id"]},
+        ],
+    }
+    documento["control"]["motivo_desmentido"] = f"{niega['autoridad']}: «{niega['frase']}»"
+    documento["presencia_dron"] = "no_confirmada"
+    return documento
+
+
+def _declaracion(autoridad: str, categoria: str, afirma: str, frase: str) -> dict[str, Any]:
+    return {"autoridad": autoridad, "pais": "BG", "categoria": categoria, "afirma": afirma,
+            "frase": frase}  # fmt: skip
+
+
+def test_en_sofia_prevalece_la_aviacion_civil_sobre_el_director_del_aeropuerto() -> None:
+    # EODI-2025-00124: la aviación civil dice que un dron entró en el aeropuerto y afectó a seis
+    # vuelos; el director del aeropuerto, «няма инцидент и няма проблем». La ficha estaba
+    # «Desmentido» por el director.
+    sofia = _desmentida(
+        "EODI-2025-00124",
+        _declaracion("Гражданската въздухоплавателна авиация", "", "drones", AVIACION),
+        _declaracion("Директор на летище София Хесус Кабайеро", "", "niega_incidente", DIRECTOR),
+        "https://actualno.com/society/njama-incident-i-njama-problem",
+    )
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(sofia, AHORA, VOCABULARIO_MODELOS)
+    presencia.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
+    guardado = almacen.incidente("EODI-2025-00124")
+    assert guardado is not None
+    assert guardado["estado"]["actual"] == "confirmado"
+    assert guardado["presencia_dron"] == "confirmada"
+    pasos = guardado["estado"]["historial"]
+    assert [p["estado"] for p in pasos] == ["notificado", "confirmado", "desmentido", "confirmado"]
+    aviacion = next(f for f in guardado["fuentes"] if f["frase_origen"] == AVIACION)
+    assert pasos[-1]["fuente_id"] == aviacion["id"]
+    assert "competente" in pasos[-1]["motivo"]["es"]
+    assert "motivo_desmentido" not in guardado["control"]
+    fuentes = {f["id"]: f for f in guardado["fuentes"]}
+    assert errores_historial(guardado["estado"], fuentes) == []
+    # La pasada siguiente no añade nada.
+    presencia.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
+    assert almacen.incidente("EODI-2025-00124") == guardado
+
+
+def test_un_desmentido_que_no_niega_nada_no_vale() -> None:
+    # EODI-2025-00206, Île Longue: la Gendarmería confirma los cinco drones; la prefectura solo
+    # dice que es prematuro atribuirlo a Moscú. Ni la ficha guardada ni una declaración nueva
+    # quedan desmentidas.
+    gendarmeria = _declaracion(
+        "Gendarmeria francese", "policia", "drones",
+        "Cinque droni hanno sorvolato ieri sera la base sottomarina",
+    )  # fmt: skip
+    prefectura = _declaracion("Prefettura", "gobierno", "niega_incidente", PREFECTURA)
+    brest = _desmentida("EODI-2025-00206", gendarmeria, prefectura,
+                        "https://tg24.sky.it/mondo/2025/12/05/droni-ile-longue")  # fmt: skip
+    corregido = competencia.corregir_desmentido(brest)
+    assert corregido is not None
+    documento, prevalece = corregido
+    assert documento["estado"]["actual"] == "confirmado"
+    assert prevalece["medio"].startswith("Gendarmeria francese")
+    assert documento["estado"]["historial"][-1]["motivo"] == competencia.motivo_sin_negacion()
+    assert not declaraciones.niega(PREFECTURA)
+    assert not declaraciones.niega("няма проблем")
+    assert declaraciones.niega(DIRECTOR)
+    noticia = _noticia()
+    gendarmeria, prefectura = {**gendarmeria, "pais": "BE"}, {**prefectura, "pais": "BE"}
+    nueva = declaraciones.aplicar_fuentes(
+        _bruselas(),
+        [(gendarmeria, declaraciones.fuente(gendarmeria, noticia, 1)),
+         (prefectura, declaraciones.fuente(prefectura, noticia, 2))],
+    )  # fmt: skip
+    assert nueva["estado"]["actual"] == "confirmado"
+    assert "desmentido" not in [p["estado"] for p in nueva["estado"]["historial"]]

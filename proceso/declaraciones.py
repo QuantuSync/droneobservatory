@@ -153,6 +153,11 @@ def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> l
         if _normal(frase) not in _normal(textos[numero - 1]):
             continue
         palabras = frase.split()[:MAX_PALABRAS_FRASE]
+        if remite(" ".join(palabras)) and not habla_de_drones(" ".join(palabras)):
+            # «Das teilte die Polizei Offenburg mit.»: lo que dijo es la oración de antes.
+            anterior = _con_lo_anterior(" ".join(palabras), textos[numero - 1])
+            if anterior is not None:
+                palabras = anterior.split()
         if sin_afirmacion(" ".join(palabras)):
             # Solo quién habla: vale lo que dijo, si el texto lo trae detrás; si no, nada.
             contenido = _con_contenido(" ".join(palabras), textos[numero - 1])
@@ -195,6 +200,40 @@ def sin_afirmacion(frase: str) -> bool:
     Stołecznej Policji przekazała», «The police said:»). Una declaración así no confirma el
     estado ni la presencia hasta tener una cita con contenido."""
     return bool(_SIN_AFIRMACION.match(frase.strip()))
+
+
+# Una cita que remite a la oración anterior: «Das teilte die Polizei Offenburg mit.»
+# (EODI-2025-00027), «Dies bestätigte die Innenministerin», «This was confirmed by the police».
+_REMITE = re.compile(
+    rf"^\W*(?:das|dies|dieses|this|that|esto|eso|ello|dat|dit|det|cela|ceci|questo|ciò|to|"
+    rf"acest\w*)(?!\w).{{0,80}}?(?<!\w)(?:{_DECIR}|teilte|bestätigt\w*|meldet\w*|mitteilt\w*)"
+    rf"(?!\w)",
+    re.IGNORECASE,
+)
+MAX_PALABRAS_REMITE = 12
+
+
+def remite(frase: str) -> bool:
+    """La cita solo dice quién lo dijo de lo que cuenta la oración anterior."""
+    return len(frase.split()) <= MAX_PALABRAS_REMITE and bool(_REMITE.match(frase.strip()))
+
+
+def _con_lo_anterior(frase: str, texto: str) -> str | None:
+    """La oración anterior seguida de la cita que remite a ella, literal y con como mucho
+    MAX_PALABRAS_FRASE palabras (las primeras de la anterior se quitan si no caben). None si el
+    texto no trae la oración anterior o si no nombra drones."""
+    patron = r"\s+".join(re.escape(p) for p in frase.split())
+    encontrada = re.search(patron, texto, re.IGNORECASE)
+    if encontrada is None:
+        return None
+    antes = re.split(r"(?<=[.!?])\s+", texto[: encontrada.start()].strip())[-1]
+    if not habla_de_drones(antes):
+        return None
+    caben = MAX_PALABRAS_FRASE - len(frase.split())
+    union = " ".join([*antes.split()[-caben:], *frase.split()])
+    if not habla_de_drones(union) or _normal(union) not in _normal(texto):
+        return None
+    return union
 
 
 def _con_contenido(frase: str, texto: str) -> str | None:
@@ -258,6 +297,40 @@ _DRON_NEGADO = re.compile(
     r"nici\s+o|nicio)\s+(?:\w+\s+)?(?:drones?|drohne\w*|dron\w*|droner?|droon\w*|drony)(?!\w)",
     re.IGNORECASE,
 )
+
+
+# Lo que niega una autoridad: una negación seguida, en pocas palabras, de lo negado.
+_NEGACION = re.compile(
+    r"(?<!\w)(?:no|not|nothing|none|never|kein\w*|nicht|nichts|niet|geen|ingen|inte|ikke|"
+    r"aucun\w*|pas|rien|non|nessun\w*|niente|nie|żadn\w*|brak|nu|nici\w*|ningún|ninguna?|"
+    r"nada|nunca|não|nenhum\w*|няма|не|нет|δεν|καμία|nėra|nav|ei|nincs|není|nema)(?!\w)",
+    re.IGNORECASE,
+)
+# Negar el peligro o el problema de seguridad no es negar el dron: «няма проблем» (el director
+# del aeropuerto de Sofía, EODI-2025-00124), «no danger to the public».
+_PELIGRO = re.compile(
+    r"^\W*(?:(?:hay|había|existe|existía|is|was|there|any|ein\w*|une?|any|hubo|ha|"
+    r"habido|of|a|de|di|za|ani|e|există|a\s+fost|niciun\w*|real|immediate|immediata|"
+    r"inmediato|unmittelbar\w*|größer\w*|grave|serio|serious)\W+){0,3}"
+    r"(?:peligro\w*|riesgo\w*|amenaza\w*|problema\w*|danger\w*|threat\w*|risk\w*|"
+    r"problem\w*|safety|security|gefahr\w*|bedrohung\w*|risiko\w*|gevaar\w*|dreiging\w*|"
+    r"fare\w*|trussel\w*|fara\w*|hot\w*|risque\w*|menace\w*|pericol\w*|minacci\w*|"
+    r"rischi\w*|zagrożeni\w*|niebezpiecz\w*|amenințar\w*|опасност\w*|заплах\w*|"
+    r"проблем\w*|κίνδυν\w*|απειλ\w*)",
+    re.IGNORECASE,
+)
+
+
+def niega(frase: str) -> bool:
+    """La frase niega algo que no es solo el peligro: «no hay peligro», «няма проблем», «no
+    safety issue» no niegan el dron ni el suceso; «è prematuro correlare l'episodio a una azione
+    di Mosca» (EODI-2025-00206) no niega nada. Que el dron no se encontrara después tampoco lo
+    niega (presencia.NO_HALLADO: «n'avaient permis de retrouver aucun drone», EODI-2025-00357)."""
+    from proceso.presencia import NO_HALLADO
+
+    if NO_HALLADO.search(frase):
+        return False
+    return any(not _PELIGRO.match(frase[m.end() : m.end() + 60]) for m in _NEGACION.finditer(frase))
 
 
 def atribuye_dron(frase: str) -> bool:
@@ -417,6 +490,9 @@ def _aplicar_nuevas(
             por_frase.append(origen)
         if afirma == "sin_drones":
             resultado["presencia_dron"] = "descartada"
+        elif afirma == "niega_incidente" and not niega(str(declaracion.get("frase", ""))):
+            # No niega nada (solo el peligro, o la atribución): no es un desmentido.
+            pass
         elif afirma == "niega_incidente" and (
             anotado := _negacion_que_cede(resultado, declaracion, origen, categorias)
         ):

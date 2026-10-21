@@ -182,7 +182,7 @@ def test_confirmada_sin_autoridad_que_lo_atribuya_queda_sin_confirmar() -> None:
 
 def test_la_regla_no_decide_las_dudosas() -> None:
     # e) La Bundeswehr afirma los drones según el extractor, pero su cita no los nombra
-    # (EODI-2025-00340, Múnich); restos del dron que solo cuenta la prensa (EODI-2025-00312).
+    # (EODI-2025-00340, Múnich).
     munich = lieja("EODI-2025-00340", "2025-10-02T20:18Z",
                    frase_origen="Drohnensichtungen am Flughafen München")  # fmt: skip
     citada = _autoridad(
@@ -199,7 +199,25 @@ def test_la_regla_no_decide_las_dudosas() -> None:
     )
     singerei["pruebas"] = {"dron_estatal": True, "entrada_exterior": True,
                            "evidencia": ["restos"]}  # fmt: skip
-    assert presencia.dudosa_por(singerei, {})
+    assert not presencia.dudosa_por(singerei, {})
+
+
+def test_los_restos_que_solo_cuenta_la_prensa_no_confirman() -> None:
+    # EODI-2025-00312, Sîngerei: el Gerbera hallado en un campo solo lo cuenta la prensa.
+    almacen = Almacen.abrir()
+    gerbera = "Dronă militară de tip Gerbera a fost găsită pe un câmp."
+    singerei = lieja("EODI-2025-00312", "2025-11-20T08:00Z", frase_origen=gerbera)
+    singerei["pruebas"] = {"dron_estatal": True, "entrada_exterior": True,
+                           "evidencia": ["restos"]}  # fmt: skip
+    singerei = _confirmada(singerei, singerei["fuentes"][0]["id"])
+    assert presencia.sin_base(singerei)
+    assert presencia.motivo_sin_base(singerei) == presencia.MOTIVO_PRUEBAS_PRENSA
+    almacen.guardar_incidente(singerei, AHORA, VOCABULARIO_MODELOS)
+    presencia.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
+    guardado = almacen.incidente("EODI-2025-00312")
+    assert guardado is not None and guardado["presencia_dron"] == "no_confirmada"
+    motivos = [h["nuevo"].get("motivo") for h in almacen.historial("EODI-2025-00312")]
+    assert presencia.MOTIVO_PRUEBAS_PRENSA in motivos
 
 
 def test_la_revision_quita_la_presencia_sin_base_con_su_motivo() -> None:

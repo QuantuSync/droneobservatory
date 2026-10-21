@@ -272,3 +272,22 @@ def test_f_no_cuenta_la_fecha_de_la_propia_nota() -> None:
     fuente.update(idioma="lv", pais="LV", frase_origen="2025. gada 13. janvārī Rīgas lidostā "
                   "notikušā bezpilota gaisa kuģu incidenta laikā")  # fmt: skip
     assert auditoria_fichas._fecha_de_publicacion(documento)
+
+
+def test_e_avisa_si_una_misma_fuente_confirma_y_desmiente_en_la_web() -> None:
+    # EODI-2025-00124 (Sofía): la web enseñaba «Confirmado» y «Desmentido» con la frase del
+    # director del aeropuerto, porque las fechas coherentes le daban al paso confirmado la fuente
+    # del desmentido (proceso/coherencia.py). Con la regla arreglada, cada paso lleva la suya.
+    documento = _jozefow()
+    aviacion, director = documento["fuentes"][0], documento["fuentes"][1]
+    documento["estado"] = {"actual": "desmentido", "historial": [
+        {"estado": "notificado", "fecha": aviacion["fecha"], "fuente_id": aviacion["id"]},
+        {"estado": "confirmado", "fecha": {"valor": "2025-02-12T07:00Z", "precision": "minuto"},
+         "fuente_id": aviacion["id"]},
+        {"estado": "desmentido", "fecha": {"valor": "2025-02-12T06:30Z", "precision": "minuto"},
+         "fuente_id": director["id"]},
+    ]}  # fmt: skip
+    assert not auditoria_fichas.misma_fuente_en_pasos_opuestos(documento)
+    documento["estado"]["historial"][1]["fuente_id"] = director["id"]
+    assert auditoria_fichas.misma_fuente_en_pasos_opuestos(documento)
+    assert auditoria_fichas._e(documento)
