@@ -34,7 +34,14 @@ from proceso import (
     titulares,
 )
 from proceso.credibilidad import Credibilidad
-from proceso.estados import RETIRADAS, REVERSIONES, Estado, error_reversion, nuevo_estado
+from proceso.estados import (
+    RETIRADAS,
+    REVERSIONES,
+    Estado,
+    error_reversion,
+    nuevo_estado,
+    transitar,
+)
 from proceso.fronteras import dentro_del_pais
 from proceso.presencia import TABLA_MOTIVOS
 from proceso.validaciones import derivar_duracion_min
@@ -334,6 +341,29 @@ def con_citas(incidente: Documento, citas: list[Documento]) -> Documento:
     return resultado
 
 
+def reconfirmar(incidente: Documento, citas: list[Documento], instante: Documento) -> Documento:
+    """El incidente que el control de fichas volvió a «notificado» porque la confirmación era una
+    cita de autoridad vacía (EODI-2026-00648, «… Komendy Stołecznej Policji przekazała»), otra vez
+    confirmado con la cita revisada de esa autoridad que afirma el suceso. Solo si ningún paso del
+    historial es ya de esa cita: no deshace un desmentido ni repite la confirmación."""
+    if incidente["estado"]["actual"] != Estado.NOTIFICADO:
+        return incidente
+    pasos = {p.get("fuente_id") for p in incidente["estado"]["historial"]}
+    fuentes = {f["id"]: f for f in incidente["fuentes"]}
+    for cita in citas:
+        declaracion = cita.get("declaracion") or {}
+        if declaracion.get("afirma") not in declaraciones.CONFIRMAN:
+            continue
+        fuente_id = fuente_de_cita(cita, incidente)["id"]
+        if fuente_id in fuentes and fuente_id not in pasos:
+            resultado = copy.deepcopy(incidente)
+            resultado["estado"] = transitar(
+                resultado["estado"], Estado.CONFIRMADO, instante, fuente_id, fuentes
+            )
+            return resultado
+    return incidente
+
+
 def _fuente_de_la_presencia(incidente: Documento, presencia: Documento) -> str | None:
     """La fuente de la cita de una presencia revisada cuando el extractor, al leer de nuevo la
     noticia, se quedó con otra frase suya: con el enlace de la revisión, la misma fuente con la
@@ -613,7 +643,7 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
     for id_, citas in _por_incidente(almacen, datos.get("citas", [])).items():
         documento = almacen.incidente(id_)
         assert documento is not None
-        nuevo = con_citas(documento, citas)
+        nuevo = reconfirmar(con_citas(documento, citas), citas, _instante(ahora))
         if nuevo != documento and _guardar(
             almacen, documento, nuevo, ahora, modelos, MOTIVO_CITA, hechos
         ):
