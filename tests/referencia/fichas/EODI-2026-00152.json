@@ -138,7 +138,7 @@
   }
  },
  "estado": {
-  "actual": "confirmado",
+  "actual": "atribuido",
   "historial": [
    {
     "estado": "notificado",
@@ -155,6 +155,14 @@
      "valor": "2026-10-06T00:30Z"
     },
     "fuente_id": "gdelt-b7161b7dc2aff933-declaracion-1"
+   },
+   {
+    "estado": "atribuido",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-06-05T00:00Z"
+    },
+    "fuente_id": "revisada-d83062e3a8cc46e7-declaracion-1"
    }
   ]
  },
@@ -5437,6 +5445,24 @@
    "id": "gdelt-b7161b7dc2aff933-declaracion-1",
    "idioma": "ro",
    "medio": "Ministerul Ap\u0103r\u0103rii (declaraci\u00f3n oficial citada en adevarul.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-06-05T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Drona marin\u0103 care a explodat \u00een aceast\u0103 diminea\u021b\u0103 \u00een Portul Constan\u021ba f\u0103cea parte, al\u0103turi de alte mijloace similare de lupt\u0103, dintr-o opera\u021biune militar\u0103 condus\u0103 de Ucraina \u00eempotriva agresiunii ruse.",
+   "id": "revisada-d83062e3a8cc46e7-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en adevarul.ro)"
   }
  ],
  "id": "EODI-2026-00152",

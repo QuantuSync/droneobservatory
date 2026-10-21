@@ -28,7 +28,7 @@
   "numero": "desconocido"
  },
  "estado": {
-  "actual": "notificado",
+  "actual": "confirmado",
   "historial": [
    {
     "estado": "notificado",
@@ -37,6 +37,14 @@
      "valor": "2025-10-05T01:00Z"
     },
     "fuente_id": "gdelt-4cb2c512024e18be"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-10-05T00:00Z"
+    },
+    "fuente_id": "revisada-6c822285bcc99755-declaracion-1"
    }
   ]
  },
@@ -170,6 +178,24 @@
    "id": "gdelt-dc14b77e5fedcd17",
    "idioma": "lt",
    "medio": "15min.lt"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-10-05T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u00ab\u03a3\u03ae\u03bc\u03b5\u03c1\u03b1 \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5, \u03c3\u03c4\u03b9\u03c2 22:16, \u03bf\u03b9 \u03b5\u03b9\u03b4\u03b9\u03ba\u03bf\u03af \u03c4\u03bf\u03c5 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03bf\u03bc\u03af\u03bf\u03c5 \u03ad\u03bb\u03b1\u03b2\u03b1\u03bd \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03b1\u03c0\u03cc \u03b5\u03ba\u03c0\u03c1\u03bf\u03c3\u03ce\u03c0\u03bf\u03c5\u03c2 \u03c4\u03b7\u03c2 Oro Navigacija \u03cc\u03c4\u03b9 \u03b7 \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03b1 \u03ba\u03c5\u03ba\u03bb\u03bf\u03c6\u03bf\u03c1\u03af\u03b1 \u03ad\u03c7\u03b5\u03b9 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03ac \u03b1\u03bd\u03b1\u03c3\u03c4\u03b1\u03bb\u03b5\u03af \u03bb\u03cc\u03b3\u03c9, \u03c3\u03cd\u03bc\u03c6\u03c9\u03bd\u03b1 \u03bc\u03b5 \u03c4\u03b9\u03c2 \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03bc\u03b1\u03c2, \u03c0\u03b9\u03b8\u03b1\u03bd\u03ae\u03c2 \u03c3\u03b5\u03b9\u03c1\u03ac\u03c2 \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03c9\u03bd",
+   "id": "revisada-6c822285bcc99755-declaracion-1",
+   "idioma": "el",
+   "medio": "Vilniaus oro uostas (declaraci\u00f3n oficial citada en in.gr)"
   }
  ],
  "id": "EODI-2025-00112",

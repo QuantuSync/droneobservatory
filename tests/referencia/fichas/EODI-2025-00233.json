@@ -1,5 +1,11 @@
 {
- "afirmaciones": [],
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-d44167e575723491-declaracion-1",
+   "valor": "confirmada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "valor": "si"
@@ -9,7 +15,7 @@
   "numero": "desconocido"
  },
  "estado": {
-  "actual": "notificado",
+  "actual": "atribuido",
   "historial": [
    {
     "estado": "notificado",
@@ -18,6 +24,22 @@
      "valor": "2025-09-10T02:00Z"
     },
     "fuente_id": "gdelt-cab83d065b03e7fd"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-09-10T00:00Z"
+    },
+    "fuente_id": "revisada-fa61f3a96a584b7c-declaracion-1"
+   },
+   {
+    "estado": "atribuido",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-09-10T00:00Z"
+    },
+    "fuente_id": "revisada-d44167e575723491-declaracion-1"
    }
   ]
  },
@@ -428,6 +450,42 @@
    "id": "gdelt-cd12d2f3539352db",
    "idioma": "ro",
    "medio": "adevarul.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-10T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "W \u015brod\u0119 nad ranem polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. To sytuacja bez precedensu.",
+   "id": "revisada-d44167e575723491-declaracion-1",
+   "idioma": "pl",
+   "medio": "Kancelaria Prezesa Rady Ministr\u00f3w (declaraci\u00f3n oficial citada en gov.pl)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-10T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "The Polish military has confirmed that some of the drones were shot down, while searches are ongoing for potential crash sites.",
+   "id": "revisada-fa61f3a96a584b7c-declaracion-1",
+   "idioma": "en",
+   "medio": "Dow\u00f3dztwo Operacyjne Rodzaj\u00f3w Si\u0142 Zbrojnych (declaraci\u00f3n oficial citada en indianexpress.com)"
   }
  ],
  "id": "EODI-2025-00233",
@@ -465,7 +523,7 @@
   "categoria": "otra",
   "nombre": "Warsaw"
  },
- "presencia_dron": "no_confirmada",
+ "presencia_dron": "confirmada",
  "pruebas": {
   "dron_estatal": true,
   "entrada_exterior": true,

@@ -27,7 +27,7 @@
   }
  },
  "estado": {
-  "actual": "notificado",
+  "actual": "confirmado",
   "historial": [
    {
     "estado": "notificado",
@@ -36,6 +36,14 @@
      "valor": "2026-03-11T19:30Z"
     },
     "fuente_id": "gdelt-3b4c7cbb8365a93b"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-03-11T00:00Z"
+    },
+    "fuente_id": "revisada-50e3064241e785c3-declaracion-1"
    }
   ]
  },
@@ -261,6 +269,24 @@
    "id": "gdelt-f951bd242161cf2c",
    "idioma": "en",
    "medio": "en.apa.az"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-11T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Un portavoz del aeropuerto explic\u00f3 a la AFP que la actividad se detuvo \"por motivos de seguridad\" durante unos treinta minutos, despu\u00e9s de que se observara \"un objeto volador no identificado\"",
+   "id": "revisada-50e3064241e785c3-declaracion-1",
+   "idioma": "es",
+   "medio": "Flughafen Berlin Brandenburg (declaraci\u00f3n oficial citada en larazon.es)"
   }
  ],
  "id": "EODI-2026-00131",

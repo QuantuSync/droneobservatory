@@ -255,10 +255,13 @@ def test_una_union_de_antes_devuelve_la_confirmacion_del_registro_unido(carpeta:
     unido = {**confirmado, "fusionado_en": "EODI-2025-00998"}
     unido.pop("episodio", None)
     almacen.guardar_incidente(unido, DESPUES, MODELOS)
-    assert oficiales.uniones(almacen, DESPUES + timedelta(hours=1), MODELOS) == ["EODI-2025-00998"]
+    # Con la fuente de la autoridad, el guardado ya la confirma (proceso/decidir.py, la autoridad
+    # que cuenta lo ocurrido) y la recuperación de la unión no tiene nada que hacer.
+    assert oficiales.uniones(almacen, DESPUES + timedelta(hours=1), MODELOS) == []
     nuevo = _incidente(almacen, "EODI-2025-00998")
     assert nuevo["estado"]["actual"] == "confirmado"
-    assert nuevo["estado"]["historial"][-1] == confirmado["estado"]["historial"][-1]
+    autoridades = {f["id"] for f in nuevo["fuentes"] if f.get("es_autoridad")}
+    assert nuevo["estado"]["historial"][-1]["fuente_id"] in autoridades
     # Ya hecho, no cambia nada.
     assert oficiales.uniones(almacen, DESPUES + timedelta(hours=2), MODELOS) == []
     assert _incidente(almacen, "EODI-2025-00998") == nuevo

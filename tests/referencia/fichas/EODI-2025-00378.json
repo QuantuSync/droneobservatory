@@ -1,5 +1,11 @@
 {
- "afirmaciones": [],
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-444e079b0dd3ebaa",
+   "valor": "no_confirmada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "valor": "desconocido"
@@ -9,7 +15,7 @@
   "numero": "desconocido"
  },
  "estado": {
-  "actual": "notificado",
+  "actual": "confirmado",
   "historial": [
    {
     "estado": "notificado",
@@ -18,6 +24,14 @@
      "valor": "2025-01-30T07:30Z"
     },
     "fuente_id": "gdelt-20651f220bc8bfd4"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-01-30T00:00Z"
+    },
+    "fuente_id": "revisada-440c98d7bdf9e389-declaracion-1"
    }
   ]
  },
@@ -66,6 +80,41 @@
    "id": "gdelt-09a2f62aa9d20172",
    "idioma": "ro",
    "medio": "adevarul.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-01-30T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Sistemele de monitorizare \u0219i supraveghere ale Ministerului Ap\u0103r\u0103rii Na\u021bionale au semnalat evolu\u021bia unor drone \u00een spa\u021biul aerian ucrainean, pe trasee de zbor \u00een apropierea frontierei cu Rom\u00e2nia.",
+   "id": "revisada-440c98d7bdf9e389-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en adevarul.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://libertatea.ro/stiri/oameni-tulcea-treziti-mesaj-ro-alert-doua-avioane-f-16-decolat-baza-aeriana-borcea-atac-rusesc-drone-5176380",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-01-30T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u201eDatele furnizate de sistemele radar ale For\u0163elor Aeriene Rom\u00e2ne nu au indicat p\u0103trunderi ale \u0163intelor aeriene monitorizate \u00een spa\u0163iul aerian na\u0163ional\u201d, anun\u021b\u0103 Ministerul Ap\u0103r\u0103rii din Rom\u00e2nia.",
+   "id": "revisada-444e079b0dd3ebaa",
+   "idioma": "ro",
+   "medio": "libertatea.ro"
   }
  ],
  "id": "EODI-2025-00378",

@@ -69,7 +69,9 @@ _DRONES_DECLINADOS = re.compile(
     r"(?<!\w)(μη επανδρωμέν\w*|bezpilot\w*|беспилот\w*|безпілот\w*|bepilo[tč]\w*|"
     # El modelo del dron de la guerra: «Un obiect zburător de tip Shahed 138 (Geran 2)»
     # (EODI-2026-00171); el lituano «bepiločio orlaivio» (EODI-2026-00037).
-    r"shahed\w*|geran\w*|gerbera\w*)",
+    r"shahed\w*|geran\w*|gerbera\w*|"
+    # «dos aeronaves no tripuladas» (EODI-2026-00488): el dron sin la palabra dron.
+    r"aeronaves? n(?:o|ão) tripulad\w*)",
     re.IGNORECASE,
 )
 # La autoridad lo deja abierto: posible, presunto o sospechoso; objeto no identificado; se
