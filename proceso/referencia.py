@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from esquema import Documento
-from proceso import auditoria_fichas, coherencia, competencia, incidentes, presencia, zona
+from proceso import auditoria_fichas, coherencia, decidir, incidentes, zona
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "tests" / "referencia"
 CAMPOS = (
@@ -41,6 +41,12 @@ def copia_publica(documento: Documento) -> Documento:
     copia["fuentes"] = [
         {c: f[c] for c in CAMPOS_FUENTE if c in f} for f in documento.get("fuentes", [])
     ]
+    # Lo que cada fuente afirma de la presencia: con ello la decide proceso/decidir.py.
+    copia["afirmaciones"] = [
+        {c: a[c] for c in ("campo", "valor", "fuente_id")}
+        for a in documento.get("afirmaciones", [])
+        if a.get("campo") == "presencia_dron"
+    ]
     return copia
 
 
@@ -54,11 +60,8 @@ def _numero(drones: Documento | None) -> Any:
 def valores(documento: Documento) -> dict[str, Any]:
     """Los datos de la ficha tal y como se publican."""
     ficha = incidentes.aplicar_reglas(documento)
-    # Un desmentido que no vale (la frase no niega o niega una autoridad que cede) y una presencia
-    # confirmada que ninguna autoridad atribuye a drones (proceso/presencia.py).
-    corregido = competencia.corregir_desmentido(ficha)
-    ficha = presencia.quitar_sin_base(corregido[0] if corregido else ficha)
-    ficha = coherencia.coherente(ficha)
+    # El estado y la presencia, como los decide el guardado (proceso/decidir.py).
+    ficha = coherencia.coherente(decidir.aplicar(ficha))
     objetivo = ficha.get("objetivo")
     if not objetivo or incidentes.objetivo_es_la_localidad(objetivo, ficha.get("lugar") or {}):
         objetivo = None

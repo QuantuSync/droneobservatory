@@ -1,4 +1,26 @@
 {
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-c2354b4b1c003de7",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-9737c718a0a62216",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-0b10a916ab5b9abe",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-feb0c7bcbb768036",
+   "valor": "descartada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "valor": "desconocido"
