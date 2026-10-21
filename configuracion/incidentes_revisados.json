@@ -8863,6 +8863,26 @@
       "cita": "Suspected drones spotted near Karlskrona naval base",
       "enlace": "https://sverigesradio.se/artikel/suspected-drones-spotted-near-karlskrona-naval-base",
       "motivo": "la base naval de Karlskrona, nombre \u00fanico del nomencl\u00e1tor"
+    },
+    {
+      "incidente": "EODI-2025-00395",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Constan\u021ba"
+      },
+      "cita": "Dron\u0103 ucrainean\u0103, detonat\u0103 l\u00e2ng\u0103 Portul Constan\u021ba.",
+      "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+      "motivo": "el dron se deton\u00f3 junto al puerto de Constanza, en el mar; la localidad es Constanza"
+    },
+    {
+      "incidente": "EODI-2026-00316",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Sulina"
+      },
+      "cita": "ha ocurrido las 10:13 de esta ma\u00f1ana sobre las aguas territoriales rumanas de Sulina por un avi\u00f3n F-16",
+      "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html",
+      "motivo": "el derribo fue sobre las aguas territoriales de Sulina; \u00abSulina-Chilia\u00bb es el brazo del Danubio"
     }
   ]
 }

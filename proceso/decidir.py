@@ -125,6 +125,11 @@ def _revisadas() -> dict[str, str]:
     }
 
 
+def revisiones(incidente: Documento) -> dict[str, Documento]:
+    """{dato: revisión} a mano de la ficha (incidentes_revisados.json, «datos»)."""
+    return _revisiones(incidente)
+
+
 def presencias_revisadas() -> dict[str, str]:
     """{incidente: presencia} revisada a mano con su cita: manda también en la validación."""
     return _revisadas()

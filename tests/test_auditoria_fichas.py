@@ -291,3 +291,20 @@ def test_e_avisa_si_una_misma_fuente_confirma_y_desmiente_en_la_web() -> None:
     documento["estado"]["historial"][1]["fuente_id"] = director["id"]
     assert auditoria_fichas.misma_fuente_en_pasos_opuestos(documento)
     assert auditoria_fichas._e(documento)
+
+
+def test_b_acepta_el_objetivo_revisado_a_mano() -> None:
+    # Tulcea: el titular nombra la base de Borcea, de donde solo despegaron los F-16; la revisión
+    # a mano, con su cita, deja la ficha sin objetivo.
+    documento = ejemplos.incidente_minimo()
+    documento["titulo"] = {
+        "es": "Dos F-16 despegan de la base de Borcea",
+        "en": "Two F-16s take off from Borcea air base",
+    }
+    documento.pop("objetivo", None)
+    assert auditoria_fichas._b(documento)
+    documento["id"] = "EODI-2025-00378"
+    documento["fuentes"][0]["enlace"] = (
+        "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
+    )
+    assert not auditoria_fichas._b(documento)
