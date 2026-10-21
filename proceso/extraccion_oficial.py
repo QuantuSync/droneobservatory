@@ -23,6 +23,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
@@ -336,7 +337,7 @@ def sin_dia(inicio: Documento, documento: Documento) -> bool:
     if dia_en_frase(str(inicio["valor"]), frase):
         return False
     publicacion = datetime.fromisoformat(str(documento["fecha"])[:10]).replace(tzinfo=UTC)
-    zona = fechas.zona(documento.get("pais")) or UTC
+    zona = fechas.zona(documento.get("pais")) or ZoneInfo("UTC")
     return not fechas.leer(frase, publicacion, zona, documento.get("idioma"))
 
 

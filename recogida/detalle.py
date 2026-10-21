@@ -385,6 +385,7 @@ def quitar_sin_dia(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -
     """Quita de cada incidente la fuente oficial que se le enlazó por una fecha sin día
     (extraccion_oficial.desenlazar_sin_dia), con lo que solo ella sostenía (revisados.sin_fuentes)
     y el motivo en el historial. Devuelve los incidentes cambiados."""
+    from exportacion.procedencia import Fichas
     from proceso.presencia import TABLA_MOTIVOS
     from recogida import revisados
 
@@ -396,6 +397,8 @@ def quitar_sin_dia(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -
         nuevo = revisados.sin_fuentes(anterior, {enlace})
         if nuevo is None or nuevo == anterior:
             continue
+        # Lo que aportaba al detalle oficial (las medidas de la nota) se queda sin origen.
+        nuevo = revisados.con_origen(nuevo, Fichas.de(almacen))
         nuevo["control"]["ultima_actualizacion"] = {
             "valor": ahora.astimezone(UTC).strftime("%Y-%m-%dT%H:%MZ"),
             "precision": "minuto",
