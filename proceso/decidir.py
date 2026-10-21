@@ -32,19 +32,49 @@ class Decision:
 
 def _historial_vigente(incidente: Documento) -> Documento:
     """El incidente con el desmentido que no vale ya corregido (proceso/competencia.py): una frase
-    que no niega nada o una autoridad que cede frente a otra competente que lo confirmó."""
+    que no niega nada o una autoridad que cede frente a otra competente que lo confirmó. Tampoco
+    vale el desmentido que solo niega el dron o su hallazgo («n'avaient permis de retrouver aucun
+    drone», EODI-2025-00357) o lo explica por otra causa (una bandada de pájaros, EODI-2026-00007):
+    el suceso, el aviso, ocurrió; lo que se rectifica es la presencia."""
     corregido = competencia.corregir_desmentido(incidente)
-    return corregido[0] if corregido else incidente
+    resultado = corregido[0] if corregido else incidente
+    historial = resultado["estado"]["historial"]
+    if len(historial) > 1 and historial[-1]["estado"] == Estado.DESMENTIDO:
+        from proceso import presencia
+
+        fuentes = {f["id"]: f for f in resultado.get("fuentes", [])}
+        frase = str((fuentes.get(historial[-1].get("fuente_id") or "") or {}).get("frase_origen"))
+        if presencia.dice_no_hallado(frase) or presencia.otra_causa(resultado):
+            resultado = copy.deepcopy(resultado)
+            resultado["estado"]["historial"] = historial[:-1]
+            resultado["estado"]["actual"] = historial[-2]["estado"]
+            resultado.get("control", {}).pop("motivo_desmentido", None)
+    return resultado
+
+
+def _autoridad_que_lo_cuenta(incidente: Documento) -> Documento | None:
+    """La primera autoridad u operador oficial que cuenta lo ocurrido (el portavoz del aeropuerto,
+    el control aéreo, la policía o el ministerio), aunque diga que no encontró el dron o que era
+    otra cosa: el suceso queda confirmado (docs/control_fichas.md, «estado»)."""
+    autoridades = [
+        f for f in incidente.get("fuentes", [])
+        if declaraciones.de_autoridad(f) and str(f.get("frase_origen") or "").strip()
+    ]  # fmt: skip
+    return min(autoridades, key=lambda f: (f["fecha"]["valor"], f["id"]), default=None)
 
 
 def decidir_estado(incidente: Documento) -> Decision:
     """El estado es el último paso de su historial (cada paso lo da una fuente: la noticia, la
     declaración de una autoridad, la revisión a mano o la rectificación del control), salvo un
-    desmentido que no vale."""
-    historial = _historial_vigente(incidente)["estado"]["historial"]
+    desmentido que no vale; y «confirmado» si sigue «notificado» y una autoridad cuenta lo
+    ocurrido."""
+    vigente = _historial_vigente(incidente)
+    historial = vigente["estado"]["historial"]
     if not historial:
         return Decision(str(incidente["estado"]["actual"]), None, "sin_historial")
     ultimo = historial[-1]
+    if ultimo["estado"] == Estado.NOTIFICADO and (cuenta := _autoridad_que_lo_cuenta(vigente)):
+        return Decision(Estado.CONFIRMADO.value, str(cuenta["id"]), "autoridad_lo_cuenta")
     regla = "competencia" if historial is not incidente["estado"]["historial"] else "historial"
     return Decision(str(ultimo["estado"]), ultimo.get("fuente_id"), regla)
 
@@ -154,6 +184,12 @@ def aplicar(
         resultado = incidente
     else:
         resultado = copy.deepcopy(resultado)
+        if estado.regla == "autoridad_lo_cuenta":
+            fuente = next(f for f in resultado["fuentes"] if f["id"] == estado.fuente_id)
+            resultado["estado"]["historial"].append({
+                "estado": estado.valor, "fecha": copy.deepcopy(fuente["fecha"]),
+                "fuente_id": estado.fuente_id,
+            })  # fmt: skip
         resultado["estado"]["actual"] = estado.valor
         if estado.valor != Estado.DESMENTIDO:
             resultado.get("control", {}).pop("motivo_desmentido", None)
