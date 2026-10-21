@@ -514,6 +514,16 @@
       "conserva": "EODI-2025-00154",
       "motivo": "el mismo suceso: el cierre del espacio aéreo del aeropuerto de Copenhague la noche del lunes 22 de septiembre de 2025; 00097 se abrió con las notas del 7 de octubre en las que el aeropuerto dice que sus datos documentan drones aquella noche («luftrommet ble stengt i flere timer 22. september»), no un suceso nuevo del 7 de octubre; sus fuentes pasan a 00154, cuya presencia sigue como la dejó la policía danesa el 25 de junio de 2026",
       "motivo_en": "the same event: the closure of Copenhagen airport's airspace on the night of Monday 22 September 2025; 00097 was opened from the reports of 7 October in which the airport says its data documented drones that night (\"luftrommet ble stengt i flere timer 22. september\"), not a new event on 7 October; its sources move to 00154, whose drone presence stays as the Danish police left it on 25 June 2026"
+    },
+    {
+      "registros": [
+        "EODI-2026-00112",
+        "EODI-2026-00223",
+        "EODI-2026-00354"
+      ],
+      "conserva": "EODI-2026-00112",
+      "motivo": "el mismo suceso: el dron que cruzó la frontera de Moldavia desde la región de Odesa la noche del 30 de marzo de 2026 a las 21:29; 00223 repetía el mismo cruce con las mismas fuentes, y 00354 es el hallazgo de sus restos en Băneștii Noi (Telenești) del 29 de abril, que según el Ministerul Apărării «corespunde traiectoriei și caracteristicilor țintei urmărite în acea seară» (protv.md), no un suceso nuevo",
+      "motivo_en": "the same event: the drone that crossed Moldova's border from the Odesa region on the night of 30 March 2026 at 21:29; 00223 repeated the same crossing with the same sources, and 00354 is the finding of its remains at Băneștii Noi (Telenești) on 29 April, which according to the Ministerul Apărării «corespunde traiectoriei și caracteristicilor țintei urmărite în acea seară» (protv.md), not a new event"
     }
   ],
   "reextraer": [
