@@ -1,0 +1,823 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-14T07:30Z"
+    },
+    "fuente_id": "gdelt-121116fecb574baa"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-14T07:30Z"
+    },
+    "fuente_id": "gdelt-4e5496763e49f993-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://kyivpost.com/post/82328",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-08-14T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Fighter jets shot down a drone that entered Latvian airspace, the country\u2019s military said Friday.",
+   "id": "revisada-c0c53a29e9f23723",
+   "idioma": "en",
+   "medio": "kyivpost.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://sudouest.fr/international/europe/ukraine/guerre-en-ukraine-un-drone-etranger-abattu-par-des-avions-de-chasse-allies-dans-l-espace-aerien-letton-30252100.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "un drone \u00e9tranger abattu par des avions de chasse alli\u00e9s dans l'espace a\u00e9rien letton",
+   "id": "gdelt-86e2146eea48b09b",
+   "idioma": "fr",
+   "medio": "sudouest.fr"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ceskenoviny.cz/zpravy/stihacky-nato-sestrelily-dron-nad-lotysskem-uvedla-riga/2861832",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron, kter\u00fd 14. srpna sest\u0159elila ve vzdu\u0161n\u00e9m prostoru Loty\u0161ska italsk\u00e1 st\u00edha\u010dka, byl ukrajinsk\u00e9ho p\u016fvodu.",
+   "id": "gdelt-db926ccda3bd2e41",
+   "idioma": "cs",
+   "medio": "ceskenoviny.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://independent.co.uk/news/world/europe/ukraine-russia-war-live-putin-zelensky-nato-jet-crimea-b3032927.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Russia war latest: Nato jets scrambled to shoot down foreign drone after it enters Latvian airspace",
+   "id": "gdelt-aec35ded14dce1f1",
+   "idioma": "en",
+   "medio": "independent.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lindependant.fr/2026/08/14/guerre-en-ukraine-un-appareil-devie-a-la-suite-de-la-guerre-electronique-russe-un-drone-abattu-dans-lespace-aerien-de-la-lettonie-la-finlande-13508630.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un drone a \u00e9t\u00e9 abattu vendredi matin par des avions de chasse de l'Otan apr\u00e8s avoir p\u00e9n\u00e9tr\u00e9",
+   "id": "gdelt-d4306fb832bec55d",
+   "idioma": "fr",
+   "medio": "lindependant.fr"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "pais",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kauno.diena.lt/naujienos/lietuva/salies-pulsas/nkvc-vadovas-apie-nato-naikintuvu-latvijoje-numusta-drona-operacija-ivykdyta-siauliu-oro-bazes-1770087",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Anot V. Vitkausko, \u0161is drono incidentas labai pana\u0161us \u012f fiksuot\u0105 gegu\u017e\u0117s m\u0117nes\u012f.",
+   "id": "gdelt-a9fe321269af89a7",
+   "idioma": "lt",
+   "medio": "kauno.diena.lt"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "pais"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://efe.com/mundo/2026-08-14/cazas-otan-derriban-dron-sobre-letonia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cazas OTAN derriban un dron sobre Letonia.",
+   "id": "gdelt-121116fecb574baa",
+   "idioma": "es",
+   "medio": "efe.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/cazas-otan-derriban-dron-letonia_202608146a7ebaaaa5690f047378fbc2.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "hab\u00eda entrado en el espacio a\u00e9reo como resultado de la guerra electromagn\u00e9tica de Rusia",
+   "id": "gdelt-4e5496763e49f993",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/cazas-otan-derriban-dron-letonia_202608146a7ebaaaa5690f047378fbc2.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T07:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Fuerzas Armadas del pa\u00eds b\u00e1ltico en un comunicado recogido por la agencia Efe.",
+   "id": "gdelt-4e5496763e49f993-declaracion-1",
+   "idioma": "es",
+   "medio": "Fuerzas Armadas de Letonia (declaraci\u00f3n oficial citada en larazon.es)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/cazas-otan-derriban-dron-letonia_202608146a7ebaaaa5690f047378fbc2.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T07:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "El derribo se produjo por cazas de la Misi\u00f3n de Polic\u00eda A\u00e9rea del B\u00e1ltico de la OTAN",
+   "id": "gdelt-4e5496763e49f993-declaracion-2",
+   "idioma": "es",
+   "medio": "Misi\u00f3n de Polic\u00eda A\u00e9rea del B\u00e1ltico de la OTAN (declaraci\u00f3n oficial citada en larazon.es)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://delfi.lt/naujienos/lietuvoje/nkvc-vadovas-dronas-latvijoje-numustas-nato-naikintuvais-is-siauliu-120289850",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NKVC vadovas: dronas Latvijoje numu\u0161tas NATO naikintuvais i\u0161 \u0160iauli\u0173",
+   "id": "gdelt-d71f5925cce9ea87",
+   "idioma": "lt",
+   "medio": "delfi.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualidad.rt.com/actualidad/622258-derribar-dron-letonia-ataque-provincia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Derriban dron sobre pa\u00eds de la OTAN durante ataque de Ucrania a puerto ruso",
+   "id": "gdelt-773084776ba4b73c",
+   "idioma": "es",
+   "medio": "rt.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2026-08-14/caccia-della-nato-abbattono-un-drone-che-era-entrato-nello-spazio-aereo-della-lettonia/19568003",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "un drone \u00e8 entrato nello spazio aereo della Lettonia",
+   "id": "gdelt-1c7ee9f712629c79",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://laregione.ch/estero/estero/1943894/abbattuto-stato-drone-pilota-lettonia-caccia-lettoni-nato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "probabilmente si trattava di un drone ucraino che aveva deviato dalla sua rotta",
+   "id": "gdelt-85c24aa7ea9b45dd",
+   "idioma": "it",
+   "medio": "laregione.ch"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://laregione.ch/estero/estero/1943894/abbattuto-stato-drone-pilota-lettonia-caccia-lettoni-nato",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "i caccia NATO in pattugliamento hanno abbattuto con successo un drone che aveva violato lo spazio aereo lettone",
+   "id": "gdelt-85c24aa7ea9b45dd-declaracion-1",
+   "idioma": "it",
+   "medio": "Forze Armate lettoni (declaraci\u00f3n oficial citada en laregione.ch)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://laregione.ch/estero/estero/1943894/abbattuto-stato-drone-pilota-lettonia-caccia-lettoni-nato",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "un veicolo aereo senza pilota che aveva violato lo spazio aereo del Paese \u00e8 stato abbattuto",
+   "id": "gdelt-85c24aa7ea9b45dd-declaracion-2",
+   "idioma": "it",
+   "medio": "Forze Armate lettoni (declaraci\u00f3n oficial citada en laregione.ch)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ve.lt/aktualijos/latvijoje-drona-numuse-is-siauliu-pakile-nato-naikintuvai",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Latvijoje dron\u0105 numu\u0161\u0117 i\u0161 \u0160iauli\u0173 pakil\u0119 NATO naikintuvai",
+   "id": "gdelt-f1f347069eedc9a6",
+   "idioma": "lt",
+   "medio": "ve.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/mondo/2026/08/14/caccia-nato-abbattono-in-lettonia-un-drone-probabilmente-ucraino_96617dd2-1d09-4ac6-8f49-02883796ca08.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caccia Nato abbattono in Lettonia un drone, 'probabilmente ucraino' - Notizie",
+   "id": "gdelt-f9229c067b74b0d5",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://republicain-lorrain.fr/defense-guerre-conflit/2026/08/14/un-drone-abattu-par-des-avions-de-l-otan-dans-l-espace-aerien-de-la-lettonie",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "un appareil \u00e9tranger sans pilote qui \u00e9tait entr\u00e9 en Lettonie",
+   "id": "gdelt-4a0fbdc0d82d6b28",
+   "idioma": "fr",
+   "medio": "republicain-lorrain.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetatema.net/bota/alarm-ne-krahun-lindor-te-nato-s-rrezohet-nje-dron-mbi-letoni-riga-fajeson--i579616",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alarm n\u00eb krahun lindor t\u00eb NATO-s, rr\u00ebzohet nj\u00eb dron mbi Letoni; Riga faj\u00ebson \"luft\u00ebn elektronike ruse\"",
+   "id": "gdelt-4acbc39c49c1301e",
+   "idioma": "sq",
+   "medio": "gazetatema.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://es.euronews.com/my-europe/2026/08/14/cazas-de-la-mision-de-policia-aerea-del-baltico-de-la-otan-derriban-un-dron-sobre-letonia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cazas de la misi\u00f3n de Polic\u00eda A\u00e9rea del B\u00e1ltico de la OTAN derriban un dron sobre Letonia",
+   "id": "gdelt-980db3307e718ea2",
+   "idioma": "es",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/ucrania-drone-abatido-pela-nato-apos-entrar-no-espaco-aereo-da-letonia-6a7ed0f87d7c399efe1b6beb",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucr\u00e2nia: drone abatido pela NATO ap\u00f3s entrar no espa\u00e7o a\u00e9reo da Let\u00f3nia",
+   "id": "gdelt-e5bd8c2cf7789626",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kyivpost.com/post/82328",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "The incident came as Russia and Ukraine traded fresh drone strikes.",
+   "id": "gdelt-8af269d5d84ee3ef",
+   "idioma": "en",
+   "medio": "kyivpost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20minutes.fr/monde/ukraine/4239186-20260814-guerre-ukraine-drone-abattu-espace-aerien-letton-ciel-mer-finlandais-localement-fermes",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : Un drone abattu dans l'espace a\u00e9rien letton, ciel et mer finlandais localement ferm\u00e9s",
+   "id": "gdelt-b55682c5bc768ff0",
+   "idioma": "fr",
+   "medio": "20minutes.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sana.sy/es/world/2327323",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cazas de la OTAN derriban un dron en el espacio a\u00e9reo de Letonia",
+   "id": "gdelt-de6dbe822d548885",
+   "idioma": "es",
+   "medio": "sana.sy"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unionesarda.it/news/mondo/caccia-italiani-abbattono-un-drone-nei-cieli-della-lettonia-riga-grazie-per-averci-difeso-i1zz8v08",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caccia italiani abbattono un drone nei cieli della Lettonia, Riga: \u00abGrazie per averci difeso\u00bb",
+   "id": "gdelt-16b7716851ce4020",
+   "idioma": "it",
+   "medio": "unionesarda.it"
+  },
+  {
+   "campos_respaldados": [
+    "entrada_exterior"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ilgazzettino.it/esteri/drone_abbattuto_caccia_italiani_eurofighter_lettonia_cosa_succede-9707795.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un drone nei cieli baltici, che poi si sarebbe rivelato essere un ordigno ucraino finito fuori rotta.",
+   "id": "gdelt-96d3266f8ed1a2cc",
+   "idioma": "it",
+   "medio": "ilgazzettino.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://italpress.com/caccia-della-nato-abbattono-un-drone-entrato-nello-spazio-aereo-della-lettonia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caccia della Nato abbattono drone entrato nello spazio aereo della Lettonia",
+   "id": "gdelt-287811c83f2a1f1d",
+   "idioma": "it",
+   "medio": "italpress.com"
+  },
+  {
+   "campos_respaldados": [
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2026-08-14/eurofighter-italiano-della-nato-abbatte-un-drone-in-lettonia-riga-ringrazia/19568860",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un Eurofighter italiano della Nato ha abbattuto un drone straniero nello spazio aereo della Lettonia.",
+   "id": "gdelt-a6d9e7326eb31c9b",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2026-08-14/caccia-italiani-abbattono-un-drone-nei-cieli-della-lettonia-riga-a-roma-grazie-per-aver-difeso-i-cieli-nato/19569076",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caccia italiani abbattono un drone nei cieli della Lettonia Riga a Roma | Grazie per aver difeso i cieli Nato",
+   "id": "gdelt-36a0eb5e81c27cd1",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://secoloditalia.it/2026/08/caccia-italiani-abbattono-un-drone-nei-cieli-della-lettonia-riga-a-roma-grazie-per-aver-difeso-i-cieli-nato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caccia italiani abbattono un drone nei cieli della Lettonia. Riga a Roma: \"Grazie per aver difeso i cieli Nato\"",
+   "id": "gdelt-97c57b7ec3afabee",
+   "idioma": "it",
+   "medio": "secoloditalia.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/08/14/cazas-de-la-otan-derriban-dron-que-entro-a-letonia-en-medio-de-ataque-ucraniano-contra-puerto-ruso.shtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cazas de la OTAN derriban dron que entr\u00f3 a Letonia en medio de ataque ucraniano contra puerto ruso",
+   "id": "gdelt-b26055e68b509e29",
+   "idioma": "es",
+   "medio": "biobiochile.cl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://notizie.it/guerra-caccia-italiani-abbattono-drone-lettonia-reazione-riga",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerra, caccia italiani abbattono drone in Lettonia: la reazione di Riga",
+   "id": "gdelt-044179b746061e40",
+   "idioma": "it",
+   "medio": "notizie.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilfattonisseno.it/2026/08/jet-italiani-abbattono-drone-nei-cieli-baltici-riga-ringrazia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Jet italiani abbattono drone nei cieli baltici, Riga ringrazia - il Fatto Nisseno - Caltanissetta notizie, cronaca, attualit\u00e0",
+   "id": "gdelt-138ded112651149d",
+   "idioma": "it",
+   "medio": "ilfattonisseno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hoy.es/internacional/europa/cazas-italianos-otan-derriban-dron-invadia-espacio-20260814190950-ntrc.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cazas italianos de la OTAN derriban un dron que invad\u00eda el espacio a\u00e9reo de Letonia",
+   "id": "gdelt-85f93bc07838320c",
+   "idioma": "es",
+   "medio": "hoy.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/europa/notizie/rubriche/altrenews/2026/08/14/ansa-jet-italiani-abbattono-drone-nei-cieli-baltici-riga-ringrazia_6e1e75b6-66db-4da3-90ed-e7d64310a984.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": ">>>ANSA/ Jet italiani abbattono drone nei cieli baltici, Riga ringrazia - Altre news",
+   "id": "gdelt-c65ac344ea67a58f",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eltiempo.com/mundo/europa/nueva-incursion-de-dron-en-europa-en-medio-de-la-guerra-entre-rusia-y-ucrania-otan-derriba-aeronave-sobre-letonia-en-medio-de-un-ataque-ucraniano-3578368",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nueva incursi\u00f3n de dron en Europa en medio de la guerra entre Rusia y Ucrania: Ot\u00e1n derriba aeronave sobre Letonia en medio de un ataque",
+   "id": "gdelt-cc2a9527c918eac4",
+   "idioma": "es",
+   "medio": "eltiempo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20minutes.fr/monde/ukraine/4239238-20260814-guerre-ukraine-otan-descend-drone-lettonie-onu-regrette-attaques-structures-sante",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : L'Otan descend un drone en Lettonie, l'OMS regrette les attaques sur des structures de sant\u00e9",
+   "id": "gdelt-3b1b749f07598711",
+   "idioma": "fr",
+   "medio": "20minutes.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mdzol.com/mundo/otan-derriba-un-dron-letonia-ataque-ucrania-un-puerto-rusia-n1585848",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-14T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "OTAN derriba un dron sobre Letonia tras ataque de Ucrania a un puerto de Rusia",
+   "id": "gdelt-da12d9d512a92437",
+   "idioma": "es",
+   "medio": "mdzol.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fnp.de/politik/kiew-attackiert-oelraffinerie-in-russland-ukraine-krieg-aktuell-zr-94435946.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-15T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg aktuell: NATO-Kampfflugzeuge schie\u00dfen Drohne ab",
+   "id": "gdelt-19ada7315afb70de",
+   "idioma": "de",
+   "medio": "fnp.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-08-20T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "14. august\u0101 Balvu novada Rug\u0101ju apk\u0101rtn\u0113 tika notriekts Ukrainas bezpilota lidapar\u0101ts",
+   "id": "revisada-0603da1630dedfb1",
+   "idioma": "lv",
+   "medio": "Nacion\u0101lie bru\u0146otie sp\u0113ki"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-08-20T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "In the vicinity of Rug\u0101ji, Balvi Municipality, allied fighter jets successfully shot down the unmanned aerial vehicle.",
+   "id": "revisada-ce0ef4f0dbb2097c",
+   "idioma": "en",
+   "medio": "Fuerzas Armadas Nacionales de Letonia"
+  }
+ ],
+ "id": "EODI-2026-00140",
+ "lugar": {
+  "fuente_punto": "revisada-ce0ef4f0dbb2097c",
+  "geocodificacion": "oficial",
+  "localidad": "Rug\u0101ji (municipio de Balvi)",
+  "nivel": "localidad",
+  "pais": "LV",
+  "punto": {
+   "lat": 57.0009,
+   "lon": 27.1297
+  },
+  "radio_km": 5.0,
+  "region": "Balvi",
+  "suceso": "noreste de Letonia"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Rug\u0101ji",
+   "es": "Rug\u0101ji"
+  },
+  "lugar": {
+   "en": "Rug\u0101ji, Latvia",
+   "es": "Rug\u0101ji, Letonia"
+  },
+  "region": {
+   "en": "Balvi",
+   "es": "Balvi"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "derribo"
+  ]
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2026-00528",
+   "nota": {
+    "en": "It merged the drone shot down over Latvia with a drone crash in Romania and articles on the war in Ukraine",
+    "es": "Juntaba el derribo del dron sobre Letonia con un dron estrellado en Ruman\u00eda y art\u00edculos de la guerra en Ucrania"
+   },
+   "separado_de": "EODI-2026-00204"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "cazas",
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-08-14T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-4e5496763e49f993",
+   "motivo": "\u00abviernes\u00bb en una nota publicada el 2026-08-14 09:30 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "NATO fighters shoot down drone over Latvia",
+  "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+ }
+}

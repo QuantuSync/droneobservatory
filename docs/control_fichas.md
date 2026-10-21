@@ -331,6 +331,53 @@ cambian respecto al día anterior y, si una comprobación sube, el aviso de sile
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
 base: `python -m recogida.auditoria_fichas [--base …] [--json]`.
 
+## Conjunto de referencia (desde el 21 de octubre de 2026)
+
+La red de seguridad antes de cambiar la estructura: unas 50 fichas cuyo valor correcto de cada dato
+(estado, presencia del dron, tipo, objetivo con su categoría y OACI, país, localidad, día de
+inicio, frontera o interior, número de drones y cabecera en español) está comprobado leyendo el
+texto completo de sus fuentes (o su copia archivada), no la ficha. Cubren cada valor de presencia
+y de estado, los tres tipos, aeropuertos, bases, puertos, centrales y lugares sin instalación,
+buques y mar, frontera e interior, uniones, separaciones, rectificaciones y varios idiomas y países.
+
+- `tests/referencia/fichas.json`: por ficha, por qué se eligió y, por dato, el valor correcto con
+  la cita literal y el enlace de la fuente que lo justifica («sin fuente» y enlace nulo si el valor
+  es «no consta» o sale del lugar, como la zona).
+- `tests/referencia/fichas/<id>.json`: la copia pública de cada ficha (solo campos que ya se
+  publican, más sus pruebas y el punto), de la que la prueba saca los datos.
+- `tests/referencia/discrepancias.json`: las fichas cuyo valor de hoy no es el correcto (id, campo,
+  valor de la ficha, valor correcto, cita y motivo). Es el trabajo pendiente.
+
+Dos comprobaciones fijas, con las mismas funciones (`proceso/referencia.py`: reglas del tipo y la
+presencia, coherencia del historial, zona, objetivo y cabecera):
+
+1. **En la CI**, `tests/test_referencia.py` pasa las copias guardadas por esas funciones y compara
+   con la referencia. Falla si aparece una discrepancia que no está en la lista, si una de la lista
+   ya está corregida (se quita; si vuelve, falla como nueva) o si la lista crece por encima de
+   `TOPE_DISCREPANCIAS`: la lista solo puede encoger.
+2. **En el servidor**, en cada control de fichas la auditoría compara las fichas de la base, como
+   las publica la exportación, con la referencia: comprobación **R**, con «id campo» por cada
+   diferencia nueva e «id ausente» si una ficha deja de estar vigente (fundida o retirada). Entra en
+   `control.json`, en el resumen diario y, si sube, en el aviso, como las demás.
+
+**La referencia solo se cambia con una cita nueva de una fuente**, nunca para que pase una prueba:
+si un valor correcto cambia (una autoridad rectifica), se pone el valor nuevo con la cita literal y
+el enlace de la fuente nueva. Si el código o los datos se apartan de la referencia, se arregla el
+código o la ficha, no la referencia.
+
+Para añadir una ficha:
+
+1. Elegirla por lo que cubre que no cubran las demás y anotarlo en `por_que`.
+2. Leer el texto completo de sus fuentes (el original o su copia archivada) y decidir cada dato
+   con su cita literal y su enlace; nunca copiarlo de la ficha.
+3. Guardar su copia pública con `proceso.referencia.copia_publica(proceso.referencia.publicada(d))`
+   sobre el documento de la base, en `tests/referencia/fichas/<id>.json`. Los tres ficheros se
+   guardan en ASCII (`json.dumps(..., ensure_ascii=True)`, con escapes para las letras con tilde):
+   la comprobación de palabras del repositorio lee bytes y parte en dos las palabras con
+   letras como «ț» o «ș», y lo que queda suelto puede parecer una palabra prohibida.
+4. Si el valor de hoy no es el correcto, añadirlo a `discrepancias.json` con su motivo: solo al
+   añadir una ficha nueva puede subir `TOPE_DISCREPANCIAS`, y en el mismo cambio.
+
 ## Correcciones a mano
 
 Siguen en `configuracion/incidentes_revisados.json` y mandan sobre el control: una presencia

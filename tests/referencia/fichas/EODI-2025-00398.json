@@ -1,0 +1,129 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-10-09T13:00Z"
+    },
+    "fuente_id": "gdelt-7da3671227e16396"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron sobrevuela y se cuela hasta las celdas en la c\u00e1rcel de Alcal\u00e1 de Guada\u00edra.",
+   "id": "gdelt-7da3671227e16396",
+   "idioma": "es",
+   "medio": "abc.es"
+  }
+ ],
+ "id": "EODI-2025-00398",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "historial": [
+   {
+    "anterior": {
+     "punto": {
+      "lat": 37.38283,
+      "lon": -5.97317
+     },
+     "radio_km": 10.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-19T23:17Z"
+    },
+    "motivo": {
+     "en": "More precise place: the affected facility identified in the record.",
+     "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n afectada que identifica la ficha."
+    }
+   }
+  ],
+  "nivel": "instalacion",
+  "pais": "ES",
+  "punto": {
+   "lat": 37.39041,
+   "lon": -5.84591
+  },
+  "radio_km": 1.0,
+  "suceso": "Centro Penitenciario de Sevilla (Sevilla I)"
+ },
+ "nombres": {
+  "anteriores": [
+   null
+  ],
+  "localidad": {
+   "en": "Seville",
+   "es": "Sevilla"
+  },
+  "lugar": {
+   "en": "Seville, Spain",
+   "es": "Sevilla, Espa\u00f1a"
+  },
+  "objetivo": {
+   "en": "Sevilla I prison",
+   "es": "Centro penitenciario Sevilla I"
+  }
+ },
+ "objetivo": {
+  "categoria": "otra",
+  "nombre": "Centro Penitenciario Sevilla I"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2025-10-09T13:00Z"
+  },
+  "origen_inicio": {
+   "corregido": true,
+   "fuente_id": "gdelt-7da3671227e16396",
+   "motivo": "ninguna frase escribe el d\u00eda del suceso: fecha de publicaci\u00f3n (2025-10-09 15:00, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Possible drone flies over Sevilla I prison in Alcal\u00e1 de Guada\u00edra",
+  "es": "Posible dron sobrevuela la prisi\u00f3n de Sevilla I en Alcal\u00e1 de Guada\u00edra"
+ }
+}

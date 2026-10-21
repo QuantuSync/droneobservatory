@@ -1,0 +1,593 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 3,
+   "min": 3
+  }
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-09T21:15Z"
+    },
+    "fuente_id": "gdelt-ed5a8ef01ff6a201"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://gva.be/binnenland/live.-bewakers-kerncentrale-spotten-drie-drones-boven-doel-en-verwittigen-politie/102527588.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bewakers kerncentrale spotten drie drones boven Doel.",
+   "id": "gdelt-ed5a8ef01ff6a201",
+   "idioma": "nl",
+   "medio": "gva.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://standaard.be/binnenland/bewakers-ontdekken-drones-boven-kerncentrale-doel-ook-vliegverkeer-luik-tijdlang-onderbroken/103837068.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bewakers ontdekken drones boven kerncentrale Doel, ook vliegverkeer Luik tijdlang onderbroken",
+   "id": "gdelt-63e681f83ad5fc85",
+   "idioma": "nl",
+   "medio": "standaard.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dhnet.be/actu/belgique/2025/11/09/intrusion-de-drones-dans-le-ciel-belge-le-trafic-aerien-a-nouveau-interrompu-a-laeroport-de-liege-BMLU5LFK75A37N52IXBFJDR4VU",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trois drones aper\u00e7us au-dessus de la centrale nucl\u00e9aire de Doel !",
+   "id": "gdelt-1a810f69af09f7cc",
+   "idioma": "fr",
+   "medio": "dhnet.be"
+  },
+  {
+   "campos_respaldados": [
+    "inicio"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "In Belgi\u00eb zijn opnieuw drones gesignaleerd, nu boven de kerncentrale in Doel.",
+   "id": "gdelt-32bf04daa2b05396",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://capital.gr/diethni/3955867/belgio-entopistikan-3-drones-pano-apo-ton-puriniko-stathmo-doel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0392\u03ad\u03bb\u03b3\u03b9\u03bf: \u0395\u03bd\u03c4\u03bf\u03c0\u03af\u03c3\u03c4\u03b7\u03ba\u03b1\u03bd 3 drones \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03bf\u03bd \u03c0\u03c5\u03c1\u03b7\u03bd\u03b9\u03ba\u03cc \u03c3\u03c4\u03b1\u03b8\u03bc\u03cc Doel",
+   "id": "gdelt-5868be20ba430c6e",
+   "idioma": "el",
+   "medio": "capital.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.nl/nieuws/buitenland/artikel/5538029/drones-gezien-bij-kerncentrale-doel-vlak-over-nederlandse-grens",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones gezien bij kerncentrale Doel in Belgi\u00eb, net over Nederlandse grens",
+   "id": "gdelt-3706ea8cf9264d9f",
+   "idioma": "nl",
+   "medio": "rtl.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavenir.net/actu/2025/11/09/le-trafic-aerien-a-laeroport-de-liege-interrompu-apres-le-signalement-dun-drone-4S5Z4EF53VCCZNORMMPPB3JPFA",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T23:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Intrusion de drones : le trafic a\u00e9rien \u00e0 l'a\u00e9roport de Li\u00e8ge a \u00e9t\u00e9 interrompu, 3 drones au-dessus de la centrale nucl\u00e9aire de Doel",
+   "id": "gdelt-378a7217cefce577",
+   "idioma": "fr",
+   "medio": "lavenir.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://spiegel.de/ausland/belgien-drohnen-ueber-atomkraftwerk-doel-gesichtet-a-7226ed79-4f21-4637-aa80-11e38507bb0e",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-09T23:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgien: Drohnen \u00fcber Atomkraftwerk Doel gesichtet",
+   "id": "gdelt-923f45dfd1a2a902",
+   "idioma": "de",
+   "medio": "spiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cedarnews.net/newstasks/belgium-drones/888724",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones Spotted Over Doel Nuclear Power Plant in Belgium \u2014 Security Response Underway",
+   "id": "gdelt-98a299ab7a75ba40",
+   "idioma": "en",
+   "medio": "cedarnews.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.be/actu/belgique/faits-divers/trois-drones-reperes-au-dessus-de-la-centrale-nucleaire-de-doel/2025-11-09/article/769907",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trois drones rep\u00e9r\u00e9s au-dessus de la centrale nucl\u00e9aire de Doel",
+   "id": "gdelt-8d26ea7d4a2d53f4",
+   "idioma": "fr",
+   "medio": "rtl.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tanjug.rs/svet/politika/206228/tri-drona-primecena-iznad-nuklearne-elektrane-doel-na-severoistoku-belgije/vest",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Tri drona prime\u0107ena iznad nuklearne elektrane Doel na severoistoku Belgije",
+   "id": "gdelt-4b1403b823a60d30",
+   "idioma": "hr",
+   "medio": "tanjug.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vrt.be/vrtnws/nl/liveblog/drones-waargenomen-boven-kerncentrale-doel-geen-nucleair-gevaa~1762286776579",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones boven Belgi\u00eb - Drones waargenomen boven kerncentrale Doel: \"Geen nucleair gevaar\"",
+   "id": "gdelt-b0b9306a30aa1c79",
+   "idioma": "nl",
+   "medio": "vrt.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dw.com/ru/v-belgii-nad-aes-doel-zametili-tri-bespilotnika/a-74681081",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412 \u0411\u0435\u043b\u044c\u0433\u0438\u0438 \u043d\u0430\u0434 \u0410\u042d\u0421 Doel \u0437\u0430\u043c\u0435\u0442\u0438\u043b\u0438 \u0442\u0440\u0438 \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u0430 \u2013 DW \u2013 10.11.2025",
+   "id": "gdelt-e8791e95752b3579",
+   "idioma": "ru",
+   "medio": "dw.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://index.hr/vijesti/clanak/dronovi-uoceni-iznad-nuklearne-elektrane-doel-u-belgiji/2728959.aspx?index_ref=naslovnica_vijesti_najnovije_d&index_tid=828584",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronovi uo\u010deni iznad nuklearne elektrane Doel u Belgiji",
+   "id": "gdelt-a93020de5a93422b",
+   "idioma": "hr",
+   "medio": "index.hr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sn.at/politik/weltpolitik/belgien-drohnen-kernkraftwerk-antwerpen-187369138",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgien: Drohnen \u00fcber Kernkraftwerk nahe Antwerpen gesichtet",
+   "id": "gdelt-d68c70d480178ecb",
+   "idioma": "de",
+   "medio": "sn.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://telegraf.rs/vesti/svet/4212611-alarm-kod-nuklearne-elektrane-doel-na-severoistoku-belgije-primecena-tri-drona",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alarm kod nuklearne elektrane Doel na severoistoku Belgije: Prime\u0107ena tri drona",
+   "id": "gdelt-92e1bd8d6163eb2b",
+   "idioma": "sr",
+   "medio": "telegraf.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/externe/trei-drone-au-fost-vazute-deasupra-centralei-nucleare-doel-din-belgia-23639056",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trei drone au fost v\u0103zute deasupra centralei nucleare Doel din Belgia",
+   "id": "gdelt-e0465a7b07012124",
+   "idioma": "ro",
+   "medio": "mediafax.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stern.de/panorama/belgien--drohnen-ueber-kernkraftwerk-doel-gesichtet-36285496.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgien: Drohnen \u00fcber Kernkraftwerk Doel gesichtet",
+   "id": "gdelt-8329e96abff53eb3",
+   "idioma": "de",
+   "medio": "stern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aachener-zeitung.de/politik/bericht-drohnen-ueber-kernkraftwerk-in-doel-gesichtet/103861387.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bericht: Drohnen \u00fcber Kernkraftwerk in Doel gesichtet",
+   "id": "gdelt-21565ddca904d5b0",
+   "idioma": "de",
+   "medio": "aachener-zeitung.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/trei-drone-detectate-deasupra-centralei-nucleare-doel-in-belgia-21265756",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trei drone detectate deasupra Centralei Nucleare Doel, \u00een Belgia",
+   "id": "gdelt-720fe10996e6e697",
+   "idioma": "ro",
+   "medio": "bursa.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://telegraaf.nl/buitenland/bewakers-spotten-drie-drones-boven-belgische-kerncentrale-van-doel/103880365.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drie drones gespot boven Belgische kerncentrale Doel: politie ingeschakeld",
+   "id": "gdelt-28b658474c425b4e",
+   "idioma": "nl",
+   "medio": "telegraaf.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stiripesurse.ro/drone-misterioase-deasupra-centralei-nucleare-doel-aceste-drone-vin-sa-spioneze_3829063",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone misterioase deasupra centralei nucleare Doel: Aceste drone vin s\u0103 spioneze",
+   "id": "gdelt-1527e033c6d60cfa",
+   "idioma": "ro",
+   "medio": "stiripesurse.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://primapress.it/belgio-avvistati-3-droni-in-sorvolo-sulla-centrale-nucleare-di-doel-nei-pressi-di-anversa",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgio: avvistati 3 droni in sorvolo sulla centrale nucleare di Doel nei pressi di Anversa \u2013 PRIMAPRESS",
+   "id": "gdelt-3af09183e3d6c423",
+   "idioma": "it",
+   "medio": "primapress.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kyivpost.com/post/63946",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "New Mystery Drones Over Belgium's Doel Nuclear Plant Spark Security Fears",
+   "id": "gdelt-99934876f40f2f9d",
+   "idioma": "en",
+   "medio": "kyivpost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lapresse.it/esteri/2025/11/10/belgio-droni-avvistati-sullaeroporto-di-liegi-e-sulla-centrale-nucleare-di-doel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgio, droni avvistati sull'aeroporto di Liegi e sulla centrale nucleare di Doel",
+   "id": "gdelt-5558780b7a98b383",
+   "idioma": "it",
+   "medio": "lapresse.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jurnalul.ro/stiri/externe/drone-deasupra-centrala-nucleara-doel-belgia-1014734.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone deasupra centralei nucleare Doel din Belgia",
+   "id": "gdelt-aeec060fb4236888",
+   "idioma": "ro",
+   "medio": "jurnalul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://world.comments.ua/news/eu/v-belgii-vnov-panika-gde-v-etot-raz-zafiksirovany-neizvestnye-drony-786244.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412 \u0411\u0435\u043b\u044c\u0433\u0438\u0438 \u0437\u0430\u043c\u0435\u0442\u0438\u043b\u0438 \u0442\u0440\u0438 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430\u0434 \u0410\u042d\u0421 Doel: \u0447\u0442\u043e \u0438\u0437\u0432\u0435\u0441\u0442\u043d\u043e",
+   "id": "gdelt-b630322f1af28539",
+   "idioma": "ru",
+   "medio": "world.comments.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.ro/externe/centrala-nucleara-doel-din-belgia-a-fost-survolata-de-trei-drone-suspecte-autoritatile-suspecteaza-activitati-de-spionaj-766175.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Centrala Nuclear\u0103 Doel, din Belgia, a fost survolat\u0103 de trei drone suspecte. Autorit\u0103\u021bile suspecteaz\u0103 activit\u0103\u021bi de spionaj",
+   "id": "gdelt-ed9f122fd8f37fa1",
+   "idioma": "ro",
+   "medio": "antena3.ro"
+  },
+  {
+   "campos_respaldados": [
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ilfattonisseno.it/2025/11/belgio-avvistati-droni-su-centrale-nucleare-anversa",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "L'agenzia di stampa Belga ha dato notizia di un avvistamento, ieri a tarda sera.",
+   "id": "gdelt-a27bc5bc8cdbc4eb",
+   "idioma": "it",
+   "medio": "ilfattonisseno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://evz.ro/trei-drone-neidentificate-au-survolat-centrala-nucleara-doel-belgia-cere-ajutor-international.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trei drone neidentificate au survolat centrala nuclear\u0103 Doel. Belgia cere ajutor interna\u021bional",
+   "id": "gdelt-9c3b9dfbd03e6461",
+   "idioma": "ro",
+   "medio": "evz.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://notizie.it/droni-alla-centrale-di-doel-aggiornamenti-sulla-situazione-in-belgio",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni alla Centrale di Doel: Aggiornamenti sulla Situazione in Belgio",
+   "id": "gdelt-0a1288b3a6df9ced",
+   "idioma": "it",
+   "medio": "notizie.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wnp.pl/rynki/belgia-media-nad-elektrownia-jadrowa-w-doel-zauwazono-trzy-niezidentyfikowane-drony,1002642.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgia: Media: nad elektrowni\u0105 j\u0105drow\u0105 w Doel zauwa\u017cono trzy niezidentyfikowane drony",
+   "id": "gdelt-8fcaf5ddbea31ab5",
+   "idioma": "pl",
+   "medio": "wnp.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailybusiness.ro/stiri-externe/alerta-la-centrala-nucleara-doel-trei-drone-misterioase-detectate-deasupra-obiectivului-strategic-din-belgia-522812",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 la centrala nuclear\u0103 Doel. Trei drone misterioase, detectate deasupra obiectivului strategic din Belgia",
+   "id": "gdelt-6530782dcbccf373",
+   "idioma": "ro",
+   "medio": "dailybusiness.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://epochtimes.de/politik/ausland/drohnen-ueber-atomkraftwerk-doel-in-belgien-gesichtet-a5299366.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "F\u00fcnf Drohnen \u00fcber Atomkraftwerk Doel in Belgien gesichtet",
+   "id": "gdelt-904446ea7a7daedf",
+   "idioma": "de",
+   "medio": "epochtimes.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://moldova-suverana.md/article/n-belgia-au-fost-detectate-trei-drone-deasupra-centralei-nucleare-doel_54717",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-10T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u00cen Belgia, au fost detectate trei drone deasupra centralei nucleare Doel",
+   "id": "gdelt-24eb3b3ec738f54c",
+   "idioma": "ro",
+   "medio": "moldova-suverana.md"
+  }
+ ],
+ "id": "EODI-2025-00125",
+ "lugar": {
+  "geocodificacion": "vocabulario",
+  "nivel": "instalacion",
+  "pais": "BE",
+  "punto": {
+   "lat": 51.385,
+   "lon": 4.148
+  },
+  "radio_km": 2.0,
+  "region": "Antwerpen",
+  "suceso": "Doel"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Doel",
+   "es": "Doel"
+  },
+  "lugar": {
+   "en": "Doel, Belgium",
+   "es": "Doel, B\u00e9lgica"
+  },
+  "objetivo": {
+   "en": "Doel",
+   "es": "Doel"
+  },
+  "region": {
+   "en": "Antwerp",
+   "es": "Amberes"
+  }
+ },
+ "objetivo": {
+  "categoria": "energia",
+  "nombre": "Doel"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2025-11-09T20:00Z"
+  },
+  "origen_inicio": {
+   "corregido": true,
+   "fuente_id": "gdelt-32bf04daa2b05396",
+   "motivo": "la frase da la hora pero no el d\u00eda: d\u00eda de la publicaci\u00f3n (2025-11-09 23:00, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Three possible drones spotted over Doel nuclear power plant in Belgium",
+  "es": "Tres posibles drones avistados sobre la central nuclear de Doel en B\u00e9lgica"
+ }
+}

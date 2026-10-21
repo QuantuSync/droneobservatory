@@ -1,0 +1,513 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 4,
+   "min": 4
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-12-27T10:15Z"
+    },
+    "fuente_id": "gdelt-5ae057a923b4e031"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-12-29T00:00Z"
+    },
+    "fuente_id": "revisada-e90fc02c99edf940-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ndz.de/der-norden/drohnen-am-flughafen-hannover-mehrere-flugzeuge-umgeleitet-SBIPCZ2A6FBMBMDCCCTUWVKJH4.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen am Flughafen Hannover: Mehrere Flugzeuge umgeleitet.",
+   "id": "gdelt-5ae057a923b4e031",
+   "idioma": "de",
+   "medio": "ndz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gn-online.de/niedersachsen/drohnen-legen-flugbetrieb-in-hannover-lahm-596793.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen legen Flugbetrieb in Hannover lahm",
+   "id": "gdelt-aaca912270affc5f",
+   "idioma": "de",
+   "medio": "gn-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zeit.de/news/2025-12/27/drohnen-legen-flugbetrieb-in-hannover-lahm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sichtung am Freitagabend: Drohnen legen Flugbetrieb in Hannover lahm",
+   "id": "gdelt-cbb3d75d5a9b1914",
+   "idioma": "de",
+   "medio": "zeit.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnn.de/panorama/drohnen-legen-flughafen-hannover-erneut-lahm-22KKOGNQGBFVVBXLNYGFW5MRDQ.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen legen Flughafen Hannover erneut lahm",
+   "id": "gdelt-7c85779209b1045f",
+   "idioma": "de",
+   "medio": "dnn.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Weihnachts-Flieger ausgebremst: Drohnen am Airport Hannover",
+   "id": "gdelt-98b5721482f55cc1",
+   "idioma": "de",
+   "medio": "ndr.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bild.de/regional/hannover/hannover-drohnen-legen-flughafen-lahm-umleitungen-und-ausfaelle-694fb8eff6fc544dba9b4a5b",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Hannover: Drohnen legen Flughafen lahm \u2013 Umleitungen und Ausf\u00e4lle",
+   "id": "gdelt-77deaee4d6b61445",
+   "idioma": "de",
+   "medio": "bild.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-12-27/germania-avvistati-droni-misteriosi-su-hannover-chiuso-laeroporto/18376270",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Germania avvistati droni misteriosi su Hannover | chiuso l' aeroporto",
+   "id": "gdelt-96a00d6ff951e3aa",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dewezet.de/panorama/drohnen-legen-flughafen-hannover-erneut-lahm-22KKOGNQGBFVVBXLNYGFW5MRDQ.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Hannover: Drohnen legen Flugverkehr lahm",
+   "id": "gdelt-b90fdc4fb74748e8",
+   "idioma": "de",
+   "medio": "dewezet.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stern.de/panorama/weltgeschehen/hannover--nichts-ging-mehr-am-airport---schuld-sind-drohnen-36993810.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Hannover: Nichts ging mehr am Airport \u2013 schuld sind Drohnen",
+   "id": "gdelt-0b9ad3acbdba8553",
+   "idioma": "de",
+   "medio": "stern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tagesspiegel.de/gesellschaft/panorama/zweite-sperrung-binnen-zwei-monaten-drohnensichtung-legt-flughafen-hannover-lahm-15084532.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zweite Sperrung binnen zwei Monaten: Drohnensichtung legt Flughafen Hannover lahm",
+   "id": "gdelt-c2739c1984f448a0",
+   "idioma": "de",
+   "medio": "tagesspiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nieuwsblad.be/nieuws/luchthaven-hannover-urenlang-gesloten-na-dronemeldingen/120258917.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchthaven Hannover urenlang gesloten na dronemeldingen",
+   "id": "gdelt-d2af2a7a1f47d912",
+   "idioma": "nl",
+   "medio": "nieuwsblad.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/externe/zborurile-de-pe-aeroportul-din-hanovra-au-fost-perturbate-din-cauza-unor-drone-neidentificate-3563527",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zborurile de pe aeroportul din Hanovra au fost perturbate din cauza unor drone neidentificate",
+   "id": "gdelt-ab7edc21b316b88a",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/mejdunarodni/Letishte-Hanover-beshe-zatvoreno-zaradi-dronove-2835468",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0435\u0442\u0438\u0449\u0435 \u0425\u0430\u043d\u043e\u0432\u0435\u0440 \u0431\u0435\u0448\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435",
+   "id": "gdelt-1c1665bb88cbdb21",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziuaconstanta.ro/stiri/externe/spatiul-aerian-deasupra-aeroportului-din-orasul-hanovra-din-nordul-germaniei-inchis-din-cauza-prezentei-in-zona-a-unor-drone-neidentificate-922418.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Spa\u0163iul aerian deasupra aeroportului din ora\u015ful Hanovra, din nordul Germaniei, \u00eenchis din cauza prezen\u0163ei \u00een zon\u0103 a unor drone neidentificate",
+   "id": "gdelt-e0a730b0b73d8ec8",
+   "idioma": "ro",
+   "medio": "ziuaconstanta.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://orf.at/stories/3415505",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen legten Flugbetrieb in Hannover lahm",
+   "id": "gdelt-f5f9077a8a32180a",
+   "idioma": "de",
+   "medio": "orf.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gds.ro/Actualitate/2025-12-27/aeroportul-din-hanovra-inchis-din-cauza-unor-drone-neidentificate",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Hanovra, \u00eenchis din cauza unor drone neidentificate",
+   "id": "gdelt-187e9c8ba399964b",
+   "idioma": "ro",
+   "medio": "gds.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://manager.bg/%D1%81%D0%B2%D1%8F%D1%82/dronove-narushiha-deinostta-na-letisteto-v-germanskia-grad-hanover",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u043e\u0432\u0435 \u043d\u0430\u0440\u0443\u0448\u0438\u0445\u0430 \u0434\u0435\u0439\u043d\u043e\u0441\u0442\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0433\u0435\u0440\u043c\u0430\u043d\u0441\u043a\u0438\u044f \u0433\u0440\u0430\u0434 \u0425\u0430\u043d\u043e\u0432\u0435\u0440",
+   "id": "gdelt-6c7219b93166cee3",
+   "idioma": "bg",
+   "medio": "manager.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://iltempo.it/esteri/2025/12/27/news/germania-avvistati-droni-misteriosi-su-hannover-chiuso-l-aeroporto-45590944",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Germania, avvistati droni misteriosi su Hannover: chiuso l'aeroporto",
+   "id": "gdelt-7c514d89ec379b2e",
+   "idioma": "it",
+   "medio": "iltempo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/world/1023904-dronove-narushiha-deinostta-na-letishteto-v-hanover",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u043e\u0432\u0435 \u043d\u0430\u0440\u0443\u0448\u0438\u0445\u0430 \u0434\u0435\u0439\u043d\u043e\u0441\u0442\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0425\u0430\u043d\u043e\u0432\u0435\u0440 \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0421\u0432\u044f\u0442",
+   "id": "gdelt-23e149ad06976fb9",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aradon.ro/mapamond/zborurile-de-pe-aeroportul-orasului-hanovra-perturbate-din-cauza-unor-drone-neidentificate-2128771",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zborurile de pe aeroportul ora\u015fului Hanovra, perturbate din cauza unor drone neidentificate",
+   "id": "gdelt-5a26bfb012c17e4c",
+   "idioma": "ro",
+   "medio": "aradon.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://romaniatv.net/drone-neidentificate-in-spatiul-aerian-german-mai-multe-zboruri-au-fost-anulate-in-aeroportul-din-hanovra_9315130.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone neidentificate \u00een spa\u021biul aerian German: Mai multe zboruri au fost anulate \u00een aeroportul din Hanovra",
+   "id": "gdelt-60382941e3f682d9",
+   "idioma": "ro",
+   "medio": "romaniatv.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://knack.be/nieuws/wereld/europa/luchthaven-van-hannover-urenlang-gesloten-door-dronemelding",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchthaven van Hannover urenlang gesloten door dronemelding",
+   "id": "gdelt-47ce50beba5d3e90",
+   "idioma": "nl",
+   "medio": "knack.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://h24info.ma/monde/allemagne-trafic-aeroport-hanovre-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Allemagne: des drones non identifi\u00e9s perturbent le trafic de l'a\u00e9roport de Hanovre",
+   "id": "gdelt-6e414f97a82ae427",
+   "idioma": "fr",
+   "medio": "h24info.ma"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/aeroport/hanovra-germania-trafic-intrerupt-drone-neautorizate-1984911",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-27T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Traficul aerian pe aeroportul din Hanovra, \u00eentrerupt din cauza unor drone neautorizate. Incursiunile cu drone, o problem\u0103 tot mai frecvent\u0103 pentru aeroporturile din Germania",
+   "id": "gdelt-19b77282ae983a81",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-29T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "An die Drohnenflieger",
+   "id": "gdelt-b586aa794c7a2f09",
+   "idioma": "de",
+   "medio": "ndr.de"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-12-30T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Best\u00e4tigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+   "id": "revisada-e90fc02c99edf940",
+   "idioma": "de",
+   "medio": "ndr.de"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-12-30T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Am Abend des zweiten Weihnachtsfeiertages haben Drohnen den Reiseverkehr am Flughafen Hannover ausgebremst.",
+   "id": "revisada-cb63c5b3aeae41fd",
+   "idioma": "de",
+   "medio": "ndr.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-12-29T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Best\u00e4tigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+   "id": "revisada-e90fc02c99edf940-declaracion-1",
+   "idioma": "de",
+   "medio": "Polizei (declaraci\u00f3n oficial citada en ndr.de)"
+  }
+ ],
+ "id": "EODI-2025-00001",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "DE",
+  "punto": {
+   "lat": 52.46146,
+   "lon": 9.68012
+  },
+  "radio_km": 5.0,
+  "region": "Niedersachsen",
+  "suceso": "Flughafen Hannover-Langenhagen"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Hanover",
+   "es": "Hannover"
+  },
+  "lugar": {
+   "en": "Hanover, Germany",
+   "es": "Hannover, Alemania"
+  },
+  "objetivo": {
+   "en": "Hanover Airport",
+   "es": "Aeropuerto de Hannover"
+  },
+  "region": {
+   "en": "Lower Saxony",
+   "es": "Baja Sajonia"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Flughafen Hannover-Langenhagen",
+  "oaci": "EDDV"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-12-28T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-b586aa794c7a2f09",
+   "motivo": "\u00abgestern abend\u00bb en una nota publicada el 2025-12-29 11:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Drones over Hanover airport force flight diversions",
+  "es": "Drones sobre el aeropuerto de Hannover obligan a desviar vuelos"
+ }
+}

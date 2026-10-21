@@ -1,0 +1,565 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  },
+  "vuelos_desviados": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-03-07T17:30Z"
+    },
+    "fuente_id": "gdelt-507737c27ff00fb0"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-03-07T17:30Z"
+    },
+    "fuente_id": "gdelt-507737c27ff00fb0-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0437\u0430\u0441\u0435\u0447\u0435\u043d \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e",
+   "id": "gdelt-507737c27ff00fb0",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T17:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u0441\u0438\u0441\u0442\u0435\u043c\u0438\u0442\u0435 \u0437\u0430 \u0441\u0438\u0433\u0443\u0440\u043d\u043e\u0441\u0442 \u0441\u0430 \u0437\u0430\u0441\u0435\u043a\u043b\u0438 \u0431\u0435\u0437\u043f\u0438\u043b\u043e\u0442\u043d\u043e \u043b\u0435\u0442\u0430\u0442\u0435\u043b\u043d\u043e \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u043e \u0432 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0437\u043e\u043d\u0430\u0442\u0430",
+   "id": "gdelt-507737c27ff00fb0-declaracion-1",
+   "idioma": "bg",
+   "medio": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438 (declaraci\u00f3n oficial citada en frognews.bg)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T17:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u041d\u0435\u0437\u0430\u0431\u0430\u0432\u043d\u043e \u0441\u0430 \u0431\u0438\u043b\u0438 \u0443\u0432\u0435\u0434\u043e\u043c\u0435\u043d\u0438 \u0420\u044a\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u043d\u0430 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435",
+   "id": "gdelt-507737c27ff00fb0-declaracion-2",
+   "idioma": "bg",
+   "medio": "\u0420\u044a\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u043d\u0430 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 (declaraci\u00f3n oficial citada en frognews.bg)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://burgasinfo.com/news/view/5/149509",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u0435\u043d \u0434\u0440\u043e\u043d \u0431\u043b\u043e\u043a\u0438\u0440\u0430 \u043a\u0430\u0446\u0430\u043d\u0435\u0442\u043e \u043d\u0430 \u0441\u0430\u043c\u043e\u043b\u0435\u0442 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-28b4fe959bb55bcb",
+   "idioma": "bg",
+   "medio": "burgasinfo.com"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/regioni/Dron-zatvori-za-kratko-vuzdushnoto-prostranstvo-nad-letishte-Vasil-Levski-v-Sofiya-2915725",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e.",
+   "id": "gdelt-1665d6b0e221d75d",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/regioni/Dron-zatvori-za-kratko-vuzdushnoto-prostranstvo-nad-letishte-Vasil-Levski-v-Sofiya-2915725",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T18:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u041e\u0442 \u041c\u0412\u0420 \u0441\u044a\u043e\u0431\u0449\u0438\u0445\u0430, \u0447\u0435 \u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0434\u0440\u043e\u043d.",
+   "id": "gdelt-1665d6b0e221d75d-declaracion-1",
+   "idioma": "bg",
+   "medio": "\u041c\u0412\u0420 (declaraci\u00f3n oficial citada en focus-news.net)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnes.bg/a/1-bulgaria/713309-letishteto-v-sofiya-e-bilo-zatvoreno-za-kratko-zaradi-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d",
+   "id": "gdelt-eb227c80ce633957",
+   "idioma": "bg",
+   "medio": "dnes.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.bg/society/dron-na-lyubitel-fotograf-zatvori-za-kratko-vazdushnoto-prostranstvo-nad-letishteto-v-sofiya.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d \u043d\u0430 \u043b\u044e\u0431\u0438\u0442\u0435\u043b \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-fa8b4fdc60594ac7",
+   "idioma": "bg",
+   "medio": "news.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bgonair.bg/a/2-bulgaria/412153-dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-vasil-levski-v-sofiya",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0432 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-e06af0e8408a59ae",
+   "idioma": "bg",
+   "medio": "bgonair.bg"
+  },
+  {
+   "campos_respaldados": [
+    "drones"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/society/dva-drona-zatvoriha-za-kratko-letishte-vasil-levski-v-sofija-news_2565239.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0432\u0430 \u0434\u0440\u043e\u043d\u0430 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0438\u0445\u0430 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0432 \u0421\u043e\u0444\u0438\u044f.",
+   "id": "gdelt-2620bda4ea36dfc3",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://novinite.com/articles/237368/Bulgaria:+Mystery+Drone+Forces+Brief+Closure+of+Airspace+above+Sofia+Airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgaria: Mystery Drone Forces Brief Closure of Airspace above Sofia Airport - Novinite.com",
+   "id": "gdelt-430510788f1dfb2c",
+   "idioma": "en",
+   "medio": "novinite.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/bulgaria/1039871-zaradi-dron-vazdushnoto-prostranstvo-nad-letishteto-v-sofia-e-bilo-zatvoreno-za-kratko",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0417\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d: \u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f",
+   "id": "gdelt-af69cc921ca736f2",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://marica.bg/balgariq/obshtestvo/misteriq-dron-zatvori-letishteto-v-sofiq",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041c\u0438\u0441\u0442\u0435\u0440\u0438\u044f! \u0414\u0440\u043e\u043d \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-361e0ba62239fa70",
+   "idioma": "bg",
+   "medio": "marica.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekipnews.com/%D0%B7%D0%B0%D1%81%D0%B5%D1%87%D0%B5%D0%BD-%D0%B5-%D0%B4%D1%80%D0%BE%D0%BD-%D0%BD%D0%B0%D0%B4-%D0%BB%D0%B5%D1%82%D0%B8%D1%89%D0%B5-%D0%B2%D0%B0%D1%81%D0%B8%D0%BB-%D0%BB%D0%B5%D0%B2%D1%81",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0417\u0430\u0441\u0435\u0447\u0435\u043d \u0435 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0442\u043e\u0437\u0438 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434, \u0441\u044a\u043e\u0431\u0449\u0438\u0445\u0430 \u043e\u0442 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0430 - EkipNews.com",
+   "id": "gdelt-d2b4baa61b6647c5",
+   "idioma": "bg",
+   "medio": "ekipnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://segabg.com/hot/category-bulgaria/letishteto-sofiya-e-bilo-zatvoreno-zaradi-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d",
+   "id": "gdelt-0fbfc449edf2f8c8",
+   "idioma": "bg",
+   "medio": "segabg.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mediapool.bg/snimasht-dron-zatvori-za-kratko-letishteto-v-sofiya-news380984.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-07T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043d\u0438\u043c\u0430\u0449 \u0434\u0440\u043e\u043d \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-902a184f6cf47f3e",
+   "idioma": "bg",
+   "medio": "mediapool.bg"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dnes.dir.bg/comments/dron-zatvori-vazdushnoto-prostranstvo-nad-letishteto-v-sofiya",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0435\u043d \u0435 \u043b\u044e\u0431\u0438\u0442\u0435\u043b \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444, \u043a\u043e\u0439\u0442\u043e \u0441\u043d\u0438\u043c\u0430\u043b \u043a\u0430\u0446\u0430\u0449\u0438 \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u0449\u0438 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0438",
+   "id": "gdelt-a663ac8c26ed1a93",
+   "idioma": "bg",
+   "medio": "dnes.dir.bg"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://cross.bg/ivandzhikov-indystriya-bili-1792001.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u043f\u043e \u043f\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043b\u043d\u0430 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u0434\u0440\u043e\u043d\u043e\u0432\u0435\u0442\u0435 \u0431\u0438\u043b\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0432\u0430\u043d\u0438 \u043e\u0442 \u043b\u044e\u0431\u0438\u0442\u0435\u043b\u0438 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438.",
+   "id": "gdelt-00161837a8abc552",
+   "idioma": "bg",
+   "medio": "cross.bg"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://cross.bg/ivandzhikov-indystriya-bili-1792001.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T10:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u041e\u0442 \u0430\u0435\u0440\u043e\u0433\u0430\u0440\u0430\u0442\u0430 \u043f\u043e\u0442\u0432\u044a\u0440\u0434\u0438\u0445\u0430, \u0447\u0435 \u0431\u0435\u0437\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u0442\u0435 \u0430\u043f\u0430\u0440\u0430\u0442\u0438 \u0441\u0430 \u0431\u0438\u043b\u0438 \u0437\u0430\u0441\u0435\u0447\u0435\u043d\u0438 \u0447\u0440\u0435\u0437 \u0441\u0438\u0441\u0442\u0435\u043c\u0430\u0442\u0430 \u0437\u0430 \u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435.",
+   "id": "gdelt-00161837a8abc552-declaracion-1",
+   "idioma": "bg",
+   "medio": "Vasil Levski Airport (declaraci\u00f3n oficial citada en cross.bg)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/society/fotografi-oprovergaha-informacija-za-dronovete-zatvorili-letishte-vasil-levski-news_2565408.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438 \u043e\u043f\u0440\u043e\u0432\u0435\u0440\u0433\u0430\u0445\u0430 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u0437\u0430 \u0434\u0440\u043e\u043d\u043e\u0432\u0435\u0442\u0435, \u0437\u0430\u0442\u0432\u043e\u0440\u0438\u043b\u0438 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\"",
+   "id": "gdelt-1bce8ef328109e33",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/regioni/Grupa-Aviacionni-fotografi-za-slucha-2916404",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0413\u0440\u0443\u043f\u0430 \u0410\u0432\u0438\u0430\u0446\u0438\u043e\u043d\u043d\u0438 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438 \u0437\u0430 \u0441\u043b\u0443\u0447\u0430\u044f \u0441 \u0434\u0440\u043e\u043d \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\": \u0422\u0432\u044a\u0440\u0434\u0435\u043d\u0438\u044f\u0442\u0430 \u043d\u0435 \u043e\u0442\u0433\u043e\u0432\u0430\u0440\u044f\u0442 \u043d\u0430 \u0438\u0441\u0442\u0438\u043d\u0430\u0442\u0430",
+   "id": "gdelt-32213768c870f2a9",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dariknews.bg/regioni/sofiia/aviacionni-fotografi-niamame-vryzka-s-incidenta-s-dron-na-letishteto-v-sofiia-2448040",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0432\u0438\u0430\u0446\u0438\u043e\u043d\u043d\u0438 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438: \u041d\u044f\u043c\u0430\u043c\u0435 \u0432\u0440\u044a\u0437\u043a\u0430 \u0441 \u0438\u043d\u0446\u0438\u0434\u0435\u043d\u0442\u0430 \u0441 \u0434\u0440\u043e\u043d \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-e820be826c6388c9",
+   "idioma": "bg",
+   "medio": "dariknews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/bulgaria/1039991-aviacionni-fotografi-majat-koito-e-snimal-na-letishteto-v-sofia-ne-e-imal-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0432\u0438\u0430\u0446\u0438\u043e\u043d\u043d\u0438 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438: \u041c\u044a\u0436\u044a\u0442, \u043a\u043e\u0439\u0442\u043e \u0435 \u0441\u043d\u0438\u043c\u0430\u043b \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f, \u043d\u0435 \u0435 \u0438\u043c\u0430\u043b \u0434\u0440\u043e\u043d \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f",
+   "id": "gdelt-eb12aa87cfb01f7f",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stirileprotv.ro/stiri/international/drona-misterioasa-detectata-in-apropierea-aeroportului-din-sofia-spatiul-aerian-a-fost-inchis-temporar.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 \u201emisterioas\u0103\" detectat\u0103 \u00een apropierea aeroportului din Sofia. Spa\u021biul aerian a fost \u00eenchis temporar",
+   "id": "gdelt-5ccd28bbe0b71b73",
+   "idioma": "ro",
+   "medio": "stirileprotv.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://segabg.com/hot/category-bulgaria/dronut-na-letishteto-sofiya-ne-bil-fotografski",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044a\u0442 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u043d\u0435 \u0431\u0438\u043b \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0441\u043a\u0438",
+   "id": "gdelt-229f8d265e19e5f9",
+   "idioma": "bg",
+   "medio": "segabg.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/aeroport-inchis/sofia-drona-suspecta-1998922",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 suspect\u0103 pe aeroportul din Sofia. Spa\u021biul aerian a fost \u00eenchis",
+   "id": "gdelt-5a22bd36bc7116eb",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://capital.ro/alerta-in-bulgaria-drona-in-apropierea-aeroportului-din-sofia-spatiul-aerian-a-fost-inchis-temporar.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 \u00een Bulgaria! Dron\u0103 \u00een apropierea aeroportului din Sofia. Spa\u021biul aerian a fost \u00eenchis temporar",
+   "id": "gdelt-f2d58e2cfd4f59b9",
+   "idioma": "ro",
+   "medio": "capital.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-externe/europa/o-drona-aparuta-din-senin-deasupra-aeroportului-2513538.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-08T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 ap\u0103rut\u0103 din senin deasupra Aeroportului din Sofia a dus la \u00eenchiderea spa\u021biului aerian",
+   "id": "gdelt-31dad4c8298299d7",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://cross.bg/ivandzhikov-indystriya-bili-1792001.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-08T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0432\u0430 \u0441\u0438\u0433\u043d\u0430\u043b\u0430 \u0437\u0430 \u043b\u0435\u0442\u044f\u0449\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0434\u043e\u0432\u0435\u0434\u043e\u0445\u0430 \u0434\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0437\u0430\u0442\u0432\u0430\u0440\u044f\u043d\u0435 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" - \u0421\u043e\u0444\u0438\u044f, \u043a\u0430\u0442\u043e \u0434\u0432\u0430 \u043f\u043e\u043b\u0435\u0442\u0430 \u0431\u044f\u0445\u0430 \u043e\u0442\u043a\u043b\u043e\u043d\u0435\u043d\u0438 \u043a\u044a\u043c \u0434\u0440\u0443\u0433\u0438 \u0433\u0440\u0430\u0434\u043e\u0432\u0435.",
+   "id": "revisada-e39d4bea49d9c546",
+   "idioma": "bg",
+   "medio": "cross.bg"
+  }
+ ],
+ "id": "EODI-2026-00064",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "BG",
+  "punto": {
+   "lat": 42.63901,
+   "lon": 24.81305
+  },
+  "radio_km": 1.0,
+  "suceso": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Sofia",
+   "es": "Sof\u00eda"
+  },
+  "lugar": {
+   "en": "Sofia, Bulgaria",
+   "es": "Sof\u00eda, Bulgaria"
+  },
+  "objetivo": {
+   "en": "Sofia Airport",
+   "es": "Aeropuerto de Sof\u00eda"
+  }
+ },
+ "objetivo": {
+  "categoria": "estadio",
+  "nombre": "\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2026-03-07T14:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-507737c27ff00fb0",
+   "motivo": "\u00ab\u0441\u044a\u0431\u043e\u0442\u0430\u00bb en una nota publicada el 2026-03-07 19:30 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Drone forces temporary closure of Sofia airport airspace",
+  "es": "Dron cierra el espacio a\u00e9reo del aeropuerto de Sof\u00eda"
+ }
+}

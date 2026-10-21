@@ -1,0 +1,2957 @@
+{
+ "comprobado": "2026-10-21",
+ "fichas": [
+  {
+   "id": "EODI-2025-00066",
+   "por_que": "Drones sobre la base a\u00e9rea de Volkel (NL) el viernes 21-11-2025: Defensa los confirma y dispara contra ellos; instalaci\u00f3n con OACI, interior, n\u00famero 5-10.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "De drones werden tussen 19.00 en 21.00 uur gezien door bewakingspersoneel, waarna militairen van de luchtmacht in actie kwamen.",
+     "enlace": "https://nos.nl/artikel/2591497-luchtmacht-heeft-wapens-ingezet-tegen-5-tot-10-drones-boven-vliegbasis-volkel"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Het ging in eerste instantie om vijf drones, en op een later moment waren het er ongeveer 10, zegt minister van Defensie Brekelmans.",
+     "enlace": "https://nos.nl/artikel/2591497-luchtmacht-heeft-wapens-ingezet-tegen-5-tot-10-drones-boven-vliegbasis-volkel"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Personeel van de Koninklijke Luchtmacht heeft gisteravond vanaf de grond geprobeerd om drones neer te halen die boven vliegbasis Volkel werden gezien.",
+     "enlace": "https://nos.nl/artikel/2591497-luchtmacht-heeft-wapens-ingezet-tegen-5-tot-10-drones-boven-vliegbasis-volkel"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Vliegbasis Volkel",
+      "oaci": "EHVK"
+     },
+     "cita": "Op vrijdagavond werden er vijf \u00e0 tien onbemande vliegtuigjes boven Vliegbasis Volkel gezien.",
+     "enlace": "https://nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370"
+    },
+    "pais": {
+     "valor": "NL",
+     "cita": "Drones spotted over Dutch high security military airbase Volkel",
+     "enlace": "https://dutchnews.nl/2025/11/drones-spotted-over-dutch-high-security-military-airbase-volkel"
+    },
+    "lugar": {
+     "valor": "Volkel",
+     "cita": "Air force personnel attempted to bring down several drones spotted over the Volkel airbase on Friday evening",
+     "enlace": "https://dutchnews.nl/2025/11/drones-spotted-over-dutch-high-security-military-airbase-volkel"
+    },
+    "inicio": {
+     "valor": "2025-11-21",
+     "cita": "Op vrijdagavond werden er vijf \u00e0 tien onbemande vliegtuigjes boven Vliegbasis Volkel gezien.",
+     "enlace": "https://nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": {
+      "min": 5,
+      "max": 10
+     },
+     "cita": "Initially five drones were spotted, but the total later rose to 10, according to defence minister Ruben Brekelmans.",
+     "enlace": "https://dutchnews.nl/2025/11/drones-spotted-over-dutch-high-security-military-airbase-volkel"
+    },
+    "cabecera": {
+     "valor": "Base a\u00e9rea de Volkel",
+     "cita": "Drones spotted over Dutch high security military airbase Volkel",
+     "enlace": "https://dutchnews.nl/2025/11/drones-spotted-over-dutch-high-security-military-airbase-volkel"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00228",
+   "por_que": "Cierre del aeropuerto civil-militar de Aalborg (Dinamarca) por drones confirmados por polic\u00eda y aeropuerto; cubre presencia confirmada sin atribuci\u00f3n, instalaci\u00f3n con OACI y n\u00famero impreciso de drones.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Det er korrekt, at luftrummet er lukket, fordi der er observeret droner. Jeg kan bekr\u00e6fte, at politiet er til stede, lyder det.",
+     "enlace": "https://jyllands-posten.dk/indland/ECE18571393/droner-lukker-luftrummet-over-aalborg"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Northern Jutland police told reporters \"more than one drone\" had been sighted near Aalborg airport and they were flying with lights on.",
+     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Luftrummet over Aalborg Lufthavn er lukket p\u00e5 ubestemt tid grundet droneaktivitet.",
+     "enlace": "https://jyllands-posten.dk/indland/ECE18571393/droner-lukker-luftrummet-over-aalborg"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Flyvestation Aalborg",
+      "oaci": "EKYT"
+     },
+     "cita": "'Luftrummet over Flyvestation Aalborg er i \u00f8jeblikket lukket grundet uautoriseret droneflyvning.'",
+     "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972"
+    },
+    "pais": {
+     "valor": "DK",
+     "cita": "Denmark's Aalborg airport, used for commercial and military flights, was closed due to drones in its airspace, police said early on Thursday",
+     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week"
+    },
+    "lugar": {
+     "valor": "Aalborg",
+     "cita": "Politiet er til stede i Aalborg Lufthavn, efter at der er blevet observeret droner i luftrummet.",
+     "enlace": "https://jyllands-posten.dk/indland/ECE18571393/droner-lukker-luftrummet-over-aalborg"
+    },
+    "inicio": {
+     "valor": "2025-09-24",
+     "cita": "The drones were first seen at about 9:44 pm (1944 GMT) on Wednesday, according to police, and remained in the airspace until 12:54 am on Thursday.",
+     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": {
+      "min": 2,
+      "max": 10
+     },
+     "cita": "Northern Jutland police told reporters \"more than one drone\" had been sighted near Aalborg airport",
+     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week"
+    },
+    "cabecera": {
+     "valor": "Base a\u00e9rea de Aalborg",
+     "cita": "'Luftrummet over Flyvestation Aalborg er i \u00f8jeblikket lukket grundet uautoriseret droneflyvning.'",
+     "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00238",
+   "por_que": "Cierre breve del espacio a\u00e9reo del aeropuerto de Aalborg (DK) la noche del 25 de septiembre de 2025 por algo que parec\u00eda un dron; la polic\u00eda confirma el cierre pero no encontr\u00f3 nada (estado, presencia, tipo, instalaci\u00f3n).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "I Billund og Aalborg Lufthavn var der sent torsdag aften kortvarige nedlukninger af luftrummet",
+     "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/mere-end-500-droneanmeldelser-paa-nationalt-plan-i-det-seneste-doegn/2025/09/26"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "it is one of our own people who discovered something that looks like a drone,\" North Jutland Police Chief Christian Tilsted said. \"We have thoroughly investigated the area, and we have not found anything.\"",
+     "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Police said a drone sighting was reported at 11:40 p.m., leading to a one-hour suspension of all departures and arrivals. Several flights were canceled, and two inbound planes were diverted.",
+     "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Aalborg Lufthavn",
+      "oaci": "EKYT"
+     },
+     "cita": "Luftrummet over Aalborg Lufthavn var lukket i en time omkring midnat p\u00e5 grund af mistanke om droner.",
+     "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+    },
+    "pais": {
+     "valor": "DK",
+     "cita": "The airspace above Aalborg Airport in northern Denmark was closed overnight",
+     "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything"
+    },
+    "lugar": {
+     "valor": "Aalborg",
+     "cita": "Luftrummet over Aalborg Lufthavn var sent torsdag aften lukket ned i omkring en time.",
+     "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+    },
+    "inicio": {
+     "valor": "2025-09-25",
+     "cita": "- Det blev lukket her 23.40, og det er under mistanke om, at man mener m\u00e5ske at have set en drone, l\u00f8d det fra vagtchefen til Ekstra Bladet.",
+     "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "it is one of our own people who discovered something that looks like a drone",
+     "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything"
+    },
+    "cabecera": {
+     "valor": "Cierre del espacio a\u00e9reo de Aalborg por avistamiento de dron no identificado",
+     "cita": "Luftrummet over Aalborg Lufthavn var lukket i en time omkring midnat p\u00e5 grund af mistanke om droner.",
+     "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00124",
+   "por_que": "Dron sobre el aeropuerto de Sof\u00eda que retras\u00f3 seis vuelos; cubre fecha (la noticia es del 12, el suceso del viernes 7), presencia confirmada por la aviaci\u00f3n civil e interrupci\u00f3n aeroportuaria.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u0414\u0440\u043e\u043d\u044a\u0442, \u043a\u043e\u0439\u0442\u043e \u043f\u0440\u0435\u0434\u0438 \u0434\u043d\u0438 \u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0438 \u0437\u0430\u0442\u0440\u0443\u0434\u043d\u0438 \u043a\u0430\u0446\u0430\u043d\u0435\u0442\u043e \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u043d\u0435\u0442\u043e \u043d\u0430 \u0448\u0435\u0441\u0442 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0430 \u0435 \u043f\u044a\u0440\u0432\u0438\u044f\u0442 \u0441\u043b\u0443\u0447\u0430\u0439, \u043f\u0440\u0438 \u043a\u043e\u0439\u0442\u043e \u043c\u043e\u0436\u0435 \u0434\u0430 \u0441\u0435 \u0433\u043e\u0432\u043e\u0440\u0438 \u0437\u0430 \u0437\u043b\u043e\u043d\u0430\u043c\u0435\u0440\u0435\u043d\u043e\u0441\u0442. \u0422\u043e\u0432\u0430 \u0437\u0430\u044f\u0432\u0438 \u0434\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u044a\u0442 \u043d\u0430 \u0413\u0440\u0430\u0436\u0434\u0430\u043d\u0441\u043a\u0430\u0442\u0430 \u0432\u044a\u0437\u0434\u0443\u0445\u043e\u043f\u043b\u0430\u0432\u0430\u0442\u0435\u043b\u043d\u0430 \u0430\u0432\u0438\u0430\u0446\u0438\u044f \u0410\u043d\u0435\u043b\u0438\u044f \u041c\u0430\u0440\u0438\u043d\u043e\u0432\u0430.",
+     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "\u0414\u0440\u043e\u043d\u044a\u0442, \u043a\u043e\u0439\u0442\u043e \u043f\u0440\u0435\u0434\u0438 \u0434\u043d\u0438 \u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0438 \u0437\u0430\u0442\u0440\u0443\u0434\u043d\u0438 \u043a\u0430\u0446\u0430\u043d\u0435\u0442\u043e \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u043d\u0435\u0442\u043e \u043d\u0430 \u0448\u0435\u0441\u0442 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0430 ... \u0422\u043e\u0432\u0430 \u0437\u0430\u044f\u0432\u0438 \u0434\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u044a\u0442 \u043d\u0430 \u0413\u0440\u0430\u0436\u0434\u0430\u043d\u0441\u043a\u0430\u0442\u0430 \u0432\u044a\u0437\u0434\u0443\u0445\u043e\u043f\u043b\u0430\u0432\u0430\u0442\u0435\u043b\u043d\u0430 \u0430\u0432\u0438\u0430\u0446\u0438\u044f \u0410\u043d\u0435\u043b\u0438\u044f \u041c\u0430\u0440\u0438\u043d\u043e\u0432\u0430.",
+     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "\u0412\u044a\u0432 \u0432\u0440\u044a\u0437\u043a\u0430 \u0441 \u0438\u0437\u0432\u044a\u043d\u0440\u0435\u0434\u043d\u0430\u0442\u0430 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044f \u043e\u0442 \u043f\u0435\u0442\u044a\u043a \u0432\u0435\u0447\u0435\u0440, \u043a\u043e\u0433\u0430\u0442\u043e \u043d\u0435\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u0430\u043d \u0434\u0440\u043e\u043d \u043d\u0430\u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \u0438 \u0431\u043b\u043e\u043a\u0438\u0440\u0430 \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0442\u0440\u0430\u0444\u0438\u043a\u0430",
+     "enlace": "https://standartnews.com/balgariya-obshtestvo/shefat-na-letishte-sofiya-s-posledni-novini-za-trevogata-s-drona-narushitel-587945.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+      "oaci": "LBSF"
+     },
+     "cita": "\u0414\u0440\u043e\u043d \u043d\u0430\u0440\u0443\u0448\u0438 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0438 \u0437\u0430\u0431\u0430\u0432\u0438 \u043d\u044f\u043a\u043e\u043b\u043a\u043e \u043f\u043e\u043b\u0435\u0442\u0430",
+     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665"
+    },
+    "pais": {
+     "valor": "BG",
+     "cita": "\u0414\u0440\u043e\u043d \u043d\u0430\u0440\u0443\u0448\u0438 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0438 \u0437\u0430\u0431\u0430\u0432\u0438 \u043d\u044f\u043a\u043e\u043b\u043a\u043e \u043f\u043e\u043b\u0435\u0442\u0430",
+     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665"
+    },
+    "lugar": {
+     "valor": "Sof\u00eda",
+     "cita": "\u0434\u0440\u043e\u043d\u0430, \u043a\u043e\u0439\u0442\u043e \u043f\u0440\u0435\u043b\u0435\u0442\u044f \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0421\u043e\u0444\u0438\u044f\"",
+     "enlace": "https://actualno.com/society/njama-incident-i-njama-problem-direktoryt-na-letishte-sofija-kaza-kakvo-shte-napravi-zanapred-pri-dronove-news_2393113.html"
+    },
+    "inicio": {
+     "valor": "2025-02-07",
+     "cita": "\u0412\u044a\u0432 \u0432\u0440\u044a\u0437\u043a\u0430 \u0441 \u0438\u0437\u0432\u044a\u043d\u0440\u0435\u0434\u043d\u0430\u0442\u0430 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044f \u043e\u0442 \u043f\u0435\u0442\u044a\u043a \u0432\u0435\u0447\u0435\u0440, \u043a\u043e\u0433\u0430\u0442\u043e \u043d\u0435\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u0430\u043d \u0434\u0440\u043e\u043d \u043d\u0430\u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \u0438 \u0431\u043b\u043e\u043a\u0438\u0440\u0430 \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0442\u0440\u0430\u0444\u0438\u043a\u0430 (art\u00edculo del 12 \u0444\u0435\u0432 25; el viernes anterior es el 7 de febrero de 2025)",
+     "enlace": "https://standartnews.com/balgariya-obshtestvo/shefat-na-letishte-sofiya-s-posledni-novini-za-trevogata-s-drona-narushitel-587945.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "\u0438\u043c\u0430\u0448\u0435 \u043d\u0435\u0447\u0435\u0441\u0442\u043e \u0441\u0440\u0435\u0449\u0430\u043d \u0434\u0440\u043e\u043d, \u043a\u043e\u0439\u0442\u043e \u043a\u0440\u044a\u0436\u0435\u0448\u0435 \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e",
+     "enlace": "https://standartnews.com/balgariya-obshtestvo/shefat-na-letishte-sofiya-s-posledni-novini-za-trevogata-s-drona-narushitel-587945.html"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Sof\u00eda",
+     "cita": "\u0414\u0440\u043e\u043d \u043d\u0430\u0440\u0443\u0448\u0438 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0438 \u0437\u0430\u0431\u0430\u0432\u0438 \u043d\u044f\u043a\u043e\u043b\u043a\u043e \u043f\u043e\u043b\u0435\u0442\u0430",
+     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00203",
+   "por_que": "Cierre de la Polderbaan de Schiphol por un supuesto dron que la Marechaussee dice que muy probablemente fue un globo: presencia descartada, estado, tipo e instalaci\u00f3n con OACI.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "De marechaussee meldde vanmiddag dat er rond 12.10 uur meerdere meldingen van piloten binnenkwamen bij de luchtverkeersleiding.",
+     "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
+    },
+    "presencia_dron": {
+     "valor": "descartada",
+     "cita": "Rond 19.00 uur meldde de marechaussee na onderzoek dat het zeer waarschijnlijk geen drone was, omdat er geen is gesignaleerd op radarbeelden. Het vermoeden is nu dat het om een ballon ging.",
+     "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "De meldingen leidden ertoe dat het vliegverkeer op de Polderbaan werd stilgelegd. Een \"vrij uniek\" besluit, zei de marechaussee. Drie kwartier lang werden vliegtuigen omgeleid naar de Zwanenburgbaan.",
+     "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Schiphol",
+      "oaci": "EHAM"
+     },
+     "cita": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest",
+     "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
+    },
+    "pais": {
+     "valor": "NL",
+     "cita": "The Polderbaan runway at Amsterdam\u2019s Schiphol Airport was shut for about 45 minutes on Sept. 27",
+     "enlace": "https://kyivindependent.com/drone-scare-halts-flights-at-amsterdans-schiphol-as-zelensky-says-russia-probing-europes-defenses"
+    },
+    "lugar": {
+     "valor": "\u00c1msterdam",
+     "cita": "The Polderbaan runway at Amsterdam\u2019s Schiphol Airport was shut for about 45 minutes on Sept. 27",
+     "enlace": "https://kyivindependent.com/drone-scare-halts-flights-at-amsterdans-schiphol-as-zelensky-says-russia-probing-europes-defenses"
+    },
+    "inicio": {
+     "valor": "2025-09-27",
+     "cita": "The Polderbaan runway at Amsterdam\u2019s Schiphol Airport was shut for about 45 minutes on Sept. 27",
+     "enlace": "https://kyivindependent.com/drone-scare-halts-flights-at-amsterdans-schiphol-as-zelensky-says-russia-probing-europes-defenses"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Die hadden een drone zien vliegen op zo'n 150 meter hoogte.",
+     "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
+    },
+    "cabecera": {
+     "valor": "Schiphol",
+     "cita": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest",
+     "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00357",
+   "por_que": "Avisos de drones cerca de Brunssum y el aeropuerto de Maastricht (Limburgo, NL) el fin de semana del 8-9 de noviembre de 2025; la Marechaussee busc\u00f3 y no encontr\u00f3 nada: estado y presencia.",
+   "valores": {
+    "estado": {
+     "valor": "notificado",
+     "cita": "Un porte-parole a confirm\u00e9 \u00e0 l'ANP ces informations rapport\u00e9es par le journal De Limburger. Il a pr\u00e9cis\u00e9 que ces recherches n'avaient permis de retrouver aucun drone.",
+     "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "La police de la province du Limbourg n\u00e9erlandais a \u00e9galement re\u00e7u des signalements de drones au-dessus de plusieurs sites de la r\u00e9gion. Le nombre exact de drones impliqu\u00e9s n'a pas \u00e9t\u00e9 consign\u00e9.",
+     "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "des recherches \u00e0 la suite de signalements de drones pr\u00e8s du centre de commandement de l'Otan \u00e0 Brunssum ainsi qu'\u00e0 l'a\u00e9roport de Maastricht-Aix-la-Chapelle",
+     "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "La police de la province du Limbourg n\u00e9erlandais a \u00e9galement re\u00e7u des signalements de drones au-dessus de plusieurs sites de la r\u00e9gion.",
+     "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ"
+    },
+    "pais": {
+     "valor": "NL",
+     "cita": "La mar\u00e9chauss\u00e9e royale n\u00e9erlandaise (le corps de gendarmerie nationale) a men\u00e9, le week-end dernier, des recherches",
+     "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ"
+    },
+    "lugar": {
+     "valor": "Limburgo",
+     "cita": "La police de la province du Limbourg n\u00e9erlandais a \u00e9galement re\u00e7u des signalements de drones au-dessus de plusieurs sites de la r\u00e9gion.",
+     "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Posibles drones se\u00f1alados sobre bases de la OTAN en la regi\u00f3n de Maastricht",
+     "cita": "Des drones signal\u00e9s au-dessus de bases de l'Otan dans la r\u00e9gion de Maastricht",
+     "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ"
+    }
+   },
+   "sin_comprobar": {
+    "inicio": "el suceso fue \u00able week-end dernier\u00bb (8-9 de noviembre de 2025): ninguna fuente da el d\u00eda exacto; el 11 de la ficha es el de la noticia"
+   }
+  },
+  {
+   "id": "EODI-2026-00648",
+   "por_que": "Dron de pr\u00e1cticas de un instituto militar polaco que cae en una parcela de J\u00f3zef\u00f3w (gmina Niepor\u0119t) tras perder el enlace; cubre presencia confirmada por la polic\u00eda sin incursi\u00f3n, sin instalaci\u00f3n y localidad que la ficha no rellena.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Podinsp. Marta Sulowska z Komendy Sto\u0142ecznej Policji przekaza\u0142a \"Wyborczej\", \u017ce pracownicy Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki utracili \u0142\u0105czno\u015b\u0107 z maszyn\u0105 \u0107wiczebn\u0105, co doprowadzi\u0142o do jej upadku na dzia\u0142k\u0119 w J\u00f3zefowie.",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Sto\u0142eczna policja uspokaja, \u017ce to nie rosyjski dron, tylko maszyna \u0107wiczebna Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki, z kt\u00f3r\u0105 operatorzy stracili \u0142\u0105czno\u015b\u0107.",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Sto\u0142eczna policja uspokaja, \u017ce to nie rosyjski dron, tylko maszyna \u0107wiczebna Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "We wtorek (20 pa\u017adziernika) po po\u0142udniu dron spad\u0142 na jedn\u0105 z dzia\u0142ek w J\u00f3zefowie w gminie Niepor\u0119t (woj. mazowieckie).",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "pais": {
+     "valor": "PL",
+     "cita": "dron spad\u0142 na jedn\u0105 z dzia\u0142ek w J\u00f3zefowie w gminie Niepor\u0119t (woj. mazowieckie)",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "lugar": {
+     "valor": "J\u00f3zef\u00f3w",
+     "cita": "We wtorek (20 pa\u017adziernika) po po\u0142udniu dron spad\u0142 na jedn\u0105 z dzia\u0142ek w J\u00f3zefowie w gminie Niepor\u0119t (woj. mazowieckie).",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "inicio": {
+     "valor": "2026-10-20",
+     "cita": "We wtorek (20 pa\u017adziernika) po po\u0142udniu dron spad\u0142 na jedn\u0105 z dzia\u0142ek w J\u00f3zefowie",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "pracownicy Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki utracili \u0142\u0105czno\u015b\u0107 z maszyn\u0105 \u0107wiczebn\u0105, co doprowadzi\u0142o do jej upadku na dzia\u0142k\u0119 w J\u00f3zefowie.",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    },
+    "cabecera": {
+     "valor": "Dron de entrenamiento militar polaco cae en una parcela de J\u00f3zef\u00f3w, cerca de Varsovia",
+     "cita": "Dron spad\u0142 na posesj\u0119 w J\u00f3zefowie pod Warszaw\u0105. To maszyna polskiego wojskowego instytutu",
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00131",
+   "por_que": "Suspensi\u00f3n de unos 30 minutos de despegues y aterrizajes en el aeropuerto de Berl\u00edn-Brandeburgo (BER) el 11 de marzo de 2026 por un objeto volador no identificado; lo cuenta el portavoz del aeropuerto (estado, presencia, tipo, instalaci\u00f3n).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Un portavoz del aeropuerto explic\u00f3 a la AFP que la actividad se detuvo \"por motivos de seguridad\" durante unos treinta minutos, despu\u00e9s de que se observara \"un objeto volador no identificado\"",
+     "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "La police a \u00e9t\u00e9 appel\u00e9e pour enqu\u00eater sur cette observation mais l'objet n'a pas \u00e9t\u00e9 rep\u00e9r\u00e9 de nouveau.",
+     "enlace": "https://tf1info.fr/international/allemagne-l-aeroport-de-berlin-suspend-brievement-son-activite-apres-le-signalement-d-un-drone-2429591.html"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Etwa eine halbe Stunde lang durften weder Flugzeuge starten noch landen.",
+     "enlace": "https://rtl.de/news/drohnensichtung-am-ber-flugbetrieb-in-berlin-kurzzeitig-gestoppt-id30460229.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Flughafen Berlin-Brandenburg",
+      "oaci": "EDDB"
+     },
+     "cita": "Aus Sicherheitsgr\u00fcnden wird der Flugbetrieb am Flughafen Berlin-Brandenburg sofort eingestellt.",
+     "enlace": "https://rtl.de/news/drohnensichtung-am-ber-flugbetrieb-in-berlin-kurzzeitig-gestoppt-id30460229.html"
+    },
+    "pais": {
+     "valor": "DE",
+     "cita": "L'a\u00e9roport de Berlin, en Allemagne, a d\u00fb bri\u00e8vement suspendre mercredi 11 mars les d\u00e9collages et les atterrissages apr\u00e8s le signalement d'un drone.",
+     "enlace": "https://tf1info.fr/international/allemagne-l-aeroport-de-berlin-suspend-brievement-son-activite-apres-le-signalement-d-un-drone-2429591.html"
+    },
+    "lugar": {
+     "valor": "Berl\u00edn",
+     "cita": "El aeropuerto de Berl\u00edn suspendi\u00f3 temporalmente las operaciones de despegue y aterrizaje este mi\u00e9rcoles tras detectarse un dron",
+     "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html"
+    },
+    "inicio": {
+     "valor": "2026-03-11",
+     "cita": "Wegen einer Drohne musste der Flugbetrieb am BER am Mittwochabend (11. M\u00e4rz) pl\u00f6tzlich gestoppt werden.",
+     "enlace": "https://rtl.de/news/drohnensichtung-am-ber-flugbetrieb-in-berlin-kurzzeitig-gestoppt-id30460229.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Weitere Sichtungen der Drohne gibt es schlie\u00dflich nicht mehr.",
+     "enlace": "https://rtl.de/news/drohnensichtung-am-ber-flugbetrieb-in-berlin-kurzzeitig-gestoppt-id30460229.html"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Berl\u00edn",
+     "cita": "El aeropuerto de Berl\u00edn suspendi\u00f3 temporalmente las operaciones de despegue y aterrizaje",
+     "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00322",
+   "por_que": "Aviso de posible dron que par\u00f3 15 minutos el aeropuerto de Hamburgo; cubre tipo (hubo interrupci\u00f3n), presencia (la polic\u00eda apunta a un globo, sin afirmarlo) y estado.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "F\u00fcr rund 15 Minuten seien am Samstagabend keine Starts und Landungen m\u00f6glich gewesen, sagte ein Polizeisprecher.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "Einsatzkr\u00e4fte suchten danach, fanden jedoch weder eine Drohne noch ein anderes Flugobjekt. ... Nach Auswertung des Bildes deutete nach Polizeiangaben vieles darauf hin, dass es sich um einen Hei\u00dfluftballon gehandelt haben k\u00f6nnte.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Wegen einer mutma\u00dflichen Drohnensichtung ist der Flugbetrieb am Hamburger Flughafen kurzzeitig unterbrochen worden. F\u00fcr rund 15 Minuten seien am Samstagabend keine Starts und Landungen m\u00f6glich gewesen, sagte ein Polizeisprecher.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Hamburger Flughafen",
+      "oaci": "EDDH"
+     },
+     "cita": "Wegen einer mutma\u00dflichen Drohnensichtung ist der Flugbetrieb am Hamburger Flughafen kurzzeitig unterbrochen worden.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    },
+    "pais": {
+     "valor": "DE",
+     "cita": "Wegen einer mutma\u00dflichen Drohnensichtung ist der Flugbetrieb am Hamburger Flughafen kurzzeitig unterbrochen worden.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    },
+    "lugar": {
+     "valor": "Hamburgo",
+     "cita": "Drohnen-Alarm in Hamburg: Flughafen stellt Betrieb auf den Landebahnen vor\u00fcbergehend ein",
+     "enlace": "https://kreiszeitung.de/lokales/hamburg/drohnen-alarm-in-hamburg-flughafen-stellt-betrieb-kurzfristig-ein-94435026.html"
+    },
+    "inicio": {
+     "valor": "2026-08-08",
+     "cita": "08.08.2026 - 23:07 Uhr ... Gegen 19.50 Uhr war der Polizei ein unbekanntes Flugobjekt am Flughafen gemeldet worden.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Hamburgo-Fuhlsb\u00fcttel",
+     "cita": "Wegen einer mutma\u00dflichen Drohnensichtung ist der Flugbetrieb am Hamburger Flughafen kurzzeitig unterbrochen worden.",
+     "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00488",
+   "por_que": "Alerta de madrugada en el condado de Tulcea por dos drones detectados por el radar rumano en el espacio a\u00e9reo de Ucrania; los cazas solo despegaron de Mihail Kog\u0103lniceanu: estado, presencia, instalaci\u00f3n, lugar y d\u00eda UTC.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania, en las cercan\u00edas de la frontera fluvial con Rumania.",
+     "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania",
+     "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Finalmente no se detectaron incursiones en el espacio a\u00e9reo rumano, cancel\u00e1ndose la alerta por posible ca\u00edda de fragmentos del dron.",
+     "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+     "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+     "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
+    },
+    "lugar": {
+     "valor": null,
+     "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+     "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
+    },
+    "inicio": {
+     "valor": "2026-10-05",
+     "cita": "El mensaje fue enviado a las 02:20 horas, mientras los cazas espa\u00f1oles realizaban la misi\u00f3n de reconocimiento y seguimiento",
+     "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "en las cercan\u00edas de la frontera fluvial con Rumania",
+     "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml"
+    },
+    "drones": {
+     "valor": 2,
+     "cita": "detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania",
+     "enlace": "https://biobiochile.cl/noticias/internacional/europa/2026/10/06/despliegan-aviones-f-16-de-la-otan-en-rumania-ante-alerta-por-drones-cerca-de-su-espacio-aereo.shtml"
+    },
+    "cabecera": {
+     "valor": "Alerta por dos drones junto a la frontera de Rumania en el condado de Tulcea",
+     "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+     "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00152",
+   "por_que": "Dron marino ucraniano que se autodeton\u00f3 en el muelle 78 del puerto de Constanza (RO) el 5-6-2026: instalaci\u00f3n (puerto), atribuci\u00f3n oficial a Ucrania, incursi\u00f3n, frontera del mar Negro.",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "Drona marin\u0103 care a explodat \u00een aceast\u0103 diminea\u021b\u0103 \u00een Portul Constan\u021ba f\u0103cea parte, al\u0103turi de alte mijloace similare de lupt\u0103, dintr-o opera\u021biune militar\u0103 condus\u0103 de Ucraina \u00eempotriva agresiunii ruse.",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Imediat dup\u0103 identificarea dronei, MApN a luat leg\u0103tura cu omologii ucraineni, care au confirmat c\u0103 au pierdut controlul oper\u0103rii a patru drone.",
+     "enlace": "https://digi24.ro/stiri/actualitate/o-drona-marina-a-explodat-in-portul-constanta-zona-este-izolata-autoritatile-se-afla-la-fata-locului-3801477"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "Intrarea acestei drone \u00een spa\u021biul suveran rom\u00e2nesc reprezint\u0103 o consecin\u021b\u0103 direct\u0103 a r\u0103zboiului purtat de Rusia \u00eempotriva Ucrainei",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "puerto",
+      "nombre": "Portul Constan\u021ba"
+     },
+     "cita": "\u00een Dana 78, \u00een Portul Constan\u021ba, a fost observat un obiect plutitor, posibil dron\u0103",
+     "enlace": "https://digi24.ro/stiri/actualitate/o-drona-marina-a-explodat-in-portul-constanta-zona-este-izolata-autoritatile-se-afla-la-fata-locului-3801477"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "O dron\u0103 marin\u0103 s-a autodetonat vineri diminea\u021b\u0103 \u00een Dana 78 a Portului Constan\u021ba",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+    },
+    "lugar": {
+     "valor": "Constanza",
+     "cita": "O dron\u0103 marin\u0103 s-a autodetonat vineri diminea\u021b\u0103 \u00een Dana 78 a Portului Constan\u021ba",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+    },
+    "inicio": {
+     "valor": "2026-06-05",
+     "cita": "\u00cen data de 05.06.2026, \u00een jurul orei 06:20, Garda de Coast\u0103, a primit o informare din partea Agen\u021biei Rom\u00e2ne de Salvare a Vie\u021bii Omene\u0219ti pe Mare",
+     "enlace": "https://digi24.ro/stiri/actualitate/o-drona-marina-a-explodat-in-portul-constanta-zona-este-izolata-autoritatile-se-afla-la-fata-locului-3801477"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 4,
+     "cita": "\u00cen acest moment, toate cele patru drone marine ie\u0219ite de sub controlul for\u021belor militare ucrainene s-au autodetona",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+    },
+    "cabecera": {
+     "valor": "Dron que explot\u00f3 en el Puerto de Constanza",
+     "cita": "O dron\u0103 marin\u0103 a explodat \u00een Portul Constan\u021ba.",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00512",
+   "por_que": "Dos mercantes (Chelsea 3 frente a Byala y HS Dignity frente a Krapets) alcanzados por drones a\u00e9reos en el mar Negro junto a las aguas b\u00falgaras; cubre buque alcanzado = incursi\u00f3n, sin instalaci\u00f3n, suceso de noche (fecha UTC) y estado confirmado sin atribuci\u00f3n formal.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u0414\u0432\u0430 \u043a\u043e\u0440\u0430\u0431\u0430 \u0441\u0430 \u0431\u0438\u043b\u0438 \u0443\u0434\u0430\u0440\u0435\u043d\u0438 \u043f\u0440\u0435\u0437 \u0438\u0437\u043c\u0438\u043d\u0430\u043b\u0430\u0442\u0430 \u043d\u043e\u0449 \u043e\u0442 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u0430\u043b\u043d\u0438\u0442\u0435 \u0432\u043e\u0434\u0438 \u043d\u0430 \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f, \u0435\u0434\u0438\u043d\u0438\u044f\u0442 \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u0411\u044f\u043b\u0430, \u0430 \u0434\u0440\u0443\u0433\u0438\u044f\u0442 \u043d\u0430 17 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u041a\u0440\u0430\u043f\u0435\u0446. \u0417\u0430 \u0442\u043e\u0432\u0430 \u0441\u044a\u043e\u0431\u0449\u0438 \u043f\u0440\u0435\u043c\u0438\u0435\u0440\u044a\u0442 \u0420\u0443\u043c\u0435\u043d \u0420\u0430\u0434\u0435\u0432",
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Alle Besatzungsmitglieder wurden gerettet, und drei Drohnen wurden entweder an Deck oder im Inneren der Chelsea-3 gefunden, teilten die Beh\u00f6rden in Sofia mit.",
+     "enlace": "https://az-online.de/politik/drohnen-versenken-frachter-nahe-bulgarien-sofia-ruft-nato-zu-hilfe-zr-94540958.html"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "Nava de marf\u0103 \u201eChelsea 3\u201d, sub pavilion maltez, a fost atacat\u0103 de trei drone aeriene la aproximativ 18 mile marine est de ora\u0219ul Biala.",
+     "enlace": "https://mediafax.ro/externe/doua-nave-lovite-de-drone-in-marea-neagra-premierul-bulgariei-va-purta-discutii-cu-ambasadorul-rus-si-cu-secretarul-general-al-nato-23824343"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "\u041a\u043e\u0440\u0430\u0431\u044a\u0442 \u201e\u0427\u0435\u043b\u0441\u0438\u201c \u0435 \u0431\u0438\u043b \u0443\u0434\u0430\u0440\u0435\u043d \u043e\u0442 \u0434\u0440\u043e\u043d \u0432 \u0427\u0435\u0440\u043d\u043e \u043c\u043e\u0440\u0435, \u043d\u0430 \u043e\u043a\u043e\u043b\u043e 15 \u043c\u043e\u0440\u0441\u043a\u0438 \u043c\u0438\u043b\u0438 \u043e\u0442 \u0431\u0440\u0435\u0433\u0430 \u0441\u0440\u0435\u0449\u0443 \u0411\u044f\u043b\u0430, \u043e\u0431\u043b\u0430\u0441\u0442 \u0412\u0430\u0440\u043d\u0430.",
+     "enlace": "https://fakti.bg/bulgaria/1089503-dron-udari-korab-krai-bala-12-dushi-sa-postradali"
+    },
+    "pais": {
+     "valor": "BG",
+     "cita": "\u0414\u0432\u0430 \u043a\u043e\u0440\u0430\u0431\u0430 \u0441\u0430 \u0431\u0438\u043b\u0438 \u0443\u0434\u0430\u0440\u0435\u043d\u0438 \u043f\u0440\u0435\u0437 \u0438\u0437\u043c\u0438\u043d\u0430\u043b\u0430\u0442\u0430 \u043d\u043e\u0449 \u043e\u0442 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u0430\u043b\u043d\u0438\u0442\u0435 \u0432\u043e\u0434\u0438 \u043d\u0430 \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f",
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
+    },
+    "lugar": {
+     "valor": "Byala",
+     "cita": "\u041a\u043e\u0440\u0430\u0431\u044a\u0442 \"CHELSEA-3\" (IMO: 9361392), \u043a\u043e\u0439\u0442\u043e \u043f\u043b\u0430\u0432\u0430 \u043f\u043e\u0434 \u043c\u0430\u043b\u0442\u0438\u0439\u0441\u043a\u0438 \u0444\u043b\u0430\u0433, \u043d\u043e \u0441\u0435 \u043c\u0435\u043d\u0430\u0436\u0438\u0440\u0430 \u043e\u0442 \u0443\u043a\u0440\u0430\u0438\u043d\u0441\u043a\u0430 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u044f \u043e\u0442 \u041e\u0434\u0435\u0441\u0430, \u0435 \u0431\u0438\u043b \u043f\u043e\u0440\u0430\u0437\u0435\u043d \u043d\u0430 \u043e\u043a\u043e\u043b\u043e 17 \u043c\u043e\u0440\u0441\u043a\u0438 \u043c\u0438\u043b\u0438 \u043e\u0442 \u0431\u0440\u0435\u0433\u0430 \u0441\u0440\u0435\u0449\u0443 \u0411\u044f\u043b\u0430, \u043e\u0431\u043b\u0430\u0441\u0442 \u0412\u0430\u0440\u043d\u0430.",
+     "enlace": "https://segabg.com/hot/category-bulgaria/dronove-udariha-korabi-kray-byala-i-krapec"
+    },
+    "inicio": {
+     "valor": "2026-10-12",
+     "cita": "\u041f\u043e \u0434\u0443\u043c\u0438\u0442\u0435 \u043c\u0443 \u0432 01:30 \u0447\u0430\u0441\u0430 \u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0431\u0435\u0434\u0441\u0442\u0432\u0430\u0449 \u043a\u043e\u0440\u0430\u0431 \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u0411\u044f\u043b\u0430.",
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar (mar Negro)"
+    },
+    "drones": {
+     "valor": 3,
+     "cita": "\u041f\u043e \u0434\u0430\u043d\u043d\u0438 \u043d\u0430 \u0435\u043a\u0438\u043f\u0430\u0436\u0430 \u0442\u043e\u0439 \u0435 \u0443\u0434\u0430\u0440\u0435\u043d \u0441 3 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u0438 \u0434\u0440\u043e\u043d\u0430 \u043f\u043e \u043f\u0430\u043b\u0443\u0431\u0430\u0442\u0430 \u0438 \u043f\u043e \u0431\u043e\u0440\u0434\u0430.",
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
+    },
+    "cabecera": {
+     "valor": "Drones atacan barcos en el mar Negro frente a Bulgaria",
+     "cita": "\u041d\u043e\u0432\u0438 \u0434\u0432\u0430 \u043a\u043e\u0440\u0430\u0431\u0430 \u0441\u0430 \u0431\u0438\u043b\u0438 \u0443\u0434\u0430\u0440\u0435\u043d\u0438 \u0441 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432 \u0427\u0435\u0440\u043d\u043e \u043c\u043e\u0440\u0435 - \u043a\u0440\u0430\u0439 \u0411\u044f\u043b\u0430 \u0438 \u043a\u0440\u0430\u0439 \u041a\u0440\u0430\u043f\u0435\u0446",
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00515",
+   "por_que": "Tres pilotos informan de un posible dron entre las 2 y las 4 de la madrugada del 13 de octubre de 2026 en el aeropuerto de N\u00faremberg; la polic\u00eda lo comunica, hay vuelos retrasados y desviados y la b\u00fasqueda no encuentra nada (estado, presencia, tipo, instalaci\u00f3n).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Im Zeitraum zwischen 2 und 4 Uhr in der Nacht meldeten laut Bericht des Polizeipr\u00e4sidiums Mittelfranken drei Piloten w\u00e4hrend des jeweiligen Lande- oder Startvorgangs unabh\u00e4ngig voneinander die Sichtung eines Objekts",
+     "enlace": "https://nordbayern.de/nuernberg/polizeibericht/piloten-melden-objekt-im-luftraum-uber-dem-flughafen-nurnberg-beeintrachtigungen-im-flugverkehr-1.15313800"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "Die durchgef\u00fchrten Ma\u00dfnahmen, bei welchen unter anderem auch ein Polizeihubschrauber im Einsatz war, f\u00fchrten nicht zur Verifizierung des gemeldeten Objekts. Die Grenzpolizeiinspektion N\u00fcrnberg f\u00fchrt nun die weiteren Ermittlungen zur Kl\u00e4rung des Geschehens.",
+     "enlace": "https://nordbayern.de/nuernberg/polizeibericht/piloten-melden-objekt-im-luftraum-uber-dem-flughafen-nurnberg-beeintrachtigungen-im-flugverkehr-1.15313800"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Insgesamt waren sechs Fl\u00fcge betroffen, die versp\u00e4tet waren: zwei Ank\u00fcnfte und vier Abfl\u00fcge. (Quelle: Bundespolizei, Anfrage Flughafen N\u00fcrnberg)",
+     "enlace": "https://merkur.de/bayern/nuernberg/mehrere-piloten-setzen-meldungen-ab-drohnen-alarm-am-nuernberger-airport-fluege-umgeleitet-94538254.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Albrecht-D\u00fcrer-Airport N\u00fcrnberg",
+      "oaci": "EDDN"
+     },
+     "cita": "Am fr\u00fchen Dienstagmorgen ist es zu Beeintr\u00e4chtigungen des Flugverkehrs am Albrecht-D\u00fcrer-Airport N\u00fcrnberg gekommen.",
+     "enlace": "https://nordbayern.de/nuernberg/polizeibericht/piloten-melden-objekt-im-luftraum-uber-dem-flughafen-nurnberg-beeintrachtigungen-im-flugverkehr-1.15313800"
+    },
+    "pais": {
+     "valor": "DE",
+     "cita": "Der Airport in Bayerns zweitgr\u00f6\u00dfter Stadt war am Dienstagmorgen (13. Oktober) gesperrt worden",
+     "enlace": "https://stuttgarter-nachrichten.de/politik/notfall-am-flughafen-nuernberg-erst-eine-drohne-dann-ein-notfallcode-was-steckt-hinter-der-sperrung-79565146.html"
+    },
+    "lugar": {
+     "valor": "N\u00faremberg",
+     "cita": "Eine m\u00f6gliche Drohnensichtung hat in den fr\u00fchen Morgenstunden zu St\u00f6rungen auf dem Flughafen N\u00fcrnberg gef\u00fchrt.",
+     "enlace": "https://schwaebische.de/regional/bayern/moegliche-drohne-stoert-flugbetrieb-am-nuernberger-flughafen-4933216"
+    },
+    "inicio": {
+     "valor": "2026-10-13",
+     "cita": "Aufregung am Albrecht-D\u00fcrer-Airport N\u00fcrnberg in der Nacht auf Dienstag (13. Oktober). [...] Zwischen 2 Uhr und 4 Uhr morgens beobachteten drei Flugzeugf\u00fchrer beim Landen oder Starten jeweils ein unbekanntes Objekt",
+     "enlace": "https://merkur.de/bayern/nuernberg/mehrere-piloten-setzen-meldungen-ab-drohnen-alarm-am-nuernberger-airport-fluege-umgeleitet-94538254.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de N\u00faremberg",
+     "cita": "Eine m\u00f6gliche Drohnensichtung hat in den fr\u00fchen Morgenstunden zu St\u00f6rungen auf dem Flughafen N\u00fcrnberg gef\u00fchrt.",
+     "enlace": "https://schwaebische.de/regional/bayern/moegliche-drohne-stoert-flugbetrieb-am-nuernberger-flughafen-4933216"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00154",
+   "por_que": "Cierre del aeropuerto de Copenhague el 22-9-2025 por drones avistados; cubre presencia no acreditada tras el cierre de la investigaci\u00f3n policial (junio de 2026), estado confirmado, interrupci\u00f3n y n\u00famero de drones.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Lufthavnen er pt. lukket ned, og det er grundet to til tre droner, som flyver omkring lufthavnsomr\u00e5det, siger han.",
+     "enlace": "https://tv2bornholm.dk/bornholm/fly-kan-ikke-lande-i-kobenhavn-grundet-droner-i-omradet-6af19"
+    },
+    "presencia_dron": {
+     "valor": "no_acreditada",
+     "cita": "I enkelte efterforskninger har det hverken kunnet p\u00e5vises eller afvises, at der har v\u00e6ret tale om droner. Dette g\u00f8r sig bl.a. g\u00e6ldende for s\u00e5 vidt ang\u00e5r efterforskningerne i K\u00f8benhavns Politi og Nordjyllands Politi.",
+     "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Anmeldelserne om droneobservationer den 22. september 2025, som f\u00f8rte til, at Naviair lukkede for lufttrafikken i K\u00f8benhavns Lufthavn",
+     "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "K\u00f8benhavns Lufthavn",
+      "oaci": "EKCH"
+     },
+     "cita": "som f\u00f8rte til, at Naviair lukkede for lufttrafikken i K\u00f8benhavns Lufthavn",
+     "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25"
+    },
+    "pais": {
+     "valor": "DK",
+     "cita": "Der kan mandag aften lidt over klokken 21 ikke lande eller lette fly i K\u00f8benhavns Lufthavn.",
+     "enlace": "https://tv2bornholm.dk/bornholm/fly-kan-ikke-lande-i-kobenhavn-grundet-droner-i-omradet-6af19"
+    },
+    "lugar": {
+     "valor": "Copenhague",
+     "cita": "Der kan mandag aften lidt over klokken 21 ikke lande eller lette fly i K\u00f8benhavns Lufthavn.",
+     "enlace": "https://tv2bornholm.dk/bornholm/fly-kan-ikke-lande-i-kobenhavn-grundet-droner-i-omradet-6af19"
+    },
+    "inicio": {
+     "valor": "2025-09-22",
+     "cita": "K\u00f8benhavns Politi har i dag fremlagt resultaterne af efterforskningen af droneobservationer den 22. september 2025 over K\u00f8benhavns Lufthavn.",
+     "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": {
+      "min": 2,
+      "max": 3
+     },
+     "cita": "Det skyldes to til tre droner i omr\u00e5det. Det siger Henrik Stormer, som er vagtchef ved K\u00f8benhavns Politi.",
+     "enlace": "https://tv2bornholm.dk/bornholm/fly-kan-ikke-lande-i-kobenhavn-grundet-droner-i-omradet-6af19"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Copenhague",
+     "cita": "Efterforskningen af droneobservationer over K\u00f8benhavns Lufthavn er indstillet",
+     "enlace": "https://politi.dk/koebenhavns-politi/nyhedsliste/efterforskningen-af-droneobservationer-over-koebenhavns-lufthavn-er-indstillet/2026/06/25"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00001",
+   "por_que": "Drones sobre el aeropuerto de Hannover la noche del 26 de diciembre de 2025 con cierre del espacio a\u00e9reo y desv\u00edos: tipo (interrupci\u00f3n), d\u00eda UTC, n\u00famero de drones confirmado por la polic\u00eda.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Best\u00e4tigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Best\u00e4tigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Um kurz vor 21 Uhr sei der Luftraum \u00fcber dem Flughafen Hannover gesperrt worden - f\u00fcr dreieinhalb Stunden.",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Flughafen Hannover-Langenhagen",
+      "oaci": "EDDV"
+     },
+     "cita": "Zeitweise war der Flugbetrieb am Flughafen Hannover-Langenhagen komplett eingestellt.",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html"
+    },
+    "pais": {
+     "valor": "DE",
+     "cita": "Drohnenvorf\u00e4lle in Niedersachsen: Zahl hat sich fast verdoppelt",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html"
+    },
+    "lugar": {
+     "valor": "Hannover",
+     "cita": "Die Drohnen sind am Abend des zweiten Weihnachtsfeiertages in der N\u00e4he des Flughafens gesichtet worden, sagte ein Sprecher des Flughafens dem NDR Niedersachsen.",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html"
+    },
+    "inicio": {
+     "valor": "2025-12-26",
+     "cita": "Die Drohnen sind am Abend des zweiten Weihnachtsfeiertages in der N\u00e4he des Flughafens gesichtet worden",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 4,
+     "cita": "Best\u00e4tigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Hannover",
+     "cita": "Weihnachts-Flieger ausgebremst: Drohnen am Hannover Airport",
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00049",
+   "por_que": "Dron civil junto a la pista 08R del aeropuerto Henri Coand\u0103 (Bucarest, RO) el 28-9-2025 que suspendi\u00f3 aterizajes 40 minutos: interrupci\u00f3n aeroportuaria, OACI, presencia por el aeropuerto.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Conform procedurii de colaborare dintre ROMATSA \u0219i Compania Na\u021bional\u0103 Aeroporturi Bucure\u0219ti, ca m\u0103sur\u0103 preventiv\u0103 imediat\u0103, au fost suspendate temporar ateriz\u0103rile",
+     "enlace": "https://agerpres.ro/economic/2025/09/28/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declan--1488183"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Compania Na\u021bional\u0103 Aeroporturi Bucure\u0219ti a transmis c\u0103 era o dron\u0103 civil\u0103.",
+     "enlace": "https://ziare.com/drona/aeroport-otopeni-piloti-avion-1967019"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "O dron\u0103 detectat\u0103 \u00een vecin\u0103tatea aeroportului Henri Coand\u0103 din Bucure\u015fti a perturbat duminic\u0103 traficul aerian timp de 40 de minute.",
+     "enlace": "https://mediafax.ro/social/drona-in-apropierea-aeroportului-otopeni-traficul-aerian-intrerupt-40-de-minute-23617382"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Aeroportul Interna\u021bional Henri Coand\u0103 Bucure\u0219ti",
+      "oaci": "LROP"
+     },
+     "cita": "\u00een timpul apropierii pentru aterizare pe pista 08R a Aeroportului Interna\u021bional Henri Coand\u0103 Bucure\u0219ti, prezen\u021ba unei drone civile de mici dimensiuni",
+     "enlace": "https://agerpres.ro/economic/2025/09/28/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declan--1488183"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "Incident cu o dron\u0103 civil\u0103 la Aeroportul Interna\u021bional Henri Coand\u0103 Bucure\u0219ti",
+     "enlace": "https://agerpres.ro/economic/2025/09/28/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declan--1488183"
+    },
+    "lugar": {
+     "valor": "Bucarest",
+     "cita": "O dron\u0103 detectat\u0103 \u00een vecin\u0103tatea aeroportului Henri Coand\u0103 din Bucure\u015fti a perturbat duminic\u0103 traficul aerian",
+     "enlace": "https://mediafax.ro/social/drona-in-apropierea-aeroportului-otopeni-traficul-aerian-intrerupt-40-de-minute-23617382"
+    },
+    "inicio": {
+     "valor": "2025-09-28",
+     "cita": "Ast\u0103zi, 28 septembrie 2025, la ora 14:26, echipajul unei aeronave aflate \u00een faza de apropiere pentru aterizare pe pista 08R",
+     "enlace": "https://ziare.com/drona/aeroport-otopeni-piloti-avion-1967019"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "a raportat controlorilor de trafic aerian prezen\u0163a unei drone civile de mici dimensiuni \u00een spa\u0163iul aerian din apropierea pistei.",
+     "enlace": "https://mediafax.ro/social/drona-in-apropierea-aeroportului-otopeni-traficul-aerian-intrerupt-40-de-minute-23617382"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Bucarest-Henri Coand\u0103",
+     "cita": "Incident cu o dron\u0103 civil\u0103 la Aeroportul Interna\u021bional Henri Coand\u0103 Bucure\u0219ti",
+     "enlace": "https://agerpres.ro/economic/2025/09/28/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declan--1488183"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00238",
+   "por_que": "Restos de un dron con explosivo hallados en un campo de Rachelu (comuna Luncavi\u021ba, Tulcea) y detonados por el MApN, que dice que viene de un dron de los ataques rusos; cubre atribuci\u00f3n oficial por restos, incursi\u00f3n, localidad exacta y d\u00eda del hallazgo frente al de la ca\u00edda.",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "Datele preliminare rezultate \u00een urma evalu\u0103rilor efectuate de speciali\u0219ti indic\u0103 faptul c\u0103 fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u021bia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Potrivit MApN, ministerul a fost informat luni, 29 iunie, despre existen\u021ba unor fragmente de dron\u0103 \u00een zona localit\u0103\u021bii Rachelu, din jude\u021bul Tulcea",
+     "enlace": "https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-incarcatura-exploziva-descoperita-in-tulcea-3840077"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u021bia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "Alert\u0103 \u00een jude\u021bul Tulcea, dup\u0103 ce un localnic a descoperit pe un c\u00e2mp resturi metalice \u0219i a sunat la 112.",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "Alert\u0103 \u00een jude\u021bul Tulcea, dup\u0103 ce un localnic a descoperit pe un c\u00e2mp resturi metalice \u0219i a sunat la 112.",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+    },
+    "lugar": {
+     "valor": "Rachelu",
+     "cita": "Opera\u021biunea a avut loc \u00een zona localit\u0103\u021bii Rachelu, comuna Luncavi\u021ba, acolo unde un localnic a alertat autorit\u0103\u021bile prin 112 dup\u0103 ce a g\u0103sit fragmentele aparatului.",
+     "enlace": "https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-incarcatura-exploziva-descoperita-in-tulcea-3840077"
+    },
+    "inicio": {
+     "valor": "2026-06-29",
+     "cita": "Potrivit MApN, ministerul a fost informat luni, 29 iunie, despre existen\u021ba unor fragmente de dron\u0103 \u00een zona localit\u0103\u021bii Rachelu, din jude\u021bul Tulcea, dup\u0103 apelul unui localnic la Serviciul 112.",
+     "enlace": "https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-incarcatura-exploziva-descoperita-in-tulcea-3840077"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar (Rachelu, junto al Danubio y Ucrania, igual que Tulcea)"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u021bia Rus\u0103",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+    },
+    "cabecera": {
+     "valor": "Restos de dron encontrados en Tulcea, Rumania",
+     "cita": "Alert\u0103 \u00een Tulcea: resturi de dron\u0103 g\u0103site pe un c\u00e2mp. Militarii au decis detonarea din cauza riscului de explozie",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00295",
+   "por_que": "Incursi\u00f3n masiva de drones rusos en Polonia la noche del 9 al 10 de septiembre de 2025, derribos y restos (Cze\u015bniki, entre otros); el Gobierno la atribuye a Rusia (estado atribuido, presencia, incursi\u00f3n, n\u00famero de drones, frontera).",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "W \u015brod\u0119 nad ranem polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. To sytuacja bez precedensu.",
+     "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Cze\u015bniki pow. zamojski \u2013 ogl\u0119dziny w fazie ko\u0144cowej \u2013 ujawniono co najmniej 32 elementy drona typu Gerbera, nie ujawniono materia\u0142\u00f3w wybuchowych.",
+     "enlace": "https://www.gov.pl/web/pr-lublin/informacja-dotyczaca-czynnosci-procesowych-prokuratury-w-zwiazku-z-ujawnionymi-dronami-na-terenie-wojewodztwa-lubelskiego-aktualizacja"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "Po raz pierwszy spora cz\u0119\u015b\u0107 dron\u00f3w nadlecia\u0142a nad Polsk\u0119 bezpo\u015brednio z Bia\u0142orusi",
+     "enlace": "https://www.gov.pl/web/premier/naruszenie-polskiej-przestrzeni-powietrznej-jest-wniosek-o-uruchomienie-art-4-traktatu-polnocnoatlantyckiego"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "Najbardziej zagro\u017conymi rejonami by\u0142y wojew\u00f3dztwo podlaskie, mazowieckie i lubelskie.",
+     "enlace": "https://www.gov.pl/web/premier/Komunikat-MON"
+    },
+    "pais": {
+     "valor": "PL",
+     "cita": "dosz\u0142o do bezprecedensowego w skali naruszenia polskiej przestrzeni powietrznej przez obiekty typu dron",
+     "enlace": "https://www.gov.pl/web/premier/Komunikat-MON"
+    },
+    "lugar": {
+     "valor": "Cze\u015bniki",
+     "cita": "Cze\u015bniki pow. zamojski \u2013 ogl\u0119dziny w fazie ko\u0144cowej \u2013 ujawniono co najmniej 32 elementy drona typu Gerbera",
+     "enlace": "https://www.gov.pl/web/pr-lublin/informacja-dotyczaca-czynnosci-procesowych-prokuratury-w-zwiazku-z-ujawnionymi-dronami-na-terenie-wojewodztwa-lubelskiego-aktualizacja"
+    },
+    "inicio": {
+     "valor": "2025-09-09",
+     "cita": "Prokuratura Okr\u0119gowa w Lublinie umorzy\u0142a \u015bledztwo w sprawie ataku kilkudziesi\u0119ciu dron\u00f3w w nocy z 9 na 10 wrze\u015bnia 2025 r.",
+     "enlace": "https://bankier.pl/wiadomosc/Prokuratura-umorzyla-sledztwo-ws-rosyjskich-dronow-Wojsko-dzialalo-zgodnie-z-prawem-9209385.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 19,
+     "cita": "Przez ca\u0142\u0105 noc dosz\u0142o do 19 narusze\u0144 polskiego nieba.",
+     "enlace": "https://www.gov.pl/web/premier/naruszenie-polskiej-przestrzeni-powietrznej-jest-wniosek-o-uruchomienie-art-4-traktatu-polnocnoatlantyckiego"
+    },
+    "cabecera": {
+     "valor": "Drones rusos invaden el espacio a\u00e9reo de Polonia",
+     "cita": "W \u015brod\u0119 nad ranem polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony.",
+     "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00134",
+   "por_que": "Dron con explosivo en el aeropuerto de Leipzig/Halle que par\u00f3 el tr\u00e1fico; cubre atribuci\u00f3n oficial a Rusia, presencia confirmada, interrupci\u00f3n y fecha (noche del 4 de agosto).",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "Die Bundesregierung weist die Verantwortung f\u00fcr den versuchten Anschlag auf den Flughafen Leipzig/Halle vom 4. August 2026 eindeutig Russland zu.",
+     "enlace": "https://www.bundesregierung.de/breg-de/service/fragen-und-anworten/reaktion-angriff-leipzig-2451522"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "dass am Abend des 4. August 2026 auf dem Gel\u00e4nde des Flughafens Leipzig/Halle mittels einer Drohne eine Explosion verursacht werden sollte. Hierzu waren an der Drohne professioneller Sprengstoff und ein Z\u00fcnder angebracht worden.",
+     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Der Flugbetrieb wurde daraufhin sofort eingestellt, wie die Polizei Leipzig gegen\u00fcber BILD mitteilte. Eine Passagiermaschine wurde nach N\u00fcrnberg umgeleitet.",
+     "enlace": "https://bild.de/regional/berlin/drohnensichtung-und-verdaechtiger-gegenstand-landebahn-am-flughafen-leipzig-gesperrt-6a72becfcc46967c04caf088"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Flughafen Leipzig/Halle",
+      "oaci": "EDDP"
+     },
+     "cita": "auf dem Gel\u00e4nde des Flughafens Leipzig/Halle mittels einer Drohne eine Explosion verursacht werden sollte",
+     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html"
+    },
+    "pais": {
+     "valor": "DE",
+     "cita": "Die Bundesregierung weist die Verantwortung f\u00fcr den versuchten Anschlag auf den Flughafen Leipzig/Halle vom 4. August 2026 eindeutig Russland zu.",
+     "enlace": "https://www.bundesregierung.de/breg-de/service/fragen-und-anworten/reaktion-angriff-leipzig-2451522"
+    },
+    "lugar": {
+     "valor": "Leipzig",
+     "cita": "Leipzig (Sachsen) \u2013 Sicherheitsalarm am Flughafen Leipzig/Halle.",
+     "enlace": "https://bild.de/regional/berlin/drohnensichtung-und-verdaechtiger-gegenstand-landebahn-am-flughafen-leipzig-gesperrt-6a72becfcc46967c04caf088"
+    },
+    "inicio": {
+     "valor": "2026-08-04",
+     "cita": "Es liegen zureichende tats\u00e4chliche Anhaltspunkte vor, dass am Abend des 4. August 2026 auf dem Gel\u00e4nde des Flughafens Leipzig/Halle mittels einer Drohne eine Explosion verursacht werden sollte.",
+     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Hierzu waren an der Drohne professioneller Sprengstoff und ein Z\u00fcnder angebracht worden.",
+     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Leipzig",
+     "cita": "\u00dcbernahme der Ermittlungen nach Drohnenfund am Flughafen Leipzig/Halle",
+     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00245",
+   "por_que": "Dron lanzado desde el buque esp\u00eda ruso Zhigulevsk en el \u00d8resund durante la escala del Charles de Gaulle en Malm\u00f6; las Fuerzas Armadas suecas confirman que era ruso: atribuci\u00f3n, presencia, incursi\u00f3n y lugar en el mar.",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "Nu kan F\u00f6rsvarsmakten bekr\u00e4fta att en rysk dr\u00f6nare har genomf\u00f6rt en olovlig flygning.",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Efter en analys av teknisk data kan F\u00f6rsvarsmakten fastst\u00e4lla att det r\u00f6r sig om en dr\u00f6nare som lyft fr\u00e5n fartyget och genomf\u00f6rt en olovlig flygning",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "observerade ett av F\u00f6rsvarsmaktens fartyg att en dr\u00f6nare lyfte fr\u00e5n ett ryskt signalspaningsfartyg i \u00d6resund. Nu kan F\u00f6rsvarsmakten bekr\u00e4fta att en rysk dr\u00f6nare har genomf\u00f6rt en olovlig flygning.",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "en dr\u00f6nare lyfte fr\u00e5n ett ryskt signalspaningsfartyg i \u00d6resund",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    },
+    "pais": {
+     "valor": "SE",
+     "cita": "det ryska signalspaningsfartyget Zhigulevsk f\u00f6rflyttade sig i svenskt territorialvatten enligt internationell r\u00e4tt",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    },
+    "lugar": {
+     "valor": null,
+     "cita": "Dr\u00f6naren som st\u00f6rdes ut en dryg mil fr\u00e5n det franska hangarfartyget i Malm\u00f6 i onsdags var rysk",
+     "enlace": "https://hbl.fi/2026-02-27/svenska-forsvaret-bekraftar-rysk-dronare-utanfor-malmo"
+    },
+    "inicio": {
+     "valor": "2026-02-25",
+     "cita": "Dr\u00f6naren som st\u00f6rdes ut en dryg mil fr\u00e5n det franska hangarfartyget i Malm\u00f6 i onsdags var rysk, bekr\u00e4ftar Sveriges f\u00f6rsvarsmakt.",
+     "enlace": "https://hbl.fi/2026-02-27/svenska-forsvaret-bekraftar-rysk-dronare-utanfor-malmo"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "aktiverade mot\u00e5tg\u00e4rder f\u00f6r att st\u00f6ra ut dr\u00f6naren",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    },
+    "cabecera": {
+     "valor": "Dron ruso se aproxima al portaaviones Charles de Gaulle en Malm\u00f6",
+     "cita": "Under bes\u00f6ket av det franska hangarfartyget Charles de Gaulle observerade ett av F\u00f6rsvarsmaktens fartyg att en dr\u00f6nare lyfte fr\u00e5n ett ryskt signalspaningsfartyg i \u00d6resund.",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00007",
+   "por_que": "Cierre del aeropuerto de Vilna (LT) el 13-9-2026 por un posible dron que el centro de crisis dijo luego que era una bandada de p\u00e1jaros: estado frente a presencia descartada.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Flytrafikken ved flyplassen i Litauens hovedstad Vilnius er stanset etter en mulig droneobservasjon i landets luftrom. Det opplyser det nasjonale kriseh\u00e5ndteringssenteret, if\u00f8lge Reuters.",
+     "enlace": "https://nettavisen.no/nyheter/flyplass-i-vilnius-stengt-etter-droneobservasjon-nato-sender-jagerfly-pa-vingene/s/80-95-75005"
+    },
+    "presencia_dron": {
+     "valor": "descartada",
+     "cita": "was lifted after the object detected by radar was found to be a flock of birds, according to Lithuania's National Crisis Management Center.",
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Flights to and from Vilnius Airport were temporarily suspended during the alert. The airport reopened to flights at around 1:52 p.m. after the restrictions were lifted.",
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Vilnius Airport",
+      "oaci": "EYVI"
+     },
+     "cita": "Flights to and from Vilnius Airport were temporarily suspended during the alert.",
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+    },
+    "pais": {
+     "valor": "LT",
+     "cita": "Lufthavnen i Vilnius i Litauen blev lukket efter en mulig droneobservation",
+     "enlace": "https://ekstrabladet.dk/nyheder/krigogkatastrofer/lufthavn-i-vilnius-lukket-efter-mulig-droneobservation/11288251"
+    },
+    "lugar": {
+     "valor": "Vilna",
+     "cita": "An air alert issued in Vilnius and surrounding areas on Sunday over a suspected aerial threat",
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+    },
+    "inicio": {
+     "valor": "2026-09-13",
+     "cita": "VILNIUS, Sept. 13 (Xinhua) -- An air alert issued in Vilnius and surrounding areas on Sunday",
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Vilna",
+     "cita": "Flights to and from Vilnius Airport were temporarily suspended during the alert.",
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00112",
+   "por_que": "Cierre del aeropuerto de Vilna la noche del 4 de octubre de 2025 por globos que llegaban de Bielorrusia; cubre presencia descartada (era otra cosa) con estado que no baja, interrupci\u00f3n aeroportuaria y zona frontera.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u00ab\u03a3\u03ae\u03bc\u03b5\u03c1\u03b1 \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5, \u03c3\u03c4\u03b9\u03c2 22:16, \u03bf\u03b9 \u03b5\u03b9\u03b4\u03b9\u03ba\u03bf\u03af \u03c4\u03bf\u03c5 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03bf\u03bc\u03af\u03bf\u03c5 \u03ad\u03bb\u03b1\u03b2\u03b1\u03bd \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03b1\u03c0\u03cc \u03b5\u03ba\u03c0\u03c1\u03bf\u03c3\u03ce\u03c0\u03bf\u03c5\u03c2 \u03c4\u03b7\u03c2 Oro Navigacija \u03cc\u03c4\u03b9 \u03b7 \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03b1 \u03ba\u03c5\u03ba\u03bb\u03bf\u03c6\u03bf\u03c1\u03af\u03b1 \u03ad\u03c7\u03b5\u03b9 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03ac \u03b1\u03bd\u03b1\u03c3\u03c4\u03b1\u03bb\u03b5\u03af \u03bb\u03cc\u03b3\u03c9, \u03c3\u03cd\u03bc\u03c6\u03c9\u03bd\u03b1 \u03bc\u03b5 \u03c4\u03b9\u03c2 \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03bc\u03b1\u03c2, \u03c0\u03b9\u03b8\u03b1\u03bd\u03ae\u03c2 \u03c3\u03b5\u03b9\u03c1\u03ac\u03c2 \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03c9\u03bd",
+     "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion"
+    },
+    "presencia_dron": {
+     "valor": "descartada",
+     "cita": "L'a\u00e9roport de Vilnius sera ferm\u00e9 \"jusqu'\u00e0 04H30 (03H30 HB)\" dimanche en raison d'une \"possible s\u00e9rie de ballons en approche\", a indiqu\u00e9 celui-ci dans une publication sur Facebook.",
+     "enlace": "https://lavenir.net/actu/monde/2025/10/05/intrusion-de-drones-dans-lespace-aerien-europeen-laeroport-de-vilnius-en-lituanie-ferme-suite-a-une-alerte-aux-ballons-suspects-73C2L5N5MFG7TLPV4MEHHUDQ2E"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Avioanele care trebuiau s\u0103 aterizeze \u00een capital\u0103 au fost redirec\u0163ionate c\u0103tre Kaunas (centru-sud), Letonia, Polonia sau s-au re\u00eentors la destina\u0163ie, \u00een timp ce un zbor spre Helsinki a fost anulat.",
+     "enlace": "https://stirileprotv.ro/stiri/international/dupa-incidentele-cu-drona-din-germania-aeroportul-din-vilnius-a-fost-inchis-din-cauza-unor-baloane-suspecte.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Tarptautinis Vilniaus oro uostas",
+      "oaci": "EYVI"
+     },
+     "cita": "\u03a4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03ad\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03b1\u03c1\u03b3\u03ac \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5 \u03c4\u03bf\u03c5 \u03a3\u03b1\u03b2\u03b2\u03ac\u03c4\u03bf\u03c5 \u03bb\u03cc\u03b3\u03c9 \u03c5\u03c0\u03bf\u03c8\u03af\u03b1\u03c2 \u03b3\u03b9\u03b1 \u03c0\u03b1\u03c1\u03bf\u03c5\u03c3\u03af\u03b1 \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03c9\u03bd \u03c0\u03bf\u03c5 \u03c0\u03b5\u03c4\u03bf\u03cd\u03c3\u03b1\u03bd \u03c3\u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae.",
+     "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion"
+    },
+    "pais": {
+     "valor": "LT",
+     "cita": "Lietuvos oro erdv\u0119 \u0161e\u0161tadienio nakt\u012f pa\u017eeid\u0117 25 meteorologiniai oro balionai, d\u0117l kuri\u0173 laikinai sutriko Vilniaus oro uosto veikla.",
+     "enlace": "https://15min.lt/verslas/naujiena/bendroves/per-menesi-desimt-dronu-sukeltu-incidentu-vilniaus-oro-uoste-663-2538170"
+    },
+    "lugar": {
+     "valor": "Vilna",
+     "cita": "Aeroportul din capitala Lituaniei, Vilnius, a anun\u0163at \u00een noaptea de s\u00e2mb\u0103t\u0103 spre duminic\u0103, \u00eenchiderea temporar\u0103 din cauza unei alerte privind \u201ebaloane\u201d suspecte.",
+     "enlace": "https://stirileprotv.ro/stiri/international/dupa-incidentele-cu-drona-din-germania-aeroportul-din-vilnius-a-fost-inchis-din-cauza-unor-baloane-suspecte.html"
+    },
+    "inicio": {
+     "valor": "2025-10-04",
+     "cita": "Il dit avoir \u00e9t\u00e9 inform\u00e9 de la mesure par l'agence de surveillance a\u00e9rienne Oro Navigajica \u00e0 22H16 (21H16 GMT).",
+     "enlace": "https://lavenir.net/actu/monde/2025/10/05/intrusion-de-drones-dans-lespace-aerien-europeen-laeroport-de-vilnius-en-lituanie-ferme-suite-a-une-alerte-aux-ballons-suspects-73C2L5N5MFG7TLPV4MEHHUDQ2E"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Vilna",
+     "cita": "\u03a4\u03bf \u0394\u03b9\u03b5\u03b8\u03bd\u03ad\u03c2 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03c3\u03c4\u03b7 \u039b\u03b9\u03b8\u03bf\u03c5\u03b1\u03bd\u03af\u03b1 \u03c0\u03b1\u03c1\u03b1\u03bc\u03ad\u03bd\u03b5\u03b9 \u03ba\u03bb\u03b5\u03b9\u03c3\u03c4\u03cc \u03b5\u03c0\u03b5\u03b9\u03b4\u03ae \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03b1 \u03c0\u03bb\u03b7\u03c3\u03af\u03b1\u03c3\u03b1\u03bd \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03bc\u03b5 \u03ba\u03af\u03bd\u03b4\u03c5\u03bd\u03bf \u03b1\u03c4\u03c5\u03c7\u03ae\u03bc\u03b1\u03c4\u03bf\u03c2",
+     "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00164",
+   "por_que": "La tripulaci\u00f3n de un helic\u00f3ptero policial que buscaba drones en RAF Lakenheath la noche del 22 de noviembre de 2024 crey\u00f3 ver un dron; el UK Airprox Board concluy\u00f3 que era un F-15 (presencia descartada, estado, instalaci\u00f3n).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "They saw red flashing lights in the area of the Lakenheath ATZ (which, at the time, they believed were drones) at a height in excess of 1500ft.",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+    },
+    "presencia_dron": {
+     "valor": "descartada",
+     "cita": "it was clear to members that the track of the F15 had correlated with the perceived position of the `drone' and that they had actually sighted a fast-moving object at distance",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "[The pilot of the EC135 reported initially that] the `drones' appeared to be carrying out large orbits of Lakenheath airfield.",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "RAF Lakenheath",
+      "oaci": "EGUL"
+     },
+     "cita": "The National Police Air Service (NPAS) helicopter took action during a search for drone activity at RAF Lakenheath and RAF Mildenhall",
+     "enlace": "https://edp24.co.uk/news/25065114.raf-lakenheath-drone-activity-prompts-helicopter-near-miss"
+    },
+    "pais": {
+     "valor": "GB",
+     "cita": "A police chopper had to withdraw from a mission over Suffolk after coming close to a drone.",
+     "enlace": "https://edp24.co.uk/news/25065114.raf-lakenheath-drone-activity-prompts-helicopter-near-miss"
+    },
+    "lugar": {
+     "valor": "Lakenheath",
+     "cita": "They saw red flashing lights in the area of the Lakenheath ATZ (which, at the time, they believed were drones)",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+    },
+    "inicio": {
+     "valor": "2024-11-22",
+     "cita": "Date: 22 Nov 2024 Time: 2151Z Position: 5216N 00026E Location: 2NM NE Newmarket",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "one of the `drones' appeared to converge with them and fly above and in front of them",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+    },
+    "cabecera": {
+     "valor": "RAF Lakenheath",
+     "cita": "A National Police Air Service (NPAS) helicopter dispatched to investigate reports of drone activity near RAF Lakenheath last November had a near miss with what it believed to be an unmanned aerial vehicle, only to later discover it was a U.S. F-15E Strike Eagle.",
+     "enlace": "https://theaviationist.com/2025/06/28/npas-helicopter-reports-near-miss-with-f-15/"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00225",
+   "por_que": "Alarma de dron en la base a\u00e9rea OTAN de Geilenkirchen que la OTAN y la polic\u00eda desmienten; cubre estado (desmentido oficial), presencia descartada e instalaci\u00f3n (base con OACI ETNG) y lugar.",
+   "valores": {
+    "presencia_dron": {
+     "valor": "descartada",
+     "cita": "Ein Nato-Sprecher in Geilenkirchen best\u00e4tigte: \"Es gab gestern hier keine Drohne.\" Zwar sei ein Detektionsger\u00e4t f\u00fcr Drohnen angeschlagen, was h\u00e4ufiger geschehe.",
+     "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Demnach wurde am Mittwoch gegen 19 Uhr ein unbekanntes Flugobjekt \u00fcber der Landebahn des Fliegerhorsts registriert.",
+     "enlace": "https://t-online.de/region/aachen/id_100949578/nato-air-base-geilenkirchen-drohnenalarm-ausgeloest-polizei-reagiert.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "NATO Air Base Geilenkirchen",
+      "oaci": "ETNG"
+     },
+     "cita": "Wegen einer angeblichen Drohnensichtung ist die Polizei am Mittwochabend zum Nato-Luftwaffenst\u00fctzpunkt Geilenkirchen bei Aachen ausger\u00fcckt.",
+     "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html"
+    },
+    "pais": {
+     "valor": "DE",
+     "cita": "Am Mittwochabend kurz vor 19 Uhr soll laut \u201eSpiegel\u201c eine Drohne in geringer H\u00f6he \u00fcber die Landebahn der Nato-Basis im nordrhein-westf\u00e4lischen Geilenkirchen geflogen sein",
+     "enlace": "https://bild.de/politik/ausland-und-internationales/drohne-ueber-geilenkirchen-nato-stuetzpunkt-in-alarmbereitschaft-68e7d698daea3e0002fb4d3b"
+    },
+    "lugar": {
+     "valor": "Geilenkirchen",
+     "cita": "Wegen einer angeblichen Drohnensichtung ist die Polizei am Mittwochabend zum Nato-Luftwaffenst\u00fctzpunkt Geilenkirchen bei Aachen ausger\u00fcckt.",
+     "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html"
+    },
+    "inicio": {
+     "valor": "2025-10-08",
+     "cita": "Am Mittwochabend kurz vor 19 Uhr soll laut \u201eSpiegel\u201c eine Drohne ... (art\u00edculo del 09.10.2025, jueves; mi\u00e9rcoles = 8 de octubre)",
+     "enlace": "https://bild.de/politik/ausland-und-internationales/drohne-ueber-geilenkirchen-nato-stuetzpunkt-in-alarmbereitschaft-68e7d698daea3e0002fb4d3b"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar (Geilenkirchen, oeste de Alemania)"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Falsa alarma de dron en la base OTAN de Geilenkirchen",
+     "cita": "Nato-Flugplatz Geilenkirchen: Drohnenalarm stellt sich als Fehlalarm heraus",
+     "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/nato-flugplatz-geilenkirchen-drohnenalarm-stellt-sich-als-fehlalarm-heraus.html"
+    }
+   },
+   "sin_comprobar": {
+    "estado": "dudoso: la OTAN dice \u00abEs gab gestern hier keine Drohne\u00bb; seg\u00fan el m\u00e9todo la alarma ocurri\u00f3 (confirmado) y lo rectificado es la presencia"
+   }
+  },
+  {
+   "id": "EODI-2026-00357",
+   "por_que": "Cierre del aeropuerto Vasil Levski de Sof\u00eda el s\u00e1bado 7 de marzo por un aviso de dron que la polic\u00eda de Sof\u00eda dice categ\u00f3ricamente que no era un dron (era un aficionado con radio y c\u00e1mara): presencia descartada, tipo interrupci\u00f3n, n\u00famero de drones.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u0412 \u0441\u044a\u0431\u043e\u0442\u0430 \u043d\u0430 7-\u0438 \u043c\u0430\u0440\u0442 \u0432 \u0434\u0435\u0436\u0443\u0440\u043d\u0430\u0442\u0430 \u0447\u0430\u0441\u0442 \u043d\u0430 \u0421\u0442\u043e\u043b\u0438\u0447\u043d\u0430\u0442\u0430 \u0434\u0438\u0440\u0435\u043a\u0446\u0438\u044f \u0431\u0435\u0448\u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f.",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "presencia_dron": {
+     "valor": "descartada",
+     "cita": "\u0414\u0440\u043e\u043d \u043d\u044f\u043c\u0430, \u043d\u0435 \u0441\u043c\u0435 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b\u0438 \u0432 \u0442\u043e\u0437\u0438 \u0441\u0438\u0433\u043d\u0430\u043b \u0434\u0440\u043e\u043d - \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0447\u043d\u043e \u0437\u0430\u044f\u0432\u0438 \u0433\u043b\u0430\u0432\u0435\u043d \u043a\u043e\u043c\u0438\u0441\u0430\u0440 \u041b\u044e\u0431\u043e\u043c\u0438\u0440 \u041d\u0438\u043a\u043e\u043b\u043e\u0432 \u043e\u0442\u043d\u043e\u0441\u043d\u043e \u0441\u0438\u0433\u043d\u0430\u043b\u0430 \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0437\u0430 \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f.",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "\u0424\u041e\u041a\u0423\u0421 \u043f\u0440\u0438\u043f\u043e\u043c\u043d\u044f, \u0447\u0435 \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0431\u0435\u0448\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d.",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c - \u0421\u043e\u0444\u0438\u044f",
+      "oaci": "LBSF"
+     },
+     "cita": "\u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "pais": {
+     "valor": "BG",
+     "cita": "\u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0431\u0435\u0448\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "lugar": {
+     "valor": "Sof\u00eda",
+     "cita": "\u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "inicio": {
+     "valor": "2026-03-07",
+     "cita": "\u0412 \u0441\u044a\u0431\u043e\u0442\u0430 \u043d\u0430 7-\u0438 \u043c\u0430\u0440\u0442 \u0432 \u0434\u0435\u0436\u0443\u0440\u043d\u0430\u0442\u0430 \u0447\u0430\u0441\u0442 \u043d\u0430 \u0421\u0442\u043e\u043b\u0438\u0447\u043d\u0430\u0442\u0430 \u0434\u0438\u0440\u0435\u043a\u0446\u0438\u044f \u0431\u0435\u0448\u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f.",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "\u0431\u0435\u0448\u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Sof\u00eda",
+     "cita": "\u041b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0431\u0435\u0448\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d.",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00042",
+   "por_que": "Cierre del aeropuerto de Oslo-Gardermoen (NO) la noche del 22 al 23-9-2025 por posibles drones; la polic\u00eda archiv\u00f3 sin poder confirmar ni descartar: presencia no acreditada, n\u00famero de drones.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "I g\u00e5r kveld og i natt har det v\u00e6rt to ulike observasjoner, og det ble besluttet \u00e5 stenge luftrommet, skrev kommunikasjonssjef Monica Fasting ved Oslo lufthavn",
+     "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373"
+    },
+    "presencia_dron": {
+     "valor": "no_acreditada",
+     "cita": "\u00d8st politidistrikt opplyser at etterforskningen ikke har kunnet bekrefte eller avkrefte om det faktisk var droner som ble observert.",
+     "enlace": "https://rb.no/henlegger-dronesak/s/5-43-2605216"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Luftrommet ble stengt rundt klokken 0.30. Like etter klokken 3.30 meldte Fasting at luftrommet var \u00e5pnet igjen.",
+     "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Oslo lufthavn Gardermoen",
+      "oaci": "ENGM"
+     },
+     "cita": "Oslo lufthavn Gardermoen m\u00e5tte natt til tirsdag holde stengt i flere timer p\u00e5 grunn av droneobservasjoner i n\u00e6rheten av flyplassen.",
+     "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373"
+    },
+    "pais": {
+     "valor": "NO",
+     "cita": "\u00d8st politidistrikt opplyser at etterforskningen ikke har kunnet bekrefte eller avkrefte",
+     "enlace": "https://rb.no/henlegger-dronesak/s/5-43-2605216"
+    },
+    "lugar": {
+     "valor": "Oslo",
+     "cita": "Oslo lufthavn var stengt i flere timer natt til tirsdag 23. september etter de mulige droneobservasjonene.",
+     "enlace": "https://rb.no/henlegger-dronesak/s/5-43-2605216"
+    },
+    "inicio": {
+     "valor": "2025-09-22",
+     "cita": "Det var f\u00f8rst like etter klokken 23 at NRK meldte at det hadde blitt observert en drone i n\u00e6rheten av Gardermoen.",
+     "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Oslo",
+     "cita": "Oslo lufthavn m\u00e5tte stenge etter droneobservasjoner",
+     "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00016",
+   "por_que": "Cuatro drones vistos por la polic\u00eda local y la seguridad militar sobre la base a\u00e9rea de Schaffen (Diest); cubre presencia confirmada por una autoridad local, sobrevuelo sin interrupci\u00f3n y base a\u00e9rea con c\u00f3digo OACI (categor\u00eda aeropuerto).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\"Toen de lokale politie samen met de militaire veiligheidsdienst ter plaatse op zoek ging, konden ze 4 drones spotten.\"",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest). Dat meldt burgemeester Geert Cluckers (DDS).",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "De drones zijn niet beschoten of uit de lucht gehaald door onze lokale politie.",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "luchtmachtbasis van Schaffen",
+      "oaci": "EBDT"
+     },
+     "cita": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest).",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "pais": {
+     "valor": "BE",
+     "cita": "Regionaal nieuws uit Brussel en Vlaams-Brabant",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "lugar": {
+     "valor": "Diest",
+     "cita": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest).",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "inicio": {
+     "valor": "2025-11-04",
+     "cita": "Gisteravond rond 20 uur liep een melding van een buurtbewoner binnen bij de politie over een drone boven de militaire basis van Schaffen.",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 4,
+     "cita": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest).",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    },
+    "cabecera": {
+     "valor": "Aer\u00f3dromo de Schaffen-Diest",
+     "cita": "Vier drones gespot boven militaire basis Schaffen: \"We blijven waakzaam\"",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00080",
+   "por_que": "Cuatro drones grandes vistos el domingo 2 de noviembre de 2025 por la tarde-noche sobre la base a\u00e9rea de Kleine-Brogel (B\u00e9lgica), que se alejaron hacia los Pa\u00edses Bajos; el ministro y el jefe de Defensa hablan de sobrevuelos sin atribuirlos (estado, presencia, tipo, instalaci\u00f3n, fecha).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "The Belgian military has been ordered to shoot down any unidentified drones flying over its military bases after three consecutive nights of airspace violations, Chief of Defense Frederik Vansina said Monday",
+     "enlace": "https://kyivpost.com/post/63595"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Ministar je dronove opisao kao velike modele i rekao da se \u2018nije radilo o redovitom preletu, ve\u0107 o jasnoj misiji koja je za cilj imala Kleine-Brogel\u2018. Letjeli su na velikoj visini, rekao je.",
+     "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Francken selbst will sich nicht zu den m\u00f6glichen Drahtziehern \u00e4u\u00dfern: Er wisse nicht, wer f\u00fcr diese Aktion verantwortlich ist.",
+     "enlace": "https://brf.be/national/2021246"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Luchtmachtbasis Kleine-Brogel",
+      "oaci": "EBBL"
+     },
+     "cita": "\u010cetiri drona vi\u0111ena su u nedjelju nave\u010der iznad belgijske vojne zra\u010dne baze Kleine-Brogel, koju koriste snage NATO saveza",
+     "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838"
+    },
+    "pais": {
+     "valor": "BE",
+     "cita": "Besonders betroffen war der Luftwaffenst\u00fctzpunkt Kleine-Brogel in der Provinz Limburg.",
+     "enlace": "https://brf.be/national/2021246"
+    },
+    "lugar": {
+     "valor": "Kleine-Brogel",
+     "cita": "\u010cetiri drona vi\u0111ena su u nedjelju nave\u010der iznad belgijske vojne zra\u010dne baze Kleine-Brogel",
+     "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838"
+    },
+    "inicio": {
+     "valor": "2025-11-02",
+     "cita": "\u010cetiri drona vi\u0111ena su u nedjelju nave\u010der iznad belgijske vojne zra\u010dne baze Kleine-Brogel, koju koriste snage NATO saveza, u najnovijem od nekoliko incidenata prijavljenih tijekom vikenda",
+     "enlace": "https://24sata.hr/news/jos-dronova-iznad-belgijske-zracne-baze-koju-koristi-nato-1085331"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 4,
+     "cita": "\u010cetiri drona vi\u0111ena su u nedjelju nave\u010der iznad belgijske vojne zra\u010dne baze Kleine-Brogel",
+     "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838"
+    },
+    "cabecera": {
+     "valor": "Base a\u00e9rea de Kleine-Brogel",
+     "cita": "Besonders betroffen war der Luftwaffenst\u00fctzpunkt Kleine-Brogel in der Provinz Limburg.",
+     "enlace": "https://brf.be/national/2021246"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00206",
+   "por_que": "Cinco drones sobre la base de submarinos nucleares de \u00cele Longue (Brest) con disparos antidr\u00f3n; cubre presencia confirmada por gendarmer\u00eda y prefectura mar\u00edtima, instalaci\u00f3n militar y n\u00famero de drones.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Cinque droni hanno sorvolato ieri sera introno alle 19:30 la base sottomarina francese dell'Ile Longue ... si \u00e8 appreso dalla gendarmeria locale.",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "I cinque droni erano piccoli modelli, ''non armati'' e ''fuori dal contesto militare'', ha precisato il prefetto marittimo dell'Atlantico, capitano di fregata Guillaume Le Rasle",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Cinque droni hanno sorvolato ieri sera introno alle 19:30 la base sottomarina francese dell'Ile Longue, nella rada di Brest",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "base_militar",
+      "nombre": "\u00cele Longue"
+     },
+     "cita": "la base sottomarina francese dell'Ile Longue, nella rada di Brest",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    },
+    "pais": {
+     "valor": "FR",
+     "cita": "la base sottomarina francese dell'Ile Longue, nella rada di Brest, adiacente alla penisola di Crozon all'estremo Ovest della Francia",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    },
+    "lugar": {
+     "valor": "\u00cele Longue",
+     "cita": "la base sottomarina di Ile Longue (Finistere), che confina con il porto di Brest",
+     "enlace": "https://quotidiano.net/esteri/droni-base-nucleare-francia-phpm2z3e"
+    },
+    "inicio": {
+     "valor": "2025-12-04",
+     "cita": "Parigi, 5 dicembre 2025 \u2013 ... I droni, ha spiegato la gendarmeria, hanno sorvolato ieri sera intorno alle 19.30 la base sottomarina di Ile Longue",
+     "enlace": "https://quotidiano.net/esteri/droni-base-nucleare-francia-phpm2z3e"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 5,
+     "cita": "I cinque droni erano piccoli modelli, ''non armati''",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    },
+    "cabecera": {
+     "valor": "\u00cele Longue",
+     "cita": "la base sottomarina francese dell'Ile Longue",
+     "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00268",
+   "por_que": "Dron tipo Shahed que alcanz\u00f3 la pista de RAF Akrotiri (zona de soberan\u00eda brit\u00e1nica en Chipre) pasada la medianoche del 2 de marzo, m\u00e1s dos interceptados: d\u00eda UTC, categor\u00eda de la instalaci\u00f3n (base a\u00e9rea con OACI), lugar y n\u00famero.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "causing what the U.K. Ministry of Defence described as \u201cminimal damage\u201d with no reported casualties.",
+     "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "The presence of a \u201csmall drone\u201d which \u201cimpacted the airfield\u201d and caused \u201cminor damage\u201d was communicated to members of the British bases shortly after 1am. Authorities later confirmed they were responding to the incident.",
+     "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "following Monday\u2019s Iranian-backed drone strike, which was launched from Lebanon.",
+     "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "RAF Akrotiri",
+      "oaci": "LCRA"
+     },
+     "cita": "A Shahed-type unmanned aerial vehicle reportedly struck the British base\u2019s runway a few minutes past midnight on March 2",
+     "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
+    },
+    "pais": {
+     "valor": "GB",
+     "cita": "Greece has dispatched two frigates and four F-16 fighter jets to Cyprus following a drone strike on RAF Akrotiri, the British military\u2019s main hub for Middle East aerial operations",
+     "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
+    },
+    "lugar": {
+     "valor": "RAF Akrotiri",
+     "cita": "Schools in the villages of Trachoni, Episkopi, Akrotiri and Asomatos, located within the RAF Akrotiri base area, were closed on Monday",
+     "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike"
+    },
+    "inicio": {
+     "valor": "2026-03-01",
+     "cita": "A Shahed-type unmanned aerial vehicle reportedly struck the British base\u2019s runway a few minutes past midnight on March 2",
+     "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 3,
+     "cita": "Two additional drones targeting the base were intercepted on March 2, according to Cypriot authorities.",
+     "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
+    },
+    "cabecera": {
+     "valor": "RAF Akrotiri",
+     "cita": "following a drone strike on RAF Akrotiri",
+     "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00378",
+   "por_que": "Alerta RO-Alert en el norte de Tulcea (RO) el 30-1-2025 por drones rusos en el espacio a\u00e9reo ucraniano junto a la frontera; los F-16 despegaron de Borcea: instalaci\u00f3n, estado y cabecera.",
+   "valores": {
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "au semnalat evolu\u021bia unor drone \u00een spa\u021biul aerian ucrainean, pe trasee de zbor \u00een apropierea frontierei cu Rom\u00e2nia.",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "un mesaj RO-alert prin care informa popula\u021bia din zona de Nord a jude\u021bului Tulcea despre posibilitatea c\u0103derii unor obiecte din spa\u021biul aerian, \u00een zona de grani\u021b\u0103",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "Incidentul a avut loc \u00een primele ore ale dimine\u021bii de joi, \u00een jude\u021bul Tulcea.",
+     "enlace": "https://libertatea.ro/stiri/oameni-tulcea-treziti-mesaj-ro-alert-doua-avioane-f-16-decolat-baza-aeriana-borcea-atac-rusesc-drone-5176380"
+    },
+    "lugar": {
+     "valor": "Tulcea",
+     "cita": "Incidentul a avut loc \u00een primele ore ale dimine\u021bii de joi, \u00een jude\u021bul Tulcea.",
+     "enlace": "https://libertatea.ro/stiri/oameni-tulcea-treziti-mesaj-ro-alert-doua-avioane-f-16-decolat-baza-aeriana-borcea-atac-rusesc-drone-5176380"
+    },
+    "inicio": {
+     "valor": "2025-01-30",
+     "cita": "\u00een primele ore ale dimine\u021bii de joi, 30 ianuarie, \u00een apropierea frontierei cu Rom\u00e2nia, \u00een jude\u021bul Tulcea.",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar (norte de Tulcea, junto a Ucrania); el punto de hoy est\u00e1 en la base de Borcea, que no es el lugar del suceso"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Drones rusos cerca de la frontera en Tulcea: dos F-16 despegan de la base de Borcea",
+     "cita": "Nou atac cu drone, l\u00e2ng\u0103 frontiera cu Rom\u00e2nia. Dou\u0103 aeronave F-16 au decolat din Baza Aerian\u0103 de la Borcea",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
+    }
+   },
+   "sin_comprobar": {
+    "estado": "dudoso: el MApN da los drones en el espacio a\u00e9reo ucraniano junto a la frontera, no en Ruman\u00eda; falta decidir si es suceso del pa\u00eds",
+    "presencia_dron": "dudoso: el MApN da los drones en el espacio a\u00e9reo ucraniano junto a la frontera, no en Ruman\u00eda; falta decidir si es suceso del pa\u00eds"
+   }
+  },
+  {
+   "id": "EODI-2025-00125",
+   "por_que": "Tres drones vistos por los vigilantes sobre la central nuclear de Doel, comunicado solo por el operador Engie (no una autoridad) y con la polic\u00eda sin comentar; cubre estado notificado, presencia no confirmada e instalaci\u00f3n de energ\u00eda.",
+   "valores": {
+    "estado": {
+     "valor": "notificado",
+     "cita": "La zone de police Scheldewaas a d\u00e9clar\u00e9 ne pas vouloir faire de commentaires.",
+     "enlace": "https://dhnet.be/actu/belgique/2025/11/09/intrusion-de-drones-dans-le-ciel-belge-le-trafic-aerien-a-nouveau-interrompu-a-laeroport-de-liege-BMLU5LFK75A37N52IXBFJDR4VU"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "De uitbater van de kerncentrale, Engie, meldt dat er drie drones zijn gezien.",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Er zijn geen gevolgen voor de werking van de kerncentrale, meldt een woordvoerder aan de VRT.",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "energia",
+      "nombre": "Doel"
+     },
+     "cita": "In Belgi\u00eb zijn opnieuw drones gesignaleerd, nu boven de kerncentrale in Doel.",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    },
+    "pais": {
+     "valor": "BE",
+     "cita": "In Belgi\u00eb zijn opnieuw drones gesignaleerd, nu boven de kerncentrale in Doel.",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    },
+    "lugar": {
+     "valor": "Doel",
+     "cita": "In Belgi\u00eb zijn opnieuw drones gesignaleerd, nu boven de kerncentrale in Doel.",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    },
+    "inicio": {
+     "valor": "2025-11-09",
+     "cita": "Trois drones ont \u00e9t\u00e9 aper\u00e7us dimanche soir au-dessus de la centrale nucl\u00e9aire de Doel, a indiqu\u00e9 Engie dimanche peu avant 22h.",
+     "enlace": "https://dhnet.be/actu/belgique/2025/11/09/intrusion-de-drones-dans-le-ciel-belge-le-trafic-aerien-a-nouveau-interrompu-a-laeroport-de-liege-BMLU5LFK75A37N52IXBFJDR4VU"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 3,
+     "cita": "De uitbater van de kerncentrale, Engie, meldt dat er drie drones zijn gezien.",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    },
+    "cabecera": {
+     "valor": "Doel",
+     "cita": "Drones gezien bij Belgische kerncentrale Doel en luchthaven Luik",
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00151",
+   "por_que": "Dron recreativo detectado el 13 de mayo de 2025 por el sistema de la central nuclear de Cofrentes; la Guardia Civil localiza y denuncia al piloto (estado, presencia confirmada, sobrevuelo, instalaci\u00f3n energ\u00e9tica).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron las inmediaciones de la Central Nuclear de Cofrentes y lo ha denunciado por volar en este espacio a\u00e9reo protegido",
+     "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Los agentes se personaron en la ubicaci\u00f3n exacta y localizaron a un ciudadano que portaba un dron y unas gafas de control remoto.",
+     "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron las inmediaciones de la central nuclear de Cofrentes, en la provincia de Valencia",
+     "enlace": "https://abc.es/espana/comunidad-valenciana/denuncian-hombre-sobrevolar-central-nuclear-cofrentes-dron-20250518120552-nt.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "energia",
+      "nombre": "Central Nuclear de Cofrentes",
+      "oaci": null
+     },
+     "cita": "un dron y su piloto, que hab\u00edan sido detectados por el sistema de detecci\u00f3n de vuelos de la Central Nuclear de Cofrentes",
+     "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html"
+    },
+    "pais": {
+     "valor": "ES",
+     "cita": "las inmediaciones de la central nuclear de Cofrentes, en la provincia de Valencia",
+     "enlace": "https://abc.es/espana/comunidad-valenciana/denuncian-hombre-sobrevolar-central-nuclear-cofrentes-dron-20250518120552-nt.html"
+    },
+    "lugar": {
+     "valor": "Cofrentes",
+     "cita": "La Guardia Civil ha identificado y denunciado a un hombre por sobrevolar la central nuclear de Cofrentes con un dron",
+     "enlace": "https://levante-emv.com/sucesos/2025/05/18/denunciado-sobrevolar-central-nuclear-cofrentes-dron-117520543.html"
+    },
+    "inicio": {
+     "valor": "2025-05-13",
+     "cita": "En concreto, el pasado 13 de mayo se recibi\u00f3 aviso por la Central Operativa de Servicios de la Guardia Civil para desplazarse a la localidad de Jalance (Valencia) e identificar un dron y su piloto",
+     "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "localizaron a un ciudadano que portaba un dron y unas gafas de control remoto",
+     "enlace": "https://abc.es/espana/comunidad-valenciana/denuncian-hombre-sobrevolar-central-nuclear-cofrentes-dron-20250518120552-nt.html"
+    },
+    "cabecera": {
+     "valor": "Central nuclear de Cofrentes",
+     "cita": "Denunciado por sobrevolar la Central Nuclear de Cofrentes con un dron",
+     "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00040",
+   "por_que": "Dron en la zona de prohibici\u00f3n de vuelo de la central nuclear de Loviisa; la polic\u00eda encontr\u00f3 el dron y al piloto: presencia confirmada, instalaci\u00f3n de energ\u00eda y zona fronteriza.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "It\u00e4-Uudenmaan poliisi sai keskiviikkoaamuna noin kello 9.50 aikoihin ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella Loviisan Saaristotien suunnalla.",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "My\u00f6hemmin p\u00e4iv\u00e4ll\u00e4 poliisi l\u00f6ysi droonin ja sen lenn\u00e4tt\u00e4j\u00e4n alueelta.",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "energia",
+      "nombre": "Loviisan ydinvoimalaitos"
+     },
+     "cita": "ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "pais": {
+     "valor": "FI",
+     "cita": "It\u00e4-Uudenmaan poliisi sai keskiviikkoaamuna noin kello 9.50 aikoihin ilmoituksen droonista",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "lugar": {
+     "valor": "Loviisa",
+     "cita": "Drooni lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "inicio": {
+     "valor": "2026-09-16",
+     "cita": "16.9. 14:11 It\u00e4-Uudenmaan poliisi sai keskiviikkoaamuna noin kello 9.50 aikoihin ilmoituksen droonista",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "My\u00f6hemmin p\u00e4iv\u00e4ll\u00e4 poliisi l\u00f6ysi droonin ja sen lenn\u00e4tt\u00e4j\u00e4n alueelta.",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    },
+    "cabecera": {
+     "valor": "Central nuclear de Loviisa",
+     "cita": "Drooni Loviisan ydin\u00advoimalan l\u00e4hist\u00f6ll\u00e4 \u2013 poliisi tutkii",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00209",
+   "por_que": "Dron con explosivos que entra desde Ruman\u00eda y explota en un campo junto al antiguo paso fronterizo de Kardam, a 1 km de la estaci\u00f3n de compresi\u00f3n del gasoducto Transbalc\u00e1nico: estado/atribuci\u00f3n, incursi\u00f3n, instalaci\u00f3n, d\u00eda y frontera.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u0412 8:10 \u0447. \u0442\u0430\u0437\u0438 \u0441\u0443\u0442\u0440\u0438\u043d \u0438\u043c\u0430\u043c\u0435 \u0438\u043d\u0446\u0438\u0434\u0435\u043d\u0442 \u2013 \u043d\u0430\u0445\u043b\u0443\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u043e\u0442\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438 \u0432\u0437\u0440\u0438\u0432\u044f\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 100 \u043c\u0435\u0442\u0440\u0430 \u043d\u0430\u0432\u044a\u0442\u0440\u0435 \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0430\u0442\u0430 \u0433\u0440\u0430\u043d\u0438\u0446\u0430 \u043e\u0442 \u043f\u043e\u0441\u043e\u043a\u0430 \u0420\u0443\u043c\u044a\u043d\u0438\u044f",
+     "enlace": "https://www.bta.bg/bg/videos/38827"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "\u0422\u043e\u0432\u0430 \u043d\u0435 \u0435 \u0434\u0440\u043e\u043d \u0438\u0433\u0440\u0430\u0447\u043a\u0430, \u0430 \u0435 \u043f\u043e-\u0433\u043e\u043b\u044f\u043c \u0434\u0440\u043e\u043d, \u0443\u0442\u043e\u0447\u043d\u0438 \u0442\u043e\u0439.",
+     "enlace": "https://www.bta.bg/bg/videos/38827"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "\u043d\u0430\u0445\u043b\u0443\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u043e\u0442\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438 \u0432\u0437\u0440\u0438\u0432\u044f\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 100 \u043c\u0435\u0442\u0440\u0430 \u043d\u0430\u0432\u044a\u0442\u0440\u0435 \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0430\u0442\u0430 \u0433\u0440\u0430\u043d\u0438\u0446\u0430 \u043e\u0442 \u043f\u043e\u0441\u043e\u043a\u0430 \u0420\u0443\u043c\u044a\u043d\u0438\u044f",
+     "enlace": "https://www.bta.bg/bg/videos/38827"
+    },
+    "pais": {
+     "valor": "BG",
+     "cita": "\u043d\u0430\u0445\u043b\u0443\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u043e\u0442\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e",
+     "enlace": "https://www.bta.bg/bg/videos/38827"
+    },
+    "lugar": {
+     "valor": "Kardam",
+     "cita": "\u0422\u043e\u0432\u0430 \u0441\u0442\u0430\u0432\u0430 \u0432 \u043d\u0435\u043f\u043e\u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0435\u043d\u0430 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u043e\u0442 \u0431\u0438\u0432\u0448\u0438\u044f \u0413\u0440\u0430\u043d\u0438\u0447\u0435\u043d \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043d\u043e-\u043f\u0440\u043e\u043f\u0443\u0441\u043a\u0430\u0442\u0435\u043b\u0435\u043d \u043f\u0443\u043d\u043a\u0442 (\u0413\u041a\u041f\u041f) \u201e\u041a\u0430\u0440\u0434\u0430\u043c\" \u043c\u0435\u0436\u0434\u0443 \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f \u0438 \u0420\u0443\u043c\u044a\u043d\u0438\u044f",
+     "enlace": "https://www.bta.bg/bg/videos/38827"
+    },
+    "inicio": {
+     "valor": "2026-08-08",
+     "cita": "sucedi\u00f3 cerca de la localidad de Kardam en torno a las 08.00 de la ma\u00f1ana local (05.00 GMT)",
+     "enlace": "https://larazon.es/internacional/dron-explosivo-estrella-bulgaria-primero-que-estallo-guerra-ucrania_202608086a77142471b42a0b5de3acb9.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "\u041f\u043e \u0434\u0443\u043c\u0438\u0442\u0435 \u043c\u0443 \u0437\u0430\u0441\u0435\u0433\u0430 \u0438\u043c\u0430 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u0441\u0430\u043c\u043e \u0437\u0430 \u0435\u0434\u0438\u043d \u0434\u0440\u043e\u043d.",
+     "enlace": "https://www.bta.bg/bg/videos/38827"
+    },
+    "cabecera": {
+     "valor": "Dron entra en el espacio a\u00e9reo de Bulgaria y explota cerca de un gasoducto",
+     "cita": "sei das Flugobjekt auf bulgarischem Staatsgebiet in einer Entfernung von 1000 Metern von der rum\u00e4nischen Grenze explodiert",
+     "enlace": "https://abendblatt.de/politik/article412806157/nato-staat-bulgarien-meldet-drohnenexplosion-nahe-gaspipeline.html"
+    }
+   },
+   "sin_comprobar": {
+    "objetivo": "dudoso: el dron cay\u00f3 en un campo a 1 km de la estaci\u00f3n de compresi\u00f3n del gasoducto (\u00ab\u043d\u0430 1000 \u043c\u0435\u0442\u0440\u0430 \u043e\u0442 \u043d\u0430\u0448\u0430\u0442\u0430 \u043a\u043e\u043c\u043f\u0440\u0435\u0441\u043e\u0440\u043d\u0430 \u0441\u0442\u0430\u043d\u0446\u0438\u044f\u00bb)"
+   }
+  },
+  {
+   "id": "EODI-2025-00395",
+   "por_que": "Dron naval ucraniano a la deriva cerca del puerto de Constanza (RO) neutralizado en alta mar por buzos militares, contado solo por fuentes an\u00f3nimas una semana despu\u00e9s: fecha, instalaci\u00f3n y presencia.",
+   "valores": {
+    "estado": {
+     "valor": "notificado",
+     "cita": "Ar fi vorba despre o dron\u0103 militar\u0103 ucrainean\u0103 cu \u00eenc\u0103rc\u0103tur\u0103 exploziv\u0103 la bord, au precizat surse din r\u00e2ndul anchetatorilor pentru Euronews Rom\u00e2nia.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "Ar fi vorba despre o dron\u0103 militar\u0103 ucrainean\u0103 cu \u00eenc\u0103rc\u0103tur\u0103 exploziv\u0103 la bord, au precizat surse din r\u00e2ndul anchetatorilor pentru Euronews Rom\u00e2nia.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "O dron\u0103 ucrainean\u0103, ajuns\u0103 \u00een deriv\u0103 \u00een zona portului Constan\u021ba, a fost neutralizat\u0103 \u00een larg, de scafandrii militari.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "O dron\u0103 ucrainean\u0103, ajuns\u0103 \u00een deriv\u0103 \u00een zona portului Constan\u021ba, a fost neutralizat\u0103 \u00een larg, de scafandrii militari.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "Dron\u0103 ucrainean\u0103, detonat\u0103 l\u00e2ng\u0103 Portul Constan\u021ba.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "lugar": {
+     "valor": "Constanza",
+     "cita": "Dron\u0103 ucrainean\u0103, detonat\u0103 l\u00e2ng\u0103 Portul Constan\u021ba.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Drona a fost detonat\u0103 de c\u0103tre scafandrii militari specializa\u021bi \u00een astfel de ac\u021biuni pentru obiecte explozive.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    },
+    "cabecera": {
+     "valor": "Posible dron detonado cerca del Puerto de Constanza",
+     "cita": "Dron\u0103 ucrainean\u0103, detonat\u0103 l\u00e2ng\u0103 Portul Constan\u021ba. Incidentul ar fi fost \u021binut secret",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+    }
+   },
+   "sin_comprobar": {
+    "inicio": "\u00ab\u00een urm\u0103 cu o s\u0103pt\u0103m\u00e2n\u0103\u00bb (hacia el 22 de julio de 2025): ninguna fuente da el d\u00eda exacto; el 29 de la ficha es el de la noticia"
+   }
+  },
+  {
+   "id": "EODI-2026-00064",
+   "por_que": "Dron de un fot\u00f3grafo aficionado que obliga a cerrar un rato el espacio a\u00e9reo del aeropuerto Vasil Levski de Sof\u00eda y desviar un vuelo de Colonia a Varna; cubre interrupci\u00f3n aeroportuaria confirmada por aeropuerto y MVR, e instalaci\u00f3n mal clasificada (el nombre \u00abVasil Levski\u00bb es tambi\u00e9n el del estadio).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u041f\u043e \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0441\u0438\u0441\u0442\u0435\u043c\u0438\u0442\u0435 \u0437\u0430 \u0441\u0438\u0433\u0443\u0440\u043d\u043e\u0441\u0442 \u0441\u0430 \u0437\u0430\u0441\u0435\u043a\u043b\u0438 \u0431\u0435\u0437\u043f\u0438\u043b\u043e\u0442\u043d\u043e \u043b\u0435\u0442\u0430\u0442\u0435\u043b\u043d\u043e \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u043e \u0432 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0437\u043e\u043d\u0430\u0442\u0430 \u0437\u0430 \u043a\u0430\u0446\u0430\u043d\u0435.",
+     "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "\u041e\u0442 \u041c\u0412\u0420 \u0441\u044a\u043e\u0431\u0449\u0438\u0445\u0430, \u0447\u0435 \u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0434\u0440\u043e\u043d. \u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0435\u043d \u0435 \u043b\u044e\u0431\u0438\u0442\u0435\u043b \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444, \u043a\u043e\u0439\u0442\u043e \u0441\u043d\u0438\u043c\u0430\u043b \u043a\u0430\u0446\u0430\u0449\u0438 \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u0449\u0438 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0438. \u0422\u043e\u0439 \u0434\u043e\u0431\u0440\u043e\u0432\u043e\u043b\u043d\u043e \u0435 \u043f\u0440\u0435\u0434\u0430\u043b \u0442\u0435\u0445\u043d\u0438\u043a\u0430\u0442\u0430 \u0441\u0438 \u043d\u0430 \u0441\u043b\u0443\u0436\u0438\u0442\u0435\u043b\u0438\u0442\u0435 \u043d\u0430 \u041c\u0412\u0420.",
+     "enlace": "https://focus-news.net/novini/regioni/Dron-zatvori-za-kratko-vuzdushnoto-prostranstvo-nad-letishte-Vasil-Levski-v-Sofiya-2915725"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434 \u0437\u0430\u0440\u0430\u0434\u0438 \u0437\u0430\u0441\u0435\u0447\u0435\u043d \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e. \u0417\u0430\u0440\u0430\u0434\u0438 \u0438\u043d\u0446\u0438\u0434\u0435\u043d\u0442\u0430 \u043f\u043e\u043b\u0435\u0442 \u043e\u0442 \u041a\u044c\u043e\u043b\u043d \u0435 \u0431\u0438\u043b \u043f\u0440\u0435\u043d\u0430\u0441\u043e\u0447\u0435\u043d",
+     "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "\u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f",
+      "oaci": "LBSF"
+     },
+     "cita": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434 \u0437\u0430\u0440\u0430\u0434\u0438 \u0437\u0430\u0441\u0435\u0447\u0435\u043d \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e.",
+     "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html"
+    },
+    "pais": {
+     "valor": "BG",
+     "cita": "\u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d",
+     "enlace": "https://dnes.bg/a/1-bulgaria/713309-letishteto-v-sofiya-e-bilo-zatvoreno-za-kratko-zaradi-dron"
+    },
+    "lugar": {
+     "valor": "Sof\u00eda",
+     "cita": "\u0414\u0440\u043e\u043d \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0432 \u0421\u043e\u0444\u0438\u044f",
+     "enlace": "https://focus-news.net/novini/regioni/Dron-zatvori-za-kratko-vuzdushnoto-prostranstvo-nad-letishte-Vasil-Levski-v-Sofiya-2915725"
+    },
+    "inicio": {
+     "valor": "2026-03-07",
+     "cita": "\u0414\u0440\u043e\u043d \u043d\u0430 \u043b\u044e\u0431\u0438\u0442\u0435\u043b \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0410\u0432\u0442\u043e\u0440: news.bg 07.03.2026 19:30:34",
+     "enlace": "https://news.bg/society/dron-na-lyubitel-fotograf-zatvori-za-kratko-vazdushnoto-prostranstvo-nad-letishteto-v-sofiya.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "\u0421\u0438\u0441\u0442\u0435\u043c\u0438\u0442\u0435 \u0437\u0430 \u0441\u0438\u0433\u0443\u0440\u043d\u043e\u0441\u0442 \u0437\u0430 \u0437\u0430\u0441\u0435\u043a\u043b\u0438 \u0434\u0440\u043e\u043d. \u0412\u0435\u0434\u043d\u0430\u0433\u0430 \u0441\u0430 \u0438\u043d\u0444\u043e\u0440\u043c\u0438\u0440\u0430\u043d\u0438 \u0420\u0412\u0414, \"\u0413\u0440\u0430\u043d\u0438\u0447\u043d\u0430 \u043f\u043e\u043b\u0438\u0446\u0438\u044f\" \u0438 \u0432\u0441\u0438\u0447\u043a\u0438 \u043d\u0430\u0437\u0435\u043c\u043d\u0438 \u0441\u043b\u0443\u0436\u0431\u0438.",
+     "enlace": "https://focus-news.net/novini/regioni/Dron-zatvori-za-kratko-vuzdushnoto-prostranstvo-nad-letishte-Vasil-Levski-v-Sofiya-2915725"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Sof\u00eda",
+     "cita": "\u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d",
+     "enlace": "https://dnes.bg/a/1-bulgaria/713309-letishteto-v-sofiya-e-bilo-zatvoreno-za-kratko-zaradi-dron"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00398",
+   "por_que": "V\u00eddeo grabado por un dron que sobrevuela la prisi\u00f3n de Sevilla I (Alcal\u00e1 de Guada\u00edra) hasta las celdas, publicado por ABC el 9 de octubre de 2025 y que solo cuenta la prensa (estado notificado, presencia no confirmada, c\u00e1rcel, lugar).",
+   "valores": {
+    "estado": {
+     "valor": "notificado",
+     "cita": "Este v\u00eddeo al que ha accedido ABC est\u00e1 grabado por este dron hace unos d\u00edas. Es reciente.",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "Im\u00e1genes captadas por el dron en la prisi\u00f3n.",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "El aparato no solo sobrevuela este centro penitenciario sin problema aparente, sin ser captado o inhibido, sino que planea con una velocidad bastante moderada",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "otra",
+      "nombre": "Centro Penitenciario Sevilla I",
+      "oaci": null
+     },
+     "cita": "se dirige hacia la prisi\u00f3n de Sevilla I, en Alcal\u00e1 de Guada\u00edra",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "pais": {
+     "valor": "ES",
+     "cita": "Un dron sobrevuela y se cuela hasta las celdas en la c\u00e1rcel de Alcal\u00e1 de Guada\u00edra",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "lugar": {
+     "valor": "Alcal\u00e1 de Guada\u00edra",
+     "cita": "se dirige hacia la prisi\u00f3n de Sevilla I, en Alcal\u00e1 de Guada\u00edra",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "deja clar\u00edsimo el trayecto que hace este dron que, ni m\u00e1s ni menos, se dirige hacia la prisi\u00f3n de Sevilla I",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    },
+    "cabecera": {
+     "valor": "Posible dron sobrevuela la prisi\u00f3n de Sevilla I en Alcal\u00e1 de Guada\u00edra",
+     "cita": "se dirige hacia la prisi\u00f3n de Sevilla I, en Alcal\u00e1 de Guada\u00edra",
+     "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html"
+    }
+   },
+   "sin_comprobar": {
+    "inicio": "Le\u00eddo por web.archive.org (el original da 403). lugar: hoy Sevilla; la prisi\u00f3n de Sevilla I est\u00e1 en Alcal\u00e1 de Guada\u00edra, seg\u00fan la propia fuente: lugar correcto Alcal\u00e1 de Guada\u00edra (zona sigue siendo interior; deriva del lugar). inicio: la fuente solo dice que el v\u00eddeo se grab\u00f3 \u00abhace unos d\u00edas\u00bb antes d"
+   }
+  },
+  {
+   "id": "EODI-2026-00334",
+   "por_que": "Drones contados por un testigo sobre la zona de la embajada de EE. UU. en Copenhague mientras la polic\u00eda cerraba la calle por un paquete sospechoso; cubre estado notificado, presencia no confirmada (la polic\u00eda no confirma drones) y cabecera.",
+   "valores": {
+    "estado": {
+     "valor": "notificado",
+     "cita": "La polizia, tuttavia, ha definito pubblicamente l\u2019intervento come verifica di un \u201cevento sospetto\u201d e non ha confermato n\u00e9 la presenza di velivoli senza pilota n\u00e9 un legame con la riunione Nato.",
+     "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "La presenza dei droni e il dispositivo di sicurezza nella zona vengono confermati all\u2019Adnkronos da un testimone che si trova in questo momento sul posto.",
+     "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_russia_diretta_oggi_18_settembre_2026-9770957.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Nelle stesse ore i media hanno riferito di droni sopra l\u2019area dell\u2019ambasciata americana.",
+     "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "otra",
+      "nombre": "Ambasciata degli Stati Uniti a Copenaghen"
+     },
+     "cita": "Droni sono stati segnalati questa mattina nei cieli di Copenaghen, dove la polizia ha chiuso l\u2019area intorno all\u2019ambasciata degli Stati Uniti.",
+     "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_russia_diretta_oggi_18_settembre_2026-9770957.html"
+    },
+    "pais": {
+     "valor": "DK",
+     "cita": "COPENAGHEN (DANIMARCA) (ITALPRESS)",
+     "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato"
+    },
+    "lugar": {
+     "valor": "Copenhague",
+     "cita": "Droni sono stati segnalati questa mattina nei cieli di Copenaghen",
+     "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_russia_diretta_oggi_18_settembre_2026-9770957.html"
+    },
+    "inicio": {
+     "valor": "2026-09-18",
+     "cita": "2026-09-18 10:19:11 Droni a Copenaghen, chiusa area intorno all\u2019ambasciata Usa Droni sono stati segnalati questa mattina nei cieli di Copenaghen",
+     "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_russia_diretta_oggi_18_settembre_2026-9770957.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Posibles drones sobre la zona de la embajada estadounidense en Copenhague",
+     "cita": "La polizia ha chiuso Dag Hammarskjolds All\u00e9, nel quartiere di Osterbro, dopo il rinvenimento di un pacco sospetto nella zona delle ambasciate di Stati Uniti, Regno Unito e Russia.",
+     "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00091",
+   "por_que": "Fragmento de dron en el mar Negro a unas 50 millas al este del Grindul Chituc (Constan\u021ba), comprobado y neutralizado por buceadores de la Armada rumana: presencia, d\u00eda, lugar mal geocodificado (Grindu est\u00e1 en Ialomi\u021ba) y frontera mar\u00edtima.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "au intervenit duminic\u0103 diminea\u021b\u0103 pentru a neutraliza resturi de dron\u0103 g\u0103site \u00een Marea Neagr\u0103, \u00een zona Grindului Chituc din jude\u021bul Constan\u021ba, a anun\u021bat Ministerul Ap\u0103r\u0103rii Na\u021bionale (MApN)",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "speciali\u015ftii EOD au identificat \u015fi recuperat un fragment de dron\u0103 ce nu prezenta risc pirotehnic",
+     "enlace": "https://bursa.ro/mapn-trei-fragmente-de-drona-recuperate-de-scafandri-militari-in-marea-neagra-in-zona-economica-exclusiva-a-romaniei-00423065"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "Interven\u021bia a avut loc \u00een jurul orei 09.30, la aproximativ 50 de mile marine est de Chituc.",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "Interven\u021bia a avut loc \u00een jurul orei 09.30, la aproximativ 50 de mile marine est de Chituc.",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "\u00een zona Grindului Chituc din jude\u021bul Constan\u021ba",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "lugar": {
+     "valor": null,
+     "cita": "Interven\u021bia a avut loc \u00een jurul orei 09.30, la aproximativ 50 de mile marine est de Chituc.",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "inicio": {
+     "valor": "2026-09-19",
+     "cita": "Ministerul Ap\u0103r\u0103rii Na\u021bionale fusese solicitat s\u00e2mb\u0103t\u0103, 19 septembrie, de Garda de Coast\u0103 s\u0103 verifice obiectul, despre care existau indicii c\u0103 ar putea fi un fragment provenit de la o dron\u0103 aerian\u0103.",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "Fragment de dron\u0103, g\u0103sit \u00een Marea Neagr\u0103, \u00een zona Grindului Chituc.",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Hallan restos de un dron en el mar Negro frente a Chituc, Ruman\u00eda",
+     "cita": "Fragment de dron\u0103, g\u0103sit \u00een Marea Neagr\u0103, \u00een zona Grindului Chituc. Scafandrii militari l-au neutralizat",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00112",
+   "por_que": "Dron Shahed que entr\u00f3 en Moldavia desde la regi\u00f3n de Odesa el 30-3-2026 y cruz\u00f3 el pa\u00eds (Dub\u0103sari, Orhei) con cierre del espacio a\u00e9reo del norte: incursi\u00f3n confirmada por el Ej\u00e9rcito, sin localidad \u00fanica.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Sistemele de supraveghere ale Armatei Na\u021bionale a Republicii Moldova au reperat aparatul de zbor \u00een jurul orei 21:29, acesta intr\u00e2nd dinspre regiunea Odesa.",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Ministerul Afacerilor Externe al Republica Moldova condamn\u0103 ferm survolarea neautorizat\u0103 a spa\u021biului aerian na\u021bional de c\u0103tre un aparat de zbor f\u0103r\u0103 pilot, de tip Shahed",
+     "enlace": "https://protv.md/actualitate/mae-condamna-ferm-survolarea-spatiului-aerian-al-republicii-moldova-de-o-drona-shahed-o-incalcare-grava-a-suveranitatii-si-integritatii-teritoriale---2754700.html"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "Drona a parcurs o distan\u021b\u0103 considerabil\u0103 deasupra teritoriului moldovean, fiind urm\u0103rit\u0103 constant de radare p\u00e2n\u0103 \u00een momentul \u00een care semnalul a fost pierdut \u00een raionul Orhei.",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "fiind detectat deasupra mai multor localit\u0103\u021bi, inclusiv Dub\u0103sari \u0219i Orhei, deplas\u00e2ndu-se spre nord la o altitudine de aproximativ 1700 de metri",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    },
+    "pais": {
+     "valor": "MD",
+     "cita": "La 30 martie, o dron\u0103 de tip Shahed a survolat neautorizat spa\u021biul aerian al Republicii Moldova",
+     "enlace": "https://protv.md/actualitate/mae-condamna-ferm-survolarea-spatiului-aerian-al-republicii-moldova-de-o-drona-shahed-o-incalcare-grava-a-suveranitatii-si-integritatii-teritoriale---2754700.html"
+    },
+    "lugar": {
+     "valor": null,
+     "cita": "fiind detectat deasupra mai multor localit\u0103\u021bi, inclusiv Dub\u0103sari \u0219i Orhei",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    },
+    "inicio": {
+     "valor": "2026-03-30",
+     "cita": "dup\u0103 ce o dron\u0103 de atac a traversat frontiera de stat \u00een cursul serii de luni, 30 martie.",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "O dron\u0103 de tip Shahed a survolat teritoriul \u021b\u0103rii la o altitudine de 1.700 de metri.",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    },
+    "cabecera": {
+     "valor": "Dron Shahed entra en el espacio a\u00e9reo de Moldavia desde Ucrania",
+     "cita": "Sistemele de supraveghere ale Armatei Na\u021bionale a Republicii Moldova au reperat aparatul de zbor \u00een jurul orei 21:29, acesta intr\u00e2nd dinspre regiunea Odesa.",
+     "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00233",
+   "por_que": "Cierre del aeropuerto Chopin de Varsovia la madrugada del 10 de septiembre de 2025 por la incursi\u00f3n de drones rusos derribados por Polonia; cubre atribuci\u00f3n oficial a Rusia, presencia confirmada, interrupci\u00f3n aeroportuaria frente a incursi\u00f3n, instalaci\u00f3n mal clasificada (\u00abotra: Warsaw\u00bb) y cabecera con \u00abposibles\u00bb.",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "Le minist\u00e8re russe des Affaires \u00e9trang\u00e8res a accus\u00e9 mercredi la Pologne de vouloir \"aggraver\" le conflit en Ukraine en propageant des \"mythes\" concernant l\u2019intrusion dans l\u2019espace a\u00e9rien polonais de drones, qui, selon Varsovie, ont \u00e9t\u00e9 envoy\u00e9s par la Russie.",
+     "enlace": "https://lindependant.fr/2025/09/10/incursion-de-drones-russes-en-pologne-la-russie-denonce-des-mythes-mais-varsovie-na-aucun-doute-sur-la-violation-de-son-espace-aerien-12922659.php"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "The Polish military has confirmed that some of the drones were shot down, while searches are ongoing for potential crash sites.",
+     "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140"
+    },
+    "pais": {
+     "valor": "PL",
+     "cita": "Polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony.",
+     "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina"
+    },
+    "lugar": {
+     "valor": "Varsovia",
+     "cita": "Chopin Airport in Warsaw temporarily closed its airspace, along with airports in Rzesz\u00f3w, Modlin, and Lublin.",
+     "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140"
+    },
+    "inicio": {
+     "valor": "2025-09-10",
+     "cita": "Warszawskie niebo w \u015brod\u0119 nad ranem zosta\u0142o zamkni\u0119te dla samolot\u00f3w pasa\u017cerskich Polskich Linii Lotniczych LOT .",
+     "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar (y del enlace con el ataque ruso de esa noche)"
+    },
+    "drones": {
+     "valor": {
+      "min": 10,
+      "max": 19
+     },
+     "cita": "The military tracked more than 10 drone-like objects, and those considered dangerous were shot down.",
+     "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140"
+    },
+    "cabecera": {
+     "valor": "Drones rusos que entraron en Polonia obligan a cerrar el aeropuerto de Varsovia",
+     "cita": "Polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. W zwi\u0105zku z tym ruch nad Lotniskiem Chopina, Lotniskiem Modlin i okolicznymi regionami zosta\u0142 wstrzymany",
+     "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina"
+    }
+   },
+   "sin_comprobar": {
+    "tipo": "depende de qu\u00e9 suceso recoge la ficha: el cierre del aeropuerto Chopin (interrupci\u00f3n) o la incursi\u00f3n del 10 de septiembre de 2025 (ya en EODI-2025-00295)",
+    "objetivo": "depende de qu\u00e9 suceso recoge la ficha: el cierre del aeropuerto Chopin (EPWA) o la incursi\u00f3n del 10 de septiembre de 2025"
+   }
+  },
+  {
+   "id": "EODI-2026-00140",
+   "por_que": "Cazas de la OTAN derriban el 14 de agosto de 2026 cerca de Rug\u0101ji (Balvi, Letonia) un dron que entr\u00f3 desde Bielorrusia; las Fuerzas Armadas letonas lo identifican despu\u00e9s como dron ucraniano desviado (estado atribuido, presencia, incursi\u00f3n, frontera).",
+   "valores": {
+    "estado": {
+     "valor": "atribuido",
+     "cita": "Nacion\u0101lie bru\u0146otie sp\u0113ki inform\u0113, ka 14. august\u0101 Balvu novada Rug\u0101ju apk\u0101rtn\u0113 tika notriekts Ukrainas bezpilota lidapar\u0101ts, kas Latvijas gaisa telp\u0101 no Baltkrievijas teritorijas ielidoja",
+     "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "The National Armed Forces inform that on August 14th, in the vicinity of Rug\u0101ji in Balvi Municipality, a Ukrainian unmanned aerial vehicle was shot down after entering Latvian airspace from the territory of Belarus",
+     "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "a Ukrainian unmanned aerial vehicle was shot down after entering Latvian airspace from the territory of Belarus, most likely under the influence of russian electronic warfare.",
+     "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "In the vicinity of Rug\u0101ji, Balvi Municipality, allied fighter jets successfully shot down the unmanned aerial vehicle.",
+     "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle"
+    },
+    "pais": {
+     "valor": "LV",
+     "cita": "Fighter jets shot down a drone that entered Latvian airspace, the country\u2019s military said Friday.",
+     "enlace": "https://kyivpost.com/post/82328"
+    },
+    "lugar": {
+     "valor": "Rug\u0101ji",
+     "cita": "In the vicinity of Rug\u0101ji, Balvi Municipality, allied fighter jets successfully shot down the unmanned aerial vehicle.",
+     "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle"
+    },
+    "inicio": {
+     "valor": "2026-08-14",
+     "cita": "La alerta se activ\u00f3 sobre las 04.00 hora local (01.00 GMT) en Letonia, tras lo cual se orden\u00f3 el despegue de emergencia de dos aviones Eurofighter italianos, uno de los cuales derrib\u00f3 el dron",
+     "enlace": "https://efe.com/mundo/2026-08-14/cazas-otan-derriban-dron-sobre-letonia"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Balvu novad\u0101 Rug\u0101ju apk\u0101rtn\u0113 sabiedroto izn\u012bcin\u0101t\u0101ji sekm\u012bgi notrieca bezpilota lidapar\u0101tu.",
+     "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats"
+    },
+    "cabecera": {
+     "valor": "Cazas de la OTAN derriban un dron sobre Letonia",
+     "cita": "Cazas de la OTAN derribaron a primera hora de este viernes un dron sobre el noreste de Letonia",
+     "enlace": "https://larazon.es/internacional/cazas-otan-derriban-dron-letonia_202608146a7ebaaaa5690f047378fbc2.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00122",
+   "por_que": "Dron avistado por seis tripulaciones que par\u00f3 35 minutos el aeropuerto de Palma y desvi\u00f3 ocho vuelos; cubre interrupci\u00f3n aeroportuaria declarada por Enaire y Aena, presencia y fecha.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "El avistamiento de un dron ha obligado a interrumpir temporalmente las operaciones en el aeropuerto de Palma la tarde de este domingo, ha informado Enaire.",
+     "enlace": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Seg\u00fan las fuentes de Aena, son ocho los vuelos con destino a Son Sant Joan que han sido desviados debido al avistamiento del dron.",
+     "enlace": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Fuentes de Aena indicaron que la operativa de llegada se paraliz\u00f3 durante al menos 35 minutos",
+     "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Son Sant Joan",
+      "oaci": "LEPA"
+     },
+     "cita": "el avistamiento de un dron oblig\u00f3 a interrumpir temporalmente las operaciones en Son Sant Joan",
+     "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html"
+    },
+    "pais": {
+     "valor": "ES",
+     "cita": "El aeropuerto de Palma opera este lunes con normalidad tras avistarse un dron este domingo",
+     "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html"
+    },
+    "lugar": {
+     "valor": "Palma",
+     "cita": "El aeropuerto de Palma opera este lunes con normalidad tras avistarse un dron este domingo",
+     "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html"
+    },
+    "inicio": {
+     "valor": "2025-10-19",
+     "cita": "Palma 19 OCT 2025 19:29 ... El avistamiento de un dron este domingo entre las pistas del aeropuerto de Palma ha interrumpido el tr\u00e1fico a\u00e9reo en Son Sant Joan durante 35 minutos",
+     "enlace": "https://diariodemallorca.es/mallorca/2025/10/19/avistamiento-dron-paraliza-trafico-aeropuerto-122788139.html"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Los controladores a\u00e9reos, en su cuenta de X, han alertado sobre las 19.00 horas del avistamiento del citado dron, que habr\u00eda sido confirmado por al menos seis tripulaciones.",
+     "enlace": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Palma",
+     "cita": "El avistamiento de un dron ha obligado a interrumpir temporalmente las operaciones en el aeropuerto de Palma la tarde de este domingo, ha informado Enaire.",
+     "enlace": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma"
+    }
+   }
+  },
+  {
+   "id": "EODI-2025-00071",
+   "por_que": "Dron sobre la pista oeste de Oslo Gardermoen el domingo 31 de agosto de 2025 por la tarde, con el tr\u00e1fico cerrado un rato y dron y piloto intervenidos por la polic\u00eda: presencia confirmada e interrupci\u00f3n.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u2013 Den fl\u00f8y over rullebanen i en kritisk sone som vil kunne f\u00e5 store konsekvenser, sier oppdragsleder Ingvild Stokkeland i \u00d8st politidistrikt.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Hun opplyser at politiet tok beslag i dronen og en mobiltelefon.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Droneflygingen p\u00e5 Gardermoen gjorde at flytrafikken ble stengt en periode.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "Oslo lufthavn, Gardermoen",
+      "oaci": "ENGM"
+     },
+     "cita": "Der hadde en drone blitt observert over den vestre rullebanen.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "pais": {
+     "valor": "NO",
+     "cita": "Rundt klokka 20 s\u00f8ndag kveld rykket politiet ut til Oslo lufthavn.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "lugar": {
+     "valor": "Oslo",
+     "cita": "Rundt klokka 20 s\u00f8ndag kveld rykket politiet ut til Oslo lufthavn.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "inicio": {
+     "valor": "2025-08-31",
+     "cita": "Rundt klokka 20 s\u00f8ndag kveld rykket politiet ut til Oslo lufthavn.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Der hadde en drone blitt observert over den vestre rullebanen.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Oslo",
+     "cita": "Nyheter, Oslo lufthavn | Fl\u00f8y drone over rullebanen: M\u00e5tte stanse flytrafikken",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00277",
+   "por_que": "Dron que cruz\u00f3 Ucrania y Moldavia y se estrell\u00f3 en un maizal de Boto\u0219eni\u021ba Mare (Suceava, RO) el 12-9-2026: incursi\u00f3n confirmada por el MApN, localidad e instalaci\u00f3n (no hay instalaci\u00f3n de energ\u00eda).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Following reconnaissance conducted by the Ministry of Internal Affairs, an aircraft that had crashed was found in a cornfield in the Boto\u0219eni\u021ba Mare area of Suceava County.",
+     "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Potrivit unui comunicat de pres\u0103 emis de MApN, drona a traversat spa\u021biul aerian al Ucrainei \u0219i al Republicii Moldova \u00eenainte de a p\u0103trunde \u00een cel al Rom\u00e2niei.",
+     "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "the Air Operations Control Centres of Ukraine and the Republic of Moldova informed the Ministry of National Defence that a drone had crossed the airspace of both countries, heading towards north-eastern Romania.",
+     "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "a fost identificat un obiect zbur\u0103tor pr\u0103bu\u0219it, \u00een zona localit\u0103\u021bii Boto\u0219eni\u021ba Mare, jude\u021bul Suceava, \u00eentr-un lan de porumb.",
+     "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "Drone crashes in Romania\u2019s Suceava county",
+     "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county"
+    },
+    "lugar": {
+     "valor": "Boto\u0219eni\u021ba Mare",
+     "cita": "Drona s-a pr\u0103bu\u0219it \u00eentr-un lan de porumb din zona localit\u0103\u021bii Boto\u0219eni\u021ba Mare din jude\u021bul Suceava.",
+     "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html"
+    },
+    "inicio": {
+     "valor": "2026-09-12",
+     "cita": "A crashed drone was discovered in a cornfield in the Boto\u0219eni\u021ba Mare area of Romania\u2019s Suceava County on the afternoon of September 12.",
+     "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar: Boto\u0219eni\u021ba Mare est\u00e1 junto a la frontera con Ucrania, igual que Suceava; el valor no cambia"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "a drone had crossed the airspace of both countries, heading towards north-eastern Romania.",
+     "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county"
+    },
+    "cabecera": {
+     "valor": "Dron que atraves\u00f3 Ucrania y Moldavia se estrella en Suceava, Rumania",
+     "cita": "O dron\u0103 care a traversat spa\u021biile aeriene ale Ucrainei \u0219i Republicii Moldova, \u00eendrept\u00e2ndu-se spre nord-estul Rom\u00e2niei, s-a pr\u0103bu\u0219it \u00eentr-un lan de porumb din jude\u021bul Suceava.",
+     "enlace": "https://protv.md/international/drona-care-a-traversat-spatiul-aerian-al-republicii-moldova-si-ucrainei-s-ar-fi-indreptat-spre-romania-un-aparat-de-zbor-s-a-prabusit-in-judetul-suceava---2767123.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00316",
+   "por_que": "Dron derribado por un F-16 rumano el domingo 26 de julio de 2026 sobre las aguas territoriales de Sulina-Chilia, con el origen a\u00fan en investigaci\u00f3n; cubre incursi\u00f3n confirmada sin atribuci\u00f3n de ese dron concreto, sin instalaci\u00f3n (el mar) y la fecha del derribo.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u201cAnchetele privind dronele dobor\u00e2te ieri \u015fi ast\u0103zi sunt \u00een curs de desf\u0103\u015furare. Protestul diplomatic al Rom\u00e2niei \u00eempotriva Federa\u0163iei Ruse se va baza pe aceste anchete.",
+     "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "o nou\u0103 dron\u0103 a fost dobor\u00e2t\u0103 duminic\u0103 diminea\u0163\u0103, la ora 10:13, de o aeronav\u0103 F-16 a For\u0163elor Aeriene Rom\u00e2ne, deasupra apelor teritoriale ale Rom\u00e2niei, \u00een zona Sulina-Chilia.",
+     "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "Ambasadorul Rus la Bucure\u0219ti convocat la MAE, dup\u0103 incidentele repetate cu drone care au p\u0103truns \u00een spa\u021biul aerian rom\u00e2nesc",
+     "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "\"El derribo de este domingo ha ocurrido las 10:13 de esta ma\u00f1ana sobre las aguas territoriales rumanas de Sulina por un avi\u00f3n F-16 de la Fuerza A\u00e9rea Rumana\"",
+     "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html"
+    },
+    "pais": {
+     "valor": "RO",
+     "cita": "deasupra apelor teritoriale ale Rom\u00e2niei, \u00een zona Sulina-Chilia.",
+     "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc"
+    },
+    "lugar": {
+     "valor": "Sulina",
+     "cita": "\"El derribo de este domingo ha ocurrido las 10:13 de esta ma\u00f1ana sobre las aguas territoriales rumanas de Sulina por un avi\u00f3n F-16 de la Fuerza A\u00e9rea Rumana\"",
+     "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html"
+    },
+    "inicio": {
+     "valor": "2026-07-26",
+     "cita": "El presidente de Ruman\u00eda , Nicusor Dan, ha confirmado este domingo el derribo de un tercer avi\u00f3n no tripulado sobre el espacio a\u00e9reo del pa\u00eds",
+     "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "o nou\u0103 dron\u0103 a fost dobor\u00e2t\u0103 duminic\u0103 diminea\u0163\u0103, la ora 10:13",
+     "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc"
+    },
+    "cabecera": {
+     "valor": "Ruman\u00eda derriba un dron que penetr\u00f3 en su espacio a\u00e9reo",
+     "cita": "Ruman\u00eda derriba un dron que sobrevolaba su espacio a\u00e9reo: es el tercero en tres d\u00edas y Bucarest convoca al embajador ruso",
+     "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00278",
+   "por_que": "Un piloto de Aer Lingus que se aproximaba a Dubl\u00edn informa el martes 8 de septiembre de 2026 de un dron grande a 6.000 pies sobre el mar; AirNav confirma el aviso y la Garda investiga, el Taoiseach lo da por no verificado (estado, presencia, sin instalaci\u00f3n).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "AirNav, a State-owned company that provides air traffic control services to Irish airports, confirmed a report of a drone sighting had been made.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "Garda headquarters said it was aware of the reported sighting and was continuing to investigate it, alongside the Department of Defence and Defence Forces.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "An investigation into the reported sighting of a large unauthorised drone at 6,000ft near the flight path of commercial aircraft off Co Wicklow",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "objetivo": {
+     "valor": null,
+     "cita": "The pilot said the drone was about 10 miles from a navigation point near Howth in north Co Dublin, which would put it somewhere off the Co Wicklow coast.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "pais": {
+     "valor": "IE",
+     "cita": "Garda headquarters said it was aware of the reported sighting and was continuing to investigate it",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "lugar": {
+     "valor": "Dubl\u00edn",
+     "cita": "The report was made by an Aer Lingus pilot in a propeller aircraft approaching Dublin Airport at about 5.20pm on Tuesday.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "inicio": {
+     "valor": "2026-09-08",
+     "cita": "The report was made by an Aer Lingus pilot in a propeller aircraft approaching Dublin Airport at about 5.20pm on Tuesday.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "He said the drone was about 3km to the aircraft\u2019s left side as he was flying into Dublin from Cornwall.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    },
+    "cabecera": {
+     "valor": "Avistamiento de un posible dron grande cerca de la bah\u00eda de Dubl\u00edn",
+     "cita": "Taoiseach Miche\u00e1l Martin: reported drone sighting 'unverified'.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00625",
+   "por_que": "Dron con droga y m\u00f3viles inhibido por la Guardia Civil camino de la c\u00e1rcel de Mendiz\u00e1bal (Ceuta); cubre presencia confirmada (dron incautado), categor\u00eda de la instalaci\u00f3n (c\u00e1rcel = otra) y fecha imprecisa (\u00abrecientemente\u00bb).",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Seg\u00fan ha informado este viernes la Comandancia, el dispositivo fue localizado e incautado \"portando sustancias estupefacientes y dos micro tel\u00e9fonos m\u00f3viles",
+     "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "ha frustrado \"recientemente\" un intento de introducci\u00f3n de sustancias estupefacientes y objetos prohibidos en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron que fue inhibido durante su vuelo evitando que alcanzara su objetivo.",
+     "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
+    },
+    "tipo": {
+     "valor": "sobrevuelo",
+     "cita": "a trav\u00e9s de un dron que fue inhibido durante su vuelo evitando que alcanzara su objetivo",
+     "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "otra",
+      "nombre": "Centro Penitenciario de Mendiz\u00e1bal"
+     },
+     "cita": "un intento de introducci\u00f3n de sustancias estupefacientes y objetos prohibidos en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
+     "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
+    },
+    "pais": {
+     "valor": "ES",
+     "cita": "El Equipo Pegaso de la Guardia Civil de Ceuta",
+     "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
+    },
+    "lugar": {
+     "valor": "Ceuta",
+     "cita": "Funcion\u00f3 en Ceuta hasta que la Guardia Civil abort\u00f3 esa operativa.",
+     "enlace": "https://elfarodeceuta.es/guardia-civil-inhibe-dron-llevaba-droga-micro-telefonos-carcel/"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "El dron fue inhibido durante su vuelo, evitando que alcanzara su objetivo",
+     "enlace": "https://elfarodeceuta.es/guardia-civil-inhibe-dron-llevaba-droga-micro-telefonos-carcel/"
+    },
+    "cabecera": {
+     "valor": "Centro Penitenciario de Mendiz\u00e1bal",
+     "cita": "en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
+     "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
+    }
+   },
+   "sin_comprobar": {
+    "inicio": "Objetivo: una c\u00e1rcel es categor\u00eda \u00abotra\u00bb seg\u00fan el encargo; hoy est\u00e1 \u00abgubernamental\u00bb. Inicio: las fuentes (16-1-2026, viernes) solo dicen que ocurri\u00f3 \u00abrecientemente\u00bb; el 16 de enero es el d\u00eda de la noticia, no consta el del suceso, por eso comprobado=false."
+   }
+  },
+  {
+   "id": "EODI-2025-00043",
+   "por_que": "Posible dron detectado por los medios t\u00e9cnicos del aeropuerto de Riga en la zona restringida (calle Gaviezes) que hizo a LGS parar los vuelos unos cinco minutos; la polic\u00eda no lo encontr\u00f3: estado (el aeropuerto lo declara), presencia no confirmada y tipo interrupci\u00f3n.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "\u201cR\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos lidojumu ierobe\u017eojumu zon\u0101 \u2013 Gaviezes ielas rajon\u0101, kas tika paman\u012bts ar lidostas tehniskajiem l\u012bdzek\u013ciem,\u201d inform\u0113ja R\u012bgas lidosta.",
+     "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme"
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "Valsts policija, kas dev\u0101s uz iesp\u0113jamo bezpilota lidapar\u0101ta atra\u0161an\u0101s vietu, t\u0101 kl\u0101tb\u016btni nekonstat\u0113ja, l\u012bdz ar to R\u012bgas lidosta turpin\u0101ja darbu ierast\u0101 re\u017e\u012bm\u0101.",
+     "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme"
+    },
+    "tipo": {
+     "valor": "interrupcion_aeroportuaria",
+     "cita": "Pamatojoties uz \u0161o inform\u0101ciju, \"Latvijas Gaisa satiksme\" pie\u0146\u0113musi l\u0113mumu uz aptuveni piec\u0101m min\u016bt\u0113m aiztur\u0113t lidojumus",
+     "enlace": "https://delfi.lv/193/politics/120092141/iespejama-drona-del-uz-bridi-aptureta-lidmasinu-satiksme-lidosta-riga-zino-raidijums"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "aeropuerto",
+      "nombre": "RIX R\u012bgas lidosta",
+      "oaci": "EVRA"
+     },
+     "cita": "paman\u012bts iesp\u0113jams drons ierobe\u017eojumu zon\u0101 \u2013 Gaviezes ielas rajon\u0101",
+     "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme"
+    },
+    "pais": {
+     "valor": "LV",
+     "cita": "Ba\u017e\u0101s par dronu R\u012bgas lidostas tuvum\u0101 otrdien uz neilgu laiku aptur\u0113ta lidma\u0161\u012bnu pacel\u0161an\u0101s un nolai\u0161an\u0101s",
+     "enlace": "https://diena.lv/raksts/latvija/zinas/bazas-par-dronu-rigas-lidostas-tuvuma-otrdien-uz-neilgu-laiku-aptureta-lidmasinu-pacelsanas-un-nolaisanas-14343137"
+    },
+    "lugar": {
+     "valor": "Riga",
+     "cita": "par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos lidojumu ierobe\u017eojumu zon\u0101 - Gaviezes ielas rajon\u0101",
+     "enlace": "https://diena.lv/raksts/latvija/zinas/bazas-par-dronu-rigas-lidostas-tuvuma-otrdien-uz-neilgu-laiku-aptureta-lidmasinu-pacelsanas-un-nolaisanas-14343137"
+    },
+    "inicio": {
+     "valor": "2025-10-21",
+     "cita": "R\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos",
+     "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme"
+    },
+    "zona": {
+     "valor": "interior",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": "desconocido",
+     "cita": "sin fuente",
+     "enlace": null
+    },
+    "cabecera": {
+     "valor": "Aeropuerto de Riga",
+     "cita": "Ba\u017e\u0101s par dronu R\u012bgas lidostas tuvum\u0101 otrdien uz neilgu laiku aptur\u0113ta lidma\u0161\u012bnu pacel\u0161an\u0101s un nolai\u0161an\u0101s",
+     "enlace": "https://diena.lv/raksts/latvija/zinas/bazas-par-dronu-rigas-lidostas-tuvuma-otrdien-uz-neilgu-laiku-aptureta-lidmasinu-pacelsanas-un-nolaisanas-14343137"
+    }
+   }
+  }
+ ]
+}

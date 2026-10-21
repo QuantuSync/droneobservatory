@@ -1,0 +1,133 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-01-30T07:30Z"
+    },
+    "fuente_id": "gdelt-20651f220bc8bfd4"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "es_incidente",
+    "localidad",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://libertatea.ro/stiri/oameni-tulcea-treziti-mesaj-ro-alert-doua-avioane-f-16-decolat-baza-aeriana-borcea-atac-rusesc-drone-5176380",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-01-30T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dup\u0103 Un Nou Atac Rusesc Cu Drone",
+   "id": "gdelt-20651f220bc8bfd4",
+   "idioma": "ro",
+   "medio": "libertatea.ro"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-01-30T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u00een primele ore ale dimine\u021bii de joi, 30 ianuarie, \u00een apropierea frontierei cu Rom\u00e2nia",
+   "id": "gdelt-09a2f62aa9d20172",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  }
+ ],
+ "id": "EODI-2025-00378",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "localidad": "Tulcea",
+  "nivel": "instalacion",
+  "pais": "RO",
+  "punto": {
+   "lat": 44.38969,
+   "lon": 27.7232
+  },
+  "radio_km": 5.0,
+  "region": "Tulcea",
+  "suceso": "Baza 86 Aerian\u0103 Borcea"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Tulcea",
+   "es": "Tulcea"
+  },
+  "lugar": {
+   "en": "Tulcea, Romania",
+   "es": "Tulcea, Ruman\u00eda"
+  },
+  "objetivo": {
+   "en": "86th Air Base Borcea",
+   "es": "Base a\u00e9rea 86 de Borcea"
+  },
+  "region": {
+   "en": "Tulcea",
+   "es": "Tulcea"
+  }
+ },
+ "objetivo": {
+  "categoria": "base_militar",
+  "nombre": "Baza 86 Aeriana\u0306 \u201eLocotenent aviator Gheorghe Mociornit\u0326a\u0306\u201d Borcea"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "cazas"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-01-30T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-09a2f62aa9d20172",
+   "motivo": "\u00ab30 ianuarie\u00bb en una nota publicada el 2025-01-30 11:15 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Possible drones near Borcea air base trigger F-16 fighter takeoff",
+  "es": "Posibles drones cerca de la base a\u00e9rea de Borcea provocan el despegue de cazas F-16"
+ }
+}

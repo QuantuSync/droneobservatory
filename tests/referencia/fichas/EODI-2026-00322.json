@@ -1,0 +1,212 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-08T21:45Z"
+    },
+    "fuente_id": "gdelt-61484eb92544555a"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-08T22:15Z"
+    },
+    "fuente_id": "gdelt-8ef0923b64519c0f-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "credibilidad": 3,
+   "enlace": "https://zeit.de/news/2026-08/08/flugbetrieb-in-hamburg-nach-drohnenalarm-kurz-unterbrochen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-08T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Wohl nur Hei\u00dfluftballon: Flugbetrieb in Hamburg nach Drohnenalarm kurz unterbrochen",
+   "id": "gdelt-61484eb92544555a",
+   "idioma": "de",
+   "medio": "zeit.de"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_nuevo",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-08T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Wegen einer mutma\u00dflichen Drohnensichtung ist der Flugbetrieb am Hamburger Flughafen kurzzeitig unterbrochen worden.",
+   "id": "gdelt-8ef0923b64519c0f",
+   "idioma": "de",
+   "medio": "bild.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ndr.de/nachrichten/hamburg/drohnenverdacht-betrieb-am-flughafen-hamburg-kurzzeitig-unterbrochen,kurzehh-3984.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-09T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnenverdacht: Betrieb am Flughafen Hamburg kurzzeitig unterbrochen",
+   "id": "gdelt-fda41d563f137b62",
+   "idioma": "de",
+   "medio": "ndr.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kreiszeitung.de/lokales/hamburg/drohnen-alarm-in-hamburg-flughafen-stellt-betrieb-kurzfristig-ein-94435026.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-09T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Alarm in Hamburg: Flughafen stellt Betrieb kurzfristig ein",
+   "id": "gdelt-c43d62616871140f",
+   "idioma": "de",
+   "medio": "kreiszeitung.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-08-08T22:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "F\u00fcr rund 15 Minuten seien am Samstagabend keine Starts und Landungen m\u00f6glich gewesen, sagte ein Polizeisprecher.",
+   "id": "gdelt-8ef0923b64519c0f-declaracion-1",
+   "idioma": "de",
+   "medio": "Polizei Hamburg (declaraci\u00f3n oficial citada en bild.de)"
+  }
+ ],
+ "id": "EODI-2026-00322",
+ "lugar": {
+  "geocodificacion": "frase_origen",
+  "historial": [
+   {
+    "anterior": {
+     "localidad": "Hamburg",
+     "punto": {
+      "lat": 53.55073,
+      "lon": 9.99302
+     },
+     "radio_km": 20.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-21T06:17Z"
+    },
+    "motivo": {
+     "en": "More precise place: the facility named in the headline.",
+     "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n que nombra el titular."
+    }
+   }
+  ],
+  "localidad": "Hamburg",
+  "nivel": "instalacion",
+  "pais": "DE",
+  "punto": {
+   "lat": 53.63634,
+   "lon": 9.98281
+  },
+  "radio_km": 5.0,
+  "region": "Hamburg",
+  "suceso": "Hamburg Airport Helmut Schmidt"
+ },
+ "nombres": {
+  "anteriores": [
+   {
+    "en": "Hamburg",
+    "es": "Hamburgo"
+   }
+  ],
+  "localidad": {
+   "en": "Hamburg",
+   "es": "Hamburgo"
+  },
+  "lugar": {
+   "en": "Hamburg, Germany",
+   "es": "Hamburgo, Alemania"
+  },
+  "objetivo": {
+   "en": "Hamburg Airport",
+   "es": "Aeropuerto de Hamburgo-Fuhlsb\u00fcttel"
+  },
+  "region": {
+   "en": "Hamburg",
+   "es": "Hamburgo"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Hamburg Airport Helmut Schmidt",
+  "oaci": "EDDH"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2026-08-08T17:50Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-8ef0923b64519c0f",
+   "motivo": "\u00absamstag\u00bb en una nota publicada el 2026-08-09 00:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Possible drone alert briefly halts operations at Hamburg airport",
+  "es": "Aviso de posible dron interrumpe brevemente las operaciones del aeropuerto de Hamburgo"
+ }
+}

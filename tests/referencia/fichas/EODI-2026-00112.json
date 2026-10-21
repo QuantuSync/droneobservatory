@@ -1,0 +1,414 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "modelo": "Shahed",
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-03-30T20:30Z"
+    },
+    "fuente_id": "gdelt-55fb1bc7f5523a45"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-03-30T21:30Z"
+    },
+    "fuente_id": "gdelt-f81b6c59d2ba510d-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19314609",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NEWS ALERT | Dron\u0103 de tip Shahed a survolat neautorizat spa\u021biul aerian al Republicii Moldova",
+   "id": "gdelt-1b341f1a75dd9509",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "medidas",
+    "modelo_dron",
+    "objetivo_conocido"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19314333",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 de tip Shahed a survolat spa\u021biul aerian al R. Moldova.",
+   "id": "gdelt-55fb1bc7f5523a45",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19314474",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 de tip Shahed, detectat\u0103 \u00een spa\u021biul aerian al Republicii Moldova",
+   "id": "gdelt-63eae15828100f6a",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19314547",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "ULTIMA OR\u0102/ O dron\u0103 Shahed a survolat \u00een aceast\u0103 noapte spa\u021biul aerian al R. Moldova. Primele informa\u021bii de la Ministerul Ap\u0103r\u0103rii",
+   "id": "gdelt-cd938ae3df4d5c80",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19314616",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 de tip Shahed, detectat\u0103 deasupra Republicii Moldova \u2013 Spa\u021biul aerian, restric\u021bionat temporar",
+   "id": "gdelt-dc384b7d61aae6bd",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "modelo_dron",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "o dron\u0103 de atac a traversat frontiera de stat \u00een cursul serii de luni, 30 martie",
+   "id": "gdelt-f81b6c59d2ba510d",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T21:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Sistemele de supraveghere ale Armatei Na\u021bionale a Republicii Moldova au reperat aparatul de zbor \u00een jurul orei 21:29",
+   "id": "gdelt-f81b6c59d2ba510d-declaracion-1",
+   "idioma": "ro",
+   "medio": "Armata Na\u021bional\u0103 a Republicii Moldova (declaraci\u00f3n oficial citada en ziare.com)"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://hotnews.ro/o-drona-shahed-a-intrat-in-spatiul-aerian-al-republicii-moldova-2206563",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-30T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Serviciul Opera\u021biuni Aeriene din Armata Republicii Moldova a observat drona la ora 21:29.",
+   "id": "gdelt-fa5368a648f1aaf6",
+   "idioma": "ro",
+   "medio": "hotnews.ro"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ziarulnational.md/alerta-aeriana-in-r-moldova-dupa-ce-o-o-drona-de-tip-shahed-a-survolat-ilegal-spatiul-national",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "o dron\u0103 de tip Shahed lansat\u0103 de armata lui Putin a survolat ilegal spa\u021biul na\u021bional",
+   "id": "gdelt-e5d33c05c583cfdc",
+   "idioma": "ro",
+   "medio": "ziarulnational.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://protv.md/actualitate/mae-condamna-ferm-survolarea-spatiului-aerian-al-republicii-moldova-de-o-drona-shahed-o-incalcare-grava-a-suveranitatii-si-integritatii-teritoriale---2754700.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "MAE condamn\u0103 ferm survolarea spa\u021biului aerian al Republicii Moldova de o dron\u0103 Shahed: \u201eO \u00eenc\u0103lcare grav\u0103 a suveranit\u0103\u021bii \u0219i integrit\u0103\u021bii teritoriale\"",
+   "id": "gdelt-a8aab1f3c890e008",
+   "idioma": "ro",
+   "medio": "protv.md"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://protv.md/actualitate/mae-condamna-ferm-survolarea-spatiului-aerian-al-republicii-moldova-de-o-drona-shahed-o-incalcare-grava-a-suveranitatii-si-integritatii-teritoriale---2754700.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T07:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Ministerul Afacerilor Externe al Republica Moldova condamn\u0103 ferm survolarea neautorizat\u0103 a spa\u021biului aerian na\u021bional",
+   "id": "gdelt-a8aab1f3c890e008-declaracion-2",
+   "idioma": "ro",
+   "medio": "Ministerul Afacerilor Externe (declaraci\u00f3n oficial citada en protv.md)"
+  },
+  {
+   "campos_respaldados": [
+    "entrada_exterior",
+    "lugar_suceso",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/externe/o-drona-de-tip-shahed-a-survolat-ilegal-spatiul-aerian-al-republicii-moldova-23712566",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drona de tip Shahed a traversat frontiera de stat din direc\u021bia localit\u0103\u021bii Podolsk, regiunea Odesa (Ucraina).",
+   "id": "gdelt-e7727d43eb9dec38",
+   "idioma": "ro",
+   "medio": "mediafax.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/drona-shahed-moldova/reactie-chisinau-survolare-razboi-ucraina-2003594",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Reac\u021bia Chi\u0219in\u0103ului dup\u0103 ce o dron\u0103 Shahed a survolat spa\u021biul aerian al Republicii Moldova: \u201eAcest incident este inacceptabil\"",
+   "id": "gdelt-d67fb261ab62b380",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19335374",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "MAE condamn\u0103 survolarea ilegal\u0103 a spa\u021biului aerian de noi drone: \u201e\u00cenc\u0103lcare grav\u0103 a suveranit\u0103\u021bii Republicii Moldova\"",
+   "id": "gdelt-506c728327a5e265",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19345035",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dou\u0103 drone Shahed au survolat spa\u021biul aerian al Republicii Moldova \u00een 24 de ore",
+   "id": "gdelt-85b398a460be57b0",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19347346",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Survol\u0103rile recente ale dronelor nu sunt incidente izolate, ci o form\u0103 de presiune hibrid\u0103 a Rusiei asupra R. Moldova, afirm\u0103 exper\u021bii",
+   "id": "gdelt-888cde98b8eb7059",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/19349300",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u201eHachiko\" revine la Moscova. \u00cen timp ce dronele ruse\u0219ti violeaz\u0103 spa\u021biul aerian al Republicii Moldova, Dodon discut\u0103, cu st\u0103p\u00e2nii, despre achizi\u021bia resurselor energetice \u0219i retragerea",
+   "id": "gdelt-ea33a0453fc7b4ab",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jurnaltv.md/news/cd7db307ac25d88f/doua-drone-au-patruns-ilegal-in-spatiul-aerian-al-republicii-moldova-in-mai-putin-de-12-ore.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dou\u0103 drone au p\u0103truns ilegal \u00een spa\u021biul aerian al Republicii Moldova \u00een mai pu\u021bin de 12 ore",
+   "id": "gdelt-f43290c5e27075f2",
+   "idioma": "ro",
+   "medio": "jurnaltv.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jurnalul.ro/stiri/externe/spatiul-aerian-republica-moldova-survolat-drona-shahed-1028546.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-31T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Spa\u021biul aerian al Republicii Moldova a fost survolat de o dron\u0103 Shahed",
+   "id": "gdelt-a6112394d7e3df6a",
+   "idioma": "ro",
+   "medio": "jurnalul.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://jurnalul.ro/stiri/externe/spatiul-aerian-republica-moldova-survolat-drona-shahed-1028546.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-31T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "O dron\u0103 de tip Shahed a survolat mar\u021bi diminea\u021ba ilegal spa\u021biul aerian al Republicii Moldova, a anun\u021bat Ministerul Ap\u0103r\u0103rii de la Chi\u0219in\u0103u.",
+   "id": "revisada-4e5e3515218631b1-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Ap\u0103r\u0103rii (declaraci\u00f3n oficial citada en jurnalul.ro)"
+  }
+ ],
+ "id": "EODI-2026-00112",
+ "lugar": {
+  "nivel": "pais",
+  "pais": "MD",
+  "suceso": "Republica Moldova"
+ },
+ "nombres": {
+  "lugar": {
+   "en": "Moldova",
+   "es": "Moldavia"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": []
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2026-00521",
+   "nota": {
+    "en": "Merged two different Shahed drones: one crossing northern Moldova on the night of 30 Mar and another flying over Transnistria on the morning of 31 Mar",
+    "es": "Junta dos drones Shahed distintos: uno que cruz\u00f3 el norte de Moldavia la noche del 30 mar y otro que sobrevol\u00f3 Transnistria la ma\u00f1ana del 31 mar"
+   },
+   "separado_de": "EODI-2026-00112"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "minuto",
+   "valor": "2026-03-30T21:29Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-f81b6c59d2ba510d",
+   "motivo": "\u00ab30 martie\u00bb en una nota publicada el 2026-03-31 00:30 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Shahed drone enters Moldavian airspace from Ukraine",
+  "es": "Dron Shahed entra en el espacio a\u00e9reo de Moldavia desde Ucrania"
+ }
+}

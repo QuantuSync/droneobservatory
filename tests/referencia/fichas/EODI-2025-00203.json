@@ -1,0 +1,356 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "minutos": {
+    "max": 45,
+    "min": 45
+   },
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-27T17:45Z"
+    },
+    "fuente_id": "gdelt-451de30632c3cfe3"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-27T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rond 19.00 uur meldde de marechaussee na onderzoek dat het zeer waarschijnlijk geen drone was, omdat er geen is gesignaleerd op radarbeelden.",
+   "id": "revisada-852a6a61d7f56892",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-27T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest, nadat piloten en vliegtuigspotters dachten dat ze een drone hadden gezien.",
+   "id": "revisada-e22f40005182cc70",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_nuevo",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_nombre",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://newsbomb.gr/kosmos/story/1682617/synagermos-sto-aerodromio-tou-amsterntam-drone-irthe-se-apostasi-50-metron-apo-aeroskafos",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "drone \u03c0\u03bf\u03c5 \u03c0\u03b5\u03c4\u03bf\u03cd\u03c3\u03b5 \u03c3\u03b5 \u03b5\u03c0\u03b9\u03ba\u03af\u03bd\u03b4\u03c5\u03bd\u03b7 \u03b1\u03c0\u03cc\u03c3\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c0\u03cc \u03b1\u03b5\u03c1\u03bf\u03c3\u03ba\u03ac\u03c6\u03b7.",
+   "id": "gdelt-451de30632c3cfe3",
+   "idioma": "el",
+   "medio": "newsbomb.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tvn24.pl/swiat/dron-nad-lotniskiem-schiphol-w-holandii-na-blisko-godzine-wylaczyli-pas-z-ruchu-st8671723",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron nad lotniskiem Schiphol w Holandii. Na blisko godzin\u0119 wy\u0142\u0105czyli pas z ruchu",
+   "id": "gdelt-4f8f8aff26dd1a8a",
+   "idioma": "pl",
+   "medio": "tvn24.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://informer.rs/planeta/vesti/1054343/amsterdam-dron-sluzbe-aerodrom",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Prime\u0107en dron blizu aerodroma u Amsterdamu",
+   "id": "gdelt-d63baa0ec8383249",
+   "idioma": "sr",
+   "medio": "informer.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tass.ru/proisshestviya/25183167",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NOS: \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u0421\u0445\u0438\u043f\u0445\u043e\u043b \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b \u0440\u0430\u0431\u043e\u0442\u0443 \u0432\u0437\u043b\u0435\u0442\u043d\u043e-\u043f\u043e\u0441\u0430\u0434\u043e\u0447\u043d\u043e\u0439 \u043f\u043e\u043b\u043e\u0441\u044b \u0438\u0437-\u0437\u0430 \u0434\u0440\u043e\u043d\u0430",
+   "id": "gdelt-05bc1efce0775dd0",
+   "idioma": "ru",
+   "medio": "tass.ru"
+  },
+  {
+   "campos_respaldados": [
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://cdt.ch/news/mondo/drone-sullaeroporto-di-amsterdam-chiusa-una-pista-per-45-minuti-406949",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "diverse unit\u00e0 hanno perlustrato la zona.",
+   "id": "gdelt-070cf55e5b532793",
+   "idioma": "it",
+   "medio": "cdt.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://forsal.pl/swiat/bezpieczenstwo/artykuly/9897574,dron-nad-lotniskiem-schiphol-w-amsterdamie-lecial-w-odleglosci-50-met.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T18:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron nad lotniskiem Schiphol w Amsterdamie. Lecia\u0142 w odleg\u0142o\u015bci 50 metr\u00f3w od samolotu",
+   "id": "gdelt-3ec77c0f985a8752",
+   "idioma": "pl",
+   "medio": "forsal.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naszdziennik.pl/swiat/327090,holandia-incydent-z-dronem-nad-lotniskiem-schiphol.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Holandia: Incydent z dronem nad lotniskiem Schiphol",
+   "id": "gdelt-e43666ae368e3fd0",
+   "idioma": "pl",
+   "medio": "naszdziennik.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bankier.pl/wiadomosc/Incydent-z-dronem-nad-lotniskiem-Schiphol-Pas-zamkniety-na-45-minut-9015991.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incydent z dronem nad lotniskiem Schiphol. Pas zamkni\u0119ty na 45 minut",
+   "id": "gdelt-e9ef6cfed73c9a25",
+   "idioma": "pl",
+   "medio": "bankier.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dhnet.be/actu/monde/2025/09/27/apres-le-danemark-le-trafic-aerien-perturbe-aux-pays-bas-un-drone-repere-au-dessus-de-laeroport-de-schiphol-J4YSOMQZMNDXHA22JKJBH2AOYQ",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Apr\u00e8s le Danemark, le trafic a\u00e9rien perturb\u00e9 aux Pays-Bas: un drone rep\u00e9r\u00e9 au-dessus de l'a\u00e9roport de Schiphol",
+   "id": "gdelt-1d4f7a05a543e62a",
+   "idioma": "fr",
+   "medio": "dhnet.be"
+  },
+  {
+   "campos_respaldados": [
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kyivindependent.com/drone-scare-halts-flights-at-amsterdans-schiphol-as-zelensky-says-russia-probing-europes-defenses",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "an investigation showed no drone was detected on radar and that the object was likely a balloon.",
+   "id": "gdelt-bb567b20007a9afd",
+   "idioma": "en",
+   "medio": "kyivindependent.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kyivindependent.com/drone-scare-halts-flights-at-amsterdans-schiphol-as-zelensky-says-russia-probing-europes-defenses",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-27T20:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "an investigation showed no drone was detected on radar and that the object was likely a balloon.",
+   "id": "gdelt-bb567b20007a9afd-declaracion-1",
+   "idioma": "en",
+   "medio": "Royal Netherlands Marechaussee (declaraci\u00f3n oficial citada en kyivindependent.com)"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://aex.ru/news/2025/9/29/288201",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u0421\u0445\u0438\u043f\u0445\u043e\u043b \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u043b \u0440\u0430\u0431\u043e\u0442\u0443 \u0432\u0437\u043b\u0435\u0442\u043d\u043e-\u043f\u043e\u0441\u0430\u0434\u043e\u0447\u043d\u043e\u0439 \u043f\u043e\u043b\u043e\u0441\u044b \u0438\u0437-\u0437\u0430 \u0434\u0440\u043e\u043d\u0430.",
+   "id": "gdelt-8a414482ab8aca38",
+   "idioma": "ru",
+   "medio": "aex.ru"
+  }
+ ],
+ "id": "EODI-2025-00203",
+ "lugar": {
+  "geocodificacion": "vocabulario",
+  "localidad": "Amsterdam",
+  "nivel": "instalacion",
+  "pais": "NL",
+  "punto": {
+   "lat": 52.3086,
+   "lon": 4.7639
+  },
+  "radio_km": 5.0,
+  "region": "Noord-Holland",
+  "suceso": "Schiphol"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Amsterdam",
+   "es": "\u00c1msterdam"
+  },
+  "lugar": {
+   "en": "Amsterdam, Netherlands",
+   "es": "\u00c1msterdam, Pa\u00edses Bajos"
+  },
+  "objetivo": {
+   "en": "Schiphol",
+   "es": "Schiphol"
+  },
+  "region": {
+   "en": "North Holland",
+   "es": "Holanda Septentrional"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Schiphol"
+ },
+ "presencia_dron": "descartada",
+ "presencia_historial": [
+  {
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-27T00:00Z"
+   },
+   "fuente_id": "revisada-852a6a61d7f56892",
+   "valor": "no_confirmada"
+  },
+  {
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-27T00:00Z"
+   },
+   "fuente_id": "gdelt-bb567b20007a9afd-declaracion-1",
+   "motivo": {
+    "en": "after investigation: no drone was detected on radar and the object was likely a balloon",
+    "es": "tras la investigaci\u00f3n: no se detect\u00f3 ning\u00fan dron en el radar y el objeto probablemente era un globo"
+   },
+   "quien": {
+    "en": "Royal Netherlands Marechaussee",
+    "es": "la Marechaussee Real de los Pa\u00edses Bajos (polic\u00eda militar)"
+   },
+   "revision": "rectificacion:fuente:EODI-2025-00203:gdelt-bb567b20007a9afd-declaracion-1",
+   "valor": "descartada"
+  }
+ ],
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "duracion_min": 45,
+  "fin": {
+   "precision": "hora",
+   "valor": "2025-09-27T10:55Z"
+  },
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-09-27T10:10Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "revisada-e22f40005182cc70",
+   "motivo": "nos.nl, s\u00e1bado 27 de septiembre de 2025: \u00abvanmiddag\u00bb y \u00abrond 12.10 uur meerdere meldingen van piloten binnenkwamen bij de luchtverkeersleiding\u00bb (12:10 hora de \u00c1msterdam, UTC+2)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Possible drone, probably a balloon, closes a Schiphol runway for 45 minutes",
+  "es": "Posible dron, probablemente un globo, cierra 45 minutos una pista de Schiphol"
+ }
+}

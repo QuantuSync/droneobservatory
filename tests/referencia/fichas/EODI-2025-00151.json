@@ -1,0 +1,297 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-05-18T10:30Z"
+    },
+    "fuente_id": "gdelt-eee429f5c43a5a95"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-05-18T10:45Z"
+    },
+    "fuente_id": "gdelt-c446152de90ec2b1-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariosigloxxi.com/texto-ep/mostrar/20250518115016/denunciado-sobrevolar-central-nuclear-cofrentes-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denunciado por sobrevolar la Central Nuclear de Cofrentes con un dron",
+   "id": "gdelt-eee429f5c43a5a95",
+   "idioma": "gl",
+   "medio": "diariosigloxxi.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://abc.es/espana/comunidad-valenciana/denuncian-hombre-sobrevolar-central-nuclear-cofrentes-dron-20250518120552-nt.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "un ciudadano que sobrevolaba con su dron",
+   "id": "gdelt-c446152de90ec2b1",
+   "idioma": "es",
+   "medio": "abc.es"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://abc.es/espana/comunidad-valenciana/denuncian-hombre-sobrevolar-central-nuclear-cofrentes-dron-20250518120552-nt.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T10:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron las inmediaciones de la central nuclear de Cofrentes",
+   "id": "gdelt-c446152de90ec2b1-declaracion-1",
+   "idioma": "es",
+   "medio": "Guardia Civil (declaraci\u00f3n oficial citada en abc.es)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavanguardia.com/local/valencia/20250518/10693808/denunciado-sobrevolar-dron-permiso-seguro-cerca-central-nuclear-cofrentes.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denunciado por sobrevolar un dron sin permiso ni seguro cerca de la central nuclear de Cofrentes",
+   "id": "gdelt-6be7a72be4fafbd5",
+   "idioma": "es",
+   "medio": "lavanguardia.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://levante-emv.com/sucesos/2025/05/18/denunciado-sobrevolar-central-nuclear-cofrentes-dron-117520543.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denunciado por sobrevolar la central nuclear de Cofrentes con un dron",
+   "id": "gdelt-33e696254779e4d9",
+   "idioma": "es",
+   "medio": "levante-emv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denunciado por sobrevolar la Central Nuclear de Cofrentes con un dron",
+   "id": "gdelt-7cb3b65276b56426",
+   "idioma": "es",
+   "medio": "europapress.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lasprovincias.es/sucesos/denunciado-sobrevolar-dron-central-nuclear-cofrentes-20250518115513-nt.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DRONES | Denunciado por sobrevolar con un dron la central nuclear de Cofrentes",
+   "id": "gdelt-4ed46f88d0f81a02",
+   "idioma": "es",
+   "medio": "lasprovincias.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/comunidad-valenciana/guardia-civil-detiene-individuo-sobrevolar-dron-central-nuclear-cofrentes_202505186829c06257a5aa2cde27430e.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-18T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Guardia Civil detiene a un individuo por sobrevolar con un dron la central nuclear de Cofrentes",
+   "id": "gdelt-897095feb6a41144",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://andaluciainformacion.es/andalucia/1897457/denunciado-por-sobrevolar-la-central-nuclear-de-cofrentes-con-un-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-19T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron",
+   "id": "gdelt-fc88532ccc745d46",
+   "idioma": "es",
+   "medio": "andaluciainformacion.es"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://andaluciainformacion.es/andalucia/1897457/denunciado-por-sobrevolar-la-central-nuclear-de-cofrentes-con-un-dron",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-19T11:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron las inmediaciones de la Central Nuclear de Cofrentes",
+   "id": "gdelt-fc88532ccc745d46-declaracion-1",
+   "idioma": "es",
+   "medio": "Guardia Civil (declaraci\u00f3n oficial citada en andaluciainformacion.es)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://andaluciainformacion.es/sociedad/1897457/denunciado-por-sobrevolar-la-central-nuclear-de-cofrentes-con-un-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-05-19T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denunciado por sobrevolar la Central Nuclear de Cofrentes con un dron",
+   "id": "gdelt-9afc6413acec68d5",
+   "idioma": "es",
+   "medio": "andaluciainformacion.es"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-05-18T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron las inmediaciones de la Central Nuclear de Cofrentes",
+   "id": "revisada-907dfc64887235b1-declaracion-1",
+   "idioma": "es",
+   "medio": "Guardia Civil (declaraci\u00f3n oficial citada en europapress.es)"
+  }
+ ],
+ "id": "EODI-2025-00151",
+ "lugar": {
+  "fuente_punto": "revisada-907dfc64887235b1-declaracion-1",
+  "geocodificacion": "oficial",
+  "localidad": "Cofrentes",
+  "nivel": "instalacion",
+  "pais": "ES",
+  "punto": {
+   "lat": 39.21462,
+   "lon": -1.05471
+  },
+  "radio_km": 2.0,
+  "suceso": "Central Nuclear de Cofrentes"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Cofrentes",
+   "es": "Cofrentes"
+  },
+  "lugar": {
+   "en": "Cofrentes, Spain",
+   "es": "Cofrentes, Espa\u00f1a"
+  },
+  "objetivo": {
+   "en": "Cofrentes Nuclear Power Plant",
+   "es": "Central nuclear de Cofrentes"
+  }
+ },
+ "objetivo": {
+  "categoria": "energia",
+  "nombre": "Central Nuclear de Cofrentes"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-05-13T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-c446152de90ec2b1",
+   "motivo": "\u00ab13 mayo\u00bb en una nota publicada el 2025-05-18 12:45 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Man charged for flying drone over Cofrentes nuclear power plant",
+  "es": "Denunciado por sobrevolar la central nuclear de Cofrentes con un dron"
+ }
+}

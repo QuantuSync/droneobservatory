@@ -1,0 +1,145 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "desmentido",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-11T13:15Z"
+    },
+    "fuente_id": "gdelt-42d4ab4d1708fad4"
+   },
+   {
+    "estado": "desmentido",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-11T13:45Z"
+    },
+    "fuente_id": "gdelt-72fa5e57b8d654c8-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "es_incidente",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dhnet.be/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-ZTLV2RIALNGXNAMUZUBOQVWBAQ",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-11T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Selon le porte-parole, il s'agit le plus souvent de drones d'amateurs.",
+   "id": "gdelt-42d4ab4d1708fad4",
+   "idioma": "fr",
+   "medio": "dhnet.be"
+  },
+  {
+   "campos_respaldados": [
+    "lugar_suceso",
+    "objetivo_conocido"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-11T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Des drones signal\u00e9s au-dessus de bases de l'Otan dans la r\u00e9gion de Maastricht.",
+   "id": "gdelt-72fa5e57b8d654c8",
+   "idioma": "fr",
+   "medio": "lavenir.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-11-11/paesi-bassi-avvistati-droni-nei-pressi-del-centro-di-comando-nato-di-brunssum/18116032",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-11T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Paesi Bassi avvistati droni nei pressi del centro di comando Nato di Brunssum",
+   "id": "gdelt-db2db0f4d5a6391f",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-11T13:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Ces recherches n'avaient permis de retrouver aucun drone.",
+   "id": "gdelt-72fa5e57b8d654c8-declaracion-1",
+   "idioma": "fr",
+   "medio": "Mar\u00e9chauss\u00e9e royale n\u00e9erlandaise (declaraci\u00f3n oficial citada en lavenir.net)"
+  }
+ ],
+ "id": "EODI-2025-00357",
+ "lugar": {
+  "nivel": "region",
+  "pais": "NL",
+  "region": "Limburg",
+  "suceso": "Maastricht"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Limburg",
+   "es": "Limburgo"
+  },
+  "lugar": {
+   "en": "Limburg, Netherlands",
+   "es": "Limburgo, Pa\u00edses Bajos"
+  },
+  "region": {
+   "en": "Limburg",
+   "es": "Limburgo"
+  }
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2025-11-11T13:15Z"
+  },
+  "origen_inicio": {
+   "motivo": "la ficha no da el inicio: fecha de publicaci\u00f3n de la primera nota (2025-11-11 14:15, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Possible drones reported over NATO bases in the Maastricht region",
+  "es": "Posibles drones se\u00f1alados sobre bases de la OTAN en la regi\u00f3n de Maastricht"
+ }
+}

@@ -1,0 +1,648 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 3,
+   "min": 3
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-13T04:30Z"
+    },
+    "fuente_id": "gdelt-86a3e90e018f0940"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-13T07:45Z"
+    },
+    "fuente_id": "gdelt-4891ace5d1035952-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/bulgaria/1089503-dron-udari-korab-krai-bala-12-dushi-sa-postradali",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u0438\u0433\u043d\u0430\u043b\u044a\u0442 \u0435 \u043f\u043e\u0434\u0430\u0434\u0435\u043d \u0432 01:57 \u0447. \u043e\u0442 \u0434\u0435\u0436\u0443\u0440\u0435\u043d \u0441\u043b\u0443\u0436\u0438\u0442\u0435\u043b \u043d\u0430 \u0412\u0430\u0440\u043d\u0430 \u0442\u0440\u0430\u0444\u0438\u043a.",
+   "id": "gdelt-86a3e90e018f0940",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://plovdiv24.bg/novini/Bylgaria/Samo-na-28-km-ot-brega-Dron-otnovo-udari-korab-krai-Byala-3038813",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u0430\u043c\u043e \u043d\u0430 28 \u043a\u043c \u043e\u0442 \u0431\u0440\u0435\u0433\u0430: \u0414\u0440\u043e\u043d \u043e\u0442\u043d\u043e\u0432\u043e \u0443\u0434\u0430\u0440\u0438 \u043a\u043e\u0440\u0430\u0431 \u043a\u0440\u0430\u0439 \u0411\u044f\u043b\u0430",
+   "id": "gdelt-1e8974b200a3263c",
+   "idioma": "bg",
+   "medio": "plovdiv24.bg"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u043e\u0432\u0438 \u0434\u0432\u0430 \u043a\u043e\u0440\u0430\u0431\u0430 \u0441\u0430 \u0431\u0438\u043b\u0438 \u0443\u0434\u0430\u0440\u0435\u043d\u0438 \u0441 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432 \u0427\u0435\u0440\u043d\u043e \u043c\u043e\u0440\u0435 - \u043a\u0440\u0430\u0439 \u0411\u044f\u043b\u0430 \u0438 \u043a\u0440\u0430\u0439 \u041a\u0440\u0430\u043f\u0435\u0446",
+   "id": "gdelt-2fa78f5bc5d58551",
+   "idioma": "bg",
+   "medio": "investor.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://segabg.com/hot/category-bulgaria/dronove-udariha-korabi-kray-byala-i-krapec",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u043e\u0432\u0435 \u0443\u0434\u0430\u0440\u0438\u0445\u0430 \u043a\u043e\u0440\u0430\u0431\u0438 \u043a\u0440\u0430\u0439 \u0411\u044f\u043b\u0430 \u0438 \u041a\u0440\u0430\u043f\u0435\u0446",
+   "id": "gdelt-6b8e41dd8eac4fdc",
+   "idioma": "bg",
+   "medio": "segabg.com"
+  },
+  {
+   "campos_respaldados": [
+    "evidencia",
+    "objetivo_conocido"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/bulgaria-a-cerut-ajutorul-ue-si-nato-pentru-investigarea-atacurilor-cu-drone-din-marea-neagra-01206065",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgaria a cerut ajutorul UE \u015fi NATO pentru investigarea atacurilor cu drone din Marea Neagr\u0103",
+   "id": "gdelt-638db66a94320525",
+   "idioma": "ro",
+   "medio": "bursa.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/bulgaria-a-cerut-ajutorul-ue-si-nato-pentru-investigarea-atacurilor-cu-drone-din-marea-neagra-01206065",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T06:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Premierul Rumen Radev a declarat luni c\u0103 r\u0103m\u00e2ne neclar dac\u0103 dronele au fost lansate din Rusia sau din Ucraina",
+   "id": "gdelt-638db66a94320525-declaracion-2",
+   "idioma": "ro",
+   "medio": "Premierul Bulgariei Rumen Radev (declaraci\u00f3n oficial citada en bursa.ro)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bgonair.bg/a/2-bulgaria/433374-otnovo-udariha-korab-s-dronove-v-cherno-more-na-18-mili-ot-byala",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041e\u0442\u043d\u043e\u0432\u043e \u0443\u0434\u0430\u0440\u0438\u0445\u0430 \u043a\u043e\u0440\u0430\u0431 \u0441 \u0434\u0440\u043e\u043do\u0432\u0435 \u0432 \u0427\u0435\u0440\u043d\u043e \u043c\u043e\u0440\u0435 - \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u043e\u0442 \u0411\u044f\u043b\u0430",
+   "id": "gdelt-7c4574558d1a0385",
+   "idioma": "bg",
+   "medio": "bgonair.bg"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://iltalehti.fi/ulkomaat/a/43fac5d3-7faf-4474-92ce-822e33e2c0a4",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kaksi alusta joutui drooni-iskun kohteeksi Bulgarian Mustanmeren-rannikolla",
+   "id": "gdelt-b5f9c642ea04f53f",
+   "idioma": "fi",
+   "medio": "iltalehti.fi"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://iltalehti.fi/ulkomaat/a/43fac5d3-7faf-4474-92ce-822e33e2c0a4",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T07:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Kaksi alusta joutui drooni-iskun kohteeksi Bulgarian Mustanmeren-rannikolla",
+   "id": "gdelt-b5f9c642ea04f53f-declaracion-1",
+   "idioma": "fi",
+   "medio": "Bulgarian p\u00e4\u00e4ministeri Rumen Radev (declaraci\u00f3n oficial citada en iltalehti.fi)"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio_precision",
+    "localidad",
+    "pais"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/externe/doua-nave-lovite-de-drone-in-marea-neagra-premierul-bulgariei-va-purta-discutii-cu-ambasadorul-rus-si-cu-secretarul-general-al-nato-23824343",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dou\u0103 nave comerciale au fost lovite \u00een incidente separate \u00een apele teritoriale bulgare din Marea Neagr\u0103",
+   "id": "gdelt-4891ace5d1035952",
+   "idioma": "ro",
+   "medio": "mediafax.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/externe/doua-nave-lovite-de-drone-in-marea-neagra-premierul-bulgariei-va-purta-discutii-cu-ambasadorul-rus-si-cu-secretarul-general-al-nato-23824343",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T07:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Dou\u0103 nave comerciale au fost lovite \u00een incidente separate \u00een apele teritoriale bulgare",
+   "id": "gdelt-4891ace5d1035952-declaracion-1",
+   "idioma": "ro",
+   "medio": "Consiliul de Securitate de pe l\u00e2ng\u0103 Consiliul de Mini\u0219tri (declaraci\u00f3n oficial citada en mediafax.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/razboi-ucraina/bulgaria-sprijin-nato-ue-atacuri-drone-marea-neagra-2041096",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgaria cere sprijinul NATO \u0219i al UE dup\u0103 atacurile cu drone de la Marea Neagr\u0103. Premierul Radev spune c\u0103 nu este clar dac\u0103 au fost",
+   "id": "gdelt-b2b39ab8cac21f56",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/doua-nave-comerciale-au-fost-lovite-de-drone-in-2563613.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Atacuri cu drone asupra a dou\u0103 nave \u00een Marea Neagr\u0103. Bulgaria cere ajutorul NATO \u0219i explica\u021bii Rusiei",
+   "id": "gdelt-162df1d17f1d75d5",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2026-10-13/navi-colpite-da-droni-nel-mar-nero-una-e-affondata-la-bulgaria-allerta-la-nato-e-convoca-lambasciatore-di-mosca/19794218",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Navi colpite da droni nel Mar Nero una \u00e8 affondata La Bulgaria allerta la Nato e convoca l' ambasciatore di Mosca",
+   "id": "gdelt-14b45e9244c6743d",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://iltempo.it/news/esteri/pressione-russa-sulla-nato-due-navi-bulgare-colpite-da-droni-nel-mar-nero-una-e-affondata",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Due navi sono state colpite da droni nel Mar Nero, al largo delle coste bulgare.",
+   "id": "gdelt-49ca9bd4c128a22f",
+   "idioma": "it",
+   "medio": "iltempo.it"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://iltempo.it/news/esteri/pressione-russa-sulla-nato-due-navi-bulgare-colpite-da-droni-nel-mar-nero-una-e-affondata",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Il premier della Bulgaria, Rumen Radev, ha convocato per oggi l\u2019ambasciatrice russa a Sofia, Eleonora Mitrofanova, dopo gli attacchi.",
+   "id": "gdelt-49ca9bd4c128a22f-declaracion-1",
+   "idioma": "it",
+   "medio": "Governo bulgaro (Rumen Radev) (declaraci\u00f3n oficial citada en iltempo.it)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tg.la7.it/esteri/mar-nero-droni-attacco-navi-bulgaria-allarme-nato-13-10-2026-264147",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mar Nero, droni colpiscono due navi: allarme NATO. Von der Leyen: \"\u00c8 inaccettabile\"",
+   "id": "gdelt-18404b060a205a3c",
+   "idioma": "it",
+   "medio": "tg.la7.it"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://arabnews.com/world/syrian-egyptian-sailors-missing-after-suspected-russian-drones-hit-ships-off-bulgaria-3006151",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Syrian, Egyptian sailors missing after suspected Russian drones hit ships off Bulgaria",
+   "id": "gdelt-a412cb7e0fb46432",
+   "idioma": "en",
+   "medio": "arabnews.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://justiceinfo.net/en/167250-suspected-russian-drones-hit-two-ships-off-bulgaria-11-missing.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Suspected Russian drones hit two ships off Bulgaria, 11 missing.",
+   "id": "gdelt-d35a9ec158ff3817",
+   "idioma": "en",
+   "medio": "justiceinfo.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sofiaglobe.com/2026/10/14/defence-minister-bulgaria-expects-to-join-natos-initiative-to-counter-drone-threats-by-october-30",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Defence Minister: Bulgaria expects by October 30 to join Nato's initiative to counter drone threats",
+   "id": "gdelt-54db7592449e33dd",
+   "idioma": "en",
+   "medio": "sofiaglobe.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24-ore.com/bullgaria-pret-te-hyje-kete-muaj-ne-nismen-anti-dron-te-nato-s-rifillojne-kerkimet-per-11-marinaret-e-zhdukur",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bullgaria pret t\u00eb hyj\u00eb k\u00ebt\u00eb muaj n\u00eb nism\u00ebn anti-dron t\u00eb NATO-s, rifillojn\u00eb k\u00ebrkimet p\u00ebr 11 marinar\u00ebt e zhdukur",
+   "id": "gdelt-518ece564415e588",
+   "idioma": "sq",
+   "medio": "24-ore.com"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://az-online.de/politik/drohnen-versenken-frachter-nahe-bulgarien-sofia-ruft-nato-zu-hilfe-zr-94540958.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "In der Nacht wurden zwei Frachtschiffe nahe der K\u00fcste des NATO-Mitglieds von Drohnen getroffen, wobei eines sank, wie Beh\u00f6rdenvertreter am Dienstag mitteilten.",
+   "id": "gdelt-999b2355c38f3bd1",
+   "idioma": "de",
+   "medio": "az-online.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://az-online.de/politik/drohnen-versenken-frachter-nahe-bulgarien-sofia-ruft-nato-zu-hilfe-zr-94540958.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T14:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "In der Nacht wurden zwei Frachtschiffe nahe der K\u00fcste des NATO-Mitglieds von Drohnen getroffen, wobei eines sank, wie Beh\u00f6rdenvertreter am Dienstag mitteilten.",
+   "id": "gdelt-999b2355c38f3bd1-declaracion-1",
+   "idioma": "de",
+   "medio": "Beh\u00f6rdenvertreter (declaraci\u00f3n oficial citada en az-online.de)"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://notiziegeopolitiche.net/bulgaria-i-droni-affondano-2-mercantili-nel-mar-nero-il-premier-radev-accusa-mosca-e-invoca-la-nato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgaria, i droni affondano 2 mercantili nel Mar Nero: il premier Radev accusa Mosca e invoca la Nato.",
+   "id": "gdelt-fbdc21a2bdc00fbb",
+   "idioma": "it",
+   "medio": "notiziegeopolitiche.net"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://notiziegeopolitiche.net/bulgaria-i-droni-affondano-2-mercantili-nel-mar-nero-il-premier-radev-accusa-mosca-e-invoca-la-nato",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T15:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "il premier Radev accusa Mosca e invoca la Nato.",
+   "id": "gdelt-fbdc21a2bdc00fbb-declaracion-1",
+   "idioma": "it",
+   "medio": "Governo bulgaro (premier Radev) (declaraci\u00f3n oficial citada en notiziegeopolitiche.net)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://topky.sk/cl/11/9530541/Bulharsko-vstupi-do-obrannej-aliancie-NATO-proti-dronom--Reaguje-tak-na-potopenie-lode-pri-svojom-pobrezi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulharsko sa chce do konca okt\u00f3bra zapoji\u0165 do iniciat\u00edvy NATO proti dronom",
+   "id": "gdelt-00fe77a7323125b7",
+   "idioma": "sk",
+   "medio": "topky.sk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://teraz.sk/zahranicie/bulharsko-sa-chce-zapojit-do-iniciativ/999837-clanok.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulharsko sa chce zapoji\u0165 do iniciat\u00edvy NATO proti dronom",
+   "id": "gdelt-7a5af7268f45f787",
+   "idioma": "sk",
+   "medio": "teraz.sk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://marinelink.com/news/bulgaria-join-nato-antidrone-initiative-543693",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgaria To Join NATO Anti-Drone Initiative",
+   "id": "gdelt-cca5ffd06db3acef",
+   "idioma": "en",
+   "medio": "marinelink.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://worthynews.com/118202-11-sailors-missing-as-drones-sink-cargo-ship-off-bulgaria-nato-responds",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-14T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Eleven sailors were missing Tuesday after a reported drone attack sank a cargo ship off Bulgaria\u2019s Black Sea coast",
+   "id": "gdelt-fc18c0664ed22117",
+   "idioma": "en",
+   "medio": "worthynews.com"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "evidencia",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://novinite.com/articles/241150/Debris+Found+on+Drone-Struck+Chelsea+3+as+Bulgaria+Opens+Investigation",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-20T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgarian authorities have found debris aboard the drone-struck merchant vessel Chelsea 3 and will analyze it to establish details of the attack",
+   "id": "gdelt-1fd1e0cd8bd28784",
+   "idioma": "en",
+   "medio": "novinite.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://novinite.com/articles/241150/Debris+Found+on+Drone-Struck+Chelsea+3+as+Bulgaria+Opens+Investigation",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-20T11:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Transport Minister Georgi Peev told reporters in the village of Kaloyanovo near Plovdiv.",
+   "id": "gdelt-1fd1e0cd8bd28784-declaracion-1",
+   "idioma": "en",
+   "medio": "Ministerio de Transporte de Bulgaria (declaraci\u00f3n oficial citada en novinite.com)"
+  }
+ ],
+ "id": "EODI-2026-00512",
+ "lugar": {
+  "nivel": "region",
+  "pais": "BG",
+  "region": "\u0412\u0430\u0440\u043d\u0430",
+  "suceso": "\u0427\u0435\u0440\u043d\u043e \u043c\u043e\u0440\u0435"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Varna",
+   "es": "Varna"
+  },
+  "lugar": {
+   "en": "Varna, Bulgaria",
+   "es": "Varna, Bulgaria"
+  },
+  "region": {
+   "en": "Varna",
+   "es": "Varna"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "caida",
+   "explosion",
+   "restos"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-10-13T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-fc18c0664ed22117",
+   "motivo": "\u00abtuesday\u00bb en una nota publicada el 2026-10-15 00:45 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drones attack ships in Black Sea off Bulgaria",
+  "es": "Drones atacan barcos en el mar Negro frente a Bulgaria"
+ }
+}

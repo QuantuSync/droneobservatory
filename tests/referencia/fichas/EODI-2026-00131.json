@@ -1,0 +1,333 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "minutos": {
+    "max": 30,
+    "min": 30
+   },
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-03-11T19:30Z"
+    },
+    "fuente_id": "gdelt-3b4c7cbb8365a93b"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "drones",
+    "es_incidente",
+    "fin",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/aeropuerto-berlin-suspende-brevemente-sus-operaciones-detectar-dron_2026031169b1bc326cf703292f6d65c7.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto de Berl\u00edn suspendi\u00f3 temporalmente las operaciones de despegue y aterrizaje este mi\u00e9rcoles.",
+   "id": "gdelt-3b4c7cbb8365a93b",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.de/news/drohnensichtung-am-ber-flugbetrieb-in-berlin-kurzzeitig-gestoppt-id30460229.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnensichtung am BER: Flugbetrieb in Berlin kurzzeitig gestoppt",
+   "id": "gdelt-88ae84e6dafb12d9",
+   "idioma": "de",
+   "medio": "rtl.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/aeroportul-din-berlin-isi-suspenda-activitatea-dupa-semnalarea-unei-drone-48916857",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Berlin \u00ee\u015fi suspend\u0103 activitatea, dup\u0103 semnalarea unei drone",
+   "id": "gdelt-4f61d81953c01f36",
+   "idioma": "ro",
+   "medio": "bursa.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bgonair.bg/a/4-world/412542-dron-sprya-poletite-na-letishteto-v-berlin",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d \u0441\u043f\u0440\u044f \u043f\u043e\u043b\u0435\u0442\u0438\u0442\u0435 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0411\u0435\u0440\u043b\u0438\u043d",
+   "id": "gdelt-4cc8b44947d5b77c",
+   "idioma": "bg",
+   "medio": "bgonair.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dcnews.ro/trafic-aerian-suspendat-temporar-pe-aeroportul-din-berlin-dupa-aparitia-unei-drone_1039821.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trafic aerian suspendat temporar pe aeroportul din Berlin dup\u0103 apari\u021bia unei drone",
+   "id": "gdelt-cb3b37d5465e8b0c",
+   "idioma": "ro",
+   "medio": "dcnews.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.ro/externe/aeroportul-din-berlin-si-a-suspendat-activitatea-din-cauza-unei-drone-780371.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Berlin \u0219i-a suspendat activitatea dup\u0103 apari\u021bia \u00een zon\u0103 a unei drone neidentificate",
+   "id": "gdelt-f73e13aa1d0eddf9",
+   "idioma": "ro",
+   "medio": "antena3.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/externe/ue/aeroportul-din-berlin-si-a-suspendat-activitatea-pentru-scurt-timp-dupa-semnalarea-prezentei-unei-drone-3672293",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Berlin \u015fi-a suspendat activitatea, dup\u0103 semnalarea prezen\u0163ei unei drone",
+   "id": "gdelt-72797acc238ea98b",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hnonline.sk/svet/96269870-letisko-v-berline-po-spozorovani-dronu-nakratko-pozastavilo-prevadzku",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Letisko v Berl\u00edne po spozorovan\u00ed dronu nakr\u00e1tko pozastavilo prev\u00e1dzku",
+   "id": "gdelt-3d0115e81eb0112a",
+   "idioma": "sk",
+   "medio": "hnonline.sk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://iltempo.it/esteri/2026/03/11/news/aeroporto-berlino-brandeburgo-sospensione-oggetto-volante-non-identificato-droni-allarme-46764521",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Germania, oggetto volante misterioso blocca l'aeroporto di Berlino. Il drone fantasma colpisce ancora",
+   "id": "gdelt-ffc38d63eb87c1c0",
+   "idioma": "it",
+   "medio": "iltempo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tf1info.fr/international/allemagne-l-aeroport-de-berlin-suspend-brievement-son-activite-apres-le-signalement-d-un-drone-2429591.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Allemagne : l'a\u00e9roport de Berlin suspend bri\u00e8vement son activit\u00e9 apr\u00e8s le signalement d'un drone",
+   "id": "gdelt-fae15c83a382428e",
+   "idioma": "fr",
+   "medio": "tf1info.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-externe/europa/panica-pe-un-aeroport-din-berlin-traficul-aerian-2514493.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Panic\u0103 pe aeroportul din Berlin: Traficul aerian, suspendat dup\u0103 apari\u021bia unei drone",
+   "id": "gdelt-9e5c361030f94033",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://www1.pluska.sk/spravy/letisko-v-berline-v-pozore-v-priestore-sa-objavil-dron-okamzite-pozastavili-prevadzku",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Berl\u00edn: Objavili dron, pozastavili prev\u00e1dzku letiska",
+   "id": "gdelt-5180a6451ef6749d",
+   "idioma": "sk",
+   "medio": "pluska.sk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnoticias.pt/2026/3/11/484442-deteccao-de-drone-obriga-a-suspender-voos-no-aeroporto-de-berlim",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Detec\u00e7\u00e3o de 'drone' obriga a suspender voos no aeroporto de Berlim",
+   "id": "gdelt-e77c2ddcba932dbb",
+   "idioma": "pt",
+   "medio": "dnoticias.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://evz.ro/aeroportul-din-berlin-a-suspendat-temporar-zborurile-dupa-aparitia-unei-drone.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-11T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Berlin a suspendat temporar zborurile dup\u0103 apari\u021bia unei drone",
+   "id": "gdelt-e9875e2810f1adf0",
+   "idioma": "ro",
+   "medio": "evz.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://en.apa.az/europe/berlin-airport-briefly-suspends-operations-over-drone-sighting-496260",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-12T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Berlin airport briefly suspends operations over drone sighting",
+   "id": "gdelt-f951bd242161cf2c",
+   "idioma": "en",
+   "medio": "en.apa.az"
+  }
+ ],
+ "id": "EODI-2026-00131",
+ "lugar": {
+  "geocodificacion": "frase_origen",
+  "historial": [
+   {
+    "anterior": {
+     "punto": {
+      "lat": 52.52437,
+      "lon": 13.41053
+     },
+     "radio_km": 20.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-21T05:17Z"
+    },
+    "motivo": {
+     "en": "More precise place: the facility named in the headline.",
+     "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n que nombra el titular."
+    }
+   }
+  ],
+  "nivel": "instalacion",
+  "pais": "DE",
+  "punto": {
+   "lat": 52.36577,
+   "lon": 13.49691
+  },
+  "radio_km": 5.0,
+  "region": "Berlin",
+  "suceso": "Flughafen Berlin Brandenburg"
+ },
+ "nombres": {
+  "anteriores": [
+   null
+  ],
+  "localidad": {
+   "en": "Berlin",
+   "es": "Berl\u00edn"
+  },
+  "lugar": {
+   "en": "Berlin, Germany",
+   "es": "Berl\u00edn, Alemania"
+  },
+  "objetivo": {
+   "en": "Berlin Brandenburg Airport",
+   "es": "Aeropuerto de Berl\u00edn"
+  },
+  "region": {
+   "en": "Berlin",
+   "es": "Berl\u00edn"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Flughafen Berlin Brandenburg",
+  "oaci": "EDDB"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2026-03-11T19:30Z"
+  },
+  "origen_inicio": {
+   "motivo": "la ficha no da el inicio: fecha de publicaci\u00f3n de la primera nota (2026-03-11 20:30, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Brief suspension at Berlin airport after possible drone detection",
+  "es": "Suspensi\u00f3n temporal en el aeropuerto de Berl\u00edn tras detectar un posible dron"
+ }
+}

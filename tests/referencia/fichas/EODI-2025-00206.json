@@ -1,0 +1,301 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 5,
+   "min": 5
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-12-05T12:00Z"
+    },
+    "fuente_id": "gdelt-3d1973b65e4c5fa9"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-12-05T12:00Z"
+    },
+    "fuente_id": "gdelt-3d1973b65e4c5fa9-declaracion-1"
+   },
+   {
+    "estado": "desmentido",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-12-05T13:45Z"
+    },
+    "fuente_id": "gdelt-087e7afdb40b5512-declaracion-2"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-12-05T13:45Z"
+    },
+    "fuente_id": "gdelt-3d1973b65e4c5fa9-declaracion-1",
+    "motivo": {
+     "en": "The denial's wording does not deny the event or the drone (it speaks of the danger, of who is behind it or of it not being found): it stays confirmed by the authority that confirmed it, and the wording stays in the history.",
+     "es": "La frase del desmentido no niega el suceso ni el dron (habla del peligro, de qui\u00e9n est\u00e1 detr\u00e1s o de que no se encontr\u00f3): sigue confirmado por la autoridad que lo confirm\u00f3, y la frase queda en el historial."
+    }
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cinque droni hanno sorvolato ieri sera introno alle 19:30 la base sottomarina francese dell'Ile Longue",
+   "id": "gdelt-3d1973b65e4c5fa9",
+   "idioma": "it",
+   "medio": "tg24.sky.it"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T12:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Cinque droni hanno sorvolato ieri sera introno alle 19:30 la base sottomarina francese dell'Ile Longue",
+   "id": "gdelt-3d1973b65e4c5fa9-declaracion-1",
+   "idioma": "it",
+   "medio": "Gendarmeria francese (declaraci\u00f3n oficial citada en tg24.sky.it)"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_nuevo",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://quotidiano.net/esteri/droni-base-nucleare-francia-phpm2z3e",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La fanteria di marina francese ha sparato contro cinque droni che sorvolavano la base navale di Ile Longue, in Bretagna.",
+   "id": "gdelt-26f2efa7822dddea",
+   "idioma": "it",
+   "medio": "quotidiano.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://askanews.it/2025/12/05/droni-su-una-base-nucleare-in-francia-la-marina-ha-sparato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su una base nucleare in Francia, la Marina ha sparato",
+   "id": "gdelt-da2ffd4ace8a4e1d",
+   "idioma": "it",
+   "medio": "askanews.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilfattoquotidiano.it/2025/12/05/droni-base-nucleare-francia-brest-news/8218177",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sorvolano base nucleare francese: tiri per abbatterli nella rada di Brest | Il Fatto Quotidiano",
+   "id": "gdelt-05eb74f4bd86f3af",
+   "idioma": "it",
+   "medio": "ilfattoquotidiano.it"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://quotidianodifoggia.it/francia-droni-sorvolano-base-con-sottomarini-nucleari-ile-longue-a-brest",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cinque droni non identificati hanno sorvolato la base strategica dell'Ile Longue a Brest",
+   "id": "gdelt-087e7afdb40b5512",
+   "idioma": "it",
+   "medio": "quotidianodifoggia.it"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://quotidianodifoggia.it/francia-droni-sorvolano-base-con-sottomarini-nucleari-ile-longue-a-brest",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T13:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "La prefettura ha precisato che \u00e8 prematuro correlare l'episodio a una azione di Mosca",
+   "id": "gdelt-087e7afdb40b5512-declaracion-2",
+   "idioma": "it",
+   "medio": "Prefettura (declaraci\u00f3n oficial citada en quotidianodifoggia.it)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/news-notizia/post/905830/2025-12-05-francia-allerta-alla-base-nucleare-brest-dopo-sorvoli-droni-non-identificati--14-45",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Francia, allerta alla base nucleare di Brest dopo sorvoli di droni non identificati",
+   "id": "gdelt-b10b9fddb048f226",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://milanofinanza.it/news/francia-5-droni-sorvolano-la-base-nucleare-ile-longue-a-brest-l-artiglieria-marittima-apre-il-fuoco-202512051306048091",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Francia, 5 droni sorvolano la base nucleare \u00cele Longue a Brest: l'artiglieria marittima apre il fuoco",
+   "id": "gdelt-271f46750bf296e3",
+   "idioma": "it",
+   "medio": "milanofinanza.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elpais.com/internacional/2025-12-05/la-marina-de-francia-derriba-varios-drones-que-sobrevolaban-una-base-estrategica-de-submarinos-nucleares.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Marina de Francia derriba varios drones que sobrevolaban una base estrat\u00e9gica de submarinos nucleares",
+   "id": "gdelt-3996c7de90aeb771",
+   "idioma": "es",
+   "medio": "elpais.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sudouest.fr/societe/defense/survol-de-la-base-de-sous-marins-nucleaires-a-brest-s-agissait-il-vraiment-de-drones-l-enquete-se-poursuit-26988197.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-12-05T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Survol de la base de sous-marins nucl\u00e9aires \u00e0 Brest : s'agissait-il vraiment de drones ? L'enqu\u00eate se poursuit",
+   "id": "gdelt-bb7c4610dd48e3e2",
+   "idioma": "fr",
+   "medio": "sudouest.fr"
+  }
+ ],
+ "id": "EODI-2025-00206",
+ "lugar": {
+  "geocodificacion": "vocabulario",
+  "nivel": "instalacion",
+  "pais": "FR",
+  "punto": {
+   "lat": 48.27,
+   "lon": -4.61
+  },
+  "radio_km": 5.0,
+  "suceso": "Ile Longue"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "\u00cele Longue",
+   "es": "\u00eele Longue"
+  },
+  "lugar": {
+   "en": "\u00cele Longue, France",
+   "es": "\u00eele Longue, Francia"
+  },
+  "objetivo": {
+   "en": "\u00cele Longue",
+   "es": "\u00eele Longue"
+  }
+ },
+ "objetivo": {
+  "categoria": "base_militar",
+  "nombre": "\u00cele Longue"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "minuto",
+   "valor": "2025-12-04T18:30Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-3d1973b65e4c5fa9",
+   "motivo": "\u00abieri sera\u00bb en una nota publicada el 2025-12-05 13:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Five drones fly over Ile Longue nuclear base in Brest",
+  "es": "Cinco drones sobrevuelan la base nuclear de Ile Longue en Brest"
+ }
+}

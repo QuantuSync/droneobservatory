@@ -1,0 +1,186 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-01-16T09:18Z"
+    },
+    "fuente_id": "gdelt-3ba27e2e73f70355"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-01-16T10:37Z"
+    },
+    "fuente_id": "gdelt-55508bd9218a9d79-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "pais"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://elfarodeceuta.es/guardia-civil-inhibe-dron-llevaba-droga-micro-telefonos-carcel/",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-01-16T09:18Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Funcion\u00f3 en Ceuta hasta que la Guardia Civil abort\u00f3 esa operativa.",
+   "id": "gdelt-3ba27e2e73f70355",
+   "idioma": "es",
+   "medio": "elfarodeceuta.es"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "localidad",
+    "lugar_nuevo",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-01-16T10:37Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "ha frustrado \"recientemente\" un intento de introducci\u00f3n de sustancias estupefacientes y objetos prohibidos en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
+   "id": "gdelt-55508bd9218a9d79",
+   "idioma": "es",
+   "medio": "rtvce.es"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-01-16T10:37Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "ha frustrado \"recientemente\" un intento de introducci\u00f3n de sustancias estupefacientes y objetos prohibidos en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
+   "id": "gdelt-55508bd9218a9d79-declaracion-1",
+   "idioma": "es",
+   "medio": "Guardia Civil (declaraci\u00f3n oficial citada en rtvce.es)"
+  }
+ ],
+ "id": "EODI-2026-00625",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "historial": [
+   {
+    "anterior": {
+     "localidad": "Ceuta",
+     "punto": {
+      "lat": 35.889,
+      "lon": -5.32
+     },
+     "radio_km": 5.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-19T23:17Z"
+    },
+    "motivo": {
+     "en": "More precise place: the affected facility identified in the record.",
+     "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n afectada que identifica la ficha."
+    }
+   }
+  ],
+  "localidad": "Ceuta",
+  "nivel": "instalacion",
+  "pais": "ES",
+  "punto": {
+   "lat": 35.87998,
+   "lon": -5.35597
+  },
+  "radio_km": 1.0,
+  "region": "Ceuta",
+  "suceso": "Centro Penitenciario de Ceuta"
+ },
+ "nombres": {
+  "anteriores": [
+   {
+    "en": "Ceuta",
+    "es": "Ceuta"
+   }
+  ],
+  "localidad": {
+   "en": "Ceuta",
+   "es": "Ceuta"
+  },
+  "lugar": {
+   "en": "Ceuta, Spain",
+   "es": "Ceuta, Espa\u00f1a"
+  },
+  "objetivo": {
+   "en": "Centro Penitenciario de Mendiz\u00e1bal",
+   "es": "Centro Penitenciario de Mendiz\u00e1bal"
+  },
+  "region": {
+   "en": "Ceuta",
+   "es": "Ceuta"
+  }
+ },
+ "objetivo": {
+  "categoria": "gubernamental",
+  "nombre": "Centro Penitenciario de Mendiz\u00e1bal"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "inhibicion"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2026-01-16T09:18Z"
+  },
+  "origen_inicio": {
+   "motivo": "la ficha no da el inicio: fecha de publicaci\u00f3n de la primera nota (2026-01-16 10:18, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Guardia Civil jams drone carrying drugs and phones bound for Mendiz\u00e1bal prison in Ceuta",
+  "es": "La Guardia Civil inhibe en Ceuta un dron con droga y m\u00f3viles que iba a la c\u00e1rcel de Mendiz\u00e1bal"
+ }
+}

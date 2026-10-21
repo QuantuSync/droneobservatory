@@ -1,0 +1,347 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 4,
+   "min": 4
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-03T05:45Z"
+    },
+    "fuente_id": "gdelt-380466e47a5476b8"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-03T05:45Z"
+    },
+    "fuente_id": "gdelt-380466e47a5476b8-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://x.com/FranckenTheo/status/1984884386089652583",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-11-02T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Geen gewone overvlucht maar duidelijke opdracht met Kleine Brogel als onderwerp.",
+   "id": "revisada-8bce52be46d5bcab-declaracion-1",
+   "idioma": "nl",
+   "medio": "Theo Francken, ministro de Defensa de B\u00e9lgica (declaraci\u00f3n oficial citada en x.com)"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-03T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u010cetiri drona vi\u0111ena su u nedjelju nave\u010der",
+   "id": "gdelt-380466e47a5476b8",
+   "idioma": "hr",
+   "medio": "jutarnji.hr"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-03T05:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Belgijska novinska agencija Belga izvijestila je o vi\u0111enjima",
+   "id": "gdelt-380466e47a5476b8-declaracion-1",
+   "idioma": "hr",
+   "medio": "Belgijska novinska agencija Belga (declaraci\u00f3n oficial citada en jutarnji.hr)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://jutarnji.hr/vijesti/svijet/misteriozni-dronovi-nadletjeli-nato-bazu-kleine-brogel-belgija-15638838",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-03T05:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "belgijski ministar obrane Theo Francken rekao da su dronovi vi\u0111eni preko no\u0107i",
+   "id": "gdelt-380466e47a5476b8-declaracion-2",
+   "idioma": "hr",
+   "medio": "Theo Francken (declaraci\u00f3n oficial citada en jutarnji.hr)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnevnik.hr/vijesti/svijet/prijavljeno-jos-vidjenja-dronova-iznad-belgijske-zracne-baze-koju-koristi-nato---943877.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-03T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Otkriveni dronovi iznad NATO-ve zra\u010dne baze: Nije slu\u010dajno, evo \u0161to se u njoj \u010duva",
+   "id": "gdelt-b177c1ba8a995728",
+   "idioma": "hr",
+   "medio": "dnevnik.hr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24sata.hr/news/jos-dronova-iznad-belgijske-zracne-baze-koju-koristi-nato-1085331",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-03T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Jo\u0161 dronova iznad belgijske zra\u010dne baze koju koristi NATO",
+   "id": "gdelt-6e1251606127cbdf",
+   "idioma": "hr",
+   "medio": "24sata.hr"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://brf.be/national/2021246",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-03T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sichtungen gab es insbesondere an den Flugh\u00e4fen von Ostende und Antwerpen, sowie im limburgischen Leopoldsburg, aber auch und vor allem \u00fcber dem Nato-St\u00fctzpunkt Kleine-Brogel.",
+   "id": "gdelt-886b4fe1e4b9e43a",
+   "idioma": "de",
+   "medio": "brf.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://novinite.com/articles/235261/Belgium+Orders+Military+to+Shoot+Down+Unidentified+Drones+Over+Its+Bases",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-04T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belgium Orders Military to Shoot Down Unidentified Drones Over Its Bases - Novinite.com",
+   "id": "gdelt-8a0abb9960b2df98",
+   "idioma": "en",
+   "medio": "novinite.com"
+  },
+  {
+   "campos_respaldados": [
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kyivpost.com/post/63595",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-04T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "repeatedly breached airspace over Kleine-Brogel \u2013 a key NATO base",
+   "id": "gdelt-2e4cd6ddeaccb7d5",
+   "idioma": "en",
+   "medio": "kyivpost.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://en.defence-ua.com/news/belgium_authorizes_shoot_down_uavs_over_nato_nuclear_base_after_3_day_reconnaissance_operation-16373.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-04T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "For three nights in a row, unknown UAV surveyed Belgian military bases",
+   "id": "gdelt-75b0fbcbd17ecd16",
+   "idioma": "en",
+   "medio": "defence-ua.com"
+  }
+ ],
+ "id": "EODI-2025-00080",
+ "lugar": {
+  "geocodificacion": "frase_origen",
+  "historial": [
+   {
+    "anterior": {
+     "punto": {
+      "lat": 51.17267,
+      "lon": 5.45059
+     },
+     "radio_km": 3.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-14T02:33Z"
+    },
+    "motivo": {
+     "en": "More precise place: the facility named in the headline.",
+     "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n que nombra el titular."
+    }
+   }
+  ],
+  "nivel": "instalacion",
+  "pais": "BE",
+  "punto": {
+   "lat": 51.16594,
+   "lon": 5.46935
+  },
+  "radio_km": 5.0,
+  "region": "Limburg",
+  "suceso": "Luchtmachtbasis Kleine Brogel"
+ },
+ "nombres": {
+  "anteriores": [
+   null
+  ],
+  "localidad": {
+   "en": "Kleine-Brogel",
+   "es": "Kleine-Brogel"
+  },
+  "lugar": {
+   "en": "Kleine-Brogel, Belgium",
+   "es": "Kleine-Brogel, B\u00e9lgica"
+  },
+  "objetivo": {
+   "en": "Kleine-Brogel Air Base",
+   "es": "Base a\u00e9rea de Kleine-Brogel"
+  },
+  "region": {
+   "en": "Limburg",
+   "es": "Limburgo"
+  }
+ },
+ "objetivo": {
+  "categoria": "base_militar",
+  "nombre": "Luchtmachtbasis Kleine Brogel"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": []
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2025-00131",
+   "nota": {
+    "en": "Merged overflights of Kleine-Brogel on different nights: 31 Oct-1 Nov, 1-2 Nov and 2-3 Nov",
+    "es": "Junta sobrevuelos de Kleine-Brogel de noches distintas: del viernes 31 oct al s\u00e1bado 1 nov, del s\u00e1bado al domingo 2 nov y del domingo al lunes 3 nov"
+   },
+   "separado_de": "EODI-2025-00131"
+  },
+  {
+   "id": "EODI-2025-00344",
+   "nota": {
+    "en": "Merged overflights of Kleine-Brogel on different nights: 31 Oct-1 Nov, 1-2 Nov and 2-3 Nov",
+    "es": "Junta sobrevuelos de Kleine-Brogel de noches distintas: del viernes 31 oct al s\u00e1bado 1 nov, del s\u00e1bado al domingo 2 nov y del domingo al lunes 3 nov"
+   },
+   "separado_de": "EODI-2025-00131"
+  },
+  {
+   "id": "EODI-2025-00445",
+   "nota": {
+    "en": "Merged drone sightings over Kleine-Brogel on different nights (Sunday 2, Monday 3 and Tuesday 4 November) with the Brussels and Li\u00e8ge airport closures of 4 November",
+    "es": "Junta los avistamientos sobre Kleine-Brogel de noches distintas (domingo 2, lunes 3 y martes 4 de noviembre) y los cierres de los aeropuertos de Bruselas y Lieja del 4 de noviembre"
+   },
+   "separado_de": "EODI-2025-00080"
+  },
+  {
+   "id": "EODI-2025-00446",
+   "nota": {
+    "en": "Merged drone sightings over Kleine-Brogel on different nights (Sunday 2, Monday 3 and Tuesday 4 November) with the Brussels and Li\u00e8ge airport closures of 4 November",
+    "es": "Junta los avistamientos sobre Kleine-Brogel de noches distintas (domingo 2, lunes 3 y martes 4 de noviembre) y los cierres de los aeropuertos de Bruselas y Lieja del 4 de noviembre"
+   },
+   "separado_de": "EODI-2025-00080"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "cazas",
+   "inhibicion",
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-11-03T00:00Z"
+  },
+  "origen_inicio": {
+   "motivo": "\u00abieri sera\u00bb en una nota publicada el 2025-11-04 16:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Four drones spotted over NATO's Kleine-Brogel air base in Belgium",
+  "es": "Cuatro drones sobre la base a\u00e9rea de Kleine-Brogel de la OTAN en B\u00e9lgica"
+ }
+}
