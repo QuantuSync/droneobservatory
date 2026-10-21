@@ -44,7 +44,7 @@ const CASOS: Caso[] = [
     id: "EODI-2026-00268",
     que: "Akrotiri",
     titulo: { es: "RAF Akrotiri", en: "RAF Akrotiri" },
-    lugar: { es: "RAF Akrotiri (base británica), Chipre", en: "RAF Akrotiri (British base), Cyprus" },
+    lugar: { es: "Akrotiri (base británica), Chipre", en: "Akrotiri (British base), Cyprus" },
     zona: false,
   },
   {
