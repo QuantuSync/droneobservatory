@@ -11,6 +11,7 @@ vez que se guarda, así que lo que escriba otro paso antes no es lo que queda.
 """
 
 import copy
+import json
 from dataclasses import dataclass
 from functools import cache
 
@@ -56,20 +57,27 @@ def _afirmada(incidente: Documento, fuente_id: str) -> str | None:
 
 
 @cache
-def _revisadas() -> frozenset[str]:
+def _revisadas() -> dict[str, str]:
+    """La presencia revisada a mano de cada incidente, con su cita (configuracion/
+    incidentes_revisados.json, «titulares»)."""
     from proceso import presencia
 
-    return presencia.presencias_revisadas()
+    datos = json.loads(presencia.REVISADOS.read_text(encoding="utf-8"))
+    return {
+        str(t["incidente"]): str(t["presencia"]["valor"])
+        for t in datos.get("titulares", [])
+        if isinstance(t.get("presencia"), dict) and t["presencia"].get("valor")
+    }
 
 
 def _abierta(incidente: Documento, negadas: frozenset[str]) -> bool:
     """Lo que deja abierta la presencia aunque una autoridad la atribuya a un dron (las mismas
-    condiciones que proceso/presencia.pendientes): un desmentido, la revisión a mano que la deja
-    abierta, una fuente que cuenta que no se encontró el dron sin pruebas físicas, o una fuente
+    condiciones que proceso/presencia.pendientes): un desmentido,
+    una fuente que cuenta que no se encontró el dron sin pruebas físicas, o una fuente
     en que el control de las fichas lee que no se encontró o que se desmiente."""
     from proceso import presencia
 
-    if incidente["estado"]["actual"] == Estado.DESMENTIDO or incidente["id"] in _revisadas():
+    if incidente["estado"]["actual"] == Estado.DESMENTIDO:
         return True
     if presencia.no_hallado(incidente) is not None and not (
         presencia.pruebas_fisicas_confirmadas(incidente)
@@ -102,6 +110,8 @@ def decidir_presencia(incidente: Documento, negadas: frozenset[str] = frozenset(
             afirmacion.get("fuente_id", "")
         ).startswith(REVISADA):
             return Decision(str(afirmacion["valor"]), str(afirmacion["fuente_id"]), "revision")
+    if incidente["id"] in _revisadas():
+        return Decision(_revisadas()[incidente["id"]], REVISADA + "titular", "revision")
     for fuente in fuentes:
         if fuente.get("documento_oficial") and "presencia_dron" in fuente.get(
             "campos_respaldados", []
