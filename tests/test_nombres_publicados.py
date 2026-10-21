@@ -40,7 +40,10 @@ def publicados() -> list[Documento]:
 
 def con_nombres(propiedades: Documento) -> Documento:
     if "nombres" in propiedades:
-        return propiedades
+        # El titular como lo publica el código de ahora (exportacion/geojson.py): una forma que
+        # una regla nueva corrige («Alexandrópolis», EODI-2026-00050) sale bien en la próxima
+        # publicación; con lo ya corregido no cambia nada.
+        return {**propiedades, "titulo": nombres_lugar.titulo_corregido(propiedades)}
     return {
         **propiedades,
         "titulo": nombres_lugar.titulo_corregido(propiedades),

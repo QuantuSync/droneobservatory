@@ -299,6 +299,17 @@ def decidir_drones(incidente: Documento) -> Any:
     return copy.deepcopy(numero)
 
 
+def _con_drones(incidente: Documento) -> Documento:
+    """El incidente con el número de drones que decide `decidir_drones` (sin cambios si ya lo
+    tenía)."""
+    if "drones" not in incidente and not _revisiones(incidente).get("drones"):
+        return incidente
+    numero = decidir_drones(incidente)
+    if (incidente.get("drones") or {}).get("numero") == numero:
+        return incidente
+    return {**incidente, "drones": {**incidente.get("drones", {}), "numero": numero}}
+
+
 def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None:
     valor = copy.deepcopy(revision["valor"])
     if campo == "lugar":
@@ -324,8 +335,7 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
 
 
 def decidir_datos(incidente: Documento) -> Documento:
-    """El incidente con el objetivo, el lugar, el inicio, el número de drones, el cierre y el
-    titular que deciden sus fuentes y sus revisiones a mano. Sin cambios si ya los
+    """El incidente con el objetivo, el lugar, el inicio, el cierre y el titular que deciden sus fuentes y sus revisiones a mano. Sin cambios si ya los
     tenía. Si cambia la instalación o el lugar, los nombres publicados se vuelven a calcular."""
     resultado = copy.deepcopy(incidente)
     revisiones = _revisiones(incidente)
@@ -344,8 +354,6 @@ def decidir_datos(incidente: Documento) -> Documento:
         resultado["objetivo"] = objetivo
     else:
         resultado.pop("objetivo", None)
-    if "drones" in resultado or "drones" in revisiones:
-        resultado["drones"] = {**resultado.get("drones", {}), "numero": decidir_drones(resultado)}
     if resultado == incidente:
         return incidente
     if "nombres" in resultado and any(
@@ -395,7 +403,9 @@ def aplicar(
         resultado = titulares.ajustar_incidente(
             {**copy.deepcopy(resultado), "presencia_dron": presencia.valor}
         )
-    # El tipo, con el estado ya decidido (la atribución demuestra la entrada).
+    # Los drones y el tipo, con el estado y la presencia ya decididos (sin dron según la
+    # autoridad, número desconocido; la atribución demuestra la entrada).
+    resultado = _con_drones(resultado)
     tipo = incidentes.con_tipo(copy.deepcopy(resultado))
     if (tipo.get("tipo"), tipo.get("origen_demostrado_por")) != (
         resultado.get("tipo"),
