@@ -79,6 +79,8 @@ from proceso.ubicacion import (
     Pistas,
     Ubicacion,
     afinar,
+    homonimo_de_la_fuente,
+    localidades_pequenas,
     nombres_en_idiomas,
     pais_del_suceso,
     ubicar,
@@ -1113,14 +1115,22 @@ def _alta(
     conserva su fusión ni su episodio: se vuelven a calcular después."""
     _ampliar_modelos(almacen, validada)
     ubicacion = ubicar(validada, pistas(almacen, peticion), nomenclator())
+    textos = tuple(
+        [str(c.get("frase") or "") for c in validada.campos.values()]
+        + [str(a["titular"]) for a in peticion.articulos]
+    )
     if ubicacion.valida and ubicacion.sitio is None:
         # Un suceso que solo se sitúa en una región gana el punto del único sitio de esa
         # región que nombran sus frases y los titulares de su candidato.
-        textos = tuple(
-            [str(c.get("frase") or "") for c in validada.campos.values()]
-            + [str(a["titular"]) for a in peticion.articulos]
-        )
         ubicacion = afinar(ubicacion, textos, nomenclator())
+    elif ubicacion.sitio is not None and ubicacion.origen in {"localidad", "localidad_pequena"}:
+        # Entre localidades homónimas, la del municipio que escribe la fuente (Józefów).
+        homonima = homonimo_de_la_fuente(ubicacion.sitio.nombre, ubicacion.pais, textos,
+                                         nomenclator())  # fmt: skip
+        if homonima is not None:
+            pequena = homonima.id in localidades_pequenas()[1]
+            origen = "localidad_pequena" if pequena else "localidad"
+            ubicacion = replace(ubicacion, sitio=homonima, origen=origen)
     if not ubicacion.valida:
         documento["motivos"] = [*documento["motivos"], f"ubicación: {ubicacion.motivo}"]
         return None

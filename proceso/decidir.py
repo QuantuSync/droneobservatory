@@ -1,4 +1,6 @@
-"""Un solo sitio decide el estado y la presencia del dron de un incidente.
+"""Un solo sitio decide los datos de un incidente: el estado, la presencia del dron, el tipo, la
+instalación afectada (objetivo), el lugar, el día de inicio, el número de drones y, con ellos, la
+cabecera de la ficha.
 
 Los demás pasos de la recogida (el extractor, las declaraciones oficiales, la competencia entre
 autoridades, las rectificaciones, el control de las fichas, las fusiones y las revisiones a mano de
@@ -6,18 +8,35 @@ configuracion/incidentes_revisados.json) aportan pruebas: fuentes con su frase, 
 del estado con su fuente, afirmaciones y pasos de `presencia_historial`. `decidir_estado` y
 `decidir_presencia` calculan el valor a partir de esas pruebas con el método
 (docs/rectificaciones.md, docs/control_fichas.md) y devuelven también qué fuente y qué regla lo
-deciden. `aplicar` deja el incidente con esos valores; lo llama `Almacen.guardar_incidente` cada
-vez que se guarda, así que lo que escriba otro paso antes no es lo que queda.
+deciden; `decidir_datos` decide los demás datos con las reglas de docs/control_fichas.md
+(«Criterios de cada dato») y las revisiones a mano de esos datos, cada una con su cita
+(configuracion/incidentes_revisados.json, «datos»). `aplicar` deja el incidente con esos valores;
+lo llama `Almacen.guardar_incidente` cada vez que se guarda, así que lo que escriba otro paso
+antes no es lo que queda.
 """
 
 import copy
 import json
+import re
 from dataclasses import dataclass
 from functools import cache
+from pathlib import Path
+from typing import Any
 
 from esquema import Documento
 from proceso import competencia, declaraciones, incidentes, rectificaciones, titulares
 from proceso.estados import Estado
+from proceso.noticias import normalizar
+
+CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
+# Los datos que una revisión a mano puede fijar, con su cita («datos»).
+CAMPOS_REVISABLES = ("objetivo", "lugar", "inicio", "drones", "cierre", "titulo")
+# Una cárcel es una instalación de categoría «otra» (docs/control_fichas.md).
+_CARCEL = re.compile(
+    r"\b(?:centro penitenciario|prisi[oó]n|c[aá]rcel|prison|penitenciar|zak[lł]ad karny|"
+    r"wi[eę]zienie|justizvollzugsanstalt|jva|f[aä]ngelse|vankila|v[aä]ngelse|gevangenis)",
+    re.IGNORECASE,
+)
 
 # Las fuentes de una revisión a mano (configuracion/incidentes_revisados.json): mandan.
 REVISADA = "revisada-"
@@ -179,11 +198,183 @@ def decidir_presencia(
     return Decision("no_confirmada", None, "sin_autoridad")
 
 
+@cache
+def _revisiones_de_datos() -> dict[str, dict[str, Documento]]:
+    """{incidente: {dato: revisión}} de configuracion/incidentes_revisados.json, «datos»: el
+    valor correcto de un dato que la regla no puede sacar de las fuentes de la ficha, con la cita
+    de la fuente que lo dice y su enlace."""
+    from proceso import presencia
+
+    datos = json.loads(presencia.REVISADOS.read_text(encoding="utf-8"))
+    resultado: dict[str, dict[str, Documento]] = {}
+    for revision in datos.get("datos", []):
+        resultado.setdefault(str(revision["incidente"]), {})[str(revision["campo"])] = revision
+    return resultado
+
+
+def _revisiones(incidente: Documento) -> dict[str, Documento]:
+    """Las revisiones de datos de este incidente: las que citan una de sus fuentes o, si la fuente
+    leída no está en la ficha, las de su país (una ficha de prueba con el mismo identificador no
+    las toma)."""
+    enlaces = {f.get("enlace") for f in incidente.get("fuentes", [])}
+    pais = (incidente.get("lugar") or {}).get("pais")
+    return {
+        campo: revision
+        for campo, revision in _revisiones_de_datos().get(str(incidente.get("id")), {}).items()
+        if revision.get("enlace") in enlaces or revision.get("pais") == pais
+    }
+
+
+@cache
+def _nomenclator() -> dict[tuple[str, str], Documento]:
+    """{(país, nombre normalizado): instalación} de los aeropuertos, bases e instalaciones del
+    nomenclátor; con el mismo alias en un país, la del nomenclátor inicial (lugares_europa.json)."""
+    indice: dict[tuple[str, str], Documento] = {}
+    for fichero in ("lugares_europa.json", "instalaciones_europa.json"):
+        lugares = json.loads((CONFIGURACION / fichero).read_text(encoding="utf-8"))["lugares"]
+        for lugar in lugares.values():
+            for alias in {lugar["nombre"], *lugar.get("alias", [])}:
+                indice.setdefault((str(lugar.get("pais")), normalizar(alias)), lugar)
+    return indice
+
+
+def instalacion_del_nomenclator(objetivo: Documento, pais: str | None) -> Documento | None:
+    """La instalación del nomenclátor que nombra el objetivo en su país, si la hay: la de ese
+    nombre o, si no, la única con OACI cuyo nombre lo contiene («Schiphol», Luchthaven
+    Schiphol)."""
+    nombre = normalizar(str(objetivo.get("nombre") or ""))
+    if not nombre:
+        return None
+    if (exacta := _nomenclator().get((str(pais), nombre))) is not None:
+        return exacta
+    patron = re.compile(rf"(?<!\w){re.escape(nombre)}(?!\w)")
+    candidatas = {
+        lugar["oaci"]: lugar
+        for (p, alias), lugar in _nomenclator().items()
+        if p == str(pais) and lugar.get("oaci") and patron.search(alias)
+    }
+    return next(iter(candidatas.values())) if len(candidatas) == 1 else None
+
+
+def decidir_objetivo(incidente: Documento) -> Documento | None:
+    """La instalación afectada: la revisión a mano con su cita; la que nombran el titular y las
+    fuentes si la ficha no tiene una (proceso/objetivo_del_titular.py); si no, la de la ficha con el
+    OACI de la instalación del nomenclátor que su nombre nombra (el nombre es uno de los suyos:
+    la cabecera lo escribe en cada idioma con proceso/nombres_lugar.py); con OACI, la categoría es
+    «aeropuerto» (también una base aérea: Kleine-Brogel, EBBL); una cárcel es «otra»."""
+    revision = _revisiones(incidente).get("objetivo")
+    if revision is not None:
+        # Sin OACI, sin la clave (el esquema no admite un OACI nulo).
+        valor = revision["valor"]
+        return None if valor is None else {k: v for k, v in valor.items() if v is not None}
+    objetivo = incidente.get("objetivo")
+    if not objetivo or objetivo.get("categoria") in (None, "otra"):
+        # La instalación que nombran el titular y las fuentes y la ficha no reconoció.
+        from proceso import objetivo_del_titular
+
+        if (nombrado := objetivo_del_titular.objetivo_nombrado(incidente)) is not None:
+            return nombrado
+    if not objetivo or not objetivo.get("nombre"):
+        return copy.deepcopy(objetivo)
+    nuevo = dict(objetivo)
+    if es_carcel(objetivo):
+        nuevo["categoria"] = "otra"
+    elif objetivo.get("categoria") in ("aeropuerto", "base_militar"):
+        lugar = instalacion_del_nomenclator(objetivo, (incidente.get("lugar") or {}).get("pais"))
+        if lugar is not None and lugar.get("oaci"):
+            nuevo.update(categoria="aeropuerto", oaci=lugar["oaci"])
+    return nuevo
+
+
+def decidir_drones(incidente: Documento) -> Any:
+    """El número de drones: la revisión a mano con su cita; si no, «desconocido» cuando la
+    autoridad concluye que no era un dron (presencia descartada); si no, el de la ficha. «Al menos
+    N» (mínimo sin máximo) espera al esquema que lo admita: el 1.20.0 exige el máximo."""
+    revision = _revisiones(incidente).get("drones")
+    if revision is not None:
+        return copy.deepcopy(revision["valor"])
+    numero = (incidente.get("drones") or {}).get("numero", "desconocido")
+    if incidente.get("presencia_dron") == rectificaciones.DESCARTADA:
+        return "desconocido"
+    return copy.deepcopy(numero)
+
+
+def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None:
+    valor = copy.deepcopy(revision["valor"])
+    if campo == "lugar":
+        # La localidad del suceso que dice la fuente (no la instalación, la provincia ni el
+        # destino del avión); en el mar, sin localidad ni nombre del sitio.
+        quitar = {"localidad"} if valor is not None else {"localidad", "suceso"}
+        lugar = {k: v for k, v in resultado.get("lugar", {}).items() if k not in quitar}
+        if valor is not None:
+            lugar.update(valor)
+        resultado["lugar"] = lugar
+    elif campo == "inicio":
+        # El día del suceso en UTC que dice la fuente (no el de la publicación ni el día local).
+        inicio = valor if isinstance(valor, dict) else {"valor": f"{valor}T00:00Z",
+                                                        "precision": "dia"}  # fmt: skip
+        if (resultado.get("tiempo") or {}).get("inicio") != inicio:
+            origen = {"tipo": "explicita", "motivo": str(revision["motivo"])[:200]}
+            resultado["tiempo"] = {"inicio": inicio, "origen_inicio": origen}
+    elif campo == "cierre":
+        resultado["consecuencias"] = {**resultado.get("consecuencias", {}),
+                                      "cierre": {"valor": valor}}  # fmt: skip
+    elif campo == "titulo":
+        resultado["titulo"] = valor
+
+
+def decidir_datos(incidente: Documento) -> Documento:
+    """El incidente con el objetivo, el lugar, el inicio, el número de drones, el cierre y el
+    titular que deciden sus fuentes y sus revisiones a mano. Sin cambios si ya los
+    tenía. Si cambia la instalación o el lugar, los nombres publicados se vuelven a calcular."""
+    resultado = copy.deepcopy(incidente)
+    revisiones = _revisiones(incidente)
+    for campo in ("lugar", "inicio", "cierre", "titulo"):
+        if campo in revisiones:
+            _con_revision(resultado, campo, revisiones[campo])
+    if "lugar" not in revisiones:
+        # Con homónimos, la localidad que dice la fuente (su municipio): Józefów de Nieporęt.
+        from proceso import noticias, ubicacion
+
+        homonimo = ubicacion.lugar_del_homonimo(resultado, noticias.nomenclator())
+        if homonimo is not None:
+            resultado["lugar"] = {"localidad": homonimo.get("suceso"), **homonimo}
+    objetivo = decidir_objetivo(resultado)
+    if objetivo:
+        resultado["objetivo"] = objetivo
+    else:
+        resultado.pop("objetivo", None)
+    if "drones" in resultado or "drones" in revisiones:
+        resultado["drones"] = {**resultado.get("drones", {}), "numero": decidir_drones(resultado)}
+    if resultado == incidente:
+        return incidente
+    if "nombres" in resultado and any(
+        resultado.get(c) != incidente.get(c) for c in ("objetivo", "lugar", "titulo")
+    ):
+        # Una ficha ya publicada (las copias de la referencia): los nombres de lo que cambia.
+        from proceso import nombres_lugar
+
+        nombres = resultado.pop("nombres")
+        nuevos = nombres_lugar.nombres_publicos(resultado)
+        if resultado.get("objetivo") != incidente.get("objetivo"):
+            nombres["objetivo"] = nuevos.get("objetivo")
+            nombres["localidad"] = nuevos.get("localidad") or nombres.get("localidad")
+        if resultado.get("lugar") != incidente.get("lugar"):
+            nombres["localidad"] = nuevos.get("localidad")
+        resultado["nombres"] = {k: v for k, v in nombres.items() if v is not None}
+    return resultado
+
+
+def es_carcel(objetivo: Documento | None) -> bool:
+    return bool(_CARCEL.search(str((objetivo or {}).get("nombre") or "")))
+
+
 def aplicar(
     incidente: Documento, negadas: frozenset[str] = frozenset(), confirmada: bool = False
 ) -> Documento:
-    """El incidente con el estado y la presencia que deciden sus pruebas, y el titular coherente
-    con la presencia (proceso/titulares.py). Sin cambios si ya los tenía."""
+    """El incidente con el estado, la presencia y los demás datos que deciden sus pruebas, y el
+    titular coherente con la presencia (proceso/titulares.py). Sin cambios si ya los tenía."""
+    incidente = decidir_datos(incidente)
     resultado = _historial_vigente(incidente)
     estado = decidir_estado(resultado)
     if resultado is incidente and estado.valor == incidente["estado"]["actual"]:
@@ -204,6 +395,13 @@ def aplicar(
         resultado = titulares.ajustar_incidente(
             {**copy.deepcopy(resultado), "presencia_dron": presencia.valor}
         )
+    # El tipo, con el estado ya decidido (la atribución demuestra la entrada).
+    tipo = incidentes.con_tipo(copy.deepcopy(resultado))
+    if (tipo.get("tipo"), tipo.get("origen_demostrado_por")) != (
+        resultado.get("tipo"),
+        resultado.get("origen_demostrado_por"),
+    ):
+        resultado = tipo
     return resultado
 
 

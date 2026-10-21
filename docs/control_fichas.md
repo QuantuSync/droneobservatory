@@ -285,10 +285,9 @@ una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales
   Bulgaria», «mar Negro») o «mar», a nivel de región y sin punto (`incidentes.lugar_sin_buque`, al
   construir la ficha y en las reglas deterministas del control). El extractor y la verificación lo
   saben (`modelo/ficha.py`, `modelo/control.py`).
-- **Un buque alcanzado por un dron en el mar no es un sobrevuelo**: impacto, explosión, ataque o
-  restos a bordo en el mar son el dron de un ataque que llegó desde el mar; el tipo es
-  «incursión», como los buques del 13 de octubre (EODI-2026-00512), con las pruebas físicas que
-  den las fuentes (`incidentes.aplicar_reglas`, `alcanzado_en_el_mar`).
+- **Un buque alcanzado por un dron en el mar** es «sobrevuelo» salvo que una autoridad diga que
+  estaba en aguas del país (desde el 21 de octubre de 2026; antes era «incursión», como los
+  buques del 13 de octubre, EODI-2026-00512): el tipo lo decide `incidentes.con_tipo`.
 - **Frontera o interior en el mar**: un suceso en el mar de un país con costa en el mar Negro es
   de la costa del mar Negro (`zona.clasificar`, motivo `costa_mar_negro`), nunca «interior»;
   con un punto en tierra (el puerto de Constanza, Sulina) manda el punto.
@@ -391,6 +390,32 @@ pruebas (fuentes, frases, pasos del historial, afirmaciones, rectificaciones) y 
 antes del guardado no es lo que queda. Las revisiones a mano entran como una fuente más
 (`revisada-…`) con prioridad. La referencia pasa sus copias por la misma decisión, por eso las
 copias guardan lo que cada fuente afirma de la presencia.
+
+### Un solo sitio decide también los demás datos (desde el 21 de octubre de 2026)
+
+`decidir.aplicar` decide además, en cada guardado, el objetivo, el lugar, el inicio, el número de
+drones, el cierre y el titular (`decidir_datos`) y, con el estado ya decidido, el tipo
+(`incidentes.con_tipo`); la cabecera sale de ellos (`auditoria_fichas.cabecera`). Los demás pasos
+siguen escribiendo en memoria, pero lo que queda al guardar es lo que deciden estas reglas:
+
+- **objetivo** (`decidir_objetivo`): la revisión a mano; si la ficha no tiene instalación (o es
+  «otra»), la que nombran el titular y las fuentes, una sola del nomenclátor, del país y cerca del
+  punto (`proceso/objetivo_del_titular.py`); si no, la de la ficha con el OACI de la instalación
+  del nomenclátor que su nombre nombra (con OACI, categoría «aeropuerto», también una base aérea).
+  Una cárcel es «otra». Sin OACI no va la clave (el esquema no admite un OACI nulo).
+- **lugar**: la revisión a mano; con homónimos, la localidad que dice la fuente por su municipio
+  («Józefów w gminie Nieporęt», `ubicacion.lugar_del_homonimo`).
+- **drones** (`decidir_drones`): la revisión a mano; «desconocido» si la autoridad concluye que no
+  era un dron (presencia descartada). «Al menos N» espera al esquema que admita un rango sin
+  máximo (el 1.20.0 exige el máximo).
+- **tipo** (`incidentes.con_tipo`): interrupción si se interrumpió un aeropuerto; incursión solo
+  si la autoridad lo atribuye, o cuenta el espacio aéreo violado, la frontera cruzada, el rastreo,
+  el derribo, la caída o los restos con el suceso confirmado, o hay pruebas físicas con el suceso
+  confirmado; en el mar, solo si lo atribuye. Si no, sobrevuelo.
+- **revisiones a mano** (`configuracion/incidentes_revisados.json`, «datos»): una por ficha y dato
+  (`objetivo`, `lugar`, `inicio`, `drones`, `cierre`, `titulo`), con el valor, la cita (25
+  palabras como mucho) y el enlace de la fuente que lo dice, y el motivo. Valen para la ficha que
+  tiene esa fuente o, si la fuente leída no está en la ficha, la de su país (`pais`).
 
 ### Criterios de cada dato (desde el 21 de octubre de 2026)
 

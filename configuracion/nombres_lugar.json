@@ -812,6 +812,46 @@
     }
   },
   "aeropuertos": {
+    "ETNG": {
+      "base": {
+        "es": "Base aérea de la OTAN en Geilenkirchen",
+        "en": "NATO Air Base Geilenkirchen"
+      },
+      "ciudad": {
+        "es": "Geilenkirchen",
+        "en": "Geilenkirchen"
+      }
+    },
+    "EBBL": {
+      "base": {
+        "es": "Base aérea de Kleine-Brogel",
+        "en": "Kleine-Brogel Air Base"
+      },
+      "ciudad": {
+        "es": "Kleine-Brogel",
+        "en": "Kleine-Brogel"
+      }
+    },
+    "GCLP": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Gran Canaria",
+        "en": "Gran Canaria Airport"
+      },
+      "ciudad": {
+        "es": "Gran Canaria",
+        "en": "Gran Canaria"
+      }
+    },
+    "EHAM": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Ámsterdam-Schiphol",
+        "en": "Amsterdam Airport Schiphol"
+      },
+      "ciudad": {
+        "es": "Ámsterdam",
+        "en": "Amsterdam"
+      }
+    },
     "EKKA": {
       "aeropuerto": {
         "es": "Aeropuerto de Karup",
@@ -1479,6 +1519,7 @@
       "en": "Alexandroupolis",
       "formas": [
         "Alexandroupoli",
+        "Alexandrópolis",
         "Αλεξανδρούπολη"
       ]
     },
@@ -1664,6 +1705,12 @@
       "pais": "ES",
       "es": "Sevilla",
       "en": "Seville",
+      "formas": []
+    },
+    {
+      "pais": "ES",
+      "es": "Abrera",
+      "en": "Abrera",
       "formas": []
     },
     {
@@ -1970,6 +2017,46 @@
     }
   ],
   "textos": {
+    "Eemshaven": {
+      "es": "Puerto de Eemshaven",
+      "en": "Port of Eemshaven",
+      "sitio": {"es": "Eemshaven", "en": "Eemshaven"}
+    },
+    "Karlskrona Örlogsbas": {
+      "es": "Base naval de Karlskrona",
+      "en": "Karlskrona Naval Base",
+      "sitio": {"es": "Karlskrona", "en": "Karlskrona"}
+    },
+    "Auvere elektrijaam": {
+      "es": "Central eléctrica de Auvere",
+      "en": "Auvere Power Plant",
+      "sitio": {"es": "Auvere", "en": "Auvere"}
+    },
+    "Bundeswehrstandort Mechernich": {
+      "es": "Base de la Bundeswehr en Mechernich",
+      "en": "Mechernich Bundeswehr base",
+      "sitio": {"es": "Mechernich", "en": "Mechernich"}
+    },
+    "Base navale de Cherbourg": {
+      "es": "Base naval de Cherburgo",
+      "en": "Cherbourg Naval Base",
+      "sitio": {"es": "Cherburgo", "en": "Cherbourg"}
+    },
+    "Køge Havn": {
+      "es": "Puerto de Køge",
+      "en": "Port of Køge",
+      "sitio": {"es": "Køge", "en": "Køge"}
+    },
+    "Camp Elsenborn": {
+      "es": "Campamento militar de Elsenborn",
+      "en": "Elsenborn military camp",
+      "sitio": {"es": "Elsenborn", "en": "Elsenborn"}
+    },
+    "Base militaire de Marche-en-Famenne": {
+      "es": "Base militar de Marche-en-Famenne",
+      "en": "Marche-en-Famenne military base",
+      "sitio": {"es": "Marche-en-Famenne", "en": "Marche-en-Famenne"}
+    },
     "RAF Akrotiri": {
       "es": "RAF Akrotiri",
       "en": "RAF Akrotiri"
@@ -2135,8 +2222,8 @@
       }
     },
     "Flyvestation Aalborg": {
-      "es": "Base aérea de Aalborg",
-      "en": "Aalborg Air Base",
+      "es": "Aeropuerto de Aalborg",
+      "en": "Aalborg Airport",
       "sitio": {
         "es": "Aalborg",
         "en": "Aalborg"

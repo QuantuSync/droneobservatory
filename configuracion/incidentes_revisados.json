@@ -8278,5 +8278,591 @@
         }
       ]
     }
+  ],
+  "datos": [
+    {
+      "incidente": "EODI-2025-00238",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "aeropuerto",
+        "nombre": "Flyvestation Aalborg",
+        "oaci": "EKYT"
+      },
+      "cita": "Luftrummet over Aalborg Lufthavn var lukket i en time omkring midnat p\u00e5 grund af mistanke om droner.",
+      "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314",
+      "motivo": "la polic\u00eda cierra el espacio a\u00e9reo sobre Flyvestation Aalborg (EKYT); la ficha no reconoci\u00f3 la instalaci\u00f3n"
+    },
+    {
+      "incidente": "EODI-2026-00488",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+      "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097",
+      "motivo": "el suceso es sobre la frontera del Danubio, al norte y este del condado de Tulcea; de Mihail Kog\u0103lniceanu solo despegaron los cazas"
+    },
+    {
+      "incidente": "EODI-2026-00152",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "puerto",
+        "nombre": "Portul Constan\u021ba",
+        "oaci": null
+      },
+      "cita": "\u00een Dana 78, \u00een Portul Constan\u021ba, a fost observat un obiect plutitor, posibil dron\u0103",
+      "enlace": "https://digi24.ro/stiri/actualitate/o-drona-marina-a-explodat-in-portul-constanta-zona-este-izolata-autoritatile-se-afla-la-fata-locului-3801477",
+      "motivo": "el dron explot\u00f3 en el puerto de Constanza; la ficha no reconoci\u00f3 la instalaci\u00f3n"
+    },
+    {
+      "incidente": "EODI-2025-00225",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "aeropuerto",
+        "nombre": "NATO Air Base Geilenkirchen",
+        "oaci": "ETNG"
+      },
+      "cita": "Wegen einer angeblichen Drohnensichtung ist die Polizei am Mittwochabend zum Nato-Luftwaffenst\u00fctzpunkt Geilenkirchen bei Aachen ausger\u00fcckt.",
+      "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html",
+      "motivo": "el aviso es en la base a\u00e9rea de la OTAN en Geilenkirchen (ETNG); la ficha no reconoci\u00f3 la instalaci\u00f3n"
+    },
+    {
+      "incidente": "EODI-2025-00378",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "informa popula\u021bia din zona de Nord a jude\u021bului Tulcea despre posibilitatea c\u0103derii unor obiecte din spa\u021biul aerian, \u00een zona de grani\u021b\u0103",
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
+      "motivo": "de la base 86 de Borcea solo despegaron los F-16; los drones estaban junto al norte de Tulcea"
+    },
+    {
+      "incidente": "EODI-2025-00395",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "O dron\u0103 ucrainean\u0103, ajuns\u0103 \u00een deriv\u0103 \u00een zona portului Constan\u021ba, a fost neutralizat\u0103 \u00een larg, de scafandrii militari.",
+      "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+      "motivo": "la \u00fanica fuente habla de un dron detonado cerca del puerto, sin decir que lo alcanzara"
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "aeropuerto",
+        "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c - \u0421\u043e\u0444\u0438\u044f",
+        "oaci": "LBSF"
+      },
+      "cita": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434 \u0437\u0430\u0440\u0430\u0434\u0438 \u0437\u0430\u0441\u0435\u0447\u0435\u043d \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e.",
+      "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+      "motivo": "es el aeropuerto Vasil Levski de Sof\u00eda (LBSF), no el estadio del mismo nombre"
+    },
+    {
+      "incidente": "EODI-2026-00277",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "a fost identificat un obiect zbur\u0103tor pr\u0103bu\u0219it, \u00een zona localit\u0103\u021bii Boto\u0219eni\u021ba Mare, jude\u021bul Suceava, \u00eentr-un lan de porumb.",
+      "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+      "motivo": "el dron cay\u00f3 en un maizal: no hay instalaci\u00f3n afectada"
+    },
+    {
+      "incidente": "EODI-2026-00316",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "ha ocurrido las 10:13 de esta ma\u00f1ana sobre las aguas territoriales rumanas de Sulina por un avi\u00f3n F-16 de la Fuerza A\u00e9rea Rumana",
+      "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html",
+      "motivo": "Sulina es la localidad, no una instalaci\u00f3n"
+    },
+    {
+      "incidente": "EODI-2026-00488",
+      "campo": "lugar",
+      "valor": null,
+      "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+      "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097",
+      "motivo": "el suceso es sobre la frontera del Danubio en el condado de Tulcea, no en Constanza"
+    },
+    {
+      "incidente": "EODI-2026-00512",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Byala"
+      },
+      "cita": "\u0435 \u0431\u0438\u043b \u043f\u043e\u0440\u0430\u0437\u0435\u043d \u043d\u0430 \u043e\u043a\u043e\u043b\u043e 17 \u043c\u043e\u0440\u0441\u043a\u0438 \u043c\u0438\u043b\u0438 \u043e\u0442 \u0431\u0440\u0435\u0433\u0430 \u0441\u0440\u0435\u0449\u0443 \u0411\u044f\u043b\u0430, \u043e\u0431\u043b\u0430\u0441\u0442 \u0412\u0430\u0440\u043d\u0430.",
+      "enlace": "https://segabg.com/hot/category-bulgaria/dronove-udariha-korabi-kray-byala-i-krapec",
+      "motivo": "la se\u00f1al de socorro lleg\u00f3 a 18 millas al este de Byala"
+    },
+    {
+      "incidente": "EODI-2026-00238",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Rachelu"
+      },
+      "cita": "Opera\u021biunea a avut loc \u00een zona localit\u0103\u021bii Rachelu, comuna Luncavi\u021ba, acolo unde un localnic a alertat autorit\u0103\u021bile prin 112 dup\u0103 ce a g\u0103sit fragmentele aparatului.",
+      "enlace": "https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-incarcatura-exploziva-descoperita-in-tulcea-3840077",
+      "motivo": "los fragmentos del dron estaban en la zona de Rachelu (Tulcea)"
+    },
+    {
+      "incidente": "EODI-2026-00245",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "\u00d6resund"
+      },
+      "cita": "Under bes\u00f6ket av det franska hangarfartyget Charles de Gaulle observerade ett av F\u00f6rsvarsmaktens fartyg att en dr\u00f6nare lyfte fr\u00e5n ett ryskt signalspaningsfartyg i \u00d6resund.",
+      "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/",
+      "motivo": "en el mar: el estrecho de \u00d6resund, no Malm\u00f6, puerto de escala del portaaviones"
+    },
+    {
+      "incidente": "EODI-2025-00225",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Geilenkirchen"
+      },
+      "cita": "Wegen einer angeblichen Drohnensichtung ist die Polizei am Mittwochabend zum Nato-Luftwaffenst\u00fctzpunkt Geilenkirchen bei Aachen ausger\u00fcckt.",
+      "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html",
+      "motivo": "la base a\u00e9rea est\u00e1 en Geilenkirchen"
+    },
+    {
+      "incidente": "EODI-2026-00268",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Akrotiri"
+      },
+      "cita": "the British Akrotiri air force base was struck by a drone at around midnight, government spokesman Konstantinos Letymbiotis said on Monday.",
+      "enlace": "https://cyprus-mail.com/2026/03/02/govt-monitoring-situation-after-akrotiri-drone-strike",
+      "motivo": "la localidad (pen\u00ednsula) de Akrotiri, no el nombre de la instalaci\u00f3n",
+      "pais": "GB"
+    },
+    {
+      "incidente": "EODI-2025-00398",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Alcal\u00e1 de Guada\u00edra"
+      },
+      "cita": "se dirige hacia la prisi\u00f3n de Sevilla I, en Alcal\u00e1 de Guada\u00edra",
+      "enlace": "https://abc.es/sevilla/provincia/alcala-de-guadaira/dron-sobrevuela-cuela-celdas-carcel-alcala-guadaira-20251009143752-nts.html",
+      "motivo": "la prisi\u00f3n de Sevilla I est\u00e1 en Alcal\u00e1 de Guada\u00edra, seg\u00fan la propia fuente"
+    },
+    {
+      "incidente": "EODI-2026-00091",
+      "campo": "lugar",
+      "valor": null,
+      "cita": "Interven\u021bia a avut loc \u00een jurul orei 09.30, la aproximativ 50 de mile marine est de Chituc.",
+      "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+      "motivo": "el suceso es en el mar, a unas 50 millas al este del Grindul Chituc; Grindu es un municipio de Ialomi\u021ba tierra adentro"
+    },
+    {
+      "incidente": "EODI-2025-00071",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Gardermoen"
+      },
+      "cita": "Droneflygingen p\u00e5 Gardermoen gjorde at flytrafikken ble stengt en periode.",
+      "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363",
+      "motivo": "la fuente nombra Gardermoen; \u00abOslo lufthavn\u00bb es el nombre del aeropuerto"
+    },
+    {
+      "incidente": "EODI-2026-00277",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Boto\u0219eni\u021ba Mare"
+      },
+      "cita": "Drona s-a pr\u0103bu\u0219it \u00eentr-un lan de porumb din zona localit\u0103\u021bii Boto\u0219eni\u021ba Mare din jude\u021bul Suceava.",
+      "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+      "motivo": "el dron cay\u00f3 en Boto\u0219eni\u021ba Mare (Suceava), no en la ciudad de Suceava"
+    },
+    {
+      "incidente": "EODI-2026-00278",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "costa de Wicklow"
+      },
+      "cita": "which would put it somewhere off the Co Wicklow coast.",
+      "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
+      "motivo": "sobre el mar frente a la costa de Wicklow; Dubl\u00edn es el destino del avi\u00f3n"
+    },
+    {
+      "incidente": "EODI-2025-00124",
+      "campo": "inicio",
+      "valor": "2025-02-07",
+      "cita": "\u0412\u044a\u0432 \u0432\u0440\u044a\u0437\u043a\u0430 \u0441 \u0438\u0437\u0432\u044a\u043d\u0440\u0435\u0434\u043d\u0430\u0442\u0430 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044f \u043e\u0442 \u043f\u0435\u0442\u044a\u043a \u0432\u0435\u0447\u0435\u0440, \u043a\u043e\u0433\u0430\u0442\u043e \u043d\u0435\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u0430\u043d \u0434\u0440\u043e\u043d \u043d\u0430\u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \u0438 \u0431\u043b\u043e\u043a\u0438\u0440\u0430 \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0442\u0440\u0430\u0444\u0438\u043a\u0430",
+      "enlace": "https://standartnews.com/balgariya-obshtestvo/shefat-na-letishte-sofiya-s-posledni-novini-za-trevogata-s-drona-narushitel-587945.html",
+      "motivo": "el viernes por la noche (7 de febrero de 2025); las noticias son del 12"
+    },
+    {
+      "incidente": "EODI-2026-00488",
+      "campo": "inicio",
+      "valor": "2026-10-05",
+      "cita": "El mensaje fue enviado a las 02:20 horas, mientras los cazas espa\u00f1oles realizaban la misi\u00f3n de reconocimiento y seguimiento",
+      "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097",
+      "motivo": "el mensaje se envi\u00f3 a las 02:20 hora de Ruman\u00eda del 6 (23:20 UTC del 5)"
+    },
+    {
+      "incidente": "EODI-2026-00512",
+      "campo": "inicio",
+      "valor": "2026-10-12",
+      "cita": "\u041f\u043e \u0434\u0443\u043c\u0438\u0442\u0435 \u043c\u0443 \u0432 01:30 \u0447\u0430\u0441\u0430 \u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0431\u0435\u0434\u0441\u0442\u0432\u0430\u0449 \u043a\u043e\u0440\u0430\u0431 \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u0411\u044f\u043b\u0430.",
+      "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets",
+      "motivo": "la se\u00f1al de socorro lleg\u00f3 a las 01:30 hora b\u00falgara del 13 (22:30 UTC del 12)"
+    },
+    {
+      "incidente": "EODI-2025-00001",
+      "campo": "inicio",
+      "valor": "2025-12-26",
+      "cita": "Die Drohnen sind am Abend des zweiten Weihnachtsfeiertages in der N\u00e4he des Flughafens gesichtet worden",
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html",
+      "motivo": "la tarde del segundo d\u00eda de Navidad, 26 de diciembre de 2025; la ficha ten\u00eda el d\u00eda de la noticia"
+    },
+    {
+      "incidente": "EODI-2026-00238",
+      "campo": "inicio",
+      "valor": "2026-06-29",
+      "cita": "Potrivit MApN, ministerul a fost informat luni, 29 iunie, despre existen\u021ba unor fragmente de dron\u0103 \u00een zona localit\u0103\u021bii Rachelu",
+      "enlace": "https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-incarcatura-exploziva-descoperita-in-tulcea-3840077",
+      "motivo": "el MApN fue informado el lunes 29 de junio de los fragmentos"
+    },
+    {
+      "incidente": "EODI-2026-00134",
+      "campo": "inicio",
+      "valor": "2026-08-04",
+      "cita": "dass am Abend des 4. August 2026 auf dem Gel\u00e4nde des Flughafens Leipzig/Halle mittels einer Drohne eine Explosion verursacht werden sollte.",
+      "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html",
+      "motivo": "la Fiscal\u00eda Federal: la tarde del 4 de agosto de 2026"
+    },
+    {
+      "incidente": "EODI-2025-00080",
+      "campo": "inicio",
+      "valor": "2025-11-02",
+      "cita": "\u010cetiri drona vi\u0111ena su u nedjelju nave\u010der iznad belgijske vojne zra\u010dne baze Kleine-Brogel",
+      "enlace": "https://24sata.hr/news/jos-dronova-iznad-belgijske-zracne-baze-koju-koristi-nato-1085331",
+      "motivo": "los drones se vieron la noche del domingo 2 de noviembre de 2025"
+    },
+    {
+      "incidente": "EODI-2026-00268",
+      "campo": "inicio",
+      "valor": "2026-03-01",
+      "cita": "A Shahed-type unmanned aerial vehicle reportedly struck the British base\u2019s runway a few minutes past midnight on March 2",
+      "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri",
+      "motivo": "pocos minutos despu\u00e9s de la medianoche del 2 de marzo en Chipre (UTC+2): 1 de marzo en UTC"
+    },
+    {
+      "incidente": "EODI-2026-00091",
+      "campo": "inicio",
+      "valor": "2026-09-19",
+      "cita": "Ministerul Ap\u0103r\u0103rii Na\u021bionale fusese solicitat s\u00e2mb\u0103t\u0103, 19 septembrie, de Garda de Coast\u0103 s\u0103 verifice obiectul",
+      "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+      "motivo": "el suceso es del 19 de septiembre de 2026"
+    },
+    {
+      "incidente": "EODI-2026-00316",
+      "campo": "inicio",
+      "valor": "2026-07-26",
+      "cita": "El presidente de Ruman\u00eda , Nicusor Dan, ha confirmado este domingo el derribo de un tercer avi\u00f3n no tripulado sobre el espacio a\u00e9reo del pa\u00eds",
+      "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html",
+      "motivo": "el derribo fue el domingo 26 de julio de 2026 a las 10:13 hora rumana"
+    },
+    {
+      "incidente": "EODI-2026-00152",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "au confirmat c\u0103 au pierdut controlul oper\u0103rii a patru drone. Celelalte trei drone s-au autodetonat \u2013 dou\u0103 \u00een larg \u0219i a treia \u00een afara portului.",
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html",
+      "motivo": "de las cuatro drones perdidas solo una lleg\u00f3 al puerto; las otras tres se autodetonaron fuera"
+    },
+    {
+      "incidente": "EODI-2026-00238",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u021bia Rus\u0103",
+      "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893",
+      "motivo": "los fragmentos son de un dron"
+    },
+    {
+      "incidente": "EODI-2026-00134",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 2
+      },
+      "cita": "Eine Frachtmaschine, die wegen des Vorfalls durchstarten musste, kollidierte im erweiterten Bereich des Flughafens in der Luft mit einem Gegenstand, mutma\u00dflich einer weiteren Drohne.",
+      "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html",
+      "motivo": "un dron seguro y el objeto contra el que choc\u00f3 el avi\u00f3n, presuntamente otro: entre 1 y 2"
+    },
+    {
+      "incidente": "EODI-2025-00042",
+      "campo": "drones",
+      "valor": "desconocido",
+      "cita": "sin fuente",
+      "enlace": null,
+      "motivo": "ninguna fuente da un n\u00famero; el \u00ab2 a 10\u00bb es el \u00abvarios\u00bb del extractor",
+      "pais": "NO"
+    },
+    {
+      "incidente": "EODI-2025-00233",
+      "campo": "drones",
+      "valor": {
+        "min": 11,
+        "max": 19
+      },
+      "cita": "Polskie i sojusznicze systemy radiolokacyjne \u015bledzi\u0142y kilkana\u015bcie obiekt\u00f3w, kt\u00f3re naruszy\u0142y przestrze\u0144 powietrzn\u0105.",
+      "enlace": "https://www.gov.pl/web/premier/Komunikat-MON",
+      "motivo": "\u00abkilkana\u015bcie\u00bb del MON: entre 11 y 19; las 19 violaciones de Tusk no son drones",
+      "pais": "PL"
+    },
+    {
+      "incidente": "EODI-2026-00488",
+      "campo": "titulo",
+      "valor": {
+        "es": "Alerta por dos drones junto a la frontera de Rumania en el condado de Tulcea",
+        "en": "Alert over two drones near Romania's border in Tulcea county"
+      },
+      "cita": "activ\u00f3 el sistema RO-Alert en las zonas norte y este del condado de Tulcea",
+      "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097",
+      "motivo": "la alerta RO-Alert fue en el norte y el este del condado de Tulcea"
+    },
+    {
+      "incidente": "EODI-2025-00378",
+      "campo": "titulo",
+      "valor": {
+        "es": "Drones rusos cerca de la frontera en Tulcea: dos F-16 despegan de la base de Borcea",
+        "en": "Russian drones near the border in Tulcea: two F-16s take off from Borcea air base"
+      },
+      "cita": "Nou atac cu drone, l\u00e2ng\u0103 frontiera cu Rom\u00e2nia. Dou\u0103 aeronave F-16 au decolat din Baza Aerian\u0103 de la Borcea",
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
+      "motivo": "de Borcea solo despegaron los F-16; los drones estaban junto al norte de Tulcea"
+    },
+    {
+      "incidente": "EODI-2025-00395",
+      "campo": "titulo",
+      "valor": {
+        "es": "Posible dron detonado cerca del Puerto de Constanza",
+        "en": "Possible drone detonated near the Port of Constan\u021ba"
+      },
+      "cita": "Dron\u0103 ucrainean\u0103, detonat\u0103 l\u00e2ng\u0103 Portul Constan\u021ba. Incidentul ar fi fost \u021binut secret",
+      "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+      "motivo": "la \u00fanica fuente habla de un posible dron detonado cerca del puerto"
+    },
+    {
+      "incidente": "EODI-2026-00334",
+      "campo": "titulo",
+      "valor": {
+        "es": "Posibles drones sobre la zona de la embajada estadounidense en Copenhague",
+        "en": "Possible drones over the US embassy area in Copenhagen"
+      },
+      "cita": "Nelle stesse ore i media hanno riferito di droni sopra l\u2019area dell\u2019ambasciata americana.",
+      "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato",
+      "motivo": "los posibles drones se vieron sobre la zona de la embajada; el cierre fue por un paquete sospechoso"
+    },
+    {
+      "incidente": "EODI-2025-00233",
+      "campo": "titulo",
+      "valor": {
+        "es": "Aeropuerto de Varsovia-Fr\u00e9d\u00e9ric Chopin",
+        "en": "Russian drones that entered Poland force the closure of Warsaw airport"
+      },
+      "cita": "Polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. W zwi\u0105zku z tym ruch nad Lotniskiem Chopina, Lotniskiem Modlin i okolicznymi regionami zosta\u0142 wstrzymany",
+      "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina",
+      "motivo": "el Gobierno polaco atribuye los drones a Rusia y el ej\u00e9rcito los derrib\u00f3"
+    },
+    {
+      "incidente": "EODI-2026-00277",
+      "campo": "titulo",
+      "valor": {
+        "es": "Dron que atraves\u00f3 Ucrania y Moldavia se estrella en Suceava, Ruman\u00eda",
+        "en": "Drone that crossed Ukraine and Moldova crashes in Suceava, Romania"
+      },
+      "cita": "O dron\u0103 care a traversat spa\u021biile aeriene ale Ucrainei \u0219i Republicii Moldova, \u00eendrept\u00e2ndu-se spre nord-estul Rom\u00e2niei, s-a pr\u0103bu\u0219it \u00eentr-un lan de porumb din jude\u021bul Suceava.",
+      "enlace": "https://protv.md/international/drona-care-a-traversat-spatiul-aerian-al-republicii-moldova-si-ucrainei-s-ar-fi-indreptat-spre-romania-un-aparat-de-zbor-s-a-prabusit-in-judetul-suceava---2767123.html",
+      "motivo": "el dron atraves\u00f3 Ucrania y Moldavia y cay\u00f3 en Suceava, Ruman\u00eda"
+    },
+    {
+      "incidente": "EODI-2026-00322",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "F\u00fcr rund 15 Minuten seien am Samstagabend keine Starts und Landungen m\u00f6glich gewesen, sagte ein Polizeisprecher.",
+      "enlace": "https://bild.de/news/inland/drohnenalarm-flugbetrieb-in-hamburg-kurz-unterbrochen-6a7798ea0e3689919ec7543f",
+      "motivo": "el aeropuerto de Hamburgo par\u00f3 los despegues y aterrizajes"
+    },
+    {
+      "incidente": "EODI-2025-00001",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Um kurz vor 21 Uhr sei der Luftraum \u00fcber dem Flughafen Hannover gesperrt worden - f\u00fcr dreieinhalb Stunden.",
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html",
+      "motivo": "el espacio a\u00e9reo del aeropuerto de Hannover se cerr\u00f3 unas 3,5 horas"
+    },
+    {
+      "incidente": "EODI-2026-00357",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "\u0424\u041e\u041a\u0423\u0421 \u043f\u0440\u0438\u043f\u043e\u043c\u043d\u044f, \u0447\u0435 \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0431\u0435\u0448\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d.",
+      "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828",
+      "motivo": "el aviso del s\u00e1bado cerr\u00f3 el aeropuerto de Sof\u00eda"
+    },
+    {
+      "incidente": "EODI-2025-00043",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Pamatojoties uz \u0161o inform\u0101ciju, \"Latvijas Gaisa satiksme\" pie\u0146\u0113musi l\u0113mumu uz aptuveni piec\u0101m min\u016bt\u0113m aiztur\u0113t lidojumus",
+      "enlace": "https://delfi.lv/193/politics/120092141/iespejama-drona-del-uz-bridi-aptureta-lidmasinu-satiksme-lidosta-riga-zino-raidijums",
+      "motivo": "el aeropuerto de Riga par\u00f3 los vuelos unos cinco minutos"
+    },
+    {
+      "incidente": "EODI-2025-00125",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "energia",
+        "nombre": "Kerncentrale Doel"
+      },
+      "cita": "Bewakers ontdekken drones boven kerncentrale Doel",
+      "enlace": "https://standaard.be/binnenland/bewakers-ontdekken-drones-boven-kerncentrale-doel-ook-vliegverkeer-luik-tijdlang-onderbroken/103837068.html",
+      "motivo": "la central nuclear de Doel (nombre del nomencl\u00e1tor, que la tiene con pa\u00eds NL por error); el objetivo \u00abDoel\u00bb era solo la localidad"
+    },
+    {
+      "incidente": "EODI-2026-00155",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "O dron\u0103 ce evolua la nord de Isaccea, detectat\u0103 de radare",
+      "enlace": "https://romania-actualitati.ro/stiri/romania/o-drona-ce-evolua-la-nord-de-isaccea-detectata-de-radare-id235061.html",
+      "motivo": "no hay instalaci\u00f3n: el dron se detect\u00f3 por radar al norte de Isaccea; \u00abIsaccea\u00bb (energ\u00eda) era la localidad"
+    },
+    {
+      "incidente": "EODI-2026-00181",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "A military training exercise near Hereford had to be abandoned when a drone came within 100ft of a plane.",
+      "enlace": "https://worcesternews.co.uk/news/26584538.drone-forces-a400m-atlas-crew-abandon-hereford-military-exercise",
+      "motivo": "la fuente habla de un ejercicio cerca de Hereford, no de la base; \u00abHereford\u00bb era la localidad"
+    },
+    {
+      "incidente": "EODI-2026-00181",
+      "campo": "titulo",
+      "valor": {
+        "es": "Un posible dron obliga a abandonar un ejercicio militar cerca de Hereford",
+        "en": "Possible drone forces abandonment of military exercise near Hereford"
+      },
+      "cita": "A military training exercise near Hereford had to be abandoned when a drone came within 100ft of a plane.",
+      "enlace": "https://worcesternews.co.uk/news/26584538.drone-forces-a400m-atlas-crew-abandon-hereford-military-exercise",
+      "motivo": "el ejercicio era cerca de Hereford, no en una base"
+    },
+    {
+      "incidente": "EODI-2026-00360",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "O dron\u0103 Shahed, filmat\u0103 cum zboar\u0103 deasupra ora\u0219ului B\u0103l\u021bi",
+      "enlace": "https://news.yam.md/ro/story/26723903",
+      "motivo": "no hay instalaci\u00f3n: el dron sobrevol\u00f3 la ciudad de B\u0103l\u021bi; \u00abB\u0103l\u0163i\u00bb (energ\u00eda) era la localidad"
+    },
+    {
+      "incidente": "EODI-2025-00211",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "base_militar",
+        "nombre": "Base militaire de Marche-en-Famenne"
+      },
+      "cita": "Minstens vier drones waargenomen boven legerbasis van Marche-en-Famenne.",
+      "enlace": "https://gva.be/binnenland/minstens-vier-drones-waargenomen-boven-legerbasis-van-marche-en-famenne/100884102.html",
+      "motivo": "la base militar de Marche-en-Famenne, que el nomencl\u00e1tor no tiene: nombre en franc\u00e9s, lengua oficial del lugar"
+    },
+    {
+      "incidente": "EODI-2025-00223",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "base_militar",
+        "nombre": "Base militaire de Marche-en-Famenne"
+      },
+      "cita": "Boven de militaire basis van Marche-en-Famenne zijn afgelopen nacht meerdere drones gespot.",
+      "enlace": "https://vrt.be/vrtnws/nl/2025/10/29/defensie-drones-boven-militaire-basis",
+      "motivo": "la base militar de Marche-en-Famenne, que el nomencl\u00e1tor no tiene: nombre en franc\u00e9s, lengua oficial del lugar"
+    },
+    {
+      "incidente": "EODI-2025-00232",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "aeropuerto",
+        "nombre": "Base a\u00e9rienne 110 Creil",
+        "oaci": "LFPC"
+      },
+      "cita": "La base militaire de Creil, qui abrite le renseignement militaire, survol\u00e9e par des drones fin novembre",
+      "enlace": "https://lanouvellerepublique.fr/a-la-une/la-base-militaire-de-creil-qui-abrite-le-renseignement-militaire-survolee-par-des-drones-fin-novembre-1765226030",
+      "motivo": "la base a\u00e9rea 110 de Creil, nombre \u00fanico del nomencl\u00e1tor y su OACI"
+    },
+    {
+      "incidente": "EODI-2026-00085",
+      "campo": "titulo",
+      "valor": {
+        "es": "Tres drones derribados sobre Ruman\u00eda en tres d\u00edas consecutivos",
+        "en": "Three drones shot down over Romania on three consecutive days"
+      },
+      "cita": "Trei drone au fost dobor\u00e2te, s\u0103pt\u0103m\u00e2na trecut\u0103, \u00een trei zile consecutive",
+      "enlace": "https://hotnews.ro/de-ce-nu-se-fac-publice-numele-pilotilor-care-au-doborat-dronele-intrate-in-spatiul-romaniei-explicatiile-venite-de-la-baza-aeriana-86-borcea-2311149",
+      "motivo": "los drones no se derribaron sobre la base de Borcea: de all\u00ed despegaron los F-16; los restos cayeron en Padina (Buz\u0103u)"
+    },
+    {
+      "incidente": "EODI-2026-00144",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "base_militar",
+        "nombre": "Bundeswehrstandort Mechernich"
+      },
+      "cita": "die Sicherheitszentrale des Bundeswehrstandortes Mechernich gemeldet",
+      "enlace": "https://focus.de/panorama/mechernich-zwei-drohnen-ueber-bundeswehr-stuetzpunkt-in-nrw-gesichtet_59511b77-4a58-4eeb-bf1a-79fc7882d4cd.html",
+      "motivo": "el acuartelamiento de la Bundeswehr en Mechernich, que el nomencl\u00e1tor no tiene: su nombre oficial en alem\u00e1n"
+    },
+    {
+      "incidente": "EODI-2025-00267",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "puerto",
+        "nombre": "K\u00f8ge Havn"
+      },
+      "cita": "Tajemnicze drony nad portem w Koge",
+      "enlace": "https://gazetaolsztynska.pl/1127337,Tajemnicze-drony-nad-portem-w-Koge-Dunska-policja-wszczela-sledztwo.html",
+      "motivo": "el puerto de K\u00f8ge, que el nomencl\u00e1tor no tiene: su nombre en dan\u00e9s"
+    },
+    {
+      "incidente": "EODI-2025-00287",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "base_militar",
+        "nombre": "Camp Elsenborn"
+      },
+      "cita": "Etwa f\u00fcnfzehn Drohnen wurden am Donnerstagabend \u00fcber dem Milit\u00e4rlager Elsenborn gesichtet.",
+      "enlace": "https://ostbelgiendirekt.be/drohnen-ueber-elsenborn-426133",
+      "motivo": "el campamento militar de Elsenborn (la fuente dice \u00abMilit\u00e4rlager\u00bb; el nomencl\u00e1tor solo tiene su aer\u00f3dromo, EBLB)"
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "energia",
+        "nombre": "Auvere elektrijaam"
+      },
+      "cita": "Estland: Drohne aus russischem Luftraum trifft Kraftwerk Auvere",
+      "enlace": "https://watson.ch/international/waffen/360055631-estland-drohne-aus-russischem-luftraum-trifft-kraftwerk-auvere",
+      "motivo": "la central de Auvere, nombre \u00fanico del nomencl\u00e1tor"
+    },
+    {
+      "incidente": "EODI-2026-00340",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "base_militar",
+        "nombre": "Base navale de Cherbourg"
+      },
+      "cita": "Un drone a survol\u00e9 le port militaire de Cherbourg-en-Cotentin sans autorisation, mercredi 18 mars.",
+      "enlace": "https://tendanceouest.com/actualite-437581-securite-un-drone-non-autorise-survole-le-port-militaire-de-cherbourg",
+      "motivo": "el puerto militar (base naval) de Cherburgo, que el nomencl\u00e1tor no tiene; \u00abCherbourg\u00bb (otra) era la localidad"
+    },
+    {
+      "incidente": "EODI-2025-00380",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "base_militar",
+        "nombre": "Karlskrona \u00d6rlogsbas"
+      },
+      "cita": "Suspected drones spotted near Karlskrona naval base",
+      "enlace": "https://sverigesradio.se/artikel/suspected-drones-spotted-near-karlskrona-naval-base",
+      "motivo": "la base naval de Karlskrona, nombre \u00fanico del nomencl\u00e1tor"
+    }
   ]
 }

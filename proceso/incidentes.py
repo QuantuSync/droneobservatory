@@ -28,6 +28,7 @@ import copy
 import hashlib
 import json
 import math
+import re
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
 from functools import cache
@@ -250,34 +251,82 @@ def aplicar_reglas(documento: Documento) -> Documento:
     las declaraciones oficiales, al enlazar una nota oficial y al fundir.
     """
     resultado = copy.deepcopy(documento)
+    if "pruebas" in resultado:
+        fisicas = set(resultado["pruebas"].get("evidencia", [])) & PRUEBAS_FISICAS
+        autoridad = resultado["estado"]["actual"] in CONFIRMADOS
+        if autoridad and fisicas and resultado.get("presencia_dron") != "descartada":
+            resultado["presencia_dron"] = "confirmada"
+    return con_tipo(resultado)
+
+
+def con_tipo(documento: Documento) -> Documento:
+    """El documento (modificado) con su tipo (docs/control_fichas.md, «tipo»): interrupción
+    aeroportuaria si se interrumpió un aeropuerto; incursión solo si una autoridad (la que lo
+    atribuye o la que cuenta el espacio aéreo violado, la frontera cruzada, el rastreo, el derribo,
+    la caída o los restos), o una prueba física o un rastreo con el suceso confirmado por una
+    autoridad, demuestra que un dron estatal entró desde fuera; si no, sobrevuelo. Que el suceso
+    esté confirmado no demuestra la entrada (EODI-2025-00080, Kleine-Brogel: nadie dice de dónde
+    venían), ni que un buque fuera alcanzado en el mar (EODI-2026-00512: ninguna autoridad dice
+    que estuviera en aguas búlgaras)."""
+    resultado = documento
     if "pruebas" not in resultado:
         # Incidente anterior a estas reglas: solo se aplica la precedencia de la interrupción.
         if _hay_interrupcion(resultado):
             resultado["tipo"] = "interrupcion_aeroportuaria"
             resultado.pop("origen_demostrado_por", None)
         return resultado
+    resultado.pop("origen_demostrado_por", None)
     datos = resultado["pruebas"]
     evidencia = set(datos.get("evidencia", []))
-    fisicas = evidencia & PRUEBAS_FISICAS
-    autoridad = resultado["estado"]["actual"] in CONFIRMADOS
-    if autoridad and fisicas and resultado.get("presencia_dron") != "descartada":
-        resultado["presencia_dron"] = "confirmada"
-    demostrada = sorted(fisicas | (evidencia & {RASTREO}) | ({"autoridad"} if autoridad else set()))
-    resultado.pop("origen_demostrado_por", None)
+    confirmado = resultado["estado"]["actual"] in CONFIRMADOS
+    # Los restos en un buque alcanzado en el mar no dicen que el dron entrara en el país.
+    en_el_mar = alcanzado_en_el_mar(resultado)
+    pruebas = (evidencia & (PRUEBAS_FISICAS | {RASTREO})) if confirmado and not en_el_mar else set()
+    atribuido = resultado["estado"]["actual"] == Estado.ATRIBUIDO
+    autoridad = atribuido or (
+        confirmado and not en_el_mar and autoridad_cuenta_la_entrada(resultado)
+    )
+    demostrada = sorted(pruebas | ({"autoridad"} if autoridad else set()))
     if _hay_interrupcion(resultado):
         resultado["tipo"] = "interrupcion_aeroportuaria"
     elif datos.get("dron_estatal") and datos.get("entrada_exterior") and demostrada:
         resultado["tipo"] = "incursion"
         resultado["origen_demostrado_por"] = demostrada
-    elif alcanzado_en_el_mar(resultado):
-        # Un buque alcanzado por un dron en el mar (impacto, explosión, restos a bordo) nunca es
-        # un sobrevuelo: el dron era de un ataque y llegó desde el mar (proceso/buques.py).
-        resultado["tipo"] = "incursion"
-        if fisicas:
-            resultado["origen_demostrado_por"] = sorted(fisicas)
     else:
         resultado["tipo"] = "sobrevuelo"
     return resultado
+
+
+# Lo que cuenta una autoridad cuando demuestra la entrada: el espacio aéreo violado, la frontera
+# cruzada, el rastreo, el derribo, la caída o los restos del dron (EODI-2026-00238: «au stabilit
+# că este vorba despre resturi de dronă»; EODI-2026-00112: «a survolat ... ilegal spațiul
+# aerian»). Un ministro que dice que los drones «no eran un sobrevuelo normal» no lo demuestra
+# (EODI-2025-00080, Kleine-Brogel).
+_ENTRADA_DE_AUTORIDAD = re.compile(
+    r"spa[tțţ]iul(?:ui)? aerian|espacio a[eé]reo|airspace|przestrze[nń]\w* powietrzn|luftraum|"
+    r"luchtruim|ilmatila|luftrum|espace a[eé]rien|spazio aereo|въздушно(?:то)? пространство|"
+    r"повітрян\w* простор|воздушн\w* пространств|"
+    # la frontera cruzada o el dron llegado de fuera
+    r"fronti?er\w* de stat|granic\w* pa[nń]stw|state border|hailed from|din ucraina|"
+    r"from (?:ukraine|russia|belarus)|z bia[lł]orusi|rusești|rusesti|russian drone|"
+    # el rastreo, el derribo, la caída o los restos
+    r"detectat|detected|urm[aă]rit|tracked|reperat|radar|survol|dobor[aâ]t|shot down|derribad|"
+    r"zestrzel|c[aă]zut|crashed|pr[aă]bu[sșş]|eksplozj|explod|distrus|destroyed|"
+    r"resturi|fragmente|szcz[aą]tk|restos del dron|debris|wreckage|tr[uü]mmer",
+    re.IGNORECASE,
+)
+
+
+def autoridad_cuenta_la_entrada(documento: Documento) -> bool:
+    """Una autoridad cuenta el espacio aéreo violado, la frontera cruzada, el rastreo, el derribo,
+    la caída o los restos del dron."""
+    from proceso import declaraciones
+
+    return any(
+        declaraciones.de_autoridad(f)
+        and _ENTRADA_DE_AUTORIDAD.search(str(f.get("frase_origen") or ""))
+        for f in documento.get("fuentes", [])
+    )
 
 
 def alcanzado_en_el_mar(documento: Documento) -> bool:

@@ -26,6 +26,7 @@ sobre los datos publicados).
 
 import gzip
 import json
+import math
 import os
 import re
 import unicodedata
@@ -413,6 +414,27 @@ def _otro_lugar_mas_largo(k: str, escrito: Bilingue) -> bool:
     return False
 
 
+# Lo que en español va en minúscula delante del nombre propio («mar Negro», «río Maritsa»).
+_GENERICOS_EN_MINUSCULA = frozenset(
+    {"mar", "rio", "lago", "golfo", "estrecho", "bahia", "canal", "cabo", "monte", "sierra"}
+)
+
+
+def con_mayuscula(escrito: Bilingue, base: str) -> Bilingue:
+    """Un nombre propio que la ficha escribe con mayúscula empieza con mayúscula en las dos
+    versiones: la etiqueta española de Wikidata de la Île Longue es «île Longue», como en una
+    frase francesa, y la web la enseñaba así (EODI-2025-00206). Solo si la primera palabra es
+    la misma que la de la ficha y no es un nombre común: «mar Negro» (de «Marea Neagră» o «Mar
+    Negru») y «río Maritsa» se quedan en minúscula."""
+    primera = clave(base.split()[0]) if base.split() else ""
+    if not base[:1].isupper() or primera in _GENERICOS_EN_MINUSCULA:
+        return escrito
+    return {
+        i: t[:1].upper() + t[1:] if t[:1].islower() and clave(t.split()[0]) == primera else t
+        for i, t in escrito.items()
+    }
+
+
 def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | None:
     k = clave(base)
     if not k:
@@ -434,7 +456,7 @@ def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | N
         and not traduccion_inventada(base, escrito)
         and not _otro_lugar_mas_largo(k, escrito)
     ):
-        return escrito
+        return con_mayuscula(escrito, base)
     if en_otro_pais and len(global_.get(k, [])) == 1:
         return global_[k][0][1]
     return None
@@ -642,6 +664,56 @@ def sitio(incidente: Documento) -> Bilingue | None:
     return next((c for c in candidatos if c is not None), None)
 
 
+# Lo que se busca alrededor de un punto anterior sin nombre: su radio y, como poco, esto.
+RADIO_MIN_ANTERIOR_KM = 5.0
+LOCALIDADES = CONFIGURACION / "localidades_europa.json"
+
+
+@cache
+def _localidades_por_pais() -> dict[str, list[tuple[str, float, float]]]:
+    """(nombre, lat, lon) de las localidades del nomenclátor (GeoNames), por país."""
+    datos = json.loads(LOCALIDADES.read_text(encoding="utf-8"))["localidades"]
+    salida: dict[str, list[tuple[str, float, float]]] = defaultdict(list)
+    for nombre, pais, lat, lon, *_ in datos.values():
+        salida[pais].append((nombre, float(lat), float(lon)))
+    return dict(salida)
+
+
+def _distancia_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    f1, f2 = math.radians(lat1), math.radians(lat2)
+    a = (
+        math.sin((f2 - f1) / 2) ** 2
+        + math.cos(f1) * math.cos(f2) * math.sin(math.radians(lon2 - lon1) / 2) ** 2
+    )
+    return 2 * 6371.0 * math.asin(math.sqrt(a))
+
+
+def localidad_cercana(lat: float, lon: float, pais: str, radio_km: float) -> str | None:
+    """La localidad del país más cercana al punto, si está dentro del radio."""
+    distancia, nombre = min(
+        (
+            (_distancia_km(lat, lon, la, lo), n)
+            for n, la, lo in _localidades_por_pais().get(pais, [])
+        ),
+        default=(math.inf, None),
+    )
+    return nombre if distancia <= radio_km else None
+
+
+def anterior(anterior_: Documento, pais: str) -> Bilingue | None:
+    """El nombre de un punto anterior del lugar: su localidad o, si se guardó solo el punto (el
+    centro de la ciudad antes de afinar a la instalación: Gotemburgo antes que Landvetter,
+    EODI-2025-00235), la localidad más cercana dentro de su radio; None si no se puede escribir."""
+    if anterior_.get("localidad"):
+        return lugar(anterior_["localidad"], pais)
+    punto = anterior_.get("punto") or {}
+    if "lat" not in punto or "lon" not in punto:
+        return None
+    radio = max(float(anterior_.get("radio_km") or 0), RADIO_MIN_ANTERIOR_KM)
+    cercana = localidad_cercana(float(punto["lat"]), float(punto["lon"]), pais, radio)
+    return lugar(cercana, pais) if cercana else None
+
+
 def nombres_publicos(incidente: Documento) -> Documento:
     """El campo `nombres` publicado: «lugar» (lo que dice la fila «Lugar», con el país o el
     territorio), «localidad», «objetivo», «region», «otros» y «anteriores» (en el orden de la
@@ -665,9 +737,7 @@ def nombres_publicos(incidente: Documento) -> Documento:
         salida["otros"] = [lugar(o.get("nombre"), pais) for o in otros]
     anteriores = lugar_.get("historial") or []
     if anteriores:
-        salida["anteriores"] = [
-            lugar((h.get("anterior") or {}).get("localidad"), pais) for h in anteriores
-        ]
+        salida["anteriores"] = [anterior(h.get("anterior") or {}, pais) for h in anteriores]
     if terr is not None:
         salida["pais_geografico"] = terr.get("geografico") or terr["codigo"]
     return salida

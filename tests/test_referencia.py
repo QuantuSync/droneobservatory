@@ -13,7 +13,7 @@ from esquema import Documento
 from proceso import auditoria_fichas, referencia
 
 # Discrepancias conocidas el 21 de octubre de 2026. Solo puede bajar.
-TOPE_DISCREPANCIAS = 64
+TOPE_DISCREPANCIAS = 5
 PRESENCIAS = {"confirmada", "no_confirmada", "no_acreditada", "descartada"}
 ESTADOS = {"notificado", "confirmado", "atribuido", "desmentido"}
 TIPOS = {"incursion", "interrupcion_aeroportuaria", "sobrevuelo"}

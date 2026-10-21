@@ -187,7 +187,7 @@
      "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything"
     },
     "cabecera": {
-     "valor": "Cierre del espacio a\u00e9reo de Aalborg por avistamiento de dron no identificado",
+     "valor": "Aeropuerto de Aalborg",
      "cita": "Luftrummet over Aalborg Lufthavn var lukket i en time omkring midnat p\u00e5 grund af mistanke om droner.",
      "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
     }
@@ -305,12 +305,12 @@
      "nota": "deriva del lugar"
     },
     "drones": {
-     "valor": 1,
-     "cita": "Die hadden een drone zien vliegen op zo'n 150 meter hoogte.",
+     "valor": "desconocido",
+     "cita": "Rond 19.00 uur meldde de marechaussee na onderzoek dat het zeer waarschijnlijk geen drone was, omdat er geen is gesignaleerd op radarbeelden. Het vermoeden is nu dat het om een ballon ging.",
      "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
     },
     "cabecera": {
-     "valor": "Schiphol",
+     "valor": "Aeropuerto de \u00c1msterdam-Schiphol",
      "cita": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest",
      "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon"
     }
@@ -663,7 +663,7 @@
      "nota": "Cronolog\u00eda del Gobierno: de las cuatro drones perdidas, solo la de la Dana 78 lleg\u00f3 al puerto; las otras tres se autodetonaron fuera (dos en alta mar, una fuera del puerto). Este suceso: 1."
     },
     "cabecera": {
-     "valor": "Dron que explot\u00f3 en el Puerto de Constanza",
+     "valor": "Puerto de Constanza",
      "cita": "O dron\u0103 marin\u0103 a explodat \u00een Portul Constan\u021ba.",
      "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
     }
@@ -1459,7 +1459,7 @@
      "enlace": null
     },
     "cabecera": {
-     "valor": "Falsa alarma de dron en la base OTAN de Geilenkirchen",
+     "valor": "Base a\u00e9rea de la OTAN en Geilenkirchen",
      "cita": "Nato-Flugplatz Geilenkirchen: Drohnenalarm stellt sich als Fehlalarm heraus",
      "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/nato-flugplatz-geilenkirchen-drohnenalarm-stellt-sich-als-fehlalarm-heraus.html"
     },
@@ -1956,7 +1956,7 @@
      "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
     },
     "cabecera": {
-     "valor": "Doel",
+     "valor": "Central nuclear de Doel",
      "cita": "Drones gezien bij Belgische kerncentrale Doel en luchthaven Luik",
      "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
     }
@@ -2541,7 +2541,7 @@
      "nota": "Comunicado del MON (Kosiniak-Kamysz) del 10-9-2025: \u00abkilkana\u015bcie\u00bb = entre 11 y 19, coherente con \u00abmore than 10\u00bb (min 11). Tusk en el Sejm habl\u00f3 de 19 violaciones (no drones). M\u00e1s tarde Przydacz dio 21 drones y la fiscal\u00eda \u00abkilkadziesi\u0105t\u00bb (ver EODI-2025-00295); para la ficha del cierre de Chopin se deja la cifra oficial de esa ma\u00f1ana."
     },
     "cabecera": {
-     "valor": "Drones rusos que entraron en Polonia obligan a cerrar el aeropuerto de Varsovia",
+     "valor": "Aeropuerto de Varsovia-Fr\u00e9d\u00e9ric Chopin",
      "cita": "Polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. W zwi\u0105zku z tym ruch nad Lotniskiem Chopina, Lotniskiem Modlin i okolicznymi regionami zosta\u0142 wstrzymany",
      "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina"
     }
@@ -2953,7 +2953,7 @@
      "enlace": "https://elfarodeceuta.es/guardia-civil-inhibe-dron-llevaba-droga-micro-telefonos-carcel/"
     },
     "cabecera": {
-     "valor": "Centro Penitenciario de Mendiz\u00e1bal",
+     "valor": "La Guardia Civil inhibe en Ceuta un dron con droga y m\u00f3viles que iba a la c\u00e1rcel de Mendiz\u00e1bal",
      "cita": "en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
      "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
     }
