@@ -256,6 +256,7 @@ def aplicar_reglas(documento: Documento) -> Documento:
         autoridad = resultado["estado"]["actual"] in CONFIRMADOS
         if autoridad and fisicas and resultado.get("presencia_dron") != "descartada":
             resultado["presencia_dron"] = "confirmada"
+        resultado.pop("origen_demostrado_por", None)
     return con_tipo(resultado)
 
 
@@ -275,7 +276,6 @@ def con_tipo(documento: Documento) -> Documento:
             resultado["tipo"] = "interrupcion_aeroportuaria"
             resultado.pop("origen_demostrado_por", None)
         return resultado
-    resultado.pop("origen_demostrado_por", None)
     datos = resultado["pruebas"]
     evidencia = set(datos.get("evidencia", []))
     confirmado = resultado["estado"]["actual"] in CONFIRMADOS
@@ -299,6 +299,7 @@ def con_tipo(documento: Documento) -> Documento:
         resultado["origen_demostrado_por"] = demostrada
     else:
         resultado["tipo"] = "sobrevuelo"
+        resultado.pop("origen_demostrado_por", None)
     return resultado
 
 
