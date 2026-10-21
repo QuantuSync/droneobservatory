@@ -36,6 +36,7 @@ from proceso import (
     buques,
     cita_titular,
     coherencia,
+    decidir,
     declaraciones,
     fechas,
     incidentes,
@@ -121,6 +122,10 @@ def _a(incidente: Documento) -> bool:
 def _b(incidente: Documento) -> bool:
     objetivo = incidente.get("objetivo") or {}
     if objetivo.get("categoria") not in (None, "otra"):
+        return False
+    # El objetivo revisado a mano con su cita (EODI-2025-00378: de la base de Borcea solo
+    # despegaron los F-16) no es una instalación sin reconocer.
+    if "objetivo" in decidir.revisiones(incidente):
         return False
     return any(_INSTALACION.search(str(t)) for t in (incidente.get("titulo") or {}).values())
 
