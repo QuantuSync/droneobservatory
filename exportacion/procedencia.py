@@ -29,7 +29,7 @@ from typing import Any
 from almacen.base import Almacen
 from esquema import Documento
 from exportacion import mejor_origen
-from proceso import declaraciones, extraccion, fechas, presencia
+from proceso import decidir, declaraciones, extraccion, fechas, presencia
 from proceso.estados import Estado
 from proceso.validacion_ficha import UMBRAL_CONFIANZA
 
@@ -232,6 +232,13 @@ REGLAS: dict[str, tuple[str, ...]] = {
     "pruebas.entrada_exterior": ("ficha:tipo", "pruebas.evidencia"),
     "pruebas.evidencia": ("ficha:origen_demostrado",),
     "presencia_dron": ("estado", "pruebas.evidencia"),
+}  # fmt: skip
+# Valores que puede revisar a mano «datos» de configuracion/incidentes_revisados.json, con el dato
+# revisado de que salen.
+REVISADOS_A_RUTA = {
+    "consecuencias.cierre.valor": "cierre", "tiempo.inicio": "inicio",
+    "lugar.localidad": "lugar", "lugar.suceso": "lugar", "drones.numero": "drones",
+    "objetivo.categoria": "objetivo", "objetivo.nombre": "objetivo", "objetivo.oaci": "objetivo",
 }  # fmt: skip
 # Rutas cuyo valor puede cambiarlo una regla: la afirmación cuenta solo si coincide.
 MISMO_VALOR = frozenset({
@@ -522,6 +529,20 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             return None
         return {"origen": mejor(origen.values()), "metodo": PARSER, "fuentes": sorted(fuentes)}
 
+    def de_revision(ruta: str) -> Documento | None:
+        # El dato revisado a mano con su cita (configuracion/incidentes_revisados.json, «datos»;
+        # proceso/decidir.py): sale de la fuente de la cita o, si la ficha no la tiene, de las
+        # noticias.
+        campo = REVISADOS_A_RUTA.get(ruta)
+        revision = decidir.revisiones(documento).get(campo) if campo else None
+        if revision is None:
+            return None
+        ids = [i for i, f in fuentes.items() if f.get("enlace") == revision.get("enlace")]
+        ids = ids or [f for f, o in origen.items() if o == PRENSA]
+        if not ids:
+            return None
+        return {"origen": mejor(origen[f] for f in ids), "metodo": REGLA, "fuentes": sorted(ids)}
+
     def de_cierre_de_pista(ruta: str) -> Documento | None:
         # El cierre que registra la regla del cierre de pista (proceso/presencia.py): sale de
         # las fuentes cuya frase cuenta que se cerró una pista por un dron o, si solo lo cuenta
@@ -558,7 +579,12 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
     for _ in range(len(pendientes) + 1):
         resueltas = []
         for ruta in pendientes:
-            marca = de_parser(ruta) or desconocido(ruta) or de_cierre_de_pista(ruta)
+            marca = (
+                de_parser(ruta)
+                or desconocido(ruta)
+                or de_cierre_de_pista(ruta)
+                or de_revision(ruta)
+            )
             valor = de_regla_(ruta) if marca is None else None
             if marca is not None:
                 procedencia[ruta] = marca
