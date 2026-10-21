@@ -253,6 +253,107 @@ def test_una_correccion_parcial_anotada_no_la_vuelve_a_tocar_el_control() -> Non
     assert not any(c.startswith("presencia") for c in corregida.cambios)
 
 
+NO_TEROGEVONDEN = "De drones zijn volgens Defensie daarna weggevlogen en niet teruggevonden."
+HELIKOPTER = (
+    "Later bleek dat het om een politiehelikopter ging die op zoek was naar de drone waarvoor de "
+    "luchthaven eerder was gesloten."
+)
+
+
+def _volkel() -> dict[str, Any]:
+    """Como EODI-2025-00066 (Volkel): Defensa dispara a los drones (declaración citada en nrc.nl,
+    con la presencia respaldada) y la prensa cuenta que no se encontraron."""
+    d = ejemplos.incidente_minimo()
+    d["id"] = "EODI-2025-09066"
+    d["presencia_dron"] = "confirmada"
+    d["lugar"] = {"punto": {"lat": 51.65, "lon": 5.71}, "radio_km": 5, "pais": "NL"}
+    prensa = _fuente("gdelt-nrc", "https://nrc.nl/nieuws/volkel", "nrc.nl", "nl", NO_TEROGEVONDEN,
+                     "10:00:00")  # fmt: skip
+    defensie = {
+        **_fuente("gdelt-nrc-declaracion-1", "https://nrc.nl/nieuws/volkel",
+                  "Defensie (declaración oficial citada en nrc.nl)", "nl",
+                  "Defensie heeft afgelopen weekend drie keer drones boven twee Nederlandse "
+                  "luchthavens gesignaleerd.", "10:00:00"),
+        "es_autoridad": True,
+        "campos_respaldados": ["estado", "presencia_dron"],
+    }  # fmt: skip
+    d["fuentes"] = [prensa, defensie]
+    return d
+
+
+def test_no_encontrar_los_drones_no_baja_lo_que_atribuyo_una_autoridad() -> None:
+    """Volkel (EODI-2025-00066): la verificación leyó «niet teruggevonden» y bajó el dron a no
+    confirmado. No encontrar pruebas no demuestra que no hubiera dron: se queda confirmado."""
+    documento = _volkel()
+    assert presencia.atribuida_por_autoridad(documento)
+    verificada = reglas.Verificada({"presencia": ("no_hallado", "gdelt-nrc", NO_TEROGEVONDEN)})
+    corregida = reglas.aplicar(copy.deepcopy(documento), verificada, False, None)
+    assert corregida.incidente["presencia_dron"] == "confirmada"
+    assert not any(c.startswith("presencia") for c in corregida.cambios)
+    assert corregida.rectificar is None
+    assert corregida.dudas
+    # Ni lo escala al experto como contradicción.
+    vista = reglas.vista(documento)
+    respuesta = {"presencia": {"valor": "no_hallado"}}
+    assert control_fichas.contradice(vista, respuesta) == ["presencia"]
+    assert control_fichas.contradice(vista, respuesta, autoridad=True) == []
+    assert control_fichas.contradice(vista, {"presencia": {"valor": "posible"}}, True) == []
+    # Tampoco la regla de «no se encontró» (proceso/presencia.quitar_por_no_hallado).
+    documento["fuentes"][0]["frase_origen"] = NO_HALLADO
+    assert presencia.quitar_por_no_hallado(documento) is documento
+    documento["fuentes"] = documento["fuentes"][:1]
+    assert presencia.quitar_por_no_hallado(documento)["presencia_dron"] == "no_confirmada"
+
+
+def test_sin_autoridad_no_encontrar_el_dron_si_lo_baja() -> None:
+    """Solo prensa (como EODI-2026-00322, Hamburgo): «no se encontró nada» baja el dron a no
+    confirmado."""
+    documento = _volkel()
+    documento["fuentes"] = documento["fuentes"][:1]
+    assert not presencia.atribuida_por_autoridad(documento)
+    verificada = reglas.Verificada({"presencia": ("no_hallado", "gdelt-nrc", NO_TEROGEVONDEN)})
+    corregida = reglas.aplicar(copy.deepcopy(documento), verificada, False, None)
+    assert corregida.incidente["presencia_dron"] == "no_confirmada"
+    assert f"presencia no confirmada: «{NO_TEROGEVONDEN}»" in corregida.cambios
+
+
+def test_lo_que_desmiente_una_autoridad_queda_para_las_rectificaciones(tmp_path: Path) -> None:
+    """Una autoridad dice que era un helicóptero (como EODI-2025-00072): la verificación no
+    cambia la presencia; la frase va a la cola de las rectificaciones con el experto."""
+    from recogida import rectificaciones as seguimiento
+
+    documento = _volkel()
+    ministro = {
+        **_fuente("revisada-minister", "https://www.dekamer.be/doc/ip107x.html",
+                  "Minister van Defensie", "nl", HELIKOPTER, "12:00:00"),
+        "es_autoridad": True,
+    }  # fmt: skip
+    documento["fuentes"].append(ministro)
+    verificada = reglas.Verificada({"presencia": ("desmentido", "revisada-minister", HELIKOPTER)})
+    corregida = reglas.aplicar(copy.deepcopy(documento), verificada, False, None)
+    assert corregida.incidente["presencia_dron"] == "confirmada"
+    assert not any(c.startswith("presencia") for c in corregida.cambios)
+    assert corregida.rectificar == ("revisada-minister", HELIKOPTER)
+    # Un desmentido de la prensa tampoco la cambia, ni va a las rectificaciones.
+    prensa = reglas.Verificada({"presencia": ("desmentido", "gdelt-nrc", NO_TEROGEVONDEN)})
+    de_prensa = reglas.aplicar(copy.deepcopy(documento), prensa, False, None)
+    assert de_prensa.incidente["presencia_dron"] == "confirmada" and de_prensa.rectificar is None
+    # El desmentido sí es una contradicción que ve el experto.
+    vista = reglas.vista(documento)
+    assert control_fichas.contradice(vista, {"presencia": {"valor": "desmentido"}}, True) == [
+        "presencia"
+    ]
+    almacen = Almacen.abrir(tmp_path / "base.sqlite")
+    control_fichas._a_rectificaciones(almacen, documento, *corregida.rectificar)
+    control_fichas._a_rectificaciones(almacen, documento, *corregida.rectificar)
+    (pendiente,) = (almacen.cursor(seguimiento.CURSOR_MENSUAL) or {})["pendientes"]
+    assert pendiente["incidente"] == documento["id"]
+    assert pendiente["titular"] == HELIKOPTER
+    assert pendiente["origen"] == seguimiento.ORIGEN_VERIFICACION
+    (propuesta,) = seguimiento.de_la_busqueda(almacen)
+    assert propuesta.modo == coste.Modo.RECTIFICACIONES
+
+
 def test_el_lugar_es_la_instalacion_que_identifica_el_objetivo() -> None:
     """Como EODI-2026-00146: objetivo «aeropuerto de Melilla» (GEML) y el punto del candidato en
     la ciudad, a 2,2 km. El punto pasa al aeropuerto; el objetivo no se toca. Un punto que da una
