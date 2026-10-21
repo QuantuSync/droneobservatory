@@ -236,7 +236,9 @@ mitad de precio) y de madrugada:
 - **Dos rondas**, como el repaso: los pares (todos los candidatos de las reglas, también los ya
   decididos, y las series de `configuracion/repaso_experto.json`: fichas que pueden contar el
   mismo suceso sin ser candidatas, como la serie de Constanza o dos fichas de países vecinos,
-  comparadas de dos en dos si están a menos de 3 días) y la verificación de cada ficha publicada
+  comparadas de dos en dos si están a menos de 3 días, o todas con `sin_ventana`: la serie de
+  Constanza, cuyas fichas de la explosión del 5 de junio llevaban la fecha de noticias
+  posteriores) y la verificación de cada ficha publicada
   (primero las que tienen un fallo conocido o el lugar en el país a secas).
 - **Por el camino normal**: cada respuesta es del experto y se aplica como las del control (las
   uniones, las correcciones con su frase literal y el motivo en el historial; nada publicado se

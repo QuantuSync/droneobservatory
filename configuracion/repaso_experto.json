@@ -1,9 +1,11 @@
 {
-  "descripcion": "Series de fichas que el repaso con el experto compara entre sí (las de cada grupo a menos de 3 días) aunque las reglas no las tengan por candidatas al mismo suceso. recogida/control_fichas.py, repaso_experto; docs/control_fichas.md.",
+  "descripcion": "Series de fichas que el repaso con el experto compara entre sí (las de cada grupo a menos de 3 días, o todas con sin_ventana) aunque las reglas no las tengan por candidatas al mismo suceso. recogida/control_fichas.py, repaso_experto; docs/control_fichas.md.",
   "grupos": [
     {
       "nombre": "Constanza y el mar Negro rumano",
       "motivo": "Restos y explosiones de drones en la costa y el puerto de Constanza contados por varias fuentes con lugares y fechas que no coinciden del todo: puede haber el mismo suceso en dos fichas.",
+      "sin_ventana": true,
+      "motivo_sin_ventana": "El primer repaso (20 de octubre de 2026) unió de dos en dos fichas de la explosión del 5 de junio en el puerto que llevaban la fecha de noticias posteriores (11 y 20 de junio, 12 de julio): se comparan todas entre sí, sea cual sea su fecha; el experto solo une con el mismo día y el mismo sitio.",
       "fichas": [
         "EODI-2025-00229", "EODI-2025-00395", "EODI-2026-00091", "EODI-2026-00109",
         "EODI-2026-00118", "EODI-2026-00147", "EODI-2026-00152", "EODI-2026-00157",

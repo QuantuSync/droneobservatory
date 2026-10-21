@@ -2064,27 +2064,42 @@ def _hecho_en_repaso(previa: Documento | None, huella: str) -> bool:
     )
 
 
-def grupos_del_repaso(ruta: Path = RUTA_GRUPOS) -> list[list[str]]:
+@dataclass
+class Grupo:
+    """Una serie de fichas que el repaso compara de dos en dos: las de `dias` días como mucho, o
+    todas si `dias` es None (las fichas de una serie con la fecha de noticias posteriores, como la
+    explosión del 5 de junio de 2026 en el puerto de Constanza)."""
+
+    fichas: list[str]
+    dias: int | None = DIAS_GRUPO
+
+
+def grupos_del_repaso(ruta: Path = RUTA_GRUPOS) -> list[Grupo]:
     """Las series de fichas que el repaso compara entre sí aunque no sean candidatas al mismo
-    suceso por las reglas (la serie de Constanza): configuracion/repaso_experto.json."""
+    suceso por las reglas (la serie de Constanza): configuracion/repaso_experto.json. Con
+    «sin_ventana», todas las de la serie, sea cual sea su fecha."""
     if not ruta.exists():
         return []
     datos = json.loads(ruta.read_text(encoding="utf-8"))
-    return [list(g["fichas"]) for g in datos.get("grupos", [])]
+    return [Grupo(list(g["fichas"]), None if g.get("sin_ventana") else DIAS_GRUPO)
+            for g in datos.get("grupos", [])]  # fmt: skip
 
 
-def pares_de_grupos(ctx: Contexto, grupos: list[list[str]]
+def pares_de_grupos(ctx: Contexto, grupos: list[Grupo]
                     ) -> list[tuple[Documento, Documento, str]]:  # fmt: skip
-    """Los pares de cada grupo activos, con fuentes y a menos de DIAS_GRUPO días, que el repaso
-    aún no decidió con las mismas fuentes."""
+    """Los pares de cada grupo activos, con fuentes y dentro de su ventana, que el repaso aún no
+    decidió con las mismas fuentes."""
     activos = {d["id"]: d for d in _activos(ctx.almacen)}
     pares = []
     for grupo in grupos:
-        fichas = sorted((activos[i] for i in grupo if i in activos and _publicas(activos[i])),
+        fichas = sorted((activos[i] for i in grupo.fichas
+                         if i in activos and _publicas(activos[i])),
                         key=lambda d: d["id"])  # fmt: skip
         for n, a in enumerate(fichas):
             for b in fichas[n + 1 :]:
-                if abs(reglas.instante(a) - reglas.instante(b)) > timedelta(days=DIAS_GRUPO):
+                if grupo.dias is not None and abs(
+                    reglas.instante(a) - reglas.instante(b)
+                ) > timedelta(days=grupo.dias):
                     continue
                 huella = reglas.huella_fuentes(a) + reglas.huella_fuentes(b)
                 if not _hecho_en_repaso(ctx.decision(reglas.clave_par(a["id"], b["id"])), huella):
@@ -2101,7 +2116,7 @@ def _primero_con_fallos(incidente: Documento) -> int:
 def repaso_experto(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = None,
                    dormir: Callable[[float], None] | None = None,
                    reloj: Callable[[], float] | None = None,
-                   grupos: list[list[str]] | None = None) -> Resultado:  # fmt: skip
+                   grupos: list[Grupo] | None = None) -> Resultado:  # fmt: skip
     """El repaso de todo lo publicado con el experto, por lotes (a mitad de precio) y dentro de
     su presupuesto aparte (coste.LIMITE_REPASO_EXPERTO_USD, modo «repaso_experto»: fuera del
     tope diario del experto, de su reserva crítica, de su parte del mes y del tope mensual).
