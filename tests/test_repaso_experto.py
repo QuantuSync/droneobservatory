@@ -150,15 +150,18 @@ def test_los_grupos_comparan_las_fichas_a_menos_de_tres_dias() -> None:
     ctx = control_fichas.Contexto(
         almacen, ahora, frozenset(), llamador, resultado, None, None, almacen.controles()
     )
-    grupo = [["EODI-2026-09601", "EODI-2026-09602", "EODI-2026-09603", "EODI-2026-09999"]]
-    pares = control_fichas.pares_de_grupos(ctx, grupo)
+    fichas = ["EODI-2026-09601", "EODI-2026-09602", "EODI-2026-09603", "EODI-2026-09999"]
+    pares = control_fichas.pares_de_grupos(ctx, [control_fichas.Grupo(fichas)])
     assert [(a["id"], b["id"]) for a, b, _ in pares] == [("EODI-2026-09601", "EODI-2026-09602")]
+    # Sin ventana: todas las de la serie, sea cual sea su fecha.
+    pares = control_fichas.pares_de_grupos(ctx, [control_fichas.Grupo(fichas, None)])
+    assert len(pares) == 3
 
 
 def test_grupos_de_la_configuracion() -> None:
     grupos = control_fichas.grupos_del_repaso()
-    assert ["EODI-2026-00057", "EODI-2026-00236"] in grupos
-    assert any("EODI-2026-00207" in g for g in grupos)
+    assert control_fichas.Grupo(["EODI-2026-00057", "EODI-2026-00236"]) in grupos
+    assert any("EODI-2026-00207" in g.fichas and g.dias is None for g in grupos)
 
 
 # --- La instalación que el titular nombra por su tipo y su ciudad ---------------------------------
