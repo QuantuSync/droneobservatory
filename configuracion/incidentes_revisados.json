@@ -2591,6 +2591,636 @@
         "fecha": "2026-10-21",
         "en": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html (original)"
       }
+    },
+    {
+      "incidente": "EODI-2025-00001",
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+      "medio": "ndr.de",
+      "fecha": "2025-12-29",
+      "idioma": "de",
+      "frase": "Bestätigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00005",
+      "enlace": "https://sudouest.fr:443/international/europe/belgique/belgique-des-drones-survolent-les-aeroports-de-bruxelles-et-de-liege-trafic-perturbe-depuis-jeudi-soir-26631351.php",
+      "medio": "sudouest.fr",
+      "fecha": "2025-11-07",
+      "idioma": "fr",
+      "frase": "en raison de la présence d’un drone à proximité, a indiqué une porte-parole du contrôle aérien.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://sudouest.fr:443/international/europe/belgique/belgique-des-drones-survolent-les-aeroports-de-bruxelles-et-de-liege-trafic-perturbe-depuis-jeudi-soir-26631351.php (original)"
+      },
+      "declaracion": {
+        "autoridad": "skeyes",
+        "pais": "BE",
+        "categoria": "navegacion_aerea",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00032",
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohne-gesichtet-flugverkehr-am-airport-hannover-gestoert,drohne-292.html",
+      "medio": "ndr.de",
+      "fecha": "2025-11-06",
+      "idioma": "de",
+      "frase": "Die Drohne wurde laut Polizei am Sonntagabend im unmittelbaren Bereich des Airports gesichtet.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohne-gesichtet-flugverkehr-am-airport-hannover-gestoert,drohne-292.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00049",
+      "enlace": "https://ziare.com/drona/aeroport-otopeni-piloti-avion-1967019",
+      "medio": "ziare.com",
+      "fecha": "2025-09-28",
+      "idioma": "ro",
+      "frase": "Compania Națională Aeroporturi București a transmis că era o dronă civilă.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://ziare.com/drona/aeroport-otopeni-piloti-avion-1967019 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Compania Națională Aeroporturi București",
+        "pais": "RO",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00062",
+      "enlace": "https://stern.de/gesellschaft/regional/thueringen/flughafen--drohne-legt-flugbetrieb-in-erfurt-kurzzeitig-lahm-36153468.html",
+      "medio": "stern.de",
+      "fecha": "2025-10-22",
+      "idioma": "de",
+      "frase": "Die Bundespolizei habe die Drohne gegen 0.30 Uhr gesichtet, sagte der Sprecher des Flughafens, Hans-Holm Bühl, auf Anfrage.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://stern.de/gesellschaft/regional/thueringen/flughafen--drohne-legt-flugbetrieb-in-erfurt-kurzzeitig-lahm-36153468.html (copia archivada)"
+      },
+      "declaracion": {
+        "autoridad": "Flughafen Erfurt-Weimar",
+        "pais": "DE",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00064",
+      "enlace": "https://dailyrecord.co.uk/news/scottish-news/edinburgh-airport-flights-delayed-drone-34707808",
+      "medio": "dailyrecord.co.uk",
+      "fecha": "2025-02-19",
+      "idioma": "en",
+      "frase": "Arriving flights were held for a short time due to the presence of a drone within the exclusion zone, which police investigated.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://dailyrecord.co.uk/news/scottish-news/edinburgh-airport-flights-delayed-drone-34707808 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Edinburgh Airport",
+        "pais": "GB",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00071",
+      "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363",
+      "medio": "rb.no",
+      "fecha": "2025-08-31",
+      "idioma": "no",
+      "frase": "Hun opplyser at politiet tok beslag i dronen og en mobiltelefon.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Politiet",
+        "pais": "NO",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00075",
+      "enlace": "https://lrt.lt/en/news-in-english/19/2769293/two-detained-for-flying-drones-near-vilnius-airport-after-airspace-breach-halts-flights",
+      "medio": "lrt.lt",
+      "fecha": "2025-12-08",
+      "idioma": "en",
+      "frase": "Lithuanian authorities detained two people on Sunday for flying drones near Vilnius Airport after one unmanned aircraft entered restricted airspace",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://lrt.lt/en/news-in-english/19/2769293/two-detained-for-flying-drones-near-vilnius-airport-after-airspace-breach-halts-flights (original)"
+      },
+      "declaracion": {
+        "autoridad": "Viešojo saugumo tarnyba",
+        "pais": "LT",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00088",
+      "enlace": "https://europasur.es/gibraltar/drones-no-autorizados-retrasan-salida-vuelos-aeropuerto_0_2005055419.html",
+      "medio": "europasur.es",
+      "fecha": "2025-10-21",
+      "idioma": "es",
+      "frase": "tras la detección de drones no autorizados en las inmediaciones del aeródromo, según confirmó a la GBC el Ministerio de Defensa, que opera la instalación.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://europasur.es/gibraltar/drones-no-autorizados-retrasan-salida-vuelos-aeropuerto_0_2005055419.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministry of Defence",
+        "pais": "GB",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00095",
+      "enlace": "https://tv2nord.dk/aalborg/aalborg-lufthavn-lukkede-luftrummet-i-otte-minutter-i-nat-pa-grund-af-mistanke-om-droner-5f778",
+      "medio": "tv2nord.dk",
+      "fecha": "2025-09-30",
+      "idioma": "da",
+      "frase": "da man kan se en drone på radaren, fortæller vagtchef ved Nordjyllands Politi Michael Mow.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://tv2nord.dk/aalborg/aalborg-lufthavn-lukkede-luftrummet-i-otte-minutter-i-nat-pa-grund-af-mistanke-om-droner-5f778 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Nordjyllands Politi",
+        "pais": "DK",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00098",
+      "enlace": "https://dailymail.co.uk/news/article-15233477/Five-flights-carrying-British-tourists-forced-divert-mystery-drone-spotted-near-Alicante-airport.html",
+      "medio": "dailymail.co.uk",
+      "fecha": "2025-10-28",
+      "idioma": "en",
+      "frase": "Due to the presence of a drone in the vicinity of the Alicante-Elche Miguel Hernandez Airport, flight diversions are occurring.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://dailymail.co.uk/news/article-15233477/Five-flights-carrying-British-tourists-forced-divert-mystery-drone-spotted-near-Alicante-airport.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Aena",
+        "pais": "ES",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00132",
+      "enlace": "https://abcnyheter.no/nyheter/ulovlig-droneflygning-pa-bergen-lufthavn/1126277",
+      "medio": "abcnyheter.no",
+      "fecha": "2025-07-08",
+      "idioma": "no",
+      "frase": "men at én flyavgang ble holdt igjen i ti minutter mens politiet fikk kontroll på droneflygningen.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://abcnyheter.no/nyheter/ulovlig-droneflygning-pa-bergen-lufthavn/1126277 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Avinor",
+        "pais": "NO",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00174",
+      "enlace": "https://kreiszeitung.de/lokales/bremen/drohnen-alarm-im-norden-flugverkehr-am-bremer-airport-fuer-fast-eine-stunde-lahmgelegt-94018239.html",
+      "medio": "kreiszeitung.de",
+      "fecha": "2025-11-03",
+      "idioma": "de",
+      "frase": "Die Drohne wurde gegen 19.30 Uhr im unmittelbaren Bereich des Airports gesichtet, wie ein Sprecher der Polizei mitteilte.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://kreiszeitung.de/lokales/bremen/drohnen-alarm-im-norden-flugverkehr-am-bremer-airport-fuer-fast-eine-stunde-lahmgelegt-94018239.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei Bremen",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00260",
+      "enlace": "https://hindustantimes.com/world-news/moldova-says-two-more-drones-violated-its-airspace-101739747777893.html",
+      "medio": "hindustantimes.com",
+      "fecha": "2025-02-16",
+      "idioma": "en",
+      "frase": "Two drones violated Moldovan airspace late on Sunday near the border with Ukraine, the government said",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://hindustantimes.com/world-news/moldova-says-two-more-drones-violated-its-airspace-101739747777893.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Government of Moldova",
+        "pais": "MD",
+        "categoria": "gobierno",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00348",
+      "enlace": "https://az-online.de/politik/polizei-sucht-gelaende-ab-naechster-drohnen-vorfall-flughafen-muenchen-betroffen-zr-93967845.html",
+      "medio": "az-online.de",
+      "fecha": "2025-10-05",
+      "idioma": "de",
+      "frase": "Die Bundespolizei hat zwei Drohnensichtungen am Flughafen in München bestätigt.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://az-online.de/politik/polizei-sucht-gelaende-ab-naechster-drohnen-vorfall-flughafen-muenchen-betroffen-zr-93967845.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Bundespolizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00022",
+      "enlace": "https://sueddeutsche.de/panorama/drohnensichtung-flughafen-hannover-bundespolizei-li.3529925",
+      "medio": "sueddeutsche.de",
+      "fecha": "2026-08-11",
+      "idioma": "de",
+      "frase": "Die Bundespolizei am Flughafen und die Landespolizei meldeten eine Drohne am südlichen Flughafenzaun.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://sueddeutsche.de/panorama/drohnensichtung-flughafen-hannover-bundespolizei-li.3529925 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Bundespolizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00035",
+      "enlace": "https://lalibre.be/belgique/societe/2026/09/16/un-drone-a-survole-laeroport-de-charleroi-ce-mercredi-les-operations-ont-ete-interrompues-lengin-a-ete-immediatement-intercepte-CHA4TXT2TNC4PL4FAYNKOTJOMU",
+      "medio": "lalibre.be",
+      "fecha": "2026-09-16",
+      "idioma": "fr",
+      "frase": "Un drone a été intercepté mercredi vers 14h00 après avoir survolé l'aéroport de Charleroi (BSCA), a indiqué mercredi soir le site aéroportuaire à Belga.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://lalibre.be/belgique/societe/2026/09/16/un-drone-a-survole-laeroport-de-charleroi-ce-mercredi-les-operations-ont-ete-interrompues-lengin-a-ete-immediatement-intercepte-CHA4TXT2TNC4PL4FAYNKOTJOMU (original)"
+      },
+      "declaracion": {
+        "autoridad": "Brussels South Charleroi Airport",
+        "pais": "BE",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00090",
+      "enlace": "https://dw.com/en/lithuanian-pm-stray-crashed-drone-hailed-from-ukraine/a-76507009",
+      "medio": "dw.com",
+      "fecha": "2026-03-24",
+      "idioma": "en",
+      "frase": "A military drone that crashed on a frozen lake in Lithuania hailed from Ukraine",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://dw.com/en/lithuanian-pm-stray-crashed-drone-hailed-from-ukraine/a-76507009 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Lietuvos Vyriausybė",
+        "pais": "LT",
+        "categoria": "gobierno",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00116",
+      "enlace": "https://unternehmen-heute.de/news.php?newsid=6712448",
+      "medio": "unternehmen-heute.de",
+      "fecha": "2026-09-23",
+      "idioma": "de",
+      "frase": "dass die Drohne um 20 Uhr auf der Nordbahn gesichtet worden sei.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://unternehmen-heute.de/news.php?newsid=6712448 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Flughafen BER",
+        "pais": "DE",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00169",
+      "enlace": "https://ziare.com/razboi-ucraina/drone-republica-moldova-autoritati-spatiul-aerian-inchis-2037208",
+      "medio": "ziare.com",
+      "fecha": "2026-09-24",
+      "idioma": "ro",
+      "frase": "Patru drone au pătruns joi în spațiul aerian al Republicii Moldova, în contextul atacurilor rusești asupra Ucrainei, potrivit Ministerului Apărării de la Chișinău.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://ziare.com/razboi-ucraina/drone-republica-moldova-autoritati-spatiul-aerian-inchis-2037208 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00205",
+      "enlace": "https://jurnalul.ro/stiri/externe/drona-shahed-survol-spatiul-aerian-republica-moldova-1042226.html",
+      "medio": "jurnalul.ro",
+      "fecha": "2026-08-22",
+      "idioma": "ro",
+      "frase": "Potrivit Ministerului Apărării de la Chișinău, drona a fost detectată la ora 04:07.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://jurnalul.ro/stiri/externe/drona-shahed-survol-spatiul-aerian-republica-moldova-1042226.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00221",
+      "enlace": "https://dw.com/ro/o-dron%C4%83-se-plimb%C4%83-prin-spa%C8%9Biul-aerian-al-r-moldova/a-77150833",
+      "medio": "dw.com",
+      "fecha": "2026-05-13",
+      "idioma": "ro",
+      "frase": "Ministerul moldovean al Apărării a confirmat că miercuri, la ora 16:00, o dronă a survolat frontiera de stat",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://dw.com/ro/o-dron%C4%83-se-plimb%C4%83-prin-spa%C8%9Biul-aerian-al-r-moldova/a-77150833 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00238",
+      "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893",
+      "medio": "digi24.ro",
+      "fecha": "2026-06-30",
+      "idioma": "ro",
+      "frase": "Armatei României au ajuns la fața locului și au stabilit că este vorba despre resturi de dronă.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893 (copia archivada)"
+      },
+      "declaracion": {
+        "autoridad": "Armata României",
+        "pais": "RO",
+        "categoria": "fuerzas_armadas",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00261",
+      "enlace": "https://merkur.de/lokales/muenchen/oktoberfest/oktoberfest-ansturm-am-flughafen-muenchen-dringende-warnung-an-drohnen-piloten-94519354.html",
+      "medio": "merkur.de",
+      "fecha": "2026-10-01",
+      "idioma": "de",
+      "frase": "Eine Polizeisprecherin erklärte, es habe sich ausschließlich um Hobby-Drohnenflieger gehandelt, deren Geräte die Sechs-Kilometer-Zone überschritten hatten.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://merkur.de/lokales/muenchen/oktoberfest/oktoberfest-ansturm-am-flughafen-muenchen-dringende-warnung-an-drohnen-piloten-94519354.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00307",
+      "enlace": "https://dailybusiness.ro/actualitate/alerta-la-granita-romaniei-o-drona-ruseasca-a-intrat-pentru-scurt-timp-in-spatiul-aerian-romanesc-in-zona-chilia-540425",
+      "medio": "dailybusiness.ro",
+      "fecha": "2026-05-07",
+      "idioma": "ro",
+      "frase": "sistemele radar ale Ministerului Apărării Naționale au detectat pentru scurt timp pătrunderea unei drone în spațiul aerian românesc, în zona localității Chilia",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://dailybusiness.ro/actualitate/alerta-la-granita-romaniei-o-drona-ruseasca-a-intrat-pentru-scurt-timp-in-spatiul-aerian-romanesc-in-zona-chilia-540425 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00418",
+      "enlace": "https://adevarul.ro/stiri-locale/constanta/portul-constanta-are-un-sistem-anti-drona-de-2527718.html",
+      "medio": "adevarul.ro",
+      "fecha": "2026-05-06",
+      "idioma": "ro",
+      "frase": "În urma verificărilor, autoritățile au stabilit că drona aparținea unor cetățeni străini",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://adevarul.ro/stiri-locale/constanta/portul-constanta-are-un-sistem-anti-drona-de-2527718.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "CN APM Constanța",
+        "pais": "RO",
+        "categoria": "gobierno",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00087",
+      "enlace": "https://diena.lt/naujienos/vilnius/miesto-pulsas/del-nt-brokerio-pakelto-megejisko-drono-trumpam-sustabdyti-skrydziai-vilniaus-oro-uoste-1746811",
+      "medio": "diena.lt",
+      "fecha": "2026-03-14",
+      "idioma": "lt",
+      "frase": "Apie pastebėtą droną NKVC informavo „Oro navigacija“",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://diena.lt/naujienos/vilnius/miesto-pulsas/del-nt-brokerio-pakelto-megejisko-drono-trumpam-sustabdyti-skrydziai-vilniaus-oro-uoste-1746811 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Oro navigacija",
+        "pais": "LT",
+        "categoria": "navegacion_aerea",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00054",
+      "enlace": "https://aftenposten.no/norge/i/XjG74o/melding-om-drone-ved-alta-lufthavn",
+      "medio": "aftenposten.no",
+      "fecha": "2025-11-17",
+      "idioma": "no",
+      "frase": "Det er Avinor som har meldt om dronen til politiet, skriver politiet klokken 10.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://aftenposten.no/norge/i/XjG74o/melding-om-drone-ved-alta-lufthavn (original)"
+      },
+      "declaracion": {
+        "autoridad": "Politiet",
+        "pais": "NO",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00051",
+      "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-eindhoven-airport-drones-vliegveld-luchtruim-gesloten",
+      "medio": "hartvannederland.nl",
+      "fecha": "2025-11-22",
+      "idioma": "nl",
+      "frase": "Volgens Defensie ging het om zo'n tien drones die boven het terrein vlogen.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-eindhoven-airport-drones-vliegveld-luchtruim-gesloten (original)"
+      },
+      "declaracion": {
+        "autoridad": "Defensie",
+        "pais": "NL",
+        "categoria": "fuerzas_armadas",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00241",
+      "enlace": "https://jurnalul.ro/stiri/locale/mesaj-ro-alert-emis-in-vrancea-din-cauza-dronelor-patrunse-in-spatiul-aerian-romanesc-1016289.html",
+      "medio": "jurnalul.ro",
+      "fecha": "2025-11-25",
+      "idioma": "ro",
+      "frase": "Două drone au păstruns în spațiul aerian românesc, una în județul Tulcea și una în Galați, a anunțat marți dimineața Ministerul Apărării Naționale.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://jurnalul.ro/stiri/locale/mesaj-ro-alert-emis-in-vrancea-din-cauza-dronelor-patrunse-in-spatiul-aerian-romanesc-1016289.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00340",
+      "enlace": "https://spiegel.de/panorama/flughafen-muenchen-betrieb-nach-drohnenalarm-wieder-aufgenommen-a-c64d0d91-3a40-42bf-99c9-5b5747bb148d",
+      "medio": "spiegel.de",
+      "fecha": "2025-10-04",
+      "idioma": "de",
+      "frase": "Die Polizei bestätigte die Drohnensichtungen am Flughafen München.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://spiegel.de/panorama/flughafen-muenchen-betrieb-nach-drohnenalarm-wieder-aufgenommen-a-c64d0d91-3a40-42bf-99c9-5b5747bb148d (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00112",
+      "enlace": "https://jurnalul.ro/stiri/externe/spatiul-aerian-republica-moldova-survolat-drona-shahed-1028546.html",
+      "medio": "jurnalul.ro",
+      "fecha": "2026-03-31",
+      "idioma": "ro",
+      "frase": "O dronă de tip Shahed a survolat marți dimineața ilegal spațiul aerian al Republicii Moldova, a anunțat Ministerul Apărării de la Chișinău.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://jurnalul.ro/stiri/externe/spatiul-aerian-republica-moldova-survolat-drona-shahed-1028546.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00197",
+      "enlace": "https://delfi.lt/news/daily/crime/sulaikytas-drona-salia-vilniaus-oro-uosto-pakeles-asmuo-120174597",
+      "medio": "delfi.lt",
+      "fecha": "2025-11-15",
+      "idioma": "lt",
+      "frase": "Šeštadienį šalia Vilniaus oro uosto skraidė dronas, praneša Viešojo saugumo tarnyba.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://delfi.lt/news/daily/crime/sulaikytas-drona-salia-vilniaus-oro-uosto-pakeles-asmuo-120174597 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Viešojo saugumo tarnyba",
+        "pais": "LT",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00305",
+      "enlace": "https://evz.ro/o-noua-drona-de-tip-shahed-a-survolat-ilegal-republica-moldova-al-treilea-incident-in-mai-putin-de-o-saptamana.html",
+      "medio": "evz.ro",
+      "fecha": "2026-04-03",
+      "idioma": "ro",
+      "frase": "Ministerul Afacerilor Externe al Republicii Moldova condamnă ferm încălcarea spațiului aerian național prin survolarea unei drone de tip Shahed",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://evz.ro/o-noua-drona-de-tip-shahed-a-survolat-ilegal-republica-moldova-al-treilea-incident-in-mai-putin-de-o-saptamana.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Afacerilor Externe",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00027",
+      "enlace": "https://swr.de/swraktuell/baden-wuerttemberg/karlsruhe/flughafen-karlsruhe-baden-baden-wegen-drohne-kurzzeitig-gesperrt-100.html",
+      "medio": "swr.de",
+      "fecha": "2025-11-17",
+      "idioma": "de",
+      "frase": "Wegen einer Drohnensichtung musste der Flughafen Karlsruhe/Baden-Baden am Samstagvormittag für eine halbe Stunde gesperrt werden. Das teilte die Polizei Offenburg mit.",
+      "comprobada": {
+        "fecha": "2026-10-21",
+        "en": "https://swr.de/swraktuell/baden-wuerttemberg/karlsruhe/flughafen-karlsruhe-baden-baden-wegen-drohne-kurzzeitig-gesperrt-100.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei Offenburg",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [

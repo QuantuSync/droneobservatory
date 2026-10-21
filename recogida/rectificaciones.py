@@ -174,25 +174,40 @@ def _publicadas(almacen: Almacen) -> list[Documento]:
 
 def detectadas(almacen: Almacen, decididas: set[str]) -> list[Propuesta]:
     """Las fuentes de los incidentes publicados que suenan a rectificación oficial y aún no ha
-    visto el experto, de las más recientes a las más antiguas."""
+    visto el experto, de las más recientes a las más antiguas. La de una autoridad cuenta desde
+    el primer día («an investigation showed no drone was detected on radar and that the object
+    was likely a balloon», la Marechaussee el mismo día del cierre de Schiphol, EODI-2025-00203),
+    y también la que desmintió el incidente aunque no suene a rectificación (EODI-2025-00357,
+    «Ces recherches n'avaient permis de retrouver aucun drone»): el experto lee si niega el dron.
+    """
     resultado = []
     for incidente in _publicadas(almacen):
         desde = _leer(incidente["tiempo"]["inicio"]["valor"]) + timedelta(DIAS_DESDE_EL_SUCESO)
         historial = incidente.get("presencia_historial") or []
         citadas = {p["fuente_id"] for p in historial}
-        if len(historial) > 1:
+        rectificada = len(historial) > 1
+        if rectificada:
             # Lo de antes de la última rectificación (y de su mismo día) ya está decidido.
             desde = max(desde, _leer(historial[-1]["fecha"]["valor"]) + timedelta(1))
+        pasos = incidente["estado"]["historial"]
+        desmiente = (
+            str(pasos[-1].get("fuente_id"))
+            if incidente["estado"]["actual"] == "desmentido"
+            else None
+        )
         for fuente in incidente["fuentes"]:
             clave = f"fuente:{incidente['id']}:{fuente['id']}"
+            autoridad = bool(fuente.get("es_autoridad")) and not rectificada
             if (
                 clave in decididas
                 or fuente["id"] in citadas
-                or _leer(fuente["fecha"]["valor"]) < desde
+                or (_leer(fuente["fecha"]["valor"]) < desde and not autoridad)
             ):
                 continue
             frase = str(fuente.get("frase_origen") or "")
-            if rectificaciones.senal(frase) is None:
+            if rectificaciones.senal(frase) is None and not (
+                autoridad and fuente["id"] == desmiente
+            ):
                 continue
             resultado.append(Propuesta(clave, incidente["id"], "recogida", fuente, frase))
     resultado.sort(key=lambda p: (p.fuente["fecha"]["valor"], p.clave), reverse=True)

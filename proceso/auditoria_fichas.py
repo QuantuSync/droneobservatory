@@ -17,7 +17,8 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   (proceso/cita_titular.respalda), salvo los justificados a mano.
 - **E, presencia sin base**: dron confirmado sin ninguna autoridad que lo atribuya a drones ni
   documento ni pruebas físicas de una autoridad, ni revisión a mano; o sin confirmar con una
-  autoridad que sí lo atribuye.
+  autoridad que sí lo atribuye; o, en lo que publica la web (proceso/coherencia.py), una misma
+  fuente da un paso que confirma y otro que desmiente (EODI-2025-00124, Sofía).
 - **F, lugar**: un buque como lugar, un suceso en el mar en la zona «interior», o la fecha de
   publicación como fecha del suceso cuando una fuente escribe otro día.
 - **G, nombres**: un punto anterior sin nombre (`nombres.anteriores` con null), o un titular
@@ -31,7 +32,15 @@ from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from esquema import Documento
-from proceso import buques, cita_titular, declaraciones, fechas, incidentes, nombres_lugar
+from proceso import (
+    buques,
+    cita_titular,
+    coherencia,
+    declaraciones,
+    fechas,
+    incidentes,
+    nombres_lugar,
+)
 from proceso.presencia import (
     atribuida_por_autoridad,
     documento_oficial_decide,
@@ -133,7 +142,18 @@ def _d(incidente: Documento) -> bool:
     )
 
 
+def misma_fuente_en_pasos_opuestos(incidente: Documento) -> bool:
+    """En lo publicado, una misma fuente da un paso que confirma (o atribuye) y otro que
+    desmiente."""
+    pasos = coherencia.coherente(incidente)["estado"]["historial"]
+    confirman = {p.get("fuente_id") for p in pasos if p["estado"] in ("confirmado", "atribuido")}
+    desmienten = {p.get("fuente_id") for p in pasos if p["estado"] == "desmentido"}
+    return bool((confirman & desmienten) - {None})
+
+
 def _e(incidente: Documento) -> bool:
+    if misma_fuente_en_pasos_opuestos(incidente):
+        return True
     presencia = incidente.get("presencia_dron")
     if incidente["id"] in presencias_revisadas():
         return False

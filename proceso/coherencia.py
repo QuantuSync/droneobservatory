@@ -7,7 +7,11 @@ ficha. A veces la ficha enseñaba fechas que se contradicen (repaso del 13 de oc
   la fecha de la noticia que encontró la recogida, aunque la fuente que confirma (el informe de
   UKAB del 15 de julio) es anterior. Un paso nunca es posterior al siguiente: toma la fecha y la
   fuente del siguiente, que ya da el estado anterior por alcanzado (quien confirma también avisa;
-  quien atribuye también confirma).
+  quien atribuye también confirma). Solo si el siguiente implica el anterior: un desmentido no
+  confirma. Si no lo implica (un «Desmentido» fechado antes que el «Confirmado» al que sigue,
+  EODI-2025-00124, Sofía), el siguiente toma la fecha del anterior y cada paso conserva su fuente:
+  el «Confirmado» de la aviación civil no puede salir de la frase del director del aeropuerto que
+  lo niega.
 - Un suceso que empieza al día siguiente de su primer aviso (EODI-2025-00001: noticias del 27 de
   diciembre y fecha del suceso el 28). Si el inicio es solo un día o una fecha aproximada, pasa al
   día del primer aviso; un inicio con hora (lo da una autoridad) no se toca.
@@ -36,10 +40,29 @@ def _dia(fecha: Documento) -> str:
     return str(fecha["valor"])[:10]
 
 
+# El orden de los estados que se implican: quien confirma también avisa, quien atribuye también
+# confirma. Todo paso implica el aviso.
+_RANGO = {"notificado": 0, "confirmado": 1, "atribuido": 2}
+
+
+def implica(siguiente: str, paso: str) -> bool:
+    """El estado `siguiente` da por alcanzado el estado `paso` (su fuente vale para los dos)."""
+    if paso == "notificado":
+        return True
+    return paso in _RANGO and siguiente in _RANGO and _RANGO[siguiente] >= _RANGO[paso]
+
+
 def coherente(documento: Documento) -> Documento:
     """El documento (copia) con las fechas del historial y del inicio sin contradicciones."""
     salida = copy.deepcopy(documento)
     historial = (salida.get("estado") or {}).get("historial") or []
+    # De delante atrás: un paso que no implica el anterior y lleva una fecha anterior toma la
+    # del anterior, con su propia fuente (un desmentido no confirma).
+    for paso, siguiente in pairwise(historial):
+        if not implica(siguiente["estado"], paso["estado"]) and _instante(
+            siguiente["fecha"]
+        ) < _instante(paso["fecha"]):
+            siguiente["fecha"] = copy.deepcopy(paso["fecha"])
     # De atrás adelante: un paso no puede ser posterior al siguiente. La fuente del siguiente ya
     # da el estado anterior por alcanzado (quien confirma también avisa).
     for indice in range(len(historial) - 2, -1, -1):

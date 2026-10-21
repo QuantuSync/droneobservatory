@@ -37,7 +37,7 @@ from typing import Any
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import declaraciones, titulares
+from proceso import competencia, declaraciones, incidentes, titulares
 from proceso.estados import Estado
 from proceso.incidentes import CONFIRMADOS, PRUEBAS_FISICAS, activo, id_fuente
 
@@ -620,6 +620,30 @@ def revisar(
             fallidos.append(incidente["id"])
             continue
         anotar(almacen, incidente, documento, MOTIVO_CITA_VACIA)
+    # Un desmentido que no vale (no niega nada, o lo niega quien cede ante la autoridad
+    # competente que lo confirmó: proceso/competencia.py): otra vez confirmado y, si esa autoridad
+    # dice que fue un dron, con la presencia confirmada por ella.
+    for incidente in almacen.incidentes():
+        if not activo(incidente):
+            continue
+        corregido = competencia.corregir_desmentido(incidente)
+        if corregido is None:
+            continue
+        documento, prevalece = corregido
+        frase = str(prevalece.get("frase_origen") or "")
+        if declaraciones.atribuye_dron(frase) and incidente["id"] not in presencias_revisadas():
+            declaraciones.confirmar_presencia(documento, prevalece["id"], expresa=True)
+        documento = titulares.ajustar_incidente(incidentes.aplicar_reglas(documento))
+        documento = {**documento, "control": {**documento["control"],
+                                              "ultima_actualizacion": instante}}  # fmt: skip
+        try:
+            almacen.guardar_incidente(documento, ahora, modelos)
+        except DocumentoInvalido:
+            fallidos.append(incidente["id"])
+            continue
+        anotar(
+            almacen, incidente, documento, str(documento["estado"]["historial"][-1]["motivo"]["es"])
+        )
     # Confirmada sin que ninguna autoridad la atribuya a drones (la puso el extractor, la
     # actuación de la autoridad o una regla anterior): sin confirmar, salvo las dudosas.
     todos = almacen.incidentes()
@@ -644,7 +668,7 @@ def revisar(
         except DocumentoInvalido:
             fallidos.append(incidente["id"])
             continue
-        anotar(almacen, incidente, documento, MOTIVO_SIN_BASE)
+        anotar(almacen, incidente, documento, motivo_sin_base(incidente))
     # Una fuente cuenta que se buscó el dron y no se encontró: la presencia no queda confirmada.
     for incidente in almacen.incidentes():
         if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
@@ -704,6 +728,20 @@ MOTIVO_SIN_BASE = (
 )
 
 
+MOTIVO_PRUEBAS_PRENSA = (
+    "criterio de presencia: los restos, el derribo o las fotos del dron solo los cuenta la "
+    "prensa, sin una autoridad que diga que era un dron; la presencia no queda confirmada"
+)
+
+
+def motivo_sin_base(incidente: Documento) -> str:
+    """El motivo de quitar la confirmación sin base: las pruebas físicas que solo cuenta la
+    prensa (EODI-2025-00312, «Dronă militară de tip Gerbera a fost găsită pe un câmp») o, si no
+    las hay, que ninguna autoridad lo atribuye."""
+    evidencia = set((incidente.get("pruebas") or {}).get("evidencia", []))
+    return MOTIVO_PRUEBAS_PRENSA if evidencia & PRUEBAS_FISICAS else MOTIVO_SIN_BASE
+
+
 def sin_base(incidente: Documento) -> bool:
     """Confirmada sin base: ninguna autoridad la atribuye a drones (atribuida_por_autoridad), ni
     lo dice en su propio documento, ni hay pruebas físicas que confirme una autoridad, ni está
@@ -739,12 +777,10 @@ def quitar_sin_base(incidente: Documento) -> Documento:
 def dudosa_por(incidente: Documento, conocidas: dict[str, dict[str, Any]]) -> bool:
     """La regla no decide (va al experto o a la revisión a mano, y la presencia se queda como
     está): una autoridad afirma los drones según el extractor («drones»), pero su cita guardada
-    no los nombra (EODI-2025-00340, Bundeswehr: «Das bestätigte eine Sprecherin»); o hay pruebas
-    físicas del dron (restos, derribo, explosión) que solo cuenta la prensa (EODI-2025-00312,
-    «Dronă militară de tip Gerbera a fost găsită pe un câmp»). `conocidas`: las declaraciones del
-    incidente por el identificador de su fuente (_declaraciones_del_candidato)."""
-    if set((incidente.get("pruebas") or {}).get("evidencia", [])) & PRUEBAS_FISICAS:
-        return True
+    no los nombra (EODI-2025-00340, Bundeswehr: «Das bestätigte eine Sprecherin»). Las pruebas
+    físicas (restos, derribo, explosión) que solo cuenta la prensa no son dudosas: sin una
+    autoridad no confirman (EODI-2025-00312, motivo_sin_base). `conocidas`: las declaraciones
+    del incidente por el identificador de su fuente (_declaraciones_del_candidato)."""
     autoridades = {f["id"] for f in incidente["fuentes"] if declaraciones.de_autoridad(f)}
     return any(d.get("afirma") == "drones" and id_ in autoridades for id_, d in conocidas.items())
 

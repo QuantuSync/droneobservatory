@@ -147,3 +147,63 @@ def anotar_negacion(
     resultado["estado"]["actual"] = Estado.CONFIRMADO.value
     resultado["control"].pop("motivo_desmentido", None)
     return resultado
+
+
+def motivo_sin_negacion() -> dict[str, str]:
+    """El motivo del paso que deja confirmado un incidente cuyo «desmentido» no negaba nada."""
+    return {
+        "es": (
+            "La frase del desmentido no niega el suceso ni el dron (habla del peligro, de quién "
+            "está detrás o de que no se encontró): sigue confirmado por la autoridad que lo "
+            "confirmó, y la frase queda en el historial."
+        ),
+        "en": (
+            "The denial's wording does not deny the event or the drone (it speaks of the danger, "
+            "of who is behind it or of it not being found): it stays confirmed by the authority "
+            "that confirmed it, and the wording stays in the history."
+        ),
+    }
+
+
+def corregir_desmentido(incidente: Documento) -> tuple[Documento, Documento] | None:
+    """Las fichas ya guardadas con un desmentido que no vale (proceso/declaraciones.niega y la
+    regla de competencia): el incidente otra vez confirmado, con el paso de la autoridad que lo
+    confirmó y su motivo detrás del desmentido (que queda en el historial), y esa fuente. None
+    si el desmentido vale.
+
+    - La frase no niega nada: «è prematuro correlare l'episodio a una azione di Mosca»
+      (EODI-2025-00206, la prefectura de Brest), «няма проблем».
+    - Lo niega una autoridad que cede y lo confirmó una competente (EODI-2025-00124, Sofía: la
+      aviación civil búlgara frente al director del aeropuerto)."""
+    from proceso import declaraciones
+
+    if incidente["estado"]["actual"] != Estado.DESMENTIDO:
+        return None
+    fuentes: dict[str, Documento] = {f["id"]: f for f in incidente["fuentes"]}
+    historial = incidente["estado"]["historial"]
+    niega = fuentes.get(str(historial[-1].get("fuente_id")))
+    if niega is None or not niega.get("es_autoridad"):
+        return None
+    confirmantes = [
+        fuentes[str(p.get("fuente_id"))] for p in historial
+        if p["estado"] in (Estado.CONFIRMADO, Estado.ATRIBUIDO)
+        and str(p.get("fuente_id")) in fuentes
+        and declaraciones.de_autoridad(fuentes[str(p.get("fuente_id"))])
+    ]  # fmt: skip
+    if not confirmantes:
+        return None
+    competentes = [f for f in confirmantes if es_competente(autoridad(f))]
+    if not declaraciones.niega(str(niega.get("frase_origen") or "")):
+        prevalece, texto = (competentes or confirmantes)[-1], motivo_sin_negacion()
+    elif cede(autoridad(niega)) and competentes:
+        prevalece, texto = competentes[-1], motivo()
+    else:
+        return None
+    resultado = copy.deepcopy(incidente)
+    pasos = resultado["estado"]["historial"]
+    fecha = max((niega["fecha"], prevalece["fecha"]), key=lambda f: str(f["valor"]))
+    pasos.append({"estado": Estado.CONFIRMADO.value, "fecha": copy.deepcopy(fecha),
+                  "fuente_id": prevalece["id"], "motivo": texto})  # fmt: skip
+    resultado["estado"]["actual"] = Estado.CONFIRMADO.value
+    resultado["control"].pop("motivo_desmentido", None)
+    return resultado, prevalece

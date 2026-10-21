@@ -381,6 +381,26 @@ def test_una_fuente_del_mismo_dia_no_se_manda(almacen: Almacen, modelos: dict[st
     assert hechos.detectadas == 0 and cliente.pedidas == []
 
 
+def test_la_autoridad_que_lo_niega_el_mismo_dia_va_al_experto(
+    almacen: Almacen, modelos: dict[str, Any]
+) -> None:
+    # EODI-2025-00203, Schiphol: la Marechaussee dijo el mismo día que no hubo dron en el radar y
+    # que el objeto era probablemente un globo. Una noticia del mismo día sigue sin mandarse.
+    modelos["rectificaciones"] = []
+    d = _copenhague()
+    d["fuentes"] = [f for f in d["fuentes"] if f["id"] != "N2"]
+    d["fuentes"][1]["medio"] = (
+        "Royal Netherlands Marechaussee (declaración oficial citada en kyivindependent.com)"
+    )
+    d["fuentes"][1]["frase_origen"] = (
+        "an investigation showed no drone was detected on radar and that the object was likely a "
+        "balloon."
+    )
+    almacen.guardar_incidente(d, AHORA, VOCABULARIO_MODELOS)
+    (propuesta,) = seguimiento.detectadas(almacen, set())
+    assert propuesta.fuente["id"] == "N1-declaracion-1"
+
+
 def test_como_mucho_unas_pocas_preguntas_por_recogida(modelos: dict[str, Any]) -> None:
     modelos["rectificaciones"] = []
     almacen = Almacen.abrir()

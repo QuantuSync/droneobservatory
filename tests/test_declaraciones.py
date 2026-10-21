@@ -357,3 +357,29 @@ def test_la_sospecha_sobre_el_autor_no_deja_abierto_el_dron() -> None:
     )
     assert declaraciones.abierto("suspected drone over the airport")
     assert declaraciones.abierto("possibly a drone behind the hangar")
+
+
+SWR = (
+    "Wegen einer Drohnensichtung musste der Flughafen Karlsruhe/Baden-Baden am Samstagvormittag "
+    "für eine halbe Stunde gesperrt werden. Das teilte die Polizei Offenburg mit. Ein Anwohner "
+    "einer benachbarten Gemeinde informierte die Polizei wegen eines Fluggeräts."
+)
+
+
+def test_la_cita_que_remite_a_la_oracion_anterior_la_lleva() -> None:
+    # EODI-2025-00027 (swr.de): el extractor guardó «Das teilte die Polizei Offenburg mit.»,
+    # que no nombra el dron; lo que dijo la policía es la oración de antes.
+    declaracion = {"fuente": 1, "frase": "Das teilte die Polizei Offenburg mit.",
+                   "autoridad": "Polizei Offenburg", "afirma": "incidente"}  # fmt: skip
+    (valida,) = declaraciones.validas([declaracion], [SWR])
+    assert valida["frase"] == (
+        "Wegen einer Drohnensichtung musste der Flughafen Karlsruhe/Baden-Baden am "
+        "Samstagvormittag für eine halbe Stunde gesperrt werden. Das teilte die Polizei Offenburg "
+        "mit."
+    )
+    assert len(valida["frase"].split()) <= declaraciones.MAX_PALABRAS_FRASE
+    assert declaraciones.atribuye_dron(valida["frase"])
+    # Si la oración anterior no habla de drones, la cita se queda como estaba.
+    sin_dron = SWR.replace("einer Drohnensichtung", "eines Gewitters")
+    (igual,) = declaraciones.validas([declaracion], [sin_dron])
+    assert igual["frase"] == "Das teilte die Polizei Offenburg mit."
