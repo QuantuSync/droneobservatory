@@ -156,6 +156,7 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             "EODI-2026-00203",
             "EODI-2026-00263",
             "EODI-2026-00281",
+            "EODI-2026-00064",
         }
     )
     # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.
