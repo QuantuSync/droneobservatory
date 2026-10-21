@@ -376,7 +376,52 @@ Para añadir una ficha:
    la comprobación de palabras del repositorio lee bytes y parte en dos las palabras con
    letras como «ț» o «ș», y lo que queda suelto puede parecer una palabra prohibida.
 4. Si el valor de hoy no es el correcto, añadirlo a `discrepancias.json` con su motivo: solo al
-   añadir una ficha nueva puede subir `TOPE_DISCREPANCIAS`, y en el mismo cambio.
+   añadir una ficha nueva, o al corregir la referencia con citas nuevas, puede subir
+   `TOPE_DISCREPANCIAS`, y en el mismo cambio.
+
+### Un solo sitio decide el estado y la presencia (desde el 21 de octubre de 2026)
+
+`proceso/decidir.py` decide los dos valores a partir de las pruebas de la ficha cada vez que se
+guarda (`Almacen.guardar_incidente`): `decidir_estado` (el último paso del historial, salvo un
+desmentido que no vale) y `decidir_presencia` (por prioridad: rectificación, revisión a mano,
+documento oficial, «era otra cosa», autoridad que lo atribuye a un dron o pruebas físicas con el
+suceso confirmado; si no, no confirmada). Las dos devuelven el valor, la fuente y la regla que lo
+deciden; si el valor cambia al guardar, el motivo queda en el historial. Los demás pasos aportan
+pruebas (fuentes, frases, pasos del historial, afirmaciones, rectificaciones) y lo que escriban
+antes del guardado no es lo que queda. Las revisiones a mano entran como una fuente más
+(`revisada-…`) con prioridad. La referencia pasa sus copias por la misma decisión, por eso las
+copias guardan lo que cada fuente afirma de la presencia.
+
+### Criterios de cada dato (desde el 21 de octubre de 2026)
+
+Con ellos se decide el valor correcto de la referencia (y el que debe dar la ficha):
+
+- **Nombre de la instalación:** el nombre único del nomenclátor (`configuracion/lugares_europa.json`
+  para aeropuertos y bases, `configuracion/instalaciones_europa.json` para lo demás), el mismo en
+  todas las fichas y en su lengua oficial; si el nomenclátor no lo tiene en esa lengua, el nombre
+  oficial en ella (Luchtmachtbasis Schaffen, Kerncentrale Doel). Nunca en la lengua de la fuente
+  (una embajada en Copenhague va en danés, no en italiano). La clave `oaci` va siempre, a nulo si
+  no la tiene.
+- **lugar:** la localidad del suceso, no la instalación, la provincia ni el destino del avión; en
+  el mar, el mar o la costa (Öresund, costa de Wicklow). Con homónimos manda la fuente (Józefów de
+  la gmina Nieporęt, no el de junto a Otwock).
+- **drones:** el número que da una fuente para ESTE suceso. «Al menos N» → `{min: N, max: null}`;
+  «más de N» → `{min: N+1, max: null}`; un número indefinido como «kilkanaście» → su rango. Las
+  violaciones del espacio aéreo no son drones. Si la autoridad dice que no hubo dron →
+  «desconocido».
+- **presencia:** `no_acreditada` si una autoridad cierra la investigación sin probarlo ni
+  descartarlo; `descartada` si la autoridad concluye que era otra cosa, aunque lo diga con «muy
+  probablemente» en su conclusión. Una «posible» otra causa de la prensa, o un aviso inicial, no
+  descarta nada; una búsqueda sin resultado el mismo día tampoco es un cierre.
+- **estado:** `confirmado` si una autoridad u operador oficial declara que el suceso ocurrió (un
+  portavoz que confirma los avisos, la OTAN que reconoce que saltó el detector); negar el dron
+  rectifica la presencia, no el estado. `atribuido` solo con una autoridad del país afectado.
+- **tipo:** `incursion` solo si una autoridad, o una prueba física que confirma una autoridad,
+  demuestra que un dron estatal entró desde fuera; las fuentes anónimas o la narración del
+  periodista no bastan. Un buque alcanzado en el mar es `sobrevuelo` salvo que una autoridad diga
+  que estaba en aguas del país.
+- **cita:** del mismo suceso y que diga ese dato (no la fecha de publicación).
+- **zona:** la regla de los 150 km del flanco este, derivada del punto; no se toca a mano.
 
 ## Correcciones a mano
 

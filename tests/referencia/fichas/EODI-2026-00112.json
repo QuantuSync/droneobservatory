@@ -1,4 +1,21 @@
 {
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-fa5368a648f1aaf6",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-f81b6c59d2ba510d",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-e8f6e194ea2a6c61-declaracion-1",
+   "valor": "confirmada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "valor": "desconocido"

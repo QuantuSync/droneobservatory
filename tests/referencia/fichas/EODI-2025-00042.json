@@ -1,4 +1,56 @@
 {
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-8e71c2a5d1b72e20",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-f42d52fecaf7dad1",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-e02b2adfd0e0b50f",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-959c8718ccbeffef",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-c6a559b978093b67",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-189d20436ef1d2b3",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-48caeaa539e5211a",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-12f9a79ba26f094e",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-12f9a79ba26f094e-declaracion-2",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-cfc2323d35a2b858",
+   "valor": "no_acreditada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "valor": "si"

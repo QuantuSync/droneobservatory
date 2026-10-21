@@ -75,9 +75,10 @@
      "enlace": "https://jyllands-posten.dk/indland/ECE18571393/droner-lukker-luftrummet-over-aalborg"
     },
     "presencia_dron": {
-     "valor": "confirmada",
-     "cita": "Northern Jutland police told reporters \"more than one drone\" had been sighted near Aalborg airport and they were flying with lights on.",
-     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week"
+     "valor": "no_acreditada",
+     "cita": "I enkelte efterforskninger har det hverken kunnet p\u00e5vises eller afvises, at der har v\u00e6ret tale om droner. Dette g\u00f8r sig bl.a. g\u00e6ldende for s\u00e5 vidt ang\u00e5r efterforskningerne i K\u00f8benhavns Politi og Nordjyllands Politi.",
+     "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25",
+     "nota": "Comunicado de Rigspolitiet del 25/06/2026 (le\u00eddo entero): \u00aballe efterforskninger nu afsluttet i samtlige af landets politikredse\u00bb. No nombra Aalborg; la atribuci\u00f3n a este suceso es por deducci\u00f3n: las investigaciones de Nordjyllands Politi de septiembre de 2025 son las de los cierres de Aalborg (24-25 y 25-26 de septiembre). Ninguna otra noticia le\u00edda ni buscada (tv2kosmopol, thestar/Reuters) nombra Aalborg en el cierre."
     },
     "tipo": {
      "valor": "interrupcion_aeroportuaria",
@@ -117,15 +118,17 @@
     "drones": {
      "valor": {
       "min": 2,
-      "max": 10
+      "max": null
      },
      "cita": "Northern Jutland police told reporters \"more than one drone\" had been sighted near Aalborg airport",
-     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week"
+     "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week",
+     "nota": "\u00abm\u00e1s de uno\u00bb \u2192 min 2 sin m\u00e1ximo; ninguna fuente le\u00edda (ni la revisi\u00f3n anterior) da 10."
     },
     "cabecera": {
-     "valor": "Base a\u00e9rea de Aalborg",
+     "valor": "Aeropuerto de Aalborg",
      "cita": "'Luftrummet over Flyvestation Aalborg er i \u00f8jeblikket lukket grundet uautoriseret droneflyvning.'",
-     "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972"
+     "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+     "nota": "la instalaci\u00f3n como aeropuerto, igual que EODI-2025-00238 (EKYT)"
     }
    }
   },
@@ -151,11 +154,12 @@
     "objetivo": {
      "valor": {
       "categoria": "aeropuerto",
-      "nombre": "Aalborg Lufthavn",
+      "nombre": "Flyvestation Aalborg",
       "oaci": "EKYT"
      },
      "cita": "Luftrummet over Aalborg Lufthavn var lukket i en time omkring midnat p\u00e5 grund af mistanke om droner.",
-     "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+     "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), EKYT"
     },
     "pais": {
      "valor": "DK",
@@ -211,11 +215,12 @@
     "objetivo": {
      "valor": {
       "categoria": "aeropuerto",
-      "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+      "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c - \u0421\u043e\u0444\u0438\u044f",
       "oaci": "LBSF"
      },
      "cita": "\u0414\u0440\u043e\u043d \u043d\u0430\u0440\u0443\u0448\u0438 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0438 \u0437\u0430\u0431\u0430\u0432\u0438 \u043d\u044f\u043a\u043e\u043b\u043a\u043e \u043f\u043e\u043b\u0435\u0442\u0430",
-     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665"
+     "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), LBSF"
     },
     "pais": {
      "valor": "BG",
@@ -316,9 +321,10 @@
    "por_que": "Avisos de drones cerca de Brunssum y el aeropuerto de Maastricht (Limburgo, NL) el fin de semana del 8-9 de noviembre de 2025; la Marechaussee busc\u00f3 y no encontr\u00f3 nada: estado y presencia.",
    "valores": {
     "estado": {
-     "valor": "notificado",
+     "valor": "confirmado",
      "cita": "Un porte-parole a confirm\u00e9 \u00e0 l'ANP ces informations rapport\u00e9es par le journal De Limburger. Il a pr\u00e9cis\u00e9 que ces recherches n'avaient permis de retrouver aucun drone.",
-     "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U"
+     "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U",
+     "nota": "El portavoz de la Koninklijke Marechaussee confirma los avisos de drones y la b\u00fasqueda (\u00abLa mar\u00e9chauss\u00e9e royale n\u00e9erlandaise ... a men\u00e9, le week-end dernier, des recherches \u00e0 la suite de signalements de drones pr\u00e8s du centre de commandement de l'Otan \u00e0 Brunssum ainsi qu'\u00e0 l'a\u00e9roport de Maastricht-Aix-la-Chapelle\u00bb): una autoridad declara que el incidente (los avisos) ocurri\u00f3. Que no encontraran el dron afecta a la presencia, no al estado."
     },
     "presencia_dron": {
      "valor": "no_confirmada",
@@ -398,7 +404,8 @@
     "lugar": {
      "valor": "J\u00f3zef\u00f3w",
      "cita": "We wtorek (20 pa\u017adziernika) po po\u0142udniu dron spad\u0142 na jedn\u0105 z dzia\u0142ek w J\u00f3zefowie w gminie Niepor\u0119t (woj. mazowieckie).",
-     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html"
+     "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+     "nota": "J\u00f3zef\u00f3w de la gmina Niepor\u0119t (powiat legionowski), no el de Otwock. Coordenadas aproximadas seg\u00fan Wikipedia en polaco (\u00abJ\u00f3zef\u00f3w (powiat legionowski)\u2026 wie\u015b so\u0142ecka\u2026 w gminie Niepor\u0119t\u00bb): 52.392222 N, 20.980833 E."
     },
     "inicio": {
      "valor": "2026-10-20",
@@ -622,7 +629,8 @@
     "objetivo": {
      "valor": {
       "categoria": "puerto",
-      "nombre": "Portul Constan\u021ba"
+      "nombre": "Portul Constan\u021ba",
+      "oaci": null
      },
      "cita": "\u00een Dana 78, \u00een Portul Constan\u021ba, a fost observat un obiect plutitor, posibil dron\u0103",
      "enlace": "https://digi24.ro/stiri/actualitate/o-drona-marina-a-explodat-in-portul-constanta-zona-este-izolata-autoritatile-se-afla-la-fata-locului-3801477"
@@ -649,9 +657,10 @@
      "nota": "deriva del lugar"
     },
     "drones": {
-     "valor": 4,
-     "cita": "\u00cen acest moment, toate cele patru drone marine ie\u0219ite de sub controlul for\u021belor militare ucrainene s-au autodetona",
-     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html"
+     "valor": 1,
+     "cita": "au confirmat c\u0103 au pierdut controlul oper\u0103rii a patru drone. Celelalte trei drone s-au autodetonat \u2013 dou\u0103 \u00een larg \u0219i a treia \u00een afara portului.",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html",
+     "nota": "Cronolog\u00eda del Gobierno: de las cuatro drones perdidas, solo la de la Dana 78 lleg\u00f3 al puerto; las otras tres se autodetonaron fuera (dos en alta mar, una fuera del puerto). Este suceso: 1."
     },
     "cabecera": {
      "valor": "Dron que explot\u00f3 en el Puerto de Constanza",
@@ -675,9 +684,10 @@
      "enlace": "https://az-online.de/politik/drohnen-versenken-frachter-nahe-bulgarien-sofia-ruft-nato-zu-hilfe-zr-94540958.html"
     },
     "tipo": {
-     "valor": "incursion",
-     "cita": "Nava de marf\u0103 \u201eChelsea 3\u201d, sub pavilion maltez, a fost atacat\u0103 de trei drone aeriene la aproximativ 18 mile marine est de ora\u0219ul Biala.",
-     "enlace": "https://mediafax.ro/externe/doua-nave-lovite-de-drone-in-marea-neagra-premierul-bulgariei-va-purta-discutii-cu-ambasadorul-rus-si-cu-secretarul-general-al-nato-23824343"
+     "valor": "sobrevuelo",
+     "cita": "\u0414\u0432\u0430 \u043a\u043e\u0440\u0430\u0431\u0430 \u0441\u0430 \u0431\u0438\u043b\u0438 \u0443\u0434\u0430\u0440\u0435\u043d\u0438 \u043f\u0440\u0435\u0437 \u0438\u0437\u043c\u0438\u043d\u0430\u043b\u0430\u0442\u0430 \u043d\u043e\u0449 \u043e\u0442 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u0430\u043b\u043d\u0438\u0442\u0435 \u0432\u043e\u0434\u0438 \u043d\u0430 \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f, \u0435\u0434\u0438\u043d\u0438\u044f\u0442 \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u0411\u044f\u043b\u0430, \u0430 \u0434\u0440\u0443\u0433\u0438\u044f\u0442 \u043d\u0430 17 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u041a\u0440\u0430\u043f\u0435\u0446.",
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets",
+     "nota": "Ninguna autoridad dice que los buques estuvieran en aguas territoriales b\u00falgaras: el primer ministro dice \u00ab\u0432 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u0430\u043b\u043d\u0438\u0442\u0435 \u0432\u043e\u0434\u0438\u00bb (y despu\u00e9s \u00ab\u0432 \u043d\u0435\u043f\u043e\u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0435\u043d\u0430 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u0434\u043e \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438\u0442\u0435 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u0430\u043b\u043d\u0438 \u0432\u043e\u0434\u0438\u00bb). Lo de adevarul.ro (\u00ab\u00een apele teritoriale ale Bulgariei\u00bb) es narraci\u00f3n del periodista."
     },
     "objetivo": {
      "valor": null,
@@ -706,9 +716,13 @@
      "nota": "deriva del lugar (mar Negro)"
     },
     "drones": {
-     "valor": 3,
+     "valor": {
+      "min": 4,
+      "max": null
+     },
      "cita": "\u041f\u043e \u0434\u0430\u043d\u043d\u0438 \u043d\u0430 \u0435\u043a\u0438\u043f\u0430\u0436\u0430 \u0442\u043e\u0439 \u0435 \u0443\u0434\u0430\u0440\u0435\u043d \u0441 3 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u0438 \u0434\u0440\u043e\u043d\u0430 \u043f\u043e \u043f\u0430\u043b\u0443\u0431\u0430\u0442\u0430 \u0438 \u043f\u043e \u0431\u043e\u0440\u0434\u0430.",
-     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
+     "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets",
+     "nota": "3 drones en el Chelsea 3 (primer ministro, por la tripulaci\u00f3n). Para el HS Dignity ninguna fuente le\u00edda da n\u00famero: solo \u00ab\u043f\u043e\u0442\u043e\u043f\u0435\u043d\u0438\u044f \u043e\u0442 \u0434\u0440\u043e\u043d\u00bb / \u00ab\u0430\u0442\u0430\u043a\u0430 \u0441 \u0434\u0440\u043e\u043d\u00bb (boulevardbulgaria.bg, que cita a Reuters y a las autoridades b\u00falgaras). Total: al menos 3+1 = 4. Si se exige un n\u00famero de fuente para ambos buques, la alternativa es {min:3,max:null}."
     },
     "cabecera": {
      "valor": "Drones atacan barcos en el mar Negro frente a Bulgaria",
@@ -891,9 +905,13 @@
      "nota": "deriva del lugar"
     },
     "drones": {
-     "valor": 4,
+     "valor": {
+      "min": 4,
+      "max": null
+     },
      "cita": "Best\u00e4tigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
-     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html"
+     "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+     "nota": "\u00abmindestens vier\u00bb = al menos 4."
     },
     "cabecera": {
      "valor": "Aeropuerto de Hannover",
@@ -969,8 +987,9 @@
    "valores": {
     "estado": {
      "valor": "atribuido",
-     "cita": "Datele preliminare rezultate \u00een urma evalu\u0103rilor efectuate de speciali\u0219ti indic\u0103 faptul c\u0103 fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u021bia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026",
-     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+     "cita": "Datele preliminare rezultate \u00een urma evalu\u0103rilor efectuate de speciali\u015fti indic\u0103 faptul c\u0103 fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u0163ia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026",
+     "enlace": "https://www.bursa.ro/mapn-incarcatura-exploziva-identificata-si-detonata-controlat-la-rachelu-tulcea-fragmentele-provin-dintr-o-drona-rusa-88444954",
+     "nota": "El valor no cambia, cambia la cita: bursa.ro (Agerpres) cierra esa frase con \u00abconform MApN\u00bb, y financialintelligence.ro reproduce el comunicado del MApN con la misma frase; no son \u00abspeciali\u0219ti\u00bb an\u00f3nimos sino la evaluaci\u00f3n que comunica el MApN. En digi24 la frase quedaba fuera de las comillas del MApN."
     },
     "presencia_dron": {
      "valor": "confirmada",
@@ -979,8 +998,9 @@
     },
     "tipo": {
      "valor": "incursion",
-     "cita": "fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u021bia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026",
-     "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893"
+     "cita": "fragmentele provin de la o dron\u0103 utilizat\u0103 \u00een atacurile executate de Federa\u0163ia Rus\u0103 asupra infrastructurii portuare ucrainene \u00een luna aprilie 2026, anterior m\u0103surilor de consolidare \u015fi adaptare a ap\u0103r\u0103rii aeriene adoptate dup\u0103 incidentele grave de la Gala\u0163i, conform MApN.",
+     "enlace": "https://www.bursa.ro/mapn-incarcatura-exploziva-identificata-si-detonata-controlat-la-rachelu-tulcea-fragmentele-provin-dintr-o-drona-rusa-88444954",
+     "nota": "Valor sin cambio: prueba f\u00edsica (fragmentos con carga explosiva en Rachelu, detonados por el MApN) que el MApN atribuye a un dron ruso; cita nueva atribuida expresamente al MApN."
     },
     "objetivo": {
      "valor": null,
@@ -1065,9 +1085,13 @@
      "enlace": null
     },
     "drones": {
-     "valor": 19,
-     "cita": "Przez ca\u0142\u0105 noc dosz\u0142o do 19 narusze\u0144 polskiego nieba.",
-     "enlace": "https://www.gov.pl/web/premier/naruszenie-polskiej-przestrzeni-powietrznej-jest-wniosek-o-uruchomienie-art-4-traktatu-polnocnoatlantyckiego"
+     "valor": {
+      "min": 20,
+      "max": null
+     },
+     "cita": "Wed\u0142ug ustale\u0144 \u015bledczych dosz\u0142o wtedy do nielegalnego przekroczenia granicy pa\u0144stwowej RP przez kilkadziesi\u0105t obcych bezza\u0142ogowych statk\u00f3w powietrznych, czyli dron\u00f3w.",
+     "enlace": "https://bankier.pl/wiadomosc/Prokuratura-umorzyla-sledztwo-ws-rosyjskich-dronow-Wojsko-dzialalo-zgodnie-z-prawem-9209385.html",
+     "nota": "Las \u00ab19 narusze\u0144\u00bb de Tusk son violaciones, no drones. Cifra final de la autoridad (Fiscal\u00eda Regional de Lublin, portavoz Marcin Kozak, v\u00eda PAP, 8-10-2026): \u00abkilkadziesi\u0105t\u00bb = varias decenas, al menos 20 (hallados en 24 localidades). Compatible con los 21 drones que dio Marcin Przydacz (Canciller\u00eda del Presidente) el 12-9-2025 seg\u00fan demagog.org.pl. El comunicado inicial del MON (10-9-2025) dec\u00eda \u00abkilkana\u015bcie obiekt\u00f3w\u00bb (11-19), superado por lo hallado despu\u00e9s."
     },
     "cabecera": {
      "valor": "Drones rusos invaden el espacio a\u00e9reo de Polonia",
@@ -1126,9 +1150,13 @@
      "nota": "deriva del lugar"
     },
     "drones": {
-     "valor": 1,
-     "cita": "Hierzu waren an der Drohne professioneller Sprengstoff und ein Z\u00fcnder angebracht worden.",
-     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html"
+     "valor": {
+      "min": 1,
+      "max": 2
+     },
+     "cita": "Eine Frachtmaschine, die wegen des Vorfalls durchstarten musste, kollidierte im erweiterten Bereich des Flughafens in der Luft mit einem Gegenstand, mutma\u00dflich einer weiteren Drohne.",
+     "enlace": "https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html",
+     "nota": "Un dron con explosivo seguro; el objeto contra el que choc\u00f3 el avi\u00f3n de carga es \u00abpresuntamente otro dron\u00bb seg\u00fan la Fiscal\u00eda Federal: entre 1 y 2. Le\u00eddo en la copia de web.archive.org (el original no responde desde aqu\u00ed)."
     },
     "cabecera": {
      "valor": "Aeropuerto de Leipzig",
@@ -1167,9 +1195,10 @@
      "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/"
     },
     "lugar": {
-     "valor": null,
-     "cita": "Dr\u00f6naren som st\u00f6rdes ut en dryg mil fr\u00e5n det franska hangarfartyget i Malm\u00f6 i onsdags var rysk",
-     "enlace": "https://hbl.fi/2026-02-27/svenska-forsvaret-bekraftar-rysk-dronare-utanfor-malmo"
+     "valor": "\u00d6resund",
+     "cita": "Under bes\u00f6ket av det franska hangarfartyget Charles de Gaulle observerade ett av F\u00f6rsvarsmaktens fartyg att en dr\u00f6nare lyfte fr\u00e5n ett ryskt signalspaningsfartyg i \u00d6resund.",
+     "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/",
+     "nota": "En el mar: el estrecho de \u00d6resund, no Malm\u00f6 (puerto de escala del portaaviones)."
     },
     "inicio": {
      "valor": "2026-02-25",
@@ -1216,11 +1245,12 @@
     "objetivo": {
      "valor": {
       "categoria": "aeropuerto",
-      "nombre": "Vilnius Airport",
+      "nombre": "Tarptautinis Vilniaus oro uostas",
       "oaci": "EYVI"
      },
      "cita": "Flights to and from Vilnius Airport were temporarily suspended during the alert.",
-     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html"
+     "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), EYVI"
     },
     "pais": {
      "valor": "LT",
@@ -1266,8 +1296,9 @@
     },
     "presencia_dron": {
      "valor": "descartada",
-     "cita": "L'a\u00e9roport de Vilnius sera ferm\u00e9 \"jusqu'\u00e0 04H30 (03H30 HB)\" dimanche en raison d'une \"possible s\u00e9rie de ballons en approche\", a indiqu\u00e9 celui-ci dans une publication sur Facebook.",
-     "enlace": "https://lavenir.net/actu/monde/2025/10/05/intrusion-de-drones-dans-lespace-aerien-europeen-laeroport-de-vilnius-en-lituanie-ferme-suite-a-une-alerte-aux-ballons-suspects-73C2L5N5MFG7TLPV4MEHHUDQ2E"
+     "cita": "\u201e\u0160i\u0105nakt buvo fiksuoti oro erdv\u0117s pa\u017eeidimai Lietuvos, i\u0161 viso u\u017efiksuoti \u012fskrendantys 25 meteorologiniai balionai i\u0161 Baltarusijos\u201c, \u2013 LRT radijui sekmadien\u012f sak\u0117 D. Buta.",
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/2701301/virs-vilniaus-oro-uosto-apribota-oro-erdve-skrydziai-nukreipiami-i-kauna-ir-ryga",
+     "nota": "El valor no cambia, cambia la cita: \u00abpossible s\u00e9rie de ballons\u00bb (aviso inicial del aeropuerto) no basta, pero s\u00ed hay autoridad que concluye que eran globos: el Nacionalinis krizi\u0173 valdymo centras (NKVC), por boca de Darius Buta: 13\u201314 globos sobre Vilna y su distrito \u00abo du i\u0161 j\u0173 \u2013 vir\u0161 Vilniaus oro uosto\u00bb. Lo respalda el VSAT (guardia de fronteras), que encontr\u00f3 siete globos esa noche."
     },
     "tipo": {
      "valor": "interrupcion_aeroportuaria",
@@ -1281,7 +1312,8 @@
       "oaci": "EYVI"
      },
      "cita": "\u03a4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03ad\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03b1\u03c1\u03b3\u03ac \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5 \u03c4\u03bf\u03c5 \u03a3\u03b1\u03b2\u03b2\u03ac\u03c4\u03bf\u03c5 \u03bb\u03cc\u03b3\u03c9 \u03c5\u03c0\u03bf\u03c8\u03af\u03b1\u03c2 \u03b3\u03b9\u03b1 \u03c0\u03b1\u03c1\u03bf\u03c5\u03c3\u03af\u03b1 \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03c9\u03bd \u03c0\u03bf\u03c5 \u03c0\u03b5\u03c4\u03bf\u03cd\u03c3\u03b1\u03bd \u03c3\u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae.",
-     "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion"
+     "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), EYVI"
     },
     "pais": {
      "valor": "LT",
@@ -1365,9 +1397,10 @@
      "enlace": null
     },
     "drones": {
-     "valor": 1,
-     "cita": "one of the `drones' appeared to converge with them and fly above and in front of them",
-     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
+     "valor": "desconocido",
+     "cita": "However, after analysis, it was clear to members that the track of the F15 had correlated with the perceived position of the \u2018drone\u2019 and that they had actually sighted a fast-moving object at distance",
+     "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf",
+     "nota": "El UK Airprox Board (y la investigaci\u00f3n de RAPCON de Lakenheath: \u00abthe police helicopter pilot was likely reporting, and reacting to, activity of the F15s\u00bb) concluye que el \u00abdron\u00bb era un F-15; CF3: \u00abperceiving them to be drones\u00bb. La autoridad dice que no hubo dron \u2192 desconocido, no 1."
     },
     "cabecera": {
      "valor": "RAF Lakenheath",
@@ -1429,10 +1462,13 @@
      "valor": "Falsa alarma de dron en la base OTAN de Geilenkirchen",
      "cita": "Nato-Flugplatz Geilenkirchen: Drohnenalarm stellt sich als Fehlalarm heraus",
      "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/nato-flugplatz-geilenkirchen-drohnenalarm-stellt-sich-als-fehlalarm-heraus.html"
+    },
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Zwar sei ein Detektionsger\u00e4t f\u00fcr Drohnen angeschlagen, was h\u00e4ufiger geschehe. Daraufhin sei die Milit\u00e4rpolizei ausger\u00fcckt, um nachzuschauen, ob irgendetwas zu sehen sei.",
+     "enlace": "https://www.t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html",
+     "nota": "El portavoz de la OTAN reconoce que salt\u00f3 el detector de drones y sali\u00f3 la polic\u00eda militar: el incidente (la alarma) ocurri\u00f3 \u2192 confirmado, no desmentido. Lo que niega es el dron (\u00abWir gehen davon aus, es war keine Drohne\u00bb; quiz\u00e1 un p\u00e1jaro), que va en presencia (descartada). Rectificar la causa no cambia el estado. (Lo dice el \u00abNato-Sprecher in Geilenkirchen\u00bb de la frase anterior del art\u00edculo.)"
     }
-   },
-   "sin_comprobar": {
-    "estado": "dudoso: la OTAN dice \u00abEs gab gestern hier keine Drohne\u00bb; seg\u00fan el m\u00e9todo la alarma ocurri\u00f3 (confirmado) y lo rectificado es la presencia"
    }
   },
   {
@@ -1461,7 +1497,8 @@
       "oaci": "LBSF"
      },
      "cita": "\u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
-     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), LBSF"
     },
     "pais": {
      "valor": "BG",
@@ -1485,9 +1522,10 @@
      "nota": "deriva del lugar"
     },
     "drones": {
-     "valor": 1,
-     "cita": "\u0431\u0435\u0448\u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
-     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828"
+     "valor": "desconocido",
+     "cita": "\u0414\u0440\u043e\u043d \u043d\u044f\u043c\u0430, \u043d\u0435 \u0441\u043c\u0435 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b\u0438 \u0432 \u0442\u043e\u0437\u0438 \u0441\u0438\u0433\u043d\u0430\u043b \u0434\u0440\u043e\u043d - \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0447\u043d\u043e \u0437\u0430\u044f\u0432\u0438 \u0433\u043b\u0430\u0432\u0435\u043d \u043a\u043e\u043c\u0438\u0441\u0430\u0440 \u041b\u044e\u0431\u043e\u043c\u0438\u0440 \u041d\u0438\u043a\u043e\u043b\u043e\u0432 \u043e\u0442\u043d\u043e\u0441\u043d\u043e \u0441\u0438\u0433\u043d\u0430\u043b\u0430 \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0437\u0430 \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f.",
+     "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828",
+     "nota": "La autoridad (director de la \u0421\u0414\u0412\u0420) dice que no hubo dron en el aviso del s\u00e1bado \u2192 desconocido (no 1). Lo que vieron era un ciudadano, empleado de una aerol\u00ednea alemana, con \u00ab\u0440\u0430\u0434\u0438\u043e\u0441\u0442\u0430\u043d\u0446\u0438\u044f \u0438 \u0444\u043e\u0442\u043e\u0430\u043f\u0430\u0440\u0430\u0442\u00bb para fotografiar aviones. SUCESOS MEZCLADOS en la ficha: (1) s\u00e1bado 7/03/2026: aviso a la \u0421\u0414\u0412\u0420 de \u00ab\u0435\u0432\u0435\u043d\u0442\u0443\u0430\u043b\u043d\u043e \u043f\u0440\u0435\u043b\u0438\u0442\u0430\u0449 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f\u00bb, cierre del aeropuerto, la polic\u00eda lo descarta; fuente: focus-news.net \u2026Gl-komisar-Lyubomir-Nikolov-Signal-2917828 (09.03.2026 18:24). (2) domingo 8/03/2026 por la noche: tres avisos de dron (23:03, 23:27 y 00:15 del 9/03), confirmados como avisos por el centro de prensa del aeropuerto, \u00ab\u0441\u0438\u0433\u043d\u0430\u043b\u0438\u0442\u0435 \u043d\u0435 \u0441\u0430 \u043f\u043e\u043f\u0440\u0435\u0447\u0438\u043b\u0438 \u043d\u0430 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0438\u0442\u0435\u00bb, solo un vuelo de Bruselas con 15 min de retraso; fuentes: focus-news.net \u2026Tri-signala-za-dronove-vuv-vuzdushno-2917935 (09.03.2026 20:29), bgonair.bg \u2026412292-tri-drona-nad-letishte-vasil-levski (09.03.2026 17:57) y burgasnews.com 2026/03/09 (no le\u00eddo). Los drones {3,3} de la ficha vienen del suceso (2); la referencia (inicio 7/03, cierre) describe el suceso (1). Sobre (2) Nikolov a\u00f1ade: \u00ab\u041f\u043e\u0441\u0442\u044a\u043f\u0432\u0430\u0442 \u0438 \u0434\u0440\u0443\u0433\u0438 \u0441\u0438\u0433\u043d\u0430\u043b\u0438, \u043d\u043e \u0442\u0435 \u043d\u0435 \u0441\u0435 \u043f\u043e\u0442\u0432\u044a\u0440\u0436\u0434\u0430\u0432\u0430\u0442\u00bb."
     },
     "cabecera": {
      "valor": "Aeropuerto de Sof\u00eda",
@@ -1579,11 +1617,12 @@
     "objetivo": {
      "valor": {
       "categoria": "aeropuerto",
-      "nombre": "luchtmachtbasis van Schaffen",
+      "nombre": "Luchtmachtbasis Schaffen",
       "oaci": "EBDT"
      },
      "cita": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest).",
-     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen"
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen",
+     "nota": "en neerland\u00e9s, su lengua oficial: el nomencl\u00e1tor solo lo tiene en ingl\u00e9s (Diest Schaffen Airfield, EBDT)"
     },
     "pais": {
      "valor": "BE",
@@ -1700,7 +1739,8 @@
     "objetivo": {
      "valor": {
       "categoria": "base_militar",
-      "nombre": "\u00cele Longue"
+      "nombre": "\u00cele Longue",
+      "oaci": null
      },
      "cita": "la base sottomarina francese dell'Ile Longue, nella rada di Brest",
      "enlace": "https://tg24.sky.it/mondo/2025/12/05/droni-francia"
@@ -1754,8 +1794,9 @@
     },
     "tipo": {
      "valor": "incursion",
-     "cita": "following Monday\u2019s Iranian-backed drone strike, which was launched from Lebanon.",
-     "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike"
+     "cita": "the British Akrotiri air force base was struck by a drone at around midnight, government spokesman Konstantinos Letymbiotis said on Monday.",
+     "enlace": "https://cyprus-mail.com/2026/03/02/govt-monitoring-situation-after-akrotiri-drone-strike",
+     "nota": "El portavoz del Gobierno chipriota confirma el impacto del dron en la base (el Ministerio de Defensa brit\u00e1nico habl\u00f3 de \u00abminimal damage\u00bb, seg\u00fan defensenews). El lanzamiento desde L\u00edbano lo da la prensa, no una autoridad, en lo le\u00eddo: la cita prueba el impacto, no nombra al Estado de origen."
     },
     "objetivo": {
      "valor": {
@@ -1772,9 +1813,10 @@
      "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
     },
     "lugar": {
-     "valor": "RAF Akrotiri",
-     "cita": "Schools in the villages of Trachoni, Episkopi, Akrotiri and Asomatos, located within the RAF Akrotiri base area, were closed on Monday",
-     "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike"
+     "valor": "Akrotiri",
+     "cita": "the British Akrotiri air force base was struck by a drone at around midnight, government spokesman Konstantinos Letymbiotis said on Monday.",
+     "enlace": "https://cyprus-mail.com/2026/03/02/govt-monitoring-situation-after-akrotiri-drone-strike",
+     "nota": "La localidad (pen\u00ednsula) de Akrotiri, no el nombre de la instalaci\u00f3n \u00abRAF Akrotiri\u00bb."
     },
     "inicio": {
      "valor": "2026-03-01",
@@ -1843,11 +1885,19 @@
      "valor": "Drones rusos cerca de la frontera en Tulcea: dos F-16 despegan de la base de Borcea",
      "cita": "Nou atac cu drone, l\u00e2ng\u0103 frontiera cu Rom\u00e2nia. Dou\u0103 aeronave F-16 au decolat din Baza Aerian\u0103 de la Borcea",
      "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
+    },
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Sistemele de monitorizare \u0219i supraveghere ale Ministerului Ap\u0103r\u0103rii Na\u021bionale au semnalat evolu\u021bia unor drone \u00een spa\u021biul aerian ucrainean, pe trasee de zbor \u00een apropierea frontierei cu Rom\u00e2nia.",
+     "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
+     "nota": "El MApN declara el suceso (drones en espacio a\u00e9reo ucraniano junto a la frontera, F-16 desde Borcea, RO-Alert en Tulcea por aviso del MApN); no atribuye a un Estado un dron en Ruman\u00eda."
+    },
+    "presencia_dron": {
+     "valor": "no_confirmada",
+     "cita": "\u201eDatele furnizate de sistemele radar ale For\u0163elor Aeriene Rom\u00e2ne nu au indicat p\u0103trunderi ale \u0163intelor aeriene monitorizate \u00een spa\u0163iul aerian na\u0163ional\u201d, anun\u021b\u0103 Ministerul Ap\u0103r\u0103rii din Rom\u00e2nia.",
+     "enlace": "https://libertatea.ro/stiri/oameni-tulcea-treziti-mesaj-ro-alert-doua-avioane-f-16-decolat-baza-aeriana-borcea-atac-rusesc-drone-5176380",
+     "nota": "El MApN no confirma ning\u00fan dron en Ruman\u00eda (radar sin penetraciones) y anuncia \u00abcercet\u0103ri \u00een zonele poten\u021bial afectate\u00bb sin resultado publicado; no es descartada porque no concluye que fuera otra cosa."
     }
-   },
-   "sin_comprobar": {
-    "estado": "dudoso: el MApN da los drones en el espacio a\u00e9reo ucraniano junto a la frontera, no en Ruman\u00eda; falta decidir si es suceso del pa\u00eds",
-    "presencia_dron": "dudoso: el MApN da los drones en el espacio a\u00e9reo ucraniano junto a la frontera, no en Ruman\u00eda; falta decidir si es suceso del pa\u00eds"
    }
   },
   {
@@ -1872,10 +1922,12 @@
     "objetivo": {
      "valor": {
       "categoria": "energia",
-      "nombre": "Doel"
+      "nombre": "Kerncentrale Doel",
+      "oaci": null
      },
      "cita": "In Belgi\u00eb zijn opnieuw drones gesignaleerd, nu boven de kerncentrale in Doel.",
-     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik"
+     "enlace": "https://nos.nl/artikel/2589862-drones-gezien-bij-belgische-kerncentrale-doel-en-luchthaven-luik",
+     "nota": "la central nuclear en neerland\u00e9s; el nomencl\u00e1tor solo tiene la subestaci\u00f3n Doel 380"
     },
     "pais": {
      "valor": "BE",
@@ -1992,7 +2044,8 @@
     "objetivo": {
      "valor": {
       "categoria": "energia",
-      "nombre": "Loviisan ydinvoimalaitos"
+      "nombre": "Loviisan ydinvoimalaitos",
+      "oaci": null
      },
      "cita": "ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
      "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
@@ -2009,8 +2062,9 @@
     },
     "inicio": {
      "valor": "2026-09-16",
-     "cita": "16.9. 14:11 It\u00e4-Uudenmaan poliisi sai keskiviikkoaamuna noin kello 9.50 aikoihin ilmoituksen droonista",
-     "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+     "cita": "It\u00e4-Uudenmaan poliisi sai keskiviikkoaamuna noin kello 9.50 aikoihin ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+     "enlace": "https://is.fi/kotimaa/art-2000012278007.html",
+     "nota": "Art\u00edculo del 16.9. a las 14:11; el 16-9-2026 es mi\u00e9rcoles (\u00abkeskiviikkoaamuna\u00bb). 9.50 hora de Finlandia (EEST, UTC+3) = 06:50 UTC del 16-9-2026. El valor no cambia; cambia la cita (la anterior empezaba con la fecha de publicaci\u00f3n)."
     },
     "zona": {
      "valor": "frontera",
@@ -2077,8 +2131,9 @@
     },
     "cabecera": {
      "valor": "Dron entra en el espacio a\u00e9reo de Bulgaria y explota cerca de un gasoducto",
-     "cita": "sei das Flugobjekt auf bulgarischem Staatsgebiet in einer Entfernung von 1000 Metern von der rum\u00e4nischen Grenze explodiert",
-     "enlace": "https://abendblatt.de/politik/article412806157/nato-staat-bulgarien-meldet-drohnenexplosion-nahe-gaspipeline.html"
+     "cita": "\u0422\u043e\u0432\u0430 \u0441\u0442\u0430\u0432\u0430 \u0432 \u043d\u0435\u043f\u043e\u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0435\u043d\u0430 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u043e\u0442 \u0431\u0438\u0432\u0448\u0438\u044f \u0413\u0440\u0430\u043d\u0438\u0447\u0435\u043d \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043d\u043e-\u043f\u0440\u043e\u043f\u0443\u0441\u043a\u0430\u0442\u0435\u043b\u0435\u043d \u043f\u0443\u043d\u043a\u0442 (\u0413\u041a\u041f\u041f) \u201e\u041a\u0430\u0440\u0434\u0430\u043c\" \u043c\u0435\u0436\u0434\u0443 \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f \u0438 \u0420\u0443\u043c\u044a\u043d\u0438\u044f \u0438 \u043d\u0430 1000 \u043c\u0435\u0442\u0440\u0430 \u043e\u0442 \u043d\u0430\u0448\u0430\u0442\u0430 \u043a\u043e\u043c\u043f\u0440\u0435\u0441\u043e\u0440\u043d\u0430 \u0441\u0442\u0430\u043d\u0446\u0438\u044f \u043d\u0430 \u0422\u0440\u0430\u043d\u0441\u0431\u0430\u043b\u043a\u0430\u043d\u0441\u043a\u0438\u044f \u0433\u0430\u0437\u043e\u043f\u0440\u043e\u0432\u043e\u0434, \u0434\u043e\u0431\u0430\u0432\u0438 \u0420\u0430\u0434\u0435\u0432.",
+     "enlace": "https://www.bta.bg/bg/videos/38827",
+     "nota": "Valor sin cambio, cita de BTA (primer ministro Radev). La explosi\u00f3n la dice la frase anterior de la misma nota: \u00ab\u043d\u0430\u0445\u043b\u0443\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u043e\u0442\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438 \u0432\u0437\u0440\u0438\u0432\u044f\u0432\u0430\u043d\u0435 \u043d\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 100 \u043c\u0435\u0442\u0440\u0430 \u043d\u0430\u0432\u044a\u0442\u0440\u0435 \u0432 \u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0430\u0442\u0430 \u0433\u0440\u0430\u043d\u0438\u0446\u0430 \u043e\u0442 \u043f\u043e\u0441\u043e\u043a\u0430 \u0420\u0443\u043c\u044a\u043d\u0438\u044f\u00bb. No hay una sola frase de \u226440 palabras con las dos cosas."
     }
    },
    "sin_comprobar": {
@@ -2100,9 +2155,10 @@
      "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
     },
     "tipo": {
-     "valor": "incursion",
-     "cita": "O dron\u0103 ucrainean\u0103, ajuns\u0103 \u00een deriv\u0103 \u00een zona portului Constan\u021ba, a fost neutralizat\u0103 \u00een larg, de scafandrii militari.",
-     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret"
+     "valor": "sobrevuelo",
+     "cita": "Ar fi vorba despre o dron\u0103 militar\u0103 ucrainean\u0103 cu \u00eenc\u0103rc\u0103tur\u0103 exploziv\u0103 la bord, au precizat surse din r\u00e2ndul anchetatorilor pentru Euronews Rom\u00e2nia.",
+     "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+     "nota": "Solo fuentes an\u00f3nimas de los investigadores; ninguna autoridad dice que un dron estatal entrara en aguas rumanas, as\u00ed que no es incursi\u00f3n."
     },
     "objetivo": {
      "valor": null,
@@ -2162,11 +2218,12 @@
     "objetivo": {
      "valor": {
       "categoria": "aeropuerto",
-      "nombre": "\u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f",
+      "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c - \u0421\u043e\u0444\u0438\u044f",
       "oaci": "LBSF"
      },
      "cita": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434 \u0437\u0430\u0440\u0430\u0434\u0438 \u0437\u0430\u0441\u0435\u0447\u0435\u043d \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e.",
-     "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html"
+     "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), LBSF"
     },
     "pais": {
      "valor": "BG",
@@ -2180,8 +2237,9 @@
     },
     "inicio": {
      "valor": "2026-03-07",
-     "cita": "\u0414\u0440\u043e\u043d \u043d\u0430 \u043b\u044e\u0431\u0438\u0442\u0435\u043b \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f \u0410\u0432\u0442\u043e\u0440: news.bg 07.03.2026 19:30:34",
-     "enlace": "https://news.bg/society/dron-na-lyubitel-fotograf-zatvori-za-kratko-vazdushnoto-prostranstvo-nad-letishteto-v-sofiya.html"
+     "cita": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c \u2013 \u0421\u043e\u0444\u0438\u044f \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434 \u0437\u0430\u0440\u0430\u0434\u0438 \u0437\u0430\u0441\u0435\u0447\u0435\u043d \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e.",
+     "enlace": "https://frognews.bg/novini/dron-zatvori-vazdushnoto-prostranstvo-nad-letishte-sofiya.html",
+     "nota": "La nota est\u00e1 fechada el 07.03.2026, que fue s\u00e1bado: \u00ab\u0432 \u0441\u044a\u0431\u043e\u0442\u0430 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434\u00bb = 7-3-2026 (por la tarde, mismo d\u00eda en UTC). focus-news.net, del 07.03.2026 19:46, dice \u00ab\u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0442\u043e\u0437\u0438 \u0441\u043b\u0435\u0434\u043e\u0431\u0435\u0434\u00bb. Valor sin cambio, cita nueva."
     },
     "zona": {
      "valor": "interior",
@@ -2191,8 +2249,9 @@
     },
     "drones": {
      "valor": 1,
-     "cita": "\u0421\u0438\u0441\u0442\u0435\u043c\u0438\u0442\u0435 \u0437\u0430 \u0441\u0438\u0433\u0443\u0440\u043d\u043e\u0441\u0442 \u0437\u0430 \u0437\u0430\u0441\u0435\u043a\u043b\u0438 \u0434\u0440\u043e\u043d. \u0412\u0435\u0434\u043d\u0430\u0433\u0430 \u0441\u0430 \u0438\u043d\u0444\u043e\u0440\u043c\u0438\u0440\u0430\u043d\u0438 \u0420\u0412\u0414, \"\u0413\u0440\u0430\u043d\u0438\u0447\u043d\u0430 \u043f\u043e\u043b\u0438\u0446\u0438\u044f\" \u0438 \u0432\u0441\u0438\u0447\u043a\u0438 \u043d\u0430\u0437\u0435\u043c\u043d\u0438 \u0441\u043b\u0443\u0436\u0431\u0438.",
-     "enlace": "https://focus-news.net/novini/regioni/Dron-zatvori-za-kratko-vuzdushnoto-prostranstvo-nad-letishte-Vasil-Levski-v-Sofiya-2915725"
+     "cita": "\u0414\u0440\u043e\u043d, \u0432\u0434\u0438\u0433\u043d\u0430\u0442 \u0441 \u0446\u0435\u043b \u0437\u0430\u0441\u043d\u0435\u043c\u0430\u043d\u0435 \u043d\u0430 \u043b\u044e\u0431\u0438\u0442\u0435\u043b\u0441\u043a\u0438 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0441\u043a\u0438 \u0441\u043d\u0438\u043c\u043a\u0438, \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u0437\u0430 \u043a\u0440\u0430\u0442\u043a\u043e \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" \u0432 \u0441\u0442\u043e\u043b\u0438\u0446\u0430\u0442\u0430, \u0441\u044a\u043e\u0431\u0449\u0438 \u0411\u041d\u0420, \u043f\u043e\u0437\u043e\u0432\u0430\u0432\u0430\u0439\u043a\u0438 \u0441\u0435 \u043d\u0430 \u043f\u0440\u0435\u0441\u0446\u0435\u043d\u0442\u044a\u0440\u0430 \u043d\u0430 \u041c\u0412\u0420.",
+     "enlace": "https://mediapool.bg/snimasht-dron-zatvori-za-kratko-letishteto-v-sofiya-news380984.html",
+     "nota": "Seg\u00fan el centro de prensa del MVR, un dron (de un fot\u00f3grafo aficionado), localizado y aterrizado. Los \u00ab\u0434\u0432\u0430 \u0434\u0440\u043e\u043d\u0430\u00bb son de Nova por fuentes no oficiales (news.bg, actualno.com). Valor sin cambio, cita nueva."
     },
     "cabecera": {
      "valor": "Aeropuerto de Sof\u00eda",
@@ -2281,10 +2340,12 @@
     "objetivo": {
      "valor": {
       "categoria": "otra",
-      "nombre": "Ambasciata degli Stati Uniti a Copenaghen"
+      "nombre": "USA's ambassade i K\u00f8benhavn",
+      "oaci": null
      },
      "cita": "Droni sono stati segnalati questa mattina nei cieli di Copenaghen, dove la polizia ha chiuso l\u2019area intorno all\u2019ambasciata degli Stati Uniti.",
-     "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_russia_diretta_oggi_18_settembre_2026-9770957.html"
+     "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_russia_diretta_oggi_18_settembre_2026-9770957.html",
+     "nota": "en dan\u00e9s, la lengua del lugar; nunca en italiano (la lengua de la fuente)"
     },
     "pais": {
      "valor": "DK",
@@ -2314,8 +2375,9 @@
     },
     "cabecera": {
      "valor": "Posibles drones sobre la zona de la embajada estadounidense en Copenhague",
-     "cita": "La polizia ha chiuso Dag Hammarskjolds All\u00e9, nel quartiere di Osterbro, dopo il rinvenimento di un pacco sospetto nella zona delle ambasciate di Stati Uniti, Regno Unito e Russia.",
-     "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato"
+     "cita": "Nelle stesse ore i media hanno riferito di droni sopra l\u2019area dell\u2019ambasciata americana.",
+     "enlace": "https://italpress.com/allarme-a-copenaghen-per-droni-e-pacco-sospetto-davanti-allambasciata-usa-oggi-il-vertice-nato",
+     "nota": "La cita anterior hablaba del paquete sospechoso, no de los drones. \u00abPosibles\u00bb porque la polic\u00eda no los confirm\u00f3 (misma fuente: \u00abnon ha confermato n\u00e9 la presenza di velivoli senza pilota\u00bb)."
     }
    }
   },
@@ -2330,8 +2392,9 @@
     },
     "presencia_dron": {
      "valor": "confirmada",
-     "cita": "speciali\u015ftii EOD au identificat \u015fi recuperat un fragment de dron\u0103 ce nu prezenta risc pirotehnic",
-     "enlace": "https://bursa.ro/mapn-trei-fragmente-de-drona-recuperate-de-scafandri-militari-in-marea-neagra-in-zona-economica-exclusiva-a-romaniei-00423065"
+     "cita": "Scafandrii de lupt\u0103 EOD \u0061i For\u021belor Navale Rom\u00e2ne au intervenit duminic\u0103 diminea\u021b\u0103 pentru a neutraliza resturi de dron\u0103 g\u0103site \u00een Marea Neagr\u0103, \u00een zona Grindului Chituc din jude\u021bul Constan\u021ba, a anun\u021bat Ministerul Ap\u0103r\u0103rii Na\u021bionale (MApN)",
+     "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+     "nota": "Valor sin cambio; cita sustituida por la de hotnews.ro sobre Chituc (la de bursa.ro era de otro suceso). El estado ya usa esta cita del MApN y no necesita cambio."
     },
     "tipo": {
      "valor": "sobrevuelo",
@@ -2438,8 +2501,9 @@
    "valores": {
     "estado": {
      "valor": "atribuido",
-     "cita": "Le minist\u00e8re russe des Affaires \u00e9trang\u00e8res a accus\u00e9 mercredi la Pologne de vouloir \"aggraver\" le conflit en Ukraine en propageant des \"mythes\" concernant l\u2019intrusion dans l\u2019espace a\u00e9rien polonais de drones, qui, selon Varsovie, ont \u00e9t\u00e9 envoy\u00e9s par la Russie.",
-     "enlace": "https://lindependant.fr/2025/09/10/incursion-de-drones-russes-en-pologne-la-russie-denonce-des-mythes-mais-varsovie-na-aucun-doute-sur-la-violation-de-son-espace-aerien-12922659.php"
+     "cita": "W \u015brod\u0119 nad ranem polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony. To sytuacja bez precedensu.",
+     "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
+     "nota": "Palabras del primer ministro Donald Tusk en la reuni\u00f3n extraordinaria del Gobierno (autoridad polaca); sustituye la cita del ministerio ruso."
     },
     "presencia_dron": {
      "valor": "confirmada",
@@ -2469,11 +2533,12 @@
     },
     "drones": {
      "valor": {
-      "min": 10,
+      "min": 11,
       "max": 19
      },
-     "cita": "The military tracked more than 10 drone-like objects, and those considered dangerous were shot down.",
-     "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140"
+     "cita": "Polskie i sojusznicze systemy radiolokacyjne \u015bledzi\u0142y kilkana\u015bcie obiekt\u00f3w, kt\u00f3re naruszy\u0142y przestrze\u0144 powietrzn\u0105.",
+     "enlace": "https://www.gov.pl/web/premier/Komunikat-MON",
+     "nota": "Comunicado del MON (Kosiniak-Kamysz) del 10-9-2025: \u00abkilkana\u015bcie\u00bb = entre 11 y 19, coherente con \u00abmore than 10\u00bb (min 11). Tusk en el Sejm habl\u00f3 de 19 violaciones (no drones). M\u00e1s tarde Przydacz dio 21 drones y la fiscal\u00eda \u00abkilkadziesi\u0105t\u00bb (ver EODI-2025-00295); para la ficha del cierre de Chopin se deja la cifra oficial de esa ma\u00f1ana."
     },
     "cabecera": {
      "valor": "Drones rusos que entraron en Polonia obligan a cerrar el aeropuerto de Varsovia",
@@ -2564,11 +2629,12 @@
     "objetivo": {
      "valor": {
       "categoria": "aeropuerto",
-      "nombre": "Son Sant Joan",
+      "nombre": "Aeroport de Palma - Son Sant Joan",
       "oaci": "LEPA"
      },
      "cita": "el avistamiento de un dron oblig\u00f3 a interrumpir temporalmente las operaciones en Son Sant Joan",
-     "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html"
+     "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), LEPA"
     },
     "pais": {
      "valor": "ES",
@@ -2637,9 +2703,10 @@
      "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
     },
     "lugar": {
-     "valor": "Oslo",
-     "cita": "Rundt klokka 20 s\u00f8ndag kveld rykket politiet ut til Oslo lufthavn.",
-     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363"
+     "valor": "Gardermoen",
+     "cita": "Droneflygingen p\u00e5 Gardermoen gjorde at flytrafikken ble stengt en periode.",
+     "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363",
+     "nota": "La fuente nombra Gardermoen (municipio de Ullensaker); \u00abOslo lufthavn\u00bb es el nombre del aeropuerto, no la localidad."
     },
     "inicio": {
      "valor": "2025-08-31",
@@ -2715,9 +2782,10 @@
      "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county"
     },
     "cabecera": {
-     "valor": "Dron que atraves\u00f3 Ucrania y Moldavia se estrella en Suceava, Rumania",
+     "valor": "Dron que atraves\u00f3 Ucrania y Moldavia se estrella en Suceava, Ruman\u00eda",
      "cita": "O dron\u0103 care a traversat spa\u021biile aeriene ale Ucrainei \u0219i Republicii Moldova, \u00eendrept\u00e2ndu-se spre nord-estul Rom\u00e2niei, s-a pr\u0103bu\u0219it \u00eentr-un lan de porumb din jude\u021bul Suceava.",
-     "enlace": "https://protv.md/international/drona-care-a-traversat-spatiul-aerian-al-republicii-moldova-si-ucrainei-s-ar-fi-indreptat-spre-romania-un-aparat-de-zbor-s-a-prabusit-in-judetul-suceava---2767123.html"
+     "enlace": "https://protv.md/international/drona-care-a-traversat-spatiul-aerian-al-republicii-moldova-si-ucrainei-s-ar-fi-indreptat-spre-romania-un-aparat-de-zbor-s-a-prabusit-in-judetul-suceava---2767123.html",
+     "nota": "Solo cambia la tilde de \u00abRuman\u00eda\u00bb. Respaldo oficial en dcnews.ro (comunicado del MApN): \u00abo dron\u0103 a traversat spa\u021biile aeriene ale celor dou\u0103 state, \u00eendrept\u00e2ndu-se c\u0103tre zona de NE a Rom\u00e2niei\u00bb."
     }
    }
   },
@@ -2808,9 +2876,10 @@
      "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
     },
     "lugar": {
-     "valor": "Dubl\u00edn",
-     "cita": "The report was made by an Aer Lingus pilot in a propeller aircraft approaching Dublin Airport at about 5.20pm on Tuesday.",
-     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay"
+     "valor": "costa de Wicklow",
+     "cita": "The pilot said the drone was about 10 miles from a navigation point near Howth in north Co Dublin, which would put it somewhere off the Co Wicklow coast.",
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
+     "nota": "Sobre el mar frente a la costa de Wicklow; Dubl\u00edn es el destino del avi\u00f3n."
     },
     "inicio": {
      "valor": "2026-09-08",
@@ -2856,7 +2925,8 @@
     "objetivo": {
      "valor": {
       "categoria": "otra",
-      "nombre": "Centro Penitenciario de Mendiz\u00e1bal"
+      "nombre": "Centro Penitenciario de Mendiz\u00e1bal",
+      "oaci": null
      },
      "cita": "un intento de introducci\u00f3n de sustancias estupefacientes y objetos prohibidos en el Centro Penitenciario de Mendiz\u00e1bal a trav\u00e9s de un dron",
      "enlace": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html"
@@ -2918,7 +2988,8 @@
       "oaci": "EVRA"
      },
      "cita": "paman\u012bts iesp\u0113jams drons ierobe\u017eojumu zon\u0101 \u2013 Gaviezes ielas rajon\u0101",
-     "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme"
+     "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
+     "nota": "nombre \u00fanico del nomencl\u00e1tor (configuracion/lugares_europa.json), EVRA: es el \u00fanico nombre que tiene, aunque la revisi\u00f3n ped\u00eda otro"
     },
     "pais": {
      "valor": "LV",

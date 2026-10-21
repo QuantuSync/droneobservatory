@@ -1,4 +1,11 @@
 {
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-dbd317e21ff0f256-declaracion-1",
+   "valor": "confirmada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "minutos": {

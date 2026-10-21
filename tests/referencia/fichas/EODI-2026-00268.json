@@ -1,4 +1,41 @@
 {
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "detalle-80807759e91faffb",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "detalle-e97ca7f30b7561a7",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "detalle-da7f56b1bed0e513",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-b97ba1a9a400540c",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-51339fe171a8ed46",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-6335f68c9869d028",
+   "valor": "confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-2d49099e0bd224c6",
+   "valor": "confirmada"
+  }
+ ],
  "consecuencias": {
   "cierre": {
    "valor": "desconocido"

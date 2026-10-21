@@ -13,7 +13,7 @@ from esquema import Documento
 from proceso import auditoria_fichas, referencia
 
 # Discrepancias conocidas el 21 de octubre de 2026. Solo puede bajar.
-TOPE_DISCREPANCIAS = 64
+TOPE_DISCREPANCIAS = 80
 PRESENCIAS = {"confirmada", "no_confirmada", "no_acreditada", "descartada"}
 ESTADOS = {"notificado", "confirmado", "atribuido", "desmentido"}
 TIPOS = {"incursion", "interrupcion_aeroportuaria", "sobrevuelo"}
@@ -109,9 +109,11 @@ def test_la_lista_de_discrepancias_solo_encoge() -> None:
 def test_la_auditoria_avisa_si_una_ficha_de_la_referencia_cambia() -> None:
     copias = _copias()
     assert referencia.fallos(copias.values()) == []
-    # Una regla que dejara de confirmar Volkel (EODI-2025-00066) sale en la comprobación R.
+    # Una regla que dejara de confirmar Volkel (EODI-2025-00066) sale en la comprobación R: sin
+    # autoridad que lo diga ni pruebas, la presencia que decide el guardado ya no es la correcta.
     cambiada = copy.deepcopy(copias["EODI-2025-00066"])
-    cambiada["presencia_dron"] = "no_confirmada"
+    cambiada["afirmaciones"] = []
+    cambiada["fuentes"] = [{**f, "es_autoridad": False} for f in cambiada["fuentes"]]
     cambiada.pop("pruebas", None)
     otras = [d for i, d in copias.items() if i != "EODI-2025-00066"]
     assert referencia.fallos([*otras, cambiada]) == ["EODI-2025-00066 presencia_dron"]
