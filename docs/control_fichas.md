@@ -287,7 +287,9 @@ una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales
   saben (`modelo/ficha.py`, `modelo/control.py`).
 - **Un buque alcanzado por un dron en el mar** es «sobrevuelo» salvo que una autoridad diga que
   estaba en aguas del país (desde el 21 de octubre de 2026; antes era «incursión», como los
-  buques del 13 de octubre, EODI-2026-00512): el tipo lo decide `incidentes.con_tipo`.
+  buques del 13 de octubre, EODI-2026-00512): el tipo lo decide `incidentes.con_tipo`. Los restos
+  a bordo y el origen del dron no lo demuestran; el rastreo o la autoridad que dice que el dron
+  entró en el espacio aéreo, sí (EODI-2026-00541, al sureste de Sulina).
 - **Frontera o interior en el mar**: un suceso en el mar de un país con costa en el mar Negro es
   de la costa del mar Negro (`zona.clasificar`, motivo `costa_mar_negro`), nunca «interior»;
   con un punto en tierra (el puerto de Constanza, Sulina) manda el punto.

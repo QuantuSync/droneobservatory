@@ -121,7 +121,9 @@ def test_estonia_no_va_a_andalucia_y_se_publica_sin_punto(almacen: Almacen) -> N
     incidente = almacen.incidente(id_ or "")
     assert incidente is not None
     assert incidente["lugar"] == {"pais": "EE", "nivel": "pais", "suceso": "Estonia"}
-    assert incidente["tipo"] == "incursion"
+    # Solo lo cuenta la prensa: sin una autoridad que lo confirme, el derribo no demuestra la
+    # entrada (docs/control_fichas.md, «tipo»).
+    assert incidente["tipo"] == "sobrevuelo"
     geojson = exportar(almacen.incidentes(), AHORA, MODELOS)
     sin_punto = exportar_sin_ubicacion(almacen.incidentes(), AHORA, MODELOS)
     assert geojson["features"] == []
@@ -157,7 +159,7 @@ def test_anenii_noi_es_incursion_con_dron_confirmado_y_sin_cierre(almacen: Almac
     assert incidente["estado"]["actual"] == "confirmado"
     # Explotó: el dron era militar; entró desde fuera y el ministerio lo confirma.
     assert incidente["tipo"] == "incursion"
-    assert incidente["origen_demostrado_por"] == ["autoridad", "caida", "explosion"]
+    assert incidente["origen_demostrado_por"] == ["caida", "explosion"]
     # El incidente confirmado es el propio dron: la confirmación confirma el dron.
     assert incidente["presencia_dron"] == "confirmada"
     # La fuente no habla de cierre: desconocido, nunca un cierre sin confirmar inventado.
@@ -296,9 +298,11 @@ def con_pruebas(estatal: bool, entrada: bool, evidencia: list[str], estado: str)
 @pytest.mark.parametrize(
     ("estatal", "entrada", "evidencia", "estado", "tipo"),
     [
-        (True, True, [], "confirmado", "incursion"),  # lo demuestra una autoridad
-        (True, True, ["restos"], "notificado", "incursion"),  # o una prueba física
-        (True, True, ["rastreo"], "notificado", "incursion"),
+        (True, True, [], "atribuido", "incursion"),  # lo demuestra la autoridad que atribuye
+        (True, True, [], "confirmado", "sobrevuelo"),  # confirmar no demuestra la entrada
+        (True, True, ["restos"], "confirmado", "incursion"),  # o una prueba física confirmada
+        (True, True, ["rastreo"], "confirmado", "incursion"),
+        (True, True, ["restos"], "notificado", "sobrevuelo"),  # que nadie confirma
         (True, True, [], "notificado", "sobrevuelo"),  # un avistamiento nunca
         (False, True, ["derribo"], "confirmado", "sobrevuelo"),  # no es militar
         (True, False, ["derribo"], "confirmado", "sobrevuelo"),  # no entró desde fuera

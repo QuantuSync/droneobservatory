@@ -335,8 +335,9 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
 
 
 def decidir_datos(incidente: Documento) -> Documento:
-    """El incidente con el objetivo, el lugar, el inicio, el cierre y el titular que deciden sus fuentes y sus revisiones a mano. Sin cambios si ya los
-    tenía. Si cambia la instalación o el lugar, los nombres publicados se vuelven a calcular."""
+    """El incidente con el objetivo, el lugar, el inicio, el cierre y el titular que deciden sus
+    fuentes y sus revisiones a mano. Sin cambios si ya los tenía. Si cambia la instalación o el
+    lugar, los nombres publicados se vuelven a calcular."""
     resultado = copy.deepcopy(incidente)
     revisiones = _revisiones(incidente)
     for campo in ("lugar", "inicio", "cierre", "titulo"):

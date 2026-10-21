@@ -279,12 +279,17 @@ def con_tipo(documento: Documento) -> Documento:
     datos = resultado["pruebas"]
     evidencia = set(datos.get("evidencia", []))
     confirmado = resultado["estado"]["actual"] in CONFIRMADOS
-    # Los restos en un buque alcanzado en el mar no dicen que el dron entrara en el país.
+    # Los restos en un buque alcanzado en el mar no dicen que el dron entrara en el país; el
+    # radar y el espacio aéreo que cuenta la autoridad, sí (EODI-2026-00541, al sureste de Sulina).
     en_el_mar = alcanzado_en_el_mar(resultado)
-    pruebas = (evidencia & (PRUEBAS_FISICAS | {RASTREO})) if confirmado and not en_el_mar else set()
+    pruebas = (
+        (evidencia & ({RASTREO} if en_el_mar else PRUEBAS_FISICAS | {RASTREO}))
+        if confirmado
+        else set()
+    )
     atribuido = resultado["estado"]["actual"] == Estado.ATRIBUIDO
     autoridad = atribuido or (
-        confirmado and not en_el_mar and autoridad_cuenta_la_entrada(resultado)
+        confirmado and autoridad_cuenta_la_entrada(resultado, solo_espacio=en_el_mar)
     )
     demostrada = sorted(pruebas | ({"autoridad"} if autoridad else set()))
     if _hay_interrupcion(resultado):
@@ -302,11 +307,15 @@ def con_tipo(documento: Documento) -> Documento:
 # că este vorba despre resturi de dronă»; EODI-2026-00112: «a survolat ... ilegal spațiul
 # aerian»). Un ministro que dice que los drones «no eran un sobrevuelo normal» no lo demuestra
 # (EODI-2025-00080, Kleine-Brogel).
-_ENTRADA_DE_AUTORIDAD = re.compile(
+_ESPACIO_DE_AUTORIDAD = (
     r"spa[tțţ]iul(?:ui)? aerian|espacio a[eé]reo|airspace|przestrze[nń]\w* powietrzn|luftraum|"
     r"luchtruim|ilmatila|luftrum|espace a[eé]rien|spazio aereo|въздушно(?:то)? пространство|"
-    r"повітрян\w* простор|воздушн\w* пространств|"
-    # la frontera cruzada o el dron llegado de fuera
+    r"повітрян\w* простор|воздушн\w* пространств"
+)
+_ESPACIO_AEREO = re.compile(_ESPACIO_DE_AUTORIDAD, re.IGNORECASE)
+_ENTRADA_DE_AUTORIDAD = re.compile(
+    _ESPACIO_DE_AUTORIDAD + "|"
+    # la frontera cruzada o el dron llegado de fuera (en el mar no dice dónde estaba el buque)
     r"fronti?er\w* de stat|granic\w* pa[nń]stw|state border|hailed from|din ucraina|"
     r"from (?:ukraine|russia|belarus)|z bia[lł]orusi|rusești|rusesti|russian drone|"
     # el rastreo, el derribo, la caída o los restos
@@ -317,14 +326,15 @@ _ENTRADA_DE_AUTORIDAD = re.compile(
 )
 
 
-def autoridad_cuenta_la_entrada(documento: Documento) -> bool:
+def autoridad_cuenta_la_entrada(documento: Documento, solo_espacio: bool = False) -> bool:
     """Una autoridad cuenta el espacio aéreo violado, la frontera cruzada, el rastreo, el derribo,
-    la caída o los restos del dron."""
+    la caída o los restos del dron (con `solo_espacio`, en el mar, solo el espacio aéreo
+    violado)."""
     from proceso import declaraciones
 
+    patron = _ESPACIO_AEREO if solo_espacio else _ENTRADA_DE_AUTORIDAD
     return any(
-        declaraciones.de_autoridad(f)
-        and _ENTRADA_DE_AUTORIDAD.search(str(f.get("frase_origen") or ""))
+        declaraciones.de_autoridad(f) and patron.search(str(f.get("frase_origen") or ""))
         for f in documento.get("fuentes", [])
     )
 
