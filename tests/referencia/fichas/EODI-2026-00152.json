@@ -162,7 +162,7 @@
      "precision": "dia",
      "valor": "2026-06-05T00:00Z"
     },
-    "fuente_id": "revisada-d83062e3a8cc46e7-declaracion-1"
+    "fuente_id": "revisada-f344634603b7abc3-declaracion-1"
    }
   ]
  },
@@ -5459,8 +5459,8 @@
     "valor": "2026-06-05T00:00Z"
    },
    "fiabilidad": "B",
-   "frase_origen": "Drona marin\u0103 care a explodat \u00een aceast\u0103 diminea\u021b\u0103 \u00een Portul Constan\u021ba f\u0103cea parte, al\u0103turi de alte mijloace similare de lupt\u0103, dintr-o opera\u021biune militar\u0103 condus\u0103 de Ucraina \u00eempotriva agresiunii ruse.",
-   "id": "revisada-d83062e3a8cc46e7-declaracion-1",
+   "frase_origen": "care a explodat \u00een aceast\u0103 diminea\u021b\u0103 \u00een Portul Constan\u021ba f\u0103cea parte, al\u0103turi de alte mijloace similare de lupt\u0103, dintr-o opera\u021biune militar\u0103 condus\u0103 de Ucraina",
+   "id": "revisada-f344634603b7abc3-declaracion-1",
    "idioma": "ro",
    "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en adevarul.ro)"
   }

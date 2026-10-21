@@ -31,7 +31,7 @@
      "precision": "dia",
      "valor": "2025-10-21T00:00Z"
     },
-    "fuente_id": "revisada-2a818bbfb815a83f-declaracion-1"
+    "fuente_id": "revisada-91426e1af2007f34-declaracion-1"
    }
   ]
  },
@@ -132,8 +132,8 @@
     "valor": "2025-10-21T00:00Z"
    },
    "fiabilidad": "B",
-   "frase_origen": "\u201cR\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos lidojumu ierobe\u017eojumu zon\u0101 \u2013 Gaviezes ielas rajon\u0101, kas tika paman\u012bts ar lidostas tehniskajiem l\u012bdzek\u013ciem,\u201d inform\u0113ja R\u012bgas lidosta.",
-   "id": "revisada-2a818bbfb815a83f-declaracion-1",
+   "frase_origen": "\u201cR\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos lidojumu ierobe\u017eojumu zon\u0101",
+   "id": "revisada-91426e1af2007f34-declaracion-1",
    "idioma": "lv",
    "medio": "R\u012bgas lidosta (declaraci\u00f3n oficial citada en la.lv)"
   }

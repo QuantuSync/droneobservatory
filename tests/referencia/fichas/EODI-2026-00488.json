@@ -12,7 +12,7 @@
   },
   {
    "campo": "presencia_dron",
-   "fuente_id": "revisada-b7fa639b84211d3d-declaracion-1",
+   "fuente_id": "revisada-23269a800617d0bf-declaracion-1",
    "valor": "confirmada"
   }
  ],
@@ -44,7 +44,7 @@
      "precision": "dia",
      "valor": "2026-10-06T00:00Z"
     },
-    "fuente_id": "revisada-b7fa639b84211d3d-declaracion-1"
+    "fuente_id": "revisada-23269a800617d0bf-declaracion-1"
    }
   ]
  },
@@ -105,8 +105,8 @@
     "valor": "2026-10-06T00:00Z"
    },
    "fiabilidad": "B",
-   "frase_origen": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas que operaban en el espacio a\u00e9reo de Ucrania, en las cercan\u00edas de la frontera fluvial con Rumania.",
-   "id": "revisada-b7fa639b84211d3d-declaracion-1",
+   "frase_origen": "el Ministerio de Defensa de Rumania indic\u00f3 que los sistemas de vigilancia por radar detectaron dos aeronaves no tripuladas",
+   "id": "revisada-23269a800617d0bf-declaracion-1",
    "idioma": "es",
    "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en biobiochile.cl)"
   }

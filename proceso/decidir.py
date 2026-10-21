@@ -73,7 +73,13 @@ def decidir_estado(incidente: Documento) -> Decision:
     if not historial:
         return Decision(str(incidente["estado"]["actual"]), None, "sin_historial")
     ultimo = historial[-1]
-    if ultimo["estado"] == Estado.NOTIFICADO and (cuenta := _autoridad_que_lo_cuenta(vigente)):
+    # Un paso que retira la confirmación con su motivo (una revisión a mano o el control de las
+    # fichas) manda: la regla no la vuelve a confirmar.
+    if (
+        ultimo["estado"] == Estado.NOTIFICADO
+        and not ultimo.get("motivo")
+        and (cuenta := _autoridad_que_lo_cuenta(vigente))
+    ):
         return Decision(Estado.CONFIRMADO.value, str(cuenta["id"]), "autoridad_lo_cuenta")
     regla = "competencia" if historial is not incidente["estado"]["historial"] else "historial"
     return Decision(str(ultimo["estado"]), ultimo.get("fuente_id"), regla)

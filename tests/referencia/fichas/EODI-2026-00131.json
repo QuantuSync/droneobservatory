@@ -43,7 +43,7 @@
      "precision": "dia",
      "valor": "2026-03-11T00:00Z"
     },
-    "fuente_id": "revisada-50e3064241e785c3-declaracion-1"
+    "fuente_id": "revisada-c3044f7372990714-declaracion-1"
    }
   ]
  },
@@ -283,8 +283,8 @@
     "valor": "2026-03-11T00:00Z"
    },
    "fiabilidad": "B",
-   "frase_origen": "Un portavoz del aeropuerto explic\u00f3 a la AFP que la actividad se detuvo \"por motivos de seguridad\" durante unos treinta minutos, despu\u00e9s de que se observara \"un objeto volador no identificado\"",
-   "id": "revisada-50e3064241e785c3-declaracion-1",
+   "frase_origen": "Un portavoz del aeropuerto explic\u00f3 a la AFP que la actividad se detuvo \"por motivos de seguridad\" durante unos treinta minutos",
+   "id": "revisada-c3044f7372990714-declaracion-1",
    "idioma": "es",
    "medio": "Flughafen Berlin Brandenburg (declaraci\u00f3n oficial citada en larazon.es)"
   }

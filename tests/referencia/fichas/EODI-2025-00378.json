@@ -31,7 +31,7 @@
      "precision": "dia",
      "valor": "2025-01-30T00:00Z"
     },
-    "fuente_id": "revisada-440c98d7bdf9e389-declaracion-1"
+    "fuente_id": "revisada-94fd17f7c9b21fcd-declaracion-1"
    }
   ]
  },
@@ -94,8 +94,8 @@
     "valor": "2025-01-30T00:00Z"
    },
    "fiabilidad": "B",
-   "frase_origen": "Sistemele de monitorizare \u0219i supraveghere ale Ministerului Ap\u0103r\u0103rii Na\u021bionale au semnalat evolu\u021bia unor drone \u00een spa\u021biul aerian ucrainean, pe trasee de zbor \u00een apropierea frontierei cu Rom\u00e2nia.",
-   "id": "revisada-440c98d7bdf9e389-declaracion-1",
+   "frase_origen": "Sistemele de monitorizare \u0219i supraveghere ale Ministerului Ap\u0103r\u0103rii Na\u021bionale au semnalat evolu\u021bia unor drone \u00een spa\u021biul aerian ucrainean",
+   "id": "revisada-94fd17f7c9b21fcd-declaracion-1",
    "idioma": "ro",
    "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en adevarul.ro)"
   },
