@@ -194,6 +194,19 @@ def test_la_instalacion_del_titular_por_su_ciudad(pais: str, en: str, es: str, s
     assert nuevo is not None and nuevo["lugar"]["nivel"] == "instalacion"
 
 
+def test_el_nombre_propio_de_la_instalacion_no_se_cambia_cada_hora() -> None:
+    """Como EODI-2025-00463: la revisión deja el objetivo «Brians 1» (un nombre de la cárcel) y la
+    regla del lugar ya no lo cambia por «Centre Penitenciari Brians 1» en cada recogida."""
+    nom = nomenclator()
+    d = _en_el_pais(
+        "ES", "Drone detected over Brians 1 prison", "Detectan un dron sobre la prisión de Brians 1"
+    )
+    primero = lugar_preciso.precisar(d, nom, datetime.now(UTC))
+    assert primero is not None and primero["lugar"]["nivel"] == "instalacion"
+    revisado = {**primero, "objetivo": {"categoria": "otra", "nombre": "Brians 1"}}
+    assert lugar_preciso.precisar(revisado, nom, datetime.now(UTC)) is None
+
+
 @pytest.mark.parametrize(
     ("pais", "en", "es"),
     [
