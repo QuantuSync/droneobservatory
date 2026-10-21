@@ -49,14 +49,15 @@ def aplicar(*lista: dict[str, Any]) -> Documento:
     return resultado
 
 
-def test_la_autoridad_que_afirma_el_cierre_confirma() -> None:
-    # El gestor aeroportuario cierra por el dron: la autoridad lo da por hecho.
+def test_la_autoridad_que_afirma_el_cierre_confirma_el_suceso_no_el_dron() -> None:
+    # El gestor aeroportuario cierra: confirma el suceso, pero una medida no dice que fuera un
+    # dron (desde el 21 de octubre de 2026).
     resultado = aplicar(declaracion(
         "incidente", "Der Flugbetrieb wurde am Donnerstagabend eingestellt", "aeropuerto",
         autoridad="Flughafen München",
     ))  # fmt: skip
     assert resultado["estado"]["actual"] == "confirmado"
-    assert resultado["presencia_dron"] == "confirmada"
+    assert resultado["presencia_dron"] == "no_confirmada"
     citada = resultado["fuentes"][-1]
     assert (citada["fiabilidad"], citada["es_autoridad"]) == ("B", True)
     assert "declaración oficial citada" in citada["medio"]
@@ -177,24 +178,53 @@ def test_la_atribucion_oficial_que_habla_de_drones_confirma_la_presencia() -> No
     resultado = aplicar(confirma, atribuye)
     assert resultado["estado"]["actual"] == "atribuido"
     assert resultado["presencia_dron"] == "confirmada"
-    # La primera autoridad que lo da por hecho es la fuente de la presencia.
+    # La fuente de la presencia es la autoridad que nombra los drones, no la que cuenta el cierre.
     [afirmacion] = afirmaciones_de_presencia(resultado)
     assert afirmacion["valor"] == "confirmada"
-    assert afirmacion["fuente_id"].endswith("-declaracion-1")
+    assert afirmacion["fuente_id"].endswith("-declaracion-2")
 
 
-def test_la_confirmacion_del_cierre_confirma_la_presencia_aunque_no_nombre_drones() -> None:
-    # Caso de Lieja: «Das teilte die Flugsicherung Skeyes mit», sobre el cierre por un dron.
+def test_la_confirmacion_del_cierre_que_no_nombra_drones_no_confirma_la_presencia() -> None:
+    # Lieja («Das teilte die Flugsicherung Skeyes mit»), Erfurt (EODI-2025-00062, «Daraufhin
+    # wurden auch die Landespolizei und die Deutsche Flugsicherung informiert»): confirman el
+    # suceso, no que fuera un dron.
     for frase, autoridad in (
         ("El espacio aéreo se cerró durante una hora", "ENAIRE"),
         ("Das teilte die Flugsicherung Skeyes mit.", "Skeyes"),
+        (
+            "Daraufhin wurden auch die Landespolizei und die Deutsche Flugsicherung informiert.",
+            "Deutsche Flugsicherung",
+        ),
     ):
         resultado = aplicar(declaracion("incidente", frase, "navegacion_aerea",
                                         autoridad=autoridad))  # fmt: skip
         assert resultado["estado"]["actual"] == "confirmado"
-        assert resultado["presencia_dron"] == "confirmada"
-        [afirmacion] = afirmaciones_de_presencia(resultado)
-        assert afirmacion["fuente_id"].endswith("-declaracion-1")
+        assert resultado["presencia_dron"] == "no_confirmada"
+        assert afirmaciones_de_presencia(resultado) == []
+
+
+def test_atribuye_dron_sin_negarlo_ni_dejarlo_abierto() -> None:
+    # Negado: EODI-2025-00203 (Marechaussee) y EODI-2025-00357 (Maastricht).
+    assert not declaraciones.atribuye_dron(
+        "an investigation showed no drone was detected on radar and that the object was likely "
+        "a balloon."
+    )
+    assert not declaraciones.atribuye_dron(
+        "Ces recherches n'avaient permis de retrouver aucun drone."
+    )
+    # Abierto en rumano: «posibile ținte aeriene» (EODI-2025-00241, SMFA).
+    assert declaraciones.abierto("SMFA, care semnala prezența unor posibile ținte aeriene")
+    # El modelo del dron (EODI-2026-00171, Ministerul Apărării) y el lituano (EODI-2026-00037).
+    assert declaraciones.atribuye_dron(
+        "Un obiect zburător de tip Shahed 138 (Geran 2) a survolat ilegal spațiul aerian"
+    )
+    assert declaraciones.atribuye_dron(
+        "prie Palangos oro uosto buvo užfiksuotas nesankcionuotas bepiločio orlaivio skrydis"
+    )
+    # Volkel: la autoridad dispara a los drones y no los encuentra; los atribuye igual.
+    assert declaraciones.atribuye_dron(
+        "Defensie heeft op de drones geschoten, maar ze zijn niet gevonden"
+    )
 
 
 def test_la_autoridad_que_cuenta_los_drones_al_confirmar_confirma_la_presencia() -> None:
@@ -229,7 +259,9 @@ def test_la_autoridad_que_lo_deja_abierto_no_confirma_la_presencia() -> None:
 
 
 def test_la_noticia_que_cita_a_la_autoridad_tambien_puede_dejarlo_abierto() -> None:
-    confirma = declaracion("incidente", "Der Flugbetrieb wurde eingestellt", "aeropuerto")
+    confirma = declaracion(
+        "incidente", "Der Flugbetrieb wurde wegen einer Drohne eingestellt", "aeropuerto"
+    )
     assert declaraciones.confirma_dron(confirma)
     assert not declaraciones.confirma_dron(confirma, "Objet non identifié au-dessus de l'aéroport")
 

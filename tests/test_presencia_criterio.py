@@ -9,7 +9,7 @@ from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import incidentes, presencia, titulares
+from proceso import declaraciones, incidentes, presencia, titulares
 from proceso.noticias import Articulo, Candidato, filtro, nomenclator, repeticion
 from proceso.validaciones import errores_presencia, validar_incidente
 from recogida import criterio_presencia
@@ -87,7 +87,9 @@ def test_el_titular_se_ajusta_a_la_presencia() -> None:
 # --- Criterio de presencia ----------------------------------------------------------------
 
 
-def test_un_cierre_por_dron_confirma_la_presencia_con_la_frase_de_la_fuente() -> None:
+def test_un_cierre_por_dron_que_cuenta_la_prensa_no_confirma_la_presencia() -> None:
+    # Desde el 21 de octubre de 2026 una medida de la autoridad (cierre, cazas, patrulla,
+    # detención) no es atribución: solo la confirma una autoridad que dice que fue un dron.
     documento = lieja(
         "EODI-2025-00092", "2025-11-09T19:00Z",
         frase_origen="Vliegverkeer luchthaven Luik stilgelegd na melding drone",
@@ -95,72 +97,125 @@ def test_un_cierre_por_dron_confirma_la_presencia_con_la_frase_de_la_fuente() ->
     documento["titulo"] = {"es": "Posibles drones sobre el aeropuerto de Lieja",
                            "en": "Possible drones over Liège Airport"}  # fmt: skip
     resultado = presencia.aplicar(documento)
-    assert resultado["presencia_dron"] == "confirmada"
-    [afirmacion] = [a for a in resultado["afirmaciones"] if a["campo"] == "presencia_dron"]
-    assert afirmacion["fuente_id"] == documento["fuentes"][0]["id"]
-    assert resultado["titulo"]["es"] == "Drones sobre el aeropuerto de Lieja"
+    assert resultado["presencia_dron"] == "no_confirmada"
+    assert [a for a in resultado.get("afirmaciones", []) if a["campo"] == "presencia_dron"] == []
     assert validar_incidente(resultado, AHORA, VOCABULARIO_MODELOS) == []
 
 
-def test_una_intervencion_policial_por_dron_confirma_la_presencia() -> None:
-    # Caso de Alta: «Politiet rykker til … etter melding om at det flyr en drone».
-    documento = lieja(
+def test_la_actuacion_de_la_autoridad_no_confirma_la_presencia() -> None:
+    # Alta (EODI-2025-00054, «Politiet rykker til … etter melding om at det flyr en drone»),
+    # Bardufoss (EODI-2025-00013, detenidos), Lanzarote (EODI-2025-00399), Luxemburgo
+    # (EODI-2026-00038) y Múnich (EODI-2025-00012, vuelos desviados): lo cuenta la prensa.
+    alta = lieja(
         "EODI-2025-00054", "2025-11-17T15:00Z",
         frase_origen="Politiet rykker til Amtmannsneset etter melding om at det flyr en drone",
     )  # fmt: skip
-    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
-    documento["tipo"] = "sobrevuelo"
-    documento["respuesta"] = {"medidas": ["patrulla"]}
-    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
-    # Sin medida registrada también: la frase dice que la policía acude por el dron.
-    documento["respuesta"] = {"medidas": ["ninguna_conocida"]}
-    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
-    documento["fuentes"][0]["frase_origen"] = "Vecinos vieron un dron sobre el aeropuerto"
-    assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
-
-
-def test_una_detencion_por_volar_un_dron_confirma_la_presencia() -> None:
-    # Caso de Bardufoss: «Dos turistas detenidos por volar un dron cerca del aeropuerto».
-    documento = lieja(
+    alta["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    alta["tipo"] = "sobrevuelo"
+    alta["respuesta"] = {"medidas": ["patrulla"]}
+    bardufoss = lieja(
         "EODI-2025-00013", "2025-09-28T12:00Z",
         frase_origen="To turister innbrakt etter mistanke om ulovlig droneflyvning.",
     )  # fmt: skip
-    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
-    documento["tipo"] = "sobrevuelo"
-    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
-
-
-def test_el_cierre_por_dron_confirma_aunque_la_frase_no_repita_el_dron() -> None:
-    # Lanzarote: el cierre está registrado y la frase dice «causó la paralización de todas las
-    # operaciones»; Luxemburgo: la frase cuenta el cierre por drones sin el campo de cierre.
     lanzarote = lieja("EODI-2025-00399", "2025-08-13T19:30Z",
                       frase_origen="causó la paralización de todas las operaciones")  # fmt: skip
-    assert presencia.aplicar(lanzarote)["presencia_dron"] == "confirmada"
     luxemburgo = lieja(
         "EODI-2026-00038", "2026-09-23T19:00Z",
         frase_origen="Zweimal wurde der Flughafen Luxemburg wegen Drohnen gesperrt",
     )  # fmt: skip
-    luxemburgo["consecuencias"] = {"cierre": {"valor": "desconocido"}}
-    luxemburgo["tipo"] = "sobrevuelo"
-    assert presencia.aplicar(luxemburgo)["presencia_dron"] == "confirmada"
-    luxemburgo["fuentes"][0]["frase_origen"] = (
-        "Zweimal wurde der Flughafen Luxemburg innerhalb weniger Tage wegen Drohnen lahmgelegt."
-    )
-    assert presencia.aplicar(luxemburgo)["presencia_dron"] == "confirmada"
-
-
-def test_los_vuelos_desviados_por_un_dron_confirman_la_presencia() -> None:
-    # Múnich, 2 de mayo de 2025: el control aéreo desvía vuelos por el dron.
-    documento = lieja(
+    munich = lieja(
         "EODI-2025-00012", "2025-05-02T12:00Z",
         frase_origen="Eine Drohne wurde im Umfeld des Flughafens gesichtet.",
     )  # fmt: skip
-    documento["consecuencias"] = {"cierre": {"valor": "desconocido"},
-                                  "vuelos_desviados": {"min": 3, "max": 3}}  # fmt: skip
-    documento["tipo"] = "interrupcion_aeroportuaria"
-    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
-    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
-    assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
+    munich["consecuencias"] = {"cierre": {"valor": "desconocido"},
+                               "vuelos_desviados": {"min": 3, "max": 3}}  # fmt: skip
+    for documento in (alta, bardufoss, lanzarote, luxemburgo, munich):
+        # Antes la actuación la confirmaba (por_actuacion la sigue encontrando).
+        assert presencia.por_actuacion(documento) is not None, documento["id"]
+        assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada", documento["id"]
+
+
+def _confirmada(documento: Documento, fuente: str) -> Documento:
+    """La presencia confirmada por esa fuente, como la dejaron el extractor o una regla anterior."""
+    documento["presencia_dron"] = "confirmada"
+    documento["afirmaciones"] = [*documento.get("afirmaciones", []),
+                                 declaraciones.afirmacion_presencia(fuente)]  # fmt: skip
+    return documento
+
+
+def _autoridad(documento: Documento, medio: str, frase: str) -> str:
+    """Una declaración oficial citada en la noticia de la ficha."""
+    noticia = documento["fuentes"][0]
+    citada = {**noticia, "id": f"{noticia['id']}-declaracion-1", "es_autoridad": True,
+              "medio": f"{medio} (declaración oficial citada en {noticia['medio']})",
+              "frase_origen": frase}  # fmt: skip
+    documento["fuentes"] = [*documento["fuentes"], citada]
+    return str(citada["id"])
+
+
+BRUSELAS = "Luchtverkeer op Brussels Airport kort stilgelegd na dronemelding."
+
+
+def test_confirmada_sin_autoridad_que_lo_atribuya_queda_sin_confirmar() -> None:
+    # c) Solo la prensa: EODI-2025-00199, Bruselas (la confirmó la regla de presencia del PR 77
+    # por el cierre que contaba la noticia).
+    bruselas = lieja("EODI-2025-00199", "2025-11-04T19:00Z", frase_origen=BRUSELAS)
+    bruselas = _confirmada(bruselas, bruselas["fuentes"][0]["id"])
+    assert presencia.sin_base(bruselas)
+    quitada = presencia.quitar_sin_base(bruselas)
+    assert quitada["presencia_dron"] == "no_confirmada"
+    assert [a for a in quitada["afirmaciones"] if a["campo"] == "presencia_dron"] == []
+    assert validar_incidente(quitada, AHORA, VOCABULARIO_MODELOS) == []
+    # b) Hay autoridad, pero solo actúa: EODI-2025-00049, Bucarest (la confirmó el extractor con
+    # la declaración «incidente» de la CNAB sobre la suspensión de los aterrizajes).
+    bucarest = lieja("EODI-2025-00049", "2025-10-01T18:00Z",
+                     frase_origen="Dronă semnalată în apropierea aeroportului Otopeni")  # fmt: skip
+    citada = _autoridad(bucarest, "Compania Națională Aeroporturi Bucureşti",
+                        "au fost suspendate temporar aterizările, iar aeronavele aflate în zonă "
+                        "au fost dirijate către puncte de aşteptare")  # fmt: skip
+    bucarest = _confirmada(bucarest, citada)
+    assert presencia.quitar_sin_base(bucarest)["presencia_dron"] == "no_confirmada"
+    # La autoridad que dice que fue un dron la sostiene.
+    _autoridad(bruselas, "Skeyes", "Een drone werd waargenomen boven de luchthaven")
+    assert presencia.quitar_sin_base(bruselas) is bruselas
+
+
+def test_la_regla_no_decide_las_dudosas() -> None:
+    # e) La Bundeswehr afirma los drones según el extractor, pero su cita no los nombra
+    # (EODI-2025-00340, Múnich); restos del dron que solo cuenta la prensa (EODI-2025-00312).
+    munich = lieja("EODI-2025-00340", "2025-10-02T20:18Z",
+                   frase_origen="Drohnensichtungen am Flughafen München")  # fmt: skip
+    citada = _autoridad(
+        munich, "Bundeswehr", "Das bestätigte eine Sprecherin des operativen Führungskommandos"
+    )
+    munich = _confirmada(munich, citada)
+    assert presencia.sin_base(munich)
+    assert presencia.dudosa_por(munich, {citada: {"afirma": "drones"}})
+    assert not presencia.dudosa_por(munich, {citada: {"afirma": "incidente"}})
+    singerei = lieja(
+        "EODI-2025-00312",
+        "2025-11-20T08:00Z",
+        frase_origen="Dronă militară de tip Gerbera a fost găsită pe un câmp.",
+    )
+    singerei["pruebas"] = {"dron_estatal": True, "entrada_exterior": True,
+                           "evidencia": ["restos"]}  # fmt: skip
+    assert presencia.dudosa_por(singerei, {})
+
+
+def test_la_revision_quita_la_presencia_sin_base_con_su_motivo() -> None:
+    almacen = Almacen.abrir()
+    bruselas = lieja("EODI-2025-00199", "2025-11-04T19:00Z", frase_origen=BRUSELAS)
+    almacen.guardar_incidente(_confirmada(bruselas, bruselas["fuentes"][0]["id"]), AHORA,
+                              VOCABULARIO_MODELOS)  # fmt: skip
+    assert presencia.revisar(almacen, AHORA, VOCABULARIO_MODELOS) == ([], [])
+    guardado = almacen.incidente("EODI-2025-00199")
+    assert guardado is not None and guardado["presencia_dron"] == "no_confirmada"
+    motivos = [h["nuevo"].get("motivo") for h in almacen.historial("EODI-2025-00199")]
+    assert presencia.MOTIVO_SIN_BASE in motivos
+    # La pasada siguiente no vuelve a confirmarla.
+    presencia.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
+    guardado = almacen.incidente("EODI-2025-00199")
+    assert guardado is not None and guardado["presencia_dron"] == "no_confirmada"
 
 
 def test_un_cierre_por_otra_causa_no_confirma_el_dron() -> None:
@@ -295,13 +350,11 @@ def test_la_correccion_se_aplica_una_vez() -> None:
 def test_la_presencia_publicada_lleva_la_cita_de_la_fuente_que_la_justifica() -> None:
     from exportacion.afirmaciones import afirmaciones_publicas
 
-    documento = lieja(
-        "EODI-2025-00092", "2025-11-09T19:00Z",
-        frase_origen="Vliegverkeer luchthaven Luik stilgelegd na melding drone",
-    )  # fmt: skip
-    resultado = presencia.aplicar(documento)
+    documento = lieja("EODI-2025-00092", "2025-11-09T19:00Z")
+    citada = _autoridad(documento, "Skeyes", "Het luchtruim werd gesloten door een drone")
+    resultado = presencia.aplicar(_confirmada(documento, citada))
     [publica] = [a for a in afirmaciones_publicas(resultado) if a["campo"] == "presencia_dron"
                  and a["valor"] == "confirmada"]  # fmt: skip
-    assert publica["cita"] == "Vliegverkeer luchthaven Luik stilgelegd na melding drone"
+    assert publica["cita"] == "Het luchtruim werd gesloten door een drone"
     otras = [a for a in afirmaciones_publicas(resultado) if a["campo"] != "presencia_dron"]
     assert all("cita" not in a for a in otras)

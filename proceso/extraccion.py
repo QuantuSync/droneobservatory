@@ -1154,7 +1154,10 @@ def _alta(
         incidente = conservar_oficiales(incidente, anterior)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
         incidente = detalle.reaplicar(almacen, incidente)
-    # Criterio de presencia (un cierre por dron la confirma) y titular coherente con ella.
+    # Criterio de presencia: sin una autoridad que diga que fue un dron, no queda confirmada (un
+    # cierre o la prensa no bastan); y titular coherente con ella.
+    if not presencia.dudosa(almacen, incidente):
+        incidente = presencia.quitar_sin_base(incidente)
     incidente = presencia.aplicar(incidente)
     incidente = aplicar_reglas(incidente)
     try:

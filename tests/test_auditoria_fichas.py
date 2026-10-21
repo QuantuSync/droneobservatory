@@ -236,3 +236,20 @@ def test_la_cita_revisada_de_la_autoridad_vuelve_a_confirmar() -> None:
     assert revisados.reconfirmar(bajado, [prensa], instante) is bajado
     niega = {**cita, "declaracion": {**cita["declaracion"], "afirma": "niega_incidente"}}
     assert revisados.reconfirmar(bajado, [niega], instante) is bajado
+
+
+def test_e_no_cuenta_como_atribucion_el_dron_negado() -> None:
+    # EODI-2025-00203 (Schiphol): la Marechaussee dice que no se detectó ningún dron y que era un
+    # globo. Sin confirmar, la auditoría no la contaba bien (nombraba el dron al negarlo).
+    documento = _jozefow()
+    documento["presencia_dron"] = "no_confirmada"
+    documento["afirmaciones"] = [a for a in documento["afirmaciones"]
+                                 if a["campo"] != "presencia_dron"]  # fmt: skip
+    documento["fuentes"][1]["frase_origen"] = (
+        "an investigation showed no drone was detected on radar and that the object was likely "
+        "a balloon."
+    )
+    assert not presencia.atribuida_por_autoridad(documento)
+    assert not auditoria_fichas._e(documento)
+    documento["fuentes"][1]["frase_origen"] = "Een drone werd waargenomen boven de luchthaven."
+    assert auditoria_fichas._e(documento)

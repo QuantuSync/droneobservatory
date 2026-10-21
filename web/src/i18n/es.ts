@@ -1008,15 +1008,15 @@ export const es: Textos = {
           {
             parrafo: [
               "El estado del suceso dice si el incidente ocurrió; la presencia de dron dice si " +
-                "la autoridad lo atribuye a un dron. Si la autoridad competente lo da por " +
-                "hecho, está confirmado: basta con que el gestor aeroportuario, el de " +
-                "navegación aérea, la policía, el ejército, un ministerio, la fiscalía o la " +
-                "autoridad de aviación civil actúe o declare atribuyendo el suceso a un dron " +
-                "(un cierre por dron, un aviso de dron que comunica, una intervención por " +
-                "dron). No se piden restos, grabación ni detección por sensor. Queda sin " +
-                "confirmar si la propia autoridad lo deja abierto («posible dron», «objeto no " +
-                "identificado», «se investiga si era un dron») o si solo lo cuentan la prensa " +
-                "o los testigos.",
+                "la autoridad lo atribuye a un dron. Está confirmado cuando una autoridad (el " +
+                "gestor aeroportuario, el de navegación aérea, la policía, el ejército, un " +
+                "ministerio, el gobierno, la fiscalía o la autoridad de aviación civil) dice " +
+                "que lo que se vio, detectó, derribó o causó el efecto era un dron. No se piden " +
+                "restos, grabación ni detección por sensor, y que después no lo encontrara no " +
+                "lo cambia. Queda sin confirmar si la propia autoridad lo deja abierto " +
+                "(«posible dron», «objeto no identificado», «se investiga si era un dron»), si " +
+                "actúa sin atribuirlo (un cierre, cazas o una patrulla no son atribución) o si " +
+                "solo lo cuentan la prensa o los testigos.",
             ],
           },
           {

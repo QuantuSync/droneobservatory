@@ -1000,15 +1000,16 @@ export const en: Textos = {
           {
             parrafo: [
               "Event status says whether the incident happened; drone presence says whether " +
-                "the authority attributes it to a drone. If the competent authority takes it " +
-                "as a fact, it is confirmed: it is enough for the airport operator, the air " +
-                "navigation service provider, the police, the armed forces, a ministry, the " +
-                "public prosecutor or the civil aviation authority to act or state that the " +
-                "event was caused by a drone (a closure because of a drone, a drone report it " +
-                "passes on, a police response to a drone). No debris, footage or sensor " +
-                "detection is required. It stays not confirmed if the authority itself leaves " +
-                "it open («possible drone», «unidentified object», «investigating whether it " +
-                "was a drone») or if only the press or witnesses report it.",
+                "the authority attributes it to a drone. It is confirmed when an authority " +
+                "(the airport operator, the air navigation service provider, the police, the " +
+                "armed forces, a ministry, the government, the public prosecutor or the civil " +
+                "aviation authority) states that what was seen, detected, shot down or caused " +
+                "the disruption was a drone. No debris, footage or sensor detection is " +
+                "required, and not finding it afterwards does not change that. It stays not " +
+                "confirmed if the authority itself leaves it open («possible drone», " +
+                "«unidentified object», «investigating whether it was a drone»), if it acts " +
+                "without attributing it (a closure, fighter jets or a patrol are not an " +
+                "attribution) or if only the press or witnesses report it.",
             ],
           },
           {

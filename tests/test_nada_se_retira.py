@@ -67,11 +67,22 @@ def almacen() -> Any:
     a.cerrar()
 
 
+# La policía dice que fueron drones: la presencia queda confirmada (una medida no basta).
+POLICIA = {
+    "autoridad": "Københavns Politi", "pais": "DK", "categoria": "policia", "afirma": "drones",
+    "autor": "", "autor_tipo": "institucion", "autor_pais": "DK", "autor_situacion": "",
+    "cita_literal": True, "fuente": 1, "frase": "observeret tre til fire store droner",
+}  # fmt: skip
+
+
 def _publicada(almacen: Almacen) -> tuple[extraccion.Peticion, str]:
-    """Un candidato con su ficha publicada (la decidió el experto: es un cierre)."""
+    """Un candidato con su ficha publicada (la decidió el experto: es un cierre con los drones
+    que declara la policía)."""
     peticion = _peticion(almacen)
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo(presencia_dron=campo(
-        "confirmada", "observeret tre til fire store droner")))  # fmt: skip
+    cliente = Cliente(ficha_ejemplo(declaraciones=[POLICIA]), ficha_ejemplo(
+        presencia_dron=campo("confirmada", "observeret tre til fire store droner"),
+        declaraciones=[POLICIA],
+    ))  # fmt: skip
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     (id_,) = hechas.incidentes
     assert id_ is not None
