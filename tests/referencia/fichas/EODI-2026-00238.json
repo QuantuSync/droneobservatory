@@ -1,0 +1,147 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-06-30T09:30Z"
+    },
+    "fuente_id": "gdelt-e72d716879501fcf"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-06-30T00:00Z"
+    },
+    "fuente_id": "revisada-524520b505de75e4-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-06-30T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "aparatul ar fi posibil de provenien\u021b\u0103 ruseasc\u0103, iar \u00een urma verific\u0103rilor s-a decis detonarea acestuia din cauza riscului de explozie.",
+   "id": "gdelt-e72d716879501fcf",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-incarcatura-exploziva-descoperita-in-tulcea-3840077",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-06-30T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Momentul \u00een care militarii detoneaz\u0103 drona cu \u00eenc\u0103rc\u0103tur\u0103 exploziv\u0103 descoperit\u0103 \u00een Tulcea",
+   "id": "gdelt-cb3efe7d7a55bd1e",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://digi24.ro/stiri/actualitate/alerta-in-tulcea-resturi-de-drona-gasite-pe-un-camp-militarii-au-decis-detonarea-din-cauza-riscului-de-explozie-3839893",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-06-30T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Armatei Rom\u00e2niei au ajuns la fa\u021ba locului \u0219i au stabilit c\u0103 este vorba despre resturi de dron\u0103.",
+   "id": "revisada-524520b505de75e4-declaracion-1",
+   "idioma": "ro",
+   "medio": "Armata Rom\u00e2niei (declaraci\u00f3n oficial citada en digi24.ro)"
+  }
+ ],
+ "id": "EODI-2026-00238",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "localidad": "Tulcea",
+  "nivel": "localidad",
+  "pais": "RO",
+  "punto": {
+   "lat": 45.1787,
+   "lon": 28.80501
+  },
+  "radio_km": 5.0,
+  "region": "Tulcea",
+  "suceso": "Tulcea"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Tulcea",
+   "es": "Tulcea"
+  },
+  "lugar": {
+   "en": "Tulcea, Romania",
+   "es": "Tulcea, Ruman\u00eda"
+  },
+  "region": {
+   "en": "Tulcea",
+   "es": "Tulcea"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-06-30T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-cb3efe7d7a55bd1e",
+   "motivo": "control de fichas: \u00abDetonarea controlat\u0103 a avut loc \u00een diminea\u021ba zilei de 30 iunie\u00bb",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drone wreckage found in Tulcea, Romania",
+  "es": "Restos de dron encontrados en Tulcea, Rumania"
+ }
+}

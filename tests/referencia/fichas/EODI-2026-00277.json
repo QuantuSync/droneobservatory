@@ -1,0 +1,189 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-12T17:30Z"
+    },
+    "fuente_id": "gdelt-5141fc4260685075"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-12T17:30Z"
+    },
+    "fuente_id": "gdelt-5141fc4260685075-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-12T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Potrivit unui comunicat de pres\u0103 emis de MApN, drona a traversat spa\u021biul aerian al Ucrainei \u0219i al Republicii Moldova.",
+   "id": "gdelt-5141fc4260685075",
+   "idioma": "ro",
+   "medio": "dcnews.ro"
+  },
+  {
+   "campos_respaldados": [
+    "evidencia",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/63538497",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-12T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aparatul a c\u0103zut \u00eentr-un lan de porumb, iar \u00een urma impactului s-a produs un incendiu.",
+   "id": "gdelt-88b35f12fa7e6ad7",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://protv.md/international/drona-care-a-traversat-spatiul-aerian-al-republicii-moldova-si-ucrainei-s-ar-fi-indreptat-spre-romania-un-aparat-de-zbor-s-a-prabusit-in-judetul-suceava---2767123.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-12T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drona care a traversat spa\u021biul aerian al Moldovei s-ar fi \u00eendreptat spre Rom\u00e2nia. Aparat de zbor pr\u0103bu\u0219it la Suceava: imagini \u0219i m\u0103rturii",
+   "id": "gdelt-56ebc3eb0c75f3a0",
+   "idioma": "ro",
+   "medio": "protv.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-12T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone crashes in Romania's Suceava county",
+   "id": "gdelt-afbeeab12db360a9",
+   "idioma": "en",
+   "medio": "news.az"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-12T17:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Potrivit unui comunicat de pres\u0103 emis de MApN, drona a traversat spa\u021biul aerian al Ucrainei \u0219i al Republicii Moldova \u00eenainte de a p\u0103trunde \u00een cel",
+   "id": "gdelt-5141fc4260685075-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en dcnews.ro)"
+  }
+ ],
+ "id": "EODI-2026-00277",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "localidad": "Suceava",
+  "nivel": "localidad",
+  "pais": "RO",
+  "punto": {
+   "lat": 47.61914,
+   "lon": 26.24423
+  },
+  "radio_km": 1.0,
+  "region": "Suceava",
+  "suceso": "Suceava"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Suceava",
+   "es": "Suceava"
+  },
+  "lugar": {
+   "en": "Suceava, Romania",
+   "es": "Suceava, Ruman\u00eda"
+  },
+  "objetivo": {
+   "en": "Suceava",
+   "es": "Suceava"
+  },
+  "region": {
+   "en": "Suceava",
+   "es": "Suceava"
+  }
+ },
+ "objetivo": {
+  "categoria": "energia",
+  "nombre": "Suceava"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "caida",
+   "explosion"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-09-12T14:20Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-5141fc4260685075",
+   "motivo": "\u00absambata\u00bb en una nota publicada el 2026-09-12 20:30 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drone that crossed Ukraine and Moldova crashes in Suceava, Romania",
+  "es": "Dron que atraves\u00f3 Ucrania y Moldavia se estrella en Suceava, Rumania"
+ }
+}

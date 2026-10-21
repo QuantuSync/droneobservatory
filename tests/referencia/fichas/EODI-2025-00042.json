@@ -1,0 +1,3904 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 10,
+   "min": 2
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-22T22:30Z"
+    },
+    "fuente_id": "gdelt-8e71c2a5d1b72e20"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-23T05:15Z"
+    },
+    "fuente_id": "gdelt-12f9a79ba26f094e-declaracion-2"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://unian.net/world/drony-v-danii-i-norvegii-ne-rabotaet-aeroport-kopengagena-v-oslo-trevoga-13139157.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412 \u0440\u0430\u0439\u043e\u043d\u0435 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0431\u044b\u043b\u043e \u0437\u0430\u043c\u0435\u0447\u0435\u043d\u043e 2-3 \u0431\u043e\u043b\u044c\u0448\u0438\u0445 \u0434\u0440\u043e\u043d\u0430.",
+   "id": "gdelt-7cf7d9725d9ed8fa",
+   "idioma": "ru",
+   "medio": "unian.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pravda.com.ua/news/2025/09/22/7532026",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u043f\u0440\u0438\u0437\u0443\u043f\u0438\u043d\u0438\u0432 \u0440\u043e\u0431\u043e\u0442\u0443 \u0447\u0435\u0440\u0435\u0437 \u0434\u0440\u043e\u043d\u0438. \u0422\u0430\u043a\u043e\u0436 \u0457\u0445 \u043f\u043e\u043c\u0456\u0442\u0438\u043b\u0438 \u0432 \u041e\u0441\u043b\u043e",
+   "id": "gdelt-c4c296b7d7f0c779",
+   "idioma": "uk",
+   "medio": "pravda.com.ua"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn Gardermoen m\u00e5tte natt til tirsdag holde stengt i flere timer",
+   "id": "gdelt-8e71c2a5d1b72e20",
+   "idioma": "no",
+   "medio": "rb.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tu.no/nyhetsstudio/drone-observert-ved-oslo-lufthavn-mandag-kveld/89609",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone observert ved Oslo lufthavn mandag kveld - Teknisk Ukeblad",
+   "id": "gdelt-f42d52fecaf7dad1",
+   "idioma": "no",
+   "medio": "tu.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unian.ua/world/droni-v-daniji-i-norvegiji-ne-pracyuye-aeroport-kopengagena-v-oslo-trivoga-13139160.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u0438 \u0432 \u0414\u0430\u043d\u0456\u0457 \u0456 \u041d\u043e\u0440\u0432\u0435\u0433\u0456\u0457 - \u043d\u0435 \u043f\u0440\u0430\u0446\u044e\u0454 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430, \u0432 \u041e\u0441\u043b\u043e \u0442\u0440\u0438\u0432\u043e\u0433\u0430 \u2014 \u0423\u041d\u0406\u0410\u041d",
+   "id": "gdelt-deccc90878c7ad5e",
+   "idioma": "uk",
+   "medio": "unian.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abcnyheter.no/nyheter/flere-fly-omdirigeres-fra-oslo-lufthavn-etter-dronehendelse-pst-holdes-informert/1223731",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flere fly omdirigeres fra Oslo lufthavn etter dronehendelse \u2013 PST holdes informert",
+   "id": "gdelt-4c2fa7dc92f8881f",
+   "idioma": "no",
+   "medio": "abcnyheter.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kommersant.ru/doc/8059339",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0437\u0430\u043a\u0440\u044b\u0442 \u0438\u0437-\u0437\u0430 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f \u0411\u041f\u041b\u0410",
+   "id": "gdelt-29c41d65348d77a8",
+   "idioma": "ru",
+   "medio": "kommersant.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/norge/i/EyOlwP/oslo-lufthavn-stengt-for-trafikk-paa-grunn-av-dronehendelse",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn stengt for trafikk p\u00e5 grunn av dronehendelse",
+   "id": "gdelt-092cd246fccc3678",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sospetti-sugli-aeroporti-di-copenaghen-e-oslo-decine-voli-deviati-code-di-passeggeri-rimasti-a-terra/17800797",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti sugli aeroporti di Copenaghen e Oslo decine voli deviati | code di passeggeri rimasti a terra",
+   "id": "gdelt-8c3e6d7266686258",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilmattino.it/primopiano/esteri/droni_copenaghen_aeroporto_chiuso_voli_deviati_cosa_succede-9083257.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti sugli aeroporti di Copenaghen e Oslo, decine voli deviati: ritardi e cancellazioni, code di passeggeri rimasti a terra",
+   "id": "gdelt-e770c42a9487ec9e",
+   "idioma": "it",
+   "medio": "ilmattino.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sospetti-sugli-aeroporti-di-copenaghen-e-oslo-scali-chiusi-decine-voli-deviati-code-di-passeggeri-rimasti-a-terra/17800783",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti sugli aeroporti di Copenaghen e Oslo scali chiusi decine voli deviati",
+   "id": "gdelt-eab14edd243a272f",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://interfax.com.ua/news/general/1106649.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u0432 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u0438\u0442\u043e \u0447\u0435\u0440\u0435\u0437 \u043d\u043e\u0432\u0443 \u0444\u0456\u043a\u0441\u0430\u0446\u0456\u044e \u043d\u0435\u043e\u043f\u0456\u0437\u043d\u0430\u043d\u043e\u0433\u043e \u0434\u0440\u043e\u043d\u0430 \u0432 \u043f\u043e\u0432\u0456\u0442\u0440\u044f\u043d\u043e\u043c\u0443 \u043f\u0440\u043e\u0441\u0442\u043e\u0440\u0456",
+   "id": "gdelt-4bdf2ba3ad7c724a",
+   "idioma": "uk",
+   "medio": "interfax.com.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/samfund/droner-observeret-lukker-lufthavn-i-oslo/10953818",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner observeret: Lukker lufthavn i Oslo",
+   "id": "gdelt-73db6131c41837dd",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2583673-luchthaven-kopenhagen-heropent-na-urenlange-sluiting-door-drones-luchtruim-oslo-dicht",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchthaven Kopenhagen heropent na urenlange sluiting door drones, luchtruim Oslo dicht",
+   "id": "gdelt-012d1c02d485b4bb",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/mondo/2025/09/23/droni-su-danimarca-e-norvegia-chiusi-gli-aeroporti-di-copenaghen-e-oslo_9ece4e38-c15b-4046-99ea-ee98f4169ae7.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su Danimarca e Norvegia, chiusi gli aeroporti di Copenaghen e Oslo - Notizie",
+   "id": "gdelt-8b07617ac1cf4e15",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bt.no/innenriks/i/Avjbdn/drone-observert-ved-oslo-lufthavn-mandag-kveld",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn stengt etter ny droneobservasjon \u2013 PST holdes informert",
+   "id": "gdelt-3d1b09d60bb3f35d",
+   "idioma": "no",
+   "medio": "bt.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nettavisen.no/nyheter/oslo-lufthavn-stengt-etter-ny-droneobservasjon/s/5-95-2632662",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn Gardermoen, OSL | Oslo lufthavn stengt etter ny droneobservasjon",
+   "id": "gdelt-622b0f3341056149",
+   "idioma": "no",
+   "medio": "nettavisen.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.nl/nieuws/buitenland/artikel/5529732/drones-gesignaleerd-bij-luchthavens-kopenhagen-en-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones gesignaleerd bij luchthavens Kopenhagen en Oslo, vliegverkeer stilgelegd",
+   "id": "gdelt-9d3f9734f3fd6f47",
+   "idioma": "nl",
+   "medio": "rtl.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kristeligt-dagblad.dk/udland/lufthavnen-i-oslo-er-lukket-paa-grund-af-mindst-droner",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Observation af droner lukker lufthavnen i Oslo",
+   "id": "gdelt-2a98cd43cfe33691",
+   "idioma": "da",
+   "medio": "kristeligt-dagblad.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://index.hr/vijesti/clanak/zbog-dronova-zatvoren-zracni-prostor-nad-aerodromom-u-oslu-isto-bilo-i-u-kopenhagenu/2712387.aspx",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zbog dronova zatvoren zra\u010dni prostor nad aerodromom u Oslu. Isto bilo i u Kopenhagenu",
+   "id": "gdelt-5ad39a75258ea465",
+   "idioma": "hr",
+   "medio": "index.hr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/avvistato-drone-oslo-chiude-aeroporto/17800872",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avvistato drone | Oslo chiude aeroporto",
+   "id": "gdelt-2ae50c09fcd856d9",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-oslo-chiuso-laeroporto/17800873",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni Oslo | chiuso l' aeroporto",
+   "id": "gdelt-f1f840fac33a9776",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ria.ru/20250923/norvegiya-2043646697.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u041c\u0418: \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u043b\u0438 \u0438\u0437-\u0437\u0430 \u0411\u041f\u041b\u0410",
+   "id": "gdelt-f7e4bca1a3d0fda2",
+   "idioma": "ru",
+   "medio": "ria.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vg.no/nyheter/i/63x4jQ/nrk-drone-observert-i-naerheten-av-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn stenges etter observasjon av flere droner",
+   "id": "gdelt-fb91383b03a9c6f4",
+   "idioma": "no",
+   "medio": "vg.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://expressen.se/nyheter/expressen-direkt?post=7f254c44-ee67-4ae7-a5a4-ac9839d431a3",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dr\u00f6nare vid flygplatsen i Oslo",
+   "id": "gdelt-6e7a30ab6914be86",
+   "idioma": "sv",
+   "medio": "expressen.se"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tvn24.pl/swiat/norwegia-lotnisko-w-oslo-zamkniete-zauwazono-drona-st8663000",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norwegia. Lotnisko w Oslo zamkni\u0119te. \"Zauwa\u017cono drona\"",
+   "id": "gdelt-889ccfb548d985f9",
+   "idioma": "pl",
+   "medio": "tvn24.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rheinpfalz.de/panorama_artikel,-flughafen-kopenhagen-wieder-offen-drohnen-auch-%C3%BCber-oslo-_arid,5815098.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Kopenhagen wieder offen - Drohnen auch \u00fcber Oslo - Panorama",
+   "id": "gdelt-03c0ab9a9796d35a",
+   "idioma": "de",
+   "medio": "rheinpfalz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nrk.no/stor-oslo/oslo-lufthavn-stengt-grunnet-droneobservasjoner-1.17581396",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn stengt grunnet drone\u00adobservasjoner",
+   "id": "gdelt-403685dc1ecbd768",
+   "idioma": "no",
+   "medio": "nrk.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://freiepresse.de/nachrichten/panorama/flughafen-kopenhagen-wieder-offen-drohnen-auch-ueber-oslo-artikel13966005",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Kopenhagen wieder offen - Drohnen auch \u00fcber Oslo",
+   "id": "gdelt-9b4176de4da12088",
+   "idioma": "de",
+   "medio": "freiepresse.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://waz-online.de/panorama/kopenhagen-flughafen-nach-drohnen-vorfall-wieder-offen-drohnen-auch-in-oslo-7DEHLPPSFNLZ3JMCFHBI3SYJ7E.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kopenhagen: Flughafen nach Drohnen-Vorfall wieder offen \u2013 Drohnen auch in Oslo",
+   "id": "gdelt-9d05a379ba59aa5d",
+   "idioma": "de",
+   "medio": "waz-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.mail.ru/incident/68008257",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0420\u0430\u0431\u043e\u0442\u0443 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \u041e\u0441\u043b\u043e \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b\u0438 \u043f\u043e\u0441\u043b\u0435 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f \u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0445 \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u043e\u0432",
+   "id": "gdelt-a353ecd679253e51",
+   "idioma": "ru",
+   "medio": "news.mail.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://volksstimme.de/panorama/flughafen-kopenhagen-wieder-offen-drohnen-auch-uber-oslo-4119699",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark und Norwegen: Flughafen Kopenhagen wieder offen - Drohnen auch \u00fcber Oslo",
+   "id": "gdelt-ad1a2cab3050fe34",
+   "idioma": "de",
+   "medio": "volksstimme.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://svt.se/nyheter/utrikes/oslos-flygplats-stangd-efter-dronarlarm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslos flygplats st\u00e4ngd \u2013 dr\u00f6nare i luftrummet",
+   "id": "gdelt-12d2e48e562fe944",
+   "idioma": "sv",
+   "medio": "svt.se"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/184/norvigia-meta-to-aerodromio-tis-kopegchagis-ekleise-kai-tou-oslo-exaitias-drones.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039d\u03bf\u03c1\u03b2\u03b7\u03b3\u03af\u03b1: \u039c\u03b5\u03c4\u03ac \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2, \u03ad\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03b5\u03be\u03b1\u03b9\u03c4\u03af\u03b1\u03c2 drones",
+   "id": "gdelt-200187483d60715e",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unn.ua/news/aeroport-oslo-tymchasovo-zakryly-cherez-poiavu-nevidomykh-droniv",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0442\u0438\u043c\u0447\u0430\u0441\u043e\u0432\u043e \u0437\u0430\u043a\u0440\u0438\u043b\u0438 \u0447\u0435\u0440\u0435\u0437 \u043f\u043e\u044f\u0432\u0443 \u043d\u0435\u0432\u0456\u0434\u043e\u043c\u0438\u0445 \u0434\u0440\u043e\u043d\u0456\u0432",
+   "id": "gdelt-7be3b7131e0dc05d",
+   "idioma": "uk",
+   "medio": "unn.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vz.ru/news/2025/9/23/1361626.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u043b \u0432\u043e\u0437\u0434\u0443\u0448\u043d\u043e\u0435 \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438\u0437-\u0437\u0430 \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u0430 :: \u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0434\u043d\u044f / \u0412\u0417\u0413\u041b\u042f\u0414",
+   "id": "gdelt-85816d4c82c8d6c7",
+   "idioma": "ru",
+   "medio": "vz.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rhein-zeitung.de/deutschland-welt/panorama/flughafen-kopenhagen-wieder-offen-drohnen-auch-ueber-oslo_arid-4070536.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark und Norwegen: Flughafen Kopenhagen wieder offen - Drohnen auch \u00fcber Oslo - Panorama",
+   "id": "gdelt-a5aa65c6cd348f73",
+   "idioma": "de",
+   "medio": "rhein-zeitung.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rbc.ru/politics/23/09/2025/68d1deec9a79476f985319eb",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u0432 \u041e\u0441\u043b\u043e \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0438\u043b \u043f\u043e\u043b\u0435\u0442\u044b \u0438\u0437-\u0437\u0430 \u0434\u0440\u043e\u043d\u043e\u0432 \u0432\u0441\u043b\u0435\u0434 \u0437\u0430 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u043e\u043c",
+   "id": "gdelt-10141e98c50bd642",
+   "idioma": "ru",
+   "medio": "rbc.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://protothema.gr/world/article/1699890/ekleise-kai-to-diethnes-aerodromio-tou-oslo-exaitias-drones-pou-theathikan-stin-periohi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03ba\u03b1\u03b9 \u03c4\u03bf \u03b4\u03b9\u03b5\u03b8\u03bd\u03ad\u03c2 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03b5\u03be\u03b1\u03b9\u03c4\u03af\u03b1\u03c2 drones \u03c0\u03bf\u03c5 \u03b8\u03b5\u03ac\u03b8\u03b7\u03ba\u03b1\u03bd \u03c3\u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae",
+   "id": "gdelt-472e4a6abf5b903a",
+   "idioma": "el",
+   "medio": "protothema.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tu.no/nyhetsstudio/oslo-lufthavn-maatte-stenge-etter-droneobservasjoner/89609",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T02:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn m\u00e5tte stenge etter droneobservasjoner - Teknisk Ukeblad",
+   "id": "gdelt-834a21dd53aa8406",
+   "idioma": "no",
+   "medio": "tu.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newsbomb.gr/kosmos/story/1681373/norvigia-ekleise-to-diethnes-aerodromio-tou-oslo-meta-apo-ptiseis-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039d\u03bf\u03c1\u03b2\u03b7\u03b3\u03af\u03b1: \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03c4\u03bf \u03b4\u03b9\u03b5\u03b8\u03bd\u03ad\u03c2 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 drones",
+   "id": "gdelt-5c7a8fb1b512067b",
+   "idioma": "el",
+   "medio": "newsbomb.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pressorg24.com/news?id=797492",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0437\u0430\u043a\u0440\u044b\u043b\u0438 \u0438\u0437-\u0437\u0430 \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0445 \u0434\u0440\u043e\u043d\u043e\u0432 - \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u043d\u043e\u0432\u043e\u0441\u0442\u0438 \u0441\u0435\u0433\u043e\u0434\u043d\u044f",
+   "id": "gdelt-79cdcf8fd9d197a9",
+   "idioma": "ru",
+   "medio": "pressorg24.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gea.de/welt/weltspiegel_artikel,-flughafen-kopenhagen-wieder-offen-drohnen-auch-%C3%BCber-oslo-_arid,7074861.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T03:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Kopenhagen wieder offen - Drohnen auch \u00fcber Oslo - Weltspiegel - Reutlinger General-Anzeiger",
+   "id": "gdelt-6fbfd86cadfddd90",
+   "idioma": "de",
+   "medio": "gea.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://russian.rt.com/world/news/1537603-aeroport-oslo-bpla",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Reuters: \u0432\u043e\u0437\u0434\u0443\u0448\u043d\u043e\u0435 \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u043e\u043c \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u043b\u0438 \u0438\u0437-\u0437\u0430 \u0411\u041f\u041b\u0410",
+   "id": "gdelt-fd1a6fe6b1debc9d",
+   "idioma": "ru",
+   "medio": "rt.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/panorama/Nach-Kopenhagen-auch-Flughafen-Oslo-wegen-Drohnen-Sichtung-gesperrt-article26049359.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Fl\u00fcge werden umgeleitet: Nach Kopenhagen auch Flughafen Oslo wegen Drohnen-Sichtung gesperrt",
+   "id": "gdelt-0ed8e91af383d1aa",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ukrinform.ua/rubric-world/4039320-aeroport-oslo-zakrili-cerez-poavu-droniv.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u0438\u043b\u0438 \u0447\u0435\u0440\u0435\u0437 \u043f\u043e\u044f\u0432\u0443 \u0434\u0440\u043e\u043d\u0456\u0432",
+   "id": "gdelt-da9199a8a54d3cff",
+   "idioma": "uk",
+   "medio": "ukrinform.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ura.news/news/1052999864",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412 \u041d\u043e\u0440\u0432\u0435\u0433\u0438\u0438 \u0437\u0430\u043c\u0435\u0442\u0438\u043b\u0438 \u0411\u041f\u041b\u0410 \u0443 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430: \u0432\u043e\u0437\u0434\u0443\u0448\u043d\u043e\u0435 \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u043e\u043c \u041e\u0441\u043b\u043e \u043e\u0442\u043a\u0440\u044b\u043b\u0438 \u0438\u0437-\u0437\u0430 \u0411\u041f\u041b\u0410",
+   "id": "gdelt-0c06a776bdf8edfe",
+   "idioma": "ru",
+   "medio": "ura.news"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/227/chaos-se-norvigia-kai-dania-ekleisan-kai-anoixan-ystera-apo-ores-ta-aerodromia-tis-kopegchagis-kai-tou-oslo-logo-drones.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a7\u03ac\u03bf\u03c2 \u03c3\u03b5 \u039d\u03bf\u03c1\u03b2\u03b7\u03b3\u03af\u03b1 \u03ba\u03b1\u03b9 \u0394\u03b1\u03bd\u03af\u03b1: \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03ba\u03b1\u03b9 \u03ac\u03bd\u03bf\u03b9\u03be\u03b1\u03bd \u03cd\u03c3\u03c4\u03b5\u03c1\u03b1 \u03b1\u03c0\u03cc \u03ce\u03c1\u03b5\u03c2 \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bb\u03cc\u03b3\u03c9\u2026 drones",
+   "id": "gdelt-908795646f6c8b80",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://life.ru/p/1791937",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aftonbladet: \u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u043b\u0438 \u0438\u0437-\u0437\u0430 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f \u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0445 \u0411\u041f\u041b\u0410",
+   "id": "gdelt-d55b67492deda2e8",
+   "idioma": "ru",
+   "medio": "life.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rbc.ua/rus/news/stolitsi-norvegiyi-zakrili-aeroport-cherez-1758589739.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u0438\u043b\u0438 \u0447\u0435\u0440\u0435\u0437 \u0434\u0440\u043e\u043d\u0438 23 \u0432\u0435\u0440\u0435\u0441\u043d\u044f",
+   "id": "gdelt-df2b75ff44ca02fc",
+   "idioma": "uk",
+   "medio": "rbc.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://delfi.lv/46713439/arzemes/120088446/kopenhagenas-un-oslo-lidostas-slegtas-neidentificetu-dronu-del",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kopenh\u0101genas un Oslo lidostas sl\u0113gtas neidentific\u0113tu dronu d\u0113\u013c",
+   "id": "gdelt-7b199ead7779959e",
+   "idioma": "lv",
+   "medio": "delfi.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naftemporiki.gr/kosmos/2009535/anastatosi-se-norvigia-kai-dania-ekleisan-gia-ores-ta-aerodromia-tis-kopegchagis-kai-toy-oslo-logo-drones-poy-theathikan-stin-periochi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0391\u03bd\u03b1\u03c3\u03c4\u03ac\u03c4\u03c9\u03c3\u03b7 \u03c3\u03b5 \u039d\u03bf\u03c1\u03b2\u03b7\u03b3\u03af\u03b1 \u03ba\u03b1\u03b9 \u0394\u03b1\u03bd\u03af\u03b1 \u2013 \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03b3\u03b9\u03b1 \u03ce\u03c1\u03b5\u03c2 \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bb\u03cc\u03b3\u03c9 drones \u03c0\u03bf\u03c5 \u03b8\u03b5\u03ac\u03b8\u03b7\u03ba\u03b1\u03bd \u03c3\u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae",
+   "id": "gdelt-7b5ec863dd9c4abb",
+   "idioma": "el",
+   "medio": "naftemporiki.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kauno.diena.lt/naujienos/pasaulis/konfliktai-nelaimes/neatpazinti-dronai-sutrikde-skrydzius-kopenhagos-ir-oslo-oro-uostuose-1720858",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Neatpa\u017einti dronai sutrikd\u0117 skryd\u017eius Kopenhagos ir Oslo oro uostuose",
+   "id": "gdelt-efe6263396c741f0",
+   "idioma": "lt",
+   "medio": "kauno.diena.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/182/chaos-se-norvigia-kai-dania-ekleisan-gia-ores-ta-aerodromia-tis-kopegchagis-kai-tou-oslo-logo-drones.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a7\u03ac\u03bf\u03c2 \u03c3\u03b5 \u039d\u03bf\u03c1\u03b2\u03b7\u03b3\u03af\u03b1 \u03ba\u03b1\u03b9 \u0394\u03b1\u03bd\u03af\u03b1: \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03b3\u03b9\u03b1 \u03ce\u03c1\u03b5\u03c2 \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bb\u03cc\u03b3\u03c9 drones",
+   "id": "gdelt-5b67a142f8692d2b",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vesti.ru/article/4699748",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u0432\u0430\u043b \u0432\u043e\u0437\u0434\u0443\u0448\u043d\u043e\u0435 \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438\u0437-\u0437\u0430 \u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u043e\u0433\u043e \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u0430",
+   "id": "gdelt-9ee47c193a0d4d2c",
+   "idioma": "ru",
+   "medio": "vesti.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://affaritaliani.it/esteri/droni-sospetti-negli-aeroporti-di-copenaghen-e-oslo-chiuso-lo-spazio-aereo-poi-l-annuncio-sono-scomparsi-nel-nulla-985226.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti negli aeroporti di Copenaghen e Oslo, chiuso lo spazio aereo. Poi l'annuncio: \"Sono scomparsi nel nulla\"",
+   "id": "gdelt-ea0e4212ab45f7a9",
+   "idioma": "it",
+   "medio": "affaritaliani.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.onet.pl/swiat/tajemnicze-drony-nad-obiektem-wojskowym-i-lotniskiem-w-oslo-sa-zatrzymani/xmftbl0",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Tajemnicze drony nad obiektem wojskowym i lotniskiem w Oslo. S\u0105 zatrzymani",
+   "id": "gdelt-fc97d2dd776eb1dd",
+   "idioma": "pl",
+   "medio": "wiadomosci.onet.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.mail.ru/society/68009579",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Reuters: \u041d\u0430\u0434 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u043e\u043c \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u0442\u043e \u0432\u043e\u0437\u0434\u0443\u0448\u043d\u043e\u0435 \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438\u0437-\u0437\u0430 \u0411\u041f\u041b\u0410",
+   "id": "gdelt-8d98b36ac64db16a",
+   "idioma": "ru",
+   "medio": "news.mail.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tothemaonline.com/Article/439706/synagermos-sta-aerodromia-toy-oslo-kai-ths-kopeghaghs-apo-drones---ekleisan-gia-wres",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03ba\u03b1\u03b9 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03b1\u03c0\u03cc drones",
+   "id": "gdelt-a4b10e2922759d44",
+   "idioma": "el",
+   "medio": "tothemaonline.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://express.de:443/panorama/alarm-in-kopenhagen-und-oslo-drohnen-legen-flughafen-lahm-1113404",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alarm in Kopenhagen und Oslo: Drohnen legen Flughafen lahm",
+   "id": "gdelt-c38270baebed383c",
+   "idioma": "de",
+   "medio": "express.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://offsite.com.cy/eidiseis/diethni/ekleisan-ta-aerodromia-kopeghagis-kai-oslo-exaitias-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u03b5\u03be\u03b1\u03b9\u03c4\u03af\u03b1\u03c2 drones",
+   "id": "gdelt-d9455f0220d6af58",
+   "idioma": "el",
+   "medio": "offsite.com.cy"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ethnos.gr/World/article/381908/synagermosstaaerodromiathskopegxaghskaitoyoslometaapomysthriodhdrones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u03bc\u03c5\u03c3\u03c4\u03b7\u03c1\u03b9\u03ce\u03b4\u03b7 drones",
+   "id": "gdelt-e30ebcd5ba1c940c",
+   "idioma": "el",
+   "medio": "ethnos.gr"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "drones",
+    "localidad",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/mejdunarodni/Norvegiya-zatvori-vuzdushnoto-prostranstvo-nad-letishteto-v-Oslo-zaradi-neizv-2715562",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u041e\u0441\u043b\u043e, \u041d\u043e\u0440\u0432\u0435\u0433\u0438\u044f, \u0435 \u0431\u0438\u043b\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e.",
+   "id": "gdelt-12f9a79ba26f094e",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/mejdunarodni/Norvegiya-zatvori-vuzdushnoto-prostranstvo-nad-letishteto-v-Oslo-zaradi-neizv-2715562",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u0412\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0435 \u0431\u0438\u043b\u043e \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u043f\u043e \u0441\u044a\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f \u0437\u0430 \u0431\u0435\u0437\u043e\u043f\u0430\u0441\u043d\u043e\u0441\u0442.",
+   "id": "gdelt-12f9a79ba26f094e-declaracion-2",
+   "idioma": "bg",
+   "medio": "Oslo Airport (declaraci\u00f3n oficial citada en focus-news.net)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nieuwsblad.be/buitenland/ongedentificeerde-drones-leggen-luchthavens-van-kopenhagen-en-oslo-urenlang-plat/92256253.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Onge\u00efdentificeerde\" drones leggen luchthavens van Kopenhagen en Oslo urenlang plat",
+   "id": "gdelt-208290dd00a5e992",
+   "idioma": "nl",
+   "medio": "nieuwsblad.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dagsavisen.no/nyheter/oslo-lufthavn-matte-stenge-etter-droneobservasjoner/9972853",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo Lufthavn stengt etter droneobservasjoner",
+   "id": "gdelt-0371c0a7fc4f18e4",
+   "idioma": "no",
+   "medio": "dagsavisen.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://thebest.gr/article/805179-oslo-kleisto-to-diethnes-aerodromio-logo-parousias-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u038c\u03c3\u03bb\u03bf: \u039a\u03bb\u03b5\u03b9\u03c3\u03c4\u03cc \u03c4\u03bf \u03b4\u03b9\u03b5\u03b8\u03bd\u03ad\u03c2 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03bb\u03cc\u03b3\u03c9 \u03c0\u03b1\u03c1\u03bf\u03c5\u03c3\u03af\u03b1\u03c2 drones",
+   "id": "gdelt-7139c5371bb44baf",
+   "idioma": "el",
+   "medio": "thebest.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/i-droni-avvistati-negli-aeroporti-di-copenaghen-e-oslo-sono-scomparsi-non-sappiamo-dove-siano-andati/17801173",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "I droni avvistati negli aeroporti di Copenaghen e Oslo | Sono scomparsi non sappiamo dove siano andati",
+   "id": "gdelt-87b2ff51c7bb5dc8",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dorzeczy.pl/swiat/782898/drony-sparalizowaly-prace-lotnisk-w-kopenhadze-i-oslo.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drony sparali\u017cowa\u0142y prace lotnisk w Kopenhadze i Oslo",
+   "id": "gdelt-a1e30ced6cff16a7",
+   "idioma": "pl",
+   "medio": "dorzeczy.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ohtuleht.ee/1140423/kopenhaageni-ja-oslo-lennujaam-olid-drooniohu-tottu-ajutiselt-suletud",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kopenhaageni ja Oslo lennujaam olid drooniohu t\u00f5ttu ajutiselt suletud",
+   "id": "gdelt-acf29afe666bc4eb",
+   "idioma": "et",
+   "medio": "ohtuleht.ee"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualitateaprahoveana.ro/actual/stiri-internationale/67003-prezenta-unor-drone-a-dat-peste-cap-traficul-aerian-la-aeroporturile-din-copenhaga-si-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Prezen\u021ba unor drone a dat peste cap traficul aerian la aeroporturile din Copenhaga \u0219i Oslo",
+   "id": "gdelt-cd29ea8064a84641",
+   "idioma": "ro",
+   "medio": "actualitateaprahoveana.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bote.ch/nachrichten/schweizundwelt/drohnenalarm-am-flughafen-kopenhagen-und-oslo-art-1622212",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnenalarm am Flughafen Kopenhagen und Oslo",
+   "id": "gdelt-d66a6cb95e1da76a",
+   "idioma": "de",
+   "medio": "bote.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dw.com/ru/aeroporty-kopengagena-i-oslo-byli-zakryty-izza-dronov/a-74102145",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0418\u0437-\u0437\u0430 \u0434\u0440\u043e\u043d\u043e\u0432 \u0431\u044b\u043b\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u044b \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u044b \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e \u2013 DW \u2013 23.09.2025",
+   "id": "gdelt-d9e8376604d52e71",
+   "idioma": "ru",
+   "medio": "dw.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://leggo.it/esteri/news/droni_oslo_copenaghen_russia_guerra_oggi_22_9_2025-9083212.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti in Danimarca e Norvegia, chiusi per ore gli aeroporti di Copenaghen e Oslo. Zelensky: \u00abSono i russi\u00bb",
+   "id": "gdelt-e21fa96cba0d674a",
+   "idioma": "it",
+   "medio": "leggo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zonebourse.com/actualite-bourse/des-drones-perturbent-les-aeroports-de-copenhague-et-oslo-ce7d58dcdb88f224",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Des drones perturbent les a\u00e9roports de Copenhague et Oslo",
+   "id": "gdelt-40820c3b4c96bb07",
+   "idioma": "fr",
+   "medio": "zonebourse.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://marketscreener.com/news/drones-force-shutdown-of-kastrup-and-gardermoen-airports-ce7d58dcdb88f224",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones Force Shutdown of Kastrup and Gardermoen Airports",
+   "id": "gdelt-623c90a3375f9e87",
+   "idioma": "en",
+   "medio": "marketscreener.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gds.it/articoli/mondo/2025/09/23/riaperti-gli-aeroporti-di-copenaghen-e-oslo-dopo-lallarme-droni-754529ab-6b77-4a8e-b54d-bb38aefc9277",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Riaperti gli aeroporti di Copenaghen e Oslo dopo l'allarme droni",
+   "id": "gdelt-9fbb18239836d64f",
+   "idioma": "it",
+   "medio": "gds.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cdt.ch/news/mondo/i-droni-sopra-gli-aeroporti-di-copenaghen-e-oslo-erano-collegati-406492",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "I droni sopra gli aeroporti di Copenaghen e Oslo erano collegati?",
+   "id": "gdelt-b0c35fd8b9e1797c",
+   "idioma": "it",
+   "medio": "cdt.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://iltirreno.it/ultimora-adnkronos/2025/09/23/news/droni-avvistati-negli-aeroporti-di-copenaghen-e-oslo-scali-chiusi-e-poi-riaperti-dopo-ore-zelensky-e-stata-la-russia-1.100764869",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni avvistati negli aeroporti di Copenaghen e Oslo, scali chiusi e poi riaperti dopo ore. Zelensky: \"E' stata la Russia\"",
+   "id": "gdelt-0dadec9a23002683",
+   "idioma": "it",
+   "medio": "iltirreno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bt.no/hendelser/i/Oowgd1/fem-fly-ble-omdirigert-til-flesland",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone-hendelse p\u00e5 Oslo Lufthavn Gardermoen: Fem fly ble omdirigert til Flesland",
+   "id": "gdelt-2c6c4041b6d39240",
+   "idioma": "no",
+   "medio": "bt.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://delo.si/novice/svet/neznani-droni-ohromili-zracni-promet-v-koebenhavnu-in-oslu",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Neznani droni ohromili zra\u010dni promet v Koebenhavnu in Oslu",
+   "id": "gdelt-3441db3f824081b6",
+   "idioma": "sl",
+   "medio": "delo.si"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.ro/externe/aeroporturile-din-copenhaga-si-oslo-s-au-redeschis-dupa-blocajul-cauzat-de-dronele-mari-langa-piste-dar-alerta-se-mentine-760554.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporturile din Copenhaga \u0219i Oslo s-au redeschis dup\u0103 blocajul cauzat de dronele \u201emari\" l\u00e2ng\u0103 piste, dar alerta se men\u021bine",
+   "id": "gdelt-3a4b45e3e695db80",
+   "idioma": "ro",
+   "medio": "antena3.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://welt.de/politik/ausland/article68d1d4006199625f8c0f9d41/vorfall-auch-in-oslo-drohnenalarm-in-kopenhagen-daenemarks-groesster-flughafen-muss-fuer-stunden-geschlossen-werden.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Vorfall auch in Oslo: Drohnenalarm in Kopenhagen \u2013 D\u00e4nemarks gr\u00f6\u00dfter Flughafen muss f\u00fcr Stunden geschlossen werden",
+   "id": "gdelt-5496d824cfe9b777",
+   "idioma": "de",
+   "medio": "welt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unn.ua/news/aeroporty-kopenhahena-ta-oslo-vidnovyly-robotu-pislia-vyiavlennia-droniv",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0438 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0442\u0430 \u041e\u0441\u043b\u043e \u0432\u0456\u0434\u043d\u043e\u0432\u0438\u043b\u0438 \u0440\u043e\u0431\u043e\u0442\u0443 \u043f\u0456\u0441\u043b\u044f \u0432\u0438\u044f\u0432\u043b\u0435\u043d\u043d\u044f \u0434\u0440\u043e\u043d\u0456\u0432",
+   "id": "gdelt-773428641110520a",
+   "idioma": "uk",
+   "medio": "unn.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetaprawna.pl/wiadomosci/swiat/artykuly/9894371,drony-zaklocily-prace-lotnisk-w-kopenhadze-i-oslo-loty-wznowiono-dop.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drony zak\u0142\u00f3ci\u0142y prac\u0119 lotnisk w Kopenhadze i Oslo. Loty wznowiono dopiero nad ranem",
+   "id": "gdelt-c01ab5faffbc905a",
+   "idioma": "pl",
+   "medio": "gazetaprawna.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://247.libero.it/nzsearch/x250923070066997057",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Allarme droni a Oslo: decine di voli dirottati, le rotte deviate sul radar",
+   "id": "gdelt-c7484e0852cacf0f",
+   "idioma": "it",
+   "medio": "247.libero.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilgazzettino.it:443/esteri/droni_aeroporti_copenaghen_oslo_voli_deviati_ritardi_cancellazioni_code-9084410.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti sugli aeroporti di Copenaghen e Oslo, decine voli deviati: ritardi e cancellazioni. Zelensky: \u00abSono stati i russi, serve una risposta\u00bb",
+   "id": "gdelt-cb14f41d7459fa66",
+   "idioma": "it",
+   "medio": "ilgazzettino.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://marketscreener.com/news/drones-force-closure-of-kastrup-and-gardermoen-airports-update-ce7d58dcdb8af422",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones Force Closure of Kastrup and Gardermoen Airports (Update)",
+   "id": "gdelt-e8c04ca047794536",
+   "idioma": "en",
+   "medio": "marketscreener.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unionesarda.it/news/mondo/droni-sugli-aeroporti-di-copenaghen-e-oslo-scali-chiusi-decine-di-aerei-dirottati-s10lsp8y",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Oslo e Copenaghen: scali chiusi, decine di aerei dirottati",
+   "id": "gdelt-aac8272e86aa9f03",
+   "idioma": "it",
+   "medio": "unionesarda.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2583673-luchthavens-kopenhagen-en-oslo-weer-open-na-urenlange-sluiting-door-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchthavens Kopenhagen en Oslo weer open na urenlange sluiting door drones",
+   "id": "gdelt-d0b5fc53651e7926",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elmundo.es/internacional/2025/09/23/68d23025e9cf4ae1378b456f.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La presencia de drones obliga a cerrar varias horas los aeropuertos de Copenhague y Oslo",
+   "id": "gdelt-ecd12f3d0383eac8",
+   "idioma": "es",
+   "medio": "elmundo.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/externe/aeroportul-din-oslo-inchis-mai-multe-ore-dupa-observarea-unei-drone-zborurile-au-fost-deviate-3424797",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Oslo, \u00eenchis mai multe ore dup\u0103 observarea unei drone. Zborurile au fost deviate",
+   "id": "gdelt-6f5b919505d53cc7",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://patrisnews.com/lixi-synagermoy-sta-aerodromia-kopegchagis-kai-oslo-xekinoyn-entatikes-ereynes-gia-ta-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039b\u03ae\u03be\u03b7 \u03c3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03bf\u03cd \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf - \u039e\u03b5\u03ba\u03b9\u03bd\u03bf\u03cd\u03bd \u03b5\u03bd\u03c4\u03b1\u03c4\u03b9\u03ba\u03ad\u03c2 \u03ad\u03c1\u03b5\u03c5\u03bd\u03b5\u03c2 \u03b3\u03b9\u03b1 \u03c4\u03b1 drones - PatrisNews",
+   "id": "gdelt-6fafafbb50307e55",
+   "idioma": "el",
+   "medio": "patrisnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilpost.it/2025/09/23/droni-aeroporti-oslo-copenaghe",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cosa sappiamo sui droni intorno agli aeroporti di Oslo e Copenaghen",
+   "id": "gdelt-6fc4950a55b9a73b",
+   "idioma": "it",
+   "medio": "ilpost.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gva.be/buitenland/ongedentificeerde-drones-leggen-luchthavens-van-kopenhagen-en-oslo-urenlang-plat-hier-zitten-vermoedelijk-professionals-achter/92259174.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Onge\u00efdentificeerde\" drones leggen luchthavens van Kopenhagen en Oslo urenlang plat: \"Hier zitten vermoedelijk professionals achter\"",
+   "id": "gdelt-8cb8bdf430358c98",
+   "idioma": "nl",
+   "medio": "gva.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vedomosti.ru/society/news/2025/09/23/1141177-aeroport-oslo-zakril",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u0441\u043b\u043e \u0437\u0430\u043a\u0440\u044b\u043b \u0432\u043e\u0437\u0434\u0443\u0448\u043d\u043e\u0435 \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0438\u0437-\u0437\u0430 \u0411\u041f\u041b\u0410",
+   "id": "gdelt-8cdd675a12e27382",
+   "idioma": "ru",
+   "medio": "vedomosti.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://euro2day.gr/news/world/article/2317431/ekleisan-gia-ores-ta-aerodromia--kopeghaghs-kai-os.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03b3\u03b9\u03b1 \u03ce\u03c1\u03b5\u03c2 \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u03bb\u03cc\u03b3\u03c9 drones",
+   "id": "gdelt-9e9590e9462fbbdc",
+   "idioma": "el",
+   "medio": "euro2day.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://quotidiano.net/esteri/droni-sugli-aeroporti-di-copenaghen-e-oslo-qp4w9rcx",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Copenaghen e Oslo, scali chiusi per ore. Zelensky: \"Sono stati i russi\"",
+   "id": "gdelt-afaeca491cdeaf2c",
+   "idioma": "it",
+   "medio": "quotidiano.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pressorg24.com/news?id=797509",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u044b \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e \u0432\u043e\u0437\u043e\u0431\u043d\u043e\u0432\u0438\u043b\u0438 \u0440\u0430\u0431\u043e\u0442\u0443 \u043f\u043e\u0441\u043b\u0435 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f \u0434\u0440\u043e\u043d\u043e\u0432",
+   "id": "gdelt-eee79500b2b38888",
+   "idioma": "ru",
+   "medio": "pressorg24.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sospetti-in-danimarca-e-norvegia-chiusi-per-ore-gli-aeroporti-di-copenaghen-e-oslo-zelensky-sono-i-russi/17801526",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti in Danimarca e Norvegia chiusi per ore gli aeroporti di Copenaghen e Oslo Zelensky",
+   "id": "gdelt-0bb0d4cc3db72766",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sugli-aeroporti-di-copenaghen-e-oslo-voli-rinviati/17801855",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Copenaghen e Oslo voli rinviati",
+   "id": "gdelt-1f5e5a47b9ebc332",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sugli-aeroporti-di-copenaghen-e-oslo-scali-chiusi-per-ore-zelensky-sono-stati-i-russi/17801479",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Copenaghen e Oslo | scali chiusi per ore Zelensky",
+   "id": "gdelt-30979a315d428858",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-avvistati-negli-aeroporti-di-copenaghen-e-oslo-scali-chiusi-e-poi-riaperti-dopo-ore-zelensky-e-stata-la-russia/17801553",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni avvistati negli aeroporti di Copenaghen e Oslo scali chiusi e poi riaperti dopo ore Zelensky",
+   "id": "gdelt-42a10b1b178f0ba3",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://15min.lt/naujiena/aktualu/pasaulis/kopenhagos-ir-oslo-oro-uostai-po-dronu-incidento-vel-atidaryti-57-2529968",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kopenhagos ir Oslo oro uostai po dron\u0173 incidento v\u0117l atidaryti",
+   "id": "gdelt-6692c7a63e2510ce",
+   "idioma": "lt",
+   "medio": "15min.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://voria.gr/article/emfanisi-drones-kai-sto-oslo-ekleise-prosorina-aerodromio",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0395\u03bc\u03c6\u03ac\u03bd\u03b9\u03c3\u03b7 drones \u03ba\u03b1\u03b9 \u03c3\u03c4\u03bf \u038c\u03c3\u03bb\u03bf - \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03ac \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf",
+   "id": "gdelt-88a0097ff95ac09b",
+   "idioma": "el",
+   "medio": "voria.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adnkronos.com/internazionale/esteri/droni-avvistati-negli-aeroporti-di-copenaghen-e-oslo-scali-chiusi-e-poi-riaperti-dopo-ore-ultime-news_18i5XtQeDXK27X1OOAtxJZ",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni avvistati negli aeroporti di Copenaghen e Oslo, Zelensky: \"E' stata la Russia\"",
+   "id": "gdelt-a565d888e19e5fb0",
+   "idioma": "it",
+   "medio": "adnkronos.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tagesspiegel.de/internationales/flughafen-kopenhagen-nach-drohnensichtung-wieder-offen--dafur-nun-oslo-geschlossen-14370710.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Herkunft unklar: Flughafen Kopenhagen nach Drohnensichtung wieder offen \u2013 daf\u00fcr nun Oslo geschlossen",
+   "id": "gdelt-cc0cef7ace4a2db4",
+   "idioma": "de",
+   "medio": "tagesspiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/riaperti-gli-aeroporti-di-copenaghen-e-oslo-chiusi-per-droni/17801808",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Riaperti gli aeroporti di Copenaghen e Oslo chiusi per droni",
+   "id": "gdelt-de77489f660865f1",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/norge/i/EyOlwP/oslo-lufthavn-stengte-for-trafikk-paa-grunn-av-dronehendelse",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn stengte for trafikk p\u00e5 grunn av dronehendelse",
+   "id": "gdelt-25cceab109d18163",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://athina984.gr/2025/09/23/epanaleitoyrgisan-ta-aerodromia-kopegchagis-kai-oslo-meta-tin-yperptisi-agnoston-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0395\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03cd\u03c1\u03b3\u03b7\u03c3\u03b1\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03c4\u03b7\u03bd \u03c5\u03c0\u03ad\u03c1\u03c0\u03c4\u03b7\u03c3\u03b7 \u03ac\u03b3\u03bd\u03c9\u03c3\u03c4\u03c9\u03bd drones",
+   "id": "gdelt-2ebdaaa368f89103",
+   "idioma": "el",
+   "medio": "athina984.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dw.com/es/reabren-aeropuertos-de-copenhague-y-oslo-tras-avistar-drones/a-74102692",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Reabren aeropuertos de Copenhague y Oslo tras avistar drones \u2013 DW \u2013 23/09/2025",
+   "id": "gdelt-3f1ef03502dc2b65",
+   "idioma": "es",
+   "medio": "dw.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://finanza.lastampa.it/News/2025/09/23/chiusi-nella-notte-gli-aeroporti-di-oslo-e-copenaghen-per-sorvolo-droni/OV8yMDI1LTA5LTIzX1RMQg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Chiusi nella notte gli aeroporti di Oslo e Copenaghen per sorvolo droni",
+   "id": "gdelt-6ceb0e3ac03e5526",
+   "idioma": "it",
+   "medio": "finanza.lastampa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lettera43.it/droni-copenhagen-oslo-norvegia-danimarca",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sopra Copenaghen e Oslo: aeroporti chiusi per ore",
+   "id": "gdelt-92c92f736d95e796",
+   "idioma": "it",
+   "medio": "lettera43.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/panorama/Drohnensichtungen-legen-Airports-in-Kopenhagen-und-Oslo-lahm-article26049697.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mehrst\u00fcndige Schlie\u00dfungen: Drohnensichtungen legen Airports in Kopenhagen und Oslo lahm",
+   "id": "gdelt-2d895a50a613b9cf",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rb.no/dansk-politi-forelopig-ingenting-som-tyder-pa-kobling-mellom-dronehendelsene-i-norge-og-danmark/s/5-43-2572426",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn, Gardermoen | Dansk politi: Forel\u00f8pig ingenting som tyder p\u00e5 kobling mellom dronehendelsene i Norge og Danmark",
+   "id": "gdelt-5ad54606b51eb3e3",
+   "idioma": "no",
+   "medio": "rb.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://respublika.lt/lt/naujienos/pasaulis/kitos_pasaulio_naujienos/dronams-nuskridus-kopenhagos-ir-oslo-oro-uostai-atnaujino-veikla",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronams nuskridus, Kopenhagos ir Oslo oro uostai atnaujino veikl\u0105",
+   "id": "gdelt-a3dbcb54fbcdad82",
+   "idioma": "lt",
+   "medio": "respublika.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17821336",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporturile din Copenhaga \u0219i Oslo s-au redeschis dup\u0103 ore de perturb\u0103ri provocate de drone. Aproximativ 20.000 de pasageri afecta\u021bi la Copenhaga",
+   "id": "gdelt-a8e7ae0928cb15db",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tu.no/nyhetsstudio/seks-kanselleringer-paa-oslo-lufthavn-tirsdag-etter-droneobservasjoner/89619",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Seks kanselleringer p\u00e5 Oslo lufthavn tirsdag etter droneobservasjoner - Teknisk Ukeblad",
+   "id": "gdelt-bb9ae7d7dd261c49",
+   "idioma": "no",
+   "medio": "tu.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bresciaoggi.it/news/mondo/droni-su-danimarca-e-norvegia-chiusi-gli-aeroporti-di-copenaghen-e-oslo-zelensky-sono-stati-i-russi-1.12797700",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su Danimarca e Norvegia, chiusi gli aeroporti di Copenaghen e Oslo. Zelensky: \u00abSono stati i russi\u00bb",
+   "id": "gdelt-d034f76b670bf041",
+   "idioma": "it",
+   "medio": "bresciaoggi.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/184/epanaleitourgoun-ta-aerodromia-tis-kopegchagis-kai-tou-oslo-meta-tin-yperptisi-agnoston-drones.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0395\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03bf\u03cd\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03c4\u03b7\u03bd \u03c5\u03c0\u03ad\u03c1\u03c0\u03c4\u03b7\u03c3\u03b7 \u03ac\u03b3\u03bd\u03c9\u03c3\u03c4\u03c9\u03bd drones",
+   "id": "gdelt-d52082d5f7cde688",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://offsite.com.cy/eidiseis/diethni/ta-aerodromia-tis-kopeghagis-kai-toy-oslo-anoixan-xana-meta-apo-ptiseis-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03ac\u03bd\u03bf\u03b9\u03be\u03b1\u03bd \u03be\u03b1\u03bd\u03ac \u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 drones",
+   "id": "gdelt-f58ac8b1681159be",
+   "idioma": "el",
+   "medio": "offsite.com.cy"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://protothema.gr/world/article/1699981/ikanos-heiristis-piso-apo-ta-mustiriodi-drones-pou-prokalesan-to-kleisimo-ton-aerodromion-tis-kopeghagis-kai-tou-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones \u03ad\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf - \u03a3\u03b5 \u03c3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc \u03bf\u03b9 \u03c5\u03c0\u03b7\u03c1\u03b5\u03c3\u03af\u03b5\u03c2 \u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03b9\u03ce\u03bd, \u00ab\u03b4\u03b5\u03bd \u03be\u03ad\u03c1\u03bf\u03c5\u03bc\u03b5 \u03b1\u03bd \u03ae\u03c4\u03b1\u03bd \u03c1\u03c9\u03c3\u03b9\u03ba\u03ac\u00bb",
+   "id": "gdelt-f61a17adca9541ae",
+   "idioma": "el",
+   "medio": "protothema.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24heures.ch/drones-les-aeroports-de-copenhague-et-oslo-ferment-237483515200",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones: les a\u00e9roports de Copenhague et Oslo ferment",
+   "id": "gdelt-f8254692417dfcda",
+   "idioma": "fr",
+   "medio": "24heures.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/caos-nei-cieli-di-copenaghen-e-oslo-decine-di-voli-cancellati-a-causa-di-droni-sospetti-dopo-i-controlli-riaperti-gli-aeroporti/17801697",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caos nei cieli di Copenaghen e Oslo | decine di voli cancellati a causa di droni sospetti Dopo i controlli riaperti gli aeroporti",
+   "id": "gdelt-01b0edf7e262a0de",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sulleuropa-aeroporti-chiusi-per-ore-a-copenaghen-e-oslo/17801953",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sull'Europa aeroporti chiusi per ore a Copenaghen e Oslo",
+   "id": "gdelt-04bfdf69443db268",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lrt.lt/ua/novini/1263/2689102/nevidomi-droni-porushili-robotu-aeroportiv-kopengagena-ta-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0434\u0440\u043e\u043d\u0438 \u043f\u043e\u0440\u0443\u0448\u0438\u043b\u0438 \u0440\u043e\u0431\u043e\u0442\u0443 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0456\u0432 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0442\u0430 \u041e\u0441\u043b\u043e",
+   "id": "gdelt-095f46d8b2431a2e",
+   "idioma": "uk",
+   "medio": "lrt.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-su-copenaghen-e-oslo-aeroporti-chiusi-e-voli-in-tilt/17801714",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su Copenaghen e Oslo | aeroporti chiusi e voli in tilt",
+   "id": "gdelt-11e6054cef20bc2e",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-sopra-copenaghen-e-oslo-aeroporti-chiusi-per-ore/17802002",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sopra Copenaghen e Oslo | aeroporti chiusi per ore",
+   "id": "gdelt-8e55a9e390bfbee5",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/avvistati-droni-chiusi-per-ore-gli-aeroporti-di-copenaghen-e-oslo-zelensky-violazione-russa-senza-risposta-mosca-andra-avanti/17802004",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avvistati droni | chiusi per ore gli aeroporti di Copenaghen e Oslo Zelensky | Violazione russa Senza risposta Mosca andr\u00e0 avanti",
+   "id": "gdelt-9c8cbe2a26b998d1",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://902.gr/eidisi/kosmos/403223/anatarahi-sta-aerodromia-kopeghagis-kai-oslo-logo-tis-ptisis-agnoston-drone",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0391\u03bd\u03b1\u03c4\u03b1\u03c1\u03b1\u03c7\u03ae \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u03bb\u03cc\u03b3\u03c9 \u03c4\u03b7\u03c2 \u03c0\u03c4\u03ae\u03c3\u03b7\u03c2 \u03ac\u03b3\u03bd\u03c9\u03c3\u03c4\u03c9\u03bd drone",
+   "id": "gdelt-a24e110449bf8c93",
+   "idioma": "el",
+   "medio": "902.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://italiaoggi.it/economia-e-politica/politica-estera/droni-sospetti-riaperti-gli-aeroporti-di-copenaghen-e-oslo-dvqdorti",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti, riaperti gli aeroporti di Copenaghen e Oslo",
+   "id": "gdelt-050ab2c2d7aa66e1",
+   "idioma": "it",
+   "medio": "italiaoggi.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sudouest.fr:443/international/de-mysterieux-drones-survolent-les-aeroports-de-copenhague-et-oslo-le-trafic-perturbe-26048603.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "De myst\u00e9rieux drones survolent les a\u00e9roports de Copenhague et Oslo, le trafic a\u00e9rien perturb\u00e9",
+   "id": "gdelt-053e8f3800bf6658",
+   "idioma": "fr",
+   "medio": "sudouest.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://javanews.al/drone-mbi-danimarke-dhe-norvegji-mbyllen-aeroportet-e-kopenhagenit-dhe-oslos-nisin-hetimet",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u00eb mbi Danimark\u00eb dhe Norvegji! Mbyllen aeroportet e Kopenhagenit dhe Oslos, nisin hetimet",
+   "id": "gdelt-31d0417b05b1fd05",
+   "idioma": "sq",
+   "medio": "javanews.al"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dw.com/ru/aeroporty-kopengagena-i-oslo-zakryvalis-izza-dronov/a-74102145",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0418\u0437-\u0437\u0430 \u0434\u0440\u043e\u043d\u043e\u0432 \u0437\u0430\u043a\u0440\u044b\u0432\u0430\u043b\u0438\u0441\u044c \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u044b \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e \u2013 DW \u2013 23.09.2025",
+   "id": "gdelt-639bc4f1cce86f82",
+   "idioma": "ru",
+   "medio": "dw.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakty.ua/460357-daniya-i-norvegiya-zakryvali-svoi-aeroporty-iz-za-neizvestnyh-dronov",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u0438 \u0437\u0443\u043f\u0438\u043d\u0438\u043b\u0438 \u0440\u043e\u0431\u043e\u0442\u0443 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0456\u0432 \u0443 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0456 \u0442\u0430 \u041e\u0441\u043b\u043e - \u0432\u0456\u0434\u0435\u043e",
+   "id": "gdelt-7d136fe91ef0216d",
+   "idioma": "uk",
+   "medio": "fakty.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newsbeast.gr/world/arthro/12586579/se-epanaleitourgia-ta-aerodromia-tis-kopegchagis-kai-tou-oslo-epeita-apo-tin-yperptisi-drones-ikanos-o-cheiristis-tous",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03b5 \u03b5\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03ad\u03c0\u03b5\u03b9\u03c4\u03b1 \u03b1\u03c0\u03cc \u03c4\u03b7\u03bd \u03c5\u03c0\u03b5\u03c1\u03c0\u03c4\u03ae\u03c3\u03b7 drones \u2013 \u00ab\u0399\u03ba\u03b1\u03bd\u03cc\u03c2 \u03bf \u03c7\u03b5\u03b9\u03c1\u03b9\u03c3\u03c4\u03ae\u03c2 \u03c4\u03bf\u03c5\u03c2\u00bb",
+   "id": "gdelt-9be6fc9677f33519",
+   "idioma": "el",
+   "medio": "newsbeast.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newsru.co.il/world/23sep2025/airports_117.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u044b \u0432 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0435 \u0438 \u041e\u0441\u043b\u043e \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b\u0438 \u0440\u0430\u0431\u043e\u0442\u0443 \u0438\u0437-\u0437\u0430 \u0437\u0430\u043c\u0435\u0447\u0435\u043d\u043d\u044b\u0445 \u0434\u0440\u043e\u043d\u043e\u0432",
+   "id": "gdelt-c02c084133ca2a84",
+   "idioma": "ru",
+   "medio": "newsru.co.il"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kp.ua/ua/incidents/a718128-aeroporti-v-oslo-ta-kopenhaheni-zakrivali-cherez-nevidomi-droni",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0438 \u0432 \u041e\u0441\u043b\u043e \u0442\u0430 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0456 \u0437\u0430\u043a\u0440\u0438\u0432\u0430\u043b\u0438 \u0447\u0435\u0440\u0435\u0437 \u043d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0434\u0440\u043e\u043d\u0438",
+   "id": "gdelt-6b3d0b7abf054667",
+   "idioma": "uk",
+   "medio": "kp.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ing.dk/artikel/droner-stopper-flytrafik-i-koebenhavn-oslo-lufthavn-ramt-kort-efter",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner stopper flytrafik i K\u00f8benhavn \u2013 Oslo Lufthavn ramt kort efter",
+   "id": "gdelt-93ee01c083223798",
+   "idioma": "da",
+   "medio": "ing.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://huffingtonpost.it/esteri/2025/09/23/news/droni_sui_cieli_deuropa_chiusi_per_ore_gli_aeroporti_di_copenaghen_e_oslo-20098783",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sui cieli d'Europa. Chiusi per ore gli aeroporti di Copenaghen e Oslo",
+   "id": "gdelt-c6ccab2da5d44607",
+   "idioma": "it",
+   "medio": "huffingtonpost.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilfattoquotidiano.it/2025/09/23/droni-aeroporti-nordici-russia-ucraina-notizie/8135567",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni nei cieli: aeroporti di Copenaghen e Oslo chiusi per ore | Il Fatto Quotidiano",
+   "id": "gdelt-2dfdeb152f10d344",
+   "idioma": "it",
+   "medio": "ilfattoquotidiano.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnews.gr/eidhseis/kosmos/547061/ikanos-xeiristis-piso-apo-ta-drones-sta-aerodromia-tis-kopegxagis-kai-tou-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u00ab\u0399\u03ba\u03b1\u03bd\u03cc\u03c2 \u03c7\u03b5\u03b9\u03c1\u03b9\u03c3\u03c4\u03ae\u03c2\u00bb \u03c0\u03af\u03c3\u03c9 \u03b1\u03c0\u03cc \u03c4\u03b1 drones \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf",
+   "id": "gdelt-612b7eb5b4aafb99",
+   "idioma": "el",
+   "medio": "dnews.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tf1info.fr/international/danemark-norvege-ce-que-l-on-sait-des-drones-qui-ont-survole-les-aeroports-de-copenhague-et-oslo-2396253.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ce que l'on sait des drones qui ont survol\u00e9 les a\u00e9roports de Copenhague et Oslo",
+   "id": "gdelt-7fe329be3b0178f9",
+   "idioma": "fr",
+   "medio": "tf1info.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-nei-cieli-chiusi-per-ore-gli-aeroporti-di-copenaghen-e-oslo-zelensky-erano-russi-senza-risposta-mosca-continuera/17802022",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni nei cieli chiusi per ore gli aeroporti di Copenaghen e Oslo Zelensky | Erano russi Senza risposta Mosca continuer\u00e0",
+   "id": "gdelt-8f304a437a36cb36",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tg24.sky.it/mondo/2025/09/23/droni-copenaghen-oslo-aeroporti-chiusi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su Copenaghen e Oslo, caos negli aeroporti e voli cancellati: cosa sappiamo",
+   "id": "gdelt-a9d1a1f2571369ba",
+   "idioma": "it",
+   "medio": "tg24.sky.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rus.delfi.lv/57862/v-mire/120088453/v-aeroportah-kopengagena-i-oslo-voznikli-pereboi-iz-za-neopoznannyh-dronov",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430\u0445 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e \u0432\u043e\u0437\u043d\u0438\u043a\u043b\u0438 \u043f\u0435\u0440\u0435\u0431\u043e\u0438 \u0438\u0437-\u0437\u0430 \u043d\u0435\u043e\u043f\u043e\u0437\u043d\u0430\u043d\u043d\u044b\u0445 \u0434\u0440\u043e\u043d\u043e\u0432",
+   "id": "gdelt-e7fdfd7a33bc67c4",
+   "idioma": "ru",
+   "medio": "rus.delfi.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://standaard.be/buitenland/luchthavens-van-kopenhagen-en-oslo-urenlang-gesloten-door-aanwezigheid-drones/92259493.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchthavens van Kopenhagen en Oslo urenlang gesloten door aanwezigheid drones",
+   "id": "gdelt-fa17d3670bb4d2ee",
+   "idioma": "nl",
+   "medio": "standaard.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://philenews.com/kosmos/diethni/article/1624472/lixi-sinagermou-gia-ta-aerodromia-kopegchagis-ke-oslo-meta-ta-drones-den-xeroume-an-itan-rosika-lene-i-ipiresies-pliroforion-vinteo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0391\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf: \u03a3\u03b5 \u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03bc\u03b5\u03c4\u03ac \u03c4\u03b1 drones",
+   "id": "gdelt-17527cc067af2eec",
+   "idioma": "el",
+   "medio": "philenews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://laseyne.maville.com/actu/actudet_-les-aeroports-de-copenhague-et-oslo-fermes-plusieurs-heures-en-raison-de-drones-non-identifies-_fil-6988824_actu.Htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Les a\u00e9roports de Copenhague et Oslo ferm\u00e9s plusieurs heures en raison de drones non identifi\u00e9s",
+   "id": "gdelt-5ccb78099ff5cdc5",
+   "idioma": "fr",
+   "medio": "maville.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nieuwsblad.be/buitenland/ongedentificeerde-drones-leggen-luchthavens-van-kopenhagen-en-oslo-urenlang-plat-denemarken-spreekt-officieel-over-aanval/92256253.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Onge\u00efdentificeerde\" drones leggen luchthavens van Kopenhagen en Oslo urenlang plat: Denemarken spreekt officieel over \"aanval\"",
+   "id": "gdelt-676f4108bd5deb9a",
+   "idioma": "nl",
+   "medio": "nieuwsblad.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://radioiasi.ro/stiri/prim-plan/drone-neidentificate-aeroporturile-din-copenhaga-si-oslo-au-fost-redeschise",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone neidentificate: Aeroporturile din Copenhaga \u015fi Oslo au fost redeschise",
+   "id": "gdelt-9522965df085b605",
+   "idioma": "ro",
+   "medio": "radioiasi.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vesti-ua.net/novosti/za-rubezhom/272795-ostanovka-aeroportov-kopengagena-i-oslo-policiya-ne-smogla-obnaruzhit-ischeznuvshie-drony.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u043e\u0432 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e: \u043f\u043e\u043b\u0438\u0446\u0438\u044f \u043d\u0435 \u0441\u043c\u043e\u0433\u043b\u0430 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0438\u0442\u044c \u0438\u0441\u0447\u0435\u0437\u043d\u0443\u0432\u0448\u0438\u0435 \u0434\u0440\u043e\u043d\u044b",
+   "id": "gdelt-aa1879c8d3a31ce7",
+   "idioma": "ru",
+   "medio": "vesti-ua.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://alphatv.gr/news/kosmos/article/204912/ekleisan-gia-ores-ta-aerodromia-tis-kopeghagis-kai-tou-oslo-logo-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b1\u03bd \u03b3\u03b9\u03b1 \u03ce\u03c1\u03b5\u03c2 \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bb\u03cc\u03b3\u03c9 drones",
+   "id": "gdelt-e5137420c5454efa",
+   "idioma": "el",
+   "medio": "alphatv.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/copenhague-oslo-reabren-sus-aeropuertos-cierre-misterioso-avistamiento-drones_2025092368d255156b16e40392dac16a.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Copenhague y Oslo reabren sus aeropuertos tras el cierre por un misterioso avistamiento de drones",
+   "id": "gdelt-eba86a100bb28de3",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-intorno-agli-aeroporti-di-oslo-e-copenaghen-chiusi-per-diverse-ore-si-indaga-sui-mandanti/17802701",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni intorno agli aeroporti di Oslo e Copenaghen chiusi per diverse ore",
+   "id": "gdelt-073c29ce8f7fb5ac",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dcnews.ro/drone-suspecte-au-perturbat-zborurile-pe-aeroporturile-din-copenhaga-si-oslo_1008870.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone suspecte au perturbat zborurile pe Aeroporturile din Copenhaga \u0219i Oslo",
+   "id": "gdelt-33547a8d452662aa",
+   "idioma": "ro",
+   "medio": "dcnews.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lessentiel.lu/fr/story/europe-des-drones-suspects-a-copenhague-et-oslo-les-aeroports-fermes-103420461",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Des drones suspects rep\u00e9r\u00e9s \u00e0 Copenhague et Oslo, les a\u00e9roports ferm\u00e9s",
+   "id": "gdelt-ab033eeb3ad9750b",
+   "idioma": "fr",
+   "medio": "lessentiel.lu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://qds.it/droni-avvistati-aeroporti-copenaghen-oslo-zelensky-russia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni avvistati negli aeroporti di Copenaghen e Oslo",
+   "id": "gdelt-00ed7bfe2a7cac6d",
+   "idioma": "it",
+   "medio": "qds.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://natemat.pl/624878,drony-sparalizowaly-lotniska-w-kopenhadze-i-oslo-policja-prowadzi-sledztwo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drony sparali\u017cowa\u0142y lotniska w Kopenhadze i Oslo. Policja prowadzi \u015bledztwo",
+   "id": "gdelt-8afb6c8740540965",
+   "idioma": "pl",
+   "medio": "natemat.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2025-09-23/nova/nezapamcen-haos-zbog-velikih-dronova-zatvoreni-aerodromi-u-kopenhagenu-i-oslu-njima-je-upravljao-sposoban-operater/40531421",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nezapam\u0107en haos, zbog velikih dronova zatvoreni aerodromi u Kopenhagenu i Oslu: \u201eNjima je upravljao sposoban operater\"",
+   "id": "gdelt-92a205b180544326",
+   "idioma": "hr",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lasexta.com/noticias/internacional/presencia-drones-inmediaciones-aeropuertos-copenhague-oslo-obligan-cerrar-trafico-aereo-horas_2025092368d24c4c6b16e40392daa9c4.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La presencia de drones en las inmediaciones de aeropuertos en Copenhague y Oslo obligan a cerrar su tr\u00e1fico a\u00e9reo durante horas",
+   "id": "gdelt-b86e481e3888f3e1",
+   "idioma": "es",
+   "medio": "lasexta.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tk.no/oslo-lufthavn-matte-stenge-etter-droneobservasjoner/s/5-51-1746255",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flyplass, Kansellering | Oslo lufthavn m\u00e5tte stenge etter droneobservasjoner",
+   "id": "gdelt-dbfcaacfccf7da1f",
+   "idioma": "no",
+   "medio": "tk.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newpost.gr/eidiseis/epanaleitoyrgoyn-ta-aerodromia-toy-oslo-kai-tis-kopegchagis-meta-tin-eisvoli-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0395\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03bf\u03cd\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03ba\u03b1\u03b9 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03bc\u03b5\u03c4\u03ac \u03c4\u03b7\u03bd \u00ab\u03b5\u03b9\u03c3\u03b2\u03bf\u03bb\u03ae\u00bb drones",
+   "id": "gdelt-fd84eb8da5700bf3",
+   "idioma": "el",
+   "medio": "newpost.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://danas.rs/svet/neidentifikovani-dronovi-danska-norveska",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Neidentifikovani dronovi izazvali haos na aerodromima u Kopenhagenu i Oslu \u2013 vlasti tvrde da je re\u010d o \"ve\u0161tom operatoru\" (VIDEO) - Svet",
+   "id": "gdelt-054cd6d06919e080",
+   "idioma": "sr",
+   "medio": "danas.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://skai.gr/news/world/drones-pano-apo-ta-aerodromia-tis-kopegxagis-kai-tou-oslo-i-sovaroteri-epithesi-se-danezik",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf: \u0397 \u03c3\u03bf\u03b2\u03b1\u03c1\u03cc\u03c4\u03b5\u03c1\u03b7 \u03b5\u03c0\u03af\u03b8\u03b5\u03c3\u03b7 \u03c3\u03b5 \u03b4\u03b1\u03bd\u03ad\u03b6\u03b9\u03ba\u03b7 \u03c5\u03c0\u03bf\u03b4\u03bf\u03bc\u03ae, \u03bb\u03ad\u03b5\u03b9 \u03b7 \u03c0\u03c1\u03c9\u03b8\u03c5\u03c0\u03bf\u03c5\u03c1\u03b3\u03cc\u03c2",
+   "id": "gdelt-9702b49ae6f709d5",
+   "idioma": "el",
+   "medio": "skai.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tidende.dk/ind-og-udland/udland/luftrummet-over-lufthavnen-i-oslo-genaabner-efter-observation-af-droner/383674",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luftrummet over lufthavnen i Oslo gen\u00e5bner efter observation af droner",
+   "id": "gdelt-05d8764b3eb8244b",
+   "idioma": "da",
+   "medio": "tidende.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://botasot.info/evrope-bota/2392826/drone-ne-piste-aeroportet-e-kopenhagenit-dhe-oslos-pezulluan-perkohesisht-aktivitetin-e-fluturimeve",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u00eb n\u00eb pist\u00eb! Aeroportet e Kopenhagenit dhe Oslos pezulluan p\u00ebrkoh\u00ebsisht aktivitetin e fluturimeve",
+   "id": "gdelt-1e6f9b4c9adeac7d",
+   "idioma": "sq",
+   "medio": "botasot.info"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ain.ua/2025/09/23/drones-oslo-copenhagen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u0438 \u043f\u0430\u0440\u0430\u043b\u0456\u0437\u0443\u0432\u0430\u043b\u0438 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0438 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0442\u0430 \u041e\u0441\u043b\u043e",
+   "id": "gdelt-205088576cc948a9",
+   "idioma": "uk",
+   "medio": "ain.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vesti-online.com/neidentifikovani-dronovi-izazvali-haos-na-aerodromima-u-kopenhagenu-i-oslu",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Neidentifikovani dronovi izazvali haos na aerodromima u Kopenhagenu i Oslu",
+   "id": "gdelt-2ec5809ff7a99b88",
+   "idioma": "sr",
+   "medio": "vesti-online.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus.de/panorama/welt/drohnensichtung-kopenhagen-oslo-debatte-um-russland-flughafensicherheit_bbbf2123-1562-4106-a3fd-385396a4787b.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnensichtung Kopenhagen Oslo \u2013 Debatte um Russland & Flughafensicherheit",
+   "id": "gdelt-455d58763fb9d27a",
+   "idioma": "de",
+   "medio": "focus.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rr.pt/noticia/mundo/2025/09/23/drones-obrigam-ao-encerramento-dos-aeroportos-de-copenhaga-e-oslo/440826",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones obrigam ao encerramento dos aeroportos de Copenhaga e Oslo",
+   "id": "gdelt-4703812d0e8c2616",
+   "idioma": "pt",
+   "medio": "rr.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lykavitos.gr/news/planet/synagermos-sta-aerodromia-tis-kopegxagis-kai-tou-oslo-meta-apo-mystiriodi-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u03b5\u03bc\u03c6\u03ac\u03bd\u03b9\u03c3\u03b7 drones",
+   "id": "gdelt-538a62d0a6b3a328",
+   "idioma": "el",
+   "medio": "lykavitos.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://panorama.com.al/drone-te-dyshimte-ne-aeroportet-e-kopenhagenit-dhe-oslos-autoritetet-sulmi-me-serioz-zelensky-jane-ruset",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone t\u00eb dyshimt\u00eb n\u00eb aeroportet e Kopenhagenit dhe Oslos, autoritetet: Sulmi m\u00eb serioz! Zelensky: Jan\u00eb rus\u00ebt",
+   "id": "gdelt-5b94f8f91fca4b3b",
+   "idioma": "sq",
+   "medio": "panorama.com.al"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elpuntavui.cat/punt-divers/article/4-divers/2577598-la-presencia-de-drons-fa-tancar-temporalment-els-aeroports-de-copenhaguen-i-oslo.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La pres\u00e8ncia de drons fa tancar temporalment els aeroports de Copenhaguen i Oslo",
+   "id": "gdelt-6ec0f90c32b1fa1e",
+   "idioma": "ca",
+   "medio": "elpuntavui.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://la.lv/droni-ir-pazudusi-notikusais-kopenhagenas-un-oslo-lidostas-rada-jautajumus-par-drosibu-eiropa",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Droni ir pazudu\u0161i\u2026\" Notiku\u0161ais Kopenh\u0101genas un Oslo lidost\u0101s rada jaut\u0101jumus par Eiropas dro\u0161\u012bbu",
+   "id": "gdelt-c5d1ac1913172e0b",
+   "idioma": "lv",
+   "medio": "la.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://reporter.gr/diethnh/diethneis-eidhseis/651947-epanaleitourgoyn-ta-aerodromia-kopegxagis-kai-oslo-meta-apo-emfanisi-agnoston-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0395\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03bf\u03cd\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u03b5\u03bc\u03c6\u03ac\u03bd\u03b9\u03c3\u03b7 \u03b1\u03b3\u03bd\u03ce\u03c3\u03c4\u03c9\u03bd drones",
+   "id": "gdelt-de610f2a5eceb98a",
+   "idioma": "el",
+   "medio": "reporter.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lapresse.it/esteri/2025/09/23/droni-sugli-aeroporti-di-copenhagen-e-oslo-chiusi-per-ore-i-due-scali",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Copenaghen e Oslo, chiusi per ore i due scali. Premier danese: \"Attacco pi\u00f9 grave mai visto\"",
+   "id": "gdelt-ec09e20e4c87ebad",
+   "idioma": "it",
+   "medio": "lapresse.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nieuwsblad.be/buitenland/ongedentificeerde-drones-leggen-luchthavens-van-kopenhagen-en-oslo-urenlang-plat-denemarken-spreekt-over-aanval-en-activeert-nationaal-crisisteam/92256253.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Onge\u00efdentificeerde\" drones leggen luchthavens van Kopenhagen en Oslo urenlang plat: Denemarken spreekt over \"aanval\" en activeert nationaal crisisteam",
+   "id": "gdelt-2700bbf402d48792",
+   "idioma": "nl",
+   "medio": "nieuwsblad.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://latele.ch/articles/les-aeroports-de-copenhague-et-d-oslo-rouvrent-mardi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "A\u00e9roports de Copenhague et Oslo rouvrent mardi apr\u00e8s survols de drones",
+   "id": "gdelt-466782bf5e40f9c3",
+   "idioma": "fr",
+   "medio": "latele.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://publico.es/internacional/europa/aeropuertos-copenhague-oslo-cierran-trafico-aereo-presencia-drones.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Los aeropuertos de Copenhague y Oslo cierran su tr\u00e1fico a\u00e9reo por la presencia de drones",
+   "id": "gdelt-59ae4bacb554fbe2",
+   "idioma": "es",
+   "medio": "publico.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailybusiness.ro/actualitate/drone-suspecte-au-paralizat-traficul-aerian-in-scandinavia-aeroporturile-din-oslo-si-copenhaga-au-stat-inchise-ore-intregi-513568",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone suspecte au paralizat traficul aerian \u00een Scandinavia. Aeroporturile din Oslo \u0219i Copenhaga au stat \u00eenchise ore \u00eentregi",
+   "id": "gdelt-5ee5abe320aeb678",
+   "idioma": "ro",
+   "medio": "dailybusiness.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17822470",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporturile din Copenhaga \u0219i Oslo, survolate de drone. Autorit\u0103\u021bile au demarat o anchet\u0103",
+   "id": "gdelt-73402ad43795da53",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vilaweb.cat/noticies/albirament-drons-caos-aeroports-copenhaguen-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "L'albirament de drons genera el caos als aeroports de Copenhaguen i Oslo",
+   "id": "gdelt-91ff1c6f03fcbc8f",
+   "idioma": "ca",
+   "medio": "vilaweb.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/cosa-succede-nei-cieli-sopra-gli-aeroporti-di-copenaghen-e-oslo-alcuni-droni-hanno-costretto-alla-chiusura/17803314",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cosa succede nei cieli sopra gli aeroporti di Copenaghen e Oslo? Alcuni droni hanno costretto alla chiusura",
+   "id": "gdelt-3c733bfe6c084921",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ladepeche.fr/2025/09/23/incursions-de-drones-dans-les-aeroports-de-copenhague-et-oslo-grave-attaque-sabotage-important-ce-que-lon-sait-des-incidents-12947766.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incursions de drones dans les a\u00e9roports de Copenhague et Oslo : \"grave attaque\", \"sabotage important\"\u2026 Ce que l'on sait des incidents",
+   "id": "gdelt-5179aa5f3f11d985",
+   "idioma": "fr",
+   "medio": "ladepeche.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vz.ru/news/2025/9/23/1361697.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0430\u043d\u0438\u044f \u0438 \u041d\u043e\u0440\u0432\u0435\u0433\u0438\u044f \u043d\u0430\u0447\u0430\u043b\u0438 \u0440\u0430\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u0411\u041f\u041b\u0410 \u043d\u0430\u0434 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430\u043c\u0438 \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e :: \u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0434\u043d\u044f / \u0412\u0417\u0413\u041b\u042f\u0414",
+   "id": "gdelt-ce4744460a65ea4d",
+   "idioma": "ru",
+   "medio": "vz.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://top-channel.tv/2025/09/23/kaos-ne-kopenhage-dhe-oslo-dronet-shkaktojne-mbyllje-te-aeroporteve-dhe-devijim-fluturimesh-reagon-kryeministrja-e-danimarkes",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kaos n\u00eb Kopenhag\u00eb dhe Oslo/ Dron\u00ebt shkaktojn\u00eb mbyllje t\u00eb aeroporteve dhe devijim fluturimesh, reagon kryeministrja e Danimark\u00ebs",
+   "id": "gdelt-9828ac41c01aebd6",
+   "idioma": "sq",
+   "medio": "top-channel.tv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/droni-su-copenaghen-e-oslo-aeroporti-fermi-per-ore-poi-via-libera/17803335",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su Copenaghen e Oslo aeroporti fermi per ore poi via libera",
+   "id": "gdelt-9de1871b23e22baf",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dire.it/23-09-2025/1182476-nella-notte-allarme-droni-negli-aeroporti-di-copenaghen-e-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Copenaghen e Oslo. Zelensky: \"\u00c8 stata la Russia\". Il Premier danese: \"Testano i nostri limiti\"",
+   "id": "gdelt-f3fcb1105d20c14e",
+   "idioma": "it",
+   "medio": "dire.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://onalert.gr/kosmos/epanaleitoyrgoyn-ta-aerodromia-toy-oslo-kai-tis-kopegchagis-meta-tis-ptiseis-agnoston-drones/640562",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0395\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03bf\u03cd\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u03c4\u03bf\u03c5 \u038c\u03c3\u03bb\u03bf \u03ba\u03b1\u03b9 \u03c4\u03b7\u03c2 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03bc\u03b5\u03c4\u03ac \u03c4\u03b9\u03c2 \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 \u03ac\u03b3\u03bd\u03c9\u03c3\u03c4\u03c9\u03bd drones",
+   "id": "gdelt-6316082b3eb5cf29",
+   "idioma": "el",
+   "medio": "onalert.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://leggo.it/esteri/news/droni_copenaghen_oslo_russi_007_alto_rischio_sabotaggi_cosa_sappiamo_oggi_23_9_2025-9084610.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti di Copenaghen e Oslo, la premier danese: \u00abNon escludo la mano della Russia\u00bb. Gli 007: \u00abAlto rischio di sabotaggi\u00bb",
+   "id": "gdelt-56c599ce1118dffc",
+   "idioma": "it",
+   "medio": "leggo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sardegnalive.net/nel-mondo/droni-su-copenaghen-e-oslo-chiusi-per-ore-i-due-aeroporti-k1hnf5qu",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su Copenaghen e Oslo, chiusi per ore i due aeroporti",
+   "id": "gdelt-76f1efeecc591fab",
+   "idioma": "it",
+   "medio": "sardegnalive.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://agronews.gr/oikonomia-kai-politiki/224609/anoixan-pali-ta-aerodromia-kopeghagis-oslo-meta-tis-ptiseis-drone",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0386\u03bd\u03bf\u03b9\u03be\u03b1\u03bd \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2, \u038c\u03c3\u03bb\u03bf \u03bc\u03b5\u03c4\u03ac \u03c4\u03b9\u03c2 \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 drone",
+   "id": "gdelt-f5c14fcc07503c0a",
+   "idioma": "el",
+   "medio": "agronews.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aristeguinoticias.com/230925/mundo/presencia-de-drones-cierra-el-trafico-durante-horas-en-aeropuertos-de-copenhague-y-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Presencia de drones cierra el tr\u00e1fico durante horas en aeropuertos de Copenhague y Oslo",
+   "id": "gdelt-2ff42a1a57cca4b5",
+   "idioma": "es",
+   "medio": "aristeguinoticias.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/184/synagermos-stin-evropi-meta-ta-drones-sta-aerodromia-kopegchagis-kai-oslo--Anisychia-gia-rosiki-ebloki.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03c3\u03c4\u03b7\u03bd \u0395\u03c5\u03c1\u03ce\u03c0\u03b7 \u03bc\u03b5\u03c4\u03ac \u03c4\u03b1 drones \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf -A\u03bd\u03b7\u03c3\u03c5\u03c7\u03af\u03b1 \u03b3\u03b9\u03b1 \u03c1\u03c9\u03c3\u03b9\u03ba\u03ae \u03b5\u03bc\u03c0\u03bb\u03bf\u03ba\u03ae",
+   "id": "gdelt-b83b2240c256c9db",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://faktor.ba/svijet/svijet/aerodrome-u-kopenhagenu-i-oslu-privremeno-zatvorili-zbog-dronova-aktivirane-oruzane-snage/231137",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aerodrome u Kopenhagenu i Oslu privremeno zatvorili zbog dronova, aktivirane oru\u017eane snage",
+   "id": "gdelt-fef0a6c96e111878",
+   "idioma": "hr",
+   "medio": "faktor.ba"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nieuwsblad.be/buitenland/ongedentificeerde-drones-leggen-luchthavens-van-kopenhagen-en-oslo-urenlang-plat-denemarken-activeert-nationaal-crisisteam-russen-ontkennen-betrokkenheid/92256253.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Onge\u00efdentificeerde\" drones leggen luchthavens van Kopenhagen en Oslo urenlang plat: Denemarken activeert nationaal crisisteam, Russen ontkennen betrokkenheid",
+   "id": "gdelt-42dbb6ed65bb9fdf",
+   "idioma": "nl",
+   "medio": "nieuwsblad.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nordlys.no/dronestengte-flyplasser-situasjonen-er-fortsatt-uavklart/s/5-34-2221760",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn, Fly | Dronestengte flyplasser: \u2013 Situasjonen er fortsatt uavklart",
+   "id": "gdelt-82f30883602cca83",
+   "idioma": "no",
+   "medio": "nordlys.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://epikaira.gr/drones-pano-apo-ta-aerodromia-kopegchagis-kai-oslo-i-sovaroteri-epithesi-se-daneziki-ypodomi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf: \u0397 \u03c3\u03bf\u03b2\u03b1\u03c1\u03cc\u03c4\u03b5\u03c1\u03b7 \u03b5\u03c0\u03af\u03b8\u03b5\u03c3\u03b7 \u03c3\u03b5 \u03b4\u03b1\u03bd\u03ad\u03b6\u03b9\u03ba\u03b7 \u03c5\u03c0\u03bf\u03b4\u03bf\u03bc\u03ae",
+   "id": "gdelt-08b4d7034dfaa983",
+   "idioma": "el",
+   "medio": "epikaira.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bfmtv.com/international/europe/aeroports-paralyses-menace-de-sabotage-dementi-de-la-russie-ce-que-l-on-sait-des-vols-de-drones-a-copenhague-et-a-oslo_AD-202509230537.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "A\u00e9roports paralys\u00e9s, \"menace de sabotage\", d\u00e9menti de la Russie\u2026 Ce que l'on sait des vols de drones \u00e0 Copenhague et \u00e0 Oslo",
+   "id": "gdelt-1e095a227961e22e",
+   "idioma": "fr",
+   "medio": "bfmtv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://huffingtonpost.fr/international/article/drones-ce-que-l-on-sait-des-survols-mysterieux-au-dessus-des-aeroports-de-copenhague-et-oslo_255155.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones : ce que l'on sait des survols myst\u00e9rieux au-dessus des a\u00e9roports de Copenhague et Oslo",
+   "id": "gdelt-3b173bb07a8f072b",
+   "idioma": "fr",
+   "medio": "huffingtonpost.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rus.azattyq.org/a/aeroport-kopengagena-priostanovil-rabotu-iz-za-dronov/33538090.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u044b \u041a\u043e\u043f\u0435\u043d\u0433\u0430\u0433\u0435\u043d\u0430 \u0438 \u041e\u0441\u043b\u043e \u043d\u0435 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u043b\u0438 \u0440\u0435\u0439\u0441\u044b \u0438\u0437-\u0437\u0430 \u0434\u0440\u043e\u043d\u043e\u0432",
+   "id": "gdelt-5b37eb4f3d6e466c",
+   "idioma": "ru",
+   "medio": "azattyq.org"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://milanofinanza.it/news/droni-sorvolano-gli-aeroporti-di-copenaghen-e-oslo-i-due-scali-chiudono-per-diverse-ore-202509230940226143",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sorvolano gli aeroporti di Copenaghen e Oslo. I due scali chiudono per diverse ore",
+   "id": "gdelt-67278ad58a1a5b31",
+   "idioma": "it",
+   "medio": "milanofinanza.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://klartale.no/norge/noen-forsoker-a-stresse-oss-og-gjore-oss-bekymret/9972905",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner stengte Oslo lufthavn Gardermoen i flere timer",
+   "id": "gdelt-a7e44709a7f8728b",
+   "idioma": "no",
+   "medio": "klartale.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2025-09-23/blic/foto-video-hitno-zatvoren-aerodrom-u-kopenhagenu-danska-digla-borbene-avione-uzbuna-zbog-dronova-koji-kruze-nebom-oglasila-se-policija-incidenti-i-u-oslu/40529337",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "(Foto, video) hitno zatvoren aerodrom u Kopenhagenu, Danska digla borbene: Avione?! Uzbuna zbog dronova koji kru\u017ee nebom: Oglasila se policija, incidenti i u Oslu",
+   "id": "gdelt-48ab57ce44f5eaf2",
+   "idioma": "sr",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vozpopuli.com/internacional/drones-en-los-aeropuertos-de-oslo-y-copenhague-alto-riesgo-de-sabotaje.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Las claves e inc\u00f3gnitas sobre el caso de los drones en los aeropuertos de Oslo y Copenhague",
+   "id": "gdelt-2439034eea7181a0",
+   "idioma": "es",
+   "medio": "vozpopuli.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pelop.gr/ta-drones-sta-aerodromia-kopegchagis-kai-oslo-prokaloun-anisychia-stin-evropi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "T\u03b1 drones \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u03c0\u03c1\u03bf\u03ba\u03b1\u03bb\u03bf\u03cd\u03bd \u03b1\u03bd\u03b7\u03c3\u03c5\u03c7\u03af\u03b1 \u03c3\u03c4\u03b7\u03bd \u0395\u03c5\u03c1\u03ce\u03c0\u03b7",
+   "id": "gdelt-d4200ea14e86d1a0",
+   "idioma": "el",
+   "medio": "pelop.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://primapress.it/oslo-riaperto-laeroporto-dopo-lavvistamento-di-due-droni-sulla-pista",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo: riaperto l'aeroporto. Era stato chiuso dopo l'avvistamento di due droni sulla pista \u2013 PRIMAPRESS",
+   "id": "gdelt-20ce1d1eb386897b",
+   "idioma": "it",
+   "medio": "primapress.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/mondo/2025/09/23/droni-sugli-aeroporti-a-oslo-e-copenaghen-lue-punta-il-dito-su-mosca.-il-cremlino_9ece4e38-c15b-4046-99ea-ee98f4169ae7.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sugli aeroporti a Oslo e Copenaghen, l'Ue punta il dito su Mosca. Il Cremlino nega - Notizie",
+   "id": "gdelt-805d4ed7caf7f14a",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/aeroporti-di-copenaghen-e-oslo-hanno-riaperto-dopo-sorvolo-droni/17804516",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporti di Copenaghen e Oslo hanno riaperto dopo sorvolo droni",
+   "id": "gdelt-83c8f2fd36f53a9b",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-23/i-droni-negli-aeroporti-di-copenaghen-e-oslo-la-premier-danese-non-escludo-coinvolgimento-della-russia-dal-cremlino-accuse-infondate/17804433",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "I droni negli aeroporti di Copenaghen e Oslo la premier danese Non escludo coinvolgimento della Russia Dal Cremlino",
+   "id": "gdelt-f4e0ae44b436d7f7",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://acento.com.do/rfi/drones-sobrevuelan-aeropuertos-de-oslo-y-copenhague-un-grave-ataque-denuncia-dinamarca-9554292.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones sobrevuelan aeropuertos de Oslo y Copenhague: \"un grave ataque\", denuncia Dinamarca",
+   "id": "gdelt-9381952dcb5f7530",
+   "idioma": "es",
+   "medio": "acento.com.do"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://primapaginanews.it/articoli/droni-non-identificati-sui-cieli-di-danimarca-e-norvegia-chiusi-gli-aeroporti-di-copenaghen-e-oslo-549826",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni non identificati sui cieli di Danimarca e Norvegia, chiusi gli aeroporti di Copenaghen e Oslo",
+   "id": "gdelt-0872700bc388b02d",
+   "idioma": "it",
+   "medio": "primapaginanews.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://caracol.com.co/2025/09/23/aeropuertos-de-copenhague-y-oslo-cerraron-en-la-madrugada-por-presencia-de-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeropuertos de Copenhague y Oslo cerraron en la madrugada por presencia de drones",
+   "id": "gdelt-be8364fd498bcc91",
+   "idioma": "es",
+   "medio": "caracol.com.co"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansabrasil.com.br/brasil/noticias/mundo/2025/09/23/drones-invadem-aeroportos-de-copenhague-e-oslo-e-levam-caos_d0806de8-eacb-45af-af2f-7af2c9832046.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones invadem aeroportos de Copenhague e Oslo e levam caos - Mundo",
+   "id": "gdelt-2abf06bf7b2c18f8",
+   "idioma": "pt",
+   "medio": "ansabrasil.com.br"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://taxydromos.gr/diethni/1244815/synagermos-stin-eyropi-meta-ta-drones-sta-aerodromia-kopegchagis-kai-oslo-anisychia-gia-rosiki-emploki",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03c3\u03c4\u03b7\u03bd \u0395\u03c5\u03c1\u03ce\u03c0\u03b7 \u03bc\u03b5\u03c4\u03ac \u03c4\u03b1 drones \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03b1 \u039a\u03bf\u03c0\u03b5\u03b3\u03c7\u03ac\u03b3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u038c\u03c3\u03bb\u03bf \u2013 A\u03bd\u03b7\u03c3\u03c5\u03c7\u03af\u03b1 \u03b3\u03b9\u03b1 \u03c1\u03c9\u03c3\u03b9\u03ba\u03ae \u03b5\u03bc\u03c0\u03bb\u03bf\u03ba\u03ae",
+   "id": "gdelt-6f2092d195766389",
+   "idioma": "el",
+   "medio": "taxydromos.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infomoney.com.br/mundo/avistamentos-de-drones-suspendem-voos-nos-aeroportos-de-copenhague-e-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamentos de drones suspendem voos nos aeroportos de Copenhague e Oslo",
+   "id": "gdelt-3db0f80cc8f46415",
+   "idioma": "pt",
+   "medio": "infomoney.com.br"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://air-journal.fr/2025-09-23-les-aeroports-de-copenhague-et-oslo-paralyses-pendant-plusieurs-heures-par-des-drones-suspects-5265737.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Les a\u00e9roports de Copenhague et Oslo paralys\u00e9s pendant plusieurs heures par des drones suspects",
+   "id": "gdelt-2a2a5ea10c752718",
+   "idioma": "fr",
+   "medio": "air-journal.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eunews.it/2025/09/23/incursioni-di-droni-negli-aeroporti-di-copenaghen-e-oslo-lue-la-russia-sta-testando-i-nostri-confini",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incursioni di droni negli aeroporti di Copenaghen e Oslo.",
+   "id": "gdelt-2e363f8b943757c6",
+   "idioma": "it",
+   "medio": "eunews.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rb.no/justisministeren-om-dronemeldingene-dette-ser-vi-pa-med-stort-alvor/s/5-43-2572700",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn, Drone | Justisministeren om dronemeldingene: \u2013 Dette ser vi p\u00e5 med stort alvor",
+   "id": "gdelt-21e162a1c162c8f0",
+   "idioma": "no",
+   "medio": "rb.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sopitas.com/noticias/cierre-aropuerto-de-copenhague-oslo-drones-rusia-dinamarca-noruega",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cierran aeropuertos de Copenhague y Oslo por avistamiento de drones... se acusa a Rusia",
+   "id": "gdelt-72c657c7998f1eb0",
+   "idioma": "es",
+   "medio": "sopitas.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://franceinfo.fr/economie/emploi/metiers/armee-et-securite/espace-aerien-des-drones-suspects-au-dessus-des-aeroports-de-copenhague-et-oslo_7509142.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T17:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Espace a\u00e9rien : des drones suspects au-dessus des a\u00e9roports de Copenhague et Oslo",
+   "id": "gdelt-209a1986e42d037b",
+   "idioma": "fr",
+   "medio": "franceinfo.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dbalears.cat/ara/mon/2025/09/23/411047/els-aeroports-copenhaguen-oslo-tancats-durant-hores-pel-vol-amenacador-drons.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Els aeroports de Copenhaguen i Oslo, tancats durant hores pel vol amena\u00e7ador de drons",
+   "id": "gdelt-0272244680544b39",
+   "idioma": "ca",
+   "medio": "dbalears.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://biobiochile.cl/noticias/internacional/europa/2025/09/23/aeropuertos-de-copenhague-y-oslo-suspendieron-sus-operaciones-por-horas-tras-avistamientos-de-drones.shtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeropuertos de Copenhague y Oslo suspendieron sus operaciones por horas tras avistamientos de drones | Internacional",
+   "id": "gdelt-a287861e15cc1428",
+   "idioma": "es",
+   "medio": "biobiochile.cl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kristeligt-dagblad.dk/udland/norsk-politi-stadig-uklart-om-drone-lukkede-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norsk politi: Stadig uklart om drone lukkede Oslo Lufthavn",
+   "id": "gdelt-480792f45c584c42",
+   "idioma": "da",
+   "medio": "kristeligt-dagblad.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://correiodobrasil.com.br/a/drones-causam-caos-aeroportos-copenhague-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "CdB | Drones Causam Caos em Aeroportos de Copenhague e Oslo",
+   "id": "gdelt-4f9fc49439bbae27",
+   "idioma": "pt",
+   "medio": "correiodobrasil.com.br"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_cancelados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://3cat.cat/3catinfo/denuncien-incursions-de-drons-als-aeroports-de-copenhaguen-i-oslo-i-russia-sen-desvincula/noticia/3371189",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Els aeroports de Copenhaguen, a Dinamarca, i d'Oslo, a Noruega, han tancat diverses hores durant la matinada de dilluns a dimarts per un albirament de",
+   "id": "gdelt-189d20436ef1d2b3",
+   "idioma": "ca",
+   "medio": "3cat.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eldestapeweb.com/informacion-general/aeropuerto/avistamientos-de-drones-paralizan-los-aeropuertos-de-copenhague-y-oslo-20259233135",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamientos de drones paralizan los aeropuertos de Copenhague y Oslo",
+   "id": "gdelt-48caeaa539e5211a",
+   "idioma": "es",
+   "medio": "eldestapeweb.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://economictimes.indiatimes.com/news/international/us/oslo-hand-grenade-attack-near-israeli-embassy-norway-police-probe-13-year-old-paid-3000-following-mystery-drones/articleshow/124081300.cms",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norway police probe Oslo blast near Israeli embassy; 13-year-old reportedly paid $3,000 to carry out attack a day after mystery drones shut down airport",
+   "id": "gdelt-b1e44ac879d3e487",
+   "idioma": "en",
+   "medio": "indiatimes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diena.lt/naujienos/pasaulis/konfliktai-nelaimes/dronai-sutrikde-oslo-ir-kopenhagos-oro-uostu-darba-paveike-ir-lietuva-1721162",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronai sutrikd\u0117 Oslo ir Kopenhagos oro uost\u0173 darb\u0105: paveik\u0117 ir Lietuv\u0105",
+   "id": "gdelt-bebaa8ee506424ee",
+   "idioma": "lt",
+   "medio": "diena.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/krimi/drone-i-forbudt-omraade-ved-oslo-lufthavn/10955939",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone i forbudt omr\u00e5de ved Oslo lufthavn",
+   "id": "gdelt-15ac0734c9221059",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nrk.no/stor-oslo/rb_-drone-ved-oslo-lufthavn---politiet-oppretter-sak-1.17585014",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "RB: Drone ved Oslo lufthavn - politiet oppretter sak",
+   "id": "gdelt-8145dea8db623758",
+   "idioma": "no",
+   "medio": "nrk.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://politiken.dk/internationalt/art10561513/Drone-beslaglagt-ved-Oslo-Lufthavn1",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone beslaglagt ved Oslo Lufthavn",
+   "id": "gdelt-64e7c7fd2711a583",
+   "idioma": "da",
+   "medio": "politiken.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kristeligt-dagblad.dk/udland/en-drone-har-floejet-i-forbudt-omraade-ved-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "En drone har fl\u00f8jet i forbudt omr\u00e5de ved Oslo lufthavn",
+   "id": "gdelt-44723cab2ef8a21c",
+   "idioma": "da",
+   "medio": "kristeligt-dagblad.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vilaweb.cat/noticies/dinamarca-tanca-altre-aeroport-presencia-drons-incursions-copenhaguen-oslo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dinamarca tanca un altre aeroport per pres\u00e8ncia de drons despr\u00e9s de les incursions a Copenhaguen i Oslo",
+   "id": "gdelt-f650aecc9629fdef",
+   "idioma": "ca",
+   "medio": "vilaweb.cat"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://straitstimes.com/world/europe/norway-police-seize-drone-operated-by-foreigner-near-oslo-airport-prosecutor",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "A man in his 50s was flying his drone in a restricted area without it affecting air traffic.",
+   "id": "gdelt-f785d22249bfa915",
+   "idioma": "en",
+   "medio": "straitstimes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abc.es/internacional/policia-noruega-incauta-dron-operado-hombre-extranjero-20250925140413-nt.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Polic\u00eda noruega incauta un dron operado por un hombre extranjero cerca del aeropuerto de Oslo",
+   "id": "gdelt-fc812834c1adf5a3",
+   "idioma": "es",
+   "medio": "abc.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://15min.lt/naujiena/aktualu/pasaulis/norvegijos-pareigunai-sako-konfiskave-salia-oslo-oro-uosto-uzsieniecio-skraidinta-drona-57-2532056",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norvegijos pareig\u016bnai sako konfiskav\u0119 \u0161alia Oslo oro uosto u\u017esienie\u010dio skraidint\u0105 dron\u0105",
+   "id": "gdelt-0c348b72d9693e09",
+   "idioma": "lt",
+   "medio": "15min.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/policia-norueguesa-apreende-drone-a-estrangeiro-perto-do-aeroporto-de-oslo-68d53171ba33a196b1444557",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pol\u00edcia norueguesa apreende drone a estrangeiro perto do aeroporto de Oslo",
+   "id": "gdelt-a2cd1f5f7f539d7f",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/drone-apreendido-pela-policia-a-estrangeiro-perto-do-aeroporto-de-oslo-68d52ff122acbdf9b1dc1ed1",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone apreendido pela pol\u00edcia a estrangeiro perto do aeroporto de Oslo",
+   "id": "gdelt-e95410203f7cbc8e",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kauno.diena.lt/naujienos/pasaulis/konfliktai-nelaimes/pareigunai-konfiskavo-salia-oslo-oro-uosto-uzsieniecio-skraidinta-drona-1721400",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pareig\u016bnai konfiskavo \u0161alia Oslo oro uosto u\u017esienie\u010dio skraidint\u0105 dron\u0105",
+   "id": "gdelt-26a7ed3539fac97f",
+   "idioma": "lt",
+   "medio": "kauno.diena.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lrt.lt/naujienos/pasaulyje/6/2691717/norvegijos-pareigunai-konfiskavo-prie-oslo-oro-uosto-skraidinta-drona",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norvegijos pareig\u016bnai konfiskavo prie Oslo oro uosto skraidint\u0105 dron\u0105",
+   "id": "gdelt-be26d609b76a5f9a",
+   "idioma": "lt",
+   "medio": "lrt.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://athens-times.com/norway-foreigner-caught-flying-drone-near-oslo-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone Incident Near Oslo Airport Involves Foreign Operator",
+   "id": "gdelt-2fee93a52d62e2f3",
+   "idioma": "en",
+   "medio": "athens-times.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://e24.no/naeringsliv/i/zAvVE5/dronetroebbel-paa-oslo-lufthavn-vi-ser-alvorlig-paa-det",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronetr\u00f8bbel p\u00e5 Oslo lufthavn: \u2013 Vi ser alvorlig p\u00e5 det",
+   "id": "gdelt-71cee410a81fd111",
+   "idioma": "no",
+   "medio": "e24.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://euractiv.com/news/norway-police-seize-drone-flying-by-oslo-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norway police seize drone flying by Oslo airport",
+   "id": "gdelt-13b80f56dcaeb753",
+   "idioma": "en",
+   "medio": "euractiv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://suasnews.com/2025/09/foreigners-drone-seized-near-oslo-airport-amid-scandinavian-air-disruptions",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Foreigner's Drone Seized Near Oslo Airport Amid Scandinavian Air Disruptions \u2013 sUAS News",
+   "id": "gdelt-37cb3d3d7a8799a3",
+   "idioma": "en",
+   "medio": "suasnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://oglobo.globo.com/mundo/noticia/2025/09/25/policia-da-noruega-apreende-drone-pilotado-por-estrangeiro-perto-do-aeroporto-de-oslo.ghtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pol\u00edcia da Noruega apreende drone pilotado por estrangeiro perto do aeroporto de Oslo",
+   "id": "gdelt-673a3f5b54aa1aea",
+   "idioma": "pt",
+   "medio": "globo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/policia-noruega-incauta-dron-operado-extranjero-junto-aeropuerto-oslo-b50m_2025092568d56e1516355c411d9c7746.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T17:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La polic\u00eda noruega incauta un dron operado por un extranjero junto al aeropuerto de Oslo",
+   "id": "gdelt-afa6011a8c72d908",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stiripesurse.ro/aeroport-oslo-drona-ilegal-confiscata-autoritatil-norvegia_3814821",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incident la un Aeroport din Oslo: O dron\u0103 operat\u0103 ilegal a fost confiscat\u0103 de autorit\u0103\u021bile din Norvegia",
+   "id": "gdelt-de07d1532ec1b710",
+   "idioma": "ro",
+   "medio": "stiripesurse.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17840331",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incident la aeroportul din Oslo: Turistul care a lansat drona, pedepsit",
+   "id": "gdelt-3124e5b59e869a0d",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/norge/i/OoGed1/dagbladet-overvaakingsssystem-var-slaatt-ut-da-dronealarmen-gikk-paa-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-10T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Det ble sl\u00e5tt full dronealarm p\u00e5 Gardermoen 22. september.",
+   "id": "gdelt-c6a559b978093b67",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "fin",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dagsavisen.no/nyheter/dronesystem-ved-oslo-lufthavn-skal-ha-vaert-nede-samme-dag-som-mulige-droneobservasjoner/10001949",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-10T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luftrommet rundt Oslo lufthavn holdt stengt i tre timer natt til 23. september.",
+   "id": "gdelt-959c8718ccbeffef",
+   "idioma": "no",
+   "medio": "dagsavisen.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/norge/i/OoGed1/overvaakingsssystem-skal-ha-vaert-slaatt-ut-da-dronealarmen-gikk-paa-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-10T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Overv\u00e5kingsssystem skal ha v\u00e6rt sl\u00e5tt ut da dronealarmen gikk p\u00e5 Oslo lufthavn",
+   "id": "gdelt-1972e06f56a537cc",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abcnyheter.no/nyheter/dronesystem-ved-oslo-lufthavn-skal-ha-vaert-nede/1247003",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-10T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronesystem ved Oslo lufthavn skal ha v\u00e6rt nede",
+   "id": "gdelt-91d1bc24e554878c",
+   "idioma": "no",
+   "medio": "abcnyheter.no"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/norge/i/8qbPVd/politiet-henlegger-etterforskningen-av-droneobservasjoner-paa-gardermoen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Natt til 23. september m\u00e5tte Gardermoen holde stengt i flere timer grunnet mulige droneobservasjoner.",
+   "id": "gdelt-17d78866680ccd03",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://rb.no/henlegger-dronesak/s/5-43-2605216",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Oslo lufthavn var stengt i flere timer etter de mulige droneobservasjonene",
+   "id": "gdelt-e02b2adfd0e0b50f",
+   "idioma": "no",
+   "medio": "rb.no"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://rb.no/henlegger-dronesak/s/5-43-2605216",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T12:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "etterforskningen ikke har kunnet bekrefte eller avkrefte om det faktisk var droner som ble observert",
+   "id": "gdelt-e02b2adfd0e0b50f-declaracion-1",
+   "idioma": "no",
+   "medio": "\u00d8st politidistrikt (declaraci\u00f3n oficial citada en rb.no)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kristeligt-dagblad.dk/udland/norsk-politi-dropper-efterforskning-af-droner-over-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norsk politi dropper efterforskning af droner over Oslo Lufthavn",
+   "id": "gdelt-414686fc865e2ecd",
+   "idioma": "da",
+   "medio": "kristeligt-dagblad.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bt.dk/udland/norsk-politi-dropper-efterforskning-af-droner-over-oslo-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norsk politi dropper efterforskning af droner over Oslo Lufthavn",
+   "id": "gdelt-cba255f72413ae26",
+   "idioma": "da",
+   "medio": "bt.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://idag.no/nyhetsstudio/vis/politiet-henlegger-dronesak-pa-gardermoen/3f.2237",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Politiet henlegger dronesak p\u00e5 Gardermoen",
+   "id": "gdelt-005aa66d4898f48e",
+   "idioma": "no",
+   "medio": "idag.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tu.no/nyhetsstudio/politiet-henlegger-dronesak-paa-gardermoen/94163",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-06T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Politiet henlegger dronesak p\u00e5 Gardermoen - Teknisk Ukeblad",
+   "id": "gdelt-1d055f925694ede8",
+   "idioma": "no",
+   "medio": "tu.no"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://thelocal.no/20251107/norwegian-police-shelve-investigation-of-oslo-airport-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-07T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Police were unable to confirm definitively whether the sightings over the airport on the night in question were in fact drones.",
+   "id": "gdelt-cfc2323d35a2b858",
+   "idioma": "en",
+   "medio": "thelocal.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://el-balad.com/6758660",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-07T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Norwegian Police Halt Investigation into Oslo Airport Drone Incidents",
+   "id": "gdelt-26e9850752bc516c",
+   "idioma": "en",
+   "medio": "el-balad.com"
+  }
+ ],
+ "id": "EODI-2025-00042",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "NO",
+  "punto": {
+   "lat": 60.19782,
+   "lon": 11.09919
+  },
+  "radio_km": 5.0,
+  "region": "Akershus",
+  "suceso": "Oslo lufthavn Gardermoen"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Oslo",
+   "es": "Oslo"
+  },
+  "lugar": {
+   "en": "Oslo, Norway",
+   "es": "Oslo, Noruega"
+  },
+  "objetivo": {
+   "en": "Oslo Airport",
+   "es": "Aeropuerto de Oslo"
+  },
+  "region": {
+   "en": "Akershus",
+   "es": "Akershus"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Oslo lufthavn, Gardermoen",
+  "oaci": "ENGM"
+ },
+ "presencia_dron": "no_acreditada",
+ "presencia_historial": [
+  {
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T05:15Z"
+   },
+   "fuente_id": "gdelt-12f9a79ba26f094e-declaracion-2",
+   "quien": {
+    "en": "Oslo Airport",
+    "es": "el aeropuerto de Oslo"
+   },
+   "valor": "confirmada"
+  },
+  {
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-11-07T00:00Z"
+   },
+   "fuente_id": "gdelt-cfc2323d35a2b858",
+   "motivo": {
+    "en": "after the investigation: unable to confirm that the observations on the night of 22 September were drones, and closed the investigation",
+    "es": "tras la investigaci\u00f3n: no pudo confirmar que las observaciones de la noche del 22 de septiembre fueran drones y cierra la investigaci\u00f3n"
+   },
+   "quien": {
+    "en": "Norwegian Police",
+    "es": "la polic\u00eda noruega"
+   },
+   "revision": "rectificacion:fuente:EODI-2025-00042:gdelt-cfc2323d35a2b858",
+   "valor": "no_acreditada"
+  }
+ ],
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-09-22T22:30Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-8e71c2a5d1b72e20",
+   "motivo": "\u00abtirsdag\u00bb en una nota publicada el 2025-09-23 00:30 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Possible drones observed at Oslo airport force closure",
+  "es": "Posibles drones observados en el aeropuerto de Oslo obligan a cerrarlo"
+ }
+}

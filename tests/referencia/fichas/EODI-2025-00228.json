@@ -1,0 +1,3868 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  },
+  "vuelos_desviados": {
+   "max": 3,
+   "min": 3
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 10,
+   "min": 2
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-24T21:15Z"
+    },
+    "fuente_id": "gdelt-f80270dad2f01812"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-24T21:15Z"
+    },
+    "fuente_id": "gdelt-f80270dad2f01812-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://tv2nord.dk/kort-nyt/aalborg/droner-i-aalborg-lufthavn-fly-kan-ikke-lande-291b2",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner i Aalborg Lufthavn: Fly kan ikke lande.",
+   "id": "gdelt-d2fb5af58fa9bed6",
+   "idioma": "da",
+   "medio": "tv2nord.dk"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "tipo",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "uautoriseret droneflyvning har skabt kaos",
+   "id": "gdelt-f80270dad2f01812",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Luftrummet over Flyvestation Aalborg er i \u00f8jeblikket lukket grundet uautoriseret droneflyvning.",
+   "id": "gdelt-f80270dad2f01812-declaracion-1",
+   "idioma": "da",
+   "medio": "Flyvev\u00e5bnets afdeling for transportfly (declaraci\u00f3n oficial citada en ekstrabladet.dk)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://expressen.se/nyheter/varlden/uppgifter-nytt-dronarlarm-i-danskt-luftrum",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Larm om dr\u00f6nare \u00f6ver Aalborgs flygplats i Danmark",
+   "id": "gdelt-107a7cacb9ae6dbf",
+   "idioma": "sv",
+   "medio": "expressen.se"
+  },
+  {
+   "campos_respaldados": [
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://jyllands-posten.dk/indland/ECE18571393/droner-lukker-luftrummet-over-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Jeg kan bekr\u00e6fte, at politiet er til stede, lyder det.",
+   "id": "gdelt-41fb98f8b41fcc0d",
+   "idioma": "da",
+   "medio": "jyllands-posten.dk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://jyllands-posten.dk/indland/ECE18571393/droner-lukker-luftrummet-over-aalborg",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Det er korrekt, at luftrummet er lukket, fordi der er observeret droner.",
+   "id": "gdelt-41fb98f8b41fcc0d-declaracion-2",
+   "idioma": "da",
+   "medio": "Aalborg Lufthavn (declaraci\u00f3n oficial citada en jyllands-posten.dk)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://politiken.dk/danmark/art10561539/Droneaktivitet-lukker-Aalborg-Lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droneaktivitet lukker Aalborg Lufthavn",
+   "id": "gdelt-7035cc5953e1b34d",
+   "idioma": "da",
+   "medio": "politiken.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.sky.com/story/aalborg-airport-in-denmark-forced-to-close-after-drones-spotted-police-say-13437595",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg Airport in Denmark forced to close after drones spotted, police say",
+   "id": "gdelt-b323cc890c8545ae",
+   "idioma": "en",
+   "medio": "sky.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mirror.co.uk/news/world-news/airport-drones-denmark-closed-live-35961247",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Airport drones LIVE: Denmark's Aalborg airport forced to close amid Russia threat - World News",
+   "id": "gdelt-67beba8e9e6386ee",
+   "idioma": "en",
+   "medio": "mirror.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/mondo/2025/09/24/droni-nello-spazio-aereo-chiuso-lo-scalo-di-aalborg-in-danimarca_0c47e5b4-0010-45c8-8ce3-f785867dcc04.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni nello spazio aereo, chiuso lo scalo di Aalborg in Danimarca - Notizie",
+   "id": "gdelt-4ce049f9e64f2a92",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naroomanewsonline.com.au/story/9074356/denmarks-aalborg-airport-forced-to-close-due-to-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport forced to close due to drones",
+   "id": "gdelt-882b2d56e018f68b",
+   "idioma": "en",
+   "medio": "naroomanewsonline.com.au"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infobae.com/america/mundo/2025/09/24/el-aeropuerto-de-aalborg-en-dinamarca-se-vio-obligado-a-cerrar-tras-el-avistamiento-de-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Tensi\u00f3n en Dinamarca: el aeropuerto de Aalborg se vio obligado a cerrar tras el avistamiento de drones",
+   "id": "gdelt-a21028993577e0bb",
+   "idioma": "es",
+   "medio": "infobae.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-24/droni-sullaeroporto-di-aalborg-in-danimarca-spazio-aereo-chiuso-voli-deviati-verso-altri-scali/17814929",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sull'aeroporto di Aalborg in Danimarca spazio aereo chiuso | voli deviati verso altri scali",
+   "id": "gdelt-cb22e89965ef354c",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/mondo/2025/09/24/droni-in-spazio-aereo-chiuso-scalo-di-aalborg-in-danimarca_bb7b9844-c879-46fe-aa61-e03cd6b68fdc.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni in spazio aereo, chiuso scalo di Aalborg in Danimarca - Notizie",
+   "id": "gdelt-d5c3de01b35f998f",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dn.se/direkt/2025-09-24/luftrum-stangt-over-alborg-pa-grund-av-dronare",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DN Direkt - Luftrum st\u00e4ngt \u00f6ver \u00c5lborg p\u00e5 grund av dr\u00f6nare",
+   "id": "gdelt-15783369ce5e71d0",
+   "idioma": "sv",
+   "medio": "dn.se"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tg24.sky.it/mondo/2025/09/24/danimarca-chiuso-aeroporto-aalborg-droni",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca, chiuso aeroporto di Aalborg a causa della presenza di droni",
+   "id": "gdelt-35c7c7b753340d4e",
+   "idioma": "it",
+   "medio": "tg24.sky.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zeit.de/politik/ausland/2025-09/daenemark-aalborg-drohnensichtung-flughafen-gesperrt",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg: Erneut Flughafen in D\u00e4nemark nach Drohnensichtung gesperrt",
+   "id": "gdelt-4810cf3a54cd6331",
+   "idioma": "de",
+   "medio": "zeit.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unian.net/world/daniya-drony-v-gorode-olborg-zakryli-aeroport-iz-za-fiksacii-bpla-13141593.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0430\u043d\u0438\u044f \u0434\u0440\u043e\u043d\u044b - \u0432 \u0433\u043e\u0440\u043e\u0434\u0435 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u044b\u043b\u0438 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u0438\u0437-\u0437\u0430 \u0444\u0438\u043a\u0441\u0430\u0446\u0438\u0438 \u0411\u041f\u041b\u0410 \u2014 \u0423\u041d\u0418\u0410\u041d",
+   "id": "gdelt-9429e20d316b07bc",
+   "idioma": "ru",
+   "medio": "unian.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24tv.ua/aeroport-olborg-daniyi-zakrito-cherez-droni-povitryanomu-prostori_n2921195",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u0438 \u043f\u043e\u043c\u0456\u0442\u0438\u043b\u0438 \u0432 \u0414\u0430\u043d\u0456\u0457 - \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u0438\u0442\u043e",
+   "id": "gdelt-bb217f0b229f6401",
+   "idioma": "uk",
+   "medio": "24tv.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/droni-nello-spazio-aereo-danese-chiuso-lo-scalo-di-aalborg-von-der-leyen-abbattere-i-jet-russi-e-unopzione-sul-tavolo/17814997",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni nello spazio aereo danese chiuso lo scalo di Aalborg | Von der Leyen | Abbattere i jet russi \u00e8 un' opzione sul tavolo",
+   "id": "gdelt-db5ab96b694b1163",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailystar.co.uk/news/latest-news/breaking-major-airport-forced-close-35961286",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg Airport forced to close over drones just days after Copenhagen incident",
+   "id": "gdelt-101cb64e03293cbb",
+   "idioma": "en",
+   "medio": "dailystar.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ceskenoviny.cz/zpravy/letiste-v-danskem-meste-aalborg-je-uzavreno-kvuli-dronum/2725388",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Leti\u0161t\u011b v d\u00e1nsk\u00e9m m\u011bst\u011b Aalborg je uzav\u0159eno kv\u016fli dron\u016fm",
+   "id": "gdelt-45c6d1f0ef680002",
+   "idioma": "cs",
+   "medio": "ceskenoviny.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://remszeitung.de/panorama/daenemark-flughafen-in-aalborg-wegen-drohnen-gesperrt-FKV3XPR4NZNBZPWCC64HID6JUY.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark: Flughafen in Aalborg wegen Drohnen gesperrt",
+   "id": "gdelt-6268168f3a82100b",
+   "idioma": "de",
+   "medio": "remszeitung.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://us.cnn.com/2025/09/24/europe/denmark-aalborg-airport-closed-drones-latam-intl",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg Airport closed after drone sighting",
+   "id": "gdelt-6c4543bdb4380f25",
+   "idioma": "en",
+   "medio": "cnn.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dw.com/en/denmark-aalborg-airport-closed-due-to-drone-sightings/a-74127857",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark: Aalborg Airport closed due to drone sightings \u2013 DW \u2013 09/24/2025",
+   "id": "gdelt-6ea5846d8ec06c70",
+   "idioma": "en",
+   "medio": "dw.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bt.no/utenriks/i/gw5J6a/luftrommet-over-flyplassen-i-aalborg-stengt-etter-droneobservasjon-to-fly-omdirigert",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luftrommet over flyplassen i Aalborg stengt etter droneobservasjon",
+   "id": "gdelt-7d7dd87d7ee05bb1",
+   "idioma": "no",
+   "medio": "bt.no"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bt.no/utenriks/i/gw5J6a/luftrommet-over-flyplassen-i-aalborg-stengt-etter-droneobservasjon-to-fly-omdirigert",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Det er korrekt at luftrommet er stengt fordi det er observert droner.",
+   "id": "gdelt-7d7dd87d7ee05bb1-declaracion-1",
+   "idioma": "no",
+   "medio": "Aalborg lufthavn (declaraci\u00f3n oficial citada en bt.no)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bt.no/utenriks/i/gw5J6a/luftrommet-over-flyplassen-i-aalborg-stengt-etter-droneobservasjon-to-fly-omdirigert",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Luftrommet over flyplassen i Aalborg er stengt p\u00e5 grunn av uautorisert droneflyging, bekrefter lufthavnen og politiet.",
+   "id": "gdelt-7d7dd87d7ee05bb1-declaracion-2",
+   "idioma": "no",
+   "medio": "Politiet (declaraci\u00f3n oficial citada en bt.no)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dr.dk/nyheder/indland/drone-lukker-luftrum-over-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone lukker luftrum over Aalborg",
+   "id": "gdelt-a9f0e6a78cdf3ce1",
+   "idioma": "da",
+   "medio": "dr.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bild.de/news/ausland/flughafen-aalborg-geschlossen-wieder-drohnen-alarm-in-daenemark-68d46bb56199625f8c0fc327",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Aalborg geschlossen: Wieder Drohnen-Alarm in D\u00e4nemark",
+   "id": "gdelt-f42a8c060981e544",
+   "idioma": "de",
+   "medio": "bild.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rbc.ua/rus/news/bezpilotniki-povitryanomu-prostori-daniyi-1758752225.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0430\u043d\u0456\u044f \u0437\u0430\u043a\u0440\u0438\u043b\u0430 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0432 \u043d\u0456\u0447 \u043d\u0430 25 \u0432\u0435\u0440\u0435\u0441\u043d\u044f \u0447\u0435\u0440\u0435\u0437 \u043d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0431\u0435\u0437\u043f\u0456\u043b\u043e\u0442\u043d\u0438\u043a\u0438",
+   "id": "gdelt-06749113bee251d9",
+   "idioma": "uk",
+   "medio": "rbc.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/verden/i/eMAkzR/dansk-politi-flere-droner-med-lys-flyr-fortsatt-over-aalborg-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dansk politi: Flere droner med lys flyr fortsatt over Aalborg lufthavn",
+   "id": "gdelt-162de019ff9cd287",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/aeroporto-dinamarques-de-aalborg-encerra-apos-avistamento-de-drones-68d473123de287f369bd0aa7",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto dinamarqu\u00eas de Aalborg encerra ap\u00f3s avistamento de drones",
+   "id": "gdelt-4ad7b3166684fa7e",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://thestar.com.my/news/world/2025/09/25/denmark039s-aalborg-airport-closed-due-to-drones-in-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport closed due to drones in airspace, police on site",
+   "id": "gdelt-4f7eb3a4fc3b07e6",
+   "idioma": "en",
+   "medio": "thestar.com.my"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vm.ru/news/1264084-aeroport-datskogo-goroda-olborg-zakryt-iz-za-bpla-v-nebe",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u0434\u0430\u0442\u0441\u043a\u043e\u0433\u043e \u0433\u043e\u0440\u043e\u0434\u0430 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u044b\u0442 \u0438\u0437-\u0437\u0430 \u0411\u041f\u041b\u0410 \u0432 \u043d\u0435\u0431\u0435",
+   "id": "gdelt-57638391e0194736",
+   "idioma": "ru",
+   "medio": "vm.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rsi.ch/info/mondo/Aeroporto-danese-di-Aalborg-chiuso-a-causa-di-droni--3144483.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto danese di Aalborg chiuso a causa di droni",
+   "id": "gdelt-7e2432958a820aab",
+   "idioma": "it",
+   "medio": "rsi.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2583929-luchthaven-aalborg-gesloten-vanwege-waargenomen-drones-klm-vlucht-omgeleid",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchthaven Aalborg gesloten vanwege waargenomen drones, KLM-vlucht omgeleid",
+   "id": "gdelt-8a471c673a4e5bd1",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/aeroporto-de-aalborg-encerrado-devido-a-presenca-de-drones-68d4700c23be918d878e4d40",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto de Aalborg encerrado devido \u00e0 presen\u00e7a de drones",
+   "id": "gdelt-a681709456378db0",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bernerzeitung.ch/drohnen-in-aalborg-daenischer-flughafen-gesperrt-621966281921",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen in Aalborg: D\u00e4nischer Flughafen gesperrt",
+   "id": "gdelt-0da75b785fb7caf4",
+   "idioma": "de",
+   "medio": "bernerzeitung.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/krimi/politiet-paa-pressemoede-droner-flyver-lige-nu-over-aalborg-lufthavn/10956065",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Politiet p\u00e5 pressem\u00f8de: Droner flyver lige nu over Aalborg Lufthavn",
+   "id": "gdelt-0fc4e3da7b7393b9",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bbc.com/news/articles/c7401vk4lgzo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport closes after reports of drones in airspace",
+   "id": "gdelt-5be6ba6c92c16993",
+   "idioma": "en",
+   "medio": "bbc.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24tv.ua/ru/ajeroport-olborg-v-danii-zakryt-iz-za-dronov-v-vozdushnom-prostranstve-reuters_n2921196",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044b \u0437\u0430\u043c\u0435\u0442\u0438\u043b\u0438 \u0432 \u0414\u0430\u043d\u0438\u0438 - \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u044b\u0442",
+   "id": "gdelt-6c9b596447d9fb9e",
+   "idioma": "ru",
+   "medio": "24tv.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ria.ru/20250925/daniya-2044169492.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041f\u043e\u043b\u0438\u0446\u0438\u044f \u0414\u0430\u043d\u0438\u0438 \u043e\u0446\u0435\u043d\u0438\u043b\u0430 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044e \u0441 \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u0430\u043c\u0438 \u0432 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0443",
+   "id": "gdelt-e5f3f546445eefdf",
+   "idioma": "ru",
+   "medio": "ria.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adnkronos.com/internazionale/esteri/droni-in-volo-nello-spazio-aereo-danese-chiuso-laeroporto-di-aalborg_YduCZWVDzqkJY9iyP4U0f",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ancora droni sulla Danimarca, chiuso l'aeroporto di Aalborg: cosa sta succedendo",
+   "id": "gdelt-6b7277a5ec94dd8b",
+   "idioma": "it",
+   "medio": "adnkronos.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deutschlandfunk.de/sperrung-des-flughafens-aalborg-nacgh-drohnen-alarm-102.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark - Sperrung des Flughafens Aalborg nacgh Drohnen-Alarm",
+   "id": "gdelt-b02013dd01e6ad92",
+   "idioma": "de",
+   "medio": "deutschlandfunk.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://enikos.gr/international/dania-ekleise-to-aerodromio-tou-alborgk-epeita-apo-entopismo-drones/2446119",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba \u03ad\u03c0\u03b5\u03b9\u03c4\u03b1 \u03b1\u03c0\u03cc \u03b5\u03bd\u03c4\u03bf\u03c0\u03b9\u03c3\u03bc\u03cc drones",
+   "id": "gdelt-ef8fa198d6e66623",
+   "idioma": "el",
+   "medio": "enikos.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://spiegel.de/ausland/daenemark-flughafen-in-aalborg-wegen-sichtung-von-drohnen-voruebergehend-gesperrt-a-6fca83c2-2bad-4cdd-ae42-acb0c23bb0e8",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark: Flughafen in Aalborg wegen Sichtung von Drohnen vor\u00fcbergehend gesperrt",
+   "id": "gdelt-fcce281425139ec2",
+   "idioma": "de",
+   "medio": "spiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-24/danimarca-droni-su-aeroporto-aalborg-scalo-chiuso/17814953",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca | droni su aeroporto Aalborg scalo chiuso",
+   "id": "gdelt-07087101e27de880",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://politiken.dk/danmark/art10561539/Droneaktivitet-lukker-Aalborg-Lufthavn-p%C3%A5-ubestemt-tid",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droneaktivitet lukker Aalborg Lufthavn p\u00e5 ubestemt tid",
+   "id": "gdelt-11fb178f300bdd7b",
+   "idioma": "da",
+   "medio": "politiken.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kristeligt-dagblad.dk/der-er-fortsat-droner-i-naerheden-af-aalborg-lufthavn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Der er fortsat droner i n\u00e6rheden af Aalborg Lufthavn",
+   "id": "gdelt-3ce3b6a492bde3f6",
+   "idioma": "da",
+   "medio": "kristeligt-dagblad.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-24/droni-russi-nello-spazio-aereo-della-danimarca-chiuso-laeroporto-di-aalborg-voli-bloccati-secondo-caso-di-violazione-in-pochi-giorni/17814967",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni russi? nello spazio aereo della Danimarca chiuso l' aeroporto di Aalborg | voli bloccati Secondo caso di violazione in pochi giorni",
+   "id": "gdelt-6469e6f96948190f",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://meteoweb.eu/2025/09/droni-sopra-aalborg-scatta-la-chiusura-dellaeroporto-e-il-secondo-caso-in-danimarca-in-pochi-giorni/1001841658",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sopra Aalborg, scatta la chiusura dell'aeroporto: \u00e8 il secondo caso in Danimarca in pochi giorni",
+   "id": "gdelt-6a6917146cd34ded",
+   "idioma": "it",
+   "medio": "meteoweb.eu"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Denmark's Aalborg airport, used for commercial and military flights, was closed due to drones in its airspace, police said early on Thursday",
+   "id": "revisada-eadb3474eb083fcd-declaracion-1",
+   "idioma": "en",
+   "medio": "Nordjyllands Politi (declaraci\u00f3n oficial citada en geo.tv)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://article.wn.com/view/2025/09/25/Denmark_shuts_Aalborg_airport_over_drones_amid_Europewide_al",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark shuts Aalborg airport over drones amid Europe-wide alerts",
+   "id": "gdelt-30496ccf0f6d0bcb",
+   "idioma": "en",
+   "medio": "wn.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilfattonisseno.it/2025/09/droni-in-volo-nello-spazio-aereo-danese-chiuso-laeroporto-di-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Droni in volo nello spazio aereo danese\", chiuso l'aeroporto di Aalborg - il Fatto Nisseno - Caltanissetta notizie, cronaca, attualit\u00e0",
+   "id": "gdelt-4b4e6fcf5c7ef667",
+   "idioma": "it",
+   "medio": "ilfattonisseno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unian.ua/world/daniya-droni-v-misti-olborg-zakrili-aeroport-cherez-fiksaciyu-bpla-13141596.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0430\u043d\u0456\u044f \u0434\u0440\u043e\u043d\u0438 - \u0432 \u043c\u0456\u0441\u0442\u0456 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u0438\u043b\u0438 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u0447\u0435\u0440\u0435\u0437 \u0444\u0456\u043a\u0441\u0430\u0446\u0456\u044e \u0411\u041f\u041b\u0410 \u2014 \u0423\u041d\u0406\u0410\u041d",
+   "id": "gdelt-8b5b6f2c83994eec",
+   "idioma": "uk",
+   "medio": "unian.ua"
+  },
+  {
+   "campos_respaldados": [
+    "cierre"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://meridiananotizie.it/2025/09/primo-piano/droni-in-volo-nello-spazio-aereo-danese-chiuso-laeroporto-di-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "la polizia danese annuncia sui social la chiusura dello spazio aereo dell'aeroporto di Aalborg.",
+   "id": "gdelt-90dee47fdd553cee",
+   "idioma": "it",
+   "medio": "meridiananotizie.it"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://meridiananotizie.it/2025/09/primo-piano/droni-in-volo-nello-spazio-aereo-danese-chiuso-laeroporto-di-aalborg",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Sono stati osservati droni nei pressi dell'aeroporto di Aalborg e lo spazio aereo \u00e8 chiuso.",
+   "id": "gdelt-90dee47fdd553cee-declaracion-1",
+   "idioma": "it",
+   "medio": "Nordjyllands Politi (declaraci\u00f3n oficial citada en meridiananotizie.it)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/ausland/id_100929084/daenemark-erneuter-drohnenalarm-flughafen-aalborg-geschlossen.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark: Erneuter Drohnenalarm \u2013 Flughafen Aalborg geschlossen",
+   "id": "gdelt-cf44d02e9192fd17",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20min.ch/story/daenemark-drohnen-legen-flughafen-aalborg-lahm-103421767",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark: Drohnen legen Flughafen Aalborg lahm",
+   "id": "gdelt-efacf3ec1dd2cd14",
+   "idioma": "de",
+   "medio": "20min.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavanguardia.com/internacional/20250925/11094526/cerrado-aeropuerto-aalborg-presencia-drones-espacio-aereo.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cerrado el aeropuerto de Aalborg por la presencia de drones en su espacio a\u00e9reo",
+   "id": "gdelt-59044e244a881a48",
+   "idioma": "es",
+   "medio": "lavanguardia.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://notimerica.com/politica/noticia-dinamarca-cerrado-aeropuerto-aalborg-dinamarca-debido-presencia-drones-20250925014659.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cerrado el aeropuerto de Aalborg, en Dinamarca, debido a la presencia de drones",
+   "id": "gdelt-68a48eb68e82468b",
+   "idioma": "es",
+   "medio": "notimerica.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vg.no/nyheter/i/JbkpE6/dansk-tv-2-luftrommet-over-flyplassen-i-aalborg-stengt-etter-droneobservasjon-to-fly-omdirigert",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dansk TV 2: Luftrommet over flyplassen i Aalborg stengt etter droneobservasjon \u2013 to fly omdirigert",
+   "id": "gdelt-3f40b2c6fb6a00f5",
+   "idioma": "no",
+   "medio": "vg.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stern.de/panorama/weltgeschehen/erneuter-drohnenvorfall--flughafen-im-daenischen-aalborg-gesperrt-36077996.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Erneuter Drohnenvorfall: Flughafen im d\u00e4nischen Aalborg gesperrt",
+   "id": "gdelt-6a1ff29396a7e1af",
+   "idioma": "de",
+   "medio": "stern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rr.pt/noticia/mundo/2025/09/24/dinamarca-presenca-de-drones-obriga-a-encerramento-do-aeroporto-de-aalborg/441101",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dinamarca. Presen\u00e7a de drones obriga a encerramento do aeroporto de Aalborg",
+   "id": "gdelt-804b722b412a6334",
+   "idioma": "pt",
+   "medio": "rr.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://english.news.cn/europe/20250925/cdf3813edfe74be39cae3f4a27e5c7ac/c.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg Airport closes airspace after drone sightings, flights diverted-Xinhua",
+   "id": "gdelt-9e9129d104e472ff",
+   "idioma": "en",
+   "medio": "english.news.cn"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/nueva-alerta-drones-dinamarca-obliga-cerrar-aeropuerto-aalborg_2025092568d48077d06d8c46f293f46b.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nueva alerta de drones en Dinamarca obliga a cerrar el aeropuerto de Aalborg",
+   "id": "gdelt-155816c733ce5824",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://observador.pt/2025/09/25/mais-um-aeroporto-encerrado-na-dinamarca-por-um-avistamento-de-drones-desta-vez-foi-o-da-cidade-de-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto de Aalborg fechado devido \u00e0 presen\u00e7a de drones \u2013 Observador",
+   "id": "gdelt-24f69a385593ea1e",
+   "idioma": "pt",
+   "medio": "observador.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazeta.ua/articles/world-life/_droni-nad-daniyeyu-aeroport-olborg-prizupiniv-robotu/1231079",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u0438 \u043d\u0430\u0434 \u0414\u0430\u043d\u0456\u0454\u044e: \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \"\u041e\u043b\u044c\u0431\u043e\u0440\u0433\" \u043f\u0440\u0438\u0437\u0443\u043f\u0438\u043d\u0438\u0432 \u0440\u043e\u0431\u043e\u0442\u0443",
+   "id": "gdelt-47e2e4a0990c1b49",
+   "idioma": "uk",
+   "medio": "gazeta.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://interfax.ru/world/1049161",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0430\u0442\u0441\u043a\u0438\u0439 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u044b\u0442 \u0438\u0437-\u0437\u0430 \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u043e\u0432",
+   "id": "gdelt-e44d9f761a87c9bf",
+   "idioma": "ru",
+   "medio": "interfax.ru"
+  },
+  {
+   "campos_respaldados": [
+    "cierre_minutos",
+    "drones",
+    "fin",
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nrk.no/urix/luftrommet-over-aalborg-stengt-_-flere-droner-er-observert-1.17585127",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u00c5lborg lufthavn var stengt i over fire timer.",
+   "id": "gdelt-d3edade126fa46e8",
+   "idioma": "no",
+   "medio": "nrk.no"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nrk.no/urix/luftrommet-over-aalborg-stengt-_-flere-droner-er-observert-1.17585127",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Det ser ut som en modell for hybridkrigf\u00f8ring som vi har sett andre steder i Europa.",
+   "id": "gdelt-d3edade126fa46e8-declaracion-3",
+   "idioma": "no",
+   "medio": "Politiets Etterretningstjeneste (declaraci\u00f3n oficial citada en nrk.no)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vrt.be/vrtnws/nl/2025/09/24/het-luchtruim-rond-de-deense-luchthaven-van-aalborg-vanwege-de-a",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Opnieuw drones in luchtruim boven Denemarken: luchthaven van Aalborg tijdelijk gesloten",
+   "id": "gdelt-18cc3e5e779fb28d",
+   "idioma": "nl",
+   "medio": "vrt.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazeta.ua/ru/articles/world-life/_drony-nad-daniej-aeroport-olborg-priostanovil-rabotu/1231079",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044b \u043d\u0430\u0434 \u0414\u0430\u043d\u0438\u0435\u0439: \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \"\u041e\u043b\u044c\u0431\u043e\u0440\u0433\" \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b \u0440\u0430\u0431\u043e\u0442\u0443",
+   "id": "gdelt-27766d51ff1bf289",
+   "idioma": "ru",
+   "medio": "gazeta.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nbcnews.com/world/europe/denmarks-aalborg-airport-closed-due-drones-two-days-copenhagen-incursi-rcna233583",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg Airport closed due to drones two days after Copenhagen incursion",
+   "id": "gdelt-7b83283521ada127",
+   "idioma": "en",
+   "medio": "nbcnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bgnes.com/society/drones-force-closure-of-aalborg-airport-in-denmark",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones force closure of Aalborg Airport in Denmark",
+   "id": "gdelt-a6d4c02180f5a5d4",
+   "idioma": "en",
+   "medio": "bgnes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://indianexpress.com/article/world/copenhagen-incursion-denmark-aalborg-airport-shut-drones-flights-diverted-10269926",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Two days after Copenhagen incursion, Denmark's Aalborg airport shut due to drones; flights diverted | World News",
+   "id": "gdelt-e5f738ee10ad22e9",
+   "idioma": "en",
+   "medio": "indianexpress.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tv2nord.dk/aalborg/der-er-fortsat-droner-i-luften-over-aalborg-ludthavn-67be2",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Der er fortsat droner i luften over Aalborg Lufthavn - kan sagtens 'nedtage dronerne'",
+   "id": "gdelt-c52ffe1b75ac5cc1",
+   "idioma": "da",
+   "medio": "tv2nord.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tv2nord.dk/aalborg/droner-i-aalborg-lufthavn-fly-kan-ikke-lande-291b2",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nordjyllands Politi afholder pressem\u00f8de efter droner lukker luftrummet over Aalborg",
+   "id": "gdelt-c80f57bc5cc790e0",
+   "idioma": "da",
+   "medio": "tv2nord.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tv2nord.dk/kort-nyt/aalborg/forsvaret-bekraefter-dronehaendelse-i-aalborg-lufthavn-fly-kan-ikke-lande-220ff",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T01:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Forsvaret bekr\u00e6fter droneh\u00e6ndelse i Aalborg Lufthavn: Fly kan ikke lande",
+   "id": "gdelt-ef100aa5e58835bd",
+   "idioma": "da",
+   "medio": "tv2nord.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/krimi/droner-har-forladt-luftrum-aalborg-lufthavn-er-genaabnet/10956013",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner har forladt luftrum: Aalborg Lufthavn er gen\u00e5bnet",
+   "id": "gdelt-5a540fcfe64c8864",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://sueddeutsche.de/panorama/drohnen-flughaefen-schliessungen-kopenhagen-aalborg-li.3317393",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Die d\u00e4nische Regierung spricht nach den erneuten Drohnensichtungen an mehreren Flugh\u00e4fen im Land.",
+   "id": "gdelt-5f82cac42112e365",
+   "idioma": "de",
+   "medio": "sueddeutsche.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stiripesurse.ro/aeroportul-aalborg-din-danemarca-inchis-din-cauza-dronelor-in-spatiul-aerian_3814578",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T02:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul Aalborg din Danemarca, \u00eenchis din cauza dronelor \u00een spa\u021biul aerian",
+   "id": "gdelt-51376b2751d3e530",
+   "idioma": "ro",
+   "medio": "stiripesurse.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/184/lixi-synagermou-sti-dania-ta-drones-apomakrynthikan-apo-ton-enaerio-choro-tou-aerodromiou-alborgk.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T02:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039b\u03ae\u03be\u03b7 \u03c3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03bf\u03cd \u03c3\u03c4\u03b7 \u0394\u03b1\u03bd\u03af\u03b1: \u03a4\u03b1 drones \u03b1\u03c0\u03bf\u03bc\u03b1\u03ba\u03c1\u03cd\u03bd\u03b8\u03b7\u03ba\u03b1\u03bd \u03b1\u03c0\u03cc \u03c4\u03bf\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf \u03c7\u03ce\u03c1\u03bf \u03c4\u03bf\u03c5 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03bf\u03bc\u03af\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba",
+   "id": "gdelt-e81a66a067ac26c1",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://timesofindia.indiatimes.com/world/europe/flying-with-lights-on-denmarks-aalborg-airport-shut-after-drones-spotted-in-airspace-flights-affected/articleshow/124102545.cms",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T02:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "'Flying with lights on': Denmark's Aalborg airport shut after drones spotted in airspace; flights affected",
+   "id": "gdelt-4e3fec16e22a9e57",
+   "idioma": "en",
+   "medio": "indiatimes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://livemint.com/news/world/drone-sighting-shuts-down-denmarks-aalborg-airport-two-days-after-copenhagen-incursion-are-russian-involved-11758764332411.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone sighting shuts down Denmark's Aalborg airport two days after Copenhagen incursion; are Russian involved?",
+   "id": "gdelt-35068b5abf39f72a",
+   "idioma": "en",
+   "medio": "livemint.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://trtworld.com/article/69e7d9f6b6b0",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg Airport suspends flights after drones spotted in airspace",
+   "id": "gdelt-49a5577765ae23dc",
+   "idioma": "en",
+   "medio": "trtworld.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dr.dk/nyheder/indland/overblik-droner-over-flere-danske-lufthavne-i-aalborg-lukkede-det-flytrafikken",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "OVERBLIK Droner over flere danske lufthavne - i Aalborg lukkede det flytrafikken",
+   "id": "gdelt-4b19da194d82f204",
+   "idioma": "da",
+   "medio": "dr.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tyden.cz/letiste-v-danskem-meste-aalborg-je-uzavreno-kvuli-dronum-pise-reuters",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Leti\u0161t\u011b v d\u00e1nsk\u00e9m m\u011bst\u011b Aalborg je uzav\u0159eno kv\u016fli dron\u016fm, p\u00ed\u0161e Reuters",
+   "id": "gdelt-4714bc524f11e450",
+   "idioma": "cs",
+   "medio": "tyden.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://srf.ch/news/international/flughafen-aalborg-erneut-drohnen-in-daenemarks-luftraum-gesichtet",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Aalborg - Erneut Drohnen in D\u00e4nemarks Luftraum gesichtet",
+   "id": "gdelt-c63d0378651f00b4",
+   "idioma": "de",
+   "medio": "srf.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deutschlandfunk.de/flughafen-aalborg-nach-drohnen-alarm-gesperrt-104.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark - Flughafen Aalborg nach Drohnen-Alarm gesperrt",
+   "id": "gdelt-3facc67c584ecbae",
+   "idioma": "de",
+   "medio": "deutschlandfunk.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtve.es/noticias/20250925/aeropuerto-danes-aalborg-cerrado-drones-incursion-copenhague/16743336.shtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto dan\u00e9s de Aalborg cerrado por drones",
+   "id": "gdelt-48d39a728b2cf4c4",
+   "idioma": "es",
+   "medio": "rtve.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nordjyske.dk/nyheder/aalborg/droner-over-aalborg-lufthavn-torsdag-morgen-flyver-fly-som-planlagt/5748611",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner over Aalborg Lufthavn: Torsdag morgen flyver fly som planlagt",
+   "id": "gdelt-3c6ba169f321b496",
+   "idioma": "da",
+   "medio": "nordjyske.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://viveresanbenedetto.it/altrigiornali/14/148040-2025",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\"Droni in volo nello spazio aereo danese\", chiuso l'aeroporto di Aalborg \u2022 Vivere San Benedetto notizie per la citt\u00e0 e il territorio",
+   "id": "gdelt-0624f69d62161d6e",
+   "idioma": "it",
+   "medio": "viveresanbenedetto.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sputnikglobe.com/20250925/danish-police-says-drones-observed-by-airports-in-esbjerg-sonderborg-skrydstrup--reports-1122848896.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danish Police Says Drones Observed by Airports in Esbjerg, Sonderborg, Skrydstrup -Reports",
+   "id": "gdelt-818083d5c010df49",
+   "idioma": "en",
+   "medio": "sputnikglobe.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://sputnikglobe.com/20250925/danish-police-says-drones-observed-by-airports-in-esbjerg-sonderborg-skrydstrup--reports-1122848896.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T04:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Drones Observed by Airports in Esbjerg, Sonderborg, Skrydstrup",
+   "id": "gdelt-818083d5c010df49-declaracion-1",
+   "idioma": "en",
+   "medio": "Danish Police (declaraci\u00f3n oficial citada en sputnikglobe.com)"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "drones",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dennikn.sk/minuta/4868819",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Letisko v d\u00e1nskom Aalborgu uzavreli pre drony",
+   "id": "gdelt-e2f9d621a837c143",
+   "idioma": "sk",
+   "medio": "dennikn.sk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24tv.ua/droni-daniyi-bezpilotniki-nad-aeroportom-olborg-25-veresnya-politsiya_n2921209",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u0438 \u0443 \u0414\u0430\u043d\u0456\u0457 - \u0431\u0435\u0437\u043f\u0456\u043b\u043e\u0442\u043d\u0438\u043a\u0438 \u043d\u0430\u0434 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u043e\u043c \u041e\u043b\u044c\u0431\u043e\u0440\u0433 25 \u0432\u0435\u0440\u0435\u0441\u043d\u044f, \u043f\u043e\u043b\u0456\u0446\u0456\u044f \u043f\u0440\u043e\u043a\u043e\u043c\u0435\u043d\u0442\u0443\u0432\u0430\u043b\u0430",
+   "id": "gdelt-2a903bdee85614d2",
+   "idioma": "uk",
+   "medio": "24tv.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/externe/aeroportul-aalborg-din-danemarca-a-fost-inchis-din-cauza-dronelor-in-spatiul-aerian-mai-multe-zboruri-afectate-23615594",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul Aalborg din Danemarca a fost \u00eenchis din cauza dronelor \u00een spa\u021biul aerian, mai multe zboruri afectate",
+   "id": "gdelt-756464e02c532e74",
+   "idioma": "ro",
+   "medio": "mediafax.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://magyarnemzet.hu/kulfold/2025/09/dronok-okoznak-riadalmat-dan-repulotereken-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dr\u00f3nok okoznak riadalmat d\u00e1n rep\u00fcl\u0151tereken: Aalborg lez\u00e1rva",
+   "id": "gdelt-b32eb670c2316e2a",
+   "idioma": "hu",
+   "medio": "magyarnemzet.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtbf.be/article/espace-aerien-ferme-a-aalborg-au-danemark-les-drones-non-identifies-ont-quitte-la-zone-11606387",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Espace a\u00e9rien ferm\u00e9 \u00e0 Aalborg au Danemark : les drones non identifi\u00e9s ont quitt\u00e9 la zone",
+   "id": "gdelt-2f3fe10dadb1cbe2",
+   "idioma": "fr",
+   "medio": "rtbf.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jang.com.pk/en/48283-denmark-airports-hit-with-drone-threat-again-aalborg-airport-closed-news",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark airports hit with drone threat again, Aalborg Airport closed",
+   "id": "gdelt-8b9281a704142d7c",
+   "idioma": "en",
+   "medio": "jang.com.pk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/internacional/2025/09/25/aeropuerto-danes-aalborg-cierra-espacio-121934036.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DINAMARCA | El aeropuerto dan\u00e9s de Aalborg cierra su espacio a\u00e9reo debido a la presencia de drones",
+   "id": "gdelt-4b522a885db4b7fd",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://japantimes.co.jp/news/2025/09/25/world/crime-legal/denmark-airport-drones-copenhagen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport closed due to drones",
+   "id": "gdelt-a69ef78f5a8fa3e3",
+   "idioma": "en",
+   "medio": "japantimes.co.jp"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://iltirreno.it/ultimora-adnkronos/2025/09/25/news/danimarca-chiude-aeroporto-di-aalborg-a-causa-di-droni-1.100765944",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca: chiude aeroporto di Aalborg a causa di droni",
+   "id": "gdelt-98131c13a94c0ac5",
+   "idioma": "it",
+   "medio": "iltirreno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tagesschau.de/ausland/drohnen-daenmark-flughafen-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark meldet erneut Drohnen \u00fcber Flugh\u00e4fen - Aalborg gesperrt",
+   "id": "gdelt-caf4efcd44651d57",
+   "idioma": "de",
+   "medio": "tagesschau.de"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kauno.diena.lt/naujienos/pasaulis/konfliktai-nelaimes/policija-virs-keliu-danijos-oro-uostu-pastebeta-neatpazintu-dronu-1721267",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Vienas \u0161i\u0173 oro uost\u0173 d\u0117l to buvo u\u017edarytas kelias valandas.",
+   "id": "gdelt-f5b6a913689b2ed0",
+   "idioma": "lt",
+   "medio": "kauno.diena.lt"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kauno.diena.lt/naujienos/pasaulis/konfliktai-nelaimes/policija-virs-keliu-danijos-oro-uostu-pastebeta-neatpazintu-dronu-1721267",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T05:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Vienas \u0161i\u0173 oro uost\u0173 d\u0117l to buvo u\u017edarytas kelias valandas.",
+   "id": "gdelt-f5b6a913689b2ed0-declaracion-1",
+   "idioma": "lt",
+   "medio": "Policija Danijos (declaraci\u00f3n oficial citada en kauno.diena.lt)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jyllands-posten.dk/indland/ECE18571543/ingen-droner-blev-nedtaget-under-aktivitet-ved-aalborg-lufthavn?fp-alg=603000050&fp-exp=60300005",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ingen droner blev nedtaget under aktivitet ved Aalborg Lufthavn",
+   "id": "gdelt-302aab8e1f607a8c",
+   "idioma": "da",
+   "medio": "jyllands-posten.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ceskenoviny.cz/zpravy/letiste-v-danskem-meste-aalborg-bylo-uzavreno-kvuli-dronum/2725388",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Leti\u0161t\u011b v d\u00e1nsk\u00e9m m\u011bst\u011b Aalborg bylo uzav\u0159eno kv\u016fli dron\u016fm",
+   "id": "gdelt-a4eddb8f2dc0ae88",
+   "idioma": "cs",
+   "medio": "ceskenoviny.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elconfidencial.com/mundo/2025-09-25/drones-aeropuerto-dinamarca-cierre-1tps_4215740",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones sobrevuelan varios aeropuertos daneses por segunda vez y obliga a cerrar el de Aalborg",
+   "id": "gdelt-407cb2a34e71ec9c",
+   "idioma": "es",
+   "medio": "elconfidencial.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gmx.ch/magazine/politik/flughafen-daenischen-aalborg-drohnen-gesperrt-41415680",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen im d\u00e4nischen Aalborg wegen Drohnen gesperrt",
+   "id": "gdelt-83fe914905c43ea8",
+   "idioma": "de",
+   "medio": "gmx.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://blesk.cz/clanek/zpravy-valka-na-ukrajine/822793/danske-letiste-uzavreli-kvuli-cizim-dronum-objevily-se-i-na-dalsich-mistech-vysetruje-i-armada.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Leti\u0161t\u011b Aalborg \u00fa\u0159ady uzav\u0159eli kv\u016fli nezn\u00e1m\u00fdm dron\u016fm",
+   "id": "gdelt-0942e05e28fa886c",
+   "idioma": "cs",
+   "medio": "blesk.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17834436",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone deasupra aeroportului Aalborg: activitate aerian\u0103 suspect\u0103 a dus la \u00eenchiderea temporar\u0103",
+   "id": "gdelt-64beaf362ed75a41",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17834441",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 \u00een nordul Danemarcei: drone observate peste baza aerian\u0103 de la Aalborg",
+   "id": "gdelt-859b0f106aaeb2f4",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://odnako.org/denmark-droni-in-the-airspace-the-aalborg-airport-closed",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark: Droni in the airspace, the Aalborg airport closed",
+   "id": "gdelt-b33ea45a2c7d641c",
+   "idioma": "en",
+   "medio": "odnako.org"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17834419",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone de origine necunoscut\u0103 survoleaz\u0103 patru aeroporturi din Danemarca. Aalborg, \u00eenchis temporar; autorit\u0103\u021bile suspecteaz\u0103 leg\u0103turi cu Rusia",
+   "id": "gdelt-c9f9bb6f5cb1a70b",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.com/noticias/mundo/aeropuerto-aalborg-dinamarca-cierra-nueva-alerta-presencia-drones_2025092568d4c7838376074a8f94c902.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto de Aalborg (Dinamarca) cierra tras una nueva alerta por la presencia de drones",
+   "id": "gdelt-e9094c369063350a",
+   "idioma": "es",
+   "medio": "antena3.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tv2nord.dk/kort-nyt/aalborg/dronerne-over-aalborg-lufthavn-er-forsvundet-e35e2",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronerne over Aalborg Lufthavn er forsvundet",
+   "id": "gdelt-529a3ccf93616cc6",
+   "idioma": "da",
+   "medio": "tv2nord.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://24tv.ua/ru/drony-v-danii-bespilotniki-nad-ajeroportom-olborg-25-sentjabrja-policija-prokommentirovala-24-kanal_n2921211",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044b \u0432 \u0414\u0430\u043d\u0438\u0438 - \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u0438 \u043d\u0430\u0434 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u043e\u043c \u041e\u043b\u044c\u0431\u043e\u0440\u0433 25 \u0441\u0435\u043d\u0442\u044f\u0431\u0440\u044f, \u043f\u043e\u043b\u0438\u0446\u0438\u044f \u043f\u0440\u043e\u043a\u043e\u043c\u0435\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043b\u0430",
+   "id": "gdelt-a527539157f4fdd9",
+   "idioma": "ru",
+   "medio": "24tv.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adnkronos.com/internazionale/esteri/ucraina-russia-guerra-news-oggi-diretta-25-settembre-2025_1TVmnUUJQ9w13FjSntOXTx",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucraina news oggi: Kiev abbatte caccia russo, in Danimarca altri droni su aeroporto Aalborg",
+   "id": "gdelt-d74d58e513bb67d7",
+   "idioma": "it",
+   "medio": "adnkronos.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilfattonisseno.it/2025/09/ucraina-kiev-abbatte-caccia-russo-su-34-chiuso-per-droni-laeroporto-danese-di-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucraina, Kiev abbatte caccia russo Su-34. Chiuso per droni l'aeroporto danese di Aalborg - il Fatto Nisseno",
+   "id": "gdelt-61b954e51312b7cc",
+   "idioma": "it",
+   "medio": "ilfattonisseno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/danimarca-avvistati-droni-in-altri-quattro-aeroporti-chiuso-lo-scalo-di-aalborg-dopo-lavvistamento/17816298",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca avvistati droni in altri quattro aeroporti | Chiuso lo scalo di Aalborg dopo l' avvistamento",
+   "id": "gdelt-6cdc2eb1e2afeb8c",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vol.at/erneut-drohnenalarm-ueber-flughafen-in-daenemark/9694091",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnenalarm am Flughafen Aalborg: Luftraum gesperrt",
+   "id": "gdelt-8659558d02bcc00c",
+   "idioma": "de",
+   "medio": "vol.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vol.at/schon-wieder-drohnen-ueber-flughafen-erneute-sperre-in-daenemark/9694205",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafensperrung in Aalborg: Drohnen st\u00f6ren Betrieb",
+   "id": "gdelt-8816f96ed5d8d1de",
+   "idioma": "de",
+   "medio": "vol.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/news-notizia/post/891064/2025-09-25-droni-nei-cieli-danesi-chiuso-spazio-aereo-dellaeroporto-aalborg--07-34",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni nei cieli danesi, chiuso lo spazio aereo dell'aeroporto di Aalborg",
+   "id": "gdelt-89aaab82f075773c",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elmundo.es/internacional/2025/09/25/68d4d8cce9cf4a14598b4573.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La presencia de drones de origen desconocido en cuatro aeropuertos de Dinamarca obliga a cerrar el aer\u00f3dromo de Aalborg",
+   "id": "gdelt-01210811d5b751e4",
+   "idioma": "es",
+   "medio": "elmundo.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://standard.co.uk/news/world/aalborg-airport-drones-denmark-copenhagen-b1249561.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport closes due to drone sightings two days after incursion at Copenhagen",
+   "id": "gdelt-205e74f53a5bcbe3",
+   "idioma": "en",
+   "medio": "standard.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lbc.co.uk/article/nato-russia-drones-europe-security-airports-5HjdDSz_2",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian drones and fighter jets have entered allied skies in what officials believe is a Kremlin attempt",
+   "id": "gdelt-2dd0b74e839d5108",
+   "idioma": "en",
+   "medio": "lbc.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lbc.co.uk/article/nato-russia-drones-europe-security-airports-5HjdDSz_2",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "We do not want to see a continuation of this dangerous pattern by Russia, intentional or not.",
+   "id": "gdelt-2dd0b74e839d5108-declaracion-1",
+   "idioma": "en",
+   "medio": "NATO (declaraci\u00f3n oficial citada en lbc.co.uk)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilsole24ore.com/art/ucraina-kiev-abbattuto-caccia-russo-droni-volo-danimarca-chiuso-aeroporto-aalborg-AH0uUFpC",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucraina, Kiev: \u00abAbbattuto caccia russo\u00bb. Droni in volo in Danimarca, chiuso aeroporto di Aalborg",
+   "id": "gdelt-492c9db8274fe11a",
+   "idioma": "it",
+   "medio": "ilsole24ore.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17834634",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone deasupra Aalborg: activitatea aerian\u0103 suspect\u0103 a dus la \u00eenchiderea temporar\u0103 a aeroportului",
+   "id": "gdelt-80f78689dd569a03",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ksta.de:443/politik/erneuter-drohnenalarm-ueber-flughafen-in-daenemark-1114989",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "der dortige Luftraum sei gesperrt worden.",
+   "id": "gdelt-c51e313deedbe5dc",
+   "idioma": "de",
+   "medio": "ksta.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tanjug.rs/svet/drustvo/194593/danska-neidentifikovani-dronovi-nisu-vise-iznad-vazdusnog-prostora-aerodroma-alborg/vest",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danska: Neidentifikovani dronovi nisu vi\u0161e iznad vazdu\u0161nog prostora aerodroma Alborg",
+   "id": "gdelt-eca092b05340b8e9",
+   "idioma": "sr",
+   "medio": "tanjug.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://srf.ch/news/international/flughafen-aalborg-unbekannte-flugobjekte-alarmieren-daenemark",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen \u00fcber D\u00e4nemark: Erneute Sichtung legen Flughafen Aalborg lahm",
+   "id": "gdelt-19dce105ef26e314",
+   "idioma": "de",
+   "medio": "srf.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://glavnoe.in.ua/news/u-daniyi-zakryly-aeroport-olborh-cherez-nevidomi-bezpilotnyky",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0423 \u0414\u0430\u043d\u0456\u0457 \u0437\u0430\u043a\u0440\u0438\u043b\u0438 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \"\u041e\u043b\u044c\u0431\u043e\u0440\u0433\" \u0447\u0435\u0440\u0435\u0437 \u043d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0431\u0435\u0437\u043f\u0456\u043b\u043e\u0442\u043d\u0438\u043a\u0438",
+   "id": "gdelt-f96b0ff6770ec297",
+   "idioma": "uk",
+   "medio": "glavnoe.in.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dr.dk/nyheder/indland/flere-passagerer-i-aalborg-lufthavn-det-er-skraemmende-saa-mange-lufthavne-bliver-paavirket-af",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flere passagerer i Aalborg Lufthavn: Det er skr\u00e6mmende, at s\u00e5 mange lufthavne bliver p\u00e5virket af droner",
+   "id": "gdelt-6fbc81000a222173",
+   "idioma": "da",
+   "medio": "dr.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailymail.co.uk/news/article-15132105/Drones-Danish-airports-fears-Putin-testing-Nato.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones are spotted over FOUR Danish airports - forcing one to close as fears grow that Putin is testing Nato's resolve after Trump says alliance",
+   "id": "gdelt-98e4c4329d9d597d",
+   "idioma": "en",
+   "medio": "dailymail.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://theguardian.com/world/live/2025/sep/25/aalborg-airport-denmark-drones-oslo-sarkozy-meloni-news-updates-europe-live",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danish authorities will acquire 'enhanced capabilities' after drones shut down Aalborg airport \u2013 Europe live | Denmark",
+   "id": "gdelt-c8d676eb10270753",
+   "idioma": "en",
+   "medio": "theguardian.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://publico.es/internacional/europa/cerrado-aeropuerto-danes-aalborg-debido-presencia-varios-drones.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cerrado el aeropuerto dan\u00e9s de Aalborg debido a la presencia de varios drones",
+   "id": "gdelt-84497f8fd79b6f4d",
+   "idioma": "es",
+   "medio": "publico.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilmessaggero.it/schede/droni_danimarca_cosa_succede_aeroporto_aalborg_base_militare_spazio_aereo_chiuso_come_a_copenaghen-9088785.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni in Danimarca, cosa succede? L'aeroporto di Aalborg come base militare e lo spazio aereo chiuso. \u00abStesso schema di Copenaghen\u00bb",
+   "id": "gdelt-ae22e56e68082a12",
+   "idioma": "it",
+   "medio": "ilmessaggero.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://168chasa.bg/Article/21358958",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u043e\u0432\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0438\u0445\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u041e\u043b\u0431\u043e\u0440\u0433 \u0432 \u0414\u0430\u043d\u0438\u044f",
+   "id": "gdelt-e6fcb97575a4a613",
+   "idioma": "bg",
+   "medio": "168chasa.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cretalive.gr/kosmos/telos-synagermoy-sti-dania-apohorisan-ta-drones-apo-ton-enaerio-horo-toy-aerodromioy",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a4\u03ad\u03bb\u03bf\u03c2 \u03c3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03bf\u03cd \u03c3\u03c4\u03b7 \u0394\u03b1\u03bd\u03af\u03b1: \u0391\u03c0\u03bf\u03c7\u03ce\u03c1\u03b7\u03c3\u03b1\u03bd \u03c4\u03b1 drones \u03b1\u03c0\u03cc \u03c4\u03bf\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf \u03c7\u03ce\u03c1\u03bf \u03c4\u03bf\u03c5 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03bf\u03bc\u03af\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba",
+   "id": "gdelt-3d6212961ab9c531",
+   "idioma": "el",
+   "medio": "cretalive.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://milanofinanza.it/news/global-sumud-flotilla-crosetto-non-saremo-in-grado-di-garantire-sicurezza-una-volta-fuori-da-acque-202509250912053576",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato, Crosetto: al lavoro su Piano Nazionale per proteggere le infrastrutture. Sistema anti-droni gi\u00e0 attivo all'Aeroporto di Roma",
+   "id": "gdelt-dbb22956fdf23a0f",
+   "idioma": "it",
+   "medio": "milanofinanza.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://landeszeitung.de/panorama/daenemark-drohnen-ueber-mehreren-flughaefen-gesichtet-airport-in-aalborg-gesperrt-FKV3XPR4NZNBZPWCC64HID6JUY.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u00e4nemark: Drohnen \u00fcber mehreren Flugh\u00e4fen gesichtet \u2013 Airport in Aalborg gesperrt",
+   "id": "gdelt-e61687c95f0b9756",
+   "idioma": "de",
+   "medio": "landeszeitung.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mirror.co.uk/news/world-news/breaking-denmark-makes-nato-move-35962107",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark makes major NATO move after 'hybrid drone attack' at airport - World News",
+   "id": "gdelt-53a8768420d5ac5b",
+   "idioma": "en",
+   "medio": "mirror.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/news-notizia/post/891204/2025-09-25-ucraina-abbattuto-caccia-russo-su-34-zaporizhzhia-chiuso-laeroporto-danese-aalborg-per-droni--09-11",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucraina, abbattuto caccia russo Su-34 a Zaporizhzhia \u2013 Chiuso l'aeroporto danese di Aalborg per droni",
+   "id": "gdelt-5cc353aa90827675",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/ancora-droni-nei-cieli-della-danimarca-chiuso-aeroporto-di-aalborg/17817037",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ancora droni nei cieli della Danimarca chiuso aeroporto di Aalborg",
+   "id": "gdelt-7bbaac8bcf1482c8",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unionesarda.it/news/mondo/danimarca-droni-sopra-altri-aeroporti-chiuso-per-ore-lo-scalo-di-aalborg-qq6esokj",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca: droni sopra altri aeroporti, chiuso per ore lo scalo di Aalborg",
+   "id": "gdelt-a73dc2e3c10166a6",
+   "idioma": "it",
+   "medio": "unionesarda.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ura.news/news/1053001248",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041f\u043e\u043b\u0438\u0446\u0438\u044f \u0414\u0430\u043d\u0438\u0438 \u0441\u043e\u043e\u0431\u0449\u0438\u043b\u0430 \u043e \u0434\u0440\u043e\u043d\u0430\u0445 \u0435\u0449\u0435 \u043d\u0430\u0434 \u0442\u0440\u0435\u043c\u044f \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430\u043c\u0438",
+   "id": "gdelt-f2f8e29c122cd264",
+   "idioma": "ru",
+   "medio": "ura.news"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/droni-in-danimarca-scatta-un-nuovo-allarme-chiuso-lo-spazio-aereo-di-aalborg-e-voli-dirottati/17816588",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni in Danimarca scatta un nuovo allarme | chiuso lo spazio aereo di Aalborg e voli dirottati",
+   "id": "gdelt-3ed3ef0f2724d36e",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/nuova-incursione-di-droni-in-danimarca-chiuso-per-ore-laeroporto-di-aalborg/17816726",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nuova incursione di droni in Danimarca | chiuso per ore l'aeroporto di Aalborg",
+   "id": "gdelt-e035389498273c90",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://viveresanbenedetto.it/altrigiornali/14/148070-2025",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucraina, Kiev abbatte caccia russo Su-34. Chiuso per droni l'aeroporto danese di Aalborg \u2022 Vivere San Benedetto notizie per la citt\u00e0 e il territorio",
+   "id": "gdelt-6137b6b1f9463e63",
+   "idioma": "it",
+   "medio": "viveresanbenedetto.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2025-09-25/aero/dronovi-zatvorili-vazdusni-prostor-iznad-aerodroma-aalborg-u-danskoj/40544805",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dronovi zatvorili vazdu\u0161ni prostor iznad aerodroma Aalborg u Danskoj",
+   "id": "gdelt-877873e9f0e417f1",
+   "idioma": "sr",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://united24media.com/latest-news/second-drone-incursion-in-a-week-shuts-down-aalborg-airport-in-denmark-11946",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Second Drone Incursion in a Week Shuts Down Aalborg Airport in Denmark",
+   "id": "gdelt-50811fd7ce61784b",
+   "idioma": "en",
+   "medio": "united24media.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ukrinform.net/rubric-ato/4040310-denmark-closes-aalborg-airport-for-second-time-in-week-due-to-drones.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark closes Aalborg Airport for second time in week due to drones",
+   "id": "gdelt-a584bb3fb9d6cd82",
+   "idioma": "en",
+   "medio": "ukrinform.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.tv/internacional/1012150/1/dinamarca-habla-ataque-hibrido-detectar-nuevos-drones-cierra-aeropuerto-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dinamarca habla de ataque h\u00edbrido tras detectar nuevos drones y cierra el aeropuerto de Aalborg",
+   "id": "gdelt-dfe8778028c960e1",
+   "idioma": "es",
+   "medio": "europapress.tv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aex.ru/news/2025/9/25/288114",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0430\u0442\u0441\u043a\u0438\u0439 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0437\u0430\u043a\u0440\u0432\u0430\u043b\u0438 \u0438\u0437-\u0437\u0430 \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u0438\u043a\u043e\u0432",
+   "id": "gdelt-c84a49bce9178f71",
+   "idioma": "ru",
+   "medio": "aex.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://limburger.nl/buitenland/denemarken-wijt-nieuwe-dronevluchten-aan-professionele-partij-doel-is-angst-zaaien/92844143.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "LIVE | Deense politie: er zijn geen drones meer boven luchthaven Aalborg",
+   "id": "gdelt-ea360119e1da1d03",
+   "idioma": "nl",
+   "medio": "limburger.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mopo.de/news/panorama/erneuter-drohnenalarm-an-daenischem-flughafen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg: Erneuter Drohnenalarm an d\u00e4nischem Flughafen",
+   "id": "gdelt-4328b16f9c263d26",
+   "idioma": "de",
+   "medio": "mopo.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lapresse.it/esteri/2025/09/24/danimarca-droni-su-aeroporto-aalborg-scalo-chiuso",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca, droni su aeroporto di Aalborg: scalo chiuso e indagini in corso",
+   "id": "gdelt-a183ff89133424ac",
+   "idioma": "it",
+   "medio": "lapresse.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hirtv.hu/hirtvkulfold/a-legterben-megjelent-dronok-miatt-orakra-lezartak-dania-aalborg-repuloteret-csutortok-hajnalban-2615893",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "A l\u00e9gt\u00e9rben megjelent dr\u00f3nok miatt \u00f3r\u00e1kra lez\u00e1rt\u00e1k D\u00e1nia Aalborg rep\u00fcl\u0151ter\u00e9t cs\u00fct\u00f6rt\u00f6k hajnalban",
+   "id": "gdelt-ba4e5d452d7680cd",
+   "idioma": "hu",
+   "medio": "hirtv.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://article.wn.com/view/2025/09/25/Drones_disrupt_flights_at_Denmarks_Aalborg_Airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones disrupt flights at Denmark's Aalborg Airport",
+   "id": "gdelt-cdde6dc717bdc380",
+   "idioma": "en",
+   "medio": "wn.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lettera43.it/incursione-droni-danimarca-aeroporto-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nuova incursione di droni in Danimarca: chiuso per ore l'aeroporto di Aalborg",
+   "id": "gdelt-1a369e58979e67e2",
+   "idioma": "it",
+   "medio": "lettera43.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lsm.lv/raksts/zinas/arzemes/25.09.2025-danija-izmekle-dronu-incidentus-virs-lidostam-iespejams-rosinas-nato-4-panta-konsultacijas.a615727",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "D\u0101nija izmekl\u0113 dronu incidentus virs lidost\u0101m; iesp\u0113jams, rosin\u0101s NATO 4. panta konsult\u0101cijas",
+   "id": "gdelt-d1aac4a259fe3493",
+   "idioma": "lv",
+   "medio": "lsm.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cnbctv18.com/world/denmarks-aalborg-airport-shut-due-to-drone-disruption-19689446.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport shut due to drone disruption",
+   "id": "gdelt-70b43d56fe8ca99c",
+   "idioma": "en",
+   "medio": "cnbctv18.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/droni-ignoti-bloccano-laeroporto-di-aalborg-e-agitano-i-cieli-deuropa/17817615",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni ignoti bloccano l'aeroporto di Aalborg e agitano i cieli d'Europa",
+   "id": "gdelt-f600bf7694838f4a",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://klartale.no/verden/droner-floy-over-danske-flyplasser-igjen/9976903",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droner over danske flyplasser: \u00c5lborg stengt og fly omdirigert",
+   "id": "gdelt-0049ce4768edb389",
+   "idioma": "no",
+   "medio": "klartale.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mikrometoxos.gr/dania-apochorisan-ta-drones-pou-eichan-entopistei-pano-apo-to-aerodromio-tou-alborgk",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: \u0391\u03c0\u03bf\u03c7\u03ce\u03c1\u03b7\u03c3\u03b1\u03bd \u03c4\u03b1 drones \u03c0\u03bf\u03c5 \u03b5\u03af\u03c7\u03b1\u03bd \u03b5\u03bd\u03c4\u03bf\u03c0\u03b9\u03c3\u03c4\u03b5\u03af \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba",
+   "id": "gdelt-9a83f8cde0076da9",
+   "idioma": "el",
+   "medio": "mikrometoxos.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://blesk.cz/clanek/zpravy-valka-na-ukrajine/822793/danska-letiste-vyrusily-cizi-drony-armada-v-pohotovosti-mluvi-o-dilu-profesionalniho-aktera.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Leti\u0161t\u011b Aalborg \u00fa\u0159ady uzav\u0159ely kv\u016fli nezn\u00e1m\u00fdm dron\u016fm",
+   "id": "gdelt-aee607219992f766",
+   "idioma": "cs",
+   "medio": "blesk.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rustourismnews.com/2025/09/25/denmark-closes-aalborg-airport-after-drones-detected-in-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark Closes Aalborg Airport After Drones Detected in Airspace",
+   "id": "gdelt-1d1589879bce778c",
+   "idioma": "en",
+   "medio": "rustourismnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tg.la7.it/esteri/nuovo-raid-droni-danimarca-chiuso-aeroporto-aalborg-25-09-2025-244822",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nuovo sorvolo di droni in Danimarca, chiuso l'aeroporto di Aalborg: \u00e8 una provocazione della Russia?",
+   "id": "gdelt-21b1b0c23eaefeb8",
+   "idioma": "it",
+   "medio": "tg.la7.it"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://cphpost.dk/2025-09-25/news/round-up/drones-put-danish-police-on-heightened-alert",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones put Danish police on heightened alert - The Copenhagen Post",
+   "id": "gdelt-d0b841f03da27874",
+   "idioma": "en",
+   "medio": "cphpost.dk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://cphpost.dk/2025-09-25/news/round-up/drones-put-danish-police-on-heightened-alert",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Nost is moving to operational readiness. This means it will be staffed around the clock.",
+   "id": "gdelt-d0b841f03da27874-declaracion-1",
+   "idioma": "en",
+   "medio": "Torkild Fogde, National Police Chief (declaraci\u00f3n oficial citada en cphpost.dk)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://curierulnational.ro/drone-suspecte-perturba-activitatea-pe-mai-multe-aeroporturi-din-danemarca-nato-avertizeaza-rusia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone suspecte perturb\u0103 activitatea pe mai multe aeroporturi din Danemarca. NATO avertizeaz\u0103 Rusia",
+   "id": "gdelt-d656efa8557af563",
+   "idioma": "ro",
+   "medio": "curierulnational.ro"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "drones",
+    "es_incidente",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ianslive.in/denmark-alerts-nato-and-eu-after-drone-incursions-shuts-one-airport--20250925164843",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "shutting Aalborg airport and placing three others airports on alert on Thursday",
+   "id": "gdelt-a29b7f902aaabcbf",
+   "idioma": "en",
+   "medio": "ianslive.in"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://en.apa.az/europe/denmark-rules-out-russian-involvement-in-drone-attacks-on-aalborg-airport-478792",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark rules out Russian involvement in drone attacks on Aalborg airport",
+   "id": "gdelt-e98d0e1bda0e242c",
+   "idioma": "en",
+   "medio": "en.apa.az"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://thesun.co.uk/news/36826957/drones-denmark-airport-nato-zelensky-putin",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark considers initiating Nato Article 4 after four airports are menaced by mystery drones amid soaring WW3 tensions",
+   "id": "gdelt-780da65c489c9623",
+   "idioma": "en",
+   "medio": "thesun.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilgazzettino.it/schede/droni_danimarca_cosa_succede_aeroporto_aalborg_base_militare_spazio_aereo_chiuso_come_a_copenaghen-9088785.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni in Danimarca, cosa succede? L'aeroporto di Aalborg come base militare e lo spazio aereo chiuso. \u00abNessuna prova contro Mosca\u00bb",
+   "id": "gdelt-5cb749ad88a72539",
+   "idioma": "it",
+   "medio": "ilgazzettino.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nettavisen.no/nyheter/danmark-luftrommet-stengt-etter-droneobservasjon/s/5-95-2636812",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone, Aalborg | Danmark: Luftrommet over Aalborg stengt - droner over fire flyplasser",
+   "id": "gdelt-d371dc3d12fea769",
+   "idioma": "no",
+   "medio": "nettavisen.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cross.bg/olborg-dronove-letishta-1780128.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0417\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u043d\u0430\u0434 \u0414\u0430\u043d\u0438\u044f \u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u041e\u043b\u0431\u043e\u0440\u0433",
+   "id": "gdelt-ba99c25995577a7c",
+   "idioma": "bg",
+   "medio": "cross.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-25/droni-su-aeroporti-in-danimarca-attacchi-ibridi-opera-di-copenaghen-regia-di-usa-uk-svezia-e-norvegia-per-rafforzamento-militare-nato-retroscena/17819847",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni su aeroporti in Danimarca attacchi ibridi opera di Copenaghen | regia di Usa Uk Svezia e Norvegia per rafforzamento militare NATO",
+   "id": "gdelt-34459b56373fd24a",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://iltempo.it/esteri/2025/09/25/news/danimarca-droni-aeroporti-chiusi-contattata-nato-44258995",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sulla Danimarca, aeroporti chiusi per ore: \"Contattata la Nato\"",
+   "id": "gdelt-9d5075f9dac7928f",
+   "idioma": "it",
+   "medio": "iltempo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-externe/europa/danemarca-tinta-unui-actor-profesionist-intr-un-2474680.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danemarca, \u021binta unui \u201eactor profesionist\" \u00eentr-un atac hibrid cu drone asupra mai multor aeroporturi. Precedent periculos pentru NATO",
+   "id": "gdelt-9245094cf2402616",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nordjyske.dk/nyheder/politik/politikere-reagerer-paa-droner-over-aalborg/5749811",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Politikere reagerer p\u00e5 droner over Aalborg",
+   "id": "gdelt-0f3fe49815a56f44",
+   "idioma": "da",
+   "medio": "nordjyske.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://theblaze.com/news/drones-shut-down-airports-in-nato-countries-as-suspicion-falls-on-russia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones shut down airports in NATO countries as suspicion falls on Russia",
+   "id": "gdelt-5ee86e2e1f87c517",
+   "idioma": "en",
+   "medio": "theblaze.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zn.ua/ukr/europe/danija-zakrila-aeroport-i-privela-vps-u-stan-hotovnosti-cherez-nevidomi-droni-v-povitrjanomu-prostori.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0423 \u0414\u0430\u043d\u0456\u0457 \u0447\u0435\u0440\u0435\u0437 \u0434\u0440\u043e\u043d\u0438 \u0437\u0430\u043a\u0440\u0438\u0432\u0430\u043b\u0438 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 - \u043f\u043e\u043b\u0456\u0446\u0456\u044f \u043f\u0435\u0440\u0435\u0432\u0456\u0440\u044f\u0454 \u0432\u0435\u0440\u0441\u0456\u044e \u043a\u043e\u043e\u0440\u0434\u0438\u043d\u043e\u0432\u0430\u043d\u0438\u0445 \u0430\u0442\u0430\u043a",
+   "id": "gdelt-71e70ddcffea02ff",
+   "idioma": "uk",
+   "medio": "zn.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nordjyske.dk/nyheder/nordjylland/seneste-status-paa-droner-over-aalborg-lufthavn-de-ville-gerne-ses/5750087",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Seneste status p\u00e5 droner over Aalborg Lufthavn: - De ville gerne ses",
+   "id": "gdelt-b742c19448c3b24c",
+   "idioma": "da",
+   "medio": "nordjyske.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://globalist.it/world/2025/09/25/ancora-raid-di-droni-sugli-aeroporti-danesi-aalborg-chiuso-indagini-in-corso",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ancora raid di droni sugli aeroporti danesi: Aalborg chiuso, indagini in corso",
+   "id": "gdelt-5381c56effc3bce7",
+   "idioma": "it",
+   "medio": "globalist.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailymail.co.uk/news/article-15135319/Is-Putin-taunting-Nato-sending-drones-Denmark-sightings-reported-airport.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T23:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Is Putin taunting Nato once again by sending drones over Denmark, as yet more sightings are now reported over airport?",
+   "id": "gdelt-1446b24d29ca0184",
+   "idioma": "en",
+   "medio": "dailymail.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_cancelados",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ridus.ru/flightradar-soobshaet--bespilotniki-snova-zamecheny-u-aeroporta-olborg-701899.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u0430\u0434 \u0440\u0430\u0439\u043e\u043d\u043e\u043c \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \u0432 \u0434\u0430\u0442\u0441\u043a\u043e\u043c \u041e\u043b\u044c\u0431\u043e\u0440\u0433\u0435 \u0432\u043d\u043e\u0432\u044c \u0437\u0430\u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u044b \u043f\u043e\u043b\u0435\u0442\u044b \u0431\u0435\u0441\u043f\u0438\u043b\u043e\u0442\u043d\u044b\u0445 \u043b\u0435\u0442\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0445 \u0430\u043f\u043f\u0430\u0440\u0430\u0442\u043e\u0432.",
+   "id": "gdelt-d59c0fce8c96dfc5",
+   "idioma": "ru",
+   "medio": "ridus.ru"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://skai.gr/news/world/theaseis-drones-gia-deyteri-synexomeni-nyxta-pano-apo-to-aerodromio-tou-almporgk-sti-dania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T01:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0398\u03b5\u03ac\u03c3\u03b5\u03b9\u03c2 drones \u03b3\u03b9\u03b1 \u03b4\u03b5\u03cd\u03c4\u03b5\u03c1\u03b7 \u03c3\u03c5\u03bd\u03b5\u03c7\u03cc\u03bc\u03b5\u03bd\u03b7 \u03bd\u03cd\u03c7\u03c4\u03b1 \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba \u03c3\u03c4\u03b7 \u0394\u03b1\u03bd\u03af\u03b1",
+   "id": "gdelt-f75295f3b42fb0b9",
+   "idioma": "el",
+   "medio": "skai.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-blev-lukket-mistanke-om-droner/10957314",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luftrummet over Aalborg Lufthavn blev lukket: Mistanke om droner",
+   "id": "gdelt-da32b767f8bbf2a1",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rbc.ua/rus/news/nevidomi-droni-vtrete-paralizuvali-aeroport-1758844579.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0432 \u0414\u0430\u043d\u0456\u0457 \u0437\u0430\u043a\u0440\u0438\u043b\u0438 \u0447\u0435\u0440\u0435\u0437 \u043d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0434\u0440\u043e\u043d\u0438",
+   "id": "gdelt-94bcf68042b81dbf",
+   "idioma": "uk",
+   "medio": "rbc.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tass.com/emergencies/2021495",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones again spotted near Denmark's Aalborg airport - Emergencies",
+   "id": "gdelt-34505e55ddd8409e",
+   "idioma": "en",
+   "medio": "tass.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://devdiscourse.com/article/business/3641937-denmarks-airspace-under-siege-drone-activities-at-aalborg-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Airspace Under Siege: Drone Activities at Aalborg Airport",
+   "id": "gdelt-950533a449fd4f7d",
+   "idioma": "en",
+   "medio": "devdiscourse.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://faz.net/aktuell/politik/ausland/wieder-drohnenalarm-in-daenemark-flughafen-aalborg-voruebergehend-geschlossen-accg-110704130.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T02:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Wieder Drohnenalarm in D\u00e4nemark - Flughafen Aalborg vor\u00fcbergehend geschlossen",
+   "id": "gdelt-4990198a7008af8c",
+   "idioma": "de",
+   "medio": "faz.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://biztoc.com/x/db3e9ed771f1879c",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T02:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark Alerts NATO After Mystery Drone Incursions Disrupt Airports",
+   "id": "gdelt-aef6a6ea88fd805e",
+   "idioma": "en",
+   "medio": "biztoc.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtve.es/noticias/20250926/aeropuerto-aalborg-cierra-sospecha-actividad-drones-segunda-noche-consecutiva/16745100.shtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto dan\u00e9s de Aalborg cierra ante \"la sospecha de actividad con drones\"",
+   "id": "gdelt-2acca00d20b27ad4",
+   "idioma": "es",
+   "medio": "rtve.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/europe/tormozyt-s-dronove-prodyljava-letishteto-na-datskija-grad-olborg-otnovo-be-zatvoreno-news_2499962.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0422\u043e\u0440\u043c\u043e\u0437\u044a\u0442 \u0441 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u043f\u0440\u043e\u0434\u044a\u043b\u0436\u0430\u0432\u0430: \u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u043d\u0430 \u0434\u0430\u0442\u0441\u043a\u0438\u044f \u0433\u0440\u0430\u0434 \u041e\u043b\u0431\u043e\u0440\u0433 \u043e\u0442\u043d\u043e\u0432\u043e \u0431\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e",
+   "id": "gdelt-75faf22a3c4ee56c",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nepszava.hu/3295870_dania-aalborg-repuloter-lezaras-drontevekenyseg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "M\u00e1r m\u00e1sodik \u00e9jszaka z\u00e1rt\u00e1k le felt\u00e9telezett dr\u00f3ntev\u00e9kenys\u00e9g miatt a d\u00e1n Aalborg rep\u00fcl\u0151teret",
+   "id": "gdelt-3df92b580fc69211",
+   "idioma": "hu",
+   "medio": "nepszava.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sat1.de/serien/newstime/news/zweite-drohnensichtung-binnen24-stunden-aalborg-flughafen-erneut-lahmgelegt-594049",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zweite Drohnensichtung binnen 24 Stunden \u2013 Aalborg-Flughafen erneut lahmgelegt",
+   "id": "gdelt-4f87ae63786cbba9",
+   "idioma": "de",
+   "medio": "sat1.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://charter97.org/ru/news/2025/9/26/657089",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044b \u0432 \u0442\u0440\u0435\u0442\u0438\u0439 \u0440\u0430\u0437 \u043f\u0430\u0440\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u043b\u0438 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0432 \u0414\u0430\u043d\u0438\u0438",
+   "id": "gdelt-540998b9ce3781dd",
+   "idioma": "ru",
+   "medio": "charter97.org"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vesti.bg/sviat/dronove-zatvoriha-za-vtora-poredna-nosht-letishteto-na-datskiia-grad-olborg-6239281",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u043e\u0432\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0438\u0445\u0430 \u0437\u0430 \u0432\u0442\u043e\u0440\u0430 \u043f\u043e\u0440\u0435\u0434\u043d\u0430 \u043d\u043e\u0449 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u043d\u0430 \u0434\u0430\u0442\u0441\u043a\u0438\u044f \u0433\u0440\u0430\u0434 \u041e\u043b\u0431\u043e\u0440\u0433",
+   "id": "gdelt-79ae5cbc2009b3cb",
+   "idioma": "bg",
+   "medio": "vesti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aktuality.sk/clanok/YZQFVpR/v-dansku-opat-uzavreli-letisko-pre-podozrive-drony-incident-ovplyvnil-medzinarodne-lety",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg op\u00e4\u0165 \u010del\u00ed incidentu s dronmi: D\u00e1nska pol\u00edcia uzavrela letisko, identitu zariaden\u00ed zatia\u013e nepozn\u00e1",
+   "id": "gdelt-ae66503f9c17b85a",
+   "idioma": "sk",
+   "medio": "aktuality.sk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.com/noticias/mundo/aeropuerto-aalborg-vuelve-cerrar-segunda-noche-consecutiva-detectar-nuevos-drones_2025092668d618c4f10d3f0678123f21.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto de Aalborg vuelve a cerrar por segunda noche consecutiva al detectar nuevos drones",
+   "id": "gdelt-e59f77762655a095",
+   "idioma": "es",
+   "medio": "antena3.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://athens-times.com/denmark-drones-spotted-for-second-night-over-aalborg-airport-temporarily-closed",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones Force Aalborg Airport Closure for Second Night",
+   "id": "gdelt-26fc7e653a0c8903",
+   "idioma": "en",
+   "medio": "athens-times.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pelop.gr/dania-drones-paralyoun-gia-defteri-nychta-to-aerodromio-tou-alborgk",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: Drones \u00ab\u03c0\u03b1\u03c1\u03b1\u03bb\u03cd\u03bf\u03c5\u03bd\u00bb \u03b3\u03b9\u03b1 \u03b4\u03b5\u03cd\u03c4\u03b5\u03c1\u03b7 \u03bd\u03cd\u03c7\u03c4\u03b1 \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba",
+   "id": "gdelt-3f8fec445d956093",
+   "idioma": "el",
+   "medio": "pelop.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://onvista.de/news/2025/09-26-erneut-drohnenalarm-in-daenemark-flughafen-aalborg-voruebergehend-geschlossen-0-20-26433577",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Erneut Drohnenalarm in D\u00e4nemark - Flughafen Aalborg vor\u00fcbergehend geschlossen",
+   "id": "gdelt-4c40effa20a958d8",
+   "idioma": "de",
+   "medio": "onvista.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hirtv.hu/hirtvkulfold/ismet-a-dronok-okoztak-bajt-a-dan-aalborg-repuloter-felett-2615948",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ism\u00e9t a dr\u00f3nok okoztak bajt a d\u00e1n Aalborg rep\u00fcl\u0151t\u00e9r felett",
+   "id": "gdelt-8869151e85083eaa",
+   "idioma": "hu",
+   "medio": "hirtv.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://thelocal.dk/20250926/aalborg-airport-closes-again-after-suspected-new-drone-sighting",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg Airport closes again after suspected new drone sighting",
+   "id": "gdelt-035c1b110f4692fe",
+   "idioma": "en",
+   "medio": "thelocal.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnes.bg/a/2-svyat/694098-letishteto-v-datskiya-grad-olborg-be-zatvoreno-zaradi-dronove-vtora-poredna-nosht",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0434\u0430\u0442\u0441\u043a\u0438\u044f \u0433\u0440\u0430\u0434 \u041e\u043b\u0431\u043e\u0440\u0433 \u0431\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432\u0442\u043e\u0440\u0430 \u043f\u043e\u0440\u0435\u0434\u043d\u0430 \u043d\u043e\u0449",
+   "id": "gdelt-1ccca5bd6b9eaa59",
+   "idioma": "bg",
+   "medio": "dnes.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infobae.com/america/mundo/2025/09/26/dinamarca-cerro-nuevamente-el-aeropuerto-de-aalborg-por-sobrevuelo-de-drones-y-denuncio-tacticas-de-guerra-hibrida",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dinamarca cerr\u00f3 nuevamente el aeropuerto de Aalborg por sobrevuelo de drones y denunci\u00f3 t\u00e1cticas de guerra h\u00edbrida",
+   "id": "gdelt-8045b11373401d01",
+   "idioma": "es",
+   "medio": "infobae.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dariknews.bg/novini/sviat/zaradi-dronove-zatvoriha-letishteto-v-datskiia-grad-olborg-za-vtora-poredna-nosht-2432021",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0417\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435: \u0417\u0430\u0442\u0432\u043e\u0440\u0438\u0445\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0434\u0430\u0442\u0441\u043a\u0438\u044f \u0433\u0440\u0430\u0434 \u041e\u043b\u0431\u043e\u0440\u0433 \u0437\u0430 \u0432\u0442\u043e\u0440\u0430 \u043f\u043e\u0440\u0435\u0434\u043d\u0430 \u043d\u043e\u0449",
+   "id": "gdelt-85026f9d42b36fcb",
+   "idioma": "bg",
+   "medio": "dariknews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://444.hu/2025/09/26/masodjara-kellett-lezarni-a-dan-aalborg-repuloteret-azonositatlan-dronok-miatt",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "M\u00e1sodj\u00e1ra kellett lez\u00e1rni a d\u00e1n Aalborg rep\u00fcl\u0151ter\u00e9t azonos\u00edtatlan dr\u00f3nok miatt",
+   "id": "gdelt-4d99e5d4492e4bd1",
+   "idioma": "hu",
+   "medio": "444.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tagesspiegel.de/internationales/erneuter-drohnenalarm-in-danemark-flughafen-aalborg-vorubergehend-geschlossen-14393021.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Erneuter Drohnenalarm in D\u00e4nemark: Flughafen in Aalborg vor\u00fcbergehend geschlossen",
+   "id": "gdelt-2f0b5341e200d7ea",
+   "idioma": "de",
+   "medio": "tagesspiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://magyarhirlap.hu/kulfold/20250926-rovid-idore-ujra-le-kellett-zarni-a-dan-aalborg-repuloteret-feltetelezett-drontevekenyseg-miatt",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "R\u00f6vid id\u0151re \u00fajra le kellett z\u00e1rni a d\u00e1n Aalborg rep\u00fcl\u0151teret felt\u00e9telezett dr\u00f3ntev\u00e9kenys\u00e9g miatt",
+   "id": "gdelt-e2b6cbb624535e32",
+   "idioma": "hu",
+   "medio": "magyarhirlap.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://farodevigo.es/mundo/2025/09/26/cierran-hora-trafico-aeropuerto-norte-121975860.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg | Cierran una hora al tr\u00e1fico un aeropuerto del norte de Dinamarca tras un supuesto avistamiento de drones",
+   "id": "gdelt-f47f45c869bff6df",
+   "idioma": "es",
+   "medio": "farodevigo.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetaprawna.pl/wiadomosci/swiat/artykuly/9896810,drony-sparalizowaly-lotniska-w-danii-aalborg-zamkniety-juz-drugi-raz.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drony sparali\u017cowa\u0142y lotniska w Danii. Aalborg zamkni\u0119ty ju\u017c drugi raz w tym tygodniu",
+   "id": "gdelt-42a71cd85c0b2358",
+   "idioma": "pl",
+   "medio": "gazetaprawna.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.makedonias.gr/2025/09/1927125",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: \u0395\u03c0\u03b1\u03bd\u03b1\u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03b5\u03af \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba \u03ad\u03c0\u03b5\u03b9\u03c4\u03b1 \u03b1\u03c0\u03cc \u00ab\u03cd\u03c0\u03bf\u03c0\u03c4\u03b5\u03c2\u00bb \u03b8\u03b5\u03ac\u03c3\u03b5\u03b9\u03c2 drones",
+   "id": "gdelt-46bc153ff45464d7",
+   "idioma": "el",
+   "medio": "news.makedonias.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavanguardia.com/internacional/20250926/11098700/dinamarca-cierra-hora-aeropuerto-aalborg-presencia-drones.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dinamarca cierra una hora el aeropuerto de Aalborg por la presencia de drones",
+   "id": "gdelt-d7e0dd6830204250",
+   "idioma": "es",
+   "medio": "lavanguardia.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://businessnews.gr/kosmos/item/319592-dania-gia-akomi-mia-nyxta-petagan-drones-pano-apo-to-aerodromio-almporgk",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: \u0393\u03b9\u03b1 \u03b1\u03ba\u03cc\u03bc\u03b7 \u03bc\u03af\u03b1 \u03bd\u03cd\u03c7\u03c4\u03b1 \u03c0\u03ad\u03c4\u03b1\u03b3\u03b1\u03bd drones \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba",
+   "id": "gdelt-3d707a67f31e660a",
+   "idioma": "el",
+   "medio": "businessnews.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hirado.hu/kulfold/cikk/2025/09/26/ket-ejszakai-dronriado-utan-ujranyitottak-a-daniai-aalborg-repuloteret",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "K\u00e9t \u00e9jszakai dr\u00f3nriad\u00f3 ut\u00e1n \u00fajranyitott\u00e1k a d\u00e1niai Aalborg rep\u00fcl\u0151teret",
+   "id": "gdelt-7b08631f4d51c37d",
+   "idioma": "hu",
+   "medio": "hirado.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-26/danimarca-nuovo-allarme-droni-chiuso-laeroporto-di-aalborg-nella-notte/17823694",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca nuovo allarme droni | chiuso l'aeroporto di Aalborg nella notte",
+   "id": "gdelt-7d225912770af39e",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kyivpost.com/post/60908",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone Incursions Force Third Aalborg Airport Shutdown in Denmark",
+   "id": "gdelt-c0a0e0c199253234",
+   "idioma": "en",
+   "medio": "kyivpost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnes.dir.bg/comments/letishteto-na-datskiya-grad-olborg-be-zatvoreno-zaradi-dronove-za-vtora-poredna-nosht",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041a\u043e\u043c\u0435\u043d\u0442\u0430\u0440\u0438 - \u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u043d\u0430 \u0434\u0430\u0442\u0441\u043a\u0438\u044f \u0433\u0440\u0430\u0434 \u041e\u043b\u0431\u043e\u0440\u0433 \u0431\u0435 \u0437\u0430\u0442\u0432\u043e\u0440\u0435\u043d\u043e \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0437\u0430 \u0432\u0442\u043e\u0440\u0430 \u043f\u043e\u0440\u0435\u0434\u043d\u0430 \u043d\u043e\u0449",
+   "id": "gdelt-dc9f1f8878dee341",
+   "idioma": "bg",
+   "medio": "dnes.dir.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://charter97.org/en/news/2025/9/26/657089",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones Paralyzed Aalborg Airport In Denmark For The Third Time",
+   "id": "gdelt-e7df7033a63eb990",
+   "idioma": "en",
+   "medio": "charter97.org"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lasexta.com/noticias/internacional/aeropuerto-danes-aalborg-vuelve-cerrar-hora-otro-posible-avistamiento-drones_2025092668d63703f10d3f067812c73f.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto dan\u00e9s de Aalborg vuelve a cerrar una hora por otro posible avistamiento de drones",
+   "id": "gdelt-27315875dcb8a231",
+   "idioma": "es",
+   "medio": "lasexta.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hu.euronews.com/2025/09/26/ujranyitottak-a-daniai-aalborg-repuloteret-miutan-ketszer-is-le-kellett-zarni-dronriado-mi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u00dajranyitott\u00e1k a d\u00e1niai Aalborg rep\u00fcl\u0151ter\u00e9t, miut\u00e1n k\u00e9tszer is le kellett z\u00e1rni dr\u00f3nriad\u00f3 miatt",
+   "id": "gdelt-dd91964eee8a707e",
+   "idioma": "hu",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cdt.ch/news/mondo/allarme-droni-nuovamente-chiuso-laeroporto-di-aalborg-406829",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Allarme droni, nuovamente chiuso l'aeroporto di Aalborg",
+   "id": "gdelt-ba5c21c8bdfa6d5d",
+   "idioma": "it",
+   "medio": "cdt.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pt.euronews.com/2025/09/26/novo-avistamento-de-drones-obriga-a-encerramento-de-aeroporto-de-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Novo avistamento de drones obriga a encerramento de aeroporto de Aalborg",
+   "id": "gdelt-e7ce5fab53429c9d",
+   "idioma": "pt",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cphpost.dk/2025-09-26/news/round-up/aalborg-airport-closed-agai-briefly-due-to-new-suspected-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aalborg Airport closed (again) briefly due to new suspected drones",
+   "id": "gdelt-e9980a64d84a437c",
+   "idioma": "en",
+   "medio": "cphpost.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://travelextra.ie/denmarks-aalborg-airport-closed-for-three-housers-after-further-drone-sitings",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport closed for three housers after further drone sitings",
+   "id": "gdelt-e5e68c66367100a5",
+   "idioma": "en",
+   "medio": "travelextra.ie"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tgcom24.mediaset.it/mondo/foto/jet-russi-intercettati-caccia-nato-droni-sugli-aeroporti-la-guerra-dei-cieli-e-le-esercitazioni-a-terra_103979610-202502k.shtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Jet russi intercettati, caccia Nato, droni sugli aeroporti: la guerra dei cieli e le esercitazioni a terra",
+   "id": "gdelt-49677c94e04d1fa4",
+   "idioma": "it",
+   "medio": "tgcom24.mediaset.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nuovosud.it/articoli/290458-fattinotizie/drone-avvistato-danimarca-chiude-di-nuovo-laeroporto-di-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone avvistato in Danimarca, chiude di nuovo l'aeroporto di Aalborg",
+   "id": "gdelt-c798f8cde6498cab",
+   "idioma": "it",
+   "medio": "nuovosud.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://euronews.com/2025/09/26/denmarks-aalborg-airport-closes-again-over-suspected-drone-hybrid-attack",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark's Aalborg airport closes again over suspected drone 'hybrid attack'",
+   "id": "gdelt-e253da8b6e19f281",
+   "idioma": "en",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-26/danimarca-ancora-droni-sospetti-sullaeroporto-di-aalborg-lolanda-arresta-due-17enni-spie-di-mosca/17824669",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danimarca ancora droni sospetti sull'aeroporto di Aalborg L'Olanda arresta due 17enni",
+   "id": "gdelt-f07d78428574b64d",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-26/droni-sospetti-sui-cieli-nato-nel-mirino-basi-e-aeroporti-in-svezia-e-danimarca-oggi-vertice-demergenza-dei-paesi-ue/17825259",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti sui cieli Nato nel mirino basi e aeroporti in Svezia e Danimarca | oggi vertice d'emergenza dei Paesi Ue",
+   "id": "gdelt-f461aded465ea5e5",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-26/droni-in-svezia-e-danimarca-chiuso-di-nuovo-laeroporto-di-aalborg/17825399",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni in Svezia e Danimarca | chiuso di nuovo l'aeroporto di Aalborg",
+   "id": "gdelt-276d43f774a7041c",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lettera43.it/droni-svezia-danimarca-chiuso-aeroporto-aalborg",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni in Svezia e Danimarca: chiuso di nuovo l'aeroporto di Aalborg",
+   "id": "gdelt-3065a2ebe6cda2de",
+   "idioma": "it",
+   "medio": "lettera43.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gds.it/articoli/mondo/2025/09/26/droni-nei-cieli-della-danimarca-riapre-laeroporto-di-aalborg-8d5736db-b7b6-41c4-8fa7-afc71f3ef519",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni nei cieli della Danimarca, riapre l'aeroporto di Aalborg",
+   "id": "gdelt-3ff9901c2a111bfd",
+   "idioma": "it",
+   "medio": "gds.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kuruc.info/r/4/292986",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kuruc.info - Ism\u00e9t dr\u00f3ntev\u00e9kenys\u00e9g miatt z\u00e1rt\u00e1k le egy id\u0151re Aalborg rep\u00fcl\u0151ter\u00e9t",
+   "id": "gdelt-537d39d74b893324",
+   "idioma": "hu",
+   "medio": "kuruc.info"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://5.ua/svit/aeroport-olborh-u-danii-vtretie-paralizuvaly-nevidomi-drony-360802.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0435\u0440\u043e\u043f\u043e\u0440\u0442 \u041e\u043b\u044c\u0431\u043e\u0440\u0433 \u0443 \u0414\u0430\u043d\u0456\u0457 \u0432\u0442\u0440\u0435\u0442\u0454 \u043f\u0430\u0440\u0430\u043b\u0456\u0437\u0443\u0432\u0430\u043b\u0438 \u043d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0434\u0440\u043e\u043d\u0438",
+   "id": "gdelt-cbf0b91c95a553f3",
+   "idioma": "uk",
+   "medio": "5.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilgiornale.it/news/politica-estera/diretta-droni-sospetti-chiuso-spazio-aereo-sullo-scalo-2542826.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Diretta | Droni avvistati in Svezia. Allerta in Danimarca, chiuso e riaperto l'aeroporto di Aalborg",
+   "id": "gdelt-c4680205cb9541aa",
+   "idioma": "it",
+   "medio": "ilgiornale.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tio.ch/dal-mondo/cronaca/1871229/droni-spazio-aereo-aeroporto-polizia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Allarme droni: chiusi pi\u00f9 aeroporti, tensione NATO",
+   "id": "gdelt-7dacf23a6d03eeac",
+   "idioma": "it",
+   "medio": "tio.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dcnews.ro/danemarca-nu-are-de-gand-sa-invoce-articolul-4-al-nato-dupa-ce-incursiunea-unei-drone-a-inchis-aeroportul-din-copenhaga_1009671.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Danemarca nu are de g\u00e2nd s\u0103 invoce articolul 4 al NATO, dup\u0103 ce incursiunea unei drone a \u00eenchis aeroportul din Copenhaga",
+   "id": "gdelt-b36d0b59e35aa8b2",
+   "idioma": "ro",
+   "medio": "dcnews.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://onalert.gr/nato/dania-den-tha-zitisoyme-tin-energopoiisi-toy-arthroy-4-toy-nato-gia-tis-ptiseis-agnoston-drones-sta-aerodromia-mas/641165",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: \u00ab\u0394\u03b5\u03bd \u03b8\u03b1 \u03b6\u03b7\u03c4\u03ae\u03c3\u03bf\u03c5\u03bc\u03b5 \u03c4\u03b7\u03bd \u03b5\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03af\u03b7\u03c3\u03b7 \u03c4\u03bf\u03c5 \u03ac\u03c1\u03b8\u03c1\u03bf\u03c5 4 \u03c4\u03bf\u03c5 NATO \u03b3\u03b9\u03b1 \u03c4\u03b9\u03c2 \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 \u03b1\u03b3\u03bd\u03ce\u03c3\u03c4\u03c9\u03bd drones \u03c3\u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03ac \u03bc\u03b1\u03c2\u00bb",
+   "id": "gdelt-e686b09019121583",
+   "idioma": "el",
+   "medio": "onalert.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ianslive.in/denmark-aalborg-airport-shut-for-second-time-after-suspected-drone-activity--20250926190323",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Denmark: Aalborg airport shut for second time after suspected drone incursion",
+   "id": "gdelt-0e84a25f401422b0",
+   "idioma": "en",
+   "medio": "ianslive.in"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/93/i-dania-den-tha-energopoiisei-to-arthro-4-tou-NATO-meta-tis-ptiseis-agnoston-drones-pano-apo-ta-aerodromia-tis.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0397 \u0394\u03b1\u03bd\u03af\u03b1 \u03b4\u03b5\u03bd \u03b8\u03b1 \u03b5\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03b9\u03ae\u03c3\u03b5\u03b9 \u03c4\u03bf \u03ac\u03c1\u03b8\u03c1\u03bf 4 \u03c4\u03bf\u03c5 NATO \u03bc\u03b5\u03c4\u03ac \u03c4\u03b9\u03c2 \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 \u03b1\u03b3\u03bd\u03ce\u03c3\u03c4\u03c9\u03bd drones \u03c0\u03ac\u03bd\u03c9 \u03b1\u03c0\u03cc \u03c4\u03b1 \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03ac \u03c4\u03b7\u03c2",
+   "id": "gdelt-d51c8c5a299db97f",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://qds.it/droni-sospetti-chiuso-aeroporto-aalborg-danimarca-allerta",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti, chiuso aeroporto di Aalborg in Danimarca",
+   "id": "gdelt-0433984d0ba2b92f",
+   "idioma": "it",
+   "medio": "qds.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://botasot.info/evrope-bota/2394233/dronet-qe-bllokuan-aeroportet-danimarka-nuk-ka-plane-per-ti-kerkuar-nato-s-te-aktivizoje-nenin-4",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u00ebt q\u00eb bllokuan aeroportet, Danimarka: Nuk ka plane p\u00ebr t'i k\u00ebrkuar NATO-s t\u00eb aktivizoj\u00eb Nenin 4",
+   "id": "gdelt-5c9567afbc1ccda0",
+   "idioma": "sq",
+   "medio": "botasot.info"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://botasot.info/evrope-bota/2394270/rasmussen-danimarka-nuk-do-te-kerkoje-konsultime-me-nato-n-pas-pranise-se-droneve-ne-aeroporte",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rasmussen: Danimarka nuk do t\u00eb k\u00ebrkoj\u00eb konsultime me NATO-n pas pranis\u00eb s\u00eb dron\u00ebve n\u00eb aeroporte",
+   "id": "gdelt-252f7cfc276adf81",
+   "idioma": "sq",
+   "medio": "botasot.info"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nordjyske.dk/nyheder/nordjylland/aalborg-lufthavnsdirektoer-om-naetterne-med-droner-vi-skal-vaere-mentalt-klar-paa-at-det-sker-igen/5764320",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-07T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kort efter lukkede luftrummet af sikkerhedshensyn.",
+   "id": "gdelt-09ba60a06c861ce6",
+   "idioma": "da",
+   "medio": "nordjyske.dk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://politi.dk/nordjyllands-politi/nyhedsliste/250925-pm1/2025/09/25",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Nordjyllands Politi modtog klokken 21:44 en anmeldelse om flere uidentificerede droner i luftrummet over Aalborg Lufthavn.",
+   "id": "revisada-ab5e9bbaeb7f9ea7",
+   "idioma": "da",
+   "medio": "Nordjyllands Politi"
+  }
+ ],
+ "id": "EODI-2025-00228",
+ "lugar": {
+  "fuente_punto": "revisada-eadb3474eb083fcd-declaracion-1",
+  "geocodificacion": "oficial",
+  "localidad": "Aeropuerto de Aalborg",
+  "nivel": "instalacion",
+  "pais": "DK",
+  "punto": {
+   "lat": 57.09449,
+   "lon": 9.85314
+  },
+  "radio_km": 5.0,
+  "region": "Nordjylland",
+  "suceso": "Aalborg Lufthavn"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Aalborg",
+   "es": "Aalborg"
+  },
+  "lugar": {
+   "en": "Aalborg, Denmark",
+   "es": "Aalborg, Dinamarca"
+  },
+  "objetivo": {
+   "en": "Aalborg Air Base",
+   "es": "Base a\u00e9rea de Aalborg"
+  },
+  "region": {
+   "en": "North Jutland",
+   "es": "Jutlandia Septentrional"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Flyvestation Aalborg",
+  "oaci": "EKYT"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": []
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2025-00154",
+   "nota": {
+    "en": "Merged the Copenhagen airport closure of 22 Sep with a drone attack on Moscow, drone sightings in Malm\u00f6 on 23 Sep and drones near other Danish airports on the night of 24-25 Sep",
+    "es": "Junta el cierre del aeropuerto de Copenhague del 22 sep con un ataque de drones contra Mosc\u00fa, drones vistos en Malm\u00f6 el 23 sep y drones cerca de otros aeropuertos daneses la noche del 24 al 25 sep"
+   },
+   "separado_de": "EODI-2025-00154"
+  },
+  {
+   "id": "EODI-2025-00459",
+   "nota": {
+    "en": "Merged the Aalborg airport closure with drone sightings near Esbjerg, S\u00f8nderborg and Skrydstrup.",
+    "es": "Juntaba el cierre del aeropuerto de Aalborg con los avistamientos de drones en Esbjerg, S\u00f8nderborg y Skrydstrup."
+   },
+   "separado_de": "EODI-2025-00349"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "duracion_min": 330,
+  "fin": {
+   "precision": "minuto",
+   "valor": "2025-09-25T00:30Z"
+  },
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-09-24T19:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-f80270dad2f01812",
+   "motivo": "\u00abonsdag\u00bb en una nota publicada el 2025-09-24 23:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Drones force the closure of Aalborg airport",
+  "es": "Drones obligan a cerrar el aeropuerto de Aalborg"
+ }
+}

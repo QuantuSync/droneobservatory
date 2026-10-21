@@ -1,0 +1,230 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-20T11:00Z"
+    },
+    "fuente_id": "gdelt-b1015c6fcf60583b"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-20T11:45Z"
+    },
+    "fuente_id": "gdelt-1bd77b05780e500e-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "evidencia",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/posibil-fragment-de-drona-gasit-in-marea-neagra-2558679.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "MApN anun\u021b\u0103 c\u0103 trei obiecte plutitoare au fost semnalate \u00een Marea Neagr\u0103, \u00een Zona Economic\u0103 Exclusiv\u0103 a Rom\u00e2niei.",
+   "id": "gdelt-b1015c6fcf60583b",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/social/resturi-de-drona-gasite-in-marea-neagra-scafandrii-militari-au-intervenit-in-zona-grindului-chituc-23810373",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Resturi de dron\u0103, g\u0103site \u00een Marea Neagr\u0103. Scafandrii militari au intervenit \u00een zona Grindului Chituc",
+   "id": "gdelt-8590b0b3294e2c3e",
+   "idioma": "ro",
+   "medio": "mediafax.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stiripesurse.ro/scafandrii-militari-trimisi-din-nou-in-marea-neagra-resturi-de-drona-descoperite-la-50-de-mile-de-litoral_3921579",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Scafandrii militari, trimi\u0219i din nou \u00een Marea Neagr\u0103: resturi de dron\u0103 descoperite la 50 de mile de litoral",
+   "id": "gdelt-0996fc276ff0aed3",
+   "idioma": "ro",
+   "medio": "stiripesurse.ro"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Interven\u021bia a avut loc \u00een jurul orei 09.30, la aproximativ 50 de mile marine est de Chituc.",
+   "id": "gdelt-1bd77b05780e500e",
+   "idioma": "ro",
+   "medio": "hotnews.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://capital.ro/resturi-de-drona-descoperite-in-marea-neagra-scafandrii-militari-au-intervenit-de-urgenta.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Resturi de dron\u0103, descoperite \u00een Marea Neagr\u0103. Scafandrii militari au intervenit de urgen\u021b\u0103",
+   "id": "gdelt-b8c5ab8dc8e408fe",
+   "idioma": "ro",
+   "medio": "capital.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cotidianul.ro/resturi-de-drona-neutralizate-in-marea-neagra-de-scafandrii-militari",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Resturi de dron\u0103, neutralizate \u00een Marea Neagr\u0103 de scafandrii militari",
+   "id": "gdelt-2bfc52fe30f56945",
+   "idioma": "ro",
+   "medio": "cotidianul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/65746595",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Resturi de dron\u0103 g\u0103site \u00een Marea Neagr\u0103, neutralizate de scafandrii militari din Rom\u00e2nia",
+   "id": "gdelt-0d3e94f37c5ea97e",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/mapn-trei-fragmente-de-drona-recuperate-de-scafandri-militari-in-marea-neagra-in-zona-economica-exclusiva-a-romaniei-00423065",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "MApN: Trei fragmente de dron\u0103, recuperate de scafandri militari \u00een Marea Neagr\u0103, \u00een Zona Economic\u0103 Exclusiv\u0103 a Rom\u00e2niei",
+   "id": "gdelt-b07558c7ab9f70ae",
+   "idioma": "ro",
+   "medio": "bursa.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-20T11:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "a anun\u021bat Ministerul Ap\u0103r\u0103rii Na\u021bionale (MApN), \u00eentr-un comunicat de pres\u0103",
+   "id": "gdelt-1bd77b05780e500e-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Ap\u0103r\u0103rii Na\u021bionale (declaraci\u00f3n oficial citada en hotnews.ro)"
+  }
+ ],
+ "id": "EODI-2026-00091",
+ "lugar": {
+  "geocodificacion": "frase_origen",
+  "localidad": "Grindu",
+  "nivel": "localidad",
+  "pais": "RO",
+  "punto": {
+   "lat": 44.76667,
+   "lon": 26.91667
+  },
+  "radio_km": 3.0,
+  "region": "Constan\u021ba",
+  "suceso": "Grindul Chituc"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Grindu",
+   "es": "Grindu"
+  },
+  "lugar": {
+   "en": "Grindu, Romania",
+   "es": "Grindu, Ruman\u00eda"
+  },
+  "region": {
+   "en": "Constan\u021ba",
+   "es": "Constanza"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": [
+   "recuperado",
+   "restos"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2026-09-20T06:30Z"
+  },
+  "origen_inicio": {
+   "corregido": true,
+   "fuente_id": "gdelt-1bd77b05780e500e",
+   "motivo": "la frase da la hora pero no el d\u00eda: d\u00eda de la publicaci\u00f3n (2026-09-20 14:45, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Drone fragments found in the Black Sea off Chituc, Romania",
+  "es": "Hallan restos de un dron en el mar Negro frente a Chituc, Ruman\u00eda"
+ }
+}

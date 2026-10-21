@@ -1,0 +1,197 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-10-09T16:30Z"
+    },
+    "fuente_id": "gdelt-7735fc9df494b596"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "credibilidad": 3,
+   "enlace": "https://bild.de/politik/ausland-und-internationales/drohne-ueber-geilenkirchen-nato-stuetzpunkt-in-alarmbereitschaft-68e7d698daea3e0002fb4d3b",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohne \u00fcber Geilenkirchen: Nato-St\u00fctzpunkt in Alarmbereitschaft",
+   "id": "gdelt-7735fc9df494b596",
+   "idioma": "de",
+   "medio": "bild.de"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio_precision",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Auf der Nato-Basis in Geilenkirchen gab es am Mittwochabend einen Drohnenalarm.",
+   "id": "gdelt-df233d641f37b078",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/drohnenalarm-unbekanntes-flugobjekt-ueber-nato-basis-geilenkirchen.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T16:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Es sei aber keine Drohne zu sehen gewesen, sagte ein Sprecher der Polizei Heinsberg.",
+   "id": "gdelt-df233d641f37b078-declaracion-1",
+   "idioma": "de",
+   "medio": "Polizei Heinsberg (declaraci\u00f3n oficial citada en t-online.de)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aachener-zeitung.de/lokales/region-heinsberg/geilenkirchen/entwarnung-auf-nato-basis-in-geilenkirchen-keine-drohne/96440077.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohne \u00fcber Nato-St\u00fctzpunkt Geilenkirchen gemeldet \u2013 Staatsschutz ermittelt",
+   "id": "gdelt-aee7e88cae749eed",
+   "idioma": "de",
+   "medio": "aachener-zeitung.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://meteoweb.eu/2025/10/un-drone-viola-la-base-nato-di-geilenkirchen-disposte-misure-di-sicurezza-rafforzate/1001847482",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un drone viola la base Nato di Geilenkirchen: disposte misure di sicurezza rafforzate",
+   "id": "gdelt-e1972ef4f3b918e2",
+   "idioma": "it",
+   "medio": "meteoweb.eu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/region/aachen/id_100949578/nato-air-base-geilenkirchen-drohnenalarm-ausgeloest-polizei-reagiert.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO Air Base Geilenkirchen: Drohnenalarm ausgel\u00f6st \u2013 Polizei reagiert",
+   "id": "gdelt-2691d00bac124fe0",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/nato-flugplatz-geilenkirchen-drohnenalarm-stellt-sich-als-fehlalarm-heraus.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato-Flugplatz Geilenkirchen: Drohnenalarm stellt sich als Fehlalarm heraus",
+   "id": "gdelt-f0fac50cf76ffaad",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/Drohne-soll-in-Luftraum-deutscher-Nato-Basis-eingedrungen-sein-article26086663.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Vorfall in Geilenkirchen: Drohne soll in Luftraum deutscher Nato-Basis eingedrungen sein",
+   "id": "gdelt-90401b7cbda9b957",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  }
+ ],
+ "id": "EODI-2025-00225",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "nivel": "instalacion",
+  "pais": "DE",
+  "punto": {
+   "lat": 50.96745,
+   "lon": 6.11763
+  },
+  "radio_km": 5.0,
+  "suceso": "Geilenkirchen"
+ },
+ "nombres": {
+  "lugar": {
+   "en": "Germany",
+   "es": "Alemania"
+  }
+ },
+ "presencia_dron": "descartada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-10-08T17:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-2691d00bac124fe0",
+   "motivo": "\u00abmittwoch\u00bb en una nota publicada el 2025-10-09 21:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "False drone alarm at NATO base Geilenkirchen",
+  "es": "Falsa alarma de dron en la base OTAN de Geilenkirchen"
+ }
+}

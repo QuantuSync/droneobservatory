@@ -1,0 +1,1017 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "minutos": {
+    "max": 30,
+    "min": 30
+   },
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-10-19T18:15Z"
+    },
+    "fuente_id": "gdelt-58cd8c387d1c5e44"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-10-21T09:15Z"
+    },
+    "fuente_id": "gdelt-3002e2a6d6bfb91f-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dailystar.co.uk/news/latest-news/breaking-major-airport-operations-suspended-36094880",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Operations at Palma de Mallorca Airport were suspended after a drone was spotted in the airspace.",
+   "id": "gdelt-58cd8c387d1c5e44",
+   "idioma": "en",
+   "medio": "dailystar.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://manchestereveningnews.co.uk/news/world-news/flights-diverted-palma-de-mallorca-32707823",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flights diverted from Palma De Mallorca Airport after drone spotted",
+   "id": "gdelt-84eec7498b653d6d",
+   "idioma": "en",
+   "medio": "manchestereveningnews.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ultimahora.es/noticias/local/2025/10/19/2494413/caos-trafico-aereo-mallorca-por-presencia-dron-entre-pistas-del-aeropuerto.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caos en el tr\u00e1fico a\u00e9reo de Mallorca por la presencia de un dron en las pistas del aeropuerto",
+   "id": "gdelt-10d66f44b76336e1",
+   "idioma": "es",
+   "medio": "ultimahora.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.es/illes-balears/noticia-avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma-20251019201026.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El avistamiento de un dron obliga a interrumpir temporalmente las operaciones en el aeropuerto de Palma",
+   "id": "gdelt-4fc1c8536f5b83ab",
+   "idioma": "es",
+   "medio": "europapress.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/mallorca/2025/10/19/avistamiento-dron-paraliza-trafico-aeropuerto-122788139.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DRONES AEROPUERTO DE PALMA | El avistamiento de un dron paraliza el tr\u00e1fico en el aeropuerto de Palma",
+   "id": "gdelt-d74d47c59c5031c3",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bild.de/news/ausland/drohnen-alarm-flughafen-mallorca-stellt-betrieb-ein-68f522029c193ceaa4c4d78d",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mallorca: Drohnen-Alarm! Flughafen in Palma stoppte Betrieb",
+   "id": "gdelt-e4ad52c977e1af5d",
+   "idioma": "de",
+   "medio": "bild.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus.de/panorama/welt/flughafen-auf-mallorca-stellt-betrieb-wegen-moeglicher-drohnensichtung-ein_3f1075a8-cd66-431e-873e-2ead926ccbe0.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen auf Mallorca stellte Betrieb wegen m\u00f6glicher Drohnensichtung ein",
+   "id": "gdelt-ac716254ea9cd1b8",
+   "idioma": "de",
+   "medio": "focus.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodeibiza.es/ibiza/2025/10/19/dron-palma-obliga-desviar-vuelos-a-ibiza-122788544.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron en Palma obliga a desviar vuelos al aeropuerto de Ibiza",
+   "id": "gdelt-08ae53921ac9155b",
+   "idioma": "es",
+   "medio": "diariodeibiza.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://levante-emv.com/sociedad/2025/10/19/avistamiento-dron-paraliza-trafico-aeropuerto-122790421.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "AEROPUERTO PALMA | Un dron obligar a cerrar el tr\u00e1fico en el aeropuerto de Palma casi una hora",
+   "id": "gdelt-6e8be8dd1874c78e",
+   "idioma": "es",
+   "medio": "levante-emv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elcorreogallego.es/sociedad/2025/10/19/avistamiento-dron-paraliza-trafico-aeropuerto-122790436.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "AEROPUERTO PALMA | Un dron obligar a cerrar el tr\u00e1fico en el aeropuerto de Palma casi una hora",
+   "id": "gdelt-bc617dc1e0132394",
+   "idioma": "es",
+   "medio": "elcorreogallego.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://derwesten.de/panorama/vermischtes/mallorca-flughafen-palma-drohnen-news-id301877948.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Alarm auf Mallorca! Flughafen Palma stellte den Betrieb ein",
+   "id": "gdelt-28300e5980143d22",
+   "idioma": "de",
+   "medio": "derwesten.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elperiodicoextremadura.com/sociedad/2025/10/19/avistamiento-dron-paraliza-trafico-aeropuerto-122790443.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "AEROPUERTO PALMA | Un dron obligar a cerrar el tr\u00e1fico en el aeropuerto de Palma casi una hora",
+   "id": "gdelt-6012caddb7b9b519",
+   "idioma": "es",
+   "medio": "elperiodicoextremadura.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://article.wn.com/view/2025/10/19/Flights_diverted_from_Palma_De_Mallorca_Airport_after_drone_",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flights diverted from Palma De Mallorca Airport after drone spotted",
+   "id": "gdelt-15b34291b4b39a10",
+   "idioma": "en",
+   "medio": "wn.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zeit.de/mobilitaet/2025-10/mallorca-drohnensichtung-flughafen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flugsicherheit: Flughafen auf Mallorca wegen Drohnensichtung zeitweise ausgesetzt",
+   "id": "gdelt-1db6237db2156cfc",
+   "idioma": "de",
+   "medio": "zeit.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elconfidencial.com/espana/2025-10-19/un-dron-en-el-aeropuerto-de-palma-ha-obligado-a-cerrar-temporalmente-el-trafico-aereo_4231095",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron en el aeropuerto de Palma ha obligado a cerrar temporalmente el tr\u00e1fico a\u00e9reo",
+   "id": "gdelt-5bc0314259cdfbe0",
+   "idioma": "es",
+   "medio": "elconfidencial.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elperiodico.com/es/sociedad/20251019/dron-paraliza-trafico-aereo-mallorca-aeropuerto-122790441",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "AEROPUERTO PALMA | Un dron obliga a cerrar el tr\u00e1fico del aeropuerto de Palma casi una hora",
+   "id": "gdelt-6fa264477d0959ba",
+   "idioma": "es",
+   "medio": "elperiodico.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron obliga a cerrar temporalmente el aeropuerto de Palma",
+   "id": "gdelt-9a50970f701fb0b7",
+   "idioma": "es",
+   "medio": "mallorcadiario.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20minutos.es/baleares/avistamiento-dron-obliga-interrumpir-temporalmente-operaciones-aeropuerto-palma_6530389_0.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El avistamiento de un dron obliga a interrumpir temporalmente las operaciones en el aeropuerto de Palma",
+   "id": "gdelt-e44f70abc5ebf2a6",
+   "idioma": "es",
+   "medio": "20minutos.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vilaweb.cat/noticies/tanquen-temporalment-laeroport-de-palma-per-lavistament-dun-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Repr\u00e8s el tr\u00e0nsit aeri a l'aeroport de Palma despr\u00e9s d'una aturada a causa de l'albirament d'un dron",
+   "id": "gdelt-6da6bd3c39c709e3",
+   "idioma": "ca",
+   "medio": "vilaweb.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://welt.de/vermischtes/article68f53f0f9c193ceaa4c4d898/flughafen-auf-mallorca-wegen-drohnensichtung-zeitweise-lahmgelegt.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen auf Mallorca wegen Drohnensichtung zeitweise lahmgelegt",
+   "id": "gdelt-80f38fcc47152021",
+   "idioma": "de",
+   "medio": "welt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tips.at/nachrichten/oesterreich/oesterreich-welt/701804-drohnenalarm-auf-mallorca-flughafen-palma-musste-kurzzeitig-gesperrt-werden",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnenalarm auf Mallorca: Flughafen Palma musste kurzzeitig gesperrt werden",
+   "id": "gdelt-77f85294c9c05490",
+   "idioma": "de",
+   "medio": "tips.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ksta.de:443/panorama/mallorca-drohnen-sichtung-an-flughafen-juergen-milski-betroffen-1132085",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mallorca: Drohnen-Sichtung an Flughafen \u2013 J\u00fcrgen Milski betroffen",
+   "id": "gdelt-7b15adf6f6d763b3",
+   "idioma": "de",
+   "medio": "ksta.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/avistamento-de-drone-fecha-temporariamente-aeroporto-de-palma-de-maiorca-68f54c2094336fba0ff59c2f",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamento de 'drone' fecha temporariamente aeroporto de Palma de Maiorca",
+   "id": "gdelt-c2ebadba3ddb5248",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/baleares/aeropuerto-mallorca-obligado-suspender-vuelos-avistamiento-dron-b50m_2025101968f54623dc27b32ca38c86d9.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto de Mallorca se ve obligado a suspender vuelos tras el avistamiento de un dron",
+   "id": "gdelt-53733ccea36cd16a",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bbv-net.de/ueberregionales/drohnen-gesichtet-betrieb-am-flughafen-von-palma-de-mallorca-zeitweise-lahmgelegt-fluege-umgeleitet-w1091641-6000433166",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnensichtung: Flughafen Mallorca zeitweise lahmgelegt",
+   "id": "gdelt-7ca5ae3975ca72bd",
+   "idioma": "de",
+   "medio": "bbv-net.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/avistamento-de-drone-fecha-temporariamente-aeroporto-de-palma-de-maiorca-68f55030b3b0e9fcdbf86d0b",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamento de 'drone' fecha temporariamente aeroporto de Palma de Maiorca",
+   "id": "gdelt-a20b84a15e07a167",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jn.pt/mundo/artigo/avistamento-de-drone-fecha-temporariamente-aeroporto-de-palma-de-maiorca/18010508",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamento de drone fecha aeroporto de Palma de Maiorca",
+   "id": "gdelt-643b06e4de87e0af",
+   "idioma": "pt",
+   "medio": "jn.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.com/noticias/sociedad/presencia-dron-obliga-suspender-vuelos-aeropuerto-mallorca_2025101968f552bfdc27b32ca38c9006.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La presencia de un dron obliga a suspender vuelos en el aeropuerto de Mallorca",
+   "id": "gdelt-64a39c9e02dda2dc",
+   "idioma": "es",
+   "medio": "antena3.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnoticias.pt/2025/10/19/467268-avistamento-de-drone-fecha-temporariamente-aeroporto-de-palma-de-maiorca",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T22:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamento de 'drone' fecha temporariamente aeroporto de Palma de Maiorca",
+   "id": "gdelt-6bedbc8b3f74aa35",
+   "idioma": "pt",
+   "medio": "dnoticias.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mopo.de/news/panorama/wegen-drohnensichtung-mallorca-flughafen-kurzzeitig-dicht",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Wegen Drohnensichtung! Mallorca-Flughafen kurzzeitig dicht",
+   "id": "gdelt-20cf17ed76afe34a",
+   "idioma": "de",
+   "medio": "mopo.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mallorcazeitung.es/panorama/2025/10/19/drohnen-alarm-am-flughafen-mallorca-122793361.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-19T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Alarm am Flughafen Mallorca - 35 Minuten lang ging nichts mehr",
+   "id": "gdelt-bd645c78df62e96f",
+   "idioma": "de",
+   "medio": "mallorcazeitung.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vilaweb.cat/noticies/un-dron-obliga-a-interrompre-lactivitat-a-laeroport-de-palma-durant-mes-de-mitja-hora",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T01:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron obliga a interrompre l'activitat a l'aeroport de Palma durant m\u00e9s de mitja hora",
+   "id": "gdelt-11972cfb9c9f1464",
+   "idioma": "ca",
+   "medio": "vilaweb.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://expresso.pt/internacional/2025-10-19-avistamento-de-drone-fecha-temporariamente-aeroporto-de-palma-de-maiorca-4839ab4b",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avistamento de 'drone' fecha temporariamente aeroporto de Palma de Maiorca",
+   "id": "gdelt-6518868f0aa33b79",
+   "idioma": "pt",
+   "medio": "expresso.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cz.de/reise/mallorca-drohnensichtung-legt-flughafen-zeitweise-lahm-KL72GZC5HZJ57MRADEFJS45IYA.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mallorca: Drohnensichtung legt Flughafen zeitweise lahm",
+   "id": "gdelt-56bb402aba1bc449",
+   "idioma": "de",
+   "medio": "cz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/mallorca/2025/10/20/aeropuerto-palma-opera-normalidad-interrumpir-122801171.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DRON AEROPUERTO PALMA | El aeropuerto de Palma opera con normalidad tras interrumpir el domingo la actividad por un dron",
+   "id": "gdelt-886d584b8ee1fb6b",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ultimahora.es/noticias/local/2025/10/20/2494595/aeropuerto-palma-opera-normalidad-tras-interrumpir-domingo-actividad-por-avistamiento-dron.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto de Palma opera con normalidad tras interrumpir el domingo la actividad por el avistamiento de un dron",
+   "id": "gdelt-f9aec3044c575124",
+   "idioma": "es",
+   "medio": "ultimahora.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://majorcadailybulletin.com/news/local/2025/10/20/137409/mallorca-flights-back-normal-palma-airport-recovers-from-drone-incident-spent-minutes-circling-palma-airport.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mallorca flights back to normal, Palma airport recovers from drone incident \"I spent 30 minutes circling Palma airport\"",
+   "id": "gdelt-a55c52cb9961718f",
+   "idioma": "en",
+   "medio": "majorcadailybulletin.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mallorcadiario.com/el-aeropuerto-de-palma-recupera-la-normalidad-tras-el-caos-provocado-por-un-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El aeropuerto de Palma recupera la normalidad tras el caos provocado por un dron",
+   "id": "gdelt-2434787f22a55b33",
+   "idioma": "es",
+   "medio": "mallorcadiario.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hna.de/welt/drohnen-alarm-auf-mallorca-flughafen-geschlossen-13-fluege-umgeleitet-zr-93995345.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Alarm auf Mallorca: Flughafen geschlossen, 13 Fl\u00fcge umgeleitet",
+   "id": "gdelt-f59c901dc378ea9e",
+   "idioma": "de",
+   "medio": "hna.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mallorcazeitung.es/boulevard/travel/2025/10/20/nach-drohnen-vorfall-am-airport-122800140.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nach Drohnen-Vorfall am Airport: So ist die Lage am Flughafen Mallorca",
+   "id": "gdelt-9751d3aa0c9fa274",
+   "idioma": "de",
+   "medio": "mallorcazeitung.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rustourismnews.com/2025/10/20/drone-sighting-disrupts-flights-at-palma-de-mallorca-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone Sighting Disrupts Flights at Palma de Mallorca Airport",
+   "id": "gdelt-0720a2eb064af6b0",
+   "idioma": "en",
+   "medio": "rustourismnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ultimahora.es/noticias/local/2025/10/20/2494741/guardia-civil-asume-investigacion-del-incidente-dron-aeropuerto-palma.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Guardia Civil asume la investigaci\u00f3n del incidente con un dron en el aeropuerto de Palma",
+   "id": "gdelt-7799b3f6f693a1b4",
+   "idioma": "es",
+   "medio": "ultimahora.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dbalears.cat/balears/balears/2025/10/20/412123/caos-aeroport-palma-per-irrupcio-dron-origen-desconegut.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Caos a l'aeroport de Palma per la irrupci\u00f3 d'un dron d'origen desconegut",
+   "id": "gdelt-98f1e0c8d3eeb79c",
+   "idioma": "ca",
+   "medio": "dbalears.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://travelmole.com/news/palma-flights-grounded-after-drone-sighting",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Palma flights grounded after drone sighting",
+   "id": "gdelt-ad6e413e5edaa574",
+   "idioma": "en",
+   "medio": "travelmole.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://unsertirol24.com/2025/10/20/drohnen-alarm-auf-mallorca-flughafen-muss-betrieb-stoppen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Alarm auf Mallorca: Flughafen muss Betrieb stoppen",
+   "id": "gdelt-df18dd960de4d184",
+   "idioma": "de",
+   "medio": "unsertirol24.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mallorcadiario.com/caos-en-mallorca-que-esta-pasando-con-los-drones-en-el-aeropuero-de-palma",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones en el aeropuerto de Palma Todo lo que debes saber",
+   "id": "gdelt-55030e4239e9df63",
+   "idioma": "es",
+   "medio": "mallorcadiario.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://united24media.com/latest-news/unidentified-drone-near-spanish-airport-halts-flights-in-palma-de-mallorca-12638",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Unidentified Drone Near Spanish Airport Halts Flights in Palma de Mallorca",
+   "id": "gdelt-e55c43973fcf03f5",
+   "idioma": "en",
+   "medio": "united24media.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://traveldailynews.com/aviation/drone-incident-temporarily-grounds-flights-at-palma-de-mallorca-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone incident temporarily grounds flights at Palma de Mallorca Airport",
+   "id": "gdelt-dcfdd9364083a254",
+   "idioma": "en",
+   "medio": "traveldailynews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elpuntavui.cat/societat/article/12-infraestructures/2586558-investiguen-la-presencia-d-un-dron-a-l-aeroport-de-palma.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Investiguen la pres\u00e8ncia d'un dron a l'aeroport de Palma",
+   "id": "gdelt-f46a687380c536f3",
+   "idioma": "ca",
+   "medio": "elpuntavui.cat"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/local/2025/10/20/policia-guardia-civil-buscan-responsable-122817772.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "AEROPUERTO PALMA / Polic\u00eda y Guardia Civil buscan al responsable del dron que invadi\u00f3 el espacio del aeropuerto de Palma",
+   "id": "gdelt-0cdb15ae5af7113e",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://informer.rs/planeta/vesti/1059927/spanija-dronovi-pretnja-aerodrom",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Neidentifikovani dron vi\u0111en je u nedelju u blizini aerodroma Palma de Majorka",
+   "id": "gdelt-95bda37078463bb4",
+   "idioma": "sr",
+   "medio": "informer.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ultimahora.es/noticias/local/2025/10/20/2494741/brigada-informacion-policia-nacional-guardia-civil-buscan-piloto-del-dron-del-aeropuerto-palma.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Brigada de Informaci\u00f3n de la Polic\u00eda Nacional y la Guardia Civil buscan al piloto del dron del aeropuerto de Palma",
+   "id": "gdelt-a1e2860e8f79e0a9",
+   "idioma": "es",
+   "medio": "ultimahora.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mallorcazeitung.es/panorama/2025/10/20/drohnen-experte-drohne-flughafen-palma-122814308.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nach Drohnensichtung am Flughafen Mallorca: Experte vermutet Vogel statt Flugger\u00e4t",
+   "id": "gdelt-380ed5cc947ad9cb",
+   "idioma": "de",
+   "medio": "mallorcazeitung.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/mallorca/2025/10/20/policia-guardia-civil-buscan-responsable-122817772.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DRON AEROPUERTO MALLORCA | Polic\u00eda y Guardia Civil buscan al responsable del dron que invadi\u00f3 el espacio del aeropuerto de Palma",
+   "id": "gdelt-0889f0a8ac0d5c1e",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.es/illes-balears/noticia-guardia-civil-asume-investigacion-incidencia-dron-aeropuerto-palma-20251020150649.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Guardia Civil asume la investigaci\u00f3n de la incidencia con un dron en el aeropuerto de Palma",
+   "id": "gdelt-c88c8806c3d7ba3f",
+   "idioma": "es",
+   "medio": "europapress.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zeri.info/bota/596844/dron-i-dyshimte-mbi-aeroportin-e-palma-de-mallorca",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron i dyshimt\u00eb mbi aeroportin e Palma de Mallorca",
+   "id": "gdelt-af6895820fec70a5",
+   "idioma": "sq",
+   "medio": "zeri.info"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://facenews.ua/news/2025/528986",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-20T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u0435\u0432\u0456\u0434\u043e\u043c\u0456 \u0434\u0440\u043e\u043d\u0438 \u0432\u043f\u0435\u0440\u0448\u0435 \u0434\u043e\u043b\u0435\u0442\u0456\u043b\u0438 \u0434\u043e \u0406\u0441\u043f\u0430\u043d\u0456\u0457, \u043f\u0430\u0440\u0430\u043b\u0456\u0437\u043e\u0432\u0430\u043d\u043e \u0440\u043e\u0431\u043e\u0442\u0443 \u0430\u0435\u0440\u043e\u043f\u043e\u0440\u0442\u0443 \u041f\u0430\u043b\u044c\u043c\u0430-\u0434\u0435-\u041c\u0430\u0439\u043e\u0440\u043a\u0430",
+   "id": "gdelt-dd59c2e2f18321c4",
+   "idioma": "uk",
+   "medio": "facenews.ua"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/mallorca/2025/10/21/avistamiento-dron-parece-ovni-122826326.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DRON AEROPUERTO PALMA | El avistamiento de un dron que parece un OVNI",
+   "id": "gdelt-3ff551aea3da4465",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diariodemallorca.es/mallorca/2025/10/21/aeropuerto-palma-tuvo-protocolo-antidrones-122829275.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DRONES EN MALLORCA: El aeropuerto de Palma tuvo un protocolo antidrones intrusos pionero en 2019 que ahora est\u00e1 pendiente de mejoras",
+   "id": "gdelt-6615a7447c112577",
+   "idioma": "es",
+   "medio": "diariodemallorca.es"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://theolivepress.es/spain-news/2025/10/21/investigation-underway-after-drone-sighting-grounds-flights-at-mallorcas-palma-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "forced flight operations to be temporarily suspended",
+   "id": "gdelt-3002e2a6d6bfb91f",
+   "idioma": "en",
+   "medio": "theolivepress.es"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://theolivepress.es/spain-news/2025/10/21/investigation-underway-after-drone-sighting-grounds-flights-at-mallorcas-palma-airport",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T09:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "at least eight flights bound for Palma were forced to divert to other destinations",
+   "id": "gdelt-3002e2a6d6bfb91f-declaracion-1",
+   "idioma": "en",
+   "medio": "Aena (declaraci\u00f3n oficial citada en theolivepress.es)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://derwesten.de/panorama/vermischtes/mallorca-flughafen-drohne-experte-id301879882.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Alarm am Flughafen Mallorca: Experten-Aussage \u00fcberrascht",
+   "id": "gdelt-181d1b93dea20bd9",
+   "idioma": "de",
+   "medio": "derwesten.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-10-19T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "El avistamiento de un dron ha obligado a interrumpir temporalmente las operaciones en el aeropuerto de Palma la tarde de este domingo, ha informado Enaire.",
+   "id": "revisada-78d8c0775656e66a-declaracion-1",
+   "idioma": "es",
+   "medio": "ENAIRE (declaraci\u00f3n oficial citada en mallorcadiario.com)"
+  }
+ ],
+ "id": "EODI-2025-00122",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "ES",
+  "punto": {
+   "lat": 39.55323,
+   "lon": 2.73778
+  },
+  "radio_km": 5.0,
+  "region": "Illes Balears",
+  "suceso": "Aeroport de Palma - Son Sant Joan"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Palma",
+   "es": "Palma"
+  },
+  "lugar": {
+   "en": "Palma, Spain",
+   "es": "Palma, Espa\u00f1a"
+  },
+  "objetivo": {
+   "en": "Palma de Mallorca Airport",
+   "es": "Aeropuerto de Palma"
+  },
+  "region": {
+   "en": "Balearic Islands",
+   "es": "Islas Baleares"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Aeroport de Palma - Son Sant Joan",
+  "oaci": "LEPA"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-10-19T17:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-3002e2a6d6bfb91f",
+   "motivo": "\u00absunday\u00bb en una nota publicada el 2025-10-21 11:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Drone forces closure of Palma de Mallorca Airport",
+  "es": "Dron obliga a cerrar el aeropuerto de Palma de Mallorca"
+ }
+}

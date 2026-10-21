@@ -1,0 +1,674 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "minutos": {
+    "max": 40,
+    "min": 40
+   },
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-28T18:45Z"
+    },
+    "fuente_id": "gdelt-cf0d65767c9f766f"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-28T19:30Z"
+    },
+    "fuente_id": "gdelt-c0f63776bff5d1a7-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/alerta-pe-aeroportul-henri-coanda-drona-detectata-2475294.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T18:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 a fost detectat\u0103 duminic\u0103, 28 septembrie 2025, \u00een apropierea pistei 08R a Aeroportului Interna\u021bional Henri Coand\u0103",
+   "id": "gdelt-cf0d65767c9f766f",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hotnews.ro/drona-semnalata-in-apropierea-aeroportului-otopeni-decizia-luata-in-cazul-mai-multor-avioane-care-urmau-sa-decoleze-2075036",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T18:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 semnalat\u0103 \u00een apropierea Aeroportului Otopeni. Decizia luat\u0103 \u00een cazul mai multor avioane care urmau s\u0103 aterizeze",
+   "id": "gdelt-5e252726e3baaf12",
+   "idioma": "ro",
+   "medio": "hotnews.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cancan.ro/panica-pe-aeroportul-otopeni-a-fost-fost-depistata-o-drona-traficul-aerian-a-fost-oprit-21271584",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Panic\u0103 pe Aeroportul Otopeni! A fost fost depistat\u0103 o dron\u0103, traficul aerian a fost oprit",
+   "id": "gdelt-7e6d0b6afa06b1f4",
+   "idioma": "ro",
+   "medio": "cancan.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/drona/aeroport-otopeni-piloti-avion-1967019",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 v\u0103zut\u0103 de pilo\u021bi \u00een apropierea aeroportului Otopeni. Traficul aerian a fost perturbat, ateriz\u0103rile au fost suspendate. \u201eRisc major pentru siguran\u021ba zborurilor\"",
+   "id": "gdelt-13957dbd0bfb9da9",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "dron_estatal",
+    "drones",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://mediafax.ro/social/drona-in-apropierea-aeroportului-otopeni-traficul-aerian-intrerupt-40-de-minute-23617382",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "au fost suspendate temporar ateriz\u0103rile, iar aeronavele aflate \u00een zon\u0103 au fost dirijate c\u0103tre puncte de a\u015fteptare",
+   "id": "gdelt-c0f63776bff5d1a7",
+   "idioma": "ro",
+   "medio": "mediafax.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://agerpres.ro/economic/2025/09/28/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declan--1488183",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incident cu o dron\u0103 civil\u0103 la Aeroportul Interna\u021bional Henri Coand\u0103 Bucure\u0219ti; autorit\u0103\u021bile au declan\u0219at o anchet\u0103",
+   "id": "gdelt-12b6ddc5c946db6d",
+   "idioma": "ro",
+   "medio": "agerpres.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/drona-in-apropierea-aeroportului-otopeni-aterizarile-temporar-redirectionate-pe-pista-secundara-85511754",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 \u00een apropierea Aeroportului Otopeni: ateriz\u0103rile temporar redirec\u0163ionate pe pista secundar\u0103",
+   "id": "gdelt-7cd212aac03e640e",
+   "idioma": "ro",
+   "medio": "bursa.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://evz.ro/drona-semnalata-langa-aeroportul-otopeni-noua-avioane-redirectionate.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 semnalat\u0103 l\u00e2ng\u0103 Aeroportul Otopeni. Nou\u0103 avioane, redirec\u021bionate",
+   "id": "gdelt-0b3d057ca1aa68f4",
+   "idioma": "ro",
+   "medio": "evz.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/actualitate/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declansat-o-ancheta-3432925",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incident cu o dron\u0103 civil\u0103 la Aeroportul Interna\u0163ional Henri Coand\u0103 Bucure\u015fti. M\u0103sur\u0103 preventiv\u0103: s-au suspendat ateriz\u0103rile",
+   "id": "gdelt-49237307150041bc",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.ro/actualitate/o-drona-necunoscuta-a-survolat-zona-de-deasupra-pistei-aeroportului-otopeni-aterizarile-au-fost-suspendate-temporar-761221.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 necunoscut\u0103 a survolat zona de deasupra pistei aeroportului Otopeni. Ateriz\u0103rile au fost suspendate temporar",
+   "id": "gdelt-2a572359b6774e6c",
+   "idioma": "ro",
+   "medio": "antena3.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://telegrafonline.ro/drona-detectata-in-apropierea-aeroportului-otopeni-noua-avioane-redirectionate",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 detectat\u0103 \u00een apropierea aeroportului Otopeni. Nou\u0103 avioane redirec\u021bionate",
+   "id": "gdelt-962007447a1e232f",
+   "idioma": "ro",
+   "medio": "telegrafonline.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stirileprotv.ro/stiri/actualitate/drona-semnalata-la-aeroportul-otopeni-aterizarile-suspendate-temporar-incident-investigat-de-autoritati.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 semnalat\u0103 la Aeroportul Otopeni: ateriz\u0103rile, suspendate temporar. Incident investigat de autorit\u0103\u021bi",
+   "id": "gdelt-78514015d605abb9",
+   "idioma": "ro",
+   "medio": "stirileprotv.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://realitatea.net/stiri/actual/alerta-pe-aeroportul-otopeni-prezenta-unei-drone-a-blocat-aterizarea-mai-multor-zboruri-pilotii-au-trebuit-sa-faca-manevre-speciale_68d979713999ef4232128ea2",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 pe Aeroportul Otopeni: Prezen\u021ba unei drone a blocat aterizarea mai multor aeromave. Pilo\u021bii au fost nevoi\u021bi s\u0103 fac\u0103 manevre speciale",
+   "id": "gdelt-0f6ab5379c24ab25",
+   "idioma": "ro",
+   "medio": "realitatea.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziarulprofit.ro/aterizarile-pe-aeroportul-otopeni-au-fost-suspendate-dupa-ce-pilotii-unei-aeronave-au-raportat-controlorilor-de-trafic-prezenta-unei-drone-civile-in-apropierea-pistei",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ateriz\u0103rile pe Aeroportul Otopeni au fost suspendate dup\u0103 ce pilo\u021bii unei aeronave au raportat controlorilor de trafic prezen\u021ba unei drone civile \u00een apropierea pistei",
+   "id": "gdelt-465cfd5933a67119",
+   "idioma": "ro",
+   "medio": "ziarulprofit.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://capital.ro/o-drona-civila-a-blocat-temporar-aterizarile-pe-aeroportul-otopeni-cnab-operarea-dronelor-in-zona-este-strict-interzisa.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 civil\u0103 a blocat temporar ateriz\u0103rile pe Aeroportul Otopeni. CNAB: Operarea dronelor \u00een zon\u0103 este strict interzis\u0103!",
+   "id": "gdelt-4c3edb9e2afa572f",
+   "idioma": "ro",
+   "medio": "capital.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://romania-actualitati.ro/stiri/romania/traficul-de-pe-aeroportul-otopeni-perturbat-de-o-drona-civila-id217034.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Traficul de pe aeroportul Otopeni, perturbat de o dron\u0103 civil\u0103",
+   "id": "gdelt-ecd21d420879f3ad",
+   "idioma": "ro",
+   "medio": "romania-actualitati.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rador.ro/2025/09/28/o-drona-civila-prezenta-in-apropierea-aeroportului-international-henri-coanda-a-perturbat-traficul-aerian",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 civil\u0103 prezent\u0103 \u00een apropierea Aeroportului Interna\u021bional \u201eHenri Coand\u0103\" a perturbat traficul aerian",
+   "id": "gdelt-5eaf6d2e6bda163a",
+   "idioma": "ro",
+   "medio": "rador.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://libertatea.ro/stiri/drona-observata-in-apropierea-unei-piste-la-aeroportul-otopeni-5465019",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dron\u0103 observat\u0103 \u00een apropierea unei piste la Aeroportul Otopeni",
+   "id": "gdelt-a767ed407d64543a",
+   "idioma": "ro",
+   "medio": "libertatea.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualitateaprahoveana.ro/actual/67171-trafic-temporar-oprit-pe-aeroportul-otopeni-din-cauza-unei-drone-observate-in-apropiere-pistei-de-aterizare",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T03:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trafic temporar oprit pe Aeroportul Otopeni, din cauza unei drone observate \u00een apropiere pistei de aterizare",
+   "id": "gdelt-24e454da7bf18b55",
+   "idioma": "ro",
+   "medio": "actualitateaprahoveana.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bucurestifm.ro/2025/09/29/incident-cu-o-drona-civila-la-aeroportul-henri-coanda-autoritatile-au-deschis-o-ancheta",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incident cu o dron\u0103 civil\u0103 la Aeroportul Henri Coand\u0103. Autorit\u0103\u021bile au deschis o anchet\u0103 - Radio Bucuresti FM - Radio Muzica Live Online",
+   "id": "gdelt-d5730c41ae762bba",
+   "idioma": "ro",
+   "medio": "bucurestifm.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kanald.ro/alerta-pe-aeroportul-otopeni-mai-multe-zboruri-au-fost-suspendate-dupa-aparitia-unei-drone-20498281",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 pe Aeroportul Otopeni! Mai multe zboruri au fost suspendate dup\u0103 apari\u021bia unei drone",
+   "id": "gdelt-c2e856e38ef2b6b8",
+   "idioma": "ro",
+   "medio": "kanald.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://romania-insider.com/civilian-drone-airport-bucharest-sept-2025",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Authorities investigate civilian drone spotted near runway at Bucharest International Airport",
+   "id": "gdelt-48e3cd7151be4f4a",
+   "idioma": "en",
+   "medio": "romania-insider.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.az/news/drone-sighting-halts-landings-at-bucharest-s-main-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone sighting halts landings at Bucharest's main airport",
+   "id": "gdelt-a7fa739d09293383",
+   "idioma": "en",
+   "medio": "news.az"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://monitorulcj.ro/nationale/132276-incident-cu-o-drona-in-apropierea-aeroportului-international-bucuresti-a-fost-deschisa-o-ancheta",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incident cu o dron\u0103 \u00een apropierea Aeroportului Interna\u021bional Bucure\u0219ti. A fost deschis\u0103 o anchet\u0103.",
+   "id": "gdelt-1a07836db7b927b6",
+   "idioma": "ro",
+   "medio": "monitorulcj.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://a1.ro/news/social/alerta-pe-aeroportul-international-henri-coanda-drona-detectata-langa-o-pista-de-aterizare-traficul-aerian-a-fost-oprit-id1144305.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 pe Aeroportul Interna\u021bional \u201eHenri Coand\u0103\"! Dron\u0103 detectat\u0103 l\u00e2ng\u0103 o pist\u0103 de aterizare! Traficul aerian a fost oprit",
+   "id": "gdelt-5c5575faec2d63c7",
+   "idioma": "ro",
+   "medio": "a1.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hotnews.ro/dosar-penal-dupa-incidentul-cu-drona-din-apropierea-aeroportului-otopeni-care-a-perturbat-noua-zboruri-politia-vrea-sa-afle-cine-a-ridicat-o-2076061",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal dup\u0103 incidentul cu dron\u0103 din apropierea Aeroportului Otopeni, care a perturbat nou\u0103 zboruri. Poli\u021bia vrea s\u0103 afle cine a ridicat-o",
+   "id": "gdelt-50db2f11f838b530",
+   "idioma": "ro",
+   "medio": "hotnews.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://evz.ro/dosar-penal-dupa-aparitia-unei-drone-in-apropierea-aeroportului-henri-coanda.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal dup\u0103 apari\u021bia unei drone \u00een apropierea Aeroportului \u201eHenri Coand\u0103\"",
+   "id": "gdelt-df6a094a5af86cc9",
+   "idioma": "ro",
+   "medio": "evz.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/actualitate/evenimente/dosar-penal-pentru-drona-ridicata-deasupra-aeroportului-otopeni-politia-cauta-operatorul-3433969",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal \u00een cazul dronei ridicate deasupra Aeroportului Otopeni. Poli\u021bia caut\u0103 operatorul",
+   "id": "gdelt-ec56e5864d3a8ae9",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stirileprotv.ro/stiri/actualitate/politia-a-deschis-dosar-penal-dupa-incidentul-cu-o-drona-civila-in-spatiul-aerian-al-aeroportului-otopeni.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poli\u0163ia a deschis dosar penal dup\u0103 incidentul cu o dron\u0103 civil\u0103 \u00een spa\u0163iul aerian al Aeroportului Otopeni",
+   "id": "gdelt-1d23d55ce483a555",
+   "idioma": "ro",
+   "medio": "stirileprotv.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://agerpres.ro/justitie/2025/09/29/igpr-dosar-penal-in-urma-incidentului-cu-o-drona-civila-la-aeroportul-international-henri-coanda--1488393",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "IGPR: Dosar penal \u00een urma incidentului cu o dron\u0103 civil\u0103 la Aeroportul Interna\u021bional 'Henri Coand\u0103'",
+   "id": "gdelt-232e1587ffc5fe6c",
+   "idioma": "ro",
+   "medio": "agerpres.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17861705",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Fragmente de dron\u0103 g\u0103site \u00een Tulcea, dup\u0103 incidente semnalate l\u00e2ng\u0103 Aeroportul Henri Coand\u0103",
+   "id": "gdelt-699358db38e7050c",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-interne/evenimente/dosar-penal-dupa-ce-o-drona-civila-a-fost-2475440.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal dup\u0103 ce o dron\u0103 civil\u0103 a fost detectat\u0103 \u00een spa\u0163iul aerian de la Aeroportul \u201eHenri Coand\u0103\"",
+   "id": "gdelt-5400fd2b35f651fa",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://romania-actualitati.ro/stiri/romania/dosar-penal-deschis-in-cazul-dronei-zarite-in-apropiere-de-aeroportul-otopeni-id217070.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal deschis \u00een cazul dronei z\u0103rite \u00een apropiere de Aeroportul Otopeni",
+   "id": "gdelt-9c2f1ab685731481",
+   "idioma": "ro",
+   "medio": "romania-actualitati.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/drona/civila-dosar-penal-aeroportul-henri-coanda-igpr-1967152",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal dup\u0103 ce o dron\u0103 civil\u0103 a fost reperat\u0103 pe Aeroportul \u201eHenri Coand\u0103\" Otopeni, \u00een apropierea unei piste",
+   "id": "gdelt-14df2b2366be0e48",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bucurestifm.ro/2025/09/29/dosar-penal-in-cazul-dronei-civile-semnalate-in-zona-aeroportului-otopeni",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dosar penal \u00een cazul dronei civile semnalate \u00een zona Aeroportului Otopeni - Radio Bucuresti FM - Radio Muzica Live Online",
+   "id": "gdelt-d9daec8eacb028cd",
+   "idioma": "ro",
+   "medio": "bucurestifm.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stirileprotv.ro/stiri/actualitate/cine-a-detectat-drona-de-la-aeroportul-otopeni-traficul-aerian-a-fost-perturbat-40-de-minute.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-29T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Cine a observat drona de la Aeroportul Otopeni. Traficul aerian a fost perturbat 40 de minute",
+   "id": "gdelt-9e7b3a816ee07563",
+   "idioma": "ro",
+   "medio": "stirileprotv.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://mediafax.ro/social/drona-in-apropierea-aeroportului-otopeni-traficul-aerian-intrerupt-40-de-minute-23617382",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "au fost suspendate temporar ateriz\u0103rile, iar aeronavele aflate \u00een zon\u0103 au fost dirijate c\u0103tre puncte de a\u015fteptare",
+   "id": "gdelt-c0f63776bff5d1a7-declaracion-1",
+   "idioma": "ro",
+   "medio": "Compania Na\u021bional\u0103 Aeroporturi Bucure\u015fti (declaraci\u00f3n oficial citada en mediafax.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://mediafax.ro/social/drona-in-apropierea-aeroportului-otopeni-traficul-aerian-intrerupt-40-de-minute-23617382",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-28T19:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "ca m\u0103sur\u0103 preventiv\u0103 imediat\u0103, au fost suspendate temporar ateriz\u0103rile",
+   "id": "gdelt-c0f63776bff5d1a7-declaracion-2",
+   "idioma": "ro",
+   "medio": "ROMATSA (declaraci\u00f3n oficial citada en mediafax.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://ziare.com/drona/aeroport-otopeni-piloti-avion-1967019",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-28T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Compania Na\u021bional\u0103 Aeroporturi Bucure\u0219ti a transmis c\u0103 era o dron\u0103 civil\u0103.",
+   "id": "revisada-dbd317e21ff0f256-declaracion-1",
+   "idioma": "ro",
+   "medio": "Compania Na\u021bional\u0103 Aeroporturi Bucure\u0219ti (declaraci\u00f3n oficial citada en ziare.com)"
+  }
+ ],
+ "id": "EODI-2025-00049",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "RO",
+  "punto": {
+   "lat": 44.56835,
+   "lon": 26.10238
+  },
+  "radio_km": 5.0,
+  "region": "Bucure\u0219ti",
+  "suceso": "Aeroportul Interna\u021bional Henri Coand\u0103 Otopeni"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Bucharest",
+   "es": "Bucarest"
+  },
+  "lugar": {
+   "en": "Bucharest, Romania",
+   "es": "Bucarest, Ruman\u00eda"
+  },
+  "objetivo": {
+   "en": "Henri Coand\u0103 International Airport",
+   "es": "Aeropuerto de Bucarest-Henri Coand\u0103"
+  },
+  "region": {
+   "en": "Bucharest",
+   "es": "Bucarest"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Aeroportul Internat\u0326ional Henri Coanda\u0306 - Otopeni (OTP)",
+  "oaci": "LROP"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2025-09-28T18:45Z"
+  },
+  "origen_inicio": {
+   "motivo": "la ficha no da el inicio: fecha de publicaci\u00f3n de la primera nota (2025-09-28 21:45, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Drone detected near Bucharest airport forces suspension of landings",
+  "es": "Dron detectado cerca del aeropuerto de Bucarest obliga a suspender aterrizajes"
+ }
+}

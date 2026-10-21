@@ -1,0 +1,251 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-04-05T07:30Z"
+    },
+    "fuente_id": "gdelt-c2354b4b1c003de7"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "fin",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://edp24.co.uk/news/25065114.raf-lakenheath-drone-activity-prompts-helicopter-near-miss",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-04-05T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "a drone coming close to them",
+   "id": "gdelt-c2354b4b1c003de7",
+   "idioma": "en",
+   "medio": "edp24.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "unidentified aircraft",
+   "id": "gdelt-9737c718a0a62216",
+   "idioma": "en",
+   "medio": "eadt.co.uk"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-11-22T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "The Ministry of Defence (MOD) has confirmed its investigation into mystery drone activity over Suffolk air bases has been completed.",
+   "id": "revisada-58d1354498730a55",
+   "idioma": "en",
+   "medio": "eadt.co.uk"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://edp24.co.uk/news/25065114.raf-lakenheath-drone-activity-prompts-helicopter-near-miss",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-04-05T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "The National Police Air Service (NPAS) helicopter took action during a search for drone activity at RAF Lakenheath and RAF Mildenhall",
+   "id": "revisada-9d8ab22a1b5aba8c",
+   "idioma": "en",
+   "medio": "edp24.co.uk"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://theaviationist.com/2025/06/28/npas-helicopter-reports-near-miss-with-f-15/",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-06-28T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "concluded that the helicopter crew had misidentified the red flashing lights of a fast-moving F-15 as belonging to a drone",
+   "id": "revisada-0b10a916ab5b9abe",
+   "idioma": "en",
+   "medio": "theaviationist.com"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-11-22T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "During searches for the unidentified aircraft, a police helicopter mistook an USA fighter jet for a drone, a report found.",
+   "id": "revisada-c7a3482aa804dd37",
+   "idioma": "en",
+   "medio": "eadt.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-06-26T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "it was clear to members that the track of the F15 had correlated with the perceived position of the \u2018drone\u2019",
+   "id": "revisada-feb0c7bcbb768036",
+   "idioma": "en",
+   "medio": "UK Airprox Board"
+  }
+ ],
+ "id": "EODI-2025-00164",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "GB",
+  "punto": {
+   "lat": 52.4047,
+   "lon": 0.55783
+  },
+  "radio_km": 5.0,
+  "region": "Suffolk",
+  "suceso": "RAF Lakenheath"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Lakenheath",
+   "es": "Lakenheath"
+  },
+  "lugar": {
+   "en": "Lakenheath, United Kingdom",
+   "es": "Lakenheath, Reino Unido"
+  },
+  "objetivo": {
+   "en": "RAF Lakenheath",
+   "es": "RAF Lakenheath"
+  },
+  "region": {
+   "en": "Suffolk",
+   "es": "Suffolk"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "RAF Lakenheath",
+  "oaci": "EGUL"
+ },
+ "presencia_dron": "descartada",
+ "presencia_historial": [
+  {
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-04-05T07:30Z"
+   },
+   "fuente_id": "gdelt-c2354b4b1c003de7",
+   "valor": "no_confirmada"
+  },
+  {
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-06-26T00:00Z"
+   },
+   "fuente_id": "revisada-feb0c7bcbb768036",
+   "motivo": {
+    "en": "Airprox report 2024294: the supposed drone seen by the police helicopter crew was an F-15",
+    "es": "informe Airprox 2024294: el supuesto dron que vio la tripulaci\u00f3n del helic\u00f3ptero policial era un F-15"
+   },
+   "quien": {
+    "en": "the UK Airprox Board",
+    "es": "el UK Airprox Board"
+   },
+   "revision": "rectificacion:revisada:EODI-2025-00164:revisada-feb0c7bcbb768036",
+   "valor": "descartada"
+  }
+ ],
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2024-11-22T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-c2354b4b1c003de7",
+   "motivo": "\u00ab22 november\u00bb, \u00ab27 november\u00bb en una nota publicada el 2025-04-05 08:30 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Drone sightings at RAF Lakenheath and Mildenhall prompt a police helicopter search",
+  "es": "Avistamientos de drones en RAF Lakenheath y Mildenhall movilizan un helic\u00f3ptero policial"
+ }
+}

@@ -1,0 +1,136 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-16T11:30Z"
+    },
+    "fuente_id": "gdelt-a6c504f040dab90a"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-16T11:30Z"
+    },
+    "fuente_id": "gdelt-a6c504f040dab90a-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://is.fi/kotimaa/art-2000012278007.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-16T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+   "id": "gdelt-a6c504f040dab90a",
+   "idioma": "fi",
+   "medio": "is.fi"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://is.fi/kotimaa/art-2000012278007.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-16T11:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "sai keskiviikkoaamuna noin kello 9.50 aikoihin ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+   "id": "gdelt-a6c504f040dab90a-declaracion-1",
+   "idioma": "fi",
+   "medio": "It\u00e4-Uudenmaan poliisi (declaraci\u00f3n oficial citada en is.fi)"
+  }
+ ],
+ "id": "EODI-2026-00040",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "FI",
+  "punto": {
+   "lat": 60.37077,
+   "lon": 26.34633
+  },
+  "radio_km": 2.0,
+  "region": "Uusimaa",
+  "suceso": "Loviisan ydinvoimalaitos"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Loviisa",
+   "es": "Loviisa"
+  },
+  "lugar": {
+   "en": "Loviisa, Finland",
+   "es": "Loviisa, Finlandia"
+  },
+  "objetivo": {
+   "en": "Loviisa Nuclear Power Plant",
+   "es": "Central nuclear de Loviisa"
+  },
+  "region": {
+   "en": "Uusimaa",
+   "es": "Uusimaa"
+  }
+ },
+ "objetivo": {
+  "categoria": "energia",
+  "nombre": "Loviisan ydinvoimalaitos"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2026-09-16T07:50Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-a6c504f040dab90a",
+   "motivo": "\u00abkeskiviikko\u00bb en una nota publicada el 2026-09-16 14:30 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Drone flies over Loviisa nuclear power plant in restricted airspace",
+  "es": "Dron sobrevuela la central nuclear de Loviisa en zona prohibida"
+ }
+}

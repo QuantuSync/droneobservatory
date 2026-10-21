@@ -1,0 +1,145 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-07-29T19:00Z"
+    },
+    "fuente_id": "gdelt-97bb4ab85c514010"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio_precision",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-07-29T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ar fi vorba despre o dron\u0103 militar\u0103 ucrainean\u0103 cu \u00eenc\u0103rc\u0103tur\u0103 exploziv\u0103 la bord.",
+   "id": "gdelt-97bb4ab85c514010",
+   "idioma": "ro",
+   "medio": "atitudinea.ro"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-07-29T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "O dron\u0103 ucrainean\u0103, ajuns\u0103 \u00een deriv\u0103 \u00een zona portului Constan\u021ba, a fost neutralizat\u0103 \u00een larg, de scafandrii militari.",
+   "id": "revisada-c498f418d107c14d",
+   "idioma": "ro",
+   "medio": "atitudinea.ro"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-07-29T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drona a fost detonat\u0103 de c\u0103tre scafandrii militari specializa\u021bi \u00een astfel de ac\u021biuni pentru obiecte explozive.",
+   "id": "revisada-07bb8766a170e28a",
+   "idioma": "ro",
+   "medio": "atitudinea.ro"
+  }
+ ],
+ "id": "EODI-2025-00395",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "RO",
+  "punto": {
+   "lat": 44.13707,
+   "lon": 28.67299
+  },
+  "radio_km": 3.0,
+  "suceso": "Portul Constan\u021ba"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Constan\u021ba",
+   "es": "Constanza"
+  },
+  "lugar": {
+   "en": "Constan\u021ba, Romania",
+   "es": "Constanza, Ruman\u00eda"
+  },
+  "objetivo": {
+   "en": "Port of Constan\u021ba",
+   "es": "Puerto de Constanza"
+  }
+ },
+ "objetivo": {
+  "categoria": "puerto",
+  "nombre": "Portul Constant\u0326a"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "derribo"
+  ]
+ },
+ "respuesta": {
+  "medidas": [
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2025-07-29T19:00Z"
+  },
+  "origen_inicio": {
+   "motivo": "la ficha no da el inicio: fecha de publicaci\u00f3n de la primera nota (2025-07-29 22:00, hora local del medio)",
+   "tipo": "publicacion"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Possible drone detonated near Constan\u021ba Port",
+  "es": "Posible dron detonado cerca del Puerto de Constanza"
+ }
+}

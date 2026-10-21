@@ -1,0 +1,514 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-13T08:30Z"
+    },
+    "fuente_id": "gdelt-7c89b4c3ffa6afc3"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-13T09:15Z"
+    },
+    "fuente_id": "gdelt-8212c1a5bb7d9d02-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://infranken.de/lk/nuernberg/blaulicht/flughafen-nuernberg-moegliche-drohnensichtung-sorgt-fuer-beeintraechtigungen-art-6403002",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen N\u00fcrnberg: M\u00f6gliche Drohnensichtung sorgt f\u00fcr Beeintr\u00e4chtigungen",
+   "id": "gdelt-7c89b4c3ffa6afc3",
+   "idioma": "de",
+   "medio": "infranken.de"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "medidas",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://schwaebische.de/regional/bayern/moegliche-drohne-stoert-flugbetrieb-am-nuernberger-flughafen-4933216",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "M\u00f6gliche Drohne st\u00f6rt Flugbetrieb am N\u00fcrnberger Flughafen",
+   "id": "gdelt-b975268cb20208b8",
+   "idioma": "de",
+   "medio": "schwaebische.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://schwaebische.de/regional/bayern/moegliche-drohne-stoert-flugbetrieb-am-nuernberger-flughafen-4933216",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T08:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Drei Piloten meldeten unabh\u00e4ngig voneinander beim Start- oder Landevorgang ein Objekt, bei dem es sich m\u00f6glicherweise um eine Drohne gehandelt haben k\u00f6nnte, wie die Polizei",
+   "id": "gdelt-b975268cb20208b8-declaracion-2",
+   "idioma": "de",
+   "medio": "Polizei (declaraci\u00f3n oficial citada en schwaebische.de)"
+  },
+  {
+   "campos_respaldados": [
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://schwaebische.de/regional/bayern/moegliche-drohne-stoert-flugbetrieb-am-nuernberger-flughafen-4933216",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "allerdings konnte eine Drohne nicht gefunden werden.",
+   "id": "revisada-56fee5972a1c1203",
+   "idioma": "de",
+   "medio": "schwaebische.de"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://merkur.de/bayern/nuernberg/mehrere-piloten-setzen-meldungen-ab-drohnen-alarm-am-nuernberger-airport-fluege-umgeleitet-94538254.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mehrere Piloten meldeten am Flughafen in N\u00fcrnberg die Sichtung von Drohnen.",
+   "id": "gdelt-8212c1a5bb7d9d02",
+   "idioma": "de",
+   "medio": "merkur.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://merkur.de/bayern/nuernberg/mehrere-piloten-setzen-meldungen-ab-drohnen-alarm-am-nuernberger-airport-fluege-umgeleitet-94538254.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T09:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Wie die Bundespolizei mitteilt, sorgte ein r\u00e4tselhaftes Flugobjekt f\u00fcr Aufregung.",
+   "id": "gdelt-8212c1a5bb7d9d02-declaracion-1",
+   "idioma": "de",
+   "medio": "Bundespolizei (declaraci\u00f3n oficial citada en merkur.de)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.az/news/germany-s-nuremberg-airport-halts-flights-after-suspected-drone-sightings",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Germany's Nuremberg airport halts flights after suspected drone sightings",
+   "id": "gdelt-1e5a57ee27ad5772",
+   "idioma": "en",
+   "medio": "news.az"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sueddeutsche.de/bayern/nuernberg-flughafen-drohne-polizei-li.3562899",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen N\u00fcrnberg: M\u00f6gliche Drohne st\u00f6rt Flugbetrieb",
+   "id": "gdelt-a21073c053acea75",
+   "idioma": "de",
+   "medio": "sueddeutsche.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://noz.de/deutschland-welt/panorama/artikel/flughafen-nuernberg-gesperrt-drohne-gesichtet-51585207",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen N\u00fcrnberg gesperrt \u2013 Drohne gesichtet?",
+   "id": "gdelt-efc706c86d299aaf",
+   "idioma": "de",
+   "medio": "noz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/panorama/gesellschaft/id_101478702/alarm-piloten-melden-drohnen-an-militaerisch-wichtigem-flughafen-nuernberg.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alarm: Piloten melden Drohnen an milit\u00e4risch wichtigem Flughafen N\u00fcrnberg",
+   "id": "gdelt-f09d1fc885ef9903",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nordbayern.de/nuernberg/polizeibericht/piloten-melden-objekt-im-luftraum-uber-dem-flughafen-nurnberg-beeintrachtigungen-im-flugverkehr-1.15313800",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "M\u00f6gliche Drohnensichtung am Flughafen N\u00fcrnberg: Auch Polizeihubschrauber im Einsatz - Piloten melden \u201eObjekt\" im Luftraum, Beeintr\u00e4chtigungen im Flugverkehr",
+   "id": "gdelt-e1bd7fa9468743c8",
+   "idioma": "de",
+   "medio": "nordbayern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infranken.de/lk/nuernberg/blaulicht/flughafen-nuernberg-moegliche-drohnensichtung-sprecher-schildert-details-art-6403002",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen N\u00fcrnberg: M\u00f6gliche Drohnensichtung - Sprecher schildert Details",
+   "id": "gdelt-8b7a561c78251dee",
+   "idioma": "de",
+   "medio": "infranken.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://noz.de/deutschland-welt/panorama/artikel/entwarnung-am-flughafen-nuernberg-drohne-gesichtet-51585207",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Entwarnung am Flughafen N\u00fcrnberg \u2013 Drohne gesichtet?",
+   "id": "gdelt-754dbfefff5c0af7",
+   "idioma": "de",
+   "medio": "noz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stuttgarter-nachrichten.de/politik/notfall-am-flughafen-nuernberg-erst-eine-drohne-dann-ein-notfallcode-was-steckt-hinter-der-sperrung-79565146.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u201eNotfall\" am Flughafen N\u00fcrnberg: Erst eine Drohne, dann Eurofighter-Einsatz \u2013 was steckt hinter der Sperrung?",
+   "id": "gdelt-388baa6a635e2c48",
+   "idioma": "de",
+   "medio": "stuttgarter-nachrichten.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/news-notizia/post/986253/2026-10-13-aeroporto-norimberga-isolato-tre-piloti-segnalano-possibile-drone-notte-13-38",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto di Norimberga isolato, tre piloti segnalano un possibile drone nella notte",
+   "id": "gdelt-7ced2a77ed57e864",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sapo.pt/artigo/aeroporto-de-nuremberga-suspende-voos-apos-relatos-de-avistamento-de-drone-6ace14fd71bdbe0b7430cc81",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto de Nuremberga suspende voos ap\u00f3s relatos de avistamento de drone",
+   "id": "gdelt-e6ae6f2fd6e7a82f",
+   "idioma": "pt",
+   "medio": "sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://schwarzwaelder-bote.de/politik/notfall-am-flughafen-nuernberg-erst-eine-drohne-dann-ein-notfallcode-was-steckt-hinter-der-sperrung-79565146.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sperrung am Flughafen N\u00fcrnberg: Erst eine Drohne, dann Eurofighter-Einsatz \u2013 Polizei gibt Entwarnung",
+   "id": "gdelt-c9086dd1933e85ca",
+   "idioma": "de",
+   "medio": "schwarzwaelder-bote.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilfattonisseno.it/2026/10/germania-isolato-aeroporto-di-norimberga-presunto-avvistamento-di-droni",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Germania, isolato aeroporto di Norimberga: presunto avvistamento di droni - il Fatto Nisseno - Caltanissetta notizie, cronaca, attualit\u00e0",
+   "id": "gdelt-9d9d82dca401117d",
+   "idioma": "it",
+   "medio": "ilfattonisseno.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtp.pt/noticias/mundo/aeroporto-de-nuremberga-suspende-operacoes-apos-detecao-de-possivel-drone_n1771392",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroporto de Nuremberga suspende opera\u00e7\u00f5es ap\u00f3s dete\u00e7\u00e3o de poss\u00edvel drone",
+   "id": "gdelt-9ee90faf895ad39e",
+   "idioma": "pt",
+   "medio": "rtp.pt"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dnews.gr/eidhseis/kosmos/616139/ekleise-to-aerodromio-tis-nyremvergis-logo-ektaktou-peristatikoy",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03b5 \u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7 \u03c3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03bf\u03cd \u03c4\u03ad\u03b8\u03b7\u03ba\u03b5 \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03b7\u03c2 \u039d\u03c5\u03c1\u03b5\u03bc\u03b2\u03ad\u03c1\u03b3\u03b7\u03c2, \u03c3\u03c4\u03b7 \u0393\u03b5\u03c1\u03bc\u03b1\u03bd\u03af\u03b1",
+   "id": "gdelt-dbb7ec19ec3b2ff9",
+   "idioma": "el",
+   "medio": "dnews.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://padovanews.it/2026/10/13/germania-isolato-aeroporto-di-norimberga-presunto-avvistamento-di-droni",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Germania, isolato aeroporto di Norimberga: presunto avvistamento di droni",
+   "id": "gdelt-b8fc5f13de07ab8a",
+   "idioma": "it",
+   "medio": "padovanews.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bursa.ro/afp-aeroportul-din-nurnberg-afectat-de-o-urgenta-de-zbor-si-de-semnalarea-unor-posibile-drone-06116060",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "AFP: Aeroportul din Nurnberg, afectat de o urgen\u0163\u0103 de zbor \u015fi de semnalarea unor posibile drone",
+   "id": "gdelt-5f92f3b9cb41f5eb",
+   "idioma": "ro",
+   "medio": "bursa.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://realitatea.net/stiri/extern/zboruri-suspendate-pe-aeroportul-din-nurnberg-dupa-o-urgenta-aviatica-alerta-si-dupa-aparitia-unei-posibile-drone-knvqjp",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zboruri suspendate pe aeroportul din N\u00fcrnberg, dup\u0103 o urgen\u021b\u0103 aviatic\u0103. Alert\u0103 \u0219i dup\u0103 apari\u021bia unei posibile drone",
+   "id": "gdelt-2dfad72ef18e7d2d",
+   "idioma": "ro",
+   "medio": "realitatea.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lalibre.be/belgique/2026/10/13/trafic-interrompu-a-laeroport-de-nuremberg-apres-lobservation-dun-possible-drone-FX3SESEYZNABNPIGIEFVR6MQ7A",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trafic interrompu \u00e0 l'a\u00e9roport de Nuremberg apr\u00e8s l'observation d'un possible drone",
+   "id": "gdelt-7401abf59a402efd",
+   "idioma": "fr",
+   "medio": "lalibre.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://salzburg24.at/news/welt/drohnen-verdacht-und-notfallcode-wirbel-und-eurofighter-einsatz-am-airport-nuernberg-art-341101",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-13T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen-Verdacht und Notfallcode: Wirbel und Eurofighter-Einsatz am Airport N\u00fcrnberg",
+   "id": "gdelt-dab34343f8b2495a",
+   "idioma": "de",
+   "medio": "salzburg24.at"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nordbayern.de/nuernberg/fluggaste-nach-drohnensichtungen-besorgt-wie-sicher-ist-der-airport-nurnberg-1.15321732",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-19T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Erst letzte Woche meldeten mehrere Piloten unabh\u00e4ngig voneinander mutma\u00dfliche Drohnensichtungen am Flughafen N\u00fcrnberg.",
+   "id": "gdelt-3124f9e4ae917ac7",
+   "idioma": "de",
+   "medio": "nordbayern.de"
+  }
+ ],
+ "id": "EODI-2026-00515",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "localidad": "N\u00fcrnberg",
+  "nivel": "instalacion",
+  "pais": "DE",
+  "punto": {
+   "lat": 49.49821,
+   "lon": 11.07775
+  },
+  "radio_km": 5.0,
+  "region": "Bayern",
+  "suceso": "Albrecht-D\u00fcrer-Airport N\u00fcrnberg"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Nuremberg",
+   "es": "N\u00faremberg"
+  },
+  "lugar": {
+   "en": "Nuremberg, Germany",
+   "es": "N\u00faremberg, Alemania"
+  },
+  "objetivo": {
+   "en": "Nuremberg Airport",
+   "es": "Aeropuerto de N\u00faremberg"
+  },
+  "region": {
+   "en": "Bavaria",
+   "es": "Baviera"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Albrecht-Du\u0308rer-Airport Nu\u0308rnberg",
+  "oaci": "EDDN"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-10-13T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-8212c1a5bb7d9d02",
+   "motivo": "merkur.de (13 de octubre de 2026): \u00abin der Nacht auf Dienstag (13. Oktober)\u00bb; el inicio dec\u00eda el 12, el d\u00eda anterior al que escribe la fuente",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Possible drone sighting at Nuremberg airport disrupts flights",
+  "es": "Posible dron sobre el aeropuerto de N\u00faremberg afecta al tr\u00e1fico a\u00e9reo"
+ }
+}

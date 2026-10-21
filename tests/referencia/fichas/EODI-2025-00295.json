@@ -1,0 +1,4464 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 20,
+   "min": 20
+  }
+ },
+ "estado": {
+  "actual": "atribuido",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-10T02:00Z"
+    },
+    "fuente_id": "gdelt-494e4646322b685b"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-11T10:45Z"
+    },
+    "fuente_id": "gdelt-d38b0d162cd64e37-declaracion-1"
+   },
+   {
+    "estado": "atribuido",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-09-10T00:00Z"
+    },
+    "fuente_id": "oficial-pl-premier-2025-09-10-autoria"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://thestar.com.my/news/world/2025/09/10/ukraine039s-air-force-warns-that-russian-drones-entered-poland039s-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-09T23:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shot down suspected Russian drones in its airspace on Wednesday.",
+   "id": "gdelt-776833be82777358",
+   "idioma": "en",
+   "medio": "thestar.com.my"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.gov.pl/web/premier/Komunikat-MON",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-10T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "W wyniku dzisiejszego ataku Federacji Rosyjskiej na terytorium Ukrainy dosz\u0142o do bezprecedensowego w skali naruszenia polskiej przestrzeni powietrznej przez obiekty typu dron.",
+   "id": "oficial-pl-mon-2025-09-10-naruszenie",
+   "idioma": "pl",
+   "medio": "Ministerstwo Obrony Narodowej"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-10T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "W \u015brod\u0119 nad ranem polska przestrze\u0144 powietrzna zosta\u0142a naruszona przez rosyjskie drony.",
+   "id": "oficial-pl-premier-2025-09-10-autoria",
+   "idioma": "pl",
+   "medio": "Kancelaria Prezesa Rady Ministr\u00f3w"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.gov.pl/web/premier/naruszenie-polskiej-przestrzeni-powietrznej-jest-wniosek-o-uruchomienie-art-4-traktatu-polnocnoatlantyckiego",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-10T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Po raz pierwszy spora cz\u0119\u015b\u0107 dron\u00f3w nadlecia\u0142a nad Polsk\u0119 bezpo\u015brednio z Bia\u0142orusi",
+   "id": "oficial-pl-premier-2025-09-10-bialorus",
+   "idioma": "pl",
+   "medio": "Prezes Rady Ministr\u00f3w"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.gov.pl/web/pr-lublin/informacja-dotyczaca-czynnosci-procesowych-prokuratury-w-zwiazku-z-ujawnionymi-dronami-na-terenie-wojewodztwa-lubelskiego-aktualizacja",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-10T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Cze\u015bniki pow. zamojski \u2013 ogl\u0119dziny w fazie ko\u0144cowej \u2013 ujawniono co najmniej 32 elementy drona typu Gerbera, nie ujawniono materia\u0142\u00f3w wybuchowych.",
+   "id": "revisada-309c9e06df19f5a8",
+   "idioma": "pl",
+   "medio": "Prokuratura Regionalna w Lublinie"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/01-22-Warnung-vor-russischen-Drohnen-Polen-sichert-Luftraum--article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T00:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 01:22 Warnung vor russischen Drohnen - Polen sichert Luftraum +++",
+   "id": "gdelt-0bbda91ced71fd82",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://theglobeandmail.com/world/article-ukraine-russia-poland-nato-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine warns of Russian drones in Poland's airspace as aircraft are activated",
+   "id": "gdelt-49d329788c8002e7",
+   "idioma": "en",
+   "medio": "theglobeandmail.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stern.de/politik/ausland/ukraine-news--ukraine-meldet-russische-drohnen-im-polnischen-luftraum-35963644.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Ukraine meldet russische Drohnen im polnischen Luftraum",
+   "id": "gdelt-6c216e6db0837267",
+   "idioma": "de",
+   "medio": "stern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bnonews.com/index.php/2025/09/poland-on-high-alert-after-ukraine-says-russian-drones-entered-its-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T01:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland on high alert after Ukraine says Russian drones entered its airspace",
+   "id": "gdelt-400a5d854de65a84",
+   "idioma": "en",
+   "medio": "bnonews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hindustantimes.com/world-news/us-news/act-of-war-us-lawmaker-joe-wilson-accuses-russia-of-attacking-poland-with-iranian-drones-101757465451147.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian drones in Poland airspace, says Ukraine, US lawmaker claims 'act of war'",
+   "id": "gdelt-3f4d77295dc73153",
+   "idioma": "en",
+   "medio": "hindustantimes.com"
+  },
+  {
+   "campos_respaldados": [
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://yahoo.com/news/articles/nato-jets-scrambled-poland-reacts-005900909.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO jets scrambled as Poland reacts to suspected Russian drones",
+   "id": "gdelt-494e4646322b685b",
+   "idioma": "en",
+   "medio": "yahoo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://yahoo.com/news/articles/nato-scrambles-jets-russian-drones-013312028.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato scrambles jets as Russian drones threaten Polish airspace in Ukraine attack",
+   "id": "gdelt-f5fbacdad4065e9f",
+   "idioma": "en",
+   "medio": "yahoo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zeit.de/politik/ausland/2025-09/polen-nato-ukraine-drohnen-russland-warnung-luftabwehr-alarmbereitschaft",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato: Ukraine meldet russische Drohnen in Polen",
+   "id": "gdelt-7a94913876a25679",
+   "idioma": "de",
+   "medio": "zeit.de"
+  },
+  {
+   "campos_respaldados": [
+    "objetivo_conocido"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://news18.com/world/polish-airport-temporarily-closed-amid-reports-of-russian-drones-in-nato-airspace-ws-l-9561137.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polish Airport Temporarily Closed Amid Reports Of Russian Drones In NATO Airspace",
+   "id": "gdelt-e7a81e11164c6644",
+   "idioma": "en",
+   "medio": "news18.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://veja.abril.com.br/mundo/polonia-e-otan-acionam-cacas-apos-ataque-de-drones-russos-a-ucrania-perto-da-fronteira",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pol\u00f4nia e Otan acionam ca\u00e7as ap\u00f3s ataque de drones russos \u00e0 Ucr\u00e2nia perto da fronteira",
+   "id": "gdelt-c259cd7cfc3bfd5b",
+   "idioma": "pt",
+   "medio": "abril.com.br"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://localnews8.com/news/national-world/cnn-world/2025/09/09/polish-and-nato-jets-scrambled-warsaw-airport-shut-after-ukrainian-reports-of-russian-drones-over-poland",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says it has shot down drones that entered its airspace during Russian attack on Ukraine - LocalNews8.com",
+   "id": "gdelt-b566725766e834fb",
+   "idioma": "en",
+   "medio": "localnews8.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.sky.com/story/ukraines-air-force-has-warned-that-russian-drones-have-entered-the-airspace-of-poland-13427912",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine's air force has warned that Russian drones have entered the airspace of Poland",
+   "id": "gdelt-a12439b405f4b65c",
+   "idioma": "en",
+   "medio": "sky.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2025-09-10/blic/drama-u-poljskoj-zatvoren-medjunarodni-aerodrom-u-varsavi-nato-avioni-u-vazduhu-zbog-gomile-ruskih-dronova-vojska-potpuno-spremna-za-hitan-odgovor/40447721",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drama u Poljskoj: Zatvoren me\u0111unarodni aerodrom u Var\u0161avi: Nato avioni u vazduhu zbog gomile ruskih dronova: Vojska potpuno spremna za hitan odgovor",
+   "id": "gdelt-67b1a46501dc8991",
+   "idioma": "bs",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abcnews.go.com/International/poland-airspace-repeatedly-violated-drone-type-objects-amid/story?id=125422386",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says airspace 'repeatedly violated by drone-type objects' amid Russian strikes on Ukraine",
+   "id": "gdelt-0424863451cc712c",
+   "idioma": "en",
+   "medio": "go.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cbsnews.com/live-updates/poland-russia-ukraine-airspace-warsaw-nato-military",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says its airspace was violated by unidentified \"drone-type objects\" during Russian strikes on Ukraine",
+   "id": "gdelt-043376be447adada",
+   "idioma": "en",
+   "medio": "cbsnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://9news.com.au/world/poland-says-it-has-shot-down-drones-that-entered-its-airspace-during-russian-attack-on-ukraine/3addccb7-06d6-49e6-946c-4f94dcd5f55c",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down drones that entered airspace during Russian attack on Ukraine",
+   "id": "gdelt-3674bc3c49b795f0",
+   "idioma": "en",
+   "medio": "9news.com.au"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://marketscreener.com/news/ukraine-s-air-force-warns-that-russian-drones-entered-poland-s-airspace-ce7d59dcdd8bf226",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland engages drones in its airspace during Russian attack on Ukraine",
+   "id": "gdelt-dc6354163298dc67",
+   "idioma": "en",
+   "medio": "marketscreener.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sueddeutsche.de/politik/ukraine-krieg-newsblog-polen-drohnen-li.3309758",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine News: Polens Luftwaffe schie\u00dft Drohnen in eigenem Luftraum ab",
+   "id": "gdelt-14f79f335c07c1cd",
+   "idioma": "de",
+   "medio": "sueddeutsche.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://scmp.com/news/world/europe/article/3324972/nato-member-poland-engages-russian-drones-its-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Developing | Nato member Poland engages drones in its airspace for first time during Ukraine war",
+   "id": "gdelt-310c6f1a34081436",
+   "idioma": "en",
+   "medio": "scmp.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://oglobo.globo.com/mundo/noticia/2025/09/10/polonia-diz-ter-derrubado-drones-que-entraram-em-seu-espaco-aereo-durante-ataque-russo-a-ucrania.ghtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pol\u00f4nia diz ter derrubado drones que entraram em seu espa\u00e7o a\u00e9reo durante ataque russo \u00e0 Ucr\u00e2nia; Otan foi acionada",
+   "id": "gdelt-47adf1ee693cb6eb",
+   "idioma": "pt",
+   "medio": "globo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://faz.net/aktuell/politik/ukraine/ukraine-liveticker-polen-schiesst-russische-drohnen-in-seinem-luftraum-ab-faz-110172806.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Liveticker: Polen schie\u00dft russische Drohnen in seinem Luftraum ab",
+   "id": "gdelt-48be66e4536681cb",
+   "idioma": "de",
+   "medio": "faz.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jutarnji.hr/vijesti/svijet/zatvorena-medunarodna-zracna-luka-u-varsavi-nato-ovi-zrakoplovi-u-zraku-stizu-izvjesca-o-gomili-ruskih-dronova-15621036",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Jutarnji list - Zatvorena Me\u0111unarodna zra\u010dna luka u Var\u0161avi. NATO-ovi zrakoplovi u zraku, u zemlju u\u0161li ruski dronovi. Tusk: 'U tijeku je vojna operacija!'",
+   "id": "gdelt-53a6ea37de65899e",
+   "idioma": "hr",
+   "medio": "jutarnji.hr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.sky.com/story/poland-scrambles-nato-defences-after-russian-drones-repeatedly-violated-airspace-in-ukraine-attacks-13427923",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland scrambles NATO defences after Russian drones 'repeatedly violated' airspace in Ukraine attacks",
+   "id": "gdelt-800e47b026fe3c39",
+   "idioma": "en",
+   "medio": "sky.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://blisty.cz/art/128569-polska-letadla-a-letadla-nato-vzletla-varsavske-letiste-bylo-uzavreno-po-ukrajinskych-zpravach-o-ruskych-dronech-nad-polskem.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polsk\u00e1 letadla a letadla NATO vzl\u00e9tla, var\u0161avsk\u00e9 leti\u0161t\u011b bylo uzav\u0159eno po ukrajinsk\u00fdch zpr\u00e1v\u00e1ch o rusk\u00fdch dronech nad Polskem | 10. 9. 2025",
+   "id": "gdelt-cb223f020b0a1701",
+   "idioma": "cs",
+   "medio": "blisty.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://spiegel.de/ausland/russland-ukraine-krieg-polen-schiesst-drohnen-in-eigenem-luftraum-ab-a-aaaf1462-d9fb-4af8-b38a-970720d272cc",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T03:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russland-Ukraine-Krieg: Polen schie\u00dft Drohnen in eigenem Luftraum ab",
+   "id": "gdelt-d07340980828267d",
+   "idioma": "de",
+   "medio": "spiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dominicanrepublicpost.com/poland-downs-drones-during-airspace-intrusion-as-russia-strikes-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs drones during airspace intrusion as Russia strikes Ukraine - Dominican Republic Post \u2013 Caribbean News, Business, Travel & Culture",
+   "id": "gdelt-8504de3e5ee60dc7",
+   "idioma": "en",
+   "medio": "dominicanrepublicpost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://channelnewsasia.com/world/poland-closes-airports-warsaw-russia-strike-western-ukraine-5341281",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T04:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down drones in its airspace during Russian attack on Ukraine",
+   "id": "gdelt-b5cd4d48c7dbed34",
+   "idioma": "en",
+   "medio": "channelnewsasia.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aljazeera.com/news/2025/9/10/poland-downs-drones-during-airspace-intrusion-as-russia-strikes-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs drones during airspace intrusion as Russia attacks Ukraine",
+   "id": "gdelt-e9947c5949070e84",
+   "idioma": "en",
+   "medio": "aljazeera.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://khaleejtimes.com/world/europe/poland-closes-airports-russia-strike-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polish airspace was repeatedly violated by drone-type objects during the Russian attack.",
+   "id": "gdelt-86aadcec2e4b33d8",
+   "idioma": "en",
+   "medio": "khaleejtimes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news18.com/world/poland-airport-closed-airspace-violated-russian-drones-attack-ukraine-strikes-9561264.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T04:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland Says Russian Drones Breached Airspace Amid Ukraine Strikes, Shuts Airports",
+   "id": "gdelt-ab765770c9805ca2",
+   "idioma": "en",
+   "medio": "news18.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://justthenews.com/world/europe/poland-strikes-down-russian-drones-violated-airspace-potential-escalation-ukraine-war",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland strikes down Russian drones that violated airspace in potential escalation of Ukraine war",
+   "id": "gdelt-a99c7bf40b626e95",
+   "idioma": "en",
+   "medio": "justthenews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nzherald.co.nz/world/poland-says-russian-drones-shot-down-after-violating-its-airspace-during-ukraine-attack/L2RADXMM2RFMBMEPEED46Y2J74",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says Russian drones shot down after violating its airspace during Ukraine attack",
+   "id": "gdelt-146f1687f44db011",
+   "idioma": "en",
+   "medio": "nzherald.co.nz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://notimerica.com/politica/noticia-ucrania-amp-polonia-afirma-haber-derribado-drones-rusos-violaron-espacio-aereo-ataque-ucrania-20250910062430.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucrania.-AMP.- Polonia afirma haber derribado drones rusos que violaron su espacio a\u00e9reo en un ataque a Ucrania",
+   "id": "gdelt-985156edb47f31a3",
+   "idioma": "es",
+   "medio": "notimerica.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://uusisuomi.fi/uutiset/a/4a09e536-f797-4d85-87f1-e7953ba09722",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Puolan armeija joutui ampumaan alas maan ilmatilaa loukanneita Ven\u00e4j\u00e4n sotilasdrooneja",
+   "id": "gdelt-d1d36214f62c5f9d",
+   "idioma": "fi",
+   "medio": "uusisuomi.fi"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://uusisuomi.fi/uutiset/a/4a09e536-f797-4d85-87f1-e7953ba09722",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Puolan armeija on ilmoittanut ampuneensa alas lennokkeja, jotka ovat loukanneet Puolan ilmatilaa.",
+   "id": "gdelt-d1d36214f62c5f9d-declaracion-1",
+   "idioma": "fi",
+   "medio": "Puolan armeija (declaraci\u00f3n oficial citada en uusisuomi.fi)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mirror.co.uk/news/world-news/nato-military-shoots-down-putins-35878314",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato military shoots down Putin's suicide drones in first military clash since Ukraine invasion",
+   "id": "gdelt-03d86fb11bae1231",
+   "idioma": "en",
+   "medio": "mirror.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nbcnews.com/world/europe/poland-engages-russian-drones-airspace-first-time-rcna230251",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says it shot down Russian drones in its airspace for the first time in Ukraine war",
+   "id": "gdelt-08c0c13253fb3859",
+   "idioma": "en",
+   "medio": "nbcnews.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://az-online.de/politik/polen-meldet-abschuss-von-russischen-drohnen-kontakt-mit-dem-nato-kommando-zr-93926181.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "mehrere russische Flugk\u00f6rper eingedrungen.",
+   "id": "gdelt-5dd3e36300c43a63",
+   "idioma": "de",
+   "medio": "az-online.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://az-online.de/politik/polen-meldet-abschuss-von-russischen-drohnen-kontakt-mit-dem-nato-kommando-zr-93926181.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Polens Milit\u00e4r neutralisiert die Drohnen.",
+   "id": "gdelt-5dd3e36300c43a63-declaracion-1",
+   "idioma": "de",
+   "medio": "Polens Milit\u00e4r (declaraci\u00f3n oficial citada en az-online.de)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lrytas.lt/pasaulis/ivykiai/2025/09/10/news/lenkijos-kariuomene-salies-oro-erdveje-numuse-iskridusius-dronus-39465056",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lenkija numu\u0161\u0117 \u012f \u0161alies oro erdv\u0119 \u012fskridusius dronus: u\u017edaryti oro uostai, NATO paj\u0117gos pakeltos \u012f or\u0105",
+   "id": "gdelt-759d09620fc48d8c",
+   "idioma": "lt",
+   "medio": "lrytas.lt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/razboi-ucraina/polonia-doborata-drone-rusia-aeroporturi-inchise-1963443",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia a dobor\u00e2t mai multe drone ruse\u0219ti care au p\u0103truns \u00een spa\u021biul s\u0103u aerian. Mai multe aeroporturi au fost \u00eenchise, NATO \u0219i SUA au fost",
+   "id": "gdelt-9892608caafb233a",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stern.de/politik/ausland/ukraine-news--luftraum-verletzt---polen-meldet-abschuss-von-drohnen-35963644.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Luftraum verletzt \u2013 Polen meldet Abschuss von Drohnen",
+   "id": "gdelt-a4db83a3eeaab976",
+   "idioma": "de",
+   "medio": "stern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eldiario.es/internacional/polonia-afirma-haber-derribado-drones-rusos-entraron-espacio-aereo-durante-ofensiva-ucrania_1_12590940.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia afirma haber derribado drones rusos que entraron en su espacio a\u00e9reo durante una ofensiva sobre Ucrania",
+   "id": "gdelt-11572e459f89de03",
+   "idioma": "es",
+   "medio": "eldiario.es"
+  },
+  {
+   "campos_respaldados": [
+    "evidencia"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://leggo.it/esteri/news/polonia_abbatte_droni_russi_cosa_e_successo_guerra_ucraina_russia-9059416.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alcuni dei quali abbattuti da Varsavia.",
+   "id": "gdelt-48c0789a40127108",
+   "idioma": "it",
+   "medio": "leggo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-10/la-polonia-abbattuti-droni-russi-nel-nostro-spazio-aereo-e-un-atto-di-aggressione-siamo-in-contatto-con-la-nato-caccia-in-volo-bloccati-tutti-i-voli-allaeroporto-di-varsavia/17719005",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Polonia | Abbattuti droni russi nel nostro spazio aereo \u00e8 un atto di aggressione Siamo in contatto con la Nato Caccia in volo bloccati",
+   "id": "gdelt-853c445493e90334",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cyprus-mail.com/2025/09/10/poland-downs-russian-drones-in-first-direct-clash-of-ukraine-war-on-nato-territory",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs Russian drones in first direct clash of Ukraine war on NATO territory",
+   "id": "gdelt-083a9ff5ca9171e4",
+   "idioma": "en",
+   "medio": "cyprus-mail.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://welt.de/politik/ausland/article68c1008815695f6010155be9/ukraine-krieg-russische-drohnen-in-luftraum-eingedrungen-polen-schiesst-feindliche-objekte-ab.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Russische Drohnen in Luftraum eingedrungen \u2013 Polen schie\u00dft \u201efeindliche Objekte\" ab",
+   "id": "gdelt-06e82097af8f69bf",
+   "idioma": "de",
+   "medio": "welt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://afr.com/world/europe/poland-scrambles-jets-shuts-warsaw-airport-over-russian-drones-20250910-p5mtx3",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones that violated its airspace following strikes on Western Ukraine",
+   "id": "gdelt-0837e2fb3f9e4d55",
+   "idioma": "en",
+   "medio": "afr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavozdegalicia.es/noticia/internacional/2025/09/10/polonia-derribadrones-rusos-violaron-espacio-aereo-ataque-ucrania/00031757480598792175932.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones rusos que violaron su espacio a\u00e9reo en un ataque a Ucrania",
+   "id": "gdelt-0aae318fafa06c67",
+   "idioma": "es",
+   "medio": "lavozdegalicia.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://srf.ch/news/international/ukraine/krieg-in-der-ukraine-nato-mitglied-polen-schiesst-drohnen-im-eigenen-luftraum-ab",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Krieg in der Ukraine - Nato-Mitglied Polen schiesst Drohnen im eigenen Luftraum ab",
+   "id": "gdelt-4df445e4d95c3122",
+   "idioma": "de",
+   "medio": "srf.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hindustantimes.com/world-news/ukraine-air-raid-map-siren-alert-in-kyiv-poltava-luhansk-donetsk-russia-drone-attack-poland-incursions-101757478858865.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Air raid alerts in parts of Ukraine amid Russian drone incursions in Poland",
+   "id": "gdelt-cf505857b05ddac3",
+   "idioma": "en",
+   "medio": "hindustantimes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.sky.com/story/ukraine-war-latest-poland-nato-russia-trump-putin-zelenskyy-live-moscow-kremlin-12541713",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine war latest: Poland shoots down Russian drones after 'unprecedented airspace violation'",
+   "id": "gdelt-55702db0cf8941a5",
+   "idioma": "en",
+   "medio": "sky.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kyivpost.com/post/59784",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO Airspace Breached: Shaheds Cross Into Poland as Russia Strikes Ukraine With Missiles, Drones",
+   "id": "gdelt-65349f92ac43d23a",
+   "idioma": "en",
+   "medio": "kyivpost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://come-on.de/politik/polen-meldet-abschuss-von-russischen-drohnen-kontakt-mit-dem-nato-kommando-zr-93926181.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polen meldet Abschuss russischer Drohnen \u2013 \u201eKontakt mit dem Nato-Kommando\"",
+   "id": "gdelt-d8b4e2a46b992dd5",
+   "idioma": "de",
+   "medio": "come-on.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2025-09-10/blic/uzivo-ruski-dronovi-usli-u-poljsku-nato-lovci-ih-oborili-zatvoren-medjunarodni-aerodrom-u-varsavi-oruzje-je-rasporedjeno-u-toku-je-vojna-operacija-foto-video/40447721",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "U\u017eivo ruski dronovi u\u0161li u Poljsku, NATO lovci ih oborili! Zatvoren me\u0111unarodni aerodrom u Var\u0161avi: \"Oru\u017eje je raspore\u0111eno, u toku je vojna operacija!\" (foto, video)",
+   "id": "gdelt-088533899f441b56",
+   "idioma": "sr",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fnp.de/politik/polen-meldet-abschuss-von-russischen-drohnen-kontakt-mit-dem-nato-kommando-zr-93926181.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polen meldet Abschuss von Drohnen aus Russland \u2013 \u201eKontakt mit dem Nato-Kommando\"",
+   "id": "gdelt-36055691f27dae32",
+   "idioma": "de",
+   "medio": "fnp.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetaexpress.com/polonia-rrezon-disa-drone-ruse-pas-shkeljes-se-hapesires-se-saj-ajrore-mbyllen-aeroporte-informohet-edhe-nato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia rr\u00ebzon disa dron\u00eb rus\u00eb pas shkeljes s\u00eb hap\u00ebsir\u00ebs s\u00eb saj ajrore, mbyllen aeroporte \u2013 informohet edhe NATO",
+   "id": "gdelt-5ae1d3def14dd2c6",
+   "idioma": "sq",
+   "medio": "gazetaexpress.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nbclosangeles.com/news/national-international/poland-downed-drones-violated-airspace-russian-attack-ukraine/3776399",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downed drones that violated airspace during Russian attack on Ukraine",
+   "id": "gdelt-fcdf4b8b0239eb13",
+   "idioma": "en",
+   "medio": "nbclosangeles.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abc.es/internacional/guerra-ucrania-rusia-directo-ultima-hora-sobre-20250910081625-di.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerra Ucrania - Rusia, en directo: \u00faltima hora sobre el derribo de drones rusos en Polonia y las reacciones de EE.UU., la UE y la",
+   "id": "gdelt-70fcf738b250ba60",
+   "idioma": "es",
+   "medio": "abc.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://independent.ie/world-news/europe/act-of-aggression-poland-shoots-down-drones-in-its-airspace-during-russian-attack-on-ukraine/a1809806131.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "'Act of aggression' \u2013 Poland shoots down drones in its airspace during Russian attack on Ukraine",
+   "id": "gdelt-abb013f0284e9685",
+   "idioma": "en",
+   "medio": "independent.ie"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elplural.com/politica/internacional/polonia-derriba-drones-entraron-espacio-aereo-durante-ataque-ruso-ucrania_359937102",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones que entraron en su espacio a\u00e9reo durante un ataque ruso a Ucrania",
+   "id": "gdelt-bd54c286b37e7f36",
+   "idioma": "es",
+   "medio": "elplural.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.de/politik/858939788/ukraine-krieg-aktuell-nato-alarm-nach-wladimir-putin-angriff-polen-kampfjets-schiessen-russen-drohnen-im-nato-luftraum-ab/1",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg aktuell: Polen-Kampfjets schie\u00dfen Putin-Drohnen im Nato-Luftraum ab",
+   "id": "gdelt-57dff91c9ff002b8",
+   "idioma": "de",
+   "medio": "news.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lasexta.com/noticias/internacional/polonia-derriba-varios-drones-rusos-que-violaron-repetidamente-espacio-aereo_2025091068c105427dd380649b1feb7c.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba varios drones rusos que \"violaron repetidamente\" su espacio a\u00e9reo durante un ataque a Ucrania",
+   "id": "gdelt-58a1a7ff302012cd",
+   "idioma": "es",
+   "medio": "lasexta.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://breakingnews.ie/world/poland-downs-drones-that-violated-airspace-during-russian-bombardment-of-ukraine-1805305.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs drones that violated airspace during Russian bombardment of Ukraine",
+   "id": "gdelt-6e613ef932e759b4",
+   "idioma": "en",
+   "medio": "breakingnews.ie"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://radiowroclaw.pl/articles/view/154107/Wojsko-zestrzelilo-drony-na-wschodzie-kraju-Naruszono-polska-przestrzen-powietrzna-podczas-ataku-na-Ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Wojsko zestrzeli\u0142o drony na wschodzie kraju. Naruszono polsk\u0105 przestrze\u0144 powietrzn\u0105 podczas ataku na Ukrain\u0119",
+   "id": "gdelt-6fdda9d1fc282413",
+   "idioma": "pl",
+   "medio": "radiowroclaw.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailymail.co.uk/news/article-15083399/poland-russia-drones-ukraine-nato-war-live-updates.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones after country's airspace was 'violated' during Ukraine attack: Live updates",
+   "id": "gdelt-715e756d033df682",
+   "idioma": "en",
+   "medio": "dailymail.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-10/la-polonia-abbatte-droni-russi-caccia-nato-in-volo-e-aeroporto-di-varsavia-chiuso/17719127",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Polonia abbatte droni russi caccia Nato in volo e aeroporto di Varsavia chiuso",
+   "id": "gdelt-7ab52451faac692a",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://brecorder.com/news/40382048/poland-shoots-down-drones-in-its-airspace-during-russias-ukraine-attack-calls-violation-act-of-aggression",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down drones in its airspace during Russia's Ukraine attack, calls violation act of aggression - World",
+   "id": "gdelt-8d2d08a9ec769552",
+   "idioma": "en",
+   "medio": "brecorder.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailyrecord.co.uk/news/uk-world-news/nato-destroys-russian-suicide-drones-35878396",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato destroys Russian suicide drones in first military clash since Ukraine invasion",
+   "id": "gdelt-10c96d82b8471228",
+   "idioma": "en",
+   "medio": "dailyrecord.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aa.com.tr/en/europe/poland-downs-russian-drones-that-violated-its-airspace-during-strikes-on-ukraine/3683248",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs Russian drones that violated its airspace during strikes on Ukraine",
+   "id": "gdelt-42371b96d3b7ff2c",
+   "idioma": "en",
+   "medio": "aa.com.tr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mdr.de/nachrichten/welt/osteuropa/politik/ukraine-krieg-polen-abschuss-drohnen-russland-nato-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Polens Armee nennt russische Drohnen im Luftraum \"reale Bedrohung\"",
+   "id": "gdelt-cc8f52cddce295d3",
+   "idioma": "de",
+   "medio": "mdr.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://as.com/actualidad/politica/guerra-de-ucrania-rusia-y-conflicto-en-la-franja-de-gaza-polonia-derriba-drones-rusos-en-su-espacio-aereo-n",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerra de Ucrania-Rusia y conflicto en la Franja de Gaza: Polonia derriba drones rusos en su espacio a\u00e9reo",
+   "id": "gdelt-031f220d80d06e0d",
+   "idioma": "es",
+   "medio": "as.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://isp.netscape.com/news/world/story/0001/20250910/1232774279039f9e5c5b78bd58686cb9",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says it shot down Russian drones that violated its airspace during bombardment of Ukraine",
+   "id": "gdelt-09a5e31b995858aa",
+   "idioma": "en",
+   "medio": "netscape.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-10/droni-russi-abbattuti-in-polonia-varsavia-chiuso-laeroporto-in-contatto-con-la-nato/17719798",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni russi abbattuti in Polonia Varsavia chiuso l' aeroporto In contatto con la Nato",
+   "id": "gdelt-1cb1700278705196",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://orissapost.com/poland-downs-drones-breaching-airspace-during-russian-bombardment-of-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs drones breaching airspace during Russian bombardment of Ukraine",
+   "id": "gdelt-ae7841fc24dba615",
+   "idioma": "en",
+   "medio": "orissapost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cbsnews.com/news/russia-ukraine-war-poland-drones-downed-russian-attacks",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says it downed drones in its airspace during Russian attacks on Ukraine",
+   "id": "gdelt-d16ddabd4c73de0f",
+   "idioma": "en",
+   "medio": "cbsnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://independent.co.uk/news/world/europe/poland-russia-drones-ukraine-war-putin-nato-latest-news-b2823643.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Russia war latest: 'Huge number' of Russian drones violated Poland's airspace, says Tusk",
+   "id": "gdelt-f490aa2adc815ae0",
+   "idioma": "en",
+   "medio": "independent.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazette.com/news/wex/poland-says-russia-repeatedly-violated-its-airspace-during-drone-attack-on-ukraine/article_6a7cd8b5-d5da-57f0-86f3-d6f8fecb46c2.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says Russia 'repeatedly' violated its airspace during drone attack on Ukraine | News",
+   "id": "gdelt-138cb5b26b8e2f2f",
+   "idioma": "en",
+   "medio": "gazette.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20minutos.es/internacional/ataque-drones-rusos-polonia-defensas-antiaereas-otan-ayudaron-derribar-aeronaves-tripuladas-rusia_6243299_6.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerra de Rusia y Ucrania, en directo | | Las defensas antia\u00e9reas de la OTAN ayudan a derribar los drones de Rusia",
+   "id": "gdelt-156a9c82475a6c61",
+   "idioma": "es",
+   "medio": "20minutos.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://taz.de/-Nachrichten-im-Ukraine-Krieg-/!6113151",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "+++ Nachrichten im Ukraine-Krieg +++: Russische Drohnen \u00fcber Polen abgeschossen",
+   "id": "gdelt-c3d1e1dab03a7592",
+   "idioma": "de",
+   "medio": "taz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elconfidencial.com/mundo/2025-09-10/polonia-drones-rusos-guerra-ucrania-directo_4205861",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones rusos: \u00faltima hora de la guerra entre Ucrania y Rusia, reacciones de la OTAN y UE, en directo",
+   "id": "gdelt-dade0416d71b1d83",
+   "idioma": "es",
+   "medio": "elconfidencial.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://emol.com/noticias/Internacional/2025/09/10/1177461/polonia-denuncia-violacion-aire-rusia.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia denuncia que drones violaron \"repetidamente\" su espacio a\u00e9reo durante ataque ruso a Ucrania",
+   "id": "gdelt-e54f60f6d1eaa5c5",
+   "idioma": "es",
+   "medio": "emol.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eltiempo.com/mundo/europa/polonia-derribo-algunos-drones-y-denuncio-que-rusia-invadio-sin-autorizacion-su-espacio-aereo-para-atacar-a-ucrania-3489267",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derrib\u00f3 'algunos drones' rusos y denunci\u00f3 que Rusia invadi\u00f3 sin autorizaci\u00f3n su espacio a\u00e9reo para atacar a Ucrania",
+   "id": "gdelt-e7859cdf07f321ce",
+   "idioma": "es",
+   "medio": "eltiempo.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://newsweek.pl/polska/polityka/atak-rosyjskich-dronow-zostaly-zestrzelone-nad-polska-wojsko-mowi-o-akcie-agresji/b7wsdqy",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kilkana\u015bcie lec\u0105cych z Rosji dron\u00f3w naruszy\u0142o w nocy polsk\u0105 przestrze\u0144 powietrzn\u0105.",
+   "id": "gdelt-2c6f8590a8519760",
+   "idioma": "pl",
+   "medio": "newsweek.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://newsweek.pl/polska/polityka/atak-rosyjskich-dronow-zostaly-zestrzelone-nad-polska-wojsko-mowi-o-akcie-agresji/b7wsdqy",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Szcz\u0105tki kilku zosta\u0142y ju\u017c odnalezione w Mniszkowie, Cze\u015bnikach, Czosn\u00f3wce czy Wyrykach.",
+   "id": "gdelt-2c6f8590a8519760-declaracion-2",
+   "idioma": "pl",
+   "medio": "Dow\u00f3dztwo Operacyjne Rodzaj\u00f3w Si\u0142 Zbrojnych (declaraci\u00f3n oficial citada en newsweek.pl)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://demokrata.hu/vilag/feszultseg-lengyelorszagban-dronokat-lottek-le-repulotereket-zartak-le-ertesitettek-a-nato-t-1054550",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Fesz\u00fclts\u00e9g Lengyelorsz\u00e1gban: dr\u00f3nokat l\u0151ttek le, rep\u00fcl\u0151tereket z\u00e1rtak le, \u00e9rtes\u00edtett\u00e9k a NATO-t",
+   "id": "gdelt-3207438ff732bf52",
+   "idioma": "hu",
+   "medio": "demokrata.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.es/internacional/noticia-rusia-asegura-haber-derribado-mas-120-drones-lanzados-ultimas-horas-ucrania-20250910102750.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rusia asegura haber derribado m\u00e1s de 120 drones lanzados en las \u00faltimas horas por Ucrania",
+   "id": "gdelt-48ba65a54696273f",
+   "idioma": "es",
+   "medio": "europapress.es"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://watson.ch/international/polen/953629313-nato-generalsekretaer-mark-rutte-beraet-mit-polen-zu-drohnenalarm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nach Angaben von Regierungschef Donald Tusk handelte es sich um Drohnen aus Russland.",
+   "id": "gdelt-5f4dcde1a750caef",
+   "idioma": "de",
+   "medio": "watson.ch"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://watson.ch/international/polen/953629313-nato-generalsekretaer-mark-rutte-beraet-mit-polen-zu-drohnenalarm",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Nach Angaben von Regierungschef Donald Tusk handelte es sich um Drohnen aus Russland.",
+   "id": "gdelt-5f4dcde1a750caef-declaracion-1",
+   "idioma": "de",
+   "medio": "Polish Government (declaraci\u00f3n oficial citada en watson.ch)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.es/internacional/noticia-bielorrusia-derriba-espacio-aereo-drones-desviaron-ruta-ataque-rusia-ucrania-20250910101940.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bielorrusia derriba en su espacio a\u00e9reo drones que \"se desviaron de su ruta\" en un ataque de Rusia a Ucrania",
+   "id": "gdelt-942f1fd5634849c6",
+   "idioma": "es",
+   "medio": "europapress.es"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://gazzettadimodena.it/italia-mondo/cronaca/2025/09/10/news/guerra-droni-russi-sulla-polonia-si-alzano-in-volo-in-caccia-siamo-stati-aggrediti-svolta-nel-conflitto-1.100758959",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La sospensione temporanea delle attivit\u00e0 in quattro scali aeroportuali, incluso lo Chopin di Varsavia.",
+   "id": "gdelt-9b4d34eb4c60e2e9",
+   "idioma": "it",
+   "medio": "gazzettadimodena.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aquieuropa.com/polonia-derriba-drones-rusos-tras-violacion-sin-precedentes-de-su-espacio-aereo-durante-ataque-a-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones rusos tras \"violaci\u00f3n sin precedentes\" de su espacio a\u00e9reo durante ataque a Ucrania",
+   "id": "gdelt-1332379fda24211f",
+   "idioma": "es",
+   "medio": "aquieuropa.com"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "entrada_exterior",
+    "evidencia",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://click2houston.com/news/world/2025/09/10/poland-says-it-shot-down-russian-drones-that-violated-its-airspace-during-bombardment-of-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Multiple Russian drones crossed into Poland in what European officials described Wednesday as a deliberate provocation.",
+   "id": "gdelt-4b6f47a01a634e1c",
+   "idioma": "en",
+   "medio": "click2houston.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://click2houston.com/news/world/2025/09/10/poland-says-it-shot-down-russian-drones-that-violated-its-airspace-during-bombardment-of-ukraine",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "It was the first time the alliance confronted a potential threat in its airspace.",
+   "id": "gdelt-4b6f47a01a634e1c-declaracion-1",
+   "idioma": "en",
+   "medio": "NATO (declaraci\u00f3n oficial citada en click2houston.com)"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://naszdziennik.pl/polska-kraj/326055,prezydent-atak-dronow-to-bezprecedensowy-moment-w-historii-nato.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "W nocy z wtorku na \u015brod\u0119 Dow\u00f3dztwo Operacyjne Rodzaj\u00f3w Si\u0142 Zbrojnych poinformowa\u0142o",
+   "id": "gdelt-77a0d584d40c35ef",
+   "idioma": "pl",
+   "medio": "naszdziennik.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://naszdziennik.pl/polska-kraj/326055,prezydent-atak-dronow-to-bezprecedensowy-moment-w-historii-nato.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Polska przestrze\u0144 powietrzna zosta\u0142a wielokrotnie naruszona przez drony.",
+   "id": "gdelt-77a0d584d40c35ef-declaracion-1",
+   "idioma": "pl",
+   "medio": "Dow\u00f3dztwo Operacyjne Rodzaj\u00f3w Si\u0142 Zbrojnych (declaraci\u00f3n oficial citada en naszdziennik.pl)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bfmtv.com/international/europe/ukraine/guerre-en-ukraine-emmanuel-macron-qualifie-l-incursion-de-drones-russes-sur-le-sol-polonais-comme-une-attaque-inacceptable_AD-202509100351.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine: Emmanel Macron condamne avec \"la plus grande fermet\u00e9\", \"l'incursion de drones russes\" en Pologne",
+   "id": "gdelt-221f0be1f67fc92f",
+   "idioma": "fr",
+   "medio": "bfmtv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bfmtv.com/international/asie/russie/guerre-en-ukraine-la-bielorussie-alliee-de-la-russie-dit-avoir-abattu-des-drones-dans-son-espace-aerien_AD-202509100380.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine: la Bi\u00e9lorussie, alli\u00e9e de la Russie, dit avoir abattu des drones dans son espace a\u00e9rien",
+   "id": "gdelt-b24160933f9e836e",
+   "idioma": "fr",
+   "medio": "bfmtv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17748554",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia a activat ap\u0103rarea NATO \u0219i a dobor\u00e2t drone ruse\u0219ti intrate \u00een spa\u021biul s\u0103u aerian. Bruxelles-ul: atacul ar putea fi deliberat",
+   "id": "gdelt-d565f4658a8c2080",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtbf.be/article/grave-et-inacceptable-plusieurs-dirigeants-europeens-condamnent-l-incursion-de-drones-russes-en-pologne-11598941",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : la Pologne, cibl\u00e9e par des drones russes, demande l'activation de l'article 4 de l'OTAN qui pr\u00e9voit la consultation des alli\u00e9s en",
+   "id": "gdelt-dd18bc59cc59c9e2",
+   "idioma": "fr",
+   "medio": "rtbf.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bignewsnetwork.com/news/278564828/poland-shoots-down-russian-drones-that-violated-its-airspace-during-ukraine-attack",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones that violated its airspace during Ukraine attack",
+   "id": "gdelt-1d1d293367d26807",
+   "idioma": "en",
+   "medio": "bignewsnetwork.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://faz.net/aktuell/politik/ukraine/ukraine-liveticker-polen-beantragt-nach-drohnenvorfall-nato-konsultationen-faz-110172806.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Liveticker: Polen beantragt nach Drohnenvorfall NATO-Konsultationen",
+   "id": "gdelt-57058c817243db28",
+   "idioma": "de",
+   "medio": "faz.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://laprovence.com/article/france-monde/5390667968398/guerre-en-ukraine-la-defense-anti-aerienne-de-l-otan-intervient-pour-detruire-des-drones-dans-le-ciel-polonais",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : la d\u00e9fense anti-a\u00e9rienne de l'Otan intervient pour d\u00e9truire des drones dans le ciel polonais",
+   "id": "gdelt-ac3962973f9c92fa",
+   "idioma": "fr",
+   "medio": "laprovence.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://chronicle.lu/category/international-news/56674-nato-member-poland-shoots-down-drones-in-its-airspace-during-russias-ukraine-attack",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO Member Poland Shoots Down Drones in its Airspace During Russia's Ukraine Attack",
+   "id": "gdelt-acee8457dd296c9e",
+   "idioma": "en",
+   "medio": "chronicle.lu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dw.com/en/poland-hits-drones-in-its-airspace-as-russia-attacks-ukraine/live-73941525",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland hits drones in its airspace as Russia attacks Ukraine \u2013 DW \u2013 09/10/2025",
+   "id": "gdelt-c00ef1c764fdc206",
+   "idioma": "en",
+   "medio": "dw.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://derbytelegraph.co.uk/news/uk-world-news/poland-shoots-down-russian-suicide-10488013",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian suicide drones in first military clash since Ukraine invasion",
+   "id": "gdelt-d6b17766d44d6a8f",
+   "idioma": "en",
+   "medio": "derbytelegraph.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://thejournal.ie/poland-shoots-down-hostile-objects-that-violated-airspace-in-russian-attack-on-ukraine-6812440-Sep2025",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones that violated airspace during attack on Ukraine",
+   "id": "gdelt-f1dffcbbca77b5a3",
+   "idioma": "en",
+   "medio": "thejournal.ie"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stern.de/politik/ausland/krieg-in-der-ukraine--polen-beantragt-nach-drohnenabschuss-nato-konsultationen-36042304.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Krieg in der Ukraine: Polen beantragt nach Drohnenabschuss Nato-Konsultationen",
+   "id": "gdelt-bbc971d52deeab78",
+   "idioma": "de",
+   "medio": "stern.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://univision.com/noticias/mundo/polonia-derriba-drones-de-rusia-que-violaron-su-espacio-aereo-para-atacar-a-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones de Rusia que violaron su espacio a\u00e9reo para atacar a Ucrania | Noticias Univision Mundo",
+   "id": "gdelt-15b384071cce5354",
+   "idioma": "es",
+   "medio": "univision.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtbf.be/article/guerre-ne-ukraine-la-pologne-ciblee-par-des-drones-russes-demande-l-activation-de-l-article-4-de-l-otan-qui-prevoit-la-consultation-des-allies-en-cas-de-menace-11598941",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : la Pologne, cibl\u00e9e par des drones russes, demande d'activer l'article 4 de l'OTAN et la consultation des alli\u00e9s en cas de",
+   "id": "gdelt-1a30b215e916c08f",
+   "idioma": "fr",
+   "medio": "rtbf.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.yam.md/ro/story/17748955",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia a solicitat activarea articolului 4 din Acordul NATO, dup\u0103 ce a dobor\u00e2t dronele ruse\u0219ti: \u201eAcesta nu este doar un r\u0103zboi pentru ucraineni. Este o",
+   "id": "gdelt-3bc237b2be537b09",
+   "idioma": "ro",
+   "medio": "news.yam.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.de/politik/858939788/ukraine-krieg-aktuell-nato-alarm-in-polen-nach-putin-angriff-kampfjets-schiessen-drohnen-im-nato-luftraum-ab-artikel-4-beantragt/1",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg aktuell: Kampfjets schie\u00dfen Putin-Drohnen \u00fcber Polen ab - Nato-Artikel 4 beantragt",
+   "id": "gdelt-5ba72d6e6df66919",
+   "idioma": "de",
+   "medio": "news.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jornaleconomico.sapo.pt/noticias/ucrania-pm-polaco-vai-invocar-tratado-da-nato-apos-derrube-de-drones-russos",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ucr\u00e2nia: PM polaco vai invocar Tratado da NATO ap\u00f3s derrube de drones russos",
+   "id": "gdelt-646daa4cdd91a59e",
+   "idioma": "pt",
+   "medio": "jornaleconomico.sapo.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://humanite.fr/monde/drones/guerre-en-ukraine-la-pologne-dit-avoir-tire-contre-des-objets-hostiles-apres-lintrusion-de-drones-russes-dans-son-espace-aerien",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : la Pologne dit avoir tir\u00e9 contre des \u00ab objets hostiles \u00bb apr\u00e8s l'intrusion de drones russes dans son espace a\u00e9rien",
+   "id": "gdelt-2534ad9f3ee406a8",
+   "idioma": "fr",
+   "medio": "humanite.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rustourismnews.com/2025/09/10/poland-downs-russian-drones-closes-airports-in-natos-first-direct-response",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland Downs Russian Drones, Closes Airports in NATO's First Direct Response",
+   "id": "gdelt-885caa53af191cdb",
+   "idioma": "en",
+   "medio": "rustourismnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailysabah.com/world/europe/russian-drones-targeted-at-ukraine-shot-down-over-polish-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian drones targeted at Ukraine shot down over Polish airspace",
+   "id": "gdelt-c84caf39f1016766",
+   "idioma": "en",
+   "medio": "dailysabah.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://article.wn.com/view/2025/09/10/NATORussia_War_Begins_In_A_First_Poland_Shoots_Down_Russian_",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO-Russia War Begins? | In A First, Poland 'Shoots Down' Russian Drones Amid Ukraine Blitz ...",
+   "id": "gdelt-713e722a2be948e3",
+   "idioma": "en",
+   "medio": "wn.com"
+  },
+  {
+   "campos_respaldados": [
+    "cierre"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://eska.pl/wiadomosci/reakcje-zagranicznych-przywodcow-na-atak-rosyjskimi-dronami-potepiam-to-w-najostrzejszych-slowach-aa-zdrr-VpGM-VBwD.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "W zwi\u0105zku z tym kilka lotnisk zosta\u0142o zamkni\u0119tych",
+   "id": "gdelt-0701e065d23cdc58",
+   "idioma": "pl",
+   "medio": "eska.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deccanchronicle.com/world/poland-says-it-shot-down-russian-drones-that-violated-its-airspace-during-bombardment-of-ukraine-1902749",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland Shots Down Russian Drones After Airspace Violation During Ukraine Strikes",
+   "id": "gdelt-3e9ce5aa33ed93b9",
+   "idioma": "en",
+   "medio": "deccanchronicle.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://yahoo.com/news/articles/belarus-says-shot-down-drones-081830080.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Belarus says it shot down some drones that went astray during Russia-Ukraine strikes",
+   "id": "gdelt-5954992d364e1233",
+   "idioma": "en",
+   "medio": "yahoo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://atlantico.fr/article/pepite/attaque-russe-ukraine-pologne-abat-drones-apres-violations-espace-aerien-donald-tusk-russie-union-europeenne-emmanuel-macron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Attaque russe en Ukraine : la Pologne abat des drones apr\u00e8s des violations de son espace a\u00e9rien",
+   "id": "gdelt-c9f35375bff702c2",
+   "idioma": "fr",
+   "medio": "atlantico.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deutschlandfunk.de/polen-beantragt-nach-abschuss-von-russischen-drohnen-nato-konsultationen-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg - Polen beantragt nach Abschuss von russischen Drohnen NATO-Konsultationen",
+   "id": "gdelt-ff60c954fddaf77d",
+   "idioma": "de",
+   "medio": "deutschlandfunk.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://opinionnigeria.com/poland-says-russian-drones-violated-its-airspace-during-ukraine-strikes",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland Says Russian Drones Violated Its Airspace During Ukraine Strikes",
+   "id": "gdelt-20c8272c9339ef6b",
+   "idioma": "en",
+   "medio": "opinionnigeria.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eaworldview.com/2025/09/ukraine-war-poland-and-nato-down-russian-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine War, Day 1,294: Poland and NATO Down Russian Drones",
+   "id": "gdelt-7c6fa9f6c3a5424a",
+   "idioma": "en",
+   "medio": "eaworldview.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://indianexpress.com/article/world/russia-drones-shot-down-poland-came-ukraine-10241802",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russia says drones shot down in Poland came from direction of Ukraine: report",
+   "id": "gdelt-b5f1a9572beb9f47",
+   "idioma": "en",
+   "medio": "indianexpress.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gauchazh.clicrbs.com.br/colunistas/rodrigo-lopes/noticia/2025/09/direto-de-kiev-russia-lanca-novo-ataque-a-ucrania-drones-violam-espaco-aereo-da-polonia-e-poem-otan-em-alerta-cmfdra57800ye0120xjiyqsd5.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Direto de Kiev: R\u00fassia lan\u00e7a novo ataque \u00e0 Ucr\u00e2nia, drones violam espa\u00e7o a\u00e9reo da Pol\u00f4nia e p\u00f5em Otan em alerta",
+   "id": "gdelt-07341065fdebe69b",
+   "idioma": "pt",
+   "medio": "clicrbs.com.br"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://english.ahram.org.eg/NewsContent/2/11/552796/World/War-in-Ukraine/Poland-invokes-NATO-Article--for-urgent-talks-afte.aspx",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland invokes NATO Article 4 for urgent talks after drone incursion - War in Ukraine - World",
+   "id": "gdelt-0f281456ed09356c",
+   "idioma": "en",
+   "medio": "ahram.org.eg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tech.wp.pl/polska-zestrzelila-rosyjskie-drony-kreml-oskarza-ukraine,7198703130393504a",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polska zestrzeli\u0142a rosyjskie drony. Rosjanie oskar\u017caj\u0105 Ukrain\u0119",
+   "id": "gdelt-1100f9d19bad1ee4",
+   "idioma": "pl",
+   "medio": "tech.wp.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deutschlandfunk.de/polen-beantragt-nach-abschuss-von-russischen-drohnen-nato-konsultationen-nach-artikel-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg - Polen beantragt nach Abschuss von russischen Drohnen NATO-Konsultationen nach Artikel 4",
+   "id": "gdelt-1c0bd091bfbad2d7",
+   "idioma": "de",
+   "medio": "deutschlandfunk.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tn.com.ar/internacional/2025/09/10/polonia-derribo-tres-drones-que-violaron-su-espacio-aereo-durante-un-ataque-ruso-a-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derrib\u00f3 tres drones que violaron su espacio a\u00e9reo durante un ataque ruso a Ucrania",
+   "id": "gdelt-3b7698c5b1795b6f",
+   "idioma": "es",
+   "medio": "tn.com.ar"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lindependant.fr/2025/09/10/guerre-en-ukraine-19-violations-trois-drones-abattus-activation-de-larticle-4-de-lotan-le-premier-ministre-polonais-revient-sur-la-violation-de-12921877.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine :\"19 violations\", \"sept drones abattus\", activation de l'article 4 de l'Otan\u2026 Le Premier ministre polonais revient sur la violation de l'espace a\u00e9rien",
+   "id": "gdelt-3d620f3bfd9956d3",
+   "idioma": "fr",
+   "medio": "lindependant.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://article.wn.com/view/2025/09/10/Poland_shoots_down_Russian_drones_in_first_NATO_clash_since_",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones in first NATO clash since Ukraine war",
+   "id": "gdelt-4dec93bb5ce7042c",
+   "idioma": "en",
+   "medio": "wn.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20minutes.fr/monde/4172226-20250910-guerre-ukraine-sait-incursion-drones-russes-pologne",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : Article 4, avions n\u00e9erlandais... Ce que l'on sait sur l'incursion de drones russes en Pologne",
+   "id": "gdelt-8c1f187ff1c5d214",
+   "idioma": "fr",
+   "medio": "20minutes.fr"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://theindianawaaz.com/poland-shuts-airports-after-ukraine-warned-of-drones-in-its-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland has shut four of its airports after Ukraine warned of drones in its airspace.",
+   "id": "gdelt-933be65f0a72ff0c",
+   "idioma": "en",
+   "medio": "theindianawaaz.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naharnet.com/stories/en/315178-poland-says-downed-drones-in-its-airspace-during-russian-attack-on-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland says downed drones in its airspace during Russian attack on Ukraine",
+   "id": "gdelt-a8c0edd950f4ae32",
+   "idioma": "en",
+   "medio": "naharnet.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://farodevigo.es/mundo/2025/09/10/polonia-rusia-drones-misil-cazas-otan-ataque-que-pasa-121430177.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "UCRANIA | As\u00ed invadi\u00f3 Rusia el espacio a\u00e9reo de Polonia: siete drones, un misil y cazas de la OTAN",
+   "id": "gdelt-1e3b00c388f75c8c",
+   "idioma": "es",
+   "medio": "farodevigo.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aljazeera.com/news/2025/9/10/poland-shoots-down-russian-drones-will-nato-enter-war-in-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones: Will NATO enter war in Ukraine?",
+   "id": "gdelt-25e2ac44be1b8399",
+   "idioma": "en",
+   "medio": "aljazeera.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://publico.es/internacional/von-der-leyen-condena-incursion-rusa-polonia-anuncia-alianza-drones-ucrania.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Von der Leyen condena la incursi\u00f3n rusa en Polonia y anuncia una \"alianza de drones\" con Ucrania",
+   "id": "gdelt-61fe5088b29ca28a",
+   "idioma": "es",
+   "medio": "publico.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://keprtv.com/news/nation-world/poland-intercepts-russian-drones-that-violated-airspace-during-ukraine-attack-nato-article-4-prime-minister-donald-tusk-parliament-dutch-f35-fighter-jets-putin-zelenskyy-peace-deal-aerial-assaults",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland intercepts Russian drones that violated airspace during Ukraine attack",
+   "id": "gdelt-a7f93893cac3304d",
+   "idioma": "en",
+   "medio": "keprtv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sss.fi/2025/09/puola-pyytaa-aktivoimaan-naton-artikla-4n-kiireellisista-neuvotteluista-toistakymmenta-droonia-loukkasi-puolan-ilmatilaa",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Puola pyyt\u00e4\u00e4 aktivoimaan Naton artikla 4:n kiireellisist\u00e4 neuvotteluista \u2013 toistakymment\u00e4 droonia loukkasi Puolan ilmatilaa",
+   "id": "gdelt-b5ec1443457d2742",
+   "idioma": "fi",
+   "medio": "sss.fi"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tvn24.pl/swiat/rosyjskie-drony-zestrzelone-nad-polska-szef-nato-mark-rutte-moj-komunikat-do-putina-jest-jasny-st8641235",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rosyjskie drony zestrzelone nad Polsk\u0105. Szef NATO Mark Rutte: m\u00f3j komunikat do Putina jest jasny",
+   "id": "gdelt-eeb6903c91980c87",
+   "idioma": "pl",
+   "medio": "tvn24.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vozpopuli.com/defensa/mark-rutte-asegura-que-la-otan-defendera-su-territorio-y-que-los-drones-rusos-en-polonia-no-son-un-incidente-aislado.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mark Rutte asegura que la OTAN defender\u00e1 \"su territorio\" y que los drones rusos en Polonia \"no son un incidente aislado\"",
+   "id": "gdelt-00981417dba051fd",
+   "idioma": "es",
+   "medio": "vozpopuli.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dominicanrepublicpost.com/poland-shoots-down-russian-drones-will-nato-enter-war-in-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland shoots down Russian drones: Will NATO enter war in Ukraine? - Dominican Republic Post \u2013 Caribbean News, Business, Travel & Culture",
+   "id": "gdelt-08e3e52257d2a320",
+   "idioma": "en",
+   "medio": "dominicanrepublicpost.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lexpress.fr/monde/europe/ukraine-la-pologne-demande-a-lotan-dactiver-larticle-4-apres-une-intrusion-de-drones-russes-VVLSYPMALJC2PEE6RVYQXOKAGM",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine : la Pologne demande \u00e0 l'Otan d'activer l'article 4 apr\u00e8s une intrusion de drones russes \u2013 L'Express",
+   "id": "gdelt-249609ff89ab0beb",
+   "idioma": "fr",
+   "medio": "lexpress.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://polityka.pl/tygodnikpolityka/kraj/2314315,1,rosyjskie-drony-nad-polska-atak-bez-precedensu-pracowita-noc-art-4-nato-uruchomiony.read",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rosyjskie drony nad Polsk\u0105. \u201eAtak bez precedensu, pracowita noc\". Art. 4 NATO uruchomiony",
+   "id": "gdelt-a259baffa88efe85",
+   "idioma": "pl",
+   "medio": "polityka.pl"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://caleaeuropeana.ro/polonia-cere-activarea-articolului-4-din-tratatul-nato-donald-tusk-este-prima-data-cand-dronele-ruse-au-fost-doborate-intr-o-tara-aliata",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "for\u021bele aeriene ale \u021b\u0103rii au dobor\u00e2t mai multe drone ruse\u0219ti",
+   "id": "gdelt-cec9add5f7c5b2a0",
+   "idioma": "ro",
+   "medio": "caleaeuropeana.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://caleaeuropeana.ro/polonia-cere-activarea-articolului-4-din-tratatul-nato-donald-tusk-este-prima-data-cand-dronele-ruse-au-fost-doborate-intr-o-tara-aliata",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "for\u021bele aeriene ale \u021b\u0103rii au dobor\u00e2t mai multe drone ruse\u0219ti",
+   "id": "gdelt-cec9add5f7c5b2a0-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Ap\u0103r\u0103rii Polonia (declaraci\u00f3n oficial citada en caleaeuropeana.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "evidencia"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kaleva.fi/saksan-puolustusministeri-venajan-droonit-lensivat/11767810",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ministeri\u00f6n mukaan \u00f6isist\u00e4 drooneista on l\u00f6ydetty seitsem\u00e4n.",
+   "id": "gdelt-553079d67c8b2f88",
+   "idioma": "fi",
+   "medio": "kaleva.fi"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kaleva.fi/saksan-puolustusministeri-venajan-droonit-lensivat/11767810",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Ministeri\u00f6n mukaan \u00f6isist\u00e4 drooneista on l\u00f6ydetty seitsem\u00e4n.",
+   "id": "gdelt-553079d67c8b2f88-declaracion-2",
+   "idioma": "fi",
+   "medio": "Puolan sis\u00e4ministeri\u00f6 (declaraci\u00f3n oficial citada en kaleva.fi)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bloomberg.com/opinion/articles/2025-09-10/putin-s-drone-strike-on-poland-targets-nato-s-willingness-to-defend-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Putin's Drone Strike on Poland Targets NATO's Willingness to Defend Ukraine",
+   "id": "gdelt-765d0da20025190f",
+   "idioma": "en",
+   "medio": "bloomberg.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kaleva.fi/venajan-droonit-vaurioittivat-taloa-ja-autoa-puola/11767810",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ven\u00e4j\u00e4n droonit vaurioittivat taloa ja autoa Puolassa, seitsem\u00e4n droonia l\u00f6ytynyt \u2013 Puola pyyt\u00e4\u00e4 Natoa aktivoimaan nelosartiklan kiireellisist\u00e4 neuvotteluista",
+   "id": "gdelt-4127acaf3dbd9cbd",
+   "idioma": "fi",
+   "medio": "kaleva.fi"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://antena3.ro/externe/pentru-putin-mesajul-nostru-e-clar-reactia-sefului-nato-mark-rutte-dupa-doborarea-de-drone-rusesti-deasupra-poloniei-759111.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u201ePentru Putin, mesajul nostru e clar\". Reac\u021bia \u0219efului NATO, Mark Rutte, dup\u0103 dobor\u00e2rea de drone ruse\u0219ti deasupra Poloniei",
+   "id": "gdelt-41e584ecc109f68e",
+   "idioma": "ro",
+   "medio": "antena3.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stabroeknews.com/2025/09/10/news/world/poland-downs-drones-the-first-nato-member-to-open-fire-during-ukraine-war",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs drones, the first NATO member to open fire during Ukraine war",
+   "id": "gdelt-7e0bbcfb966d284b",
+   "idioma": "en",
+   "medio": "stabroeknews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://boerse-express.com/news/articles/polen-schiesst-russische-drohnen-ab-nato-staat-erstmals-aktiv-im-ukraine-konflikt-823735",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "B\u00f6rse Express - Polen schie\u00dft russische Drohnen ab \u2013 NATO-Staat erstmals aktiv im Ukraine-Konflikt",
+   "id": "gdelt-8fb4b896e2b5ca2a",
+   "idioma": "de",
+   "medio": "boerse-express.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lr-online.de/nachrichten/politik/russland-ukraine-und-der-krieg-nach-dem-abschuss-von-drohnen-ueber-polen-was-bedeutet-das-fuer-die-nato-78301563.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russland, Ukraine und der Krieg: Nach dem Abschuss von Drohnen \u00fcber Polen \u2013 was bedeutet das f\u00fcr die Nato?",
+   "id": "gdelt-9cecba3a2f8e4846",
+   "idioma": "de",
+   "medio": "lr-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://reviewjournal.com/news/nation-and-world/poland-says-it-shot-down-russian-drones-that-violated-its-airspace-during-strikes-on-ukraine-3440042",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian drones that violated Poland's airspace during strikes on Ukraine shot down | Nation and World",
+   "id": "gdelt-04a2970014b9e4fe",
+   "idioma": "en",
+   "medio": "reviewjournal.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://touteleurope.eu/l-ue-dans-le-monde/guerre-en-ukraine-la-pologne-denonce-un-acte-d-agression-apres-l-incursion-de-drones-russes-dans-son-espace-aerien",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : la Pologne d\u00e9nonce un \"acte d'agression\" apr\u00e8s l'incursion de drones russes dans son espace a\u00e9rien",
+   "id": "gdelt-2838889ab21ae074",
+   "idioma": "fr",
+   "medio": "touteleurope.eu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elpais.com/internacional/2025-09-10/la-otan-advierte-del-riesgo-de-escalada-tras-la-incursion-de-drones-rusos-en-polonia.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerra Rusia y Ucrania : La OTAN advierte del riesgo de escalada tras la incursi\u00f3n de drones rusos en Polonia | Internacional",
+   "id": "gdelt-4a56ee9af529f5a9",
+   "idioma": "es",
+   "medio": "elpais.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://abcnyheter.no/nyheter/eide-droner-over-polen-trolig-en-russisk-test-av-nato/1207070",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mye tyder p\u00e5 at dette er et russisk fors\u00f8k p\u00e5 \u00e5 teste Nato",
+   "id": "gdelt-9257625d6412d445",
+   "idioma": "no",
+   "medio": "abcnyheter.no"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://abcnyheter.no/nyheter/eide-droner-over-polen-trolig-en-russisk-test-av-nato/1207070",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T14:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Polen har konkludert med at dette er en villet handling, alts\u00e5 ikke et uhell",
+   "id": "gdelt-9257625d6412d445-declaracion-1",
+   "idioma": "no",
+   "medio": "Polen (declaraci\u00f3n oficial citada en abcnyheter.no)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://metroworldnews.com/noticias/2025/09/10/polonia-derriba-drones-rusos-que-violaron-su-espacio-aereo-durante-ataque-a-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones rusos que violaron su espacio a\u00e9reo durante ataque a Ucrania",
+   "id": "gdelt-7c852df836bd4bce",
+   "idioma": "es",
+   "medio": "metroworldnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://telemundo.com/noticias/noticias-telemundo/internacional/polonia-enfrenta-por-primera-vez-drones-rusos-espacio-aereo-rcna230254",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia denuncia que drones violaron su espacio a\u00e9reo durante un ataque ruso en el oeste de Ucrania",
+   "id": "gdelt-81943b367d6d6a71",
+   "idioma": "es",
+   "medio": "telemundo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://laverdad.com/polonia-derriba-drones-rusos-que-violaron-su-espacio-aereo-durante-bombardeos-en-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derriba drones rusos que violaron su espacio a\u00e9reo durante bombardeos en Ucrania",
+   "id": "gdelt-046720d6293094cd",
+   "idioma": "es",
+   "medio": "laverdad.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ledauphine.com/defense-guerre-conflit/2025/09/10/incursion-de-drones-russes-en-pologne-reactions-l-otan-sous-pression-ce-que-l-on-sait",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine. Incursion de drones russes en Pologne : r\u00e9actions, l'Otan sous pression... ce que l'on sait",
+   "id": "gdelt-3710988ab54af8ea",
+   "idioma": "fr",
+   "medio": "ledauphine.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://oregonlive.com/nation/2025/09/poland-nato-shoot-down-russian-drones-that-entered-polish-territory-during-ukraine-strike.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland, NATO shoot down Russian drones that entered Polish territory during Ukraine strike",
+   "id": "gdelt-9cce16e6d1036fae",
+   "idioma": "en",
+   "medio": "oregonlive.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dagsavisen.no/nyheter/eide-om-droner-over-polen-mye-tyder-pa-at-dette-er-et-russisk-forsok-pa-a-teste-nato/9952697",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russiske droner over Polen: En test av Nato if\u00f8lge Eide",
+   "id": "gdelt-83b6160da89c2e75",
+   "idioma": "no",
+   "medio": "dagsavisen.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ibtimes.com/poland-downs-russian-drones-natos-first-offensive-action-ukraine-war-3783020",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland Downs Russian Drones In NATO's First Offensive Action Of Ukraine War",
+   "id": "gdelt-52c1af0996059053",
+   "idioma": "en",
+   "medio": "ibtimes.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ambito.com/mundo/polonia-derribo-drones-rusos-y-marco-el-primer-ataque-un-miembro-la-otan-la-guerra-ucrania-n6188658",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia derrib\u00f3 drones rusos y marc\u00f3 el primer ataque de un miembro de la OTAN en la guerra de Ucrania",
+   "id": "gdelt-6d71106c59f67c46",
+   "idioma": "es",
+   "medio": "ambito.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://english.news.cn/europe/20250910/758740b551be46adb438ed649fe806a4/c.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones shot down in Poland come from Ukraine: Russian diplomat-Xinhua",
+   "id": "gdelt-0ba1c82ef0987253",
+   "idioma": "en",
+   "medio": "english.news.cn"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziuaconstanta.ro/stiri/externe/secretarul-general-nato-mark-rutte-condamna-incursiunea-dronelor-ruse-in-polonia-extrem-de-periculos-si-imprudent-911040.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Secretarul general NATO, Mark Rutte, condamn\u0103 incursiunea dronelor ruse \u00een Polonia - \u201eExtrem de periculos \u0219i imprudent\"",
+   "id": "gdelt-4280837526eefe4c",
+   "idioma": "ro",
+   "medio": "ziuaconstanta.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://proceso.com.mx/internacional/2025/9/10/polonia-anuncia-que-derribo-drones-rusos-que-violaron-su-espacio-aereo-durante-bombardeos-en-ucrania-358569.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia anuncia que derrib\u00f3 drones rusos que violaron su espacio a\u00e9reo durante bombardeos en Ucrania",
+   "id": "gdelt-850095e6d545508b",
+   "idioma": "es",
+   "medio": "proceso.com.mx"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/verden/i/LM29zJ/eide-om-droner-over-polen-mye-tyder-paa-at-dette-er-et-russisk-forsoek-paa-aa-teste-nato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Eide om droner over Polen: \u2013 Mye tyder p\u00e5 at dette er et russisk fors\u00f8k p\u00e5 \u00e5 teste Nato",
+   "id": "gdelt-96a1cded61213ee1",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://leparisien.fr/international/ukraine/guerre-en-ukraine-ce-que-lon-sait-des-drones-russes-abattus-au-dessus-de-la-pologne-10-09-2025-77ZDZMOJ7RAQFB3PN7OXP7M2YY.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : ce que l'on sait des drones russes abattus au-dessus de la Pologne",
+   "id": "gdelt-3e2c9acafc977719",
+   "idioma": "fr",
+   "medio": "leparisien.fr"
+  },
+  {
+   "campos_respaldados": [
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://hirado.hu/kulfold/cikk/2025/09/10/mark-rutte-szerint-a-nato-legvedelme-sikeresen-reagalt-a-lengyelorszagi-orosz-drontamadasra",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "L\u00e9gv\u00e9delmi rendszereink m\u0171k\u00f6d\u00e9sbe l\u00e9ptek, \u00e9s a lengyel F-16-osok, a holland F-35-\u00f6s\u00f6k, az olasz AWACS-g\u00e9pek, a n\u00e9met Patriotok.",
+   "id": "gdelt-ed8b6acc9f252917",
+   "idioma": "hu",
+   "medio": "hirado.hu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/18-33-Trump-Was-ist-mit-Russland-das-den-polnischen-Luftraum-mit-Drohnen-verletzt--article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 18:33 Trump: \"Was ist mit Russland, das den polnischen Luftraum mit Drohnen verletzt?\" +++",
+   "id": "gdelt-e085f63364fac8e1",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://eurasiareview.com/10092025-nato-secretary-general-mark-rutte-on-violation-of-polish-airspace-by-russian-drones-statement",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Last night, numerous drones from Russia violated Polish airspace.",
+   "id": "gdelt-36a8ccada462a233",
+   "idioma": "en",
+   "medio": "eurasiareview.com"
+  },
+  {
+   "campos_respaldados": [
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://spravy.pravda.sk/svet/clanok/766528-este-to-nie-je-vojna-s-moskvou-poliaci-zostrelili-ruske-drony-nato-vravi-ze-putinovi-neustupi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bola aktivovan\u00e1 na\u0161a protivzdu\u0161n\u00e1 obrana, ktor\u00e1 \u00faspe\u0161ne zaistila obranu \u00fazemia NATO",
+   "id": "gdelt-235ba6a2caf865be",
+   "idioma": "sk",
+   "medio": "spravy.pravda.sk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://spravy.pravda.sk/svet/clanok/766528-este-to-nie-je-vojna-s-moskvou-poliaci-zostrelili-ruske-drony-nato-vravi-ze-putinovi-neustupi",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T17:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Ve\u013ek\u00fd po\u010det dronov z Ruska naru\u0161il po\u013esk\u00fd vzdu\u0161n\u00fd priestor. Bola aktivovan\u00e1 na\u0161a protivzdu\u0161n\u00e1 obrana",
+   "id": "gdelt-235ba6a2caf865be-declaracion-2",
+   "idioma": "sk",
+   "medio": "NATO (declaraci\u00f3n oficial citada en spravy.pravda.sk)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/19-06-Polnische-Behoerden-finden-zwei-weitere-Drohnen-eine-davon-wohl-bei-Militaerstuetzpunkt--article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 19:06 Polnische Beh\u00f6rden finden zwei weitere Drohnen - eine davon wohl bei Milit\u00e4rst\u00fctzpunkt +++",
+   "id": "gdelt-c452c8bf0af27e6d",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://oann.com/newsroom/poland-downs-russian-drones-after-repeated-airspace-violations-during-ukraine-attack",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs Russian drones after 'Repeated' airspace violations during Ukraine attack",
+   "id": "gdelt-dc501999f92b8bab",
+   "idioma": "en",
+   "medio": "oann.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://staradvertiser.com/2025/09/10/breaking-news/poland-downs-russian-drones-first-nato-member-to-fire-in-ukraine-war",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs Russian drones, first NATO member to fire in Ukraine war",
+   "id": "gdelt-5ead8ad44d6f372c",
+   "idioma": "en",
+   "medio": "staradvertiser.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://geo.tv/latest/623019-poland-downs-drones-in-its-airspace-becoming-first-nato-member-to-fire-during-ukraine-war",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland downs drones in its airspace, becoming first Nato member to fire during Ukraine war",
+   "id": "gdelt-73bd477034a1f052",
+   "idioma": "en",
+   "medio": "geo.tv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://english.elpais.com/international/2025-09-10/nato-warns-of-risk-of-escalation-after-russian-drone-strike-in-poland.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T19:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "War between Russia and Ukraine: NATO warns of risk of escalation after Russian drone strike in Poland | International",
+   "id": "gdelt-cc020ea4f8e0cdf9",
+   "idioma": "en",
+   "medio": "elpais.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infobae.com/america/mundo/2025/09/10/el-lider-de-la-onu-advirtio-sobre-el-riesgo-real-de-una-expansion-de-la-guerra-de-ucrania-tras-la-incursion-de-drones-rusos-en-polonia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "El l\u00edder de la ONU advirti\u00f3 sobre el \"riesgo real\" de una expansi\u00f3n de la guerra de Ucrania tras la incursi\u00f3n de drones rusos en",
+   "id": "gdelt-09457f14bdf64b15",
+   "idioma": "es",
+   "medio": "infobae.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://channel4.com/news/factcheck/factcheck-russian-drones-in-poland-nato-article-4-and-what-it-means-for-ukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "FactCheck: Russian drones in Poland, NATO Article 4 and what it means for Ukraine",
+   "id": "gdelt-3162da76967d8b34",
+   "idioma": "en",
+   "medio": "channel4.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zonebourse.com/actualite-bourse/la-pologne-abat-des-drones-russes-premiere-intervention-armee-d-un-membre-de-l-otan-depuis-le-debu-ce7d59dcd18aff26",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Pologne abat des drones dans son espace a\u00e9rien, devenant le premier membre de l'OTAN \u00e0 ouvrir le feu depuis le d\u00e9but de la guerre",
+   "id": "gdelt-c334106f98a59e01",
+   "idioma": "fr",
+   "medio": "zonebourse.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jungewelt.de/artikel/508060.ukraine-krieg-drohnen-in-polens-luftraum-abgeschossen.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Drohnen in Polens Luftraum abgeschossen",
+   "id": "gdelt-27439241f8e001e5",
+   "idioma": "de",
+   "medio": "jungewelt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://yahoo.com/news/articles/ukraine-war-latest-nato-engages-192213999.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T21:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine war latest: NATO engages Russia for first time ever as Poland downs drones amid attack on Ukraine",
+   "id": "gdelt-4a1e15bf964035f6",
+   "idioma": "en",
+   "medio": "yahoo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetaprawna.pl/wiadomosci/kraj/artykuly/9884356,atak-rosyjskich-dronow-niemcy-francja-i-nato-nie-zostawia-nas-samych.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Atak rosyjskich dron\u00f3w. Niemcy, Francja i NATO nie zostawi\u0105 nas samych? Zobacz, co zaproponowali Donaldowi Tuskowi",
+   "id": "gdelt-784fd54d069a7f07",
+   "idioma": "pl",
+   "medio": "gazetaprawna.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zfcorporate.ro/business-legal/rusia-trimis-dronele-300-kilometri-interiorul-teritoriului-poloniei-22900054",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T21:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rusia \u015fi-a trimis dronele la 300 de kilometri \u00een interiorul teritoriului Poloniei. Este cea mai mare sfidare la adresa NATO de la \u00eenceputul r\u0103zboiul Rusiei",
+   "id": "gdelt-dacc5d59b7638143",
+   "idioma": "ro",
+   "medio": "zfcorporate.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailytimes.com.pk/1366907/poland-wades-into-ukraine-war-by-downing-russian-drones-in-its-airspace",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland wades into Ukraine war by downing Russian drones in its airspace",
+   "id": "gdelt-d37bcc66449f87ed",
+   "idioma": "en",
+   "medio": "dailytimes.com.pk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lopezdoriga.com/internacional/drones-rusos-polonia-mayor-choque-rusia-otan-guerra-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones rusos en Polonia, el mayor choque de Rusia con la OTAN durante la guerra en Ucrania",
+   "id": "gdelt-92dcdf8385466492",
+   "idioma": "es",
+   "medio": "lopezdoriga.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://estadao.com.br/internacional/putin-indica-com-invasao-de-drones-na-polonia-que-nao-vai-recuar-na-pressao-militar-contra-a-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Putin indica com invas\u00e3o de drones na Pol\u00f4nia que n\u00e3o vai recuar na press\u00e3o militar contra a Ucr\u00e2nia",
+   "id": "gdelt-be692489903e9c03",
+   "idioma": "pt",
+   "medio": "estadao.com.br"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://spanish.xinhuanet.com/20250911/c507b9b81c2d4f2586b92e9cdb742728/c.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T00:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Diplom\u00e1tico ruso dice que drones derribados en Polonia proven\u00edan de Ucrania",
+   "id": "gdelt-4a46441b64ff8793",
+   "idioma": "es",
+   "medio": "xinhuanet.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://theguardian.com/world/2025/sep/11/ukraine-war-briefing-cheap-shahed-like-gerbera-drones-used-in-poland-violation",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T01:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine war briefing: Cheap Shahed-like Gerbera drones used in Poland violation",
+   "id": "gdelt-93e98e3fda92c427",
+   "idioma": "en",
+   "medio": "theguardian.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ladepeche.fr/2025/09/11/decryptage-guerre-en-ukraine-incursion-de-drones-russes-en-pologne-la-russie-cherche-t-elle-vraiment-a-elargir-le-conflit-12922199.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DECRYPTAGE. Guerre en Ukraine : incursion de drones russes en Pologne, la Russie cherche-t-elle vraiment \u00e0 \u00e9largir le conflit ?",
+   "id": "gdelt-0a3ee58aef48a088",
+   "idioma": "fr",
+   "medio": "ladepeche.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://merkur.de/politik/russland-mit-neuen-sanktionen-ukraine-krieg-rekord-drohnenangriff-auf-kiew-trump-droht-zr-93922254.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T05:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Trump reagiert auf Russlands Drohnen im NATO-Luftraum",
+   "id": "gdelt-4ba20b86c184a242",
+   "idioma": "de",
+   "medio": "merkur.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eaworldview.com/2025/09/ukraine-war-poland-zelensky-strong-countermeasures-v-russia-incursion",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine War, Day 1,295: Zelensky - \"Strong Countermeasures Are Vital\" After Russian Drone Incursion Into Poland",
+   "id": "gdelt-63da05b4f2ad01ae",
+   "idioma": "en",
+   "medio": "eaworldview.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetaprawna.pl/wiadomosci/artykuly/9884720,atak-dronow-z-rosji-jak-bezpiecznie-oddzielic-samoloty-cywilne-od-woj.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Atak dron\u00f3w z Rosji. Jak bezpiecznie oddzieli\u0107 samoloty cywilne od wojskowych? By\u0142y szef PA\u017bP chce strefy buforowej",
+   "id": "gdelt-876079d13655609b",
+   "idioma": "pl",
+   "medio": "gazetaprawna.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.wp.pl/sikorski-atak-dronow-na-polske-to-test-calego-nato-7199035150269376a",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sikorski: Atak dron\u00f3w na Polsk\u0119 to test ca\u0142ego NATO",
+   "id": "gdelt-282dd001be892b66",
+   "idioma": "pl",
+   "medio": "wiadomosci.wp.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://huffingtonpost.es/global/drones-rusos-polonia-mayor-choque-otan-comienzo-guerra-ucraniabr.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones rusos en Polonia: todo lo que sabemos del mayor choque con la OTAN desde el comienzo de la guerra en Ucrania",
+   "id": "gdelt-69f632e68748a096",
+   "idioma": "es",
+   "medio": "huffingtonpost.es"
+  },
+  {
+   "campos_respaldados": [
+    "evidencia",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://latercera.com/mundo/noticia/polonia-limita-el-trafico-aereo-en-las-fronteras-con-ucrania-y-bielorrusia-tras-la-incursion-de-drones-rusos",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "el derribo de varios drones que entraron en su territorio durante un ataque lanzado por el Ej\u00e9rcito de Rusia.",
+   "id": "gdelt-fe5e9f0fa5338dc1",
+   "idioma": "es",
+   "medio": "latercera.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fnp.de/politik/russland-mit-neuen-sanktionen-ukraine-krieg-rekord-drohnenangriff-auf-kiew-trump-droht-zr-93922254.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Russlands Drohnen im NATO-Luftraum \u2013 Polen schr\u00e4nkt Luftverkehr ein",
+   "id": "gdelt-254e0bc35d7d4399",
+   "idioma": "de",
+   "medio": "fnp.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://franceinfo.fr/monde/russie/guerre-en-ukraine-des-drones-russes-abattus-dans-le-ciel-polonais_7485760.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : des drones russes abattus dans le ciel polonais",
+   "id": "gdelt-a6363bfb4c8ef334",
+   "idioma": "fr",
+   "medio": "franceinfo.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infobae.com/america/mundo/2025/09/11/polonia-restringio-su-espacio-aereo-en-la-frontera-oriental-con-bielorrusia-y-ucrania-tras-la-incursion-de-drones-rusos",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia restringi\u00f3 su espacio a\u00e9reo en la frontera oriental con Bielorrusia y Ucrania tras la incursi\u00f3n de drones rusos",
+   "id": "gdelt-b4f678be8eb0c874",
+   "idioma": "es",
+   "medio": "infobae.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://come-on.de/politik/wie-selbst-putins-zerstoerte-drohnen-eine-nato-schwaeche-vorfuehren-zr-93928652.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "20 russische Flugobjekte \u2013 Drohnen",
+   "id": "gdelt-d38b0d162cd64e37",
+   "idioma": "de",
+   "medio": "come-on.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://come-on.de/politik/wie-selbst-putins-zerstoerte-drohnen-eine-nato-schwaeche-vorfuehren-zr-93928652.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T10:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Die Regierung um Donald Tusk in Warschau hat Nato-Artikel 4 gezogen.",
+   "id": "gdelt-d38b0d162cd64e37-declaracion-1",
+   "idioma": "de",
+   "medio": "Rz\u0105d Polski (declaraci\u00f3n oficial citada en come-on.de)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailymail.co.uk/news/article-15087691/NATO-anti-drone-Iron-Dome-Ukraine-Russia-Poland.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO needs 'anti-drone' Iron Dome including 120-mile buffer zone INSIDE Ukraine to stop Russian aerial attacks, Poland warns - as it's revealed one of Putin's",
+   "id": "gdelt-4a71bd365aa15474",
+   "idioma": "en",
+   "medio": "dailymail.co.uk"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://delfi.lv/52983255/spried-ar-delfi/120087099/par-es-un-nato-reakciju-uz-krievijas-dronu-ielidosanu-polija",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "vair\u0101ki krievu trieciendroni",
+   "id": "gdelt-302b232f09b58f98",
+   "idioma": "lv",
+   "medio": "delfi.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://yahoo.com/news/articles/ukraine-poland-lithuania-issue-joint-103409728.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine, Poland and Lithuania issue joint statement on Russian drone incursion",
+   "id": "gdelt-45b958af343cd68d",
+   "idioma": "en",
+   "medio": "yahoo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elperiodico.com/es/internacional/20250911/polonia-restringe-espacio-aereo-flanco-este-tres-meses-incursion-drones-rusos-121466536",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "UCRANIA | Polonia restringe el espacio a\u00e9reo en todo su flanco este durante tres meses tras la incursi\u00f3n de drones rusos",
+   "id": "gdelt-a2640a2e7376797c",
+   "idioma": "es",
+   "medio": "elperiodico.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://metro.co.uk/2025/09/11/russian-drones-shot-poland-were-heading-nato-base-supplying-ukraine-24136961",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian drones shot down in Poland 'were heading to Nato base supplying Ukraine'",
+   "id": "gdelt-1595479f6aec42d9",
+   "idioma": "en",
+   "medio": "metro.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://globalsecurity.org/military/library/news/2025/09/mil-250910-rferl06.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland Says It Shot Down Russian Drones In NATO Airspace, A First In Ukraine War",
+   "id": "gdelt-ad691984c67863c3",
+   "idioma": "en",
+   "medio": "globalsecurity.org"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/ukraine/id_100904276/ukraine-krieg-lettland-schliesst-luftraum-nach-drohnen-vorfall.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Lettland schlie\u00dft Luftraum nach Drohnen-Vorfall",
+   "id": "gdelt-e02219dcd08df1b1",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/14-57-Loecher-in-Nato-Luftabwehr-Thiele-Russland-hat-wohl-Dummy-Drohnen-geschickt--article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 14:57 L\u00f6cher in Nato-Luftabwehr? Thiele: Russland hat wohl \"Dummy-Drohnen\" geschickt+++",
+   "id": "gdelt-39f963ae4d432d32",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "inicio",
+    "inicio_precision",
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://la.lv/cik-daudz-nato-izmaksaja-krievijas-leto-dronu-notrieksana-polija-summa-ir-milziga",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Tr\u012bs Krievijas dronus izdevies izn\u012bcin\u0101t ar diviem F-35 izn\u012bcin\u0101t\u0101jiem; ceturt\u0101 drona liktenis v\u0113l tiek p\u0101rbaud\u012bts.",
+   "id": "gdelt-3032f82de6645fd3",
+   "idioma": "lv",
+   "medio": "la.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/15-40-Selenskyj-bietet-Nato-Partnern-Beratung-bei-Drohnen-Abwehr-an--article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 15:40 Selenskyj bietet Nato-Partnern Beratung bei Drohnen-Abwehr an +++",
+   "id": "gdelt-1ab52ee51b0f49ec",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailymail.co.uk/news/article-15088905/Drones-Poland-Putin-NATO-Ukraine-Russia.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones fired into Poland by Putin's forces 'were on a direct path to NATO base that supplies Ukraine'",
+   "id": "gdelt-60a4b7fca571471d",
+   "idioma": "en",
+   "medio": "dailymail.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/16-07-UN-Sicherheitsrat-tagt-am-Freitag-zu-russischen-Drohnen-in-Polens-Luftraum--article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 16:07 UN-Sicherheitsrat tagt am Freitag zu russischen Drohnen in Polens Luftraum +++",
+   "id": "gdelt-c93330420309c1ec",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://welt.de/politik/ausland/article68c25b34e94fcb47b9cd4699/Ukraine-Krieg-Nach-Drohnen-Vorfall-Bundeswehr-weitet-Luftraum-Kontrolle-ueber-Polen-deutlich-aus-Liveticker.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: ++ Nach Drohnen-Vorfall \u2013 Bundeswehr weitet Luftraum-Kontrolle \u00fcber Polen deutlich aus ++ Liveticker",
+   "id": "gdelt-b563442a628d1ea1",
+   "idioma": "de",
+   "medio": "welt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://noz.de/deutschland-welt/ukraine-krieg/artikel/ukraine-krieg-russische-drohnen-ueber-polen-bundeswehr-reagiert-48342649",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Russische Drohnen \u00fcber Polen \u2013 Bundeswehr reagiert",
+   "id": "gdelt-2bc1715ba3aa2e71",
+   "idioma": "de",
+   "medio": "noz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gazetaprawna.pl/wiadomosci/kraj/artykuly/9885180,polskie-wojsko-pojedzie-na-ukraine-ekspert-zidentyfikowal-rosyjskie-d.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polskie wojsko pojedzie na Ukrain\u0119. Ekspert zidentyfikowa\u0142 rosyjskie drony",
+   "id": "gdelt-74c473657b76e7ee",
+   "idioma": "pl",
+   "medio": "gazetaprawna.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diena.lv/raksts/latvija/zinas/andzans-nato-reakcija-uz-krievijas-dronu-ielidosanu-polija-bija-adekvata-14341320",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "And\u017e\u0101ns: NATO reakcija uz Krievijas dronu ielido\u0161anu Polij\u0101 bija adekv\u0101ta",
+   "id": "gdelt-f1e5046262556911",
+   "idioma": "lv",
+   "medio": "diena.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://polityka.pl/tygodnikpolityka/kraj/2314315,1,rosyjskie-drony-nad-polska-atak-bez-precedensu-pracowita-noc-wicepremier-nato-zdalo-egzamin.read",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T17:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rosyjskie drony nad Polsk\u0105. \u201eAtak bez precedensu, pracowita noc\". Wicepremier: NATO zda\u0142o egzamin",
+   "id": "gdelt-4144d43e49522c20",
+   "idioma": "pl",
+   "medio": "polityka.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pch24.pl/polscy-wojskowi-pojada-na-ukraine-maja-nauczyc-sie-zestrzeliwac-drony",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polscy wojskowi pojad\u0105 na Ukrain\u0119. Maj\u0105 nauczy\u0107 si\u0119 zestrzeliwa\u0107 drony",
+   "id": "gdelt-8ffee0c50c144546",
+   "idioma": "pl",
+   "medio": "pch24.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rp.pl/wojsko/art42998081-polacy-przejda-na-ukrainie-szkolenia-ze-zwalczania-dronow",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polscy \u017co\u0142nierze pojada na Ukrain\u0119. B\u0119d\u0105 si\u0119 szkoli\u0107 w zestrzeliwaniu dron\u00f3w",
+   "id": "gdelt-fcd33fb2d94f70f6",
+   "idioma": "pl",
+   "medio": "rp.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sixactualites.fr/politique-religion/reunion-durgence-a-lonu-sur-lincursion-de-drones-russes-en-ukraine-a-la-demande-de-la-pologne/65313",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T18:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "R\u00e9union d'urgence \u00e0 l'ONU sur l'incursion de drones russes en Ukraine, \u00e0 la demande de la Pologne",
+   "id": "gdelt-47e08f40ae0704f8",
+   "idioma": "fr",
+   "medio": "sixactualites.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://midilibre.fr/2025/09/11/guerre-en-ukraine-emmanuel-macron-envoie-des-rafale-en-pologne-pour-repondre-aux-incursions-de-drones-russes-dans-lespace-aerien-12925345.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : Emmanuel Macron envoie des Rafale en Pologne pour r\u00e9pondre aux incursions de drones russes dans l'espace a\u00e9rien",
+   "id": "gdelt-83eb7cae83bd9ae0",
+   "idioma": "fr",
+   "medio": "midilibre.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://georgiatoday.ge/ukraine-latest-russian-drones-violate-polish-airspace-as-war-intensifies-across-ukraine-frontlines",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine Latest: Russian Drones Violate Polish Airspace as War Intensifies across Ukraine Frontlines",
+   "id": "gdelt-05b4faffa140ce7b",
+   "idioma": "en",
+   "medio": "georgiatoday.ge"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://euronews.com/my-europe/2025/09/11/polish-military-to-take-part-in-a-drone-combat-training-in-ukraine-after-airspace-violatio",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polish military to take part in a drone combat training in Ukraine after airspace violations",
+   "id": "gdelt-15548fa219447eca",
+   "idioma": "en",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.fr/actu/international/guerre-en-ukraine-apres-l-intrusion-de-l-espace-aerien-polonais-par-des-drones-russes-la-france-mobilise-trois-rafale-7900540425",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : apr\u00e8s l'intrusion de l'espace a\u00e9rien polonais par des drones russes, la France mobilise trois Rafale",
+   "id": "gdelt-7eb744851cc28116",
+   "idioma": "fr",
+   "medio": "rtl.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mdr.de/nachrichten/welt/osteuropa/politik/ukraine-krieg-russland-polen-drohnen-bundeswehr-luftraum-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-11T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Bundeswehr verst\u00e4rkt Luftraum\u00fcberwachung \u00fcber Polen nach Drohnen-Vorfall",
+   "id": "gdelt-14ef51e83d22f877",
+   "idioma": "de",
+   "medio": "mdr.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eldiario.es/internacional/trump-quita-importancia-incursion-drones-rusos-polonia-durante-ataque-ucrania-pudo-haber-sido-error_1_12596984.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Trump quita importancia a la incursi\u00f3n de drones rusos en Polonia durante un ataque a Ucrania: \"Pudo haber sido un error\"",
+   "id": "gdelt-ee09e6590e721e6c",
+   "idioma": "es",
+   "medio": "eldiario.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://independent.co.uk/news/world/europe/poland-russia-ukraine-war-live-trump-putin-drones-nato-news-b2825103.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Russia war live: Poland rejects Trump's claim that Putin's drone incursion 'could've been a mistake'",
+   "id": "gdelt-dc6abb241784465a",
+   "idioma": "en",
+   "medio": "independent.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ladepeche.fr/2025/09/12/direct-guerre-en-ukraine-221-drones-abattus-cette-nuit-par-la-russie-dans-lune-des-attaques-les-plus-massives-de-kiev-contre-moscou-12926119.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DIRECT. Guerre en Ukraine : 221 drones abattus cette nuit par la Russie, dans l'une des attaques les plus massives de Kiev contre Moscou",
+   "id": "gdelt-ae98dab91ff853ac",
+   "idioma": "fr",
+   "medio": "ladepeche.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bfmtv.com/international/asie/russie/guerre-en-ukraine-moscou-dit-avoir-abattu-221-drones-dans-la-nuit_AD-202509120144.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T06:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine: Moscou dit avoir abattu 221 drones dans la nuit",
+   "id": "gdelt-5edc852b7897c2cb",
+   "idioma": "fr",
+   "medio": "bfmtv.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rte.ie/news/world/2025/0912/1533060-russia-poland-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian media blaming Ukraine for Poland drone incursion",
+   "id": "gdelt-deb3564c9f78bb7d",
+   "idioma": "en",
+   "medio": "rte.ie"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://eaworldview.com/2025/09/ukraine-war-poland-trump-russias-drone-incursion-was-not-a-mistake",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine War, Day 1,296: Poland to Trump - Russia's Drone Incursion \"Was Not a Mistake\"",
+   "id": "gdelt-3dcd8d028f9e80c1",
+   "idioma": "en",
+   "medio": "eaworldview.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abc.com.py/internacionales/2025/09/12/sikorski-visita-ucrania-tras-la-intrusion-de-drones-rusos-en-el-espacio-aereo-polaco",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sikorski visita Ucrania tras la intrusi\u00f3n de drones rusos en el espacio a\u00e9reo polaco - Mundo",
+   "id": "gdelt-e82e860a98d6ac27",
+   "idioma": "es",
+   "medio": "abc.com.py"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://la-croix.com/international/international-ukraine-russie-jour-1297-point-conflit-ukrainien-poutine-aujourdhui-20250912",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine, jour 1297 : man\u0153uvres entre Russie et Bi\u00e9lorussie, 221 drones ukrainiens abattus",
+   "id": "gdelt-9df721f0c76b8458",
+   "idioma": "fr",
+   "medio": "la-croix.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://brignoles.maville.com/actu/actudet_-guerre-en-ukraine-sanctions-drones-abattus-exercices-en-bielorussie...-le-point-sur-la-nuit-_fil-6971968_actu.Htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : sanctions, drones abattus, exercices en Bi\u00e9lorussie\u2026 Le point sur la nuit",
+   "id": "gdelt-6829d6e0fe79b186",
+   "idioma": "fr",
+   "medio": "maville.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://touteleurope.eu/l-ue-dans-le-monde/guerre-en-ukraine-apres-l-incursion-de-drones-russes-en-pologne-la-france-et-l-onu-reagissent",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : apr\u00e8s l'incursion de drones russes en Pologne, la France et l'ONU r\u00e9agissent",
+   "id": "gdelt-c9893b1bf495fc8b",
+   "idioma": "fr",
+   "medio": "touteleurope.eu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://afternoonvoice.com/jaishankar-urges-early-end-to-ukraine-war-in-talks-with-polish-fm-amid-drone-incursion-tensions.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Jaishankar Urges Early End To Ukraine War In Talks With Polish FM Amid Drone Incursion Tensions",
+   "id": "gdelt-9b999feda94730e3",
+   "idioma": "en",
+   "medio": "afternoonvoice.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://noz.de/deutschland-welt/ukraine-krieg/artikel/ukraine-krieg-mehr-russische-drohnen-im-luftraum-ueber-polen-48342649",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Mehr russische Drohnen im Luftraum \u00fcber Polen?",
+   "id": "gdelt-37382c2184f3b1d0",
+   "idioma": "de",
+   "medio": "noz.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://jowhar.com/russian-outlets-accuse-ukraine-of-orchestrating-drone-incursion-into-poland",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russian outlets accuse Ukraine of orchestrating drone incursion into Poland - Jowhar News Leader",
+   "id": "gdelt-0ff1061fffacf5ab",
+   "idioma": "en",
+   "medio": "jowhar.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dna.fr/defense-guerre-conflit/2025/09/12/incursion-de-drones-russes-en-pologne-moscou-invite-a-cesser-ses-provocations",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T20:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Une vingtaine de drones russes sont entr\u00e9s dans la nuit de mardi \u00e0 mercredi dans l'espace a\u00e9rien polonais.",
+   "id": "gdelt-7d5282ed8f10a0ce",
+   "idioma": "fr",
+   "medio": "dna.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://theglobeandmail.com/canada/article-g7-financial-support-ukraine-russian-drones-poland",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-12T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "G7 seeks ways to boost financial support for Ukraine after Russian drone incursion into Poland",
+   "id": "gdelt-5451a5ecfc2a11bc",
+   "idioma": "en",
+   "medio": "theglobeandmail.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://webpronews.com/poland-intercepts-19-russian-drones-in-nato-airspace-amid-ukraine-strikes",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "intercepting multiple Russian drones that had veered into NATO territory.",
+   "id": "gdelt-fb0220e6d855eb0d",
+   "idioma": "en",
+   "medio": "webpronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtbf.be/article/guerre-en-ukraine-pologne-et-otan-deploient-leurs-avions-et-demandent-aux-citoyens-de-suivre-les-instructions-11600669",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T18:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alerte aux drones russes pr\u00e8s de la fronti\u00e8re Pologne-Ukraine: la Pologne et l'Otan d\u00e9ploient leurs avions et alertent les citoyens",
+   "id": "gdelt-151304c2e6580039",
+   "idioma": "fr",
+   "medio": "rtbf.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavanguardia.com/internacional/20250913/11057219/polonia-otan-despliegan-aviones-ataques-drones-rusos-ucrania.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia y la OTAN despliegan aviones tras los ataques con drones rusos en Ucrania",
+   "id": "gdelt-1fb9ae86c300b44f",
+   "idioma": "es",
+   "medio": "lavanguardia.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lexpress.fr/monde/europe/la-pologne-et-lotan-deploient-leurs-avions-apres-des-frappes-de-drones-russes-en-ukraine-VCQF3COIO5B6JHABZIMDOS5XHI",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Pologne et l'Otan d\u00e9ploient leurs avions apr\u00e8s des frappes de drones russes en Ukraine",
+   "id": "gdelt-f2a7efbad7b03ed3",
+   "idioma": "fr",
+   "medio": "lexpress.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nacion.com/el-mundo/polonia-y-la-otan-movilizan-aviones-militares-por/H3AYQZL4YBCZBOQBWVOWFLODNM/story",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T21:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia y la OTAN movilizan aviones militares por presencia de drones rusos en frontera con Ucrania",
+   "id": "gdelt-ce7b019a971e7fb8",
+   "idioma": "es",
+   "medio": "nacion.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cartacapital.com.br/mundo/polonia-e-otan-enviam-avioes-devido-a-drones-russos-na-zona-fronteirica-com-ucrania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pol\u00f4nia e Otan enviam avi\u00f5es devido a drones russos na zona fronteiri\u00e7a com Ucr\u00e2nia",
+   "id": "gdelt-26452261f5898c48",
+   "idioma": "pt",
+   "medio": "cartacapital.com.br"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://la-croix.com/frappes-russes-en-ukraine-nouvelle-incursion-d-un-drone-dans-le-ciel-d-un-pays-de-l-otan-en-roumanie-20250913",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T22:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Frappes russes en Ukraine : nouvelle incursion d'un drone dans le ciel d'un pays de l'Otan, en Roumanie",
+   "id": "gdelt-37e2321bb3c8fca1",
+   "idioma": "fr",
+   "medio": "la-croix.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://journaldemontreal.com/2025/09/13/la-roumanie-affirme-quun-drone-a-viole-son-espace-aerien-pendant-des-frappes-russes-sur-lukraine",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-13T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Frappes russes en Ukraine: un drone dans le ciel de la Roumanie, un pays de l'OTAN",
+   "id": "gdelt-d137e4a33530fb95",
+   "idioma": "fr",
+   "medio": "journaldemontreal.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://come-on.de/politik/ukraine-krieg-trump-fordert-boykott-russischen-oels-durch-nato-staaten-us-sondergesandter-mahnt-nach-drohnen-vorfall-in-polen-zr-93931005.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Trump fordert Boykott russischen \u00d6ls durch NATO-Staaten \u2013 US-Sondergesandter mahnt nach Drohnen-Vorfall in Polen",
+   "id": "gdelt-146b14dea7f06bcc",
+   "idioma": "de",
+   "medio": "come-on.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://news.de/politik/858951629/naechste-provokation-durch-wladimir-putin-im-ukraine-krieg-russische-drohnen-ueber-polen-und-rumaenien-nato-kampfjets-gestartet/1",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg aktuell: Erneut russische Drohnen \u00fcber Polen - Nato-Kampfjets steigen in die Luft",
+   "id": "gdelt-de61ba8161ce8a23",
+   "idioma": "de",
+   "medio": "news.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ladepeche.fr/2025/09/14/direct-guerre-en-ukraine-apres-la-pologne-un-drone-russe-survole-le-ciel-de-la-roumanie-pays-membre-de-lotan-12929738.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "DIRECT. Guerre en Ukraine : apr\u00e8s la Pologne, un drone russe survole le ciel de la Roumanie, pays membre de l'Otan",
+   "id": "gdelt-c8f5a12db9aaae6d",
+   "idioma": "fr",
+   "medio": "ladepeche.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newsonair.gov.in/nato-heightens-security-after-russian-drone-breaches-romanian-airspace-amid-ukraine-strikes",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO Heightens Security After Russian Drone Breaches Romanian Airspace Amid Ukraine Strikes",
+   "id": "gdelt-b339328acd50883d",
+   "idioma": "en",
+   "medio": "newsonair.gov.in"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://levif.be/international/ukraine/live/guerre_en_ukraine/nouvelle-incursion-dun-drone-dans-le-ciel-dun-pays-de-lotan-en-roumanie-546137",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Live Guerre en Ukraine: Nouvelle incursion d'un drone dans le ciel d'un pays de l'Otan, en Roumanie",
+   "id": "gdelt-537170db82d9e4c6",
+   "idioma": "fr",
+   "medio": "levif.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://humanite.fr/monde/etats-unis/guerre-en-ukraine-apres-la-pologne-la-russie-teste-les-limites-de-lotan-en-lancant-ses-drones-sur-la-roumanie",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Guerre en Ukraine : apr\u00e8s la Pologne, la Russie teste les limites de l'OTAN en lan\u00e7ant ses drones sur la Roumanie",
+   "id": "gdelt-dcb7acb44e5bfe7d",
+   "idioma": "fr",
+   "medio": "humanite.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://larazon.es/internacional/asi-son-drones-que-rusia-usa-guerra-ucrania-que-han-encendido-alarmas-otan-p7m_2025091468c6d3c90e72636c5e8752c7.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "As\u00ed son los drones que Rusia usa en la guerra contra Ucrania y que han encendido las alarmas en la OTAN",
+   "id": "gdelt-aa37a30c6825d1fa",
+   "idioma": "es",
+   "medio": "larazon.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wort.lu/international/die-ukraine-gibt-den-nato-staaten-nachhilfe-bei-der-drohnenabwehr/90316994.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Die Ukraine gibt den NATO-Staaten Nachhilfe bei der Drohnenabwehr",
+   "id": "gdelt-2a6f373941720cfa",
+   "idioma": "de",
+   "medio": "wort.lu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deutschlandfunk.de/selenskyj-bietet-nato-unterstuetzung-bei-der-abwehr-russischer-drohnen-an-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine - Selenskyj bietet NATO Unterst\u00fctzung bei der Abwehr russischer Drohnen an",
+   "id": "gdelt-8abf9589f10ec5d7",
+   "idioma": "de",
+   "medio": "deutschlandfunk.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://az-online.de/politik/ukraine-krieg-russische-drohne-durchquert-nato-luftraum-trump-zweifelt-an-putin-zr-93931005.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-14T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Russische Drohne durchquert NATO-Luftraum - Trump zweifelt an Putin",
+   "id": "gdelt-d0c1e6f1433ace93",
+   "idioma": "de",
+   "medio": "az-online.de"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-09-10T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "wystrzelona przez pilota my\u015bliwca F-35 \u2013 w spos\u00f3b niezamierzony uderzy\u0142a w dach budynku mieszkalnego w miejscowo\u015bci Wyryki Wola.",
+   "id": "revisada-166c5e73b6b57a9e",
+   "idioma": "pl",
+   "medio": "Prokuratura Okr\u0119gowa w Lublinie"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bankier.pl/wiadomosc/Prokuratura-umorzyla-sledztwo-ws-rosyjskich-dronow-Wojsko-dzialalo-zgodnie-z-prawem-9209385.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-08T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Prokuratura Okr\u0119gowa w Lublinie umorzy\u0142a \u015bledztwo w sprawie ataku kilkudziesi\u0119ciu dron\u00f3w",
+   "id": "gdelt-1c44b842c0efac57",
+   "idioma": "pl",
+   "medio": "bankier.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bankier.pl/wiadomosc/Prokuratura-umorzyla-sledztwo-ws-rosyjskich-dronow-Wojsko-dzialalo-zgodnie-z-prawem-9209385.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-08T12:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Prokuratura Okr\u0119gowa w Lublinie umorzy\u0142a \u015bledztwo w sprawie ataku kilkudziesi\u0119ciu dron\u00f3w w nocy z 9 na 10 wrze\u015bnia 2025 r.",
+   "id": "gdelt-1c44b842c0efac57-declaracion-1",
+   "idioma": "pl",
+   "medio": "Prokuratura Okr\u0119gowa w Lublinie (declaraci\u00f3n oficial citada en bankier.pl)"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dziennikwschodni.pl:443/artykul/393025,umorzone-sledztwo-w-sprawie-rosyjskich-dronow-prokuratura-wojsko-dzialalo-zgodnie-z-prawem",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-08T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "w nocy z 9 na 10 wrze\u015bnia 2025 roku dosz\u0142o do nielegalnego przekroczenia granicy",
+   "id": "gdelt-e28fa8ddc0d101c2",
+   "idioma": "pl",
+   "medio": "dziennikwschodni.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dziennikwschodni.pl:443/artykul/393025,umorzone-sledztwo-w-sprawie-rosyjskich-dronow-prokuratura-wojsko-dzialalo-zgodnie-z-prawem",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-08T13:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "w nocy z 9 na 10 wrze\u015bnia 2025 roku dosz\u0142o do nielegalnego przekroczenia granicy pa\u0144stwowej przez kilkadziesi\u0105t obcych dron\u00f3w",
+   "id": "gdelt-e28fa8ddc0d101c2-declaracion-1",
+   "idioma": "pl",
+   "medio": "Prokuratura Okr\u0119gowa w Lublinie (declaraci\u00f3n oficial citada en dziennikwschodni.pl)"
+  }
+ ],
+ "id": "EODI-2025-00295",
+ "lugar": {
+  "fuente_punto": "revisada-309c9e06df19f5a8",
+  "geocodificacion": "oficial",
+  "historial": [
+   {
+    "anterior": {
+     "fuente_punto": "revisada-166c5e73b6b57a9e",
+     "localidad": "Wyryki-Wola",
+     "punto": {
+      "lat": 51.5625,
+      "lon": 23.36389
+     },
+     "radio_km": 2.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-05T19:17Z"
+    },
+    "motivo": {
+     "en": "The point moves from Wyryki-Wola to Cze\u015bniki. According to the prosecutors, the house in Wyryki-Wola was hit by a missile fired by a Polish fighter jet during the operation against the drones, not by a drone, and damage caused by the defensive response is never the main point. Cze\u015bniki is the first place with drone debris named by the Lublin Regional Prosecutor's Office on 10 September 2025. Wyryki-Wola stays among the other places with the prosecutors' statement.",
+     "es": "El punto pasa de Wyryki-Wola a Cze\u015bniki. Seg\u00fan la fiscal\u00eda, la casa de Wyryki-Wola la alcanz\u00f3 un misil disparado por un caza polaco durante la operaci\u00f3n contra los drones, no un dron, y un da\u00f1o de la respuesta defensiva nunca es el punto principal. Cze\u015bniki es el primer lugar con restos de dron que nombra la Fiscal\u00eda Regional de Lublin el 10 de septiembre de 2025. Wyryki-Wola sigue en otros lugares con la frase de la fiscal\u00eda."
+    }
+   }
+  ],
+  "localidad": "Cze\u015bniki",
+  "nivel": "localidad",
+  "otros_lugares": [
+   {
+    "fuente": "revisada-166c5e73b6b57a9e",
+    "nombre": "Wyryki-Wola (pow. w\u0142odawski)",
+    "punto": {
+     "lat": 51.5625,
+     "lon": 23.36389
+    }
+   },
+   {
+    "nombre": "Czosn\u00f3wka (pow. bialski)",
+    "punto": {
+     "lat": 52.01447,
+     "lon": 23.22587
+    }
+   },
+   {
+    "nombre": "Wyhalew (pow. parczewski)",
+    "punto": {
+     "lat": 51.61833,
+     "lon": 23.16583
+    }
+   },
+   {
+    "nombre": "Krzywowierzba-Kolonia (pow. parczewski)",
+    "punto": {
+     "lat": 51.58611,
+     "lon": 23.17278
+    }
+   },
+   {
+    "nombre": "Wohy\u0144 (pow. radzy\u0144ski)",
+    "punto": {
+     "lat": 51.75667,
+     "lon": 22.78194
+    }
+   },
+   {
+    "nombre": "Wielki \u0141an (pow. w\u0142odawski)",
+    "punto": {
+     "lat": 51.48278,
+     "lon": 23.20528
+    }
+   },
+   {
+    "nombre": "Zab\u0142ocie-Kolonia / Kolonia Zab\u0142ocie (pow. bialski, gmina Kode\u0144)",
+    "punto": {
+     "lat": 51.8414,
+     "lon": 23.57214
+    }
+   },
+   {
+    "nombre": "Bychawka Trzecia (pow. lubelski)",
+    "punto": {
+     "lat": 51.07194,
+     "lon": 22.53083
+    }
+   },
+   {
+    "nombre": "Mniszk\u00f3w (pow. opoczy\u0144ski, \u0142\u00f3dzkie)",
+    "punto": {
+     "lat": 51.37017,
+     "lon": 20.03559
+    }
+   },
+   {
+    "nombre": "Ole\u015bno (pow. elbl\u0105ski, warmi\u0144sko-mazurskie)",
+    "punto": {
+     "lat": 54.07913,
+     "lon": 19.28654
+    }
+   },
+   {
+    "nombre": "Nowe Miasto nad Pilic\u0105 (pow. gr\u00f3jecki, mazowieckie)",
+    "punto": {
+     "lat": 51.61669,
+     "lon": 20.57962
+    }
+   },
+   {
+    "nombre": "Rak\u00f3w (pow. kielecki, \u015bwi\u0119tokrzyskie)",
+    "punto": {
+     "lat": 50.67504,
+     "lon": 21.04234
+    }
+   },
+   {
+    "nombre": "Czy\u017c\u00f3w (pow. buski, \u015bwi\u0119tokrzyskie)",
+    "punto": {
+     "lat": 50.48317,
+     "lon": 20.99855
+    }
+   },
+   {
+    "nombre": "Sob\u00f3tka (pow. opatowski, \u015bwi\u0119tokrzyskie)",
+    "punto": {
+     "lat": 50.79509,
+     "lon": 21.68261
+    }
+   },
+   {
+    "nombre": "Smyk\u00f3w (\u015bwi\u0119tokrzyskie)"
+   },
+   {
+    "nombre": "entre Radiany y Seweryn\u00f3w"
+   }
+  ],
+  "pais": "PL",
+  "punto": {
+   "lat": 50.705,
+   "lon": 23.44111
+  },
+  "radio_km": 2.0,
+  "region": "Lubelskie",
+  "suceso": "Polen"
+ },
+ "nombres": {
+  "anteriores": [
+   {
+    "en": "Wyryki-Wola",
+    "es": "Wyryki-Wola"
+   }
+  ],
+  "localidad": {
+   "en": "Cze\u015bniki",
+   "es": "Cze\u015bniki"
+  },
+  "lugar": {
+   "en": "Cze\u015bniki, Poland",
+   "es": "Cze\u015bniki, Polonia"
+  },
+  "otros": [
+   {
+    "en": "Wyryki-Wola",
+    "es": "Wyryki-Wola"
+   },
+   {
+    "en": "Czosn\u00f3wka",
+    "es": "Czosn\u00f3wka"
+   },
+   {
+    "en": "Wyhalew",
+    "es": "Wyhalew"
+   },
+   {
+    "en": "Krzywowierzba-Kolonia",
+    "es": "Krzywowierzba-Kolonia"
+   },
+   {
+    "en": "Wohy\u0144",
+    "es": "Wohy\u0144"
+   },
+   {
+    "en": "Wielki \u0141an",
+    "es": "Wielki \u0141an"
+   },
+   {
+    "en": "Zab\u0142ocie-Kolonia",
+    "es": "Zab\u0142ocie-Kolonia"
+   },
+   {
+    "en": "Bychawka Trzecia",
+    "es": "Bychawka Trzecia"
+   },
+   {
+    "en": "Mniszk\u00f3w",
+    "es": "Mniszk\u00f3w"
+   },
+   {
+    "en": "Olesno",
+    "es": "Olesno"
+   },
+   {
+    "en": "Nowe Miasto nad Pilic\u0105",
+    "es": "Nowe Miasto nad Pilic\u0105"
+   },
+   {
+    "en": "Rak\u00f3w",
+    "es": "Rak\u00f3w"
+   },
+   {
+    "en": "Czy\u017c\u00f3w",
+    "es": "Czy\u017c\u00f3w"
+   },
+   {
+    "en": "Sob\u00f3tka",
+    "es": "Sob\u00f3tka"
+   },
+   {
+    "en": "Smyk\u00f3w",
+    "es": "Smyk\u00f3w"
+   },
+   {
+    "en": "between Radiany and Seweryn\u00f3w",
+    "es": "entre Radiany y Seweryn\u00f3w"
+   }
+  ],
+  "region": {
+   "en": "Lublin Voivodeship",
+   "es": "Voivodato de Lublin"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "derribo",
+   "restos"
+  ]
+ },
+ "respuesta": {
+  "medidas": [
+   "cazas"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-09-09T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-77a0d584d40c35ef",
+   "motivo": "\u00abwtorku srode\u00bb en una nota publicada el 2025-09-10 11:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Russian drones penetrate Polish airspace",
+  "es": "Drones rusos invaden el espacio a\u00e9reo de Polonia"
+ }
+}

@@ -1,0 +1,733 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "desmentido",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-13T11:30Z"
+    },
+    "fuente_id": "gdelt-66591d0e615f0e85"
+   },
+   {
+    "estado": "desmentido",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-13T11:30Z"
+    },
+    "fuente_id": "gdelt-66591d0e615f0e85-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_nuevo",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bt.dk/udland/nato-kampfly-sendt-i-luften-lufthavn-lukket-efter-mulig-observation-af-drone",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Vilnius Lufthavn i Litauens hovedstad er i \u00f8jeblikket lukket",
+   "id": "gdelt-50392741a2452ebe",
+   "idioma": "da",
+   "medio": "bt.dk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bt.dk/udland/nato-kampfly-sendt-i-luften-lufthavn-lukket-efter-mulig-observation-af-drone",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T11:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Et Nato-kampfly er blevet sendt i luften",
+   "id": "gdelt-50392741a2452ebe-declaracion-2",
+   "idioma": "da",
+   "medio": "NATO (declaraci\u00f3n oficial citada en bt.dk)"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/krigogkatastrofer/lufthavn-i-vilnius-lukket-efter-mulig-droneobservation/11288251",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lufthavnen i Vilnius i Litauen blev lukket efter en mulig droneobservation",
+   "id": "gdelt-66591d0e615f0e85",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/krigogkatastrofer/lufthavn-i-vilnius-lukket-efter-mulig-droneobservation/11288251",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T11:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "det litauiske nationale krisecenter har aflyst meldingen om en mulig drone",
+   "id": "gdelt-66591d0e615f0e85-declaracion-1",
+   "idioma": "da",
+   "medio": "Litauens nationale kriseh\u00e5ndteringscenter (declaraci\u00f3n oficial citada en ekstrabladet.dk)"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://leggo.it/esteri/news/13_settembre_2026_guerra_ucraina_oggi_ultime_notizie-9760845.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania, spazio aereo chiuso a Vilnius: \u00abDroni in volo dalla Bielorussia\u00bb.",
+   "id": "gdelt-6f396dd243c7841f",
+   "idioma": "it",
+   "medio": "leggo.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nettavisen.no/nyheter/flyplass-i-vilnius-stengt-etter-droneobservasjon-nato-sender-jagerfly-pa-vingene/s/80-95-75005",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Vilnius, Litauen | Vilnius-flyplass stengt etter droneobservasjon \u2013 Nato sender jagerfly",
+   "id": "gdelt-1119b47d25fc7560",
+   "idioma": "no",
+   "medio": "nettavisen.no"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nettavisen.no/nyheter/flyplass-i-vilnius-stengt-etter-droneobservasjon-nato-sender-jagerfly-pa-vingene/s/80-95-75005",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Flytrafikken ved flyplassen i Litauens hovedstad Vilnius er stanset etter en mulig droneobservasjon",
+   "id": "gdelt-1119b47d25fc7560-declaracion-1",
+   "idioma": "no",
+   "medio": "Litauens nationale kriseh\u00e5ndteringscenter (declaraci\u00f3n oficial citada en nettavisen.no)"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://aftenposten.no/verden/i/7pvQeW/stengte-flyplassen-i-vilnius-etter-mulig-droneobservasjon",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "S\u00f8ndag ble flyplassen i Vilnius i Litauen stengt etter en mulig droneobservasjon",
+   "id": "gdelt-44ddb698f1bae10d",
+   "idioma": "no",
+   "medio": "aftenposten.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/topnews/2026/09/13/lituania-chiude-lo-scalo-di-vilnius-per-possibili-droni-nato-mobilita-i-caccia_ba065eca-7589-4e10-afe1-6d32bdd0045b.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania chiude lo scalo di Vilnius per possibili droni, Nato mobilita i caccia - Ultima ora",
+   "id": "gdelt-7fb3ad3040808c68",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dariknews.bg/novini/sviat/zaplaha-ot-predpolagaem-dron-litva-zatvori-letishteto-vyv-vilnius-nato-vdigna-iztrebiteli-2466356",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0417\u0430\u043f\u043b\u0430\u0445\u0430 \u043e\u0442 \u043f\u0440\u0435\u0434\u043f\u043e\u043b\u0430\u0433\u0430\u0435\u043c \u0434\u0440\u043e\u043d: \u041b\u0438\u0442\u0432\u0430 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432\u044a\u0432 \u0412\u0438\u043b\u043d\u044e\u0441, \u041d\u0410\u0422\u041e \u0432\u0434\u0438\u0433\u043d\u0430 \u0438\u0437\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u0438",
+   "id": "gdelt-06f9bbf37d5fddb3",
+   "idioma": "bg",
+   "medio": "dariknews.bg"
+  },
+  {
+   "campos_respaldados": [
+    "cierre_minutos"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://blic.rs/vesti/svet/litvanija-na-nogama-aerodrom-zatvoren-zbog-drona-nato-podigao-borbeni-avion/92jw1s0",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "aerodrom je ponovo otvoren oko sat vremena kasnije",
+   "id": "gdelt-5793bcbc851a85f5",
+   "idioma": "bs",
+   "medio": "blic.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2026-09-13/droni-sopra-vilnius-chiuso-laeroporto-mosca-attacca-un-treno-al-confine-con-la-polonia-ma-dice-si-a-colloqui-trilaterali-per-ottobre-la-diretta/19676146",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sopra Vilnius chiuso l'aeroporto Mosca attacca un treno al confine con la Polonia ma dice s\u00ec a colloqui trilaterali per ottobre \u2013 La diretta",
+   "id": "gdelt-b2dc6e2715bf59f9",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2026-09-13/blic/nato-podigao-borbeni-avion-zatvoren-evropski-aerodrom-dron-probio-vazdusni-prostor-podignuta-uzbuna/42352694",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO podigao borbeni avion, zatvoren evropski aerodrom! Dron probio vazdu\u0161ni prostor, podignuta uzbuna",
+   "id": "gdelt-d8867ae85d7eb161",
+   "idioma": "bs",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tanjug.rs/svet/politika/280758/zatvoren-aerodrom-u-vilnjusu-podignut-avion-nato-a-nakon-sto-je-uocen-dron/vest",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zatvoren aerodrom u Vilnjusu, podignut avion NATO-a nakon \u0161to je uo\u010den dron",
+   "id": "gdelt-21d4aadeb191d831",
+   "idioma": "sr",
+   "medio": "tanjug.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_incontro_usa_kiev_quando_dove-9760867.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania, spazio aereo chiuso a Vilnius: \u00abDroni in volo dalla Bielorussia\u00bb. Si alzano i jet della Nato. Zelensky: deliberato attacco russo al confine con Polonia",
+   "id": "gdelt-722e3bd70137ae0d",
+   "idioma": "it",
+   "medio": "ilgazzettino.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://capital.gr/diethni/4016549/i-lithouania-ekleise-to-aerodromio-tou-bilnious-gia-pithani-apeili-drone-apogeiothikan-maxitika-tou-nato-gia-anaxaitisi",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0397 \u039b\u03b9\u03b8\u03bf\u03c5\u03b1\u03bd\u03af\u03b1 \u03ad\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03b3\u03b9\u03b1 \u03c0\u03b9\u03b8\u03b1\u03bd\u03ae \u03b1\u03c0\u03b5\u03b9\u03bb\u03ae drone -...",
+   "id": "gdelt-a1a53eebebe15b31",
+   "idioma": "el",
+   "medio": "capital.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stirileprotv.ro/stiri/international/lituania-a-inchis-temporar-aeroportul-din-vilnius-dupa-o-alerta-de-drona-nato-a-ridicat-un-avion-de-vanatoare.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un stol de p\u0103s\u0103ri a declan\u0219at alerta de dron\u0103 \u00een Lituania. Aeroportul din Vilnius a fost \u00eenchis o or\u0103",
+   "id": "gdelt-573fbb5b026c6a6a",
+   "idioma": "ro",
+   "medio": "stirileprotv.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/world/1080607-litva-zatvori-letishteto-vav-vilnus-zaradi-predpolagaem-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0438\u0442\u0432\u0430 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432\u044a\u0432 \u0412\u0438\u043b\u043d\u044e\u0441 \u0437\u0430\u0440\u0430\u0434\u0438 \u043f\u0440\u0435\u0434\u043f\u043e\u043b\u0430\u0433\u0430\u0435\u043c \u0434\u0440\u043e\u043d \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0421\u0432\u044f\u0442",
+   "id": "gdelt-452670535fa97127",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://stiripesurse.ro/alerta-cu-drona-in-lituania-aeroportul-din-vilnius-a-fost-inchis_3919654",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alert\u0103 cu dron\u0103 \u00een Lituania - Aeroportul din Vilnius a fost \u00eenchis",
+   "id": "gdelt-afafbc4795dbf39a",
+   "idioma": "ro",
+   "medio": "stiripesurse.ro"
+  },
+  {
+   "campos_respaldados": [
+    "entrada_exterior",
+    "medidas"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/227/lithouania-ekleise-to-aerodromio-tou-vilnious-logo-ypoptou-drone--sikothike-machitiko-tou-nato.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03b5\u03bd\u03cc\u03c2 drone \u03c3\u03c4\u03bf\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf \u03c7\u03ce\u03c1\u03bf \u03c4\u03b7\u03c2 \u039b\u03b9\u03b8\u03bf\u03c5\u03b1\u03bd\u03af\u03b1\u03c2",
+   "id": "gdelt-c692edf878143e96",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://itongadol.com/internacionales/lituania-cerro-el-aeropuerto-de-vilna-y-la-otan-desplego-cazas-ante-la-posible-presencia-de-un-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania cerr\u00f3 el aeropuerto de Vilna y la OTAN despleg\u00f3 cazas ante la posible presencia de un dron",
+   "id": "gdelt-5330fcdc8340c254",
+   "idioma": "es",
+   "medio": "itongadol.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziarulnational.md/lituania-inchide-aeroportul-din-vilnius-dupa-detectarea-unei-posibile-drone-era-un-stol-de-pasari",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania \u00eenchide aeroportul din Vilnius dup\u0103 detectarea unei posibile drone. Era un stol de p\u0103s\u0103ri",
+   "id": "gdelt-8c58dc8561b27850",
+   "idioma": "ro",
+   "medio": "ziarulnational.md"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ziare.com/razboi-ucraina/aeroport-vilnius-inchis-drona-stol-pasari-2035152",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aeroportul din Vilnius, \u00eenchis din cauza unei presupuse drone \u00een spa\u021biul aerian. Drona s-a dovedit a fi un stol de p\u0103s\u0103ri",
+   "id": "gdelt-5d6710fbd1da3c9b",
+   "idioma": "ro",
+   "medio": "ziare.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2026-09-13/lituania-sospetti-droni-nei-cieli-di-vilnius-aeroporto-chiuso-ma-era-uno-stormo-di-uccelli/19676400",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania sospetti droni nei cieli di Vilnius | aeroporto chiuso ma era uno stormo di uccelli",
+   "id": "gdelt-533571271aa957a9",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://informer.rs/planeta/vesti/1150401/litvanija-nato-avion-dron-aerodrom-viljnus",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO podigao avion iznad Litvanije: Uo\u010den dron, zatvoren aerodrom u Vilnjusu",
+   "id": "gdelt-7fd39e4f02f08a95",
+   "idioma": "bs",
+   "medio": "informer.rs"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newsbomb.gr/kosmos/story/1763064/lithouania-ekleise-prosorina-to-aerodromio-tou-vilnious-afoy-entopistike-pithano-drone",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039b\u03b9\u03b8\u03bf\u03c5\u03b1\u03bd\u03af\u03b1: \u0388\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03ac \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03b1\u03c6\u03bf\u03cd \u03b5\u03bd\u03c4\u03bf\u03c0\u03af\u03c3\u03c4\u03b7\u03ba\u03b5 \u03c0\u03b9\u03b8\u03b1\u03bd\u03cc drone",
+   "id": "gdelt-d76640c767cee38d",
+   "idioma": "el",
+   "medio": "newsbomb.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/mejdunarodni/Litva-vdigna-iztrebiteli-na-NATO-v-nebeto-Dron-sprya-rabotata-na-letishteto-vuv-Vilnyus-3024452",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0438\u0442\u0432\u0430 \u0432\u0434\u0438\u0433\u043d\u0430 \u0438\u0437\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u0438 \u043d\u0430 \u041d\u0410\u0422\u041e \u0432 \u043d\u0435\u0431\u0435\u0442\u043e: \u0414\u0440\u043e\u043d \u0441\u043f\u0440\u044f \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432\u044a\u0432 \u0412\u0438\u043b\u043d\u044e\u0441",
+   "id": "gdelt-fed500f389b0709d",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europa.today.it/attualita/falso-allarme-droni-lituania-uccelli.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Falso allarme droni in Lituania: chiuso l'aeroporto di Vilnius, ma era uno stormo di uccelli",
+   "id": "gdelt-0b2e2dcc49e7ed53",
+   "idioma": "it",
+   "medio": "europa.today.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sot.com.al/panik-ne-lituani-mbyllet-aeroporti-ne-vilnius-pas-alarmit-per-dron-i5183045",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Panik n\u00eb Lituani, mbyllet aeroporti n\u00eb Vilnius pas alarmit p\u00ebr \"dron\"",
+   "id": "gdelt-2800966fb4c2bff3",
+   "idioma": "sq",
+   "medio": "sot.com.al"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kohajone.com/aktualitet/alarm-ne-qiellin-e-lituanise-nato-ngre-avion-luftarak-pas-dyshimit-per-nje-dron-mbi-vilnius",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Alarm n\u00eb qiellin e Lituanis\u00eb: NATO ngre avion luftarak pas dyshimit p\u00ebr nj\u00eb dron mbi Vilnius",
+   "id": "gdelt-5d1784192e0191fc",
+   "idioma": "sq",
+   "medio": "kohajone.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://infooggi.it/articolo/falso-allarme-drone-in-lituania-era-uno-stormo-di-uccelli-riapre-l-aeroporto-di-vilnius/155295",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Falso allarme drone in Lituania: era uno stormo di uccelli, riapre l'aeroporto di Vilnius",
+   "id": "gdelt-cb45ee164a83871b",
+   "idioma": "it",
+   "medio": "infooggi.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vg.no/nyheter/i/wr2b1o/litauen-stenger-flyplass-etter-mulig-dronesyn",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flyplassen i Vilnius stengt etter mulig droneobservasjon",
+   "id": "gdelt-7ae876ff1be8b6de",
+   "idioma": "no",
+   "medio": "vg.no"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://novini.bg/article/2026091311553716054",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0438\u0442\u0432\u0430 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432\u044a\u0432 \u0412\u0438\u043b\u043d\u044e\u0441, \u0430 \u041d\u0410\u0422\u041e \u0432\u0434\u0438\u0433\u043d\u0430 \u043f\u043e \u0442\u0440\u0435\u0432\u043e\u0433\u0430 \u0438\u0437\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u0438, \u0432 \u043e\u0442\u0433\u043e\u0432\u043e\u0440 \u043d\u0430 \u0437\u0430\u043f\u043b\u0430\u0445\u0430 \u043e\u0442 \u043f\u0440\u0435\u0434\u043f\u043e\u043b\u0430\u0433\u0430\u0435\u043c \u0434\u0440\u043e\u043d",
+   "id": "gdelt-dcbd24092f4b0fef",
+   "idioma": "bg",
+   "medio": "novini.bg"
+  },
+  {
+   "campos_respaldados": [
+    "cierre_minutos",
+    "fin",
+    "inicio",
+    "inicio_precision",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "It remained in force for just over half an hour",
+   "id": "gdelt-e44457dc072ff6bf",
+   "idioma": "en",
+   "medio": "english.news.cn"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://english.news.cn/20260913/d8f3a66ac1b64e1782900e4621c350ae/c.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T16:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "the object detected by radar was found to be a flock of birds",
+   "id": "gdelt-e44457dc072ff6bf-declaracion-1",
+   "idioma": "en",
+   "medio": "Lithuania's National Crisis Management Center (declaraci\u00f3n oficial citada en english.news.cn)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://naslovi.net/2026-09-13/danas/nakon-zatvoranja-aerodroma-u-viljnusu-i-mobilizacije-nato-aviona-sumnjivi-dron-bio-zapravo-jato-ptica/42353415",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T17:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nakon zatvoranja aerodroma u Viljnusu i mobilizacije NATO aviona: Sumnjivi dron bio zapravo jato ptica",
+   "id": "gdelt-295b10bf6d7a7cd8",
+   "idioma": "sr",
+   "medio": "naslovi.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cross.bg/letishteto-dron-trevoga-1805887.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-13T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0438\u0442\u0432\u0430 \u0437\u0430\u0442\u0432\u043e\u0440\u0438 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432\u044a\u0432 \u0412\u0438\u043b\u043d\u044e\u0441, \u0430 \u041d\u0410\u0422\u041e \u0432\u0434\u0438\u0433\u043d\u0430 \u043f\u043e \u0442\u0440\u0435\u0432\u043e\u0433\u0430 \u0438\u0437\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u0438, \u0432 \u043e\u0442\u0433\u043e\u0432\u043e\u0440 \u043d\u0430 \u0437\u0430\u043f\u043b\u0430\u0445\u0430 \u043e\u0442 \u043f\u0440\u0435\u0434\u043f\u043e\u043b\u0430\u0433\u0430\u0435\u043c \u0434\u0440\u043e\u043d, \u043a\u043e\u0439\u0442\u043e \u0441\u0435 \u043e\u0442\u043a\u0430\u0437\u0430 \u044f\u0442\u043e \u043f\u0442\u0438\u0446\u0438",
+   "id": "gdelt-08e8a8cf0bdb95f3",
+   "idioma": "bg",
+   "medio": "cross.bg"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "localidad",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://sot.com.al/dron-mbi-lituani-mbyllet-aeroporti-i-vilniusit-nato-ngre-avionin-luftarak-kievi-paralajmeron-per-rrezikun-rus-ne-europe-kremlini-zbulon-bisedimet-e-reja-trepaleshe-ne-tetor-i5183149",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-14T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lituania mbylli p\u00ebrkoh\u00ebsisht aeroportin e Vilniusit pasi u raportua p\u00ebr pranin\u00eb e mundshme t\u00eb nj\u00eb droni",
+   "id": "gdelt-6c91f3d8c07ad7fa",
+   "idioma": "sq",
+   "medio": "sot.com.al"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://humanevents.com/2026/09/14/lithuanian-authorities-close-airport-scramble-nato-jet-when-mistaking-birds-for-drones-in-real-life-99-red-balloons-incident",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-14T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lithuanian authorities close airport, scramble NATO jet when mistaking birds for drones in real life '99 Red Balloons' incident | Human Events",
+   "id": "gdelt-cafe5ba5a861a635",
+   "idioma": "en",
+   "medio": "humanevents.com"
+  }
+ ],
+ "id": "EODI-2026-00007",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "nivel": "instalacion",
+  "pais": "LT",
+  "punto": {
+   "lat": 54.63488,
+   "lon": 25.28759
+  },
+  "radio_km": 5.0,
+  "region": "Vilniaus apskritis",
+  "suceso": "Vilnius"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Vilnius",
+   "es": "Vilna"
+  },
+  "lugar": {
+   "en": "Vilnius, Lithuania",
+   "es": "Vilna, Lituania"
+  },
+  "objetivo": {
+   "en": "Vilnius Airport",
+   "es": "Aeropuerto de Vilna"
+  },
+  "region": {
+   "en": "Vilnius County",
+   "es": "Provincia de Vilna"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Tarptautinis Vilniaus oro uostas",
+  "oaci": "EYVI"
+ },
+ "presencia_dron": "descartada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": []
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2026-00179",
+   "nota": {
+    "en": "it merged two different events: the closure of Vilnius airport on Sunday 13 September 2026 over a possible drone that turned out to be a flock of birds (sot.com.al, humanevents.com) and the shoot-down by NATO fighters of a drone that came from Belarus on the night of 14 to 15 September near Pratk\u016bnai (delo.si, klix.ba)",
+    "es": "juntaba dos sucesos distintos: el cierre del aeropuerto de Vilna del domingo 13 de septiembre de 2026 por un posible dron que result\u00f3 ser una bandada de p\u00e1jaros (sot.com.al, humanevents.com) y el derribo de un dron llegado de Bielorrusia por cazas de la OTAN la noche del 14 al 15 cerca de Pratk\u016bnai (delo.si, klix.ba)"
+   },
+   "separado_de": "EODI-2026-00072"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "cazas"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-09-13T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-44ddb698f1bae10d",
+   "motivo": "\u00absondag\u00bb en una nota publicada el 2026-09-13 14:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Vilnius airport closed after possible drone sighting",
+  "es": "Cierre del aeropuerto de Vilna tras avistamiento de posible dron"
+ }
+}

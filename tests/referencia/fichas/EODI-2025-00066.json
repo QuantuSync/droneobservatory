@@ -1,0 +1,515 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 10,
+   "min": 5
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-22T13:00Z"
+    },
+    "fuente_id": "gdelt-1948ee741e66a225"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-22T16:00Z"
+    },
+    "fuente_id": "gdelt-cf4d0fca7c8705d1-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "credibilidad": 3,
+   "enlace": "https://drimble.nl/politiek/104706535/optreden-tegen-drones-boven-vliegbasis-volkel.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Optreden tegen drones boven vliegbasis Volkel",
+   "id": "gdelt-1948ee741e66a225",
+   "idioma": "nl",
+   "medio": "drimble.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2591497-luchtmacht-heeft-wapens-ingezet-tegen-drones-boven-vliegbasis-volkel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchtmacht heeft wapens ingezet tegen drones boven vliegbasis Volkel",
+   "id": "gdelt-90e29542d8f64b30",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.nl/nieuws/binnenland/artikel/5540266/drones-gesignaleerd-boven-vliegbasis-volkel-defensie-probeert-ze",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones gesignaleerd boven vliegbasis Volkel, Defensie zette wapens in om ze neer te halen",
+   "id": "gdelt-d9752ccb4ee0ef25",
+   "idioma": "nl",
+   "medio": "rtl.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://hartvannederland.nl/112/crime/artikelen/volkel-noord-brabant-defensie-drones-vliegbasis-wapens",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones boven vliegbasis Volkel gesignaleerd: Defensie zet wapens in",
+   "id": "gdelt-2146df3d3191f897",
+   "idioma": "nl",
+   "medio": "hartvannederland.nl"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "fin",
+    "inicio",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ilmessaggero.it:443/mondo/droni_base_militare_volkel_olanda_esercito_schiera_armi_per_abbatterli-9204593.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Allarme in Olanda, dove sono stati avvistati dei droni sulla base aereo di Volkel tra le 19 e le 21 di venerd\u00ec sera.",
+   "id": "gdelt-543e48527c0f64d4",
+   "idioma": "it",
+   "medio": "ilmessaggero.it"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ilmessaggero.it:443/mondo/droni_base_militare_volkel_olanda_esercito_schiera_armi_per_abbatterli-9204593.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "sono state schierate armi per abbatterli. I velivoli si sono allontanati e non sono stati ritrovati.",
+   "id": "gdelt-543e48527c0f64d4-declaracion-1",
+   "idioma": "it",
+   "medio": "Royal Netherlands Marechaussee (declaraci\u00f3n oficial citada en ilmessaggero.it)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://limburger.nl/economie/drones-gesignaleerd-boven-militaire-vliegbasis-volkel-luchtmacht-zette-wapens-in-om-ze-neer-te-halen/106992838.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones gesignaleerd boven militaire vliegbasis Volkel, luchtmacht zette wapens in om ze neer te halen",
+   "id": "gdelt-ca7733455304b27e",
+   "idioma": "nl",
+   "medio": "limburger.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nltimes.nl/2025/11/22/dutch-military-opens-fire-unidentified-drones-volkel-air-base",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dutch military opens fire on unidentified drones over Volkel air base",
+   "id": "gdelt-9e53c298cbcaf3c6",
+   "idioma": "en",
+   "medio": "nltimes.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://blikopnieuws.nl/nieuws/307943/meerdere-drones-boven-vliegbasis-volkel-defensie-zet-wapens-in-om-ze-neer-te-halen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Meerdere drones boven vliegbasis Volkel, Defensie zet wapens in om ze neer te halen",
+   "id": "gdelt-7ed651cf08fff36e",
+   "idioma": "nl",
+   "medio": "blikopnieuws.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bbc.com/news/articles/cewjlr0v02ro",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones spotted near Netherlands' Volkel air base",
+   "id": "gdelt-32d9da76af0d28b0",
+   "idioma": "en",
+   "medio": "bbc.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "fin",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://newsday.com/news/nation/netherlands-air-base-drones-volkel-s16516",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "unidentified drone flights have been reported near military sites",
+   "id": "gdelt-cf4d0fca7c8705d1",
+   "idioma": "en",
+   "medio": "newsday.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://newsday.com/news/nation/netherlands-air-base-drones-volkel-s16516",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T16:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "The Dutch military opened fire at drones over Volkel Air Base in the east of the country",
+   "id": "gdelt-cf4d0fca7c8705d1-declaracion-1",
+   "idioma": "en",
+   "medio": "Ministry of Defense (declaraci\u00f3n oficial citada en newsday.com)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://omroepbrabant.nl/nieuws/4794285/drones-gesignaleerd-boven-vliegbasis-volkel-luchtmacht-zet-wapens-in",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones gesignaleerd boven vliegbasis Volkel, luchtmacht zet wapens in",
+   "id": "gdelt-5ac760cf7c8dd317",
+   "idioma": "nl",
+   "medio": "omroepbrabant.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nieuws.nl/algemeen/defensie-treedt-op-tegen-drones-boven-vliegbasis-volkel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Defensie treedt op tegen drones boven vliegbasis Volkel",
+   "id": "gdelt-9cd845f61b869a5c",
+   "idioma": "nl",
+   "medio": "nieuws.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dnoticias.pt/2025/11/22/471432-militares-holandeses-abrem-fogo-contra-drones-sobre-a-base-aerea-de-volkel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Militares holandeses abrem fogo contra drones sobre a Base A\u00e9rea de Volkel",
+   "id": "gdelt-a9ec6ceafb98b579",
+   "idioma": "pt",
+   "medio": "dnoticias.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nrc.nl/nieuws/2025/11/22/defensie-zet-voor-het-eerst-wapens-in-tegen-drones-boven-vliegbasis-volkel-a4913330",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Defensie zet voor het eerst wapens in tegen drones boven vliegbasis Volkel",
+   "id": "gdelt-b0295ea6e385290f",
+   "idioma": "nl",
+   "medio": "nrc.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nos.nl/artikel/2591497-luchtmacht-heeft-wapens-ingezet-tegen-5-tot-10-drones-boven-vliegbasis-volkel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luchtmacht heeft wapens ingezet tegen 5 tot 10 drones boven vliegbasis Volkel",
+   "id": "gdelt-08f0f99ecb214f62",
+   "idioma": "nl",
+   "medio": "nos.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dailybusiness.ro/actualitate/drone-misterioase-deasupra-bazei-militare-volkel-armata-olandeza-intervine-cu-arme-de-la-sol-525327",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T18:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drone misterioase deasupra bazei militare Volkel. Armata olandez\u0103 intervine cu arme de la sol",
+   "id": "gdelt-74329d7aa1e3e468",
+   "idioma": "ro",
+   "medio": "dailybusiness.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cadena3.com/noticia/mundo/fuerza-aerea-holandesa-dispara-contra-drones-que-sobrevolaban-base-militar-en-volkel_489685",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T19:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Fuerza A\u00e9rea holandesa dispara contra drones que sobrevolaban base militar en Volkel",
+   "id": "gdelt-de14940ee975d717",
+   "idioma": "es",
+   "medio": "cadena3.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dutchnews.nl/2025/11/drones-spotted-over-dutch-high-security-military-airbase-volkel",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-22T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones spotted over Dutch high security military airbase Volkel",
+   "id": "gdelt-25f7abd3e15beacb",
+   "idioma": "en",
+   "medio": "dutchnews.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tagesspiegel.de/internationales/militar-setzt-waffen-in-volkel-ein-niederlande-melden-drohnensichtungen-an-flughafen--airport-eindhoven-gesperrt-14918864.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-23T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Milit\u00e4r setzt Waffen in Volkel ein: Niederlande melden Drohnensichtungen an Flugh\u00e4fen \u2013 Airport Eindhoven gesperrt",
+   "id": "gdelt-4c4da2c7729d4aaf",
+   "idioma": "de",
+   "medio": "tagesspiegel.de"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dagelijksestandaard.nl/nieuws/brekelmans-drones-boven-vliegbasis-volkel-niet-bewapend",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-23T13:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Brekelmans: drones boven vliegbasis Volkel niet bewapend.",
+   "id": "gdelt-22b7be70d18326ef",
+   "idioma": "nl",
+   "medio": "dagelijksestandaard.nl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nltimes.nl/2025/11/23/drones-halt-eindhoven-flights-hours-defense-fires-drones-volkel-air-base",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-23T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones halt Eindhoven flights hours after Defense fires at drones at Volkel Air Base",
+   "id": "gdelt-08c92b4f8c66714f",
+   "idioma": "en",
+   "medio": "nltimes.nl"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "inicio",
+    "inicio_precision",
+    "medidas",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-23T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Op vrijdagavond werden er vijf \u00e0 tien onbemande vliegtuigjes boven Vliegbasis Volkel gezien.",
+   "id": "gdelt-7c37c5a09b237ba0",
+   "idioma": "nl",
+   "medio": "nrc.nl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-23T19:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Defensie heeft afgelopen weekend drie keer drones boven twee Nederlandse luchthavens gesignaleerd.",
+   "id": "gdelt-7c37c5a09b237ba0-declaracion-1",
+   "idioma": "nl",
+   "medio": "Defensie (declaraci\u00f3n oficial citada en nrc.nl)"
+  }
+ ],
+ "id": "EODI-2025-00066",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "NL",
+  "punto": {
+   "lat": 51.65714,
+   "lon": 5.7043
+  },
+  "radio_km": 5.0,
+  "region": "Limburg",
+  "suceso": "Volkel Air Base"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Volkel",
+   "es": "Volkel"
+  },
+  "lugar": {
+   "en": "Volkel, Netherlands",
+   "es": "Volkel, Pa\u00edses Bajos"
+  },
+  "objetivo": {
+   "en": "Volkel Air Base",
+   "es": "Base a\u00e9rea de Volkel"
+  },
+  "region": {
+   "en": "Limburg",
+   "es": "Limburgo"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Vliegbasis Volkel",
+  "oaci": "EHVK"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2025-00444",
+   "nota": {
+    "en": "merges the shots fired at drones over Volkel on 21 November with the Eindhoven airport closure on 22 November and new drones over Volkel on the night of 22-23 November",
+    "es": "junta los disparos contra drones en Volkel del 21 de noviembre con el cierre de Eindhoven del 22 y nuevos drones sobre Volkel la noche del 22 al 23"
+   },
+   "separado_de": "EODI-2025-00066"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "duracion_min": 120,
+  "fin": {
+   "precision": "minuto",
+   "valor": "2025-11-21T21:00Z"
+  },
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-11-21T19:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-cf4d0fca7c8705d1",
+   "motivo": "\u00abfriday\u00bb en una nota publicada el 2025-11-22 17:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Dutch military opens fire at drones over Volkel Air Base",
+  "es": "Militares holandeses abren fuego contra drones sobre la Base A\u00e9rea de Volkel"
+ }
+}

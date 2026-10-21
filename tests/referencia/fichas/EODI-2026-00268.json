@@ -1,0 +1,440 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 3,
+   "min": 3
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-03-30T00:00Z"
+    },
+    "fuente_id": "detalle-80807759e91faffb"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-03-30T00:00Z"
+    },
+    "fuente_id": "detalle-80807759e91faffb"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://inewsgr.com/184/anisychia-stin-kypro-ekrixi-stin-aeroporiki-vasi-akrotiriou--pithani-ptosi-drone.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-01T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03c3\u03ae\u03bc\u03b1\u03bd\u03b5 \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5 \u03c4\u03b7\u03c2 \u039a\u03c5\u03c1\u03b9\u03b1\u03ba\u03ae\u03c2 \u03c3\u03c4\u03b7 \u0392\u03c1\u03b5\u03c4\u03b1\u03bd\u03b9\u03ba\u03ae \u0392\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03ae \u0391\u03b5\u03c1\u03bf\u03c0\u03bf\u03c1\u03b9\u03ba\u03ae \u0392\u03ac\u03c3\u03b7 \u03c3\u03c4\u03bf \u0391\u03ba\u03c1\u03c9\u03c4\u03ae\u03c1\u03b9 \u03c4\u03b7\u03c2 \u039a\u03cd\u03c0\u03c1\u03bf\u03c5, \u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u03b1\u03bd\u03b1\u03c6\u03bf\u03c1\u03ad\u03c2 \u03b3\u03b9\u03b1 \u03b9\u03c3\u03c7\u03c5\u03c1\u03ae \u03ad\u03ba\u03c1\u03b7\u03be\u03b7.",
+   "id": "gdelt-51339fe171a8ed46",
+   "idioma": "el",
+   "medio": "inewsgr.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://iefimerida.gr/kosmos/kypro-ekrixi-aeroporiki-basi-akrotirioy-ptosi-drone",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T00:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0391\u03bd\u03b7\u03c3\u03c5\u03c7\u03af\u03b1 \u03c3\u03c4\u03b7\u03bd \u039a\u03cd\u03c0\u03c1\u03bf: \u03a3\u03c5\u03bd\u03b1\u03b3\u03b5\u03c1\u03bc\u03cc\u03c2 \u03b3\u03b9\u03b1 \u03ad\u03ba\u03c1\u03b7\u03be\u03b7 \u03c3\u03c4\u03b7\u03bd \u03b1\u03b5\u03c1\u03bf\u03c0\u03bf\u03c1\u03b9\u03ba\u03ae \u03b2\u03ac\u03c3\u03b7 \u0391\u03ba\u03c1\u03c9\u03c4\u03b7\u03c1\u03af\u03bf\u03c5 -\u03a0\u03b9\u03b8\u03b1\u03bd\u03ae \u03c0\u03c4\u03ce\u03c3\u03b7 drone",
+   "id": "gdelt-9c830d0c50c54ae4",
+   "idioma": "el",
+   "medio": "iefimerida.gr"
+  },
+  {
+   "campos_respaldados": [
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://infobae.com/america/mundo/2026/03/02/tras-el-aval-del-reino-unido-a-eeuu-para-usar-sus-bases-militares-un-dron-ataco-una-instalacion-britanica-en-chipre",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "un drone atac\u00f3 una instalaci\u00f3n brit\u00e1nica en Chipre.",
+   "id": "gdelt-b97ba1a9a400540c",
+   "idioma": "es",
+   "medio": "infobae.com"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lajornadasanluis.com.mx/reino-unido-responde-ataque-con-drones-contra-su-base-militar-en-chipre",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T04:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "ocurrido a medianoche",
+   "id": "gdelt-0e752f57ded3c58a",
+   "idioma": "es",
+   "medio": "lajornadasanluis.com.mx"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://g1.globo.com/mundo/noticia/2026/03/02/drone-atinge-base-militar-reino-unido-chipre.ghtml",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T04:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ataque de drone atinge base militar do Reino Unido no Chipre",
+   "id": "gdelt-0544506df773613a",
+   "idioma": "pt",
+   "medio": "globo.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://es.euronews.com/2026/03/02/guerra-oriente-medio-salpica-europa-dron-base-militar-reino-unido-chipre",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La guerra en Oriente Medio ya salpica a Europa: un dron alcanza una base militar de Reino Unido en Chipre",
+   "id": "gdelt-966701c1efec9996",
+   "idioma": "es",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://pt.euronews.com/2026/03/02/reino-unido-diz-que-um-drone-atingiu-a-sua-base-militar-em-chipre",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Reino Unido diz que um drone atingiu a sua base militar em Chipre",
+   "id": "gdelt-64616934ea4c0b1d",
+   "idioma": "pt",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lafm.com.co/internacional/iran-ataca-base-britanica-en-chipre-dron-explota-hoy-2-marzo-2026-392091",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T14:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drones iran\u00edes explotan en la base a\u00e9rea de Reino Unido en Chipre: Grecia enviar\u00e1 apoyo militar",
+   "id": "gdelt-475d1e7bcc7791ab",
+   "idioma": "es",
+   "medio": "lafm.com.co"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://veja.abril.com.br/mundo/base-militar-do-reino-unido-no-chipre-e-atingida-por-drone-do-ira",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-02T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Base militar do Reino Unido no Chipre \u00e9 atingida por drone do Ir\u00e3",
+   "id": "gdelt-136587f31ad885eb",
+   "idioma": "pt",
+   "medio": "abril.com.br"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-03T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "located within the RAF Akrotiri base area, were closed on Monday as a precaution after the airfield was struck by a drone",
+   "id": "revisada-c573b81d1d05aaca",
+   "idioma": "en",
+   "medio": "cyprus-mail.com"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-03T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "the Cyprus News Agency reported that rumours circulating on social media about an alleged explosion in the Dhekelia area could not be verified.",
+   "id": "revisada-ea3c64ea62c65d43",
+   "idioma": "en",
+   "medio": "cyprus-mail.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-03T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Iranian-backed drone strike, which was launched from Lebanon",
+   "id": "gdelt-2d49099e0bd224c6",
+   "idioma": "en",
+   "medio": "cyprus-mail.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "modelo_dron",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-03T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "A Shahed-type unmanned aerial vehicle reportedly struck the British base's runway",
+   "id": "gdelt-6335f68c9869d028",
+   "idioma": "en",
+   "medio": "defensenews.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-03T15:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Two additional drones targeting the base were intercepted on March 2, according to Cypriot authorities.",
+   "id": "gdelt-6335f68c9869d028-declaracion-1",
+   "idioma": "en",
+   "medio": "Cypriot authorities (declaraci\u00f3n oficial citada en defensenews.com)"
+  },
+  {
+   "campos_respaldados": [
+    "detalle_oficial.inicio",
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "documento_oficial": "uk_parlamento:117499",
+   "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117499",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-09T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "the drone attack on RAF Akrotiri on 2 March 2026",
+   "id": "detalle-da7f56b1bed0e513",
+   "idioma": "en",
+   "medio": "UK Government (Ministry of Defence)"
+  },
+  {
+   "campos_respaldados": [
+    "detalle_oficial.inicio",
+    "estado",
+    "lugar.pais",
+    "lugar.suceso",
+    "objetivo.categoria",
+    "objetivo.nombre",
+    "objetivo_conocido",
+    "presencia_dron",
+    "pruebas.dron_estatal",
+    "pruebas.entrada_exterior",
+    "tiempo.inicio",
+    "tipo"
+   ],
+   "credibilidad": 1,
+   "documento_oficial": "uk_parlamento:117492",
+   "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117492",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-30T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "it came from Lebanon or Iraq",
+   "id": "detalle-80807759e91faffb",
+   "idioma": "en",
+   "medio": "UK Government (Ministry of Defence)"
+  },
+  {
+   "campos_respaldados": [
+    "detalle_oficial.inicio",
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "documento_oficial": "uk_parlamento:117491",
+   "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117491",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-30T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "it came from Lebanon or Iraq",
+   "id": "detalle-e97ca7f30b7561a7",
+   "idioma": "en",
+   "medio": "UK Government (Ministry of Defence)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117492",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-30T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "The Ministry of Defence can confirm that a drone targeted RAF Akrotiri on 2 March was not launched from Iran.",
+   "id": "revisada-c9fa4e0be6e190e4",
+   "idioma": "en",
+   "medio": "UK Government"
+  }
+ ],
+ "id": "EODI-2026-00268",
+ "lugar": {
+  "fuente_punto": "revisada-c9fa4e0be6e190e4",
+  "geocodificacion": "oficial",
+  "localidad": "RAF Akrotiri",
+  "nivel": "instalacion",
+  "pais": "GB",
+  "punto": {
+   "lat": 34.59028,
+   "lon": 32.98778
+  },
+  "radio_km": 3.0,
+  "suceso": "RAF Akrotiri"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "RAF Akrotiri",
+   "es": "RAF Akrotiri"
+  },
+  "lugar": {
+   "en": "RAF Akrotiri (British base), Cyprus",
+   "es": "RAF Akrotiri (base brit\u00e1nica), Chipre"
+  },
+  "objetivo": {
+   "en": "RAF Akrotiri",
+   "es": "RAF Akrotiri"
+  },
+  "pais_geografico": "CY"
+ },
+ "objetivo": {
+  "categoria": "base_militar",
+  "nombre": "RAF Akrotiri"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "explosion"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-03-02T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "detalle-80807759e91faffb",
+   "motivo": "fecha de UK Government (Ministry of Defence) (https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117492)",
+   "tipo": "oficial"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drone targeting RAF Akrotiri",
+  "es": "Dron contra RAF Akrotiri"
+ }
+}

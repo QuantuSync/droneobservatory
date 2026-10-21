@@ -1,0 +1,253 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  },
+  "vuelos_desviados": {
+   "max": 8,
+   "min": 8
+  },
+  "vuelos_retrasados": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-10-05T01:00Z"
+    },
+    "fuente_id": "gdelt-4cb2c512024e18be"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_desviados",
+    "vuelos_retrasados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://in.gr/2025/10/05/world/lithouania-meta-ta-drones-ta-aerostata-kleisto-aerodromio-tou-vilnious-logo-empodion",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-05T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03ad\u03ba\u03bb\u03b5\u03b9\u03c3\u03b5 \u03b1\u03c1\u03b3\u03ac \u03c4\u03bf \u03b2\u03c1\u03ac\u03b4\u03c5 \u03c4\u03bf\u03c5 \u03a3\u03b1\u03b2\u03b2\u03ac\u03c4\u03bf\u03c5 \u03bb\u03cc\u03b3\u03c9 \u03c5\u03c0\u03bf\u03c8\u03af\u03b1\u03c2 \u03b3\u03b9\u03b1 \u03c0\u03b1\u03c1\u03bf\u03c5\u03c3\u03af\u03b1 \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03c9\u03bd",
+   "id": "gdelt-4cb2c512024e18be",
+   "idioma": "el",
+   "medio": "in.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://newsbomb.gr/kosmos/story/1684451/meta-ta-drones-ta-aerostata-kleisto-to-aerodromio-tou-vilnious-sti-lithouania",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-05T01:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039c\u03b5\u03c4\u03ac \u03c4\u03b1 drones \u03c4\u03b1... \u03b1\u03b5\u03c1\u03cc\u03c3\u03c4\u03b1\u03c4\u03b1: \u039a\u03bb\u03b5\u03b9\u03c3\u03c4\u03cc \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0392\u03af\u03bb\u03bd\u03b9\u03bf\u03c5\u03c2 \u03c3\u03c4\u03b7 \u039b\u03b9\u03b8\u03bf\u03c5\u03b1\u03bd\u03af\u03b1",
+   "id": "gdelt-cc37f9e4f7ecb97b",
+   "idioma": "el",
+   "medio": "newsbomb.gr"
+  },
+  {
+   "campos_respaldados": [
+    "fin"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://stirileprotv.ro/stiri/international/dupa-incidentele-cu-drona-din-germania-aeroportul-din-vilnius-a-fost-inchis-din-cauza-unor-baloane-suspecte.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-05T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Traficul a fost reluat duminic\u0103 diminea\u0163\u0103, la ora local\u0103 04.50",
+   "id": "gdelt-04c4b7883ef12615",
+   "idioma": "ro",
+   "medio": "stirileprotv.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lavenir.net/actu/monde/2025/10/05/intrusion-de-drones-dans-lespace-aerien-europeen-laeroport-de-vilnius-en-lituanie-ferme-suite-a-une-alerte-aux-ballons-suspects-73C2L5N5MFG7TLPV4MEHHUDQ2E",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-05T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Intrusion de drones dans l'espace a\u00e9rien europ\u00e9en : l'a\u00e9roport de Vilnius en Lituanie ferm\u00e9 suite \u00e0 une alerte aux \"ballons\" suspects",
+   "id": "gdelt-e5cae761794ea4b8",
+   "idioma": "fr",
+   "medio": "lavenir.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dhnet.be/actu/monde/2025/10/05/nouvelle-intrusion-de-drones-dans-un-pays-europeen-la-lituanie-touchee-laeroport-de-vilnius-ferme-suite-a-une-alerte-aux-ballons-suspects-XBM4JWSZH5A2DB465DTC6IA4UI",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-05T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nouvelle intrusion de drones dans un pays europ\u00e9en : la Lituanie touch\u00e9e, l'a\u00e9roport de Vilnius ferm\u00e9 suite \u00e0 une alerte aux \"ballons\" suspects",
+   "id": "gdelt-98b69d2440060535",
+   "idioma": "fr",
+   "medio": "dhnet.be"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://15min.lt/verslas/naujiena/bendroves/per-menesi-desimt-dronu-sukeltu-incidentu-vilniaus-oro-uoste-663-2538170",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-10-09T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lietuvos oro erdv\u0119 \u0161e\u0161tadienio nakt\u012f pa\u017eeid\u0117 25 meteorologiniai oro balionai, d\u0117l kuri\u0173 laikinai sutriko Vilniaus oro uosto veikla.",
+   "id": "revisada-bde51a58e6647ba6",
+   "idioma": "lt",
+   "medio": "15min.lt"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "dron_estatal",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_cancelados",
+    "vuelos_retrasados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://15min.lt/verslas/naujiena/bendroves/per-menesi-desimt-dronu-sukeltu-incidentu-vilniaus-oro-uoste-663-2538170",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-09T03:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Uosto u\u017edarymas paveik\u0117 apie 5 t\u016bkstan\u010dius keleivi\u0173 ir 30 skryd\u017ei\u0173",
+   "id": "gdelt-dc14b77e5fedcd17",
+   "idioma": "lt",
+   "medio": "15min.lt"
+  }
+ ],
+ "id": "EODI-2025-00112",
+ "lugar": {
+  "geocodificacion": "frase_origen",
+  "historial": [
+   {
+    "anterior": {
+     "localidad": "Vilnius",
+     "punto": {
+      "lat": 54.68916,
+      "lon": 25.2798
+     },
+     "radio_km": 10.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-21T05:17Z"
+    },
+    "motivo": {
+     "en": "More precise place: the facility named in the headline.",
+     "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n que nombra el titular."
+    }
+   }
+  ],
+  "localidad": "Vilnius",
+  "nivel": "instalacion",
+  "pais": "LT",
+  "punto": {
+   "lat": 54.63488,
+   "lon": 25.28759
+  },
+  "radio_km": 5.0,
+  "region": "Vilniaus apskritis",
+  "suceso": "Tarptautinis Vilniaus oro uostas"
+ },
+ "nombres": {
+  "anteriores": [
+   {
+    "en": "Vilnius",
+    "es": "Vilna"
+   }
+  ],
+  "localidad": {
+   "en": "Vilnius",
+   "es": "Vilna"
+  },
+  "lugar": {
+   "en": "Vilnius, Lithuania",
+   "es": "Vilna, Lituania"
+  },
+  "objetivo": {
+   "en": "Vilnius Airport",
+   "es": "Aeropuerto de Vilna"
+  },
+  "region": {
+   "en": "Vilnius County",
+   "es": "Provincia de Vilna"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Tarptautinis Vilniaus oro uostas",
+  "oaci": "EYVI"
+ },
+ "presencia_dron": "descartada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "duracion_min": 470,
+  "fin": {
+   "precision": "minuto",
+   "valor": "2025-10-05T04:50Z"
+  },
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-10-04T21:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-4cb2c512024e18be",
+   "motivo": "\u00ab\u03c3\u03b1\u03b2\u03b2\u03b1\u03c4\u03bf\u03c5\u00bb en una nota publicada el 2025-10-05 04:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Vilnius airport closure due to suspected balloons",
+  "es": "Cierre del aeropuerto de Vilna por sospecha de globos"
+ }
+}

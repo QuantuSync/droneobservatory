@@ -1,0 +1,193 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-20T22:45Z"
+    },
+    "fuente_id": "gdelt-97de5c6303f204c7"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-20T22:45Z"
+    },
+    "fuente_id": "gdelt-97de5c6303f204c7-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-20T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "We wtorek (20 pa\u017adziernika) po po\u0142udniu dron spad\u0142 na jedn\u0105 z dzia\u0142ek w J\u00f3zefowie w gminie Niepor\u0119t (woj. mazowieckie).",
+   "id": "gdelt-97de5c6303f204c7",
+   "idioma": "pl",
+   "medio": "wiadomosci.gazeta.pl"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://natemat.pl/672436,dron-spadl-pod-warszawa-tym-razem-winna-nie-jest-rosja-tylko-polskie-wojsko",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-21T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Okaza\u0142o si\u0119, \u017ce to polska maszyna obs\u0142ugiwana przez Wojskowy Instytut Technicznego Uzbrojenia w Zielonce.",
+   "id": "gdelt-03660e6211f82e6d",
+   "idioma": "pl",
+   "medio": "natemat.pl"
+  },
+  {
+   "campos_respaldados": [
+    "lugar_suceso"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://niezalezna.pl/polska/dron-spadl-na-prywatna-posesje-wojskowi-stracili-lacznosc-z-maszyna/582180",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-21T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Mieszka\u0144cy miejscowo\u015bci J\u00f3zef\u00f3w w gminie Niepor\u0119t (powiat legionowski) w godzinach popo\u0142udniowych us\u0142yszeli g\u0142o\u015bny huk.",
+   "id": "gdelt-dbea7385daf72b87",
+   "idioma": "pl",
+   "medio": "niezalezna.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-10-20T22:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Marta Sulowska z Komendy Sto\u0142ecznej Policji przekaza\u0142a \"Wyborczej\", \u017ce pracownicy Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki utracili \u0142\u0105czno\u015b\u0107 z maszyn\u0105 \u0107wiczebn\u0105",
+   "id": "gdelt-97de5c6303f204c7-declaracion-1",
+   "idioma": "pl",
+   "medio": "Komenda Sto\u0142ecznej Policji (declaraci\u00f3n oficial citada en wiadomosci.gazeta.pl)"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-10-20T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sto\u0142eczna policja uspokaja, \u017ce to nie rosyjski dron, tylko maszyna \u0107wiczebna Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki, z kt\u00f3r\u0105 operatorzy stracili \u0142\u0105czno\u015b\u0107.",
+   "id": "revisada-c348ca6de94f600e",
+   "idioma": "pl",
+   "medio": "wiadomosci.gazeta.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33089535,dron-spadl-na-posesje-w-jozefowie-pod-warszawa-to-maszyna-polskiego.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-10-20T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "pracownicy Wojskowego Instytutu Technicznego Uzbrojenia z Zielonki utracili \u0142\u0105czno\u015b\u0107 z maszyn\u0105 \u0107wiczebn\u0105, co doprowadzi\u0142o do jej upadku na dzia\u0142k\u0119 w J\u00f3zefowie.",
+   "id": "revisada-53aaf746ae3cec94-declaracion-1",
+   "idioma": "pl",
+   "medio": "Komenda Sto\u0142eczna Policji (declaraci\u00f3n oficial citada en wiadomosci.gazeta.pl)"
+  }
+ ],
+ "id": "EODI-2026-00648",
+ "lugar": {
+  "geocodificacion": "localidad",
+  "nivel": "localidad",
+  "pais": "PL",
+  "punto": {
+   "lat": 52.13707,
+   "lon": 21.23589
+  },
+  "radio_km": 5.0,
+  "region": "mazowieckie",
+  "suceso": "J\u00f3zef\u00f3w"
+ },
+ "nombres": {
+  "lugar": {
+   "en": "Poland",
+   "es": "Polonia"
+  },
+  "region": {
+   "en": "Masovian Voivodeship",
+   "es": "Voivodato de Mazovia"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": false,
+  "evidencia": [
+   "caida"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-10-20T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-97de5c6303f204c7",
+   "motivo": "\u00ab20 pazdziernika\u00bb en una nota publicada el 2026-10-21 00:45 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Polish military training drone falls on a plot in J\u00f3zef\u00f3w, near Warsaw",
+  "es": "Dron de entrenamiento militar polaco cae en una parcela de J\u00f3zef\u00f3w, cerca de Varsovia"
+ }
+}

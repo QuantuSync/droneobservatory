@@ -1,0 +1,508 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-10T02:00Z"
+    },
+    "fuente_id": "gdelt-cab83d065b03e7fd"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://solinger-tageblatt.de/politik/polen-kampfjets-sichern-luftraum-wegen-russischer-drohnen-flughafen-warschau-gesperrt-GOU5ZP5MJFG2JJEL53MIEJWG7I.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T02:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Flughafen Warschau gesperrt.",
+   "id": "gdelt-cab83d065b03e7fd",
+   "idioma": "de",
+   "medio": "solinger-tageblatt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://gorenjskiglas.si/sta/poljska-v-svojem-zracnem-prostoru-sestrelila-vec-dronov-varsava-300282",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poljska v svojem zra\u010dnem prostoru sestrelila ve\u010d dronov Var\u0161ava",
+   "id": "gdelt-23724d359b923954",
+   "idioma": "sl",
+   "medio": "gorenjskiglas.si"
+  },
+  {
+   "campos_respaldados": [
+    "evidencia",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://telegraaf.nl/buitenland/live-polen-schiet-drones-neer-boven-eigen-grondgebied-luchthaven-warschau-dicht/89313648.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polen schiet drones neer boven eigen grondgebied.",
+   "id": "gdelt-67892d7d5edf7041",
+   "idioma": "nl",
+   "medio": "telegraaf.nl"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-10/polonia-varsavia-abbattuti-droni-russi-entrati-in-nostro-spazio-aereo/17718720",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "droni russi entrati in nostro spazio aereo",
+   "id": "gdelt-9c2ebd5ec82d7ce0",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lemonde.fr/international/article/2025/09/10/la-pologne-abat-des-objets-hostiles-des-drones-russes-apres-des-violations-de-son-espace-aerien-l-aeroport-de-varsovie-ferme_6640226_3210.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Pologne abat des \u00ab objets hostiles \u00bb, des drones russes, apr\u00e8s des violations de son espace a\u00e9rien, l'a\u00e9roport de Varsovie ferm\u00e9",
+   "id": "gdelt-57112b96b741d147",
+   "idioma": "fr",
+   "medio": "lemonde.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://idnes.cz/zpravy/zahranicni/rusko-ukrajina-valka-polsko-naruseni-vzdusny-prostor.A250910_040629_zahranicni_dtt",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polsk\u00fd vzdu\u0161n\u00fd prostor naru\u0161ily rusk\u00e9 drony, Var\u0161ava na\u0159\u00eddila jejich sest\u0159elen\u00ed",
+   "id": "gdelt-6652d6357260d6e1",
+   "idioma": "cs",
+   "medio": "idnes.cz"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://saudigazette.com.sa/article/654845/World/Europe/Warsaw-airport-shut-after-Ukrainian-reports-of-Russian-drones-over-Poland",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Warsaw airport shut after Ukrainian reports of Russian drones over Poland",
+   "id": "gdelt-0a02a31e2c3b3662",
+   "idioma": "en",
+   "medio": "saudigazette.com.sa"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://athina984.gr/2025/09/10/rosika-drones-ston-enaerio-choro-tis-polonias-chrisi-oplon-ekane-i-varsovia-ektakti-synedriasi-toy-nato",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u03a1\u03c9\u03c3\u03b9\u03ba\u03ac drones \u03c3\u03c4\u03bf\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf \u03c7\u03ce\u03c1\u03bf \u03c4\u03b7\u03c2 \u03a0\u03bf\u03bb\u03c9\u03bd\u03af\u03b1\u03c2 -\u00ab \u03a7\u03c1\u03ae\u03c3\u03b7 \u03cc\u03c0\u03bb\u03c9\u03bd\u00bb \u03ad\u03ba\u03b1\u03bd\u03b5 \u03b7 \u0392\u03b1\u03c1\u03c3\u03bf\u03b2\u03af\u03b1 \u03ba\u03b1\u03b9 \u03ba\u03b1\u03c4\u03b1\u03b3\u03b3\u03ad\u03bb\u03bb\u03b5\u03b9 \u00ab \u03b5\u03c0\u03af\u03b8\u03b5\u03c3\u03b7\u00bb \u2013 \u0388\u03ba\u03c4\u03b1\u03ba\u03c4\u03b7 \u03c3\u03c5\u03bd\u03b5\u03b4\u03c1\u03af\u03b1\u03c3\u03b7 \u03c4\u03bf\u03c5 \u039d\u0391\u03a4\u039f",
+   "id": "gdelt-e27f92ebd8409498",
+   "idioma": "el",
+   "medio": "athina984.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.wp.pl/atak-rosyjskich-dronow-tak-wygladalo-lotnisko-chopina-7198669875639937v",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Atak rosyjskich dron\u00f3w. Tak wygl\u0105da\u0142o lotnisko Chopina",
+   "id": "gdelt-55a8bc48a47a2bdb",
+   "idioma": "pl",
+   "medio": "wiadomosci.wp.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://weltwoche.ch/daily/polen-schiesst-russische-drohnen-ab-warschau-spricht-von-mehrfacher-verletzung-des-polnischen-luftraums",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polen schiesst russische Drohnen ab: Warschau spricht von \u00abmehrfacher Verletzung des polnischen Luftraums\u00bb",
+   "id": "gdelt-af58753fbfc984d0",
+   "idioma": "de",
+   "medio": "weltwoche.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://indianexpress.com/article/world/poland-reopens-warsaw-airspace-russian-drone-incursion-10241140",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Poland reopens Warsaw airspace after Russian drone incursion",
+   "id": "gdelt-7aab8f6796070739",
+   "idioma": "en",
+   "medio": "indianexpress.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-09/la-polonia-abbatte-droni-russi-nel-suo-spazio-aereo-chiuso-per-ore-laeroporto-di-varsavia/17719334",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Polonia abbatte droni russi nel suo spazio aereo.",
+   "id": "gdelt-6be1681019405b28",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elpueblodeceuta.es/art/111834/ataque-ruso-con-drones-en-polonia-aeropuertos-cerrados-y-defensas-activadas-en-varsovia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ataque ruso con drones en Polonia: aeropuertos cerrados y defensas activadas en Varsovia",
+   "id": "gdelt-f33b15201af526a0",
+   "idioma": "es",
+   "medio": "elpueblodeceuta.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mediatica.ro/hirek/kulfold/dronokat-lottek-le-lengyelorszagban-a-chopin-repuloter-lezarva",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dr\u00f3nokat l\u0151ttek le Lengyelorsz\u00e1gban: a Chopin rep\u00fcl\u0151t\u00e9r lez\u00e1rva",
+   "id": "gdelt-654fab74471161dc",
+   "idioma": "hu",
+   "medio": "mediatica.ro"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.radiozet.pl/polska/zamkniecie-przestrzeni-powietrznej-po-wtargnieciu-dronow-jest-komunikat-lotniska-chopina",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Zamkni\u0119cie przestrzeni powietrznej po wtargni\u0119ciu dron\u00f3w. Jest komunikat Lotniska Chopina",
+   "id": "gdelt-b00655b995579715",
+   "idioma": "pl",
+   "medio": "wiadomosci.radiozet.pl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://charter97.org/en/news/2025/9/10/655150",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Warsaw Airports Resume Operations After Overnight Russian Drone Incursion",
+   "id": "gdelt-0ae82756f97fc49c",
+   "idioma": "en",
+   "medio": "charter97.org"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/mejdunarodni/Letishteto-vuv-Varshava-sprya-poletite-sled-ataka-s-dronove-2700133",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432\u044a\u0432 \u0412\u0430\u0440\u0448\u0430\u0432\u0430 \u0441\u043f\u0440\u044f \u043f\u043e\u043b\u0435\u0442\u0438\u0442\u0435 \u0441\u043b\u0435\u0434 \u0430\u0442\u0430\u043a\u0430 \u0441 \u0434\u0440\u043e\u043d\u043e\u0432\u0435",
+   "id": "gdelt-223f89381f6f5c20",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://franceguyane.fr/actualite/international/pologne-laviation-abat-des-objets-hostiles-apres-des-violations-de-lespace-aerien-1049784.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Varsovie et ses alli\u00e9s d\u00e9noncent une \u00abprovocation\u00bb russe apr\u00e8s l'incursion de drones en Pologne",
+   "id": "gdelt-732f84163ff95f5f",
+   "idioma": "fr",
+   "medio": "franceguyane.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://charentelibre.fr:443/international/guerre-en-ukraine/la-pologne-abat-des-drones-russes-dans-son-espace-aerien-varsovie-denonce-un-acte-d-agression-25866308.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "La Pologne abat des drones russes dans son espace a\u00e9rien, Varsovie d\u00e9nonce un \u00ab acte d'agression \u00bb",
+   "id": "gdelt-9463110ea0a63f42",
+   "idioma": "fr",
+   "medio": "charentelibre.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europe1.fr/international/pologne-des-drones-russes-penetrent-lespace-aerien-varsovie-denonce-un-acte-dagression-772103",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Pologne : des drones russes p\u00e9n\u00e8trent l'espace a\u00e9rien, Varsovie d\u00e9nonce un \u00abacte d'agression\u00bb",
+   "id": "gdelt-a605a9da7816d4c0",
+   "idioma": "fr",
+   "medio": "europe1.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://alphatv.gr/news/kosmos/article/203795/nato-rosika-drones-to-nato-leei-oti-",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u039d\u0391\u03a4\u039f-\u03c1\u03c9\u03c3\u03b9\u03ba\u03ac drones: \u03a4\u03bf \u039d\u0391\u03a4\u039f \u03bb\u03ad\u03b5\u03b9 \u03cc\u03c4\u03b9 \u03b4\u03b9\u03b1\u03b2\u03bf\u03c5\u03bb\u03b5\u03cd\u03b5\u03c4\u03b1\u03b9 \u03c3\u03c4\u03b5\u03bd\u03ac \u03bc\u03b5 \u03c4\u03b7\u03bd \u0392\u03b1\u03c1\u03c3\u03bf\u03b2\u03af\u03b1 \u03b1\u03c6\u03cc\u03c4\u03bf\u03c5 \u03b7 \u03a0\u03bf\u03bb\u03c9\u03bd\u03af\u03b1 \u03ba\u03b1\u03c4\u03ad\u03c1\u03c1\u03b9\u03c8\u03b5 drones \u03c3\u03c4\u03bf\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf \u03c7\u03ce\u03c1\u03bf \u03c4\u03b7\u03c2",
+   "id": "gdelt-36312d44bb93ae78",
+   "idioma": "el",
+   "medio": "alphatv.gr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://negocios.com/articulo/ultima-hora/polonia-denuncia-repetidas-incursiones-drones-rusos-cierra-cuatro-aeropuertos-incluido-varsovia/20250910093930466798.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia confirma incursiones de drones rusos y cierra el aeropuerto de Varsovia",
+   "id": "gdelt-89b17fa4e53e584b",
+   "idioma": "es",
+   "medio": "negocios.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elmostrador.cl/noticias/mundo/2025/09/10/polonia-en-alerta-maxima-rusia-viola-su-espacio-aereo-con-drones-y-varsovia-lo-califica-de-agresion",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Polonia en alerta m\u00e1xima: Rusia viola su espacio a\u00e9reo con drones y Varsovia lo califica de agresi\u00f3n",
+   "id": "gdelt-fd7e27b28f140983",
+   "idioma": "es",
+   "medio": "elmostrador.cl"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lindependant.fr/2025/09/10/incursion-de-drones-russes-en-pologne-la-russie-denonce-des-mythes-mais-varsovie-na-aucun-doute-sur-la-violation-de-son-espace-aerien-12922659.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Incursion de drones russes en Pologne : la Russie d\u00e9nonce des \"mythes\", mais Varsovie n'a \"aucun doute\" sur la violation de son espace a\u00e9rien",
+   "id": "gdelt-f574fdbc4dd923aa",
+   "idioma": "fr",
+   "medio": "lindependant.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://merkur.de/politik/russische-drohnen-verletzen-polnischen-luftraum-warschau-schliesst-flughafen-zr-93927454.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-10T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russische Drohnen verletzen polnischen Luftraum \u2013 Warschau schlie\u00dft Flughafen",
+   "id": "gdelt-7ee52f225d552ce1",
+   "idioma": "de",
+   "medio": "merkur.de"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "pais"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://adevarul.ro/stiri-externe/europa/varsovia-prinsa-in-capcana-kremlinului-atacul-2472592.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-17T10:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "aproape 20 de drone ruse\u0219ti au p\u0103truns \u00een spa\u021biul aerian al Poloniei",
+   "id": "gdelt-cd12d2f3539352db",
+   "idioma": "ro",
+   "medio": "adevarul.ro"
+  }
+ ],
+ "id": "EODI-2025-00233",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "nivel": "instalacion",
+  "pais": "PL",
+  "punto": {
+   "lat": 52.22977,
+   "lon": 21.01178
+  },
+  "radio_km": 20.0,
+  "region": "Mazovia",
+  "suceso": "Warschau"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Warsaw",
+   "es": "Varsovia"
+  },
+  "lugar": {
+   "en": "Warsaw, Poland",
+   "es": "Varsovia, Polonia"
+  },
+  "objetivo": {
+   "en": "Warsaw",
+   "es": "Varsovia"
+  },
+  "region": {
+   "en": "Mazovia",
+   "es": "Mazovia"
+  }
+ },
+ "objetivo": {
+  "categoria": "otra",
+  "nombre": "Warsaw"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "derribo",
+   "recuperado"
+  ]
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2025-00209",
+   "nota": {
+    "en": "Merged the Russian drone incursion and Warsaw airport closure of 10 Sep with the drone flown over government buildings in Warsaw on 15 Sep by a Ukrainian operator",
+    "es": "Junta la incursi\u00f3n de drones rusos y el cierre del aeropuerto de Varsovia del 10 sep con el dron que sobrevol\u00f3 edificios del Gobierno en Varsovia el 15 sep (operador ucraniano expulsado)"
+   },
+   "separado_de": "EODI-2025-00233"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "cazas",
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-09-10T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-cd12d2f3539352db",
+   "motivo": "\u00ab10 septembrie\u00bb en una nota publicada el 2025-09-17 13:00 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Possible drones shot down force closure of Warsaw airport",
+  "es": "Posibles drones derribados obligan a cerrar el aeropuerto de Varsovia"
+ }
+}

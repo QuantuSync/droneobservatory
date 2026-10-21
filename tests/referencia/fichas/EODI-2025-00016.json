@@ -1,0 +1,137 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 4,
+   "min": 4
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-05T11:45Z"
+    },
+    "fuente_id": "gdelt-4ba1d21ac88d29c4"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-11-05T11:45Z"
+    },
+    "fuente_id": "gdelt-4ba1d21ac88d29c4-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-05T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest).",
+   "id": "gdelt-4ba1d21ac88d29c4",
+   "idioma": "nl",
+   "medio": "vrt.be"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-11-05T11:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest).",
+   "id": "gdelt-4ba1d21ac88d29c4-declaracion-1",
+   "idioma": "nl",
+   "medio": "Burgemeester Geert Cluckers (declaraci\u00f3n oficial citada en vrt.be)"
+  }
+ ],
+ "id": "EODI-2025-00016",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "nivel": "instalacion",
+  "pais": "BE",
+  "punto": {
+   "lat": 51.00038,
+   "lon": 5.06173
+  },
+  "radio_km": 5.0,
+  "region": "Vlaams-Brabant",
+  "suceso": "Schaffen"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Diest",
+   "es": "Diest"
+  },
+  "lugar": {
+   "en": "Diest, Belgium",
+   "es": "Diest, B\u00e9lgica"
+  },
+  "objetivo": {
+   "en": "Diest-Schaffen Airfield",
+   "es": "Aer\u00f3dromo de Schaffen-Diest"
+  },
+  "region": {
+   "en": "Flemish Brabant",
+   "es": "Brabante Flamenco"
+  }
+ },
+ "objetivo": {
+  "categoria": "base_militar",
+  "nombre": "Diest Schaffen Airfield"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-11-04T20:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-4ba1d21ac88d29c4",
+   "motivo": "\u00abgisteravond\u00bb en una nota publicada el 2025-11-05 12:45 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Four drones spotted over Schaffen military base",
+  "es": "Cuatro drones avistados sobre la base militar de Schaffen"
+ }
+}

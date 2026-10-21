@@ -1,0 +1,166 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-10-21T19:00Z"
+    },
+    "fuente_id": "gdelt-fd32ff19006f6c5e"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://delfi.lv/193/politics/120092141/iespejama-drona-del-uz-bridi-aptureta-lidmasinu-satiksme-lidosta-riga-zino-raidijums",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Otrdien ba\u017e\u0101s par iesp\u0113jamu dronu lidostas R\u012bga tuvum\u0101 uz br\u012bdi aptur\u0113ta lidma\u0161\u012bnu satiksme.",
+   "id": "gdelt-fd32ff19006f6c5e",
+   "idioma": "lv",
+   "medio": "delfi.lv"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision",
+    "lugar_nuevo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T19:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "R\u012bgas lidosta \u0161odien plkst. 14.20 sniedza atbild\u012bgajiem dienestiem inform\u0101ciju par iesp\u0113jamu bezpilota lidapar\u0101ta atra\u0161anos.",
+   "id": "gdelt-06c231a0feb867bd",
+   "idioma": "lv",
+   "medio": "la.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nra.lv/latvija/riga/504739-drons-rigas-lidostas-tuvuma-uz-bridi-aptur-aviacijas-kustibu.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T19:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drons R\u012bgas lidostas tuvum\u0101 uz br\u012bdi aptur avi\u0101cijas kust\u012bbu",
+   "id": "gdelt-5568bf6cbc2c95e8",
+   "idioma": "lv",
+   "medio": "nra.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rus.delfi.lv/57860/latvia/120092142/vo-vtornik-iz-za-veroyatnogo-poyavleniya-drona-vblizi-aeroporta-riga-vremenno-byli-priostanovleny-polety",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-21T22:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412\u043e \u0432\u0442\u043e\u0440\u043d\u0438\u043a \u0438\u0437-\u0437\u0430 \u0432\u0435\u0440\u043e\u044f\u0442\u043d\u043e\u0433\u043e \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u0434\u0440\u043e\u043d\u0430 \u0432\u0431\u043b\u0438\u0437\u0438 \u0430\u044d\u0440\u043e\u043f\u043e\u0440\u0442\u0430 \"\u0420\u0438\u0433\u0430\" \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0431\u044b\u043b\u0438 \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u044b \u043f\u043e\u043b\u0435\u0442\u044b",
+   "id": "gdelt-d78b08fe017d933a",
+   "idioma": "ru",
+   "medio": "rus.delfi.lv"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diena.lv/raksts/latvija/zinas/bazas-par-dronu-rigas-lidostas-tuvuma-otrdien-uz-neilgu-laiku-aptureta-lidmasinu-pacelsanas-un-nolaisanas-14343137",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-10-22T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ba\u017e\u0101s par dronu R\u012bgas lidostas tuvum\u0101 otrdien uz neilgu laiku aptur\u0113ta lidma\u0161\u012bnu pacel\u0161an\u0101s un nolai\u0161an\u0101s",
+   "id": "gdelt-8758f6cc87c21fa1",
+   "idioma": "lv",
+   "medio": "diena.lv"
+  }
+ ],
+ "id": "EODI-2025-00043",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "LV",
+  "punto": {
+   "lat": 56.92233,
+   "lon": 23.97242
+  },
+  "radio_km": 5.0,
+  "region": "R\u012bga",
+  "suceso": "R\u012bgas lidosta"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Riga",
+   "es": "Riga"
+  },
+  "lugar": {
+   "en": "Riga, Latvia",
+   "es": "Riga, Letonia"
+  },
+  "objetivo": {
+   "en": "Riga International Airport",
+   "es": "Aeropuerto de Riga"
+  },
+  "region": {
+   "en": "Riga",
+   "es": "Riga"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "RIX Ri\u0304gas lidosta",
+  "oaci": "EVRA"
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "minuto",
+   "valor": "2025-10-21T14:20Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-06c231a0feb867bd",
+   "motivo": "\u00absodien\u00bb en una nota publicada el 2025-10-21 22:00 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Possible drone near Riga airport disrupts air traffic",
+  "es": "Posible dron cerca del aeropuerto de Riga interrumpe el tr\u00e1fico a\u00e9reo"
+ }
+}

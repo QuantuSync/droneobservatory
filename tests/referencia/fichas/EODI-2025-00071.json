@@ -1,0 +1,139 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-08-31T20:45Z"
+    },
+    "fuente_id": "gdelt-63a03024909245da"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-08-31T00:00Z"
+    },
+    "fuente_id": "revisada-034865840c6b84d2-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-08-31T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droneflygingen p\u00e5 Gardermoen gjorde at flytrafikken ble stengt en periode.",
+   "id": "gdelt-63a03024909245da",
+   "idioma": "no",
+   "medio": "rb.no"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://rb.no/floy-drone-over-rullebanen-matte-stanse-flytrafikken/s/5-43-2555363",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-08-31T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Hun opplyser at politiet tok beslag i dronen og en mobiltelefon.",
+   "id": "revisada-034865840c6b84d2-declaracion-1",
+   "idioma": "no",
+   "medio": "Politiet (declaraci\u00f3n oficial citada en rb.no)"
+  }
+ ],
+ "id": "EODI-2025-00071",
+ "lugar": {
+  "geocodificacion": "nomenclator",
+  "nivel": "instalacion",
+  "pais": "NO",
+  "punto": {
+   "lat": 60.19782,
+   "lon": 11.09919
+  },
+  "radio_km": 5.0,
+  "region": "Akershus",
+  "suceso": "Oslo lufthavn"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Oslo",
+   "es": "Oslo"
+  },
+  "lugar": {
+   "en": "Oslo, Norway",
+   "es": "Oslo, Noruega"
+  },
+  "objetivo": {
+   "en": "Oslo Airport",
+   "es": "Aeropuerto de Oslo"
+  },
+  "region": {
+   "en": "Akershus",
+   "es": "Akershus"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Oslo lufthavn, Gardermoen",
+  "oaci": "ENGM"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2025-08-31T18:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-63a03024909245da",
+   "motivo": "\u00absondag\u00bb en una nota publicada el 2025-08-31 22:45 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Drone over Oslo Gardermoen runway forces closure of air traffic",
+  "es": "Dron sobre la pista de Oslo Gardermoen obliga a cerrar el tr\u00e1fico a\u00e9reo"
+ }
+}

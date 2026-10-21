@@ -1,0 +1,247 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-07-26T10:45Z"
+    },
+    "fuente_id": "gdelt-24ef67a35c35e4c4"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-07-26T10:45Z"
+    },
+    "fuente_id": "gdelt-24ef67a35c35e4c4-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-26T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u00eenc\u0103lc\u0103rilor repetate de c\u0103tre Federa\u0163ia Rus\u0103 a spa\u0163iului aerian al Rom\u00e2niei",
+   "id": "gdelt-24ef67a35c35e4c4",
+   "idioma": "ro",
+   "medio": "europafm.ro"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-26T10:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "ambasadorul rus la Bucure\u015fti a fost chemat la MAE, \u00een urma \u00eenc\u0103lc\u0103rilor repetate",
+   "id": "gdelt-24ef67a35c35e4c4-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Afacerilor Externe (declaraci\u00f3n oficial citada en europafm.ro)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://europafm.ro/ambasadorul-rus-la-bucuresti-convocat-la-mae-dupa-incidentele-repetate-cu-drone-care-au-patruns-in-spatiul-aerian-romanesc",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-26T10:45Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "o nou\u0103 dron\u0103 a fost dobor\u00e2t\u0103 duminic\u0103 diminea\u0163\u0103, la ora 10:13, de o aeronav\u0103 F-16",
+   "id": "gdelt-24ef67a35c35e4c4-declaracion-2",
+   "idioma": "ro",
+   "medio": "For\u021bele Aeriene Rom\u00e2ne (declaraci\u00f3n oficial citada en europafm.ro)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20minutos.es/internacional/rumania-derriba-dron-sobrevolaba-espacio-aereo-tercero-dias-bucarest-convoca-embajador-ruso_7019084_0.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-26T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ruman\u00eda derriba un dron que sobrevolaba su espacio a\u00e9reo: es el tercero en tres d\u00edas y Bucarest convoca al embajador ruso",
+   "id": "gdelt-68097737fbb76771",
+   "idioma": "es",
+   "medio": "20minutos.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elpais.com/internacional/2026-07-26/bucarest-convocara-al-embajador-ruso-tras-derribar-un-tercer-dron-en-el-espacio-aereo-rumano.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-26T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bucarest convocar\u00e1 al embajador ruso tras derribar un tercer dron en el espacio a\u00e9reo rumano",
+   "id": "gdelt-821cdee59d3989d6",
+   "idioma": "es",
+   "medio": "elpais.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/16-40-Abschuss-dreier-russischer-Drohnen-kostet-Nato-Land-Rumaenien-1-5-Millionen-Euro-id30859357.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-27T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 16:40 Abschuss dreier russischer Drohnen kostet Nato-Land Rum\u00e4nien 1,5 Millionen Euro +++",
+   "id": "gdelt-c5ebb7cbe6d215c0",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lancasteronline.com/news/world/nato-member-romania-shoots-down-stray-drones-from-ukraine-war-after-years-of-incursions/article_77829ef1-ca5b-523e-9654-f77cf18fcb91.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-28T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "NATO member Romania shoots down stray drones from Ukraine war after years of incursions",
+   "id": "gdelt-e3ae0ad28d427d0b",
+   "idioma": "en",
+   "medio": "lancasteronline.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://mendocinobeacon.com/2026/07/28/romania-russia-ukraine-war-drones",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-07-28T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russia intensified attacks against Ukraine near the border.",
+   "id": "gdelt-8860bfc5e7dfba35",
+   "idioma": "en",
+   "medio": "mendocinobeacon.com"
+  }
+ ],
+ "id": "EODI-2026-00316",
+ "lugar": {
+  "geocodificacion": "frase_origen",
+  "nivel": "localidad",
+  "pais": "RO",
+  "punto": {
+   "lat": 45.15564,
+   "lon": 29.65403
+  },
+  "radio_km": 3.0,
+  "region": "Tulcea",
+  "suceso": "Sulina-Chilia"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Sulina",
+   "es": "Sulina"
+  },
+  "lugar": {
+   "en": "Sulina, Romania",
+   "es": "Sulina, Ruman\u00eda"
+  },
+  "objetivo": {
+   "en": "Sulina",
+   "es": "Sulina"
+  },
+  "region": {
+   "en": "Tulcea",
+   "es": "Tulcea"
+  }
+ },
+ "objetivo": {
+  "categoria": "otra",
+  "nombre": "Sulina"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "derribo"
+  ]
+ },
+ "respuesta": {
+  "medidas": [
+   "cazas",
+   "derribo"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-07-25T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-8860bfc5e7dfba35",
+   "motivo": "\u00abfriday\u00bb en una nota publicada el 2026-07-28 19:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Romania shoots down drone that penetrated its airspace",
+  "es": "Ruman\u00eda derriba un dron que penetr\u00f3 en su espacio a\u00e9reo"
+ }
+}

@@ -1,0 +1,413 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "atribuido",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-02-26T13:00Z"
+    },
+    "fuente_id": "gdelt-3465f83546d2d8d1"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-02-27T18:55Z"
+    },
+    "fuente_id": "oficial-se-forsvarsmakten-2026-02-27-dronare"
+   },
+   {
+    "estado": "atribuido",
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-02-27T18:55Z"
+    },
+    "fuente_id": "oficial-se-forsvarsmakten-2026-02-27-autoria"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "lugar_suceso",
+    "medidas",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://bt.dk/udland/medie-svensk-militaer-tvinger-russisk-drone-vaek-fra-hangarskib-ved-malmoe",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "En russisk drone har n\u00e6rmet sig det franske hangarskib Charles de Gaulle",
+   "id": "gdelt-3465f83546d2d8d1",
+   "idioma": "da",
+   "medio": "bt.dk"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.gazeta.pl/swiat/7,198075,32626637,rosyjski-dron-zblizyl-sie-do-francuskiego-lotniskowca-w-malmo.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bezza\u0142ogowiec wystartowa\u0142 z rosyjskiej jednostki znajduj\u0105cej si\u0119 w pobli\u017cu portu w Malmo.",
+   "id": "gdelt-04e68d32ad582c19",
+   "idioma": "pl",
+   "medio": "wiadomosci.gazeta.pl"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://wiadomosci.gazeta.pl/swiat/7,198075,32626637,rosyjski-dron-zblizyl-sie-do-francuskiego-lotniskowca-w-malmo.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T16:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Dron zosta\u0142 wykryty przez szwedzkie si\u0142y zbrojne, kt\u00f3re zag\u0142uszy\u0142y jego sygna\u0142.",
+   "id": "gdelt-04e68d32ad582c19-declaracion-1",
+   "idioma": "pl",
+   "medio": "Szwedzkie Si\u0142y Zbrojne (declaraci\u00f3n oficial citada en wiadomosci.gazeta.pl)"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://midilibre.fr/2026/02/26/incident-suspect-pres-du-charles-de-gaulle-larmee-suedoise-brouille-un-drone-alors-quune-une-mysterieuse-fuite-de-carburant-pollue-le-port-de-malmo-13246128.php",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "L'arm\u00e9e su\u00e9doise a neutralis\u00e9 mercredi 25 f\u00e9vrier un drone d'origine inconnue",
+   "id": "gdelt-4aebb11f98b02ff7",
+   "idioma": "fr",
+   "medio": "midilibre.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bt.dk/udland/svensk-militaer-tvinger-drone-vaek-fra-hangarskib-ved-malmoe",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Svensk milit\u00e6r tvinger drone v\u00e6k fra hangarskib ved Malm\u00f8",
+   "id": "gdelt-2027dc7290775b46",
+   "idioma": "da",
+   "medio": "bt.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://nyheter24.se/nyheter/inrikes/1463499-rysk-dronare-narmade-sig-malmo-upptacktes-av-forsvaret",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Rysk dr\u00f6nare n\u00e4rmade sig Malm\u00f6 \u2013 uppt\u00e4cktes av f\u00f6rsvaret",
+   "id": "gdelt-d49609ecf54a9e99",
+   "idioma": "sv",
+   "medio": "nyheter24.se"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lemonde.fr/international/article/2026/02/26/l-armee-suedoise-brouille-un-drone-d-origine-inconnue-non-loin-du-porte-avions-charles-de-gaulle-qui-faisait-escale-a-malmo_6668398_3210.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T17:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "L'arm\u00e9e su\u00e9doise brouille un drone d'origine inconnue non loin du porte-avions \u00ab Charles-de-Gaulle \u00bb, qui faisait escale \u00e0 Malm\u00f6",
+   "id": "gdelt-fd408c29791eefa9",
+   "idioma": "fr",
+   "medio": "lemonde.fr"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/Udland/sveriges-forsvarsminister-mistaenker-russisk-drone-ved-hangarskib-i-malmoe/11108211",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T18:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sveriges forsvarsminister: Mist\u00e6nker russisk drone ved hangarskib i Malm\u00f8",
+   "id": "gdelt-bf48bd0a9054f17e",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://standard.co.uk/news/world/nato-intercepts-russian-drone-security-alert-malmo-b1272687.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-26T20:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Nato intercepts Russian drone in 'serious security alert' in Malmo",
+   "id": "gdelt-5f1431ca20138836",
+   "idioma": "en",
+   "medio": "standard.co.uk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wgauradio.com/news/world/sweden-intercepts/DJEJAF26ZAY3LFKLYP2J5LZHIQ",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-27T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Swedish military intercepts suspected Russian drone near Malm\u00f6 port",
+   "id": "gdelt-5b43f9c5d994fe44",
+   "idioma": "en",
+   "medio": "wgauradio.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "medidas",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://digi24.ro/stiri/externe/ue/incident-militar-in-malmo-suedia-a-interceptat-o-drona-rusa-in-apropierea-portavionului-nuclear-francez-charles-de-gaulle-3651449",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-27T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "o dron\u0103 rus\u0103, care s-a apropiat de portavionul francez Charles de Gaulle",
+   "id": "gdelt-fff882775c78b399",
+   "idioma": "ro",
+   "medio": "digi24.ro"
+  },
+  {
+   "campos_respaldados": [
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://hbl.fi/2026-02-27/svenska-forsvaret-bekraftar-rysk-dronare-utanfor-malmo",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-27T20:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Dr\u00f6naren som st\u00f6rdes ut en dryg mil fr\u00e5n det franska hangarfartyget i Malm\u00f6 i onsdags var rysk, bekr\u00e4ftar Sveriges f\u00f6rsvarsmakt.",
+   "id": "gdelt-114a6763433d1ae0",
+   "idioma": "sv",
+   "medio": "hbl.fi"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://hbl.fi/2026-02-27/svenska-forsvaret-bekraftar-rysk-dronare-utanfor-malmo",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-27T20:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Dr\u00f6naren som st\u00f6rdes ut en dryg mil fr\u00e5n det franska hangarfartyget i Malm\u00f6 i onsdags var rysk, bekr\u00e4ftar Sveriges f\u00f6rsvarsmakt.",
+   "id": "gdelt-114a6763433d1ae0-declaracion-1",
+   "idioma": "sv",
+   "medio": "Sveriges f\u00f6rsvarsmakt (declaraci\u00f3n oficial citada en hbl.fi)"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://hbl.fi/2026-02-27/svenska-forsvaret-bekraftar-rysk-dronare-utanfor-malmo",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-27T20:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "en dr\u00f6nare lyfte fr\u00e5n det ryska signalspaningsfartyget Zhigulevsk i \u00d6resund.",
+   "id": "gdelt-114a6763433d1ae0-declaracion-2",
+   "idioma": "sv",
+   "medio": "F\u00f6rsvarsmaktens fartyg (declaraci\u00f3n oficial citada en hbl.fi)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elconfidencialdigital.com/geopolitica/articulo/armamento/ejercito-sueco-desvia-dron-ruso-portaviones-frances-malmo/20260227233255003663.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-02-27T23:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ej\u00e9rcito sueco desv\u00eda dron ruso contra portaviones franc\u00e9s en Malm\u00f6",
+   "id": "gdelt-67f7a69f47b5e742",
+   "idioma": "es",
+   "medio": "elconfidencialdigital.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-27T18:55Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Under bes\u00f6ket av det franska hangarfartyget Charles de Gaulle observerade ett av F\u00f6rsvarsmaktens fartyg att en dr\u00f6nare lyfte fr\u00e5n ett ryskt signalspaningsfartyg i \u00d6resund.",
+   "id": "oficial-se-forsvarsmakten-2026-02-27-dronare",
+   "idioma": "sv",
+   "medio": "F\u00f6rsvarsmakten"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-27T18:55Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Det var under bes\u00f6ket av det franska hangarfartyget Charles de Gaulle till Malm\u00f6 som det ryska signalspaningsfartyget Zhigulevsk f\u00f6rflyttade sig i svenskt territorialvatten",
+   "id": "oficial-se-forsvarsmakten-2026-02-27-zhigulevsk",
+   "idioma": "sv",
+   "medio": "F\u00f6rsvarsmakten"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-27T18:55Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Nu kan F\u00f6rsvarsmakten bekr\u00e4fta att en rysk dr\u00f6nare har genomf\u00f6rt en olovlig flygning.",
+   "id": "oficial-se-forsvarsmakten-2026-02-27-autoria",
+   "idioma": "sv",
+   "medio": "F\u00f6rsvarsmakten"
+  }
+ ],
+ "id": "EODI-2026-00245",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "nivel": "localidad",
+  "pais": "SE",
+  "punto": {
+   "lat": 55.60587,
+   "lon": 13.00073
+  },
+  "radio_km": 10.0,
+  "region": "Sk\u00e5ne",
+  "suceso": "Malm\u00f6"
+ },
+ "nombres": {
+  "lugar": {
+   "en": "Sweden",
+   "es": "Suecia"
+  },
+  "region": {
+   "en": "Scania",
+   "es": "Escania"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": []
+ },
+ "respuesta": {
+  "medidas": [
+   "inhibicion"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-02-25T00:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-4aebb11f98b02ff7",
+   "motivo": "\u00ab25 fevrier\u00bb en una nota publicada el 2026-02-26 17:15 (hora local del medio)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Russian drone approaches Charles de Gaulle aircraft carrier in Malm\u00f6",
+  "es": "Dron ruso se aproxima al portaaviones Charles de Gaulle en Malm\u00f6"
+ }
+}

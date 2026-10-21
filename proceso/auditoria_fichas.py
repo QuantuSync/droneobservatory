@@ -48,7 +48,7 @@ from proceso.presencia import (
     pruebas_fisicas_confirmadas,
 )
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G")
+COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "R")
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -57,6 +57,7 @@ NOMBRES = {
     "E": "presencia sin base",
     "F": "lugar",
     "G": "nombres",
+    "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -221,7 +222,8 @@ _REGLAS: dict[str, Callable[[Documento], bool]] = {
 def auditar(documentos: Iterable[Documento]) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
-    for documento in documentos:
+    vistos = list(documentos)
+    for documento in vistos:
         if not incidentes.activo(documento):
             continue
         for clave, regla in _REGLAS.items():
@@ -233,6 +235,14 @@ def auditar(documentos: Iterable[Documento]) -> dict[str, list[str]]:
                 fallo = False
             if fallo:
                 resultado[clave].append(str(documento["id"]))
+    # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor
+    # comprobado contra sus fuentes en algo que no es una discrepancia conocida.
+    from proceso import referencia
+
+    try:
+        resultado["R"] = referencia.fallos(vistos)
+    except (KeyError, TypeError, ValueError, OSError) as error:
+        resultado["R"] = [f"sin comparar: {str(error)[:80]}"]
     return {c: sorted(ids) for c, ids in resultado.items()}
 
 

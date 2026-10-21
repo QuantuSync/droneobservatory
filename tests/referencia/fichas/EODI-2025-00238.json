@@ -1,0 +1,264 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "minutos": {
+    "max": 60,
+    "min": 60
+   },
+   "valor": "si"
+  },
+  "vuelos_desviados": {
+   "max": 2,
+   "min": 2
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-26T08:30Z"
+    },
+    "fuente_id": "gdelt-5c8b15a14002dca8"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-09-26T00:00Z"
+    },
+    "fuente_id": "detalle-169323e15cc02cc6"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "drones",
+    "es_incidente",
+    "fin",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T22:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luftrummet over Aalborg Lufthavn var sent torsdag aften lukket ned",
+   "id": "gdelt-110851f971e48ce0",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://enikos.gr/international/dania-nees-theaseis-drones-sto-aerodromio-tou-alborgk-akyrothikan-ptiseis/2446776",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-25T23:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0394\u03b1\u03bd\u03af\u03b1: \u039d\u03ad\u03b5\u03c2 \u03b8\u03b5\u03ac\u03c3\u03b5\u03b9\u03c2 drones \u03c3\u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03c4\u03bf\u03c5 \u0386\u03bb\u03bc\u03c0\u03bf\u03c1\u03b3\u03ba \u2013 \u0391\u03ba\u03c5\u03c1\u03ce\u03b8\u03b7\u03ba\u03b1\u03bd \u03c0\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2",
+   "id": "gdelt-93f7db4c12e5851e",
+   "idioma": "el",
+   "medio": "enikos.gr"
+  },
+  {
+   "campos_respaldados": [
+    "detalle_oficial.inicio",
+    "detalle_oficial.punto",
+    "detalle_oficial.radio_km",
+    "estado",
+    "tiempo.inicio"
+   ],
+   "credibilidad": 1,
+   "documento_oficial": "politi_dk:rigspolitiet/nyhedsliste/mere-end-500-droneanmeldelser-paa-nationalt-plan-i-det-seneste-doegn/2025/09/26",
+   "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/mere-end-500-droneanmeldelser-paa-nationalt-plan-i-det-seneste-doegn/2025/09/26",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-26T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Billund og Aalborg Lufthavn var der sent torsdag aften kortvarige nedlukninger",
+   "id": "detalle-169323e15cc02cc6",
+   "idioma": "da",
+   "medio": "Rigspolitiet"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-26T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Det blev lukket her 23.40, og det er under mistanke om, at man mener m\u00e5ske at have set en drone",
+   "id": "revisada-59d1dccf850734f9",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk"
+  },
+  {
+   "campos_respaldados": [
+    "cierre",
+    "cierre_minutos",
+    "drones",
+    "es_incidente",
+    "inicio_precision",
+    "localidad",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_desviados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "The airspace above Aalborg Airport in northern Denmark was closed overnight on Sept. 26.",
+   "id": "gdelt-5c8b15a14002dca8",
+   "idioma": "en",
+   "medio": "kyivindependent.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://theguardian.com/world/live/2025/sep/26/denmark-drone-sightings-airport-russia-ukraine-europe-live-news",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Airspace over Danish city of Aalborg closed again last night after reports of drone sightings \u2013 Europe live",
+   "id": "gdelt-5ad9334f0035fc49",
+   "idioma": "en",
+   "medio": "theguardian.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ansa.it/sito/notizie/mondo/europa/2025/09/26/sospetti-droni-chiuso-lo-spazio-aereo-dello-scalo-danese-di-aalborg_0f034238-1d52-4b88-b1a9-73256990d91a.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Sospetti droni, chiuso lo spazio aereo dello scalo danese di Aalborg - Europa",
+   "id": "gdelt-4f44a73ea74ae60d",
+   "idioma": "it",
+   "medio": "ansa.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-26/avvistati-droni-sospetti-di-nuovo-chiuso-lo-spazio-aereo-sopra-lo-scalo-di-aalborg-in-danimarca/17824437",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Avvistati droni sospetti di nuovo chiuso lo spazio aereo sopra lo scalo di Aalborg in Danimarca",
+   "id": "gdelt-03b6776132fa498b",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://zazoom.it/2025-09-26/droni-sospetti-chiuso-lo-spazio-aereo-sullo-scalo-danese-di-aalborg/17824429",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-26T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Droni sospetti chiuso lo spazio aereo sullo scalo danese di Aalborg",
+   "id": "gdelt-6cf8886475f200ab",
+   "idioma": "it",
+   "medio": "zazoom.it"
+  }
+ ],
+ "id": "EODI-2025-00238",
+ "lugar": {
+  "geocodificacion": "candidato",
+  "localidad": "Aalborg",
+  "nivel": "localidad",
+  "pais": "DK",
+  "punto": {
+   "lat": 57.048,
+   "lon": 9.9187
+  },
+  "radio_km": 10.0,
+  "region": "Nordjylland",
+  "suceso": "Aalborg"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Aalborg",
+   "es": "Aalborg"
+  },
+  "lugar": {
+   "en": "Aalborg, Denmark",
+   "es": "Aalborg, Dinamarca"
+  },
+  "region": {
+   "en": "North Jutland",
+   "es": "Jutlandia Septentrional"
+  }
+ },
+ "presencia_dron": "no_confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "duracion_min": 55,
+  "fin": {
+   "precision": "minuto",
+   "valor": "2025-09-25T22:35Z"
+  },
+  "inicio": {
+   "precision": "minuto",
+   "valor": "2025-09-25T21:40Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "revisada-59d1dccf850734f9",
+   "motivo": "ekstrabladet.dk: el espacio a\u00e9reo de Aalborg se cerr\u00f3 \u00absent torsdag aften\u00bb, el jueves 25 de septiembre de 2025, a las 23.40 hora de Dinamarca (UTC+2); las 21:44 ven\u00edan de la nota de la polic\u00eda de la noche anterior (mi\u00e9rcoles 24)",
+   "tipo": "explicita"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Aalborg airspace closed after unidentified drone sighting",
+  "es": "Cierre del espacio a\u00e9reo de Aalborg por avistamiento de dron no identificado"
+ }
+}
