@@ -338,7 +338,9 @@ sin nombre, titular publicado con otra forma de la ciudad); H, instalación hom�
 estadio, o su instalación está a más de 30 km de la localidad de la ficha); I, alias genérico
 (desde el 22/10/2026: el objetivo se llama solo con palabras corrientes, como «Base navale», o las
 fuentes nombran su instalación solo con un nombre o una ciudad genéricos, como «im Norden», «en el
-norte», por el aeródromo de Norden-Norddeich). Los recuentos del día y los
+norte», por el aeródromo de Norden-Norddeich); J, hora local como UTC (desde el 22/10/2026: la
+hora UTC de la ficha es la hora local que escribe una de sus fuentes y ninguna escribe la que le
+toca en la zona del suceso). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
@@ -356,6 +358,19 @@ instalación, adjetivos y enlaces), de palabras de tipo de lugar enteras o de n�
 (`proceso/noticias.generico`): hace falta un nombre propio o la ciudad. Las palabras corrientes que
 son también un lugar (Porto, Halle, Malå, Orlík, Au) quedan fuera de la lista. La comprobación I
 de la auditoría avisa si una ficha toma su objetivo de un alias genérico.
+
+### Hora local tomada como UTC (desde el 22 de octubre de 2026)
+
+El extractor da el inicio y el fin en UTC y tiene que convertir la hora local que escribe la
+fuente; a veces la copia sin convertir: «gegen 19.30 Uhr» en Bremen el 2 de noviembre de 2025
+(hora de invierno, UTC+1) son las 18:30 UTC, y EODI-2025-00007 publicaba las 19:30 UTC. Al hacer la
+ficha (`proceso/fechas.hora_en_utc`), si la frase del inicio escribe una sola hora
+(`textos_dron.hora_local`), la hora UTC de la ficha es esa misma y en la zona del suceso (la del
+país o la de su territorio, con su horario de verano) no lo es, la hora se toma como local y se pasa
+a UTC; el fin de la misma ficha se corrige en lo mismo. Si la frase escribe la hora local ya bien
+convertida, u otra hora, no se toca. Las fichas ya guardadas no conservan la frase del inicio: se
+corrigen con una revisión del inicio con su cita (`titulares.inicio` en
+`incidentes_revisados.json`), y la comprobación J de la auditoría avisa de las que queden.
 
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 

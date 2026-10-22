@@ -1,0 +1,800 @@
+{
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-2c551c7dca55c9fe",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-3384c43bdd9b2564",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "gdelt-f374f4ebc0fc0121-declaracion-2",
+   "valor": "confirmada"
+  }
+ ],
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  },
+  "vuelos_retrasados": {
+   "max": 6,
+   "min": 6
+  }
+ },
+ "drones": {
+  "modelo": "\u043a\u0440\u0438\u043b\u043e",
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-02-10T07:45Z"
+    },
+    "fuente_id": "gdelt-2c551c7dca55c9fe"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-02-12T07:00Z"
+    },
+    "fuente_id": "gdelt-f374f4ebc0fc0121-declaracion-2"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/crime/trjabvat-sistemi-za-zaglushavane-na-dronove-na-letishte-sofija-losh-opit-ot-germanija-go-podskazva-news_2391702.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-02-10T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0434\u0440\u043e\u043d \u0437\u0430\u0431\u0430\u0432\u0438 6 \u043f\u043e\u043b\u0435\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0432 \u043f\u0435\u0442\u044a\u043a \u0432\u0435\u0447\u0435\u0440\u0442\u0430",
+   "id": "revisada-80dfa18716cc72b4",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "campos_respaldados": [
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo",
+    "vuelos_retrasados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/crime/trjabvat-sistemi-za-zaglushavane-na-dronove-na-letishte-sofija-losh-opit-ot-germanija-go-podskazva-news_2391702.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T07:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0434\u0440\u043e\u043d \u0437\u0430\u0431\u0430\u0432\u0438 6 \u043f\u043e\u043b\u0435\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0432 \u043f\u0435\u0442\u044a\u043a \u0432\u0435\u0447\u0435\u0440\u0442\u0430",
+   "id": "gdelt-2c551c7dca55c9fe",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/Bylgaria/Gen-Spas-Spaskov-Imam-sumneniya-che-mozhe-da-ne-e-imalo-dron-na-letishte-So-2443192",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0413\u0435\u043d. \u0421\u043f\u0430\u0441 \u0421\u043f\u0430\u0441\u043a\u043e\u0432: \u0418\u043c\u0430\u043c \u0441\u044a\u043c\u043d\u0435\u043d\u0438\u044f, \u0447\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u043d\u0435 \u0435 \u0438\u043c\u0430\u043b\u043e \u0434\u0440\u043e\u043d \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0438 \u0434\u0430 \u0435 \u0431\u0438\u043b\u043e \u0438\u043c\u0438\u0442\u0430\u0446\u0438\u044f",
+   "id": "gdelt-1ee9fc062c210254",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/gen-spasov-drona-letishte-sofiia-triabva-ima-sistema-zaglushavane.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0413\u0435\u043d. \u0421\u043f\u0430\u0441\u043e\u0432 \u0437\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u0422\u0440\u044f\u0431\u0432\u0430 \u0434\u0430 \u0438\u043c\u0430 \u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0437\u0430 \u0437\u0430...",
+   "id": "gdelt-e2e948916d9bbebd",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://btvnovinite.bg/bulgaria/speshna-sreshta-na-letishte-sofija-zaradi-drona-kojto-blokira-trafika.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043f\u0435\u0448\u043d\u0430 \u0441\u0440\u0435\u0449\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u0430, \u043a\u043e\u0439\u0442\u043e \u0431\u043b\u043e\u043a\u0438\u0440\u0430 \u0442\u0440\u0430\u0444\u0438\u043a\u0430",
+   "id": "gdelt-b97a8e9d4c2d1585",
+   "idioma": "bg",
+   "medio": "btvnovinite.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://novini.bg/bylgariya/obshtestvo/892956",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T14:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043b\u0435\u0434 \u0438\u043d\u0446\u0438\u0434\u0435\u043d\u0442\u0430 \u043e\u0442 \u043f\u0435\u0442\u044a\u043a \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u0412 \u0431\u044a\u0434\u0435\u0449\u0435 \u0449\u0435 \u043d\u0435\u0443\u0442\u0440\u0430\u043b\u0438\u0437\u0438\u0440\u0430\u0442 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0432 \u043f\u0435\u0440\u0438\u043c\u0435\u0442\u044a\u0440\u0430 \u043d\u0430 \u0430\u0435\u0440\u043e\u0433\u0430\u0440\u0430\u0442\u0430 - \u041e\u0431\u0449\u0435\u0441\u0442\u0432\u043e",
+   "id": "gdelt-8721bc4d72f2ff51",
+   "idioma": "bg",
+   "medio": "novini.bg"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "modelo_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/Bylgaria/Ministur-Karadzhov-za-drona-okolo-letishte-Sofiya-Obezpokoeni-sme-takiva-ustroistva-mogat-da-imat-dvoina-upotreba-2443690",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T15:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0422\u0430\u043a\u0438\u0432\u0430 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u043d\u0435 \u0441\u0435 \u043d\u0430\u043c\u0438\u0440\u0430\u0442 \u043e\u0431\u0438\u043a\u043d\u043e\u0432\u0435\u043d\u043e, \u0442\u0435 \u0441\u0430 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u043d\u043e \u0438\u0437\u0440\u0430\u0431\u043e\u0442\u0435\u043d\u0438",
+   "id": "gdelt-567e12a7863cf164",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dariknews.bg/novini/bylgariia/dyrzhavata-sys-speshni-merki-sled-sluchaia-s-drona-okolo-letishte-sofiia-2409446",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u044a\u0440\u0436\u0430\u0432\u0430\u0442\u0430 \u0441\u044a\u0441 \u0441\u043f\u0435\u0448\u043d\u0438 \u043c\u0435\u0440\u043a\u0438 \u0441\u043b\u0435\u0434 \u0441\u043b\u0443\u0447\u0430\u044f \u0441 \u0434\u0440\u043e\u043d\u0430 \u043e\u043a\u043e\u043b\u043e \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-2b9b02b639a780d2",
+   "idioma": "bg",
+   "medio": "dariknews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/crime/grozdan-karadjov-dronyt-nad-letishte-sofija-e-provokacija-news_2392076.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T15:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0413\u0440\u043e\u0437\u0434\u0430\u043d \u041a\u0430\u0440\u0430\u0434\u0436\u043e\u0432: \u0414\u0440\u043e\u043d\u044a\u0442 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0435 \u043f\u0440\u043e\u0432\u043e\u043a\u0430\u0446\u0438\u044f",
+   "id": "gdelt-f1b0b76ecfbfb78f",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/svikvat-speshna-sreshta-letishte-sofiia-zaradi-drona-blokiral-trafika.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u0432\u0438\u043a\u0432\u0430\u0442 \u0441\u043f\u0435\u0448\u043d\u0430 \u0441\u0440\u0435\u0449\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u0430, \u0431\u043b\u043e\u043a\u0438\u0440\u0430\u043b \u0442\u0440\u0430\u0444\u0438\u043a\u0430",
+   "id": "gdelt-0556281635b7b28d",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://banker.bg/2025/02/10/puskaneto-na-dron-letisthe-sofiya",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043f\u043e\u0440\u0435\u0434 \u041a\u0430\u0440\u0430\u0434\u0436\u043e\u0432 \u043f\u0443\u0441\u043a\u0430\u043d\u0435\u0442\u043e \u043d\u0430 \u0434\u0440\u043e\u043d \u0432 \u0440\u0430\u0439\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0431\u0438\u043b\u043e \u043f\u0440\u043e\u0432\u043e\u043a\u0430\u0446\u0438\u044f",
+   "id": "gdelt-ec0748c919b358c3",
+   "idioma": "bg",
+   "medio": "banker.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sofiaglobe.com/2025/02/10/bulgarian-authorities-look-to-fill-security-gaps-after-drone-incident-at-sofia-airport",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Bulgarian authorities look to fill security gaps after drone incident at Sofia Airport",
+   "id": "gdelt-0ab7816311e67d0d",
+   "idioma": "en",
+   "medio": "sofiaglobe.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://standartnews.com/balgariya-obshtestvo/ministar-karadzhov-sas-smayvashta-versiya-za-drona-nad-letishte-sofiya-587779.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T16:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041c\u0438\u043d\u0438\u0441\u0442\u044a\u0440 \u041a\u0430\u0440\u0430\u0434\u0436\u043e\u0432 \u0441\u044a\u0441 \u0441\u043c\u0430\u0439\u0432\u0430\u0449\u0430 \u0432\u0435\u0440\u0441\u0438\u044f \u0437\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f - \u041e\u0431\u0449\u0435\u0441\u0442\u0432\u043e \u2014 \u041d\u043e\u0432\u0438\u043d\u0438 \u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442",
+   "id": "gdelt-5818199633d40ff8",
+   "idioma": "bg",
+   "medio": "standartnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://plovdiv24.bg/novini/Bylgaria/Ministur-Karadzhov-za-drona-okolo-letishte-Sofiya-Mozhe-da-ima-dvoina-upotreba-2443725",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041c\u0438\u043d\u0438\u0441\u0442\u044a\u0440 \u041a\u0430\u0440\u0430\u0434\u0436\u043e\u0432 \u0437\u0430 \u0434\u0440\u043e\u043d\u0430 \u043e\u043a\u043e\u043b\u043e \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u041c\u043e\u0436\u0435 \u0434\u0430 \u0438\u043c\u0430 \u0434\u0432\u043e\u0439\u043d\u0430 \u0443\u043f\u043e\u0442\u0440\u0435\u0431\u0430",
+   "id": "gdelt-06ac7552b7966bdd",
+   "idioma": "bg",
+   "medio": "plovdiv24.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bgonair.bg/a/2-bulgaria/372758-vzemat-speshni-merki-na-letishte-sofiya-sled-sluchaya-s-dron",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T17:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412\u0437\u0435\u043c\u0430\u0442 \u0441\u043f\u0435\u0448\u043d\u0438 \u043c\u0435\u0440\u043a\u0438 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0441\u043b\u0435\u0434 \u0441\u043b\u0443\u0447\u0430\u044f \u0441 \u0434\u0440\u043e\u043d",
+   "id": "gdelt-d031cf9f5c1cb096",
+   "idioma": "bg",
+   "medio": "bgonair.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mediapool.bg/vlastta-se-chudi-kakvo-da-obyasnyava-za-drona-nad-letishte-sofiya-news367961.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T17:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412\u043b\u0430\u0441\u0442\u0442\u0430 \u0441\u0435 \u0447\u0443\u0434\u0438 \u043a\u0430\u043a\u0432\u043e \u0434\u0430 \u043e\u0431\u044f\u0441\u043d\u044f\u0432\u0430 \u0437\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0421\u043e\u0444\u0438\u044f\"",
+   "id": "gdelt-9af7047e7f77b31e",
+   "idioma": "bg",
+   "medio": "mediapool.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/bulgaria/948712-dronat-narushitel-na-letishte-sofia-se-okaza-po-opasen-ot-ochakvanoto",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-10T20:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044a\u0442-\u043d\u0430\u0440\u0443\u0448\u0438\u0442\u0435\u043b \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0441\u0435 \u043e\u043a\u0430\u0437\u0430 \u043f\u043e-\u043e\u043f\u0430\u0441\u0435\u043d \u043e\u0442 \u043e\u0447\u0430\u043a\u0432\u0430\u043d\u043e\u0442\u043e \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f",
+   "id": "gdelt-74496bc6c8100132",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dariknews.bg/novini/bylgariia/nova-speshna-sreshta-sled-izvynrednata-situaciia-s-drona-na-letishte-sofiia-2409488",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T05:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u043e\u0432\u0430 \u0441\u043f\u0435\u0448\u043d\u0430 \u0441\u0440\u0435\u0449\u0430 \u0441\u043b\u0435\u0434 \u0438\u0437\u0432\u044a\u043d\u0440\u0435\u0434\u043d\u0430\u0442\u0430 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044f \u0441 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-c3c9782ae0885e95",
+   "idioma": "bg",
+   "medio": "dariknews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/nova-sreshta-drona-letishte-sofiia-triabvat-spetsialni-umeniia-upravlenieto-bil-provokatsiia.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u043e\u0432\u0430 \u0441\u0440\u0435\u0449\u0430 \u0437\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f. \u0422\u0440\u044f\u0431\u0432\u0430\u0442 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u043d\u0438 \u0443\u043c\u0435\u043d\u0438\u044f \u0437\u0430 ...",
+   "id": "gdelt-47227966bac59027",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/crime/aviojurnalist-za-drona-na-letishte-sofija-njakoj-si-e-napravil-kefa-news_2392424.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0432\u0438\u043e\u0436\u0443\u0440\u043d\u0430\u043b\u0438\u0441\u0442 \u0437\u0430 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u041d\u044f\u043a\u043e\u0439 \u0441\u0438 \u0435 \u043d\u0430\u043f\u0440\u0430\u0432\u0438\u043b \u043a\u0435\u0444\u0430",
+   "id": "gdelt-07196430b0cb1239",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/society/dron-shpionin-li-e-preletjal-nad-letishte-sofija-analiz-na-ekspert-za-vidovete-dronove-i-kak-mogat-da-se-izpolzvat-news_2392435.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d \u0448\u043f\u0438\u043e\u043d\u0438\u043d \u043b\u0438 \u0435 \u043f\u0440\u0435\u043b\u0435\u0442\u044f\u043b \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \"\u0421\u043e\u0444\u0438\u044f\"? \u0410\u043d\u0430\u043b\u0438\u0437 \u043d\u0430 \u0435\u043a\u0441\u043f\u0435\u0440\u0442 \u0437\u0430 \u0432\u0438\u0434\u043e\u0432\u0435\u0442\u0435 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0438 \u043a\u0430\u043a \u043c\u043e\u0433\u0430\u0442 \u0434\u0430 \u0441\u0435 \u0438\u0437\u043f\u043e\u043b\u0437\u0432\u0430\u0442",
+   "id": "gdelt-19aeb311b8bb47be",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://blagoevgrad24.bg/novini/Bylgaria/Zhurnalist-Podoben-dron-kato-tozi-nad-letishteto-v-Sofiya-e-mnogo-opasen-za-kacashtite-i-izlitashtite-samoleti-tui-kato-mozhe-da-dovede-do-katastrofa-s-mnogo-zhertvi-2444336",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T07:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0416\u0443\u0440\u043d\u0430\u043b\u0438\u0441\u0442: \u041f\u043e\u0434\u043e\u0431\u0435\u043d \u0434\u0440\u043e\u043d, \u043a\u0430\u0442\u043e \u0442\u043e\u0437\u0438 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f, \u0435 \u043c\u043d\u043e\u0433\u043e \u043e\u043f\u0430\u0441\u0435\u043d \u0437\u0430 \u043a\u0430\u0446\u0430\u0449\u0438\u0442\u0435 \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u0449\u0438\u0442\u0435 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0438, \u0442\u044a\u0439 \u043a\u0430\u0442\u043e \u043c\u043e\u0436\u0435 \u0434\u0430 \u0434\u043e\u0432\u0435\u0434\u0435 \u0434\u043e \u043a\u0430\u0442\u0430\u0441\u0442\u0440\u043e\u0444\u0430 \u0441",
+   "id": "gdelt-58d5a930d2e5810b",
+   "idioma": "bg",
+   "medio": "blagoevgrad24.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vesti.bg/bulgaria/nova-speshna-sreshta-zaradi-drona-na-letishte-sofiia-6220622",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T08:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041d\u043e\u0432\u0430 \u0441\u043f\u0435\u0448\u043d\u0430 \u0441\u0440\u0435\u0449\u0430 \u0437\u0430\u0440\u0430\u0434\u0438 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-63e4aca30be8f8ba",
+   "idioma": "bg",
+   "medio": "vesti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/Bylgaria/Direktorut-na-Granichna-policiya-za-drona-narushitel-na-letishte-Sofiya-Tova-e-2444453",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T08:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u044a\u0442 \u043d\u0430 \u0413\u0440\u0430\u043d\u0438\u0447\u043d\u0430 \u043f\u043e\u043b\u0438\u0446\u0438\u044f \u0437\u0430 \u0434\u0440\u043e\u043d\u0430-\u043d\u0430\u0440\u0443\u0448\u0438\u0442\u0435\u043b \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u0422\u043e\u0432\u0430 \u0435 \u0446\u0435\u043b\u0435\u043d\u0430\u0441\u043e\u0447\u0435\u043d\u043e \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435, \u0449\u0435 \u0431\u044a\u0434\u0435 \u0440\u0430\u0437\u0441\u043b\u0435\u0434\u0432\u0430\u043d\u043e",
+   "id": "gdelt-da2049cc8eec2d15",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/bulgaria/948807-dimitar-stavrev-dronat-nad-letishte-sofia-moje-da-e-izletal-ot-katapult",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0438\u043c\u0438\u0442\u044a\u0440 \u0421\u0442\u0430\u0432\u0440\u0435\u0432: \u0414\u0440\u043e\u043d\u044a\u0442 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u043c\u043e\u0436\u0435 \u0434\u0430 \u0435 \u0438\u0437\u043b\u0435\u0442\u044f\u043b \u043e\u0442 \u043a\u0430\u0442\u0430\u043f\u0443\u043b\u0442 \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f",
+   "id": "gdelt-5c5c659d1df9b5f3",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://novini.bg/bylgariya/obshtestvo/893049",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0438\u043c\u0438\u0442\u044a\u0440 \u0421\u0442\u0430\u0432\u0440\u0435\u0432: \u0412\u0435\u0440\u043e\u044f\u0442\u043d\u043e \u0434\u0440\u043e\u043d\u044a\u0442 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0435 \u0438\u0437\u043b\u0435\u0442\u044f\u043b \u043e\u0442 \u043a\u0430\u0442\u0430\u043f\u0443\u043b\u0442 - \u041e\u0431\u0449\u0435\u0441\u0442\u0432\u043e",
+   "id": "gdelt-2ee297373cad2072",
+   "idioma": "bg",
+   "medio": "novini.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://plovdiv24.bg/novini/Bylgaria/Zhurnalist-Podoben-dron-kato-tozi-nad-letishteto-v-Sofiya-e-mnogo-opasen-2444331",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0416\u0443\u0440\u043d\u0430\u043b\u0438\u0441\u0442: \u041f\u043e\u0434\u043e\u0431\u0435\u043d \u0434\u0440\u043e\u043d, \u043a\u0430\u0442\u043e \u0442\u043e\u0437\u0438 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u0421\u043e\u0444\u0438\u044f, \u0435 \u043c\u043d\u043e\u0433\u043e \u043e\u043f\u0430\u0441\u0435\u043d",
+   "id": "gdelt-2af43d4fe4911bf7",
+   "idioma": "bg",
+   "medio": "plovdiv24.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://blitz.bg/analizi-i-komentari/skandalno-razkritie-za-drona-prichinil-dramata-na-letishche-sofiya_news1066543.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043a\u0430\u043d\u0434\u0430\u043b\u043d\u043e \u0440\u0430\u0437\u043a\u0440\u0438\u0442\u0438\u0435 \u0437\u0430 \u0434\u0440\u043e\u043d\u0430, \u043f\u0440\u0438\u0447\u0438\u043d\u0438\u043b \u0434\u0440\u0430\u043c\u0430\u0442\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-60617306d5c9df28",
+   "idioma": "bg",
+   "medio": "blitz.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bnr.bg/post/102113897",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T09:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043b\u0435\u0434 \"\u0440\u0430\u0437\u0445\u043e\u0434\u043a\u0430\u0442\u0430\" \u043d\u0430 \u0434\u0440\u043e\u043d \u043d\u0430\u0434 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u0429\u0435 \u0437\u0430\u0442\u0435\u0433\u043d\u0430\u0442 \u043b\u0438 \u0440\u0435\u0433\u0443\u043b\u0430\u0446\u0438\u0438\u0442\u0435? - \u041e\u0442 \u0434\u0435\u043d\u044f",
+   "id": "gdelt-49ebace289432bf3",
+   "idioma": "bg",
+   "medio": "bnr.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cross.bg/dronove-zhyrnalist-letishte-1764562.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041f\u0440\u043e\u0432\u043e\u043a\u0430\u0446\u0438\u044f \u043b\u0438 \u0435 \u0434\u0440\u043e\u043d\u044a\u0442, \u043d\u0430\u0432\u043b\u044f\u0437\u044a\u043b \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f? \u0418\u043c\u0430 \u043b\u0438 \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0438 \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u0438 \u0437\u0430 \u0441\u0438\u0433\u0443\u0440\u043d\u043e\u0441\u0442\u0442\u0430 \u0438 \u043a\u0430\u043a\u0432\u0438 \u0431\u0438\u0445\u0430 \u043c\u043e\u0433\u043b\u0438 \u0434\u0430 \u0441\u0430 \u0440\u0435\u0448\u0435\u043d\u0438\u044f\u0442\u0430",
+   "id": "gdelt-410cb483e0f1cf3e",
+   "idioma": "bg",
+   "medio": "cross.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://dariknews.bg/novini/bylgariia/situaciiata-s-drona-na-letishte-sofiia-celenasocheno-li-e-bilo-i-imalo-li-e-kak-da-byde-zasechen-obzor-2409519",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u0438\u0442\u0443\u0430\u0446\u0438\u044f\u0442\u0430 \u0441 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u0426\u0435\u043b\u0435\u043d\u0430\u0441\u043e\u0447\u0435\u043d\u043e \u043b\u0438 \u0435 \u0431\u0438\u043b\u043e \u0438 \u0438\u043c\u0430\u043b\u043e \u043b\u0438 \u0435 \u043a\u0430\u043a \u0434\u0430 \u0431\u044a\u0434\u0435 \u0437\u0430\u0441\u0435\u0447\u0435\u043d (\u041e\u0411\u0417\u041e\u0420)",
+   "id": "gdelt-66bd3e0f8fe7f73e",
+   "idioma": "bg",
+   "medio": "dariknews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/bulgaria/948834-shefat-na-granichna-policia-dronat-nad-letishte-sofia-e-manipuliran-celenasocheno",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0428\u0435\u0444\u044a\u0442 \u043d\u0430 \u0413\u0440\u0430\u043d\u0438\u0447\u043d\u0430 \u043f\u043e\u043b\u0438\u0446\u0438\u044f: \u0414\u0440\u043e\u043d\u044a\u0442 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0435 \u043c\u0430\u043d\u0438\u043f\u0443\u043b\u0438\u0440\u0430\u043d \u0446\u0435\u043b\u0435\u043d\u0430\u0441\u043e\u0447\u0435\u043d\u043e \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f",
+   "id": "gdelt-4f8c55e60af2ba66",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/ekspert-dronat-letishte-sofiia-goliam-tova-tip-voenni-dronove-shpionaj.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0415\u043a\u0441\u043f\u0435\u0440\u0442: \u0414\u0440\u043e\u043d\u044a\u0442 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0435 \u0433\u043e\u043b\u044f\u043c - \u0442\u043e\u0432\u0430 \u0441\u0430 \u0442\u0438\u043f \u0432\u043e\u0435\u043d\u043d\u0438 \u0434\u0440\u043e\u043d...",
+   "id": "gdelt-971a55843877b99e",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/aviatsionen-jurnalist-dronat-nad-letishte-sofiia-izletial-katapult.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0410\u0432\u0438\u0430\u0446\u0438\u043e\u043d\u0435\u043d \u0436\u0443\u0440\u043d\u0430\u043b\u0438\u0441\u0442: \u0414\u0440\u043e\u043d\u044a\u0442 \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0435 \u0438\u0437\u043b\u0435\u0442\u044f\u043b \u043e\u0442 \u043a\u0430\u0442\u0430\u043f\u0443\u043b\u0442",
+   "id": "gdelt-dc3823f1445b515c",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bgonair.bg/a/36-sutreshen-blok/372813-provokatsiyata-s-drona-na-letishte-sofiya-mozheshe-da-svali-samolet",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-11T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u041f\u0440\u043e\u0432\u043e\u043a\u0430\u0446\u0438\u044f\u0442\u0430 \u0441 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u043c\u043e\u0436\u0435\u0448\u0435 \u0434\u0430 \u0441\u0432\u0430\u043b\u0438 \u0441\u0430\u043c\u043e\u043b\u0435\u0442",
+   "id": "gdelt-9140f0b4c663fcf5",
+   "idioma": "bg",
+   "medio": "bgonair.bg"
+  },
+  {
+   "campos_respaldados": [
+    "drones",
+    "es_incidente",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_nombre",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/society/njama-incident-i-njama-problem-direktoryt-na-letishte-sofija-kaza-kakvo-shte-napravi-zanapred-pri-dronove-news_2393113.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T06:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0434\u0440\u043e\u043d\u0430, \u043a\u043e\u0439\u0442\u043e \u043f\u0440\u0435\u043b\u0435\u0442\u044f \u043d\u0430\u0434 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f",
+   "id": "gdelt-3384c43bdd9b2564",
+   "idioma": "bg",
+   "medio": "actualno.com"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://actualno.com/society/njama-incident-i-njama-problem-direktoryt-na-letishte-sofija-kaza-kakvo-shte-napravi-zanapred-pri-dronove-news_2393113.html",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T06:30Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u043d\u044f\u043c\u0430 \u0438\u043d\u0446\u0438\u0434\u0435\u043d\u0442 \u0438 \u043d\u044f\u043c\u0430 \u043f\u0440\u043e\u0431\u043b\u0435\u043c",
+   "id": "gdelt-3384c43bdd9b2564-declaracion-1",
+   "idioma": "bg",
+   "medio": "\u0414\u0438\u0440\u0435\u043a\u0442\u043e\u0440 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0425\u0435\u0441\u0443\u0441 \u041a\u0430\u0431\u0430\u0439\u0435\u0440\u043e (declaraci\u00f3n oficial citada en actualno.com)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://novini.bg/bylgariya/kriminalno/893248",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T06:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043b\u0435\u0434 \u0434\u0440\u043e\u043d\u0430 \u043e\u043a\u043e\u043b\u043e \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f: \u041f\u043e\u0441\u0442\u0430\u0432\u044f\u0442 \u0430\u043d\u0442\u0435\u043d\u0430, \u0437\u0430 \u0434\u0430 \u0441\u043b\u0435\u0434\u0438 \u0432\u0441\u0438\u0447\u043a\u0438 \u043e\u0431\u0435\u043a\u0442\u0438 \u0432 \u0440\u0435\u0430\u043b\u043d\u043e \u0432\u0440\u0435\u043c\u0435 - \u041a\u0440\u0438\u043c\u0438\u043d\u0430\u043b\u043d\u043e",
+   "id": "gdelt-f0f9b77747b5ace4",
+   "idioma": "bg",
+   "medio": "novini.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://btvnovinite.bg/predavania/tazi-sutrin/direktorat-na-letishte-sofija-pred-btv-kakvi-merki-shte-predpriemat-sled-drona.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u044a\u0442 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u043f\u0440\u0435\u0434 bTV: \u041a\u0430\u043a\u0432\u0438 \u043c\u0435\u0440\u043a\u0438 \u0449\u0435 \u043f\u0440\u0435\u0434\u043f\u0440\u0438\u0435\u043c\u0430\u0442 \u0441\u043b\u0435\u0434 \u0434\u0440\u043e\u043d\u0430?",
+   "id": "gdelt-c2285bafbbe9359b",
+   "idioma": "bg",
+   "medio": "btvnovinite.bg"
+  },
+  {
+   "campos_respaldados": [
+    "tipo",
+    "vuelos_retrasados"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T07:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044a\u0442, \u043a\u043e\u0439\u0442\u043e \u043f\u0440\u0435\u0434\u0438 \u0434\u043d\u0438 \u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0438 \u0437\u0430\u0442\u0440\u0443\u0434\u043d\u0438 \u043a\u0430\u0446\u0430\u043d\u0435\u0442\u043e \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u043d\u0435\u0442\u043e \u043d\u0430 \u0448\u0435\u0441\u0442 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0430",
+   "id": "gdelt-f374f4ebc0fc0121",
+   "idioma": "bg",
+   "medio": "focus-news.net"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://focus-news.net/novini/regioni/Zaradi-drona-Postavyat-antenana-letishte-Sofiya-za-da-sledi-vsichki-obekti-2445665",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T07:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "\u0414\u0440\u043e\u043d\u044a\u0442, \u043a\u043e\u0439\u0442\u043e \u043f\u0440\u0435\u0434\u0438 \u0434\u043d\u0438 \u0432\u043b\u0435\u0437\u0435 \u043d\u0430 \u0442\u0435\u0440\u0438\u0442\u043e\u0440\u0438\u044f\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0438 \u0437\u0430\u0442\u0440\u0443\u0434\u043d\u0438 \u043a\u0430\u0446\u0430\u043d\u0435\u0442\u043e \u0438 \u0438\u0437\u043b\u0438\u0442\u0430\u043d\u0435\u0442\u043e \u043d\u0430 \u0448\u0435\u0441\u0442 \u0441\u0430\u043c\u043e\u043b\u0435\u0442\u0430",
+   "id": "gdelt-f374f4ebc0fc0121-declaracion-2",
+   "idioma": "bg",
+   "medio": "\u0413\u0440\u0430\u0436\u0434\u0430\u043d\u0441\u043a\u0430\u0442\u0430 \u0432\u044a\u0437\u0434\u0443\u0445\u043e\u043f\u043b\u0430\u0432\u0430\u0442\u0435\u043b\u043d\u0430 \u0430\u0432\u0438\u0430\u0446\u0438\u044f (declaraci\u00f3n oficial citada en focus-news.net)"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://frognews.bg/novini/sled-dramata-drona-postaviat-antena-letishte-sofiia-shte-sledi-vsichki-obekti-realno-vreme.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T07:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0421\u043b\u0435\u0434 \u0434\u0440\u0430\u043c\u0430\u0442\u0430 \u0441 \u0434\u0440\u043e\u043d\u0430: \u041f\u043e\u0441\u0442\u0430\u0432\u044f\u0442 \u0430\u043d\u0442\u0435\u043d\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f, \u0449\u0435 \u0441\u043b\u0435\u0434\u0438 \u0432...",
+   "id": "gdelt-36cbb2972621244c",
+   "idioma": "bg",
+   "medio": "frognews.bg"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://standartnews.com/balgariya-obshtestvo/shefat-na-letishte-sofiya-s-posledni-novini-za-trevogata-s-drona-narushitel-587945.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0428\u0435\u0444\u044a\u0442 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438 \u043d\u043e\u0432\u0438\u043d\u0438 \u0437\u0430 \u0442\u0440\u0435\u0432\u043e\u0433\u0430\u0442\u0430 \u0441 \u0434\u0440\u043e\u043d\u0430 \u043d\u0430\u0440\u0443\u0448\u0438\u0442\u0435\u043b",
+   "id": "gdelt-77802a16d9b04107",
+   "idioma": "bg",
+   "medio": "standartnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://fakti.bg/mnenia/949219-vladimir-turtanski-pred-fakti-za-incidenta-s-drona-premerena-e-temperaturata-na-letishte-sofia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-02-12T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "\u0412\u043b\u0430\u0434\u0438\u043c\u0438\u0440 \u0422\u0443\u0440\u0442\u0430\u043d\u0441\u043a\u0438 \u043f\u0440\u0435\u0434 \u0424\u0410\u041a\u0422\u0418 \u0437\u0430 \u0438\u043d\u0446\u0438\u0434\u0435\u043d\u0442\u0430 \u0441 \u0434\u0440\u043e\u043d\u0430 : \u201e\u041f\u0440\u0435\u043c\u0435\u0440\u0435\u043d\u0430 \u0435 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430\u0442\u0430\" \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0421\u043e\u0444\u0438\u044f\" \u1409 \u041d\u043e\u0432\u0438\u043d\u0438 \u043e\u0442 Fakti.bg - \u041c\u043d\u0435\u043d\u0438\u044f",
+   "id": "gdelt-f442525e5b8c8d50",
+   "idioma": "bg",
+   "medio": "fakti.bg"
+  }
+ ],
+ "id": "EODI-2025-00157",
+ "lugar": {
+  "fuente_punto": "revisada-80dfa18716cc72b4",
+  "geocodificacion": "oficial",
+  "historial": [
+   {
+    "anterior": {
+     "punto": {
+      "lat": 42.63901,
+      "lon": 24.81305
+     },
+     "radio_km": 1.0
+    },
+    "fecha": {
+     "precision": "minuto",
+     "valor": "2026-10-22T10:17Z"
+    },
+    "motivo": {
+     "en": "The point was the Vasil Levski stadium in Karlovo, which has the same name as the airport; the event is at Sofia's Vasil Levski airport.",
+     "es": "El punto era el del estadio Vasil Levski de Karlovo, que se llama como el aeropuerto; el suceso es en el aeropuerto Vasil Levski de Sof\u00eda."
+    }
+   }
+  ],
+  "localidad": "Sofia",
+  "nivel": "instalacion",
+  "pais": "BG",
+  "punto": {
+   "lat": 42.69548,
+   "lon": 23.41779
+  },
+  "radio_km": 5.0,
+  "region": "Sofia-grad",
+  "suceso": "\u041b\u0435\u0442\u0438\u0449\u0435 \u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438"
+ },
+ "nombres": {
+  "anteriores": [
+   {
+    "en": "Karlovo",
+    "es": "Karlovo"
+   }
+  ],
+  "localidad": {
+   "en": "Sofia",
+   "es": "Sof\u00eda"
+  },
+  "lugar": {
+   "en": "Sofia, Bulgaria",
+   "es": "Sof\u00eda, Bulgaria"
+  },
+  "objetivo": {
+   "en": "Sofia Airport",
+   "es": "Aeropuerto de Sof\u00eda"
+  },
+  "region": {
+   "en": "Sofia-grad",
+   "es": "Sofia-grad"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\u201c - \u0421\u043e\u0444\u0438\u044f",
+  "oaci": "LBSF"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": false,
+  "entrada_exterior": false,
+  "evidencia": []
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-02-07T17:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-2c551c7dca55c9fe",
+   "motivo": "\u00ab\u043f\u0435\u0442\u044a\u043a\u00bb en una nota publicada el 2025-02-10 09:45 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Drone delays six flights at Sofia airport",
+  "es": "Un dron retrasa seis vuelos en el aeropuerto de Sof\u00eda"
+ }
+}

@@ -32,6 +32,10 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   las fuentes de la ficha nombran su instalación solo con un nombre o una ciudad genéricos y
   nunca con uno propio (EODI-2025-00174: «Drohnen-Alarm im Norden», «en el norte», por el
   aeródromo de Norden-Norddeich; proceso/noticias.generico).
+- **J, hora local como UTC**: la hora UTC de la ficha es la hora local que escribe una de sus
+  fuentes y ninguna escribe la que le toca en la zona del suceso (EODI-2025-00007: «gegen 19.30
+  Uhr» en Bremen en noviembre son las 18:30 UTC, y la ficha daba las 19:30 UTC;
+  proceso/fechas.hora_en_utc).
 """
 
 import re
@@ -50,6 +54,7 @@ from proceso import (
     incidentes,
     nombres_lugar,
     noticias,
+    textos_dron,
 )
 from proceso.presencia import (
     atribuida_por_autoridad,
@@ -59,7 +64,7 @@ from proceso.presencia import (
 )
 from proceso.ubicacion import CATEGORIA_LUGAR
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "R")
+COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "R")
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -70,6 +75,7 @@ NOMBRES = {
     "G": "nombres",
     "H": "instalación homónima",
     "I": "alias genérico",
+    "J": "hora local como UTC",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -301,8 +307,33 @@ def _i(incidente: Documento) -> bool:
     return bool(nombrados) and all(noticias.generico(n) for n in nombrados)
 
 
+def _j(incidente: Documento) -> bool:
+    """La hora de una cita frente a la hora UTC de la ficha: marca la ficha cuya hora UTC es la
+    hora local que escribe una de sus fuentes, si ninguna fuente escribe la hora local que de
+    verdad le corresponde (fechas.hora_en_utc)."""
+    inicio = (incidente.get("tiempo") or {}).get("inicio") or {}
+    precision = inicio.get("precision")
+    if precision not in {"minuto", "hora"}:
+        return False
+    lugar = incidente.get("lugar") or {}
+    punto = lugar.get("punto") or {}
+    zona = fechas.zona(lugar.get("pais"), punto.get("lat"), punto.get("lon"))
+    if zona is None:
+        return False
+    valor = datetime.fromisoformat(str(inicio["valor"]).replace("Z", "+00:00"))
+    frases = [str(f.get("frase_origen") or "") for f in incidente.get("fuentes") or []]
+    malas = [f for f in frases if fechas.hora_en_utc(valor, precision, f, zona) is not None]
+    local = valor.astimezone(zona)
+    bien = any(
+        (h := textos_dron.hora_local(f)) is not None
+        and h[0] == local.hour and (precision == "hora" or h[1] == local.minute)
+        for f in frases
+    )  # fmt: skip
+    return bool(malas) and not bien
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
-    "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i,
+    "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
 }  # fmt: skip
 
 

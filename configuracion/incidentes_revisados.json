@@ -524,6 +524,15 @@
       "conserva": "EODI-2026-00112",
       "motivo": "el mismo suceso: el dron que cruzó la frontera de Moldavia desde la región de Odesa la noche del 30 de marzo de 2026 a las 21:29; 00223 repetía el mismo cruce con las mismas fuentes, y 00354 es el hallazgo de sus restos en Băneștii Noi (Telenești) del 29 de abril, que según el Ministerul Apărării «corespunde traiectoriei și caracteristicilor țintei urmărite în acea seară» (protv.md), no un suceso nuevo",
       "motivo_en": "the same event: the drone that crossed Moldova's border from the Odesa region on the night of 30 March 2026 at 21:29; 00223 repeated the same crossing with the same sources, and 00354 is the finding of its remains at Băneștii Noi (Telenești) on 29 April, which according to the Ministerul Apărării «corespunde traiectoriei și caracteristicilor țintei urmărite în acea seară» (protv.md), not a new event"
+    },
+    {
+      "registros": [
+        "EODI-2026-00649",
+        "EODI-2026-00653"
+      ],
+      "conserva": "EODI-2026-00649",
+      "motivo": "el mismo suceso: los sobrevuelos de drones no autorizados sobre la base naval de Toulon y otros sitios militares del Var durante el ejercicio Typhon (del 5 al 16 de octubre de 2026), que la Marine nationale anunció el 21 de octubre; las dos fichas citan la misma declaración («Plusieurs survols de « drones aériens non autorisés » ont été détectés « aux abords et au-dessus de sites militaires » lors de récentes manœuvres») y sus noticias son del mismo día; no se unieron solas porque cada una tomó un día distinto del ejercicio (13 y 16 de octubre, precisión de día)",
+      "motivo_en": "the same event: the unauthorised drone overflights of the Toulon naval base and other military sites in the Var during the Typhon exercise (5 to 16 October 2026), announced by the French Navy on 21 October; both records quote the same statement («Plusieurs survols de « drones aériens non autorisés » ont été détectés « aux abords et au-dessus de sites militaires » lors de récentes manœuvres») and their reports are from the same day; they were not merged automatically because each took a different day of the exercise (13 and 16 October, day precision)"
     }
   ],
   "reextraer": [
@@ -4126,6 +4135,90 @@
       "motivo": {
         "es": "Presencia no confirmada: el aeropuerto confirma que recibió tres avisos de dron el domingo 8 de marzo de 2026 por la noche, sin efecto en los vuelos, pero ninguna autoridad dice que hubiera drones. La parte del domingo separada de EODI-2026-00064 se une a esta ficha.",
         "en": "Drone presence not confirmed: the airport confirms it received three drone reports on the night of Sunday 8 March 2026, with no effect on flights, but no authority says there were drones. The Sunday part separated from EODI-2026-00064 joins this record."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00007",
+      "inicio": {
+        "valor": "2025-11-02T18:30Z",
+        "precision": "minuto",
+        "cita": "Die Drohne wurde gegen 19.30 Uhr im unmittelbaren Bereich des Airports gesichtet, wie ein Sprecher der Polizei mitteilte.",
+        "motivo": "la policía de Bremen (kreiszeitung.de): «gegen 19.30 Uhr», hora de Bremen del domingo 2 de noviembre de 2025 (hora de invierno, UTC+1)",
+        "fin": "2025-11-02T19:22Z",
+        "fin_cita": "Ancora un drone blocca i voli in Germania, stop di un'ora all'aeroporto di Brema"
+      },
+      "motivo": {
+        "es": "La ficha publicaba las 19:30 UTC: tomó como UTC la hora local de la policía («gegen 19.30 Uhr»), que en noviembre son las 18:30 UTC. El cierre duró 52 minutos («stop di un'ora», adnkronos.com), hasta las 19:22 UTC.",
+        "en": "The record showed 19:30 UTC: it took the police's local time («gegen 19.30 Uhr») as UTC, which in November is 18:30 UTC. The closure lasted 52 minutes («stop di un'ora», adnkronos.com), until 19:22 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00062",
+      "inicio": {
+        "valor": "2025-10-21T22:35Z",
+        "precision": "minuto",
+        "cita": "Von 0.35 bis 1.45 Uhr wurde der Flughafen für den Flugbetrieb gesperrt.",
+        "motivo": "otz.de: «Von 0.35 bis 1.45 Uhr», hora de Erfurt de la noche del 21 al 22 de octubre de 2025 (hora de verano, UTC+2)",
+        "fin": "2025-10-21T23:45Z",
+        "fin_cita": "Von 0.35 bis 1.45 Uhr wurde der Flughafen für den Flugbetrieb gesperrt."
+      },
+      "motivo": {
+        "es": "La ficha publicaba de las 00:35 a las 01:45 UTC del 22 de octubre: tomó como UTC la hora local de otz.de («Von 0.35 bis 1.45 Uhr»), que en octubre (UTC+2) son de las 22:35 a las 23:45 UTC del 21.",
+        "en": "The record showed 00:35 to 01:45 UTC on 22 October: it took otz.de's local time («Von 0.35 bis 1.45 Uhr») as UTC, which in October (UTC+2) is 22:35 to 23:45 UTC on the 21st."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00154",
+      "inicio": {
+        "valor": "2025-09-22T18:30Z",
+        "precision": "minuto",
+        "cita": "W poniedziałek kopenhaskie lotnisko było zamknięte od godz. 20.30 z powodu zaobserwowania w pobliżu kilku dużych dronów.",
+        "motivo": "radiozet.pl: «od godz. 20.30», hora de Copenhague del lunes 22 de septiembre de 2025 (hora de verano, UTC+2)"
+      },
+      "motivo": {
+        "es": "La ficha publicaba las 20:00 UTC (22:00 en Copenhague); el aeropuerto cerró hacia las 20:30 hora local («od godz. 20.30»), las 18:30 UTC.",
+        "en": "The record showed 20:00 UTC (22:00 in Copenhagen); the airport closed around 20:30 local time («od godz. 20.30»), 18:30 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00112",
+      "inicio": {
+        "valor": "2026-03-30T18:29Z",
+        "precision": "minuto",
+        "cita": "Serviciul Operațiuni Aeriene din Armata Republicii Moldova a observat drona la ora 21:29.",
+        "motivo": "hotnews.ro: el ejército de Moldavia vio el dron «la ora 21:29», hora de Chisináu del lunes 30 de marzo de 2026 (hora de verano desde el 29, UTC+3)"
+      },
+      "motivo": {
+        "es": "La ficha publicaba las 21:29 UTC: tomó como UTC la hora local del ejército de Moldavia («la ora 21:29»), que el 30 de marzo (UTC+3) son las 18:29 UTC.",
+        "en": "The record showed 21:29 UTC: it took the Moldovan army's local time («la ora 21:29») as UTC, which on 30 March (UTC+3) is 18:29 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00136",
+      "inicio": {
+        "valor": "2026-08-20T00:16Z",
+        "precision": "minuto",
+        "cita": "Potrivit Ministerului Apărării de la Chișinău, drona a fost detectată joi, 20 august, la ora 3.16.",
+        "motivo": "el Ministerio de Defensa de Moldavia (mediafax.ro): «la ora 3.16» del jueves 20 de agosto de 2026, hora de Chisináu (UTC+3)",
+        "fin": "2026-08-20T00:22Z",
+        "fin_cita": "Drona a fost urmărită de sistemele de supraveghere ale Armatei Naționale timp de aproximativ șase minute."
+      },
+      "motivo": {
+        "es": "La ficha publicaba de las 03:16 a las 03:22 UTC: tomó como UTC la hora local del Ministerio de Defensa («la ora 3.16»), que en agosto (UTC+3) son las 00:16 UTC; seguido unos seis minutos, hasta las 00:22 UTC.",
+        "en": "The record showed 03:16 to 03:22 UTC: it took the Defence Ministry's local time («la ora 3.16») as UTC, which in August (UTC+3) is 00:16 UTC; tracked for about six minutes, until 00:22 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00205",
+      "inicio": {
+        "valor": "2026-08-22T01:07Z",
+        "precision": "minuto",
+        "cita": "Potrivit Ministerului Apărării de la Chișinău, drona a fost detectată la ora 04:07.",
+        "motivo": "el Ministerio de Defensa de Moldavia (jurnalul.ro): «la ora 04:07» del sábado 22 de agosto de 2026, hora de Chisináu (UTC+3)"
+      },
+      "motivo": {
+        "es": "La ficha publicaba las 02:00 UTC; el Ministerio de Defensa detectó el dron «la ora 04:07», hora de Chisináu, que en agosto (UTC+3) son las 01:07 UTC.",
+        "en": "The record showed 02:00 UTC; the Defence Ministry detected the drone «la ora 04:07», Chișinău time, which in August (UTC+3) is 01:07 UTC."
       }
     }
   ],

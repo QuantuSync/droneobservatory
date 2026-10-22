@@ -400,6 +400,10 @@ def construir(
     tiempo: Documento = {"inicio": inicio, "origen_inicio": origen_inicio(resolucion, enviadas,
                                                                           ficha)}  # fmt: skip
     fin_ficha = leer_fecha(ficha.valor("fin") or "")
+    if fin_ficha is not None and "T" in ficha.valor("fin"):
+        # El fin lleva el mismo error que el inicio si este venía en hora local
+        # (fechas.hora_en_utc).
+        fin_ficha -= resolucion.desfase
     if (
         fin_ficha is not None
         and "T" in ficha.valor("fin")
