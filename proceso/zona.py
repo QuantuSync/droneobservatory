@@ -15,6 +15,9 @@ costa; el siguiente punto, el aeropuerto de Sofía, a más de 200 km del mar).
 
 En orden, la primera regla que se cumple:
 
+0. una zona revisada a mano (configuracion/incidentes_revisados.json, «datos», campo «zona»),
+   con la cita de una fuente de la ficha, cuando la regla no puede: Chopin, cerrado por los
+   drones rusos del 10 de septiembre de 2025, queda a 151 km de Bielorrusia;
 1. enlazado con el ataque ruso contra Ucrania de esa noche (proceso/cruces.py): frontera;
 2. con punto: frontera si está a 150 km o menos de la frontera terrestre con Ucrania, Rusia o
    Bielorrusia, o a 50 km o menos de la costa del mar Negro; si no, interior;
@@ -208,6 +211,11 @@ def _lugar_nombrado(incidente: Documento) -> tuple[float, float] | None:
 def clasificar(incidente: Documento) -> Documento:
     """{grupo, motivo, distancia_km?}: la distancia (a la frontera con Ucrania, Rusia o
     Bielorrusia, redondeada al km) solo cuando hay punto o lugar nombrado."""
+    from proceso import decidir
+
+    revision = decidir.revision_de(incidente, "zona")
+    if revision is not None:
+        return copy.deepcopy(revision["valor"])
     if "ataque" in incidente:
         return {"grupo": FRONTERA, "motivo": "ataque"}
     lugar = incidente.get("lugar", {})

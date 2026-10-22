@@ -30,7 +30,7 @@ from proceso.noticias import normalizar
 
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 # Los datos que una revisión a mano puede fijar, con su cita («datos»).
-CAMPOS_REVISABLES = ("objetivo", "lugar", "inicio", "drones", "cierre", "titulo")
+CAMPOS_REVISABLES = ("objetivo", "lugar", "inicio", "drones", "cierre", "titulo", "zona")
 # Una cárcel es una instalación de categoría «otra» (docs/control_fichas.md).
 _CARCEL = re.compile(
     r"\b(?:centro penitenciario|prisi[oó]n|c[aá]rcel|prison|penitenciar|zak[lł]ad karny|"
@@ -235,6 +235,11 @@ def _revisiones(incidente: Documento) -> dict[str, Documento]:
         for campo, revision in _revisiones_de_datos().get(str(incidente.get("id")), {}).items()
         if revision.get("enlace") in enlaces or revision.get("pais") == pais
     }
+
+
+def revision_de(incidente: Documento, campo: str) -> Documento | None:
+    """La revisión a mano de un dato de este incidente (la zona la lee proceso/zona.py)."""
+    return _revisiones(incidente).get(campo)
 
 
 @cache

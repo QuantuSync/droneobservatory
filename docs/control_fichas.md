@@ -448,7 +448,9 @@ Con ellos se decide el valor correcto de la referencia (y el que debe dar la fic
   periodista no bastan. Un buque alcanzado en el mar es `sobrevuelo` salvo que una autoridad diga
   que estaba en aguas del país.
 - **cita:** del mismo suceso y que diga ese dato (no la fecha de publicación).
-- **zona:** la regla de los 150 km del flanco este, derivada del punto; no se toca a mano.
+- **zona:** la regla de los 150 km del flanco este, derivada del punto. Solo cuando la regla no
+  puede, una revisión de `datos` con el campo `zona` y la cita de una fuente de la ficha (el
+  aeropuerto Chopin, cerrado por los drones rusos del 10 de septiembre de 2025, está a 151 km).
 
 ## Correcciones a mano
 
