@@ -8475,6 +8475,17 @@
   ],
   "datos": [
     {
+      "incidente": "EODI-2025-00233",
+      "campo": "zona",
+      "valor": {
+        "grupo": "frontera",
+        "motivo": "ataque"
+      },
+      "cita": "Warsaw airport shut after Ukrainian reports of Russian drones over Poland",
+      "enlace": "https://saudigazette.com.sa/article/654845/World/Europe/Warsaw-airport-shut-after-Ukrainian-reports-of-Russian-drones-over-Poland",
+      "motivo": "el aeropuerto Chopin cerr\u00f3 por los drones rusos del ataque de esa noche; a 151 km de Bielorrusia, la regla de los 150 km no puede"
+    },
+    {
       "incidente": "EODI-2025-00238",
       "campo": "objetivo",
       "valor": {

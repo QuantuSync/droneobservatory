@@ -81,3 +81,21 @@ def test_se_guarda_con_su_motivo_y_solo_si_cambia() -> None:
     guardado = almacen.incidentes()[0]
     assert guardado["zona"]["grupo"] in zona.GRUPOS
     assert zona.clasificar_todos(almacen, AHORA, VOCABULARIO_MODELOS)["cambiados"] == 0
+
+
+def test_zona_revisada_a_mano_con_su_cita() -> None:
+    # Chopin (EODI-2025-00233), cerrado por los drones rusos del 10 de septiembre de 2025, a 151 km
+    # de Bielorrusia: la regla de los 150 km no puede y manda la revisión con la cita.
+    enlace = (
+        "https://saudigazette.com.sa/article/654845/World/Europe/"
+        "Warsaw-airport-shut-after-Ukrainian-reports-of-Russian-drones-over-Poland"
+    )
+    chopin = {
+        **incidente("PL", "interrupcion_aeroportuaria", punto=punto(52.16309, 20.96362)),
+        "id": "EODI-2025-00233", "fuentes": [{"enlace": enlace}],
+    }  # fmt: skip
+    assert zona.clasificar(chopin) == {"grupo": "frontera", "motivo": "ataque"}
+    # Sin esa fuente (una ficha de prueba con el mismo identificador), la regla: interior.
+    sin_fuente = {**chopin, "fuentes": []}
+    assert zona.clasificar(sin_fuente)["grupo"] == "interior"
+    assert zona.clasificar(sin_fuente)["distancia_km"] == 151
