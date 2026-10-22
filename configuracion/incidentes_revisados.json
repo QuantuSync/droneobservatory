@@ -6058,6 +6058,106 @@
         }
       },
       "motivo": "El nomenclátor casó «base navale de Toulon» con «Base navale» (base:way/662378236), en La Reunión; la base naval de Toulon no está en él."
+    },
+    {
+      "incidente": "EODI-2026-00077",
+      "lugar": {
+        "nombre": "Sofia",
+        "nivel": "instalacion",
+        "lat": 42.69548,
+        "lon": 23.41779,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00077",
+        "enlace": "https://focus-news.net/novini/regioni/Tri-signala-za-dronove-vuv-vuzdushno-2917935",
+        "medio": "focus-news.net",
+        "fecha": "2026-03-09",
+        "idioma": "bg",
+        "frase": "В неделя вечер са постъпили три сигнала за дронове на Летище \"Васил Левски\", потвърдиха от пресцентъра на аерогарата за ФОКУС."
+      },
+      "cambio": {
+        "motivo": {
+          "es": "El punto era el del estadio Vasil Levski de Karlovo, que se llama como el aeropuerto; el suceso es en el aeropuerto Vasil Levski de Sofía.",
+          "en": "The point was the Vasil Levski stadium in Karlovo, which has the same name as the airport; the event is at Sofia's Vasil Levski airport."
+        }
+      },
+      "motivo": "El nomenclátor casó «Летище „Васил Левски“» con el estadio Vasil Levski de Karlovo (estadio:way/169361657); el aeropuerto es LBSF, en Sofía."
+    },
+    {
+      "incidente": "EODI-2025-00157",
+      "lugar": {
+        "nombre": "Sofia",
+        "nivel": "instalacion",
+        "lat": 42.69548,
+        "lon": 23.41779,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00157",
+        "enlace": "https://actualno.com/crime/trjabvat-sistemi-za-zaglushavane-na-dronove-na-letishte-sofija-losh-opit-ot-germanija-go-podskazva-news_2391702.html",
+        "medio": "actualno.com",
+        "fecha": "2025-02-10",
+        "idioma": "bg",
+        "frase": "дрон забави 6 полета на летище София в петък вечерта"
+      },
+      "cambio": {
+        "motivo": {
+          "es": "El punto era el del estadio Vasil Levski de Karlovo, que se llama como el aeropuerto; el suceso es en el aeropuerto Vasil Levski de Sofía.",
+          "en": "The point was the Vasil Levski stadium in Karlovo, which has the same name as the airport; the event is at Sofia's Vasil Levski airport."
+        }
+      },
+      "motivo": "El nomenclátor casó «Летище „Васил Левски“» con el estadio Vasil Levski de Karlovo (estadio:way/169361657); el aeropuerto es LBSF, en Sofía."
+    },
+    {
+      "incidente": "EODI-2025-00174",
+      "lugar": {
+        "nombre": "Bremen",
+        "nivel": "instalacion",
+        "lat": 53.04534,
+        "lon": 8.78711,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00174",
+        "enlace": "https://kreiszeitung.de/lokales/bremen/drohnen-alarm-im-norden-flugverkehr-am-bremer-airport-fuer-fast-eine-stunde-lahmgelegt-94018239.html",
+        "medio": "kreiszeitung.de",
+        "fecha": "2025-11-03",
+        "idioma": "de",
+        "frase": "Drohnen-Alarm im Norden: Flugverkehr am Bremer Airport für fast eine Stunde lahmgelegt"
+      },
+      "cambio": {
+        "motivo": {
+          "es": "El punto era el del aeródromo de Norden-Norddeich: «im Norden» («en el norte») casaba con él; el suceso es en el aeropuerto de Bremen.",
+          "en": "The point was the Norden-Norddeich airfield: «im Norden» («in the north») matched it; the event is at Bremen airport."
+        }
+      },
+      "motivo": "«Drohnen-Alarm im Norden» casó con el aeródromo de Norden-Norddeich (EDWS); el aeropuerto es el de Bremen (EDDW)."
+    },
+    {
+      "incidente": "EODI-2025-00451",
+      "lugar": {
+        "nombre": "Aalborg",
+        "nivel": "instalacion",
+        "lat": 57.09449,
+        "lon": 9.85314,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00451",
+        "enlace": "https://dailystar.co.uk/news/latest-news/breaking-major-airport-forced-close-35961286",
+        "medio": "dailystar.co.uk",
+        "fecha": "2025-09-24",
+        "idioma": "en",
+        "frase": "Drones have been observed near Aalborg Airport and the airspace is closed."
+      },
+      "cambio": {
+        "motivo": {
+          "es": "El punto era el del aeropuerto de Copenhague, que las fuentes nombran por el incidente de dos días antes; el suceso es en el aeropuerto de Aalborg.",
+          "en": "The point was Copenhagen airport, which the sources mention for the incident two days earlier; the event is at Aalborg airport."
+        }
+      },
+      "motivo": "El cierre es el del aeropuerto de Aalborg (EKYT); Copenhague (EKCH) solo sale como el incidente de dos días antes."
     }
   ],
   "separar": [
