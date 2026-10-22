@@ -28,7 +28,7 @@ esos márgenes no son una discrepancia.
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime, time, timedelta
 from functools import cache
 from pathlib import Path
@@ -318,6 +318,34 @@ class Resolucion:
     origen: str
     motivo: str
     corregido: bool = False
+    # Lo que se restó a la hora de la ficha por venir en hora local y no en UTC (hora_en_utc):
+    # el fin de la misma ficha lleva el mismo error.
+    desfase: timedelta = timedelta(0)
+
+
+def hora_en_utc(valor: datetime, precision: str | None, frase: str,
+                zona_suceso: ZoneInfo) -> datetime | None:  # fmt: skip
+    """La hora de la ficha pasada a UTC si el extractor copió la hora local de la frase sin
+    convertirla, o None si no. Lo es si la frase escribe una sola hora (textos_dron.hora_local),
+    la hora UTC de la ficha es esa misma y en la zona del suceso no lo es: «gegen 19.30 Uhr» en
+    Bremen el 2 de noviembre de 2025 (UTC+1) son las 18:30 UTC, y EODI-2025-00007 publicaba las
+    19:30 UTC. Con la hora local de la frase ya bien convertida, o con otra hora, no se toca."""
+    from proceso.textos_dron import hora_local
+
+    if precision not in {"minuto", "hora"}:
+        return None
+    escrita = hora_local(frase)
+    if escrita is None:
+        return None
+
+    def igual(momento: datetime) -> bool:
+        return momento.hour == escrita[0] and (precision == "hora" or momento.minute == escrita[1])
+
+    utc = valor.astimezone(UTC)
+    if not igual(utc) or igual(utc.astimezone(zona_suceso)):
+        return None
+    local = datetime.combine(utc.date(), time(*escrita), zona_suceso)
+    return local.astimezone(UTC)
 
 
 def _con_dia(momento: datetime, dia: date, zona_suceso: ZoneInfo) -> datetime:
@@ -525,9 +553,20 @@ def inicio_de_ficha(
     ]  # fmt: skip
     if articulo.get("titular"):
         frases.append(str(articulo["titular"]))
-    return resolver(
+    en_utc = hora_en_utc(valor, precision, frases[0], zona_suceso)
+    if en_utc is not None:
+        desfase, valor = valor - en_utc, en_utc
+    resolucion = resolver(
         valor, precision or "dia", list(dict.fromkeys(f for f in frases if f)), publicacion,
         zona_medio, zona_suceso, articulo.get("idioma"),
+    )  # fmt: skip
+    if en_utc is None:
+        return resolucion
+    local = en_utc.astimezone(zona_suceso).strftime("%H:%M")
+    return replace(
+        resolucion, desfase=desfase, corregido=True,
+        motivo=f"{resolucion.motivo}; la hora de la frase ({local}) es hora local "
+               f"({zona_suceso.key}): en UTC, {en_utc.strftime('%H:%M')}",
     )  # fmt: skip
 
 
