@@ -335,11 +335,27 @@ cita de autoridad vacía; D, titular sin respaldo; E, presencia sin base; F, lug
 marcado como interior, fecha de publicación cuando una fuente da otra); G, nombres (punto anterior
 sin nombre, titular publicado con otra forma de la ciudad); H, instalación homónima (desde el
 22/10/2026: el objetivo no casa con el tipo del suceso, como una interrupción aeroportuaria con un
-estadio, o su instalación está a más de 30 km de la localidad de la ficha). Los recuentos del día y los
+estadio, o su instalación está a más de 30 km de la localidad de la ficha); I, alias genérico
+(desde el 22/10/2026: el objetivo se llama solo con palabras corrientes, como «Base navale», o las
+fuentes nombran su instalación solo con un nombre o una ciudad genéricos, como «im Norden», «en el
+norte», por el aeródromo de Norden-Norddeich). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
 base: `python -m recogida.auditoria_fichas [--base …] [--json]`.
+
+### Alias genéricos (desde el 22 de octubre de 2026)
+
+Los alias de las instalaciones salen tal cual de las etiquetas de nombre de OpenStreetMap
+(`recogida/instalaciones_osm.py`) y las ciudades de `lugares_europa.json` se ponen a mano. Algunos
+son solo palabras corrientes: «Base navale» (una base de La Reunión), «Port» (un puerto polaco),
+«Stadion Miejski», «Kaserne 1»; y la ciudad «Norden» del aeródromo de Norden-Norddeich es también
+«el norte» en alemán. Un alias o una ciudad hecho solo de palabras de
+`configuracion/palabras_corrientes.json` (puntos cardinales, el nombre genérico de cada tipo de
+instalación, adjetivos y enlaces), de palabras de tipo de lugar enteras o de números no casa nada
+(`proceso/noticias.generico`): hace falta un nombre propio o la ciudad. Las palabras corrientes que
+son también un lugar (Porto, Halle, Malå, Orlík, Au) quedan fuera de la lista. La comprobación I
+de la auditoría avisa si una ficha toma su objetivo de un alias genérico.
 
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 

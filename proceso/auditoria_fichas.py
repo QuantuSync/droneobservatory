@@ -28,6 +28,10 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   aeroportuaria con un objetivo que no es un aeropuerto ni una base) o la instalación del
   nomenclátor que nombra está a más de 30 km de la localidad de la ficha (EODI-2026-00077: el
   estadio «Васил Левски» de Karlovo por el aeropuerto de Sofía).
+- **I, alias genérico**: el objetivo se llama solo con palabras corrientes («Base navale»), o
+  las fuentes de la ficha nombran su instalación solo con un nombre o una ciudad genéricos y
+  nunca con uno propio (EODI-2025-00174: «Drohnen-Alarm im Norden», «en el norte», por el
+  aeródromo de Norden-Norddeich; proceso/noticias.generico).
 """
 
 import re
@@ -55,7 +59,7 @@ from proceso.presencia import (
 )
 from proceso.ubicacion import CATEGORIA_LUGAR
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "R")
+COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "R")
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -65,6 +69,7 @@ NOMBRES = {
     "F": "lugar",
     "G": "nombres",
     "H": "instalación homónima",
+    "I": "alias genérico",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -275,8 +280,29 @@ def _h(incidente: Documento) -> bool:
     )
 
 
+def _i(incidente: Documento) -> bool:
+    objetivo = incidente.get("objetivo") or {}
+    if objetivo.get("categoria") in (None, "otra"):
+        return False
+    nombre = noticias.normalizar(str(objetivo.get("nombre") or ""))
+    if nombre and noticias.generico(nombre):
+        return True
+    sitio = _instalacion_del_objetivo(incidente)
+    if sitio is None:
+        return False
+    # Lo que escriben las fuentes y el titular; no el «suceso», que copia el nombre casado.
+    textos = [
+        *(incidente.get("titulo") or {}).values(),
+        *(f.get("frase_origen") or "" for f in incidente.get("fuentes") or []),
+    ]
+    normal = " " + " ".join(noticias.normalizar(str(t)) for t in textos if t) + " "
+    nombres = {noticias.normalizar(n) for n in (sitio.nombre, *sitio.alias, *sitio.ciudades)}
+    nombrados = [n for n in nombres if n and f" {n} " in normal]
+    return bool(nombrados) and all(noticias.generico(n) for n in nombrados)
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
-    "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h,
+    "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i,
 }  # fmt: skip
 
 

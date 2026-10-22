@@ -304,6 +304,38 @@ def no_son_lugares(ruta: Path = DIRECTORIO / "no_son_lugares.json") -> frozenset
     )
 
 
+@cache
+def palabras_corrientes(ruta: Path = DIRECTORIO / "palabras_corrientes.json") -> frozenset[str]:
+    """Palabras corrientes que no nombran una instalación concreta
+    (configuracion/palabras_corrientes.json) y las de tipo de lugar enteras («base», no el
+    prefijo «baza» de «Bazaly»), normalizadas: «Norden», «navale», «port»."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    tipos = [p for palabras in configuracion()["tipo_de_lugar"].values() for p in palabras]
+    return frozenset(
+        normalizar(p)
+        for p in [
+            *tipos,
+            *(
+                p
+                for clave in ("puntos_cardinales", "tipos", "adjetivos", "enlaces")
+                for p in datos[clave]
+            ),
+        ]
+    )
+
+
+# Números y ordinales romanos: «Kaserne 1», «MVE II».
+_NUMERO = re.compile(r"\d+|[ivx]+")
+
+
+def generico(normal: str) -> bool:
+    """El nombre normalizado está hecho solo de palabras corrientes, de tipo de lugar o de
+    números: «im Norden» o «base navale» no nombran ninguna instalación (EODI-2025-00174,
+    EODI-2026-00649). Hace falta un nombre propio o la ciudad."""
+    corrientes = palabras_corrientes()
+    return all(p in corrientes or _NUMERO.fullmatch(p) for p in normal.split())
+
+
 def nombra_lugar(normal: str) -> bool:
     """El nombre normalizado puede nombrar un lugar: no es un país ni una palabra de la lista."""
     return not es_nombre_de_pais(normal) and normal not in no_son_lugares()
@@ -327,8 +359,10 @@ def nomenclator(
 
     def propio(nombre: str) -> bool:
         """Tiene alguna palabra que no es el tipo de lugar: «Lentokenttäalue» no nombra nada."""
-        return len(nombre) >= MIN_LETRAS_ALIAS and any(
-            not any(p.match(palabra) for p in cue.values()) for palabra in nombre.split()
+        return (
+            len(nombre) >= MIN_LETRAS_ALIAS
+            and any(not any(p.match(palabra) for p in cue.values()) for palabra in nombre.split())
+            and not generico(nombre)
         )
 
     # El nombre de un país no nombra un lugar: GeoNames da «Ukraine» como nombre alternativo
@@ -351,6 +385,8 @@ def nomenclator(
         # El nomenclátor está en forma descompuesta: se compara también sin acentos.
         if not any(p.search(c) or p.search(normalizar(c)) for p in cue.values())
         and nombra_lugar(normalizar(c))
+        # «Norden» (ciudad de Norden-Norddeich) es también «el norte»: «im Norden».
+        and not generico(normalizar(c))
         for forma in (normalizar(c), *sorted(variantes(normalizar(c), sitio.pais)))
         if nombra_lugar(forma)
     ]
