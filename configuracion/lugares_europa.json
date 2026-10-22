@@ -20500,6 +20500,31 @@
    "lon": -2.40881,
    "radio_km": 2.0,
    "pais": "GB"
+  },
+  "base:wikidata/Q1564994": {
+   "tipo": "base",
+   "nombre": "Base navale de Toulon",
+   "alias": [
+    "Base navale de Toulon",
+    "base naval de Toulon",
+    "port militaire de Toulon",
+    "arsenal de Toulon",
+    "Toulon naval base",
+    "Toulon Arsenal",
+    "Militärhafen Toulon",
+    "Marinestützpunkt Toulon",
+    "arsenale di Tolone",
+    "Arsenal Naval de Tolón",
+    "Arsenal Naval de Toulon",
+    "base naval de Tolón"
+   ],
+   "ciudades": [
+    "Toulon"
+   ],
+   "lat": 43.11944,
+   "lon": 5.91639,
+   "radio_km": 3.0,
+   "pais": "FR"
   }
  }
 }
