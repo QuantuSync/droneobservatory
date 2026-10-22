@@ -24,6 +24,10 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
 - **G, nombres**: un punto anterior sin nombre (`nombres.anteriores` con null), o un titular
   publicado que escribe una ciudad de otra forma que la ficha (EODI-2026-00050: «Alexandrópolis»
   frente a «Alejandrópolis»).
+- **H, instalación homónima**: el objetivo no casa con el tipo del suceso (una interrupción
+  aeroportuaria con un objetivo que no es un aeropuerto ni una base) o la instalación del
+  nomenclátor que nombra está a más de 30 km de la localidad de la ficha (EODI-2026-00077: el
+  estadio «Васил Левски» de Karlovo por el aeropuerto de Sofía).
 """
 
 import re
@@ -41,6 +45,7 @@ from proceso import (
     fechas,
     incidentes,
     nombres_lugar,
+    noticias,
 )
 from proceso.presencia import (
     atribuida_por_autoridad,
@@ -48,8 +53,9 @@ from proceso.presencia import (
     presencias_revisadas,
     pruebas_fisicas_confirmadas,
 )
+from proceso.ubicacion import CATEGORIA_LUGAR
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "R")
+COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "R")
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -58,6 +64,7 @@ NOMBRES = {
     "E": "presencia sin base",
     "F": "lugar",
     "G": "nombres",
+    "H": "instalación homónima",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -219,8 +226,57 @@ def _g(incidente: Documento) -> bool:
     )
 
 
+# Lo lejos que puede estar la instalación del objetivo de la localidad de la ficha.
+DISTANCIA_OBJETIVO_KM = 30.0
+# Lo que puede ser el objetivo de una interrupción aeroportuaria.
+OBJETIVOS_AEROPORTUARIOS = frozenset({"aeropuerto", "base_militar"})
+
+
+def _instalacion_del_objetivo(incidente: Documento) -> noticias.Lugar | None:
+    """La instalación del nomenclátor que nombra el objetivo: la de su OACI o la única del país
+    con ese nombre."""
+    objetivo = incidente.get("objetivo") or {}
+    nom = noticias.nomenclator()
+    if objetivo.get("oaci") and (sitio := nom.lugares.get(str(objetivo["oaci"]))) is not None:
+        return sitio
+    nombre = noticias.normalizar(str(objetivo.get("nombre") or ""))
+    pais = (incidente.get("lugar") or {}).get("pais")
+    hallados = [
+        s
+        for s in nom.lugares.values()
+        if s.pais == pais and s.tipo in CATEGORIA_LUGAR and noticias.normalizar(s.nombre) == nombre
+    ]
+    return hallados[0] if nombre and len(hallados) == 1 else None
+
+
+def _h(incidente: Documento) -> bool:
+    objetivo = incidente.get("objetivo") or {}
+    categoria = objetivo.get("categoria")
+    if categoria in (None, "otra"):
+        return False
+    if (
+        incidente.get("tipo") == "interrupcion_aeroportuaria"
+        and categoria not in OBJETIVOS_AEROPORTUARIOS
+    ):
+        return True
+    lugar = incidente.get("lugar") or {}
+    sitio = _instalacion_del_objetivo(incidente)
+    if sitio is None or not lugar.get("localidad"):
+        return False
+    nom = noticias.nomenclator()
+    localidades = [
+        nom.lugares[i]
+        for i in noticias.localidades_declinadas(str(lugar["localidad"]), nom)
+        if i in nom.lugares and nom.lugares[i].pais == lugar.get("pais")
+    ]
+    return len(localidades) == 1 and (
+        noticias.distancia_km(localidades[0], sitio)
+        > DISTANCIA_OBJETIVO_KM + localidades[0].radio_km
+    )
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
-    "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g,
+    "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h,
 }  # fmt: skip
 
 

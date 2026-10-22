@@ -393,7 +393,12 @@ def lugares_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:
     # Un alias de una sola palabra tiene que ir con mayúscula: «camp» en «military camp» no
     # es el campo irlandés que se llama «Camp».
     mayusculas = _mayusculas(titular)
-    hallados = _buscar(nom.alias, [g for g in grupos if " " in g or g in mayusculas])
+    hallados = [
+        elegido
+        for grupo in [g for g in grupos if " " in g or g in mayusculas]
+        if len(nom.alias.get(grupo, ())) == 1
+        and (elegido := _entre_homonimos(titular, grupo, nom.alias[grupo][0], nom)) is not None
+    ]
     if not hallados:
         # Una ciudad de varias instalaciones («Düsseldorf», del aeropuerto y de un helipuerto)
         # vale si el titular nombra el tipo de una sola de ellas («Düsseldorfer Flughafen»).
@@ -408,6 +413,39 @@ def lugares_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:
                 if len(con_tipo) == 1:
                     hallados.append(con_tipo[0])
     return tuple(dict.fromkeys(hallados))
+
+
+# Lo lejos que puede estar de la ciudad que nombra el texto la instalación que la lleva.
+DISTANCIA_HOMONIMO_KM = 30.0
+
+
+def _entre_homonimos(titular: str, grupo: str, id_: str, nom: Nomenclator) -> str | None:
+    """La instalación que nombra un alias completo cuando otra del mismo país lleva ese nombre
+    como ciudad («Васил Левски» es el estadio de Karlovo y la ciudad del aeropuerto de Sofía,
+    LBSF; EODI-2026-00064 y EODI-2026-00077): la del tipo que nombra el texto («Летище»); si no
+    se decide, la que está cerca de la ciudad que nombra; si tampoco, ninguna."""
+    pais = nom.lugares[id_].pais
+    candidatos = [
+        id_,
+        *(i for i in nom.ciudades.get(grupo, ()) if i != id_ and nom.lugares[i].pais == pais),
+    ]
+    if len(candidatos) == 1:
+        return id_
+    con_tipo = [i for i in candidatos if _nombra_tipo(titular, i, nom)]
+    if len(con_tipo) == 1:
+        return con_tipo[0]
+    candidatos = con_tipo or candidatos
+    ciudades = [
+        nom.lugares[c]
+        for c in localidades_declinadas(titular, nom)
+        if c in nom.lugares and nom.lugares[c].pais == pais
+    ]
+    cerca = [
+        i
+        for i in candidatos
+        if any(distancia_km(c, nom.lugares[i]) <= DISTANCIA_HOMONIMO_KM for c in ciudades)
+    ]
+    return cerca[0] if len(cerca) == 1 else None
 
 
 def _ciudades_sueltas(sitio: Lugar) -> int:

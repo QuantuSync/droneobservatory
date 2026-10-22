@@ -57,6 +57,13 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    Sud - Agigea») y no cuenta; si quedan dos (Chopin y Modlin), ninguna
    (`lugar_preciso._por_su_ciudad`).
 
+   Desde el 22 de octubre de 2026, **instalaciones con el mismo nombre**: un alias completo de una
+   instalación que otra del país lleva como ciudad («Васил Левски» es el estadio de Karlovo y la
+   ciudad del aeropuerto de Sofía, LBSF) no casa solo. Decide el tipo que nombra el texto
+   («Летище», aeropuerto); si no, la que está a menos de 30 km de la ciudad que nombra; si
+   tampoco, ninguna (`noticias._entre_homonimos`). EODI-2026-00064 y EODI-2026-00077 tenían el
+   punto y el objetivo en el estadio.
+
    Desde el 19 de octubre de 2026, además, **el lugar es la instalación afectada** aunque ninguna
    autoridad dé el punto exacto: si el objetivo de la ficha identifica una instalación del
    nomenclátor por su código OACI y el punto está a más de 1 km de ella, el marcador pasa a la
@@ -326,7 +333,9 @@ una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales
 vigentes con cada fallo conocido: A, cabecera de una palabra; B, instalación no reconocida; C,
 cita de autoridad vacía; D, titular sin respaldo; E, presencia sin base; F, lugar (buque, mar
 marcado como interior, fecha de publicación cuando una fuente da otra); G, nombres (punto anterior
-sin nombre, titular publicado con otra forma de la ciudad). Los recuentos del día y los
+sin nombre, titular publicado con otra forma de la ciudad); H, instalación homónima (desde el
+22/10/2026: el objetivo no casa con el tipo del suceso, como una interrupción aeroportuaria con un
+estadio, o su instalación está a más de 30 km de la localidad de la ficha). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
