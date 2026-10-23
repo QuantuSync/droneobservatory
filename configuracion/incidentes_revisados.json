@@ -533,6 +533,16 @@
       "conserva": "EODI-2026-00649",
       "motivo": "el mismo suceso: los sobrevuelos de drones no autorizados sobre la base naval de Toulon y otros sitios militares del Var durante el ejercicio Typhon (del 5 al 16 de octubre de 2026), que la Marine nationale anunció el 21 de octubre; las dos fichas citan la misma declaración («Plusieurs survols de « drones aériens non autorisés » ont été détectés « aux abords et au-dessus de sites militaires » lors de récentes manœuvres») y sus noticias son del mismo día; no se unieron solas porque cada una tomó un día distinto del ejercicio (13 y 16 de octubre, precisión de día)",
       "motivo_en": "the same event: the unauthorised drone overflights of the Toulon naval base and other military sites in the Var during the Typhon exercise (5 to 16 October 2026), announced by the French Navy on 21 October; both records quote the same statement («Plusieurs survols de « drones aériens non autorisés » ont été détectés « aux abords et au-dessus de sites militaires » lors de récentes manœuvres») and their reports are from the same day; they were not merged automatically because each took a different day of the exercise (13 and 16 October, day precision)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00127",
+        "EODI-2025-00157",
+        "EODI-2025-00124"
+      ],
+      "conserva": "EODI-2025-00127",
+      "motivo": "el mismo suceso: el dron que retrasó seis vuelos en el aeropuerto de Sofía (LBSF) el viernes 7 de febrero de 2025; 00157 y 00124 son noticias del 10 y el 12 de febrero sobre ese dron. El control de fichas los unió el 14 de octubre de 2026, la reversión en bloque de su primera ronda deshizo también esta unión y el repaso de esa noche los dio por distintos (leyó el 9 de febrero, la fecha de la noticia, como día del suceso); el 23 de octubre volvió a unirlos. Revisado a mano para que no vuelva a deshacerse",
+      "motivo_en": "the same event: the drone that delayed six flights at Sofia airport (LBSF) on Friday 7 February 2025; 00157 and 00124 are reports of 10 and 12 February about that drone. The record check joined them on 14 October 2026, the bulk reversal of its first round also undid this union and that night's review took them as different (it read 9 February, the date of the report, as the day of the event); on 23 October it joined them again. Reviewed by hand so that it is not undone again"
     }
   ],
   "reextraer": [
@@ -6251,6 +6261,25 @@
         }
       },
       "motivo": "El cierre es el del aeropuerto de Aalborg (EKYT); Copenhague (EKCH) solo sale como el incidente de dos días antes."
+    },
+    {
+      "incidente": "EODI-2026-00582",
+      "lugar": {
+        "nombre": "Sulina",
+        "nivel": "localidad",
+        "lat": 45.15564,
+        "lon": 29.65403,
+        "radio_km": 10
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00582",
+        "enlace": "https://ziare.com/drone/doborate-piloti-romani-2042065",
+        "medio": "ziare.com",
+        "fecha": "2026-10-17",
+        "idioma": "ro",
+        "frase": "Ambele incidente s-au produs în apropierea orașului Sulina."
+      },
+      "motivo": "Los dos drones se derribaron sobre las aguas territoriales del mar Negro junto a Sulina (ziare.com; capital.ro: «deasupra Mării Negre, în apropierea localității Sulina»). La recogida de la 01:17 UTC del 23 de octubre de 2026 dejó solo la región «Marea Neagră» y la ficha perdió su punto."
     }
   ],
   "separar": [
