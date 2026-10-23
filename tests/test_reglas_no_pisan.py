@@ -95,3 +95,13 @@ def test_la_hora_con_minutos_separados_por_h() -> None:
         assert hora_local(frase) == (4, 30), frase
     assert hora_local("Un drone a été aperçu à 4 h au-dessus de la base") == (4, 0)
     assert hora_local("Eine Drohne wurde um 21 Uhr gesichtet") == (21, 0)
+
+
+def test_volver_a_extraer_conserva_el_ataque_de_su_noche() -> None:
+    # Sulina (2026-00582, 23/10 01:23): al volver a extraerla se perdían el ataque y con él la
+    # zona; los cruces lo devolvían en la misma recogida. El rehecho lo conserva.
+    import inspect
+
+    from proceso import extraccion
+
+    assert '("fusionado_en", "episodio", "ataque")' in inspect.getsource(extraccion._alta)
