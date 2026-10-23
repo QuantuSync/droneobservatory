@@ -97,7 +97,8 @@ jobs:
     needs: destino
     if: needs.destino.outputs.base != ''
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Dos intentos de instalación (12 min) y dos de recorridos (25 min) como mucho, y el resto.
+    timeout-minutes: 80
     strategy:
       fail-fast: false
       matrix:
@@ -129,7 +130,35 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
-      - run: npx playwright install --with-deps ${{ matrix.navegadores }}
+      # Los paquetes de Ubuntu que pide Playwright, de la caché: el 23 de octubre de 2026 el espejo
+      # de Ubuntu de los runners servía cada paquete grande en 1-5 minutos y la instalación de
+      # WebKit tardó 47 y 55 minutos (las pruebas, 10); un trabajo llegó al tope y se canceló.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/paquetes-playwright
+          key: paquetes-playwright-${{ runner.os }}-${{ matrix.navegadores }}-${{ hashFiles('web/package-lock.json') }}
+          restore-keys: paquetes-playwright-${{ runner.os }}-${{ matrix.navegadores }}-
+      # Cada intento con su tiempo máximo; si se agota (código 124), un segundo intento y nada más.
+      # Un fallo de verdad no se repite.
+      - name: Navegadores y paquetes de Playwright
+        run: |
+          set -uo pipefail
+          mkdir -p ~/paquetes-playwright
+          printf '%s\n' 'Acquire::Retries "3";' 'Acquire::http::Timeout "30";' \
+            'APT::Keep-Downloaded-Packages "true";' | sudo tee /etc/apt/apt.conf.d/99recorridos
+          if compgen -G "$HOME/paquetes-playwright/*.deb" > /dev/null; then
+            sudo cp "$HOME"/paquetes-playwright/*.deb /var/cache/apt/archives/
+          fi
+          for intento in 1 2; do
+            codigo=0
+            timeout -k 30s 12m npx playwright install --with-deps ${{ matrix.navegadores }} || codigo=$?
+            [ "$codigo" -eq 124 ] || [ "$codigo" -eq 137 ] || break
+            echo "::warning::la instalación de Playwright pasó de 12 minutos (intento $intento)"
+          done
+          if compgen -G "/var/cache/apt/archives/*.deb" > /dev/null; then
+            cp /var/cache/apt/archives/*.deb ~/paquetes-playwright/
+          fi
+          exit "$codigo"
       - name: Recorridos contra ${{ needs.destino.outputs.base }}
         env:
           BASE: ${{ needs.destino.outputs.base }}
@@ -137,7 +166,16 @@ jobs:
           VERCEL_BYPASS: ${{ secrets.EODI_VERCEL_BYPASS }}
           CAPTURAS: ${{ runner.temp }}/capturas
           PLAYWRIGHT_HTML_OPEN: never
-        run: npx playwright test --project=${{ matrix.proyecto }} --shard=${{ matrix.trozo }} --reporter=list,html
+        run: |
+          set -uo pipefail
+          for intento in 1 2; do
+            codigo=0
+            timeout -k 30s 25m npx playwright test --project=${{ matrix.proyecto }} \
+              --shard=${{ matrix.trozo }} --reporter=list,html || codigo=$?
+            [ "$codigo" -eq 124 ] || [ "$codigo" -eq 137 ] || break
+            echo "::warning::los recorridos pasaron de 25 minutos (intento $intento)"
+          done
+          exit "$codigo"
       - name: Informe de Playwright
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
