@@ -236,7 +236,7 @@ def patron(frase: str) -> str | None:
     return None
 
 
-# Hora local escrita en la frase: «20:00», «20h15», «20.15 Uhr», «kl. 20.15», «um 21 Uhr».
+# Hora local escrita en la frase: «20:00», «20h15», «4 h 30», «20.15 Uhr», «kl. 20.15», «um 21 Uhr».
 _CONTEXTO_HORA = (
     r"(?<!\w)(?:kl\.?|klokken|klockan|um|godz\.?|ora|orei|ore|à|a las|at|around|ok\.|ca\.)"
 )
@@ -246,7 +246,8 @@ _HORA = re.compile(
     rf"|{_CONTEXTO_HORA}\s+(?:\w+\s+)?([01]?\d|2[0-3])\.([0-5]\d){_FIN}"
     rf"|(?<![\d.,:])([01]?\d|2[0-3])\.([0-5]\d)\s*(?:uhr|h\b)"
     rf"|{_CONTEXTO_HORA}\s+(?:about\s+|around\s+|approximately\s+|gegen\s+|circa\s+)?"
-    rf"([01]?\d|2[0-3]){_FIN}(?:\s*(?:uhr|h\b|hrs|o'clock))?",
+    # Sin minutos detrás: «à 4 h 30» son las 4:30 (las lee la primera forma), no las 4.
+    rf"([01]?\d|2[0-3]){_FIN}(?!\s?[:h]\s?[0-5]\d)(?:\s*(?:uhr|h\b|hrs|o'clock))?",
     re.IGNORECASE,
 )
 # Frases que dan la hora de otra cosa (la reapertura, el final).

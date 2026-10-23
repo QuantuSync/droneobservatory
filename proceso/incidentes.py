@@ -348,12 +348,15 @@ def alcanzado_en_el_mar(documento: Documento) -> bool:
 
 def objetivo_es_la_localidad(objetivo: Documento | None, lugar: Documento) -> bool:
     """Un objetivo «otra» que se llama como la localidad del suceso no es una instalación: es el
-    lugar. No se guarda como objetivo (EODI-2026-00648, «Józefów · Otro lugar»)."""
+    lugar. No se guarda como objetivo (EODI-2026-00648, «Józefów · Otro lugar»). Con el lugar a
+    nivel de instalación, el sitio del suceso es la propia instalación y no cuenta: la cárcel de
+    Mas d'Enric de EODI-2025-00404 salía en la auditoría A y el control la quitaba cada hora."""
     nombre = normalizar(str((objetivo or {}).get("nombre") or ""))
+    campos = ("localidad",) if lugar.get("nivel") == "instalacion" else ("localidad", "suceso")
     return (
         (objetivo or {}).get("categoria") == "otra"
         and bool(nombre)
-        and nombre in {normalizar(str(lugar[c])) for c in ("localidad", "suceso") if lugar.get(c)}
+        and nombre in {normalizar(str(lugar[c])) for c in campos if lugar.get(c)}
     )
 
 

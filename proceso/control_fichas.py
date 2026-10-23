@@ -421,6 +421,10 @@ def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
         dato = None
     if dato is not None:
         valor, fuente, frase = dato
+        if actual != valor and "drones" in conservar:
+            # Conservar impide quitar y también sustituir: el número revisado a mano (1-2 en
+            # EODI-2026-00134) no lo cambia la verificación que lee «eine Drohne» cada hora.
+            return
         c.respaldos["drones.numero"] = (fuente, frase)
         if actual != valor:
             afirmaciones = [*_sin_afirmaciones(d, "drones"), _afirmacion("drones", valor, fuente)]
@@ -456,7 +460,11 @@ def _cierre(
     if minutos is not None and cierre.get("valor") == "si":
         valor, fuente, frase = minutos
         c.respaldos["consecuencias.cierre.minutos"] = (fuente, frase)
-        if cierre.get("minutos") != valor and FRASE_DE_CIERRE.search(frase):
+        if (
+            cierre.get("minutos") != valor
+            and FRASE_DE_CIERRE.search(frase)
+            and ("duracion_min" not in conservar or "minutos" not in cierre)
+        ):
             cierre["minutos"] = valor
             c.cambios.append(f"duración del cierre {_rango_texto(valor)} min: «{frase}»")
     elif isinstance(cierre.get("minutos"), dict) and "duracion_min" not in conservar:
