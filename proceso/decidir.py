@@ -130,6 +130,26 @@ def revisiones(incidente: Documento) -> dict[str, Documento]:
     return _revisiones(incidente)
 
 
+@cache
+def _inicios_revisados() -> frozenset[str]:
+    """Los incidentes con el inicio revisado a mano («titulares.inicio» o «datos», «inicio»), sea
+    cual sea la fuente de su cita (una noticia, una revisada-…)."""
+    from proceso import presencia
+
+    datos = json.loads(presencia.REVISADOS.read_text(encoding="utf-8"))
+    ids = {
+        str(t["incidente"]) for t in datos.get("titulares", []) if isinstance(t.get("inicio"), dict)
+    }
+    ids |= {str(r["incidente"]) for r in datos.get("datos", []) if r.get("campo") == "inicio"}
+    return frozenset(ids)
+
+
+def inicio_revisado(incidente: Documento) -> bool:
+    """El inicio de la ficha está revisado a mano: ninguna regla lo pisa (lo reconoce por el
+    identificador de la ficha, no por la fuente: el de EODI-2025-00154 cita una noticia)."""
+    return str(incidente.get("id")) in _inicios_revisados()
+
+
 def presencias_revisadas() -> dict[str, str]:
     """{incidente: presencia} revisada a mano con su cita: manda también en la validación."""
     return _revisadas()
@@ -432,6 +452,14 @@ def aplicar(
     titulo = decidir_titulo(resultado)
     if titulo != resultado.get("titulo"):
         resultado = {**resultado, "titulo": titulo}
+    # La zona, con todo lo demás decidido: un guardado que rehacía la ficha sin ella la quitaba y
+    # la clasificación horaria la volvía a poner en la misma recogida (EODI-2026-00019, 23/10).
+    if "fusionado_en" not in resultado and "retirado" not in resultado:
+        from proceso import zona
+
+        grupo = zona.clasificar(resultado)
+        if grupo != resultado.get("zona"):
+            resultado = {**resultado, "zona": grupo}
     return resultado
 
 

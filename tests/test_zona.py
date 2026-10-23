@@ -72,14 +72,14 @@ def test_sin_punto_ni_lugar() -> None:
     assert zona.clasificar(incidente("BE", "incursion", nivel="pais"))["grupo"] == "interior"
 
 
-def test_se_guarda_con_su_motivo_y_solo_si_cambia() -> None:
+def test_la_decide_el_guardado_y_la_pasada_no_cambia_nada() -> None:
     almacen = Almacen.abrir()
     documento = copy.deepcopy(base_prueba.completo())
+    documento.pop("zona", None)
     almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
-    primera = zona.clasificar_todos(almacen, AHORA, VOCABULARIO_MODELOS)
-    assert primera["cambiados"] == 1
+    # El guardado ya la decide (proceso/decidir.aplicar): la pasada horaria no cambia nada.
     guardado = almacen.incidentes()[0]
-    assert guardado["zona"]["grupo"] in zona.GRUPOS
+    assert guardado["zona"] == zona.clasificar(guardado)
     assert zona.clasificar_todos(almacen, AHORA, VOCABULARIO_MODELOS)["cambiados"] == 0
 
 

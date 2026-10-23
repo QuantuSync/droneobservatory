@@ -338,7 +338,11 @@ def aplicar(incidente: Documento, lista: list[Aportacion]) -> Documento:
             a.fuente for a in sorted(lista, key=lambda a: a.fuente["id"])
             if a.valores.get("detalle_oficial.inicio") == oficial
         )  # fmt: skip
-        resultado["tiempo"] = inicio_oficial(resultado["tiempo"], oficial, fuente_inicio)
+        from proceso import decidir
+
+        resultado["tiempo"] = inicio_oficial(
+            resultado["tiempo"], oficial, fuente_inicio, decidir.inicio_revisado(resultado)
+        )
         for fuente in resultado["fuentes"]:
             if fuente["id"] == fuente_inicio["id"]:
                 fuente["campos_respaldados"] = sorted(
@@ -405,16 +409,21 @@ def punto_oficial(lugar: Documento, combinados: dict[str, Any]) -> Documento:
     return resultado
 
 
-def inicio_oficial(tiempo: Documento, oficial: Documento, fuente: Documento) -> Documento:
+def inicio_oficial(
+    tiempo: Documento, oficial: Documento, fuente: Documento, revisado: bool = False
+) -> Documento:
     """El inicio del incidente con la fecha de la fuente oficial, que manda sobre la de la
     prensa: su día está escrito en el documento (o es el instante de un encuentro). Si la
     autoridad solo da el día y la prensa da la hora de ese mismo día, se queda la hora de la
     prensa con el día confirmado por la autoridad."""
     resultado = copy.deepcopy(tiempo)
-    if str((tiempo.get("origen_inicio") or {}).get("fuente_id") or "").startswith("revisada-"):
-        # El inicio revisado a mano con su cita manda (incidentes_revisados.json): la hora de una
-        # nota de balance de la policía lo pisaba cada hora y la revisión lo devolvía
-        # (EODI-2025-00238 Aalborg y EODI-2025-00154 Copenhague, 22-23 de octubre de 2026).
+    if revisado or str((tiempo.get("origen_inicio") or {}).get("fuente_id") or "").startswith(
+        "revisada-"
+    ):
+        # El inicio revisado a mano con su cita manda (incidentes_revisados.json), sea cual sea
+        # la fuente de la cita: la hora de una nota de balance de la policía lo pisaba cada hora y
+        # la revisión lo devolvía (EODI-2025-00238 Aalborg y EODI-2025-00154 Copenhague, cuya
+        # cita es una noticia, 22-23 de octubre de 2026).
         return resultado
     actual = tiempo["inicio"]
     mismo_dia = actual["valor"][:10] == oficial["valor"][:10]
