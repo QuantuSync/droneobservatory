@@ -110,6 +110,9 @@ def incursion() -> Documento:
         tiempo={"inicio": ejemplos.instante("2025-10-05T23:00Z", "hora")},
         lugar={"punto": {"lat": 45.17, "lon": 28.8}, "radio_km": 10, "pais": "RO"},
     )  # fmt: skip
+    # Sin atribución el titular no dice que el dron es ruso (proceso/decidir.decidir_titulo):
+    # lo dice la fuente, y con eso la revisión de cruces lo enlaza.
+    documento["fuentes"][0]["frase_origen"] = "o dronă rusească a intrat în spațiul aerian"
     # El lugar que da la autoridad, con los demás lugares que nombra (recogida/revisados.py).
     documento["lugar"].update(
         geocodificacion="oficial", fuente_punto=documento["fuentes"][0]["id"], localidad="Isaccea",
