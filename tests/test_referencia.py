@@ -19,7 +19,7 @@ ESTADOS = {"notificado", "confirmado", "atribuido", "desmentido"}
 TIPOS = {"incursion", "interrupcion_aeroportuaria", "sobrevuelo"}
 PAISES = {"ES", "NL", "DK", "DE", "PL", "RO", "BG", "LT", "LV", "BE", "NO"}
 OBLIGATORIAS = {
-    "EODI-2025-00066", "EODI-2025-00228", "EODI-2025-00238", "EODI-2025-00157",
+    "EODI-2025-00066", "EODI-2025-00228", "EODI-2025-00238", "EODI-2025-00127",
     "EODI-2025-00203", "EODI-2025-00357", "EODI-2026-00648", "EODI-2026-00131",
     "EODI-2026-00322", "EODI-2026-00488", "EODI-2026-00152", "EODI-2026-00512",
     "EODI-2026-00515", "EODI-2025-00154",
@@ -109,17 +109,17 @@ def test_la_lista_de_discrepancias_solo_encoge() -> None:
 def test_la_auditoria_avisa_si_una_ficha_de_la_referencia_cambia() -> None:
     copias = _copias()
     assert referencia.fallos(copias.values()) == []
-    # Una regla que dejara de confirmar Sofía (EODI-2025-00157, la confirma la autoridad que lo
+    # Una regla que dejara de confirmar Sofía (EODI-2025-00127, la confirma la autoridad que lo
     # atribuye a un dron) sale en la comprobación R: sin autoridad que lo diga ni pruebas, la
     # presencia que decide el guardado ya no es la correcta.
-    cambiada = copy.deepcopy(copias["EODI-2025-00157"])
+    cambiada = copy.deepcopy(copias["EODI-2025-00127"])
     cambiada["afirmaciones"] = []
     cambiada["fuentes"] = [{**f, "es_autoridad": False} for f in cambiada["fuentes"]]
     cambiada.pop("pruebas", None)
-    otras = [d for i, d in copias.items() if i != "EODI-2025-00157"]
-    assert referencia.fallos([*otras, cambiada]) == ["EODI-2025-00157 presencia_dron"]
-    fundida = {**copias["EODI-2025-00157"], "fusionado_en": "EODI-2025-00444"}
-    assert referencia.fallos([*otras, fundida]) == ["EODI-2025-00157 ausente"]
-    assert auditoria_fichas.auditar([cambiada])["R"] == ["EODI-2025-00157 presencia_dron"]
+    otras = [d for i, d in copias.items() if i != "EODI-2025-00127"]
+    assert referencia.fallos([*otras, cambiada]) == ["EODI-2025-00127 presencia_dron"]
+    fundida = {**copias["EODI-2025-00127"], "fusionado_en": "EODI-2025-00444"}
+    assert referencia.fallos([*otras, fundida]) == ["EODI-2025-00127 ausente"]
+    assert auditoria_fichas.auditar([cambiada])["R"] == ["EODI-2025-00127 presencia_dron"]
     # Las fichas que no vienen no cuentan (las pruebas de la auditoría con fichas inventadas).
     assert referencia.fallos([]) == []
