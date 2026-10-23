@@ -411,6 +411,11 @@ def inicio_oficial(tiempo: Documento, oficial: Documento, fuente: Documento) -> 
     autoridad solo da el día y la prensa da la hora de ese mismo día, se queda la hora de la
     prensa con el día confirmado por la autoridad."""
     resultado = copy.deepcopy(tiempo)
+    if str((tiempo.get("origen_inicio") or {}).get("fuente_id") or "").startswith("revisada-"):
+        # El inicio revisado a mano con su cita manda (incidentes_revisados.json): la hora de una
+        # nota de balance de la policía lo pisaba cada hora y la revisión lo devolvía
+        # (EODI-2025-00238 Aalborg y EODI-2025-00154 Copenhague, 22-23 de octubre de 2026).
+        return resultado
     actual = tiempo["inicio"]
     mismo_dia = actual["valor"][:10] == oficial["valor"][:10]
     if oficial["precision"] == "dia" and mismo_dia and actual["precision"] in {"minuto", "hora"}:
