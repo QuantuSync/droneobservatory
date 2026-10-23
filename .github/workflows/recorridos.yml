@@ -97,8 +97,8 @@ jobs:
     needs: destino
     if: needs.destino.outputs.base != ''
     runs-on: ubuntu-latest
-    # Dos intentos de instalación (12 min) y dos de recorridos (25 min) como mucho, y el resto.
-    timeout-minutes: 80
+    # Dos intentos de instalación (20 min) y dos de recorridos (25 min) como mucho, y el resto.
+    timeout-minutes: 100
     strategy:
       fail-fast: false
       matrix:
@@ -139,7 +139,11 @@ jobs:
           key: paquetes-playwright-${{ runner.os }}-${{ matrix.navegadores }}-${{ hashFiles('web/package-lock.json') }}
           restore-keys: paquetes-playwright-${{ runner.os }}-${{ matrix.navegadores }}-
       # Cada intento con su tiempo máximo; si se agota (código 124), un segundo intento y nada más.
-      # Un fallo de verdad no se repite.
+      # Un fallo de verdad no se repite. La caché no sirve en los deployment_status (producción):
+      # Actions la salta porque el evento no va ligado a una rama. Al agotarse el tiempo, timeout
+      # para npx pero no el apt-get que lanzó con sudo, que sigue con el cerrojo de dpkg: el 23 de
+      # octubre de 2026 el segundo intento salió al momento con código 100 («Could not get lock»).
+      # Antes de repetir se para ese apt-get y se deja dpkg en orden; lo ya descargado se reutiliza.
       - name: Navegadores y paquetes de Playwright
         run: |
           set -uo pipefail
@@ -151,9 +155,13 @@ jobs:
           fi
           for intento in 1 2; do
             codigo=0
-            timeout -k 30s 12m npx playwright install --with-deps ${{ matrix.navegadores }} || codigo=$?
+            timeout -k 30s 20m npx playwright install --with-deps ${{ matrix.navegadores }} || codigo=$?
             [ "$codigo" -eq 124 ] || [ "$codigo" -eq 137 ] || break
-            echo "::warning::la instalación de Playwright pasó de 12 minutos (intento $intento)"
+            echo "::warning::la instalación de Playwright pasó de 20 minutos (intento $intento)"
+            sudo pkill -TERM -x apt-get || true
+            for _ in $(seq 1 12); do pgrep -x apt-get > /dev/null || break; sleep 5; done
+            sudo pkill -KILL -x apt-get || true
+            sudo dpkg --configure -a || true
           done
           if compgen -G "/var/cache/apt/archives/*.deb" > /dev/null; then
             cp /var/cache/apt/archives/*.deb ~/paquetes-playwright/
