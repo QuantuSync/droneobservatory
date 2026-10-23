@@ -114,6 +114,8 @@ def test_en_la_base_se_guarda_en_los_dos_sentidos() -> None:
         tiempo={"inicio": ejemplos.instante("2025-09-12T23:00Z", "hora")},
         lugar={"punto": {"lat": 45.17, "lon": 28.8}, "radio_km": 10, "pais": "RO"},
     )  # fmt: skip
+    # Sin atribución el titular guardado no dice «ruso»: lo dice la fuente.
+    incidente["fuentes"][0]["frase_origen"] = "o dronă rusească a intrat în spațiul aerian"
     almacen.guardar_incidente(incidente, AHORA, MODELOS)
     resumen = cruces.enlazar(almacen, AHORA, MODELOS)
     assert resumen["incidentes_cambiados"] == resumen["ataques_cambiados"] == 1
