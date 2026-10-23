@@ -438,6 +438,8 @@ def incidente_completo() -> Documento:
             "tiene_confirmacion_oficial_directa": True,
             "fecha_del_suceso_verificada": True,
         },
+        # La que decide el guardado (proceso/decidir.aplicar): enlazado con el ataque de su noche.
+        "zona": {"grupo": "frontera", "motivo": "ataque"},
     }
 
 
