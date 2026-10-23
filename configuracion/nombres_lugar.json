@@ -1013,6 +1013,30 @@
   },
   "localidades": [
     {
+      "pais": "SE",
+      "es": "Öresund",
+      "en": "Øresund",
+      "formas": [
+        "Öresund",
+        "Øresund",
+        "Oresund",
+        "Öresundet",
+        "Øresundet"
+      ]
+    },
+    {
+      "pais": "DK",
+      "es": "Öresund",
+      "en": "Øresund",
+      "formas": [
+        "Öresund",
+        "Øresund",
+        "Oresund",
+        "Öresundet",
+        "Øresundet"
+      ]
+    },
+    {
       "pais": "DE",
       "es": "Múnich",
       "en": "Munich",
