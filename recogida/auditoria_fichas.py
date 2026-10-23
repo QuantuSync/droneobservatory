@@ -8,6 +8,7 @@ import argparse
 import json
 import sqlite3
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -32,7 +33,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     args = opciones.parse_args(argumentos)
     with TemporaryDirectory() as temporal:
         almacen = Almacen.abrir(copia(args.base, Path(temporal) / "eodi.sqlite"))
-        resultado = auditoria_fichas.auditar(almacen.incidentes())
+        desde = datetime.now(UTC) - timedelta(hours=auditoria_fichas.HORAS_OSCILA)
+        resultado = auditoria_fichas.auditar(
+            almacen.incidentes(), almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))
     else:

@@ -61,7 +61,6 @@ from modelo import control as peticiones
 from modelo import coste, ficha, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import (
-    atribucion,
     autoridades,
     buques,
     escalado,
@@ -70,7 +69,6 @@ from proceso import (
     no_es_suceso,
     presencia,
     rectificaciones,
-    titulares,
 )
 from proceso import control_fichas as reglas
 from proceso.noticias import Nomenclator
@@ -1126,9 +1124,8 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
             _a_rectificaciones(ctx.almacen, incidente, *correccion.rectificar)
         if not correccion.cambios:
             continue
+        # El titular lo decide proceso/decidir.py al guardar.
         nuevo = incidentes.aplicar_reglas(correccion.incidente)
-        nuevo = titulares.ajustar_incidente(nuevo)
-        nuevo["titulo"] = atribucion.titulo_segun_atribucion(nuevo)
         if decision.get("modelo"):
             nuevo = anotar_modelos(nuevo, correccion.cambios, str(decision["modelo"]))
         _guardar(ctx, incidente, nuevo, "; ".join(correccion.cambios))
@@ -2413,7 +2410,10 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
     from proceso import auditoria_fichas
 
     try:
-        resultado = auditoria_fichas.auditar(almacen.incidentes())
+        desde = ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)
+        resultado = auditoria_fichas.auditar(
+            almacen.incidentes(), almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])
         return anterior

@@ -601,6 +601,18 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2026-00668",
+      "enlace": "https://inewsgr.com/441/synechizoun-oi-tourkikes-voltes-sto-aigaio-machitika-kataskopeftiko-kai-drones-ston-elliniko-enaerio-choro.htm",
+      "medio": "inewsgr.com",
+      "fecha": "2026-10-22",
+      "idioma": "el",
+      "frase": "Σύμφωνα με τα επίσημα στοιχεία, στον σχηματισμό συμμετείχαν δύο μαχητικά F-16, ένα αεροσκάφος ATR-72 και πέντε μη επανδρωμένα UAV",
+      "comprobada": {
+        "fecha": "2026-10-23",
+        "en": "https://inewsgr.com/441/synechizoun-oi-tourkikes-voltes-sto-aigaio-machitika-kataskopeftiko-kai-drones-ston-elliniko-enaerio-choro.htm (artículo del 22 de octubre de 2026 a las 20:04, con los datos del Estado Mayor ΓΕΕΘΑ)"
+      }
+    },
+    {
       "incidente": "EODI-2025-00228",
       "enlace": "https://politi.dk/nordjyllands-politi/nyhedsliste/250925-pm1/2025/09/25",
       "medio": "politi.dk",
@@ -9134,12 +9146,34 @@
       "incidente": "EODI-2025-00378",
       "campo": "titulo",
       "valor": {
-        "es": "Drones rusos cerca de la frontera en Tulcea: dos F-16 despegan de la base de Borcea",
-        "en": "Russian drones near the border in Tulcea: two F-16s take off from Borcea air base"
+        "es": "Posibles drones cerca de la frontera en Tulcea: dos F-16 despegan de la base de Borcea",
+        "en": "Possible drones near the border in Tulcea: two F-16s take off from Borcea air base"
       },
       "cita": "Nou atac cu drone, l\u00e2ng\u0103 frontiera cu Rom\u00e2nia. Dou\u0103 aeronave F-16 au decolat din Baza Aerian\u0103 de la Borcea",
       "enlace": "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html",
       "motivo": "de Borcea solo despegaron los F-16; los drones estaban junto al norte de Tulcea"
+    },
+    {
+      "incidente": "EODI-2026-00650",
+      "campo": "titulo",
+      "valor": {
+        "es": "Alerta RO-Alert en Tulcea por posibles drones detectados en el espacio aéreo ucraniano",
+        "en": "RO-Alert issued in Tulcea over possible drones detected in Ukrainian airspace"
+      },
+      "cita": "its radar surveillance system detected a group of aerial targets north-east of the town of Vylkove, in the Ukrainian airspace.",
+      "enlace": "https://stiripesurse.ro/mapn-group-of-drones-detected-north-east-of-vylkove-no-incursions-into-national-airspace_3930061",
+      "motivo": "el MApN sitúa los drones en el espacio aéreo ucraniano; la regla de atribución quitó «ucraniano»/«Ukrainian», que es del espacio aéreo y no del dron, y el titular sugería espacio aéreo rumano"
+    },
+    {
+      "incidente": "EODI-2026-00668",
+      "campo": "titulo",
+      "valor": {
+        "es": "Cinco drones y tres aviones entran sin autorización en el FIR de Atenas sobre el mar Egeo",
+        "en": "Five drones and three aircraft enter the Athens FIR over the Aegean Sea without authorization"
+      },
+      "cita": "Σύμφωνα με τα επίσημα στοιχεία, στον σχηματισμό συμμετείχαν δύο μαχητικά F-16, ένα αεροσκάφος ATR-72 και πέντε μη επανδρωμένα UAV",
+      "enlace": "https://inewsgr.com/441/synechizoun-oi-tourkikes-voltes-sto-aigaio-machitika-kataskopeftiko-kai-drones-ston-elliniko-enaerio-choro.htm",
+      "motivo": "la cita guardada habla de ocho aeronaves sin nombrar drones; el mismo artículo cuenta, según los datos oficiales del Estado Mayor (ΓΕΕΘΑ), dos F-16, un ATR-72 y cinco UAV; sin atribución, el titular no dice de qué país son"
     },
     {
       "incidente": "EODI-2025-00395",

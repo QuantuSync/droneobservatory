@@ -25,13 +25,12 @@ from typing import Any
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from proceso import (
-    atribucion,
+    decidir,
     declaraciones,
     extraccion,
     incidentes,
     presencia,
     rectificaciones,
-    titulares,
 )
 from proceso.credibilidad import Credibilidad
 from proceso.estados import (
@@ -389,8 +388,6 @@ def _fuente_de_la_presencia(incidente: Documento, presencia: Documento) -> str |
 def con_titular(incidente: Documento, revision: Documento, instante: Documento) -> Documento:
     """El titular revisado y, si la revisión lo dice, la presencia y el estado con su cita."""
     resultado = copy.deepcopy(incidente)
-    if "titulo" in revision:
-        resultado["titulo"] = dict(revision["titulo"])
     fuentes = {f["frase_origen"]: f["id"] for f in resultado["fuentes"]}
     presencia = revision.get("presencia")
     if presencia and resultado.get("presencia_dron") != presencia["valor"]:
@@ -502,10 +499,8 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
         # lo da una nota oficial (ubicaciones).
         nuevo = {k: v for k, v in resultado["lugar"].items() if k != "nuts2"}
         resultado["lugar"] = {**nuevo, **lugar}
-    # Las mismas reglas de titular que el resto, para que la revisión horaria no lo cambie:
-    # coherente con la presencia y sin nacionalidad ni autor si no está atribuido.
-    resultado = titulares.ajustar_incidente(resultado)
-    resultado["titulo"] = atribucion.titulo_segun_atribucion(resultado)
+    # El titular revisado lo decide proceso/decidir.py, con la presencia y la atribución.
+    resultado["titulo"] = decidir.decidir_titulo(resultado)
     return resultado
 
 

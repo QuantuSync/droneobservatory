@@ -36,9 +36,16 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   fuentes y ninguna escribe la que le toca en la zona del suceso (EODI-2025-00007: «gegen 19.30
   Uhr» en Bremen en noviembre son las 18:30 UTC, y la ficha daba las 19:30 UTC;
   proceso/fechas.hora_en_utc).
+- **K, dato que oscila**: el mismo dato de una ficha vuelve, en las últimas 48 horas, a un valor
+  que ya había dejado (A → B → A, o dos reglas que lo cambian desde el mismo valor y se queda el
+  viejo) 3 veces o más: dos reglas que se pisan en cada recogida (EODI-2025-00378, el titular,
+  22-23 de octubre de 2026). Lo lee de la tabla de motivos y de los cambios guardados
+  (`Almacen.cambios_desde`); un arreglo deshecho una sola vez no cuenta.
 """
 
+import json
 import re
+from collections import Counter
 from collections.abc import Callable, Iterable
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
@@ -64,7 +71,7 @@ from proceso.presencia import (
 )
 from proceso.ubicacion import CATEGORIA_LUGAR
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "R")
+COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "R")
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -76,6 +83,7 @@ NOMBRES = {
     "H": "instalación homónima",
     "I": "alias genérico",
     "J": "hora local como UTC",
+    "K": "dato que oscila",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -337,8 +345,47 @@ _REGLAS: dict[str, Callable[[Documento], bool]] = {
 }  # fmt: skip
 
 
-def auditar(documentos: Iterable[Documento]) -> dict[str, list[str]]:
-    """Por comprobación, los identificadores de las fichas vigentes que la incumplen."""
+HORAS_OSCILA = 48
+MIN_VUELTAS = 3
+# Lo que no es un dato de la ficha: lo del control, el motivo del cambio y lo que se calcula de
+# los datos para publicarlos.
+_NO_SON_DATOS = frozenset({"control", "motivo", "nombres", "procedencia", "id"})
+
+
+def oscilan(cambios: Iterable[Documento]) -> dict[str, list[str]]:
+    """{incidente: [datos]} que vuelven a un valor que ya habían dejado `MIN_VUELTAS` veces o más
+    (los cambios, por orden, de `Almacen.cambios_desde`)."""
+    dejados: dict[tuple[str, str], set[str]] = {}
+    vueltas: Counter[tuple[str, str]] = Counter()
+    for cambio in cambios:
+        anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
+        claves = (
+            set(nuevo)
+            if cambio.get("tabla") == "incidentes_motivos"
+            else set(anterior) | set(nuevo)
+        )
+        for dato in claves - _NO_SON_DATOS:
+            antes = json.dumps(anterior.get(dato), sort_keys=True, ensure_ascii=False)
+            despues = json.dumps(nuevo.get(dato), sort_keys=True, ensure_ascii=False)
+            if antes == despues:
+                continue
+            clave = (str(cambio["entidad_id"]), dato)
+            vistos = dejados.setdefault(clave, set())
+            if antes in vistos or despues in vistos:
+                vueltas[clave] += 1
+            vistos.add(antes)
+    resultado: dict[str, list[str]] = {}
+    for (id_, dato), veces in sorted(vueltas.items()):
+        if veces >= MIN_VUELTAS:
+            resultado.setdefault(id_, []).append(dato)
+    return resultado
+
+
+def auditar(
+    documentos: Iterable[Documento], cambios: Iterable[Documento] = ()
+) -> dict[str, list[str]]:
+    """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
+    son los de las últimas 48 horas (`Almacen.cambios_desde`), para K."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
     for documento in vistos:
@@ -353,6 +400,9 @@ def auditar(documentos: Iterable[Documento]) -> dict[str, list[str]]:
                 fallo = False
             if fallo:
                 resultado[clave].append(str(documento["id"]))
+    vigentes = {str(d["id"]) for d in vistos if incidentes.activo(d)}
+    resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
+                      if i in vigentes]  # fmt: skip
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor
     # comprobado contra sus fuentes en algo que no es una discrepancia conocida.
     from proceso import referencia
