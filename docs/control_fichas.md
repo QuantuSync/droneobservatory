@@ -450,6 +450,17 @@ siguen escribiendo en memoria, pero lo que queda al guardar es lo que deciden es
 - **drones** (`decidir_drones`): la revisión a mano; «desconocido» si la autoridad concluye que no
   era un dron (presencia descartada). «Al menos N» espera al esquema que admita un rango sin
   máximo (el 1.20.0 exige el máximo).
+- **titular** (`decidir_titulo`, desde el 23 de octubre de 2026), en español y en inglés, al
+  final, con todo lo demás ya decidido: el texto revisado a mano («datos» y, si no, «titulares»)
+  o el de la ficha; el dron como confirmado o posible según la presencia
+  (`proceso/titulares.py`); y, sin atribución de una autoridad, sin el país del dron ni su autor
+  (`atribucion.titulo_sin_atribucion`). Solo se quita la nacionalidad pegada al dron («drones
+  rusos», «drones y aviones turcos», «Russian Shahed drones»), en los dos idiomas; se quedan la
+  del espacio aéreo («espacio aéreo ucraniano»), el lugar, una persona o un buque. Un titular no
+  afirma drones que ninguna cita nombra: si la cita guardada no los nombra, una revisión de
+  «datos» rehace el titular con la cita que sí lo hace (EODI-2026-00668) o la ficha se retira.
+  Ningún otro paso escribe el titular; antes lo hacían el control, la revisión a mano, la barrera
+  y las declaraciones oficiales, y se pisaban cada hora (EODI-2025-00378).
 - **tipo** (`incidentes.con_tipo`): interrupción si se interrumpió un aeropuerto; incursión solo
   si la autoridad lo atribuye, o cuenta el espacio aéreo violado, la frontera cruzada, el rastreo,
   el derribo, la caída o los restos con el suceso confirmado, o hay pruebas físicas con el suceso
@@ -457,7 +468,12 @@ siguen escribiendo en memoria, pero lo que queda al guardar es lo que deciden es
 - **revisiones a mano** (`configuracion/incidentes_revisados.json`, «datos»): una por ficha y dato
   (`objetivo`, `lugar`, `inicio`, `drones`, `cierre`, `titulo`), con el valor, la cita (25
   palabras como mucho) y el enlace de la fuente que lo dice, y el motivo. Valen para la ficha que
-  tiene esa fuente o, si la fuente leída no está en la ficha, la de su país (`pais`).
+  tiene esa fuente o, si la fuente leída no está en la ficha, la de su país (`pais`). La
+  revisión `cierre` dice si hubo cierre; su duración citada se queda. Ninguna otra regla cambia
+  un dato revisado a mano: la fecha de una nota oficial no pisa el inicio revisado, el control
+  no corrige el número de drones ni el inicio revisados ni quita la instalación revisada, y la
+  ubicación oficial toma la localidad de la revisión. Si dos reglas se pisan, la comprobación K
+  de la auditoría lo cuenta (un dato que vuelve 3 veces o más en 48 horas).
 
 ### Criterios de cada dato (desde el 21 de octubre de 2026)
 
