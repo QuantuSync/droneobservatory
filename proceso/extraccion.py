@@ -1152,9 +1152,10 @@ def _alta(
         )
     anterior = almacen.incidente(id_)
     if anterior is not None:
-        # Se conservan el alta y, salvo al rehacer, la fusión y el episodio.
+        # Se conservan el alta y, salvo al rehacer, la fusión, el episodio y el ataque de su noche
+        # (proceso/cruces.py lo revisa en la misma recogida; sin él, se iba y volvía).
         incidente["control"]["alta"] = anterior["control"]["alta"]
-        for campo in () if rehacer else ("fusionado_en", "episodio"):
+        for campo in () if rehacer else ("fusionado_en", "episodio", "ataque"):
             if campo in anterior:
                 incidente[campo] = anterior[campo]
     incidente = declaraciones.aplicar(
