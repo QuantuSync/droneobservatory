@@ -24,7 +24,7 @@ Un incidente en el que se unió un registro confirmado recupera esa confirmació
 oficial pasó con la unión (`uniones`): las uniones de antes del 14 de octubre de 2026 se llevaban
 la fuente y no el estado.
 
-Además, todos los titulares quedan de acuerdo con el estado (atribucion.titulo_segun_atribucion):
+Además, todos los titulares quedan de acuerdo con el estado (proceso/decidir.decidir_titulo):
 el de un incidente que no está atribuido no dice la nacionalidad del dron ni señala a un autor.
 """
 
@@ -39,7 +39,7 @@ from typing import Any
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import atribucion, declaraciones, incidentes
+from proceso import atribucion, decidir, declaraciones, incidentes
 from proceso.credibilidad import Credibilidad
 from proceso.presencia import TABLA_MOTIVOS
 
@@ -253,7 +253,7 @@ def titulares(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> tup
     for incidente in almacen.incidentes():
         if not incidentes.activo(incidente):
             continue
-        titulo = atribucion.titulo_segun_atribucion(incidente)
+        titulo = decidir.decidir_titulo(incidente)
         if titulo == incidente["titulo"]:
             continue
         documento = {

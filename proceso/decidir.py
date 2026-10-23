@@ -1,6 +1,6 @@
 """Un solo sitio decide los datos de un incidente: el estado, la presencia del dron, el tipo, la
-instalación afectada (objetivo), el lugar, el día de inicio, el número de drones y, con ellos, la
-cabecera de la ficha.
+instalación afectada (objetivo), el lugar, el día de inicio, el número de drones, el titular (en
+español y en inglés) y, con ellos, la cabecera de la ficha.
 
 Los demás pasos de la recogida (el extractor, las declaraciones oficiales, la competencia entre
 autoridades, las rectificaciones, el control de las fichas, las fusiones y las revisiones a mano de
@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from esquema import Documento
-from proceso import competencia, declaraciones, incidentes, rectificaciones, titulares
+from proceso import atribucion, competencia, declaraciones, incidentes, rectificaciones, titulares
 from proceso.estados import Estado
 from proceso.noticias import normalizar
 
@@ -347,17 +347,15 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
     elif campo == "cierre":
         resultado["consecuencias"] = {**resultado.get("consecuencias", {}),
                                       "cierre": {"valor": valor}}  # fmt: skip
-    elif campo == "titulo":
-        resultado["titulo"] = valor
 
 
 def decidir_datos(incidente: Documento) -> Documento:
-    """El incidente con el objetivo, el lugar, el inicio, el cierre y el titular que deciden sus
-    fuentes y sus revisiones a mano. Sin cambios si ya los tenía. Si cambia la instalación o el
-    lugar, los nombres publicados se vuelven a calcular."""
+    """El incidente con el objetivo, el lugar, el inicio y el cierre que deciden sus fuentes y sus
+    revisiones a mano (el titular, al final de `aplicar`). Sin cambios si ya los tenía. Si cambia
+    la instalación o el lugar, los nombres publicados se vuelven a calcular."""
     resultado = copy.deepcopy(incidente)
     revisiones = _revisiones(incidente)
-    for campo in ("lugar", "inicio", "cierre", "titulo"):
+    for campo in ("lugar", "inicio", "cierre"):
         if campo in revisiones:
             _con_revision(resultado, campo, revisiones[campo])
     if "lugar" not in revisiones:
@@ -399,7 +397,7 @@ def aplicar(
     incidente: Documento, negadas: frozenset[str] = frozenset(), confirmada: bool = False
 ) -> Documento:
     """El incidente con el estado, la presencia y los demás datos que deciden sus pruebas, y el
-    titular coherente con la presencia (proceso/titulares.py). Sin cambios si ya los tenía."""
+    titular que decide `decidir_titulo` con todo eso. Sin cambios si ya los tenía."""
     incidente = decidir_datos(incidente)
     resultado = _historial_vigente(incidente)
     estado = decidir_estado(resultado)
@@ -418,9 +416,7 @@ def aplicar(
             resultado.get("control", {}).pop("motivo_desmentido", None)
     presencia = decidir_presencia(resultado, negadas, confirmada)
     if presencia.valor != resultado.get("presencia_dron"):
-        resultado = titulares.ajustar_incidente(
-            {**copy.deepcopy(resultado), "presencia_dron": presencia.valor}
-        )
+        resultado = {**copy.deepcopy(resultado), "presencia_dron": presencia.valor}
     # Los drones y el tipo, con el estado y la presencia ya decididos (sin dron según la
     # autoridad, número desconocido; la atribución demuestra la entrada).
     resultado = _con_drones(resultado)
@@ -430,7 +426,48 @@ def aplicar(
         resultado.get("origen_demostrado_por"),
     ):
         resultado = tipo
+    titulo = decidir_titulo(resultado)
+    if titulo != resultado.get("titulo"):
+        resultado = {**resultado, "titulo": titulo}
     return resultado
+
+
+@cache
+def _titulos_revisados() -> dict[str, dict[str, str]]:
+    """{incidente: titular} revisado a mano en «titulares» de incidentes_revisados.json."""
+    from proceso import presencia
+
+    datos = json.loads(presencia.REVISADOS.read_text(encoding="utf-8"))
+    return {
+        str(t["incidente"]): dict(t["titulo"])
+        for t in datos.get("titulares", [])
+        if isinstance(t.get("titulo"), dict)
+    }
+
+
+def decidir_titulo(incidente: Documento) -> dict[str, str]:
+    """El titular en español y en inglés, decidido con lo que ya está decidido:
+
+    1. el texto: el revisado a mano con su cita (incidentes_revisados.json, «datos» y si no
+       «titulares»); si no, el de la ficha (el extractor, la barrera de titulares, el de país);
+    2. el dron como confirmado o posible según la presencia (proceso/titulares.py);
+    3. sin atribución de una autoridad, sin el país del dron ni su autor
+       (proceso/atribucion.titulo_sin_atribucion), lo mismo en los dos idiomas.
+
+    Cada paso deja igual un titular que ya lo cumple: guardar dos veces da el mismo titular, y
+    ningún otro paso de la recogida lo escribe (antes cuatro reglas se pisaban cada hora y quedaba
+    el valor viejo: EODI-2025-00378, 22-23 de octubre de 2026)."""
+    revision = _revisiones(incidente).get("titulo")
+    if revision is not None:
+        base = dict(revision["valor"])
+    elif (revisado := _titulos_revisados().get(str(incidente.get("id")))) is not None:
+        base = revisado
+    else:
+        base = dict(incidente.get("titulo") or {})
+    if not base:
+        return base
+    ajustado = titulares.ajustar_incidente({**incidente, "titulo": base})
+    return atribucion.titulo_segun_atribucion(ajustado)
 
 
 def motivo(

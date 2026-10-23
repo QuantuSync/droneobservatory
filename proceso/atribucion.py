@@ -308,26 +308,39 @@ def errores(incidente: Documento) -> list[str]:
 
 # --- Retirar una atribución que no se sostiene ------------------------------------------
 
-# Lo que un titular no puede decir de un incidente sin atribuir: la nacionalidad de los drones
-# (es de quien atribuye) y, si ninguna autoridad lo dice, que llevaban explosivos.
-_NACIONALIDAD = {
-    "es": re.compile(
-        r"\s+(?:rus[oa]s?|bielorrus[oa]s?|ucranian[oa]s?|iran[ií]es|iran[ií])(?=\W|$)",
-        re.IGNORECASE,
+# Lo que un titular no puede decir de un incidente sin atribuir: de qué país es el dron o quién lo
+# lanzó (lo dice quien atribuye) y, si ninguna autoridad lo dice, que llevaban explosivos. Las
+# nacionalidades que no son del autor se quedan: la del espacio aéreo («espacio aéreo ucraniano»,
+# «Ukrainian airspace»), la del lugar, la de una persona o la de un buque (EODI-2026-00650,
+# 23 de octubre de 2026). Solo se quita la que va pegada al dron, en los dos idiomas.
+_GENTILICIO = {
+    "es": (
+        r"(?:rus[oa]s?|bielorrus[oa]s?|ucranian[oa]s?|iran[ií](?:es)?|turc[oa]s?|"
+        r"marroqu[ií](?:es)?|chin[oa]s?|norcorean[oa]s?)"
     ),
-    "en": re.compile(r"(?<!\w)(?:Russian|Belarusian|Ukrainian|Iranian)\s+", re.IGNORECASE),
+    "en": r"(?:Russian|Belarusian|Ukrainian|Iranian|Turkish|Moroccan|Chinese|North Korean)",
 }
-# Otras nacionalidades, solo pegadas al dron («Dron turco», «Turkish drones»): sueltas son las de
-# un lugar («espacio aéreo griego»), que el titular puede decir.
+# Lo que puede ir entre el dron y su gentilicio: «drones militares rusos», «drones y aviones
+# turcos», «Turkish possible drones», «Russian Shahed drones».
+_ENTRE = {
+    "es": (
+        r"(?:\s+(?:militar(?:es)?|marinos?|kamikaze|Shahed|Gerbera|Geran(?:-2)?|de ataque|"
+        r"de combate|y aviones|y aeronaves|y cazas|y helic[oó]pteros|y misiles))*"
+    ),
+    "en": (
+        r"(?:(?:possible|suspected|military|naval|unidentified|kamikaze|attack|combat|Shahed|"
+        r"Geran(?:-2)?|Gerbera|Shahed-type)\s+)*"
+    ),
+}
 _NACIONALIDAD_DEL_DRON = {
     "es": re.compile(
-        r"(?<!\w)((?:drones|dron|drone)(?:\s+(?:militar(?:es)?|marinos?|kamikaze|Shahed|Gerbera))?)"
-        r"\s+(?:turc[oa]s?|marroqu[ií](?:es)?|chin[oa]s?|norcorean[oa]s?)(?=\W|$)",
+        rf"(?<!\w)((?:drones|dron|Shahed|Geran(?:-2)?|Gerbera){_ENTRE['es']})"
+        rf"\s+{_GENTILICIO['es']}(?!\w)",
         re.IGNORECASE,
     ),
     "en": re.compile(
-        r"(?<!\w)(?:Turkish|Moroccan|Chinese|North Korean)\s+"
-        r"(?=(?:(?:possible|suspected|military|naval|unidentified)\s+)?drones?(?!\w))",
+        rf"(?<!\w){_GENTILICIO['en']}\s+"
+        rf"(?={_ENTRE['en']}(?:drones?|Shaheds?|Gerans?|Gerberas?|aircraft and drones?)(?!\w))",
         re.IGNORECASE,
     ),
 }
@@ -376,10 +389,9 @@ def titulo_sin_atribucion(incidente: Documento) -> dict[str, str]:
         for f in incidente.get("fuentes", [])
     )
     titulo: dict[str, str] = dict(incidente["titulo"])
-    for idioma, patron in _NACIONALIDAD.items():
+    for idioma in (i for i in _NACIONALIDAD_DEL_DRON if i in titulo):
         texto = _AUTOR[idioma].sub(" " if idioma == "en" else "", titulo[idioma])
         texto = _NACIONALIDAD_DEL_DRON[idioma].sub(r"\1" if idioma == "es" else "", texto)
-        texto = patron.sub(" " if idioma == "en" else "", texto)
         if not autoridad_dice_explosivos:
             texto = _EXPLOSIVOS[idioma].sub(" " if idioma == "en" else "", texto)
         titulo[idioma] = _mayuscula(" ".join(texto.split()))

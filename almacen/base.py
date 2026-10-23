@@ -1624,6 +1624,26 @@ class Almacen:
                 (tabla, entidad_id, _json(anterior), _json({**nuevo, "motivo": motivo})),
             )
 
+    def cambios_desde(self, fecha: str) -> list[Documento]:
+        """Los cambios de los incidentes y de sus motivos desde `fecha` (ISO UTC), por orden: lo
+        que lee la comprobación K de la auditoría (proceso/auditoria_fichas.oscilan)."""
+        filas = self._conexion.execute(
+            "SELECT entidad_id, tabla, anterior, nuevo, fecha FROM historial "
+            "WHERE tabla IN ('incidentes', 'incidentes_motivos') AND operacion != 'alta' "
+            "AND fecha >= ? ORDER BY id",
+            (fecha,),
+        ).fetchall()
+        return [
+            {
+                "entidad_id": entidad_id,
+                "tabla": tabla,
+                "anterior": json.loads(anterior) if anterior is not None else {},
+                "nuevo": json.loads(nuevo) if nuevo is not None else {},
+                "fecha": fecha_,
+            }
+            for entidad_id, tabla, anterior, nuevo, fecha_ in filas
+        ]
+
     def historial(self, entidad_id: str) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT tabla, operacion, anterior, nuevo, fecha FROM historial "

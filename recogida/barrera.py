@@ -38,7 +38,7 @@ from typing import Any
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from exportacion import geojson
-from proceso import atribucion, cita_titular, incidentes, titulares
+from proceso import cita_titular, decidir, incidentes
 from proceso.presencia import TABLA_MOTIVOS
 
 registro = logging.getLogger(__name__)
@@ -191,8 +191,8 @@ def a_nivel_de_pais(incidente: Documento) -> Documento:
     if isinstance(objetivo, dict):
         resultado["objetivo"] = {k: v for k, v in objetivo.items() if k in ("categoria", "uso")}
     resultado["titulo"] = titulo_de_pais(resultado)
-    resultado = titulares.ajustar_incidente(resultado)
-    resultado["titulo"] = atribucion.titulo_segun_atribucion(resultado)
+    # Coherente con la presencia y la atribución: lo decide proceso/decidir.py.
+    resultado["titulo"] = decidir.decidir_titulo(resultado)
     return resultado
 
 

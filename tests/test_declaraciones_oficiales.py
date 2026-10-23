@@ -360,7 +360,9 @@ def test_un_atribuido_puede_decirlo() -> None:
     assert atribucion.titulo_segun_atribucion(documento) == titulo
 
 
-def test_la_revision_de_titulares_guarda_con_su_motivo() -> None:
+def test_el_titular_sin_atribucion_sale_al_guardar_y_la_revision_no_lo_toca() -> None:
+    # Un solo sitio decide el titular (proceso/decidir.py): sale bien al guardar y la revisión
+    # horaria de titulares no tiene nada que cambiar (antes lo cambiaba y otra regla lo devolvía).
     almacen, id_ = _almacen()
     documento = _incidente(almacen, id_)
     documento["titulo"] = {
@@ -368,12 +370,9 @@ def test_la_revision_de_titulares_guarda_con_su_motivo() -> None:
         "en": "Russian drones over Copenhagen airport",
     }
     almacen.guardar_incidente(documento, AHORA, MODELOS)
-    cambiados, fallidos = oficiales.titulares(almacen, DESPUES, MODELOS)
-    assert (cambiados, fallidos) == (1, [])
     assert _incidente(almacen, id_)["titulo"] == {
-        "es": "Drones sobre el aeropuerto de Copenhague",
-        "en": "Drones over Copenhagen airport",
+        "es": "Posibles drones sobre el aeropuerto de Copenhague",
+        "en": "Possible drones over Copenhagen airport",
     }
-    motivos = [c["nuevo"].get("motivo") for c in almacen.historial(id_) if c["nuevo"]]
-    assert oficiales.MOTIVO_TITULAR in motivos
+    assert oficiales.titulares(almacen, DESPUES, MODELOS) == (0, [])
     assert oficiales.titulares(almacen, DESPUES + timedelta(hours=1), MODELOS) == (0, [])
