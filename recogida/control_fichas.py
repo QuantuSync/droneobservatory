@@ -63,6 +63,7 @@ from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import (
     autoridades,
     buques,
+    decidir,
     escalado,
     incidentes,
     lugar_preciso,
@@ -1108,6 +1109,9 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
             # no la quita la verificación: el verificador puede no leer «entre las 07:00 y las
             # 08:10» como la hora del suceso (EODI-2025-00365).
             conservar |= {"inicio", "duracion_min"}
+        # Lo revisado a mano con su cita lo decide proceso/decidir.py: el control no lo corrige
+        # (EODI-2026-00134: «eine Drohne» frente a la revisión 1-2, cada hora).
+        conservar |= {"drones", "inicio"} & set(decidir.revisiones(incidente))
         fuentes_regla, titular_regla = presencia.respaldo_cierre_de_pista(incidente)
         enlaces = {f.get("enlace") or f["id"] for f in _publicas(incidente)}
         correccion = reglas.aplicar(
@@ -1213,7 +1217,10 @@ def reglas_deterministas(ctx: Contexto) -> None:
             if preciso is not None:
                 nuevo = preciso
                 motivos.append(f"lugar en {preciso['lugar']['suceso']}, la instalación de la ficha")
-        if incidentes.objetivo_es_la_localidad(nuevo.get("objetivo"), nuevo["lugar"]):
+        # Salvo la instalación revisada a mano (EODI-2025-00404, la cárcel de Mas d'Enric).
+        objetivo = nuevo.get("objetivo")
+        revisado = objetivo == revisados.objetivo_revisado(str(nuevo["id"]))
+        if incidentes.objetivo_es_la_localidad(objetivo, nuevo["lugar"]) and not revisado:
             nuevo = {k: v for k, v in nuevo.items() if k != "objetivo"}
             motivos.append(
                 "sin objetivo: «otra» con el nombre de la localidad no es una instalación"

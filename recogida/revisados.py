@@ -520,6 +520,21 @@ def punto_de_respuesta_defensiva(frase: str) -> bool:
     return defensiva and not any(t in texto for t in regla["dron"])
 
 
+@cache
+def _objetivos_revisados() -> dict[str, Documento]:
+    return {
+        str(r["incidente"]): dict(r["objetivo"])
+        for r in cargar().get("titulares", [])
+        if r.get("objetivo")
+    }
+
+
+def objetivo_revisado(incidente: str) -> Documento | None:
+    """La instalación revisada a mano en «titulares» (con su motivo), si la hay."""
+    objetivo = _objetivos_revisados().get(incidente)
+    return dict(objetivo) if objetivo else None
+
+
 def con_lugar(incidente: Documento, revision: Documento, instante: Documento) -> Documento | None:
     """El lugar que da la autoridad: punto, radio y los demás lugares que nombra, cada uno con la
     fuente que lo explica si la revisión la da. None si el punto no cae en su país, si su frase
@@ -556,7 +571,10 @@ def con_lugar(incidente: Documento, revision: Documento, instante: Documento) ->
     nuevo["punto"] = punto
     nuevo["radio_km"] = float(lugar["radio_km"])
     nuevo["nivel"] = lugar["nivel"]
-    nuevo["localidad"] = lugar["nombre"]
+    # La localidad la decide la revisión de datos si la hay (proceso/decidir.py): «Akrotiri», la
+    # península, y no «RAF Akrotiri», la base (EODI-2026-00268 iba y volvía cada hora).
+    datos = (decidir.revision_de(incidente, "lugar") or {}).get("valor") or {}
+    nuevo["localidad"] = datos.get("localidad") or lugar["nombre"]
     if lugar.get("region"):
         nuevo["region"] = lugar["region"]
     nuevo["geocodificacion"] = "oficial"

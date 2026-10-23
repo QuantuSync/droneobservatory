@@ -345,8 +345,11 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
             origen = {"tipo": "explicita", "motivo": str(revision["motivo"])[:200]}
             resultado["tiempo"] = {"inicio": inicio, "origen_inicio": origen}
     elif campo == "cierre":
-        resultado["consecuencias"] = {**resultado.get("consecuencias", {}),
-                                      "cierre": {"valor": valor}}  # fmt: skip
+        # Si hubo cierre; su duración con su cita (el control de las fichas) se queda: antes se
+        # perdía en cada guardado y el control la volvía a poner (EODI-2025-00001, 2026-00322).
+        anterior = (resultado.get("consecuencias") or {}).get("cierre") or {}
+        cierre = {**anterior, "valor": valor} if valor == "si" else {"valor": valor}
+        resultado["consecuencias"] = {**resultado.get("consecuencias", {}), "cierre": cierre}
 
 
 def decidir_datos(incidente: Documento) -> Documento:

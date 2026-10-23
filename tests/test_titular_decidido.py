@@ -165,3 +165,61 @@ def test_k_cuenta_el_dato_que_cambia_y_vuelve_cada_hora() -> None:
     }
     resultado = auditoria_fichas.auditar([], cambios)
     assert resultado["K"] == []  # ninguna vigente entre los documentos
+
+
+# --- Los otros datos que oscilaban cada hora (22-23 de octubre de 2026) ----------------------
+
+
+def test_la_fecha_oficial_no_pisa_el_inicio_revisado_a_mano() -> None:
+    # Aalborg (2025-00238): la nota de balance de Rigspolitiet ponía las 21:00 (hora) y la
+    # revisión devolvía las 21:40 (minuto) con la cita de ekstrabladet.dk, cada hora.
+    from proceso import detalle
+
+    tiempo = {
+        "inicio": {"valor": "2025-09-25T21:40Z", "precision": "minuto"},
+        "fin": {"valor": "2025-09-25T22:35Z", "precision": "minuto"},
+        "duracion_min": 55,
+        "origen_inicio": {"tipo": "explicita", "fuente_id": "revisada-59d1dccf850734f9"},
+    }
+    oficial = {"valor": "2025-09-25T21:00Z", "precision": "hora"}
+    fuente = {
+        "id": "detalle-169323e15cc02cc6",
+        "medio": "Rigspolitiet",
+        "enlace": "https://politi.dk",
+    }
+    assert detalle.inicio_oficial(tiempo, oficial, fuente) == tiempo
+
+
+def test_la_revision_del_cierre_conserva_su_duracion_citada() -> None:
+    # Hannover (2025-00001): la revisión «hubo cierre» borraba los 210 minutos que el control
+    # lee en la cita («für dreieinhalb Stunden») y el control los volvía a poner.
+    hannover = _ficha(
+        "EODI-2025-00001",
+        {"es": "Drones en Hannover", "en": "Drones in Hanover"},
+        "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/weihnachts-flieger-"
+        "ausgebremst-drohnen-am-flughafen-hannover,drohnen-238.html",
+        "DE",
+    )
+    hannover["consecuencias"] = {"cierre": {"valor": "si", "minutos": {"min": 210, "max": 210}}}
+    hannover["tiempo"] = {"inicio": {"valor": "2025-12-26T19:50Z", "precision": "minuto"}}
+    decidido = decidir.decidir_datos(hannover)
+    assert decidido["consecuencias"]["cierre"] == {
+        "valor": "si", "minutos": {"min": 210, "max": 210}
+    }  # fmt: skip
+
+
+def test_lo_revisado_a_mano_no_lo_quita_el_control() -> None:
+    # Tarragona (2025-00404): la revisión pone la cárcel de Mas d'Enric y el control la quitaba
+    # por llamarse como la localidad; Akrotiri (2026-00268): la ubicación oficial ponía la base
+    # como localidad y la revisión de datos, la península.
+    from recogida import revisados
+
+    assert revisados.objetivo_revisado("EODI-2025-00404") == {
+        "categoria": "otra", "nombre": "Centre Penitenciari Mas d'Enric"
+    }  # fmt: skip
+    akrotiri = _ficha(
+        "EODI-2026-00268", {"es": "Dron", "en": "Drone"},
+        "https://cyprus-mail.com/2026/03/02/govt-monitoring-situation-after-akrotiri-drone-strike",
+        "GB",
+    )  # fmt: skip
+    assert (decidir.revision_de(akrotiri, "lugar") or {})["valor"] == {"localidad": "Akrotiri"}
