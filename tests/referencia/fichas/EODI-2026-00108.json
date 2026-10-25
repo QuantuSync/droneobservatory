@@ -1,0 +1,885 @@
+{
+ "afirmaciones": [
+  {
+   "campo": "presencia_dron",
+   "fuente_id": "revisada-ca546f452b617f78-declaracion-1",
+   "valor": "confirmada"
+  }
+ ],
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-03-25T08:30Z"
+    },
+    "fuente_id": "gdelt-de96f36b458110c2"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-03-25T00:00Z"
+    },
+    "fuente_id": "revisada-ca546f452b617f78-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://la-croix.com/international/ukraine-russie-jour-1492-point-conflit-ukrainien-poutine-aujourdhui-20260325",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-25T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un drone ukrainien visant des cibles en Russie a heurt\u00e9 la chemin\u00e9e d\u2019une centrale \u00e9lectrique en Estonie mercredi 23 mars",
+   "id": "revisada-41b577c5bdb28f2d",
+   "idioma": "fr",
+   "medio": "la-croix.com"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "evidencia"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://watson.ch/international/waffen/360055631-drohne-aus-russischem-luftraum-trifft-kraftwerk-in-estland",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Inzwischen teilten die Regierung mit, dass es sich um ein fehlgeleitetes ukrainisches Flugobjekt handelte.",
+   "id": "gdelt-5f3e0c1159c17225",
+   "idioma": "de",
+   "medio": "watson.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://welt.de/politik/ausland/article69c394a8d9e61ae4ac08b1b8/baltikum-russische-drohne-trifft-laut-estnischem-geheimdienst-kraftwerk-in-estland.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Baltikum: Russische Drohne trifft laut estnischem Geheimdienst Kraftwerk in Estland",
+   "id": "gdelt-aabf66cbf7b58aa3",
+   "idioma": "de",
+   "medio": "welt.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://morgenpost.de/politik/article410508760/ukraine-news-krieg-russland-trump-putin-estland-drohne-kraftwerk.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T08:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-News: Russische Drohne trifft Kraftwerk in Estland",
+   "id": "gdelt-de96f36b458110c2",
+   "idioma": "de",
+   "medio": "morgenpost.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://t-online.de/nachrichten/ausland/internationale-politik/id_101185344/news-zum-ukraine-krieg-drohne-trifft-kraftwerk-in-estland.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "News zum Ukraine-Krieg: Drohne trifft Kraftwerk in Estland",
+   "id": "gdelt-8a97062c06a94cb2",
+   "idioma": "de",
+   "medio": "t-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://diepresse.com/20709667/russische-drohne-dringt-in-nato-luftraum-ein-und-trifft-kraftwerk-in",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russische Drohne dringt in Nato-Luftraum ein und trifft Kraftwerk in Estland \u2013 DiePresse.com",
+   "id": "gdelt-a875127c3a77c9cd",
+   "idioma": "de",
+   "medio": "diepresse.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://epochtimes.de/politik/ausland/drohne-trifft-kraftwerk-in-estland-russland-fing-ueber-nacht-fast-400-ukrainische-drohnen-ab-a5440557.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T08:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohne trifft Kraftwerk in Estland \u2013 Russland fing \u00fcber Nacht fast 400 ukrainische Drohnen ab",
+   "id": "gdelt-e20716a8e8728b25",
+   "idioma": "de",
+   "medio": "epochtimes.de"
+  },
+  {
+   "campos_respaldados": [
+    "entrada_exterior",
+    "es_incidente",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://orf.at/stories/3424896",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Die Drohne drang den Angaben zufolge aus dem russischen Luftraum in den estnischen Luftraum ein.",
+   "id": "gdelt-24eecb46e9361f8c",
+   "idioma": "de",
+   "medio": "orf.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/08-55-Geheimdienst-Russische-Drohne-trifft-Kraftwerk-in-Estland-article23143824.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg im Liveticker: +++ 08:55 Geheimdienst: Russische Drohne trifft Kraftwerk in Estland +++",
+   "id": "gdelt-504f121a3e25c395",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://finanznachrichten.de/nachrichten-2026-03/68031366-aus-russland-kommende-drohne-trifft-kraftwerk-in-estland-003.htm",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Aus Russland kommende Drohne trifft Kraftwerk in Estland",
+   "id": "gdelt-bc099d05dd94e241",
+   "idioma": "de",
+   "medio": "finanznachrichten.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/Estnischer-Geheimdienst-Russische-Drohne-trifft-Kraftwerk-id30508854.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Keine Verletzten: Estnischer Geheimdienst: Russische Drohne trifft Kraftwerk",
+   "id": "gdelt-ec6a22262f00a847",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://watson.ch/international/waffen/360055631-estland-drohne-aus-russischem-luftraum-trifft-kraftwerk-auvere",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Estland: Drohne aus russischem Luftraum trifft Kraftwerk Auvere",
+   "id": "gdelt-8910eff472187482",
+   "idioma": "de",
+   "medio": "watson.ch"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://la-croix.com/international/ukraine-russie-jour-1492-point-conflit-ukrainien-poutine-aujourdhui-20260325",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "ces drones militaires ukrainiens charg\u00e9s d'explosifs ont fini accidentellement leur course sur leur territoire",
+   "id": "gdelt-8abd622d101d5f3e",
+   "idioma": "fr",
+   "medio": "la-croix.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://web.de/magazine/politik/russland-krieg-ukraine/drohnen-stuerzen-lettland-estland-kraftwerk-getroffen-42047430",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T09:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen st\u00fcrzen in Lettland und Estland ab \u2013 Kraftwerk getroffen",
+   "id": "gdelt-5d01b3967f8e63cb",
+   "idioma": "de",
+   "medio": "web.de"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "objetivo_conocido",
+    "pais",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://dnoticias.pt/2026/3/25/486050-drone-atingiu-uma-central-eletrica-na-estonia-sem-causar-vitimas",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T10:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "o aparelho a\u00e9reo n\u00e3o tripulado (drone) entrou no espa\u00e7o a\u00e9reo da Est\u00f3nia vindo da R\u00fassia",
+   "id": "gdelt-eac766b7f3a833ff",
+   "idioma": "pt",
+   "medio": "dnoticias.pt"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://heute.at/s/russische-drohne-trifft-kraftwerk-in-estland-120173981",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Brisanter Geheimdienstbericht \u2013 Russische Drohne trifft Kraftwerk in NATO-Staat Estland",
+   "id": "gdelt-99b33a29c3b899b0",
+   "idioma": "de",
+   "medio": "heute.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kurier.at/politik/ausland/auvere-estland-kraftwerk-drohne-russland/403144139",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T10:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Estland: Russische Drohne trifft Kraftwerk",
+   "id": "gdelt-f7e7fea5eb92aa3e",
+   "idioma": "de",
+   "medio": "kurier.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20min.ch/story/ukraine-krieg-kraftwerk-getroffen-russische-drohnen-in-estland-und-lettland-453678534597",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kraftwerk getroffen: Russische Drohnen in Estland und Lettland",
+   "id": "gdelt-62568e72bfbb8c05",
+   "idioma": "de",
+   "medio": "20min.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://europapress.es/internacional/noticia-estonia-denuncia-incidente-dron-central-electrica-cerca-frontera-rusia-20260325112516.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Estonia denuncia un incidente con un dron en una central el\u00e9ctrica cerca de la frontera con Rusia",
+   "id": "gdelt-8e5ed774dd12a24e",
+   "idioma": "es",
+   "medio": "europapress.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ovb-online.de/weltspiegel/politik/ukraine-krieg-aktuell-offenbar-massiver-drohnenangriff-in-leningrad-zr-94230542.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T10:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg aktuell: Alarm in zwei NATO-L\u00e4ndern \u2013 Russische Drohne trifft Kraftwerk",
+   "id": "gdelt-d6ee02a98e353637",
+   "idioma": "de",
+   "medio": "ovb-online.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://vilaweb.cat/noticies/estonia-denuncia-un-incident-amb-un-dron-en-una-central-electrica-prop-de-la-frontera-amb-russia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Est\u00f2nia denuncia un incident amb un dron en una central el\u00e8ctrica prop de la frontera amb R\u00fassia",
+   "id": "gdelt-1e21fc086b5e847c",
+   "idioma": "ca",
+   "medio": "vilaweb.cat"
+  },
+  {
+   "campos_respaldados": [
+    "inicio",
+    "inicio_precision",
+    "lugar_suceso",
+    "objetivo_categoria",
+    "objetivo_nombre"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://infobae.com/espana/2026/03/25/estonia-investiga-el-impacto-de-un-dron-ruso-en-una-central-electrica-y-convoca-una-reunion-de-emergencia-pero-adelanta-que-no-era-el-objetivo-y-que-no-se-han-producido-danos",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Durante la noche del 25 de marzo a las 3.43 de la madrugada, un dron impact\u00f3 contra la chimenea",
+   "id": "gdelt-dc4e6bc6fcbcbacc",
+   "idioma": "es",
+   "medio": "infobae.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://br.de/nachrichten/deutschland-welt/drohnen-ueber-dem-baltikum-kraftwerk-in-estland-getroffen,VErbXZX",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen \u00fcber dem Baltikum \u2013 Kraftwerk in Estland getroffen",
+   "id": "gdelt-1dbf024e8f1d569d",
+   "idioma": "de",
+   "medio": "br.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://es.euronews.com/2026/03/25/un-dron-ruso-ataca-la-chimenea-de-una-central-electrica-en-estonia",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron ruso ataca la chimenea de una central el\u00e9ctrica en Estonia",
+   "id": "gdelt-9303147562e5a71e",
+   "idioma": "es",
+   "medio": "euronews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://tagesspiegel.de/internationales/drohnen-aus-russland-dringen-in-nato-luftraum-ein-kraftwerk-in-estland-getroffen--weiterer-vorfall-in-lettland-15397438.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen aus Russland dringen in Nato-Luftraum ein: Kraftwerk in Estland getroffen \u2013 weiterer Vorfall in Lettland",
+   "id": "gdelt-d6bc823c1350ace8",
+   "idioma": "de",
+   "medio": "tagesspiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://rtl.de/news/russland-drohne-trifft-nato-land-estland-kraftwerk-getroffen-id30509078.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Russland: Drohne trifft NATO-Land Estland \u2013 Kraftwerk getroffen",
+   "id": "gdelt-ca07e5214540d643",
+   "idioma": "de",
+   "medio": "rtl.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://sueddeutsche.de/politik/ukraine-krieg-newsblog-estland-drohne-li.3457739",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine News: Drohne trifft estnisches Kraftwerk",
+   "id": "gdelt-fa578b3b1356f09f",
+   "idioma": "de",
+   "medio": "sueddeutsche.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://abendblatt.de/politik/article411552606/drohnen-stuerzen-in-estland-und-lettland-ab-kraftwerk-schornstein-getroffen.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T11:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Estland: Kraftwerk von Drohne getroffen \u2013 Tr\u00fcmmer werden untersucht",
+   "id": "gdelt-8d9947670b1038dc",
+   "idioma": "de",
+   "medio": "abendblatt.de"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lalibre.be/international/europe/guerre-ukraine-russie/2026/03/25/guerre-en-ukraine-un-drone-venu-de-russie-heurte-la-cheminee-dune-centrale-electrique-en-estonie-LW3VNNHPF5G4XBJJR4ND6M2YAE",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Le drone est entr\u00e9 dans l'espace a\u00e9rien estonien en provenance de l'espace a\u00e9rien russe.",
+   "id": "gdelt-36dce3185af171da",
+   "idioma": "fr",
+   "medio": "lalibre.be"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wort.lu/international/ukrainische-drohnen-stuerzen-in-estland-und-lettland-ab-kraftwerk-getroffen/8183959.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukrainische Drohnen st\u00fcrzen in Estland und Lettland ab: Kraftwerk getroffen",
+   "id": "gdelt-39366f1ac32d7914",
+   "idioma": "de",
+   "medio": "wort.lu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://salzburg24.at/news/welt/provokation-gegen-nato-staat-russische-drohnen-treffen-kraftwerk-in-estland-art-320769",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T12:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Provokation gegen NATO-Staat: Russische Drohnen treffen Kraftwerk in Estland",
+   "id": "gdelt-805fad33e2a84efe",
+   "idioma": "de",
+   "medio": "salzburg24.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://elmundo.es/internacional/2026/03/25/69c3b0c4fc6c837b278b45b4.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T12:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron procedente del espacio a\u00e9reo ruso choca contra la chimenea de una central el\u00e9ctrica de Estonia",
+   "id": "gdelt-f299beed486a30f8",
+   "idioma": "es",
+   "medio": "elmundo.es"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://deutschlandfunk.de/zwei-aus-russland-kommende-drohnen-in-estland-und-lettland-abgestuerzt-100.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T12:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg - Zwei aus Russland kommende Drohnen in Estland und Lettland abgest\u00fcrzt",
+   "id": "gdelt-05d8df074941b568",
+   "idioma": "de",
+   "medio": "deutschlandfunk.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://lrt.lt/en/news-in-english/19/2878250/lithuania-blames-russia-s-war-in-ukraine-for-baltic-drone-crashes",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T13:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Lithuania blames Russia's war in Ukraine for Baltic drone crashes",
+   "id": "gdelt-86ef0e615e779d07",
+   "idioma": "en",
+   "medio": "lrt.lt"
+  },
+  {
+   "campos_respaldados": [
+    "dron_estatal",
+    "drones",
+    "entrada_exterior",
+    "es_incidente",
+    "evidencia",
+    "inicio",
+    "inicio_precision",
+    "objetivo_categoria",
+    "objetivo_conocido",
+    "objetivo_nombre",
+    "pais",
+    "presencia_dron",
+    "tipo"
+   ],
+   "credibilidad": 3,
+   "enlace": "https://lanouvelletribune.info/2026/03/guerre-en-ukraine-le-territoire-de-lotan-frappe-par-un-drone-venant-de-russie",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un drone entr\u00e9 depuis l'espace a\u00e9rien russe a percut\u00e9 mercredi matin la chemin\u00e9e de la centrale \u00e9lectrique d'Auvere.",
+   "id": "gdelt-770e228fd94d9cff",
+   "idioma": "fr",
+   "medio": "lanouvelletribune.info"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://wort.lu/international/ukrainische-drohnen-stuerzen-auf-estland-und-lettland-kraftwerk-getroffen/8183959.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T13:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukrainische Drohnen st\u00fcrzen auf Estland und Lettland: Kraftwerk getroffen",
+   "id": "gdelt-d5c8957fa9752ba7",
+   "idioma": "de",
+   "medio": "wort.lu"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://kurier.at/politik/ausland/auvere-estland-kraftwerk-drohne-russland-lettland-ukraine/403144139",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T13:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Abgest\u00fcrzte Drohnen in Estland und Lettland stammten aus Ukraine",
+   "id": "gdelt-77a55a8204f29eec",
+   "idioma": "de",
+   "medio": "kurier.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://n-tv.de/politik/Baltenlaender-Abgestuerzte-Drohnen-stammen-aus-Ukraine-id30510929.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kraftwerk in Estland getroffen: Baltenl\u00e4nder: Abgest\u00fcrzte Drohnen stammen aus Ukraine",
+   "id": "gdelt-6373719c70c49588",
+   "idioma": "de",
+   "medio": "n-tv.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mopo.de/news/panorama/drohnen-im-nato-luftraum-kraftwerk-getroffen",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Drohnen im NATO-Luftraum: Kraftwerk getroffen",
+   "id": "gdelt-aa89586aed5f6485",
+   "idioma": "de",
+   "medio": "mopo.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://heute.at/s/paukenschlag-estland-drohne-von-ukraine-abgefeuert-120174174",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T14:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kraftwerk besch\u00e4digt \u2013 Paukenschlag! Estland-Drohne von Ukraine abgefeuert",
+   "id": "gdelt-dd34d0ec8d013181",
+   "idioma": "de",
+   "medio": "heute.at"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://20min.ch/story/ukraine-krieg-kraftwerk-getroffen-drohnen-in-estland-und-lettland-abgestuerzt-453678534597",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T15:30Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Kraftwerk getroffen: Drohnen in Estland und Lettland abgest\u00fcrzt",
+   "id": "gdelt-ec35bc5212aadfad",
+   "idioma": "de",
+   "medio": "20min.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://spiegel.de/ausland/ukraine-krieg-drohnen-in-estland-und-lettland-abgestuerzt-kraftwerk-getroffen-a-3ee11042-03e5-41af-bc06-78363ac6ab13",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T15:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukraine-Krieg: Drohnen in Estland und Lettland abgest\u00fcrzt \u2013 Kraftwerk getroffen",
+   "id": "gdelt-aec221beb8f83eb4",
+   "idioma": "de",
+   "medio": "spiegel.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://bernerzeitung.ch/ticker-ukraine-russland-krieg-5-514789244253",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Newsticker zur Ukraine: Drohne schl\u00e4gt in Kraftwerk in Estland ein",
+   "id": "gdelt-74e45346a9565c7b",
+   "idioma": "de",
+   "medio": "bernerzeitung.ch"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://ruhrnachrichten.de/ueberregionales/ukraine-russland-krieg-newsblog-updates-usa-selenskyj-putin-trump-merz-2-w1172259-2002014911",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T16:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Ukrainische Drohne traf Kraftwerk in Estland: News-Blog",
+   "id": "gdelt-7ed6f6eb62ff8f43",
+   "idioma": "de",
+   "medio": "ruhrnachrichten.de"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://mundiario.com/articulo/internacional/dron-cae-estonia-letonia-detecta-incursiones-guerra-ucrania/20260325153416380049.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Un dron cae en Estonia y Letonia detecta incursiones por la guerra en Ucrania",
+   "id": "gdelt-3dcdcab5c284e188",
+   "idioma": "es",
+   "medio": "mundiario.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T16:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Estonia and Latvia say Russian drones hit their NATO territory amid huge attack on Ukraine",
+   "id": "gdelt-ae54deffbb224158",
+   "idioma": "en",
+   "medio": "cbsnews.com"
+  },
+  {
+   "credibilidad": 3,
+   "enlace": "https://braunschweiger-zeitung.de/politik/article411553809/russische-drohne-trifft-kraftwerk-in-estland-auch-anderes-land-meldet-vorfall.html",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-03-25T16:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Estland: Drohne aus Russland trifft Kraftwerk \u2013 aber Ermittlungen \u00fcberraschen",
+   "id": "gdelt-4d645122e7ea26c2",
+   "idioma": "de",
+   "medio": "braunschweiger-zeitung.de"
+  },
+  {
+   "campos_respaldados": [],
+   "credibilidad": 3,
+   "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident",
+   "es_autoridad": false,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-10-23T00:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+   "id": "revisada-aa94075dea833d82",
+   "idioma": "en",
+   "medio": "news.err.ee"
+  },
+  {
+   "campos_respaldados": [
+    "estado",
+    "presencia_dron"
+   ],
+   "credibilidad": 1,
+   "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
+   "es_autoridad": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-25T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+   "id": "revisada-ca546f452b617f78-declaracion-1",
+   "idioma": "en",
+   "medio": "Estonia's Internal Security Service (declaraci\u00f3n oficial citada en cbsnews.com)"
+  }
+ ],
+ "id": "EODI-2026-00108",
+ "lugar": {
+  "geocodificacion": "localidad_pequena",
+  "nivel": "localidad",
+  "pais": "EE",
+  "punto": {
+   "lat": 59.34583,
+   "lon": 27.9375
+  },
+  "radio_km": 3.0,
+  "suceso": "Auvere"
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Auvere",
+   "es": "Auvere"
+  },
+  "lugar": {
+   "en": "Auvere, Estonia",
+   "es": "Auvere, Estonia"
+  },
+  "objetivo": {
+   "en": "Auvere Power Plant",
+   "es": "Central el\u00e9ctrica de Auvere"
+  }
+ },
+ "objetivo": {
+  "categoria": "energia",
+  "nombre": "Auvere elektrijaam"
+ },
+ "presencia_dron": "confirmada",
+ "pruebas": {
+  "dron_estatal": true,
+  "entrada_exterior": true,
+  "evidencia": [
+   "caida",
+   "explosion"
+  ]
+ },
+ "relacionados": [
+  {
+   "id": "EODI-2026-00090",
+   "nota": {
+    "en": "Mixes the Ukrainian drone that crashed in Lithuania (23 Mar 2026) with the drone attack on the Leningrad region and the drones that fell in Estonia and Latvia on 25 Mar",
+    "es": "Junta el dron ucraniano estrellado en Lituania (23 mar 2026) con el ataque de drones sobre Leningrado y los drones ca\u00eddos en Estonia y Letonia el 25 mar"
+   },
+   "separado_de": "EODI-2026-00090"
+  },
+  {
+   "id": "EODI-2026-00519",
+   "nota": {
+    "en": "Mixes the Ukrainian drone that crashed in Lithuania (23 Mar 2026) with the drone attack on the Leningrad region and the drones that fell in Estonia and Latvia on 25 Mar",
+    "es": "Junta el dron ucraniano estrellado en Lituania (23 mar 2026) con el ataque de drones sobre Leningrado y los drones ca\u00eddos en Estonia y Letonia el 25 mar"
+   },
+   "separado_de": "EODI-2026-00090"
+  }
+ ],
+ "tiempo": {
+  "inicio": {
+   "precision": "hora",
+   "valor": "2026-03-25T06:00Z"
+  },
+  "origen_inicio": {
+   "fuente_id": "gdelt-770e228fd94d9cff",
+   "motivo": "\u00abmercredi\u00bb en una nota publicada el 2026-03-25 15:15 (hora local del medio)",
+   "tipo": "relativa"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drone hits the chimney of the Auvere power plant in Estonia",
+  "es": "Un dron alcanza la chimenea de la central el\u00e9ctrica de Auvere (Estonia)"
+ }
+}

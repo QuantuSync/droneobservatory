@@ -638,12 +638,12 @@ export const es: Textos = {
     industrial: "planta industrial",
   },
   medida: {
-    cierre_espacio_aereo: "cierre del espacio aéreo",
-    patrulla: "patrulla",
-    cazas: "despegue de cazas",
-    derribo: "derribo",
-    inhibicion: "inhibición",
-    ninguna_conocida: "ninguna conocida",
+    cierre_espacio_aereo: "Cierre del espacio aéreo",
+    patrulla: "Patrulla",
+    cazas: "Despegue de cazas",
+    derribo: "Derribo",
+    inhibicion: "Inhibición",
+    ninguna_conocida: "Ninguna conocida",
   },
   sentido: {
     RU_UA: "De Rusia contra Ucrania",

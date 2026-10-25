@@ -10,7 +10,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { detalleIncidente } from "../src/datos/derivar.ts";
 import { validarColeccion } from "../src/datos/validar.ts";
-import { autoridadEscrita, medioEnFrase, medioEscrito } from "../src/i18n/autoridades.ts";
+import { anadirAutoridades, autoridadEscrita, medioEnFrase, medioEscrito } from "../src/i18n/autoridades.ts";
 import { textos } from "../src/i18n/index.ts";
 import { incidente } from "./ejemplos.ts";
 
@@ -77,6 +77,21 @@ describe("autoridades en el idioma de la página", () => {
     expect(es.region.fuenteCifras(medioEnFrase("Ministerul Apărării", "es", es.ficha.declaracionCitada))).toBe(
       "Cifras del Ministerio de Defensa Nacional de Rumanía",
     );
+  });
+
+  it("la traducción que empieza por el artículo en mayúscula va en minúscula dentro de la frase", () => {
+    // EODI-2026-00682 decía «Declaración de La presidenta de Moldavia, Maia Sandu».
+    anadirAutoridades({ "Maia Sandu": { es: "La presidenta de Moldavia, Maia Sandu", en: "The President of Moldova, Maia Sandu" } });
+    const es = textos("es");
+    const en = textos("en");
+    expect(medioEscrito("Maia Sandu (declaración oficial citada en protv.md)", "es", es.ficha.declaracionCitada)).toBe(
+      "Declaración de la presidenta de Moldavia, Maia Sandu, citada en protv.md",
+    );
+    expect(medioEscrito("Maia Sandu (declaración oficial citada en protv.md)", "en", en.ficha.declaracionCitada)).toBe(
+      "Statement by the President of Moldova, Maia Sandu, quoted in protv.md",
+    );
+    // Sola, como nombre de la fuente, con su mayúscula.
+    expect(medioEscrito("Maia Sandu", "es", es.ficha.declaracionCitada)).toBe("La presidenta de Moldavia, Maia Sandu");
   });
 
   for (const idioma of ["es", "en"] as const) {

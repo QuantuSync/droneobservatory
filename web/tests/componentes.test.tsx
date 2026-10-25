@@ -83,7 +83,7 @@ describe("ficha de un incidente", () => {
     expect(screen.getByText("02/10/2025 · 22:18 UTC")).toBeTruthy();
     expect(screen.getByText("2–10")).toBeTruthy();
     expect(screen.getByText(`(${es.ficha.rangoDeFuentes})`)).toBeTruthy();
-    expect(screen.getByText("cierre del espacio aéreo")).toBeTruthy();
+    expect(screen.getByText("Cierre del espacio aéreo")).toBeTruthy();
     expect(screen.getByText("EDDM", { exact: false })).toBeTruthy();
   });
 

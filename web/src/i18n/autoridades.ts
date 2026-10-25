@@ -48,7 +48,19 @@ export function autoridadEscrita(original: string, idioma: Idioma): string {
   if (conocida !== undefined) {
     return conocida.original === true ? `${conocida[idioma]} (${original})` : conocida[idioma];
   }
-  return TRADUCIDAS.get(nombre)?.[idioma] ?? SIN_NOMBRE[idioma];
+  const traducida = TRADUCIDAS.get(nombre)?.[idioma];
+  return traducida === undefined ? SIN_NOMBRE[idioma] : sinArticuloMayusculo(traducida);
+}
+
+/**
+ * La traducción que traen los datos puede empezar por el artículo en mayúscula, como al principio
+ * de una frase («La presidenta de Moldavia, Maia Sandu»): el nombre va siempre dentro de otra
+ * («Declaración de la presidenta…», «según the…»), así que el artículo va en minúscula; donde va
+ * solo, medioEscrito le pone la mayúscula. Desde el 25 de octubre de 2026 (EODI-2026-00682 decía
+ * «Declaración de La presidenta de Moldavia»).
+ */
+function sinArticuloMayusculo(nombre: string): string {
+  return nombre.replace(/^(La|El|Los|Las|The)(?= )/u, (articulo) => articulo.toLowerCase());
 }
 
 const DECLARACION = /^(.+) \(declaración oficial citada en (.+)\)$/;

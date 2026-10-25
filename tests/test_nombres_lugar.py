@@ -57,6 +57,25 @@ def test_pafos_en_espanol_y_paphos_en_ingles() -> None:
     assert titulo["en"] == "Drones over Cyprus force evacuation of Paphos airport"
 
 
+def test_el_objetivo_en_otro_idioma_antes_que_la_ciudad() -> None:
+    # EODI-2025-00136 publicaba «Suspendidos los vuelos en Brussels Airport…» en español: la forma
+    # general «Brussels» → «Bruselas» se aplicaba antes y el nombre del objetivo ya no casaba.
+    doc = incidente(
+        "BE",
+        localidad="Zaventem",
+        punto={"lat": 50.90093, "lon": 4.4858},
+        objetivo={"categoria": "aeropuerto", "nombre": "Brussels Airport", "oaci": "EBBR"},
+        titulo={
+            "es": "Suspendidos los vuelos en Brussels Airport por un posible dron",
+            "en": "Flights suspended at Brussels Airport over possible drone sighting",
+        },
+    )
+    titulo = nombres_lugar.titulo_corregido(doc)
+    assert titulo["es"] == "Suspendidos los vuelos en el aeropuerto de Bruselas por un posible dron"
+    assert titulo["en"] == "Flights suspended at Brussels Airport over possible drone sighting"
+    assert nombres_lugar.problemas_texto(titulo["es"], "es") == []
+
+
 def test_larnaca_sin_localidad_lleva_la_ciudad_de_su_aeropuerto() -> None:
     doc = incidente(
         "CY",
