@@ -278,3 +278,68 @@ def leer(respuesta: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(datos, dict):
         raise RespuestaInvalida("la salida no es un objeto")
     return datos
+
+
+# --- Noticias retrospectivas ---------------------------------------------------------------
+
+# Una noticia que parece contar un suceso anterior (proceso/fechas.retrospectiva, o una ficha
+# más antigua de la misma instalación): ¿de qué fecha es el suceso y es el de alguna ficha ya
+# existente del mismo sitio, sin ventana de días? Va siempre al experto.
+VERSION_RETROSPECTIVA = "retrospectiva/1"
+ESFUERZO_RETROSPECTIVA = "high"
+MAX_SALIDA_RETROSPECTIVA = 500
+PRECISIONES_RETROSPECTIVA = ("dia", "mes", "")
+
+ESQUEMA_RETROSPECTIVA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "retrospectiva",
+        "misma_que",
+        "fecha",
+        "precision",
+        "fuente",
+        "frase",
+        "motivo_es",
+        "motivo_en",
+    ],
+    "properties": {
+        "retrospectiva": {"type": "boolean"},
+        "misma_que": {"type": "string"},
+        "fecha": {"type": "string"},
+        "precision": {"enum": list(PRECISIONES_RETROSPECTIVA)},
+        "fuente": _FUENTE,
+        "frase": _FRASE,
+        "motivo_es": {"type": "string"},
+        "motivo_en": {"type": "string"},
+    },
+}
+
+INSTRUCCIONES_RETROSPECTIVA = """Eres el control de calidad del European Observatory of Drone \
+Incidents. Recibes una ficha nueva de un incidente con drones cuya fecha es solo la de \
+publicación de sus noticias, sus fuentes (medio, fecha de publicación, idioma, titular y \
+frase) y las fichas ya publicadas del mismo sitio (identificador, fecha y titular). Algunas \
+noticias cuentan un suceso anterior: una investigación que se cierra, un juicio, una cifra del \
+año, el recuerdo de un ataque de hace semanas («im August», «last month», «el pasado…»).
+
+- retrospectiva: true si las fuentes cuentan un suceso anterior a su publicación (de otro día, \
+no el de la noticia ni la víspera); false si cuentan algo de ese día o de la noche anterior.
+- misma_que: si es retrospectiva y el suceso que cuenta es el de una de las fichas publicadas \
+(el mismo hecho físico: el mismo dron o los mismos drones, en el mismo sitio y el mismo día), \
+su identificador exacto; si no, vacío. Ante la duda, vacío.
+- fecha: el día del suceso, AAAA-MM-DD, si una frase lo escribe; o el mes, AAAA-MM, si solo \
+escribe el mes; vacío si no lo escribe o no es retrospectiva. La fecha de publicación no es la \
+del suceso. precision: «dia», «mes» o vacío, según la fecha.
+- fuente y frase: el número de la fuente y la frase literal, copiada tal cual de su texto, que \
+respalda la fecha o la retrospectiva (0 y vacío si no hay ninguna).
+- motivo_es y motivo_en: una frase corta, en español y en inglés, con lo que se decidió."""
+
+
+def cuerpo_retrospectiva(ficha: dict[str, Any], fuentes: list[FuenteControl],
+                         candidatas: list[dict[str, Any]]) -> dict[str, Any]:  # fmt: skip
+    partes = ["Ficha nueva:", resumen_ficha(ficha), "Fuentes:"]
+    partes += [f.bloque(i) for i, f in enumerate(fuentes[:MAX_FUENTES], 1)]
+    partes += ["", "Fichas publicadas del mismo sitio:"]
+    partes += [resumen_ficha(c) for c in candidatas] or ["(ninguna)"]
+    return _cuerpo(INSTRUCCIONES_RETROSPECTIVA, ESQUEMA_RETROSPECTIVA, "\n".join(partes),
+                   MAX_SALIDA_RETROSPECTIVA, ESFUERZO_RETROSPECTIVA)  # fmt: skip

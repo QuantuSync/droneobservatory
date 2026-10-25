@@ -393,11 +393,42 @@ corrigen con una revisión del inicio con su cita (`titulares.inicio` en
 - **Noticias retrospectivas.** La comprobación N avisa de una ficha cuyo inicio es la fecha de
   publicación y cuyas fuentes nombran otro mes: la noticia cuenta un suceso anterior y, con la
   fecha de publicación, no casa con la ficha del suceso. Se revisan a mano (unir con la ficha del
-  suceso o corregir el inicio con su cita); la regla que lo evita al hacer la ficha está pendiente.
+  suceso o corregir el inicio con su cita). Desde el cierre del 25 de octubre, la regla está en el
+  control (abajo) y N es su comprobación fija.
 - **Frontera.** El 25 de octubre, en los 90 días anteriores, había 2 parejas de fichas de frontera
   del mismo día y país sin unir a 15-30 km: una era el mismo suceso (Moldavia, EODI-2026-00676 y
   00682, unidas a mano) y la otra no (Lunga por la mañana y Brănești por la noche del 30 de
   septiembre). El radio no se amplía.
+
+### Noticias retrospectivas (desde el 25 de octubre de 2026, por la tarde)
+
+Una noticia que cuenta un suceso anterior (una investigación que se cierra, el recuerdo de un
+ataque de hace semanas) entraba como suceso nuevo con la fecha de su publicación: cuando la ficha
+no da el inicio, se toma la publicación, y los pares del control solo se buscan a 30 o 48 horas,
+así que nunca casaba con la ficha del suceso. Así entraron EODI-2026-00663 («u augustu», avaz.ba,
+22 de octubre) y 00499 (freiepresse.de, 8 de octubre) sobre el intento de atentado de Leipzig del
+4 de agosto, y 00666 sobre el hallazgo de Wunstorf del 15 de septiembre.
+
+- **Cuándo pregunta** (`proceso/control_fichas.pide_fecha`): la ficha nueva tomó la fecha de
+  publicación y una fuente nombra otro mes que el del inicio o un pasado lejano («last month»,
+  «letzten Monat», «el mes pasado», en los idiomas de las fuentes: `configuracion/fechas.json`,
+  `pasados.anterior`; `proceso/fechas.retrospectiva`), o su instalación tiene una ficha anterior
+  del mismo sitio con la fecha comprobada en los 400 días anteriores
+  (`proceso/control_fichas.previas_del_sitio`). «mai» en rumano es «más», no mayo.
+- **Qué pregunta** (`modelo/control.cuerpo_retrospectiva`, siempre al experto): si cuenta un
+  suceso anterior, si es el de una de las fichas anteriores del mismo sitio (sin ventana de días)
+  y su fecha, con la frase literal que la respalda.
+- **Qué hace** (`recogida/control_fichas.retrospectivas`): si es el mismo suceso, une las fichas
+  (queda la de número menor); si da la fecha y su frase está en la fuente, la ficha la toma con
+  precisión «dia» o, si solo da el mes, el día 1 con precisión «aproximada» (el esquema no tiene
+  precisión de mes); si no es retrospectiva, el motivo del inicio queda marcado («noticia
+  retrospectiva revisada») y no se vuelve a preguntar. Lo decidido se guarda en el control
+  (`retrospectiva:<id>`) y se vuelve a poner si una extracción nueva devuelve la fecha de
+  publicación.
+- **Retención**: mientras no hay respuesta comprobada, la ficha no se publica. La que nombra otro
+  mes o un pasado lejano se retiene sin límite; la que solo comparte instalación con una ficha
+  anterior (casi siempre un suceso nuevo) espera como mucho las 6 horas de siempre.
+- **Comprobación fija**: la N de la auditoría es la misma regla sobre todo lo publicado.
 
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 

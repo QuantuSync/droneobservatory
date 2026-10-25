@@ -51,7 +51,10 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
 - **N, noticia retrospectiva**: el inicio de la ficha es la fecha de publicación y una de sus
   fuentes nombra otro mes (EODI-2026-00134 y EODI-2026-00663, noticias de octubre sobre los drones
   de Leipzig de septiembre, y EODI-2026-00108, Auvere en marzo): la noticia cuenta un suceso
-  anterior y la ficha no casa con la del suceso por la fecha.
+  anterior y la ficha no casa con la del suceso por la fecha. También un pasado lejano («last
+  month», «letzten Monat»); «mai» en rumano es «más», no mayo. Desde el 25 de octubre de 2026 es
+  la regla que retiene la ficha nueva hasta que el experto da la fecha o la une a la del suceso
+  (proceso/fechas.retrospectiva): lo que marca es lo ya publicado antes o sin decidir.
 """
 
 import json
@@ -364,28 +367,10 @@ def _m(incidente: Documento) -> bool:
     return decidir.en_la_localidad_revisada(lugar) != lugar
 
 
-# Formas de un mes que en su idioma también son una palabra corriente.
-_MESES_AMBIGUOS = {"en": frozenset({"may", "march"})}
-
-
 def _n(incidente: Documento) -> bool:
-    tiempo = incidente.get("tiempo") or {}
-    if (tiempo.get("origen_inicio") or {}).get("tipo") != "publicacion":
-        return False
-    inicio = date.fromisoformat(str(tiempo["inicio"]["valor"])[:10])
-    # El mes anterior en los primeros días del mes es el de la víspera, no otro suceso.
-    vale = {inicio.month} | ({(inicio.month - 2) % 12 + 1} if inicio.day <= 3 else set())
-    for fuente in incidente.get("fuentes", []):
-        idioma = str(fuente.get("idioma") or "")
-        lexico = fechas.lexicos().get(idioma)
-        if lexico is None:
-            continue
-        ambiguos = _MESES_AMBIGUOS.get(idioma, frozenset())
-        for palabra in fechas.normal(str(fuente.get("frase_origen") or "")).split():
-            mes = lexico.meses.get(palabra)
-            if mes is not None and mes not in vale and palabra not in ambiguos:
-                return True
-    return False
+    # La misma regla que retiene las fichas nuevas hasta que el experto da la fecha
+    # (proceso/fechas.retrospectiva, recogida/control_fichas.retrospectivas).
+    return fechas.retrospectiva(incidente) is not None
 
 
 _REGLAS: dict[str, Callable[[Documento], bool]] = {

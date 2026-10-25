@@ -70,7 +70,12 @@ seguridad llega a 0,7 y, si la rectificación estaba revisada a mano, el tipo co
 1. **Revisadas a mano**: [`configuracion/rectificaciones_oficiales.json`](../configuracion/rectificaciones_oficiales.json).
    Cada entrada lleva la declaración literal de la autoridad con su enlace y su fecha, el tipo,
    quién y qué dijo en los dos idiomas y, si hace falta, quién declaró el valor de antes. Se
-   aplican en cada recogida horaria, la primera vez con la decisión del experto.
+   aplican en cada recogida horaria, la primera vez con la decisión del experto. La declaración
+   se lee en la página de la autoridad (`oficial`) o, si la autoridad no la publica, en un medio
+   de fiabilidad A que la cita con el nombre de quien habla (`citada_en`, con el medio y su
+   fiabilidad): es una declaración oficial citada, como las que encuentra el extractor (el
+   cierre de la investigación de Auvere, EODI-2026-00108, que solo cuenta ERR citando al fiscal
+   estatal Gardi Anderson).
 2. **En cada recogida horaria**: las fuentes de los incidentes publicados (confirmados, no
    confirmados o no acreditados) que suenan a retractación o a cierre oficial de una
    investigación, en cualquier idioma, y son al menos de un día después del suceso. Las

@@ -522,7 +522,9 @@ def test_revisadas_de_verdad_validan() -> None:
         assert entrada["tipo"] in rectificaciones.TIPOS
         assert entrada["quien"]["es"] and entrada["quien"]["en"]
         assert entrada["motivo"]["es"] and entrada["motivo"]["en"]
-        assert entrada["fuente"]["declaracion"] and entrada["fuente"]["oficial"]
+        # Leída en la página de la autoridad o citada por un medio de fiabilidad A (Auvere).
+        citada = (entrada["fuente"].get("citada_en") or {}).get("fiabilidad") == "A"
+        assert entrada["fuente"]["declaracion"] and (entrada["fuente"]["oficial"] or citada)
         assert len(entrada["fecha_declaracion"]) == 10
         # La fuente que se añade a la ficha valida (su frase, como mucho 25 palabras: el
         # 16 de octubre de 2026 las tres primeras no se guardaron por eso).

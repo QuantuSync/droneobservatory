@@ -64,6 +64,43 @@
         "es": "las imágenes difundidas como el dron de esa noche eran de un helicóptero de la policía que buscaba el dron; el cierre por el aviso de dron se mantiene",
         "en": "the footage released as that night's drone showed a police helicopter searching for the drone; the closure over the drone report stands"
       }
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "tipo": "parcial",
+      "fecha_declaracion": "2026-10-23",
+      "fuente": {
+        "enlace": "https://www.err.ee/1610174596/uurimine-ei-tuvastanud-auvere-droonijuhtumis-tahtlikku-tegevust-eesti-vastu",
+        "medio": "err.ee",
+        "fecha": "2026-10-23",
+        "idioma": "et",
+        "frase": "Kuna droon hävines kokkupõrke ja plahvatuse tagajärjel sedavõrd ulatuslikult, ei olnud säilinud osade põhjal võimalik selle päritolu usaldusväärselt kindlaks teha, ütles riigiprokurör Gardi Anderson.",
+        "oficial": false,
+        "citada_en": {
+          "medio": "ERR (Eesti Rahvusringhääling)",
+          "fiabilidad": "A",
+          "motivo": "la radiotelevisión pública de Estonia cita por su nombre al fiscal estatal Gardi Anderson y al subdirector de la KAPO Andres Ratassepp; la Fiscalía no publicó nota sobre este caso"
+        },
+        "declaracion": {
+          "autoridad": "Prokuratuur",
+          "pais": "EE",
+          "categoria": "fiscalia",
+          "afirma": "drones"
+        },
+        "comprobada": {
+          "fecha": "2026-10-25",
+          "en": "https://www.err.ee/1610174596/uurimine-ei-tuvastanud-auvere-droonijuhtumis-tahtlikku-tegevust-eesti-vastu (original, ERR, 23 de octubre de 2026; lo repiten lounaeestlane.ee y mke.ee)"
+        }
+      },
+      "contexto": "Prokuratuur lõpetas Auvere elektrijaama korstent tabanud drooni juhtumi uurimise, kuna drooni päritolu ega juhtunu täpsemaid asjaolusid ei olnud võimalik välja selgitada. Uurimisinfo ei anna alust arvata, et tegemist oli Eesti vastu suunatud rünnakuga või et drooni eesmärk oli kahjustada Auvere elektrijaama. [...] Uurimise käigus kontrolliti muu hulgas versiooni, kas tegemist võis olla Ukraina drooniga, mis oli oma trajektoorilt kõrvale kaldunud. Selle kontrollimiseks suheldi Ukraina ekspertidega ja määrati ekspertiis. Kogutud teave ei võimaldanud drooni päritolu kindlaks teha. Selle aasta 25. märtsi öösel kell 3.43 tabas droon Auvere elektrijaama korstent ning toimus plahvatus. (Nota del observatorio: el dron y el impacto en la chimenea están probados; lo que la investigación no determina es su origen.)",
+      "quien": {
+        "es": "la Fiscalía de Estonia (fiscal estatal Gardi Anderson)",
+        "en": "the Estonian Prosecutor's Office (state prosecutor Gardi Anderson)"
+      },
+      "motivo": {
+        "es": "la investigación se cierra sin poder determinar el origen del dron; la hipótesis de un dron ucraniano desviado no se confirmó",
+        "en": "the investigation is closed without the drone's origin being determined; the hypothesis of a stray Ukrainian drone was not confirmed"
+      }
     }
   ]
 }

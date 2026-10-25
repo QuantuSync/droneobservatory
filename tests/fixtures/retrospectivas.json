@@ -1,0 +1,1296 @@
+{
+ "EODI-2026-00663": {
+  "afirmaciones": [
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": true
+   },
+   {
+    "campo": "localidad",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": "Leipzig"
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "Lajpcig/Hale",
+     "pais": "DE",
+     "region": "Sachsen"
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": "Aeropuerto de Leipzig/Halle"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": "DE"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-20473be3d01e762b",
+    "valor": "sobrevuelo"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-10-22T00:17Z"
+   },
+   "candidato": "CAND-20261021T2300-loc:2879139-aeropuerto",
+   "huella_fuentes": "20473be3d01e762bb6a9cfa5d064cf1b3ee7a86826f5ae34ae6fa89c4f91b812",
+   "modelos": {
+    "es_incidente": "modelo-experto",
+    "localidad": "modelo-experto",
+    "lugar_suceso": "modelo-experto",
+    "objetivo_categoria": "modelo-experto",
+    "objetivo_conocido": "modelo-experto",
+    "objetivo_nombre": "modelo-experto",
+    "pais": "modelo-experto",
+    "presencia_dron": "modelo-experto",
+    "tipo": "modelo-experto"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-10-22T00:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "estado": {
+   "actual": "notificado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-21T23:00Z"
+     },
+     "fuente_id": "gdelt-20473be3d01e762b"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "es_incidente",
+     "localidad",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://avaz.ba/vijesti/globus/1082018/putin-licno-naredio-sabotaze-protiv-clanica-nato-a-napad-dronom-na-aerodrom-u-lajpcigu-organizovan-preko-srbije",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-21T23:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "neuspjeli napad dronovima na aerodromu Lajpcig/Hale u Njemačkoj u augustu, objavio je Wall Street Journal",
+    "id": "gdelt-20473be3d01e762b",
+    "idioma": "sr",
+    "interna_fuera_de_ucrania": false,
+    "medio": "avaz.ba",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00663",
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "historial": [
+    {
+     "anterior": {
+      "localidad": "Leipzig",
+      "punto": {
+       "lat": 51.33962,
+       "lon": 12.37129
+      },
+      "radio_km": 10.0
+     },
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-22T00:17Z"
+     },
+     "motivo": {
+      "en": "More precise place: the affected facility identified in the record.",
+      "es": "Lugar más preciso: la instalación afectada que identifica la ficha."
+     }
+    }
+   ],
+   "localidad": "Leipzig",
+   "nivel": "instalacion",
+   "pais": "DE",
+   "punto": {
+    "lat": 51.42105,
+    "lon": 12.23654
+   },
+   "radio_km": 5.0,
+   "region": "Sachsen",
+   "suceso": "Flughafen Leipzig/Halle"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Flughafen Leipzig/Halle",
+   "oaci": "EDDP"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "aproximada",
+    "valor": "2026-10-21T23:00Z"
+   },
+   "origen_inicio": {
+    "motivo": "la ficha no da el inicio: fecha de publicación de la primera nota (2026-10-22 01:00, hora local del medio)",
+    "tipo": "publicacion"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "Possible attempted drone attack on Leipzig/Halle airport",
+   "es": "Intento de ataque con posibles drones contra el aeropuerto de Leipzig/Halle"
+  },
+  "zona": {
+   "distancia_km": 613,
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ },
+ "EODI-2026-00499": {
+  "afirmaciones": [
+   {
+    "campo": "drones",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": true
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "Flughafen Leipzig/Halle",
+     "pais": "DE",
+     "region": "Sachsen-Anhalt"
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": "Flughafen Leipzig/Halle"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": "DE"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-681c0b78131e7584",
+    "valor": "sobrevuelo"
+   },
+   {
+    "campo": "dron_estatal",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": true
+   },
+   {
+    "campo": "entrada_exterior",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": true
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": true
+   },
+   {
+    "campo": "localidad",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": "Leipzig"
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": "Leipzig"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": "DE"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-a94aadd067bd6044",
+    "valor": "interrupcion_aeroportuaria"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-10-08T16:17Z"
+   },
+   "candidato": "CAND-20261008T1530-EDDP-aeropuerto",
+   "huella_fuentes": "553aed83ef42ec1371850ad833cf3bbfc28e16df81c94d7b98865a6b47da36ab",
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-10-09T16:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  "estado": {
+   "actual": "notificado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-08T15:30Z"
+     },
+     "fuente_id": "gdelt-681c0b78131e7584"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "drones",
+     "es_incidente",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://freiepresse.de/nachrichten/sachsen/drohnenangriff-auf-flughafen-leipzig-halle-das-sind-die-mutmasslichen-hintermaenner-artikel14439360",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-08T15:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Der Anschlagsversuch auf eine ukrainische Transportmaschine auf dem Flughafen Leipzig/Halle",
+    "id": "gdelt-681c0b78131e7584",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "freiepresse.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://notiziegeopolitiche.net/lipsia-il-drone-che-non-e-esploso-chi-ce-davvero-dietro-il-sabotaggio-russo-allaeroporto",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-08T22:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Lipsia, il drone che non è esploso: chi c'è davvero dietro il sabotaggio russo all'aeroporto – Notizie Geopolitiche",
+    "id": "gdelt-2e7eb190b321bd35",
+    "idioma": "it",
+    "interna_fuera_de_ucrania": false,
+    "medio": "notiziegeopolitiche.net",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "dron_estatal",
+     "entrada_exterior",
+     "es_incidente",
+     "localidad",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://la-croix.com/international/attaque-de-drone-a-leipzig-le-renseignement-militaire-russe-directement-pointe-du-doigt-20261009",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-09T15:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "tentative d'attentat sur l'aéroport civil de Leipzig",
+    "id": "gdelt-a94aadd067bd6044",
+    "idioma": "fr",
+    "interna_fuera_de_ucrania": false,
+    "medio": "la-croix.com",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00499",
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "nivel": "instalacion",
+   "pais": "DE",
+   "punto": {
+    "lat": 51.42105,
+    "lon": 12.23654
+   },
+   "radio_km": 5.0,
+   "region": "Sachsen-Anhalt",
+   "suceso": "Flughafen Leipzig/Halle"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Flughafen Leipzig/Halle",
+   "oaci": "EDDP"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": true,
+   "entrada_exterior": true,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "aproximada",
+    "valor": "2026-10-08T15:30Z"
+   },
+   "origen_inicio": {
+    "motivo": "la ficha no da el inicio: fecha de publicación de la primera nota (2026-10-08 17:30, hora local del medio)",
+    "tipo": "publicacion"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "Alleged drone attack on Leipzig/Halle airport",
+   "es": "Presunto ataque con dron contra el aeropuerto de Leipzig/Halle"
+  },
+  "zona": {
+   "distancia_km": 613,
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ },
+ "EODI-2026-00666": {
+  "afirmaciones": [
+   {
+    "campo": "dron_estatal",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": true
+   },
+   {
+    "campo": "drones",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": true
+   },
+   {
+    "campo": "evidencia",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": [
+     "caida"
+    ]
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": {
+     "nivel": "localidad",
+     "nombre": "Wunstorf",
+     "pais": "DE",
+     "region": "Baja Sajonia"
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": "base_militar"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": "Fliegerhorst Wunstorf"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": "DE"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": "confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-c7a4c755b65f35df",
+    "valor": "sobrevuelo"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-10-22T09:17Z"
+   },
+   "candidato": "CAND-20261022T0845-ETNW-militar",
+   "huella_fuentes": "c7a4c755b65f35df0bcad9e36ba1abfcbc9f3e524c7f033976445aad7d7472e7",
+   "modelos": {
+    "dron_estatal": "modelo-base",
+    "drones": "modelo-base",
+    "es_incidente": "modelo-base",
+    "evidencia": "modelo-base",
+    "lugar_suceso": "modelo-base",
+    "objetivo_categoria": "modelo-base",
+    "objetivo_conocido": "modelo-base",
+    "objetivo_nombre": "modelo-base",
+    "pais": "modelo-base",
+    "presencia_dron": "modelo-base",
+    "tipo": "modelo-base"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-10-22T09:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-22T08:45Z"
+     },
+     "fuente_id": "gdelt-c7a4c755b65f35df"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-22T08:45Z"
+     },
+     "fuente_id": "gdelt-c7a4c755b65f35df-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "dron_estatal",
+     "drones",
+     "es_incidente",
+     "evidencia",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://dagbladet.no/nyheter/hever-trusselnivaet-etter-dronefunn/85321371",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-22T08:45Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Trusselhevingen skjer etter at en bonde fant en tilsynelatende styrtet drone nær forsvarets flybase i Wunstorf, utenfor Hannover.",
+    "id": "gdelt-c7a4c755b65f35df",
+    "idioma": "no",
+    "interna_fuera_de_ucrania": false,
+    "medio": "dagbladet.no",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://dagbladet.no/nyheter/hever-trusselnivaet-etter-dronefunn/85321371",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-10-22T08:45Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "Det tyske forsvaret mistenker forsøk på russisk sabotasje etter funn av en drone utstyrt med sprengstoff.",
+    "id": "gdelt-c7a4c755b65f35df-declaracion-1",
+    "idioma": "no",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Det tyske forsvaret (Bundeswehr) (declaración oficial citada en dagbladet.no)",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00666",
+  "lugar": {
+   "geocodificacion": "candidato",
+   "nivel": "localidad",
+   "pais": "DE",
+   "punto": {
+    "lat": 52.45499,
+    "lon": 9.43021
+   },
+   "radio_km": 5.0,
+   "region": "Baja Sajonia",
+   "suceso": "Wunstorf"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Fliegerhorst Wunstorf",
+   "oaci": "ETNW"
+  },
+  "presencia_dron": "confirmada",
+  "pruebas": {
+   "dron_estatal": true,
+   "entrada_exterior": false,
+   "evidencia": [
+    "caida"
+   ]
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "aproximada",
+    "valor": "2026-10-22T08:45Z"
+   },
+   "origen_inicio": {
+    "motivo": "la ficha no da el inicio: fecha de publicación de la primera nota (2026-10-22 10:45, hora local del medio)",
+    "tipo": "publicacion"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "Explosive-laden drone found near Wunstorf air base in Germany",
+   "es": "Hallan un dron con explosivos cerca de la base aérea de Wunstorf, Alemania"
+  },
+  "zona": {
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ },
+ "EODI-2026-00134": {
+  "afirmaciones": [
+   {
+    "campo": "cierre",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "si"
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": true
+   },
+   {
+    "campo": "fin",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "2026-08-05T01:55"
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "2026-08-05T00:15"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "hora"
+   },
+   {
+    "campo": "localidad",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "Leipzig"
+   },
+   {
+    "campo": "lugar_nuevo",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": {
+     "categoria": "aeropuerto",
+     "lat": 51.4239,
+     "lon": 12.2218,
+     "nombre": "Flughafen Leipzig/Halle",
+     "pais": "DE"
+    }
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "Flughafen Leipzig/Halle",
+     "pais": "DE",
+     "region": "Sachsen"
+    }
+   },
+   {
+    "campo": "medidas",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": [
+     "derribo",
+     "patrulla"
+    ]
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": false
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "DE"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": "interrupcion_aeroportuaria"
+   },
+   {
+    "campo": "vuelos_desviados",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   {
+    "campo": "cierre_minutos",
+    "confianza_extraccion": 1.0,
+    "fuente_id": "gdelt-63635318bc34029b",
+    "valor": {
+     "max": 115,
+     "min": 115
+    }
+   }
+  ],
+  "atribucion": {
+   "actor": "Russland",
+   "autoridad": "Bundesregierung",
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-09-04T00:00Z"
+   },
+   "pais": "RU",
+   "tipo": "estado"
+  },
+  "consecuencias": {
+   "cierre": {
+    "minutos": {
+     "max": 115,
+     "min": 115
+    },
+    "valor": "si"
+   },
+   "vuelos_desviados": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-09-28T09:43Z"
+   },
+   "candidato": "CAND-20260805T0530-loc:2879139-aeropuerto",
+   "huella_fuentes": "15c25cee0186b43ec3de23a5effd5281f0ccf4fad7154d8923c30c792b281e88",
+   "modelos": {
+    "drones": "modelo-experto"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-10-23T15:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": {
+    "max": 2,
+    "min": 1
+   }
+  },
+  "estado": {
+   "actual": "atribuido",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-05T05:30Z"
+     },
+     "fuente_id": "gdelt-63635318bc34029b"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-05T05:30Z"
+     },
+     "fuente_id": "gdelt-63635318bc34029b-declaracion-1"
+    },
+    {
+     "estado": "atribuido",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-04T00:00Z"
+     },
+     "fuente_id": "oficial-de-bundesregierung-2026-09-04-autoria"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "cierre",
+     "cierre_minutos",
+     "drones",
+     "es_incidente",
+     "fin",
+     "inicio",
+     "inicio_precision",
+     "localidad",
+     "lugar_nuevo",
+     "lugar_suceso",
+     "medidas",
+     "objetivo_conocido",
+     "pais",
+     "tipo",
+     "vuelos_desviados"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://bild.de/regional/berlin/drohnensichtung-und-verdaechtiger-gegenstand-landebahn-am-flughafen-leipzig-gesperrt-6a72becfcc46967c04caf088",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-05T05:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Der Flugbetrieb wurde daraufhin sofort eingestellt, wie die Polizei Leipzig gegenüber BILD mitteilte.",
+    "id": "gdelt-63635318bc34029b",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "bild.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://bild.de/regional/berlin/drohnensichtung-und-verdaechtiger-gegenstand-landebahn-am-flughafen-leipzig-gesperrt-6a72becfcc46967c04caf088",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-05T05:30Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "Der Flugbetrieb wurde daraufhin sofort eingestellt, wie die Polizei Leipzig gegenüber BILD mitteilte.",
+    "id": "gdelt-63635318bc34029b-declaracion-1",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Polizei Leipzig (declaración oficial citada en bild.de)",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://mediafax.ro/externe/trafic-aerian-perturbat-in-germania-dupa-o-alerta-cu-drona-pe-aeroportul-leipzig-halle-23784861",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-05T06:45Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Trafic aerian perturbat în Germania după o alertă cu dronă pe aeroportul Leipzig/Halle",
+    "id": "gdelt-56dcdb5e2543f89a",
+    "idioma": "ro",
+    "interna_fuera_de_ucrania": false,
+    "medio": "mediafax.ro",
+    "publica": true,
+    "replicas": 2
+   }
+  ],
+  "id": "EODI-2026-00134",
+  "investigacion": [
+   {
+    "autoridad": "Generalbundesanwalt",
+    "cita": "Die Bundesanwaltschaft hat heute (6. August 2026) wegen der besonderen Bedeutung des Falles das Ermittlungsverfahren zum Drohnenfund am Flughafen Leipzig/Halle von der Generalstaatsanwaltschaft Dresden übernommen.",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-08-06T00:00Z"
+    },
+    "fuente_id": "oficial-de-generalbundesanwalt-2026-08-06-ermittlungsverfahren"
+   },
+   {
+    "autoridad": "Bundesregierung",
+    "cita": "Unabhängig davon sind die strafrechtlichen Ermittlungen und juristischen Verfahren in der Angelegenheit noch nicht abgeschlossen und laufen weiter.",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-09-04T00:00Z"
+    },
+    "fuente_id": "oficial-de-bundesregierung-2026-09-04-ermittlungen"
+   }
+  ],
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "localidad": "Leipzig",
+   "nivel": "instalacion",
+   "pais": "DE",
+   "punto": {
+    "lat": 51.42105,
+    "lon": 12.23654
+   },
+   "radio_km": 5.0,
+   "region": "Sachsen",
+   "suceso": "Flughafen Leipzig/Halle"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Flughafen Leipzig/Halle",
+   "oaci": "EDDP"
+  },
+  "presencia_dron": "confirmada",
+  "pruebas": {
+   "dron_estatal": true,
+   "entrada_exterior": true,
+   "evidencia": [
+    "caida",
+    "derribo",
+    "explosion",
+    "recuperado",
+    "restos"
+   ]
+  },
+  "respuesta": {
+   "medidas": [
+    "derribo",
+    "patrulla"
+   ]
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-08-04T00:00Z"
+   },
+   "origen_inicio": {
+    "motivo": "la Fiscalía Federal: la tarde del 4 de agosto de 2026",
+    "tipo": "explicita"
+   }
+  },
+  "tipo": "interrupcion_aeroportuaria",
+  "titulo": {
+   "en": "Drone with explosive charge causes closure of Leipzig airport",
+   "es": "Dron con carga explosiva causa cierre del aeropuerto de Leipzig"
+  },
+  "zona": {
+   "distancia_km": 613,
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ },
+ "EODI-2026-00276": {
+  "afirmaciones": [
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": true
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-672ceb28189706b1",
+    "valor": "2026-09-15"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-672ceb28189706b1",
+    "valor": "dia"
+   },
+   {
+    "campo": "localidad",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": "Hannover"
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": {
+     "nivel": "region",
+     "nombre": "Steinhuder Meer",
+     "pais": "DE",
+     "region": "Niedersachsen"
+    }
+   },
+   {
+    "campo": "medidas",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": [
+     "patrulla"
+    ]
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": false
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": "DE"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-7e35f706499bef3f",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 1.0,
+    "fuente_id": "gdelt-b91f0aaca22b4d2d",
+    "valor": "confirmada"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-10-02T09:17Z"
+   },
+   "candidato": "CAND-20260915T1130-loc:2758462-avistamiento",
+   "huella_fuentes": "50b0aecb0bb5a9dd88e5747b3ac2a4262feabe6c0e670c9799b3d5a0ad76f6a7",
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-10-05T16:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T11:30Z"
+     },
+     "fuente_id": "gdelt-7e35f706499bef3f"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-18T00:00Z"
+     },
+     "fuente_id": "oficial-de-bundesanwaltschaft-2026-09-18-wunstorf-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "es_incidente",
+     "localidad",
+     "lugar_suceso",
+     "medidas",
+     "objetivo_conocido",
+     "pais",
+     "presencia_dron"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://mopo.de/im-norden/niedersachsen/drohnenteile-nahe-bundeswehr-fliegerhorst-gefunden-polizei-im-grosseinsatz/4989760",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-15T11:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Teile einer vermutlich abgestürzten Drohne werden nahe dem Steinhuder Meer gefunden",
+    "id": "gdelt-7e35f706499bef3f",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "mopo.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://nwzonline.de/blaulicht-thema/drohnenfund-am-steinhuder-meer-polizei-sucht-gelaende-ab_a_4,3,1809232658.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-15T12:15Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Drohnenfund am Steinhuder Meer: Polizei sucht Gelände ab",
+    "id": "gdelt-b91f0aaca22b4d2d",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "nwzonline.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "inicio",
+     "inicio_precision"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohne-stuerzt-nahe-steinhuder-meer-ab-grosseinsatz-der-polizei,drohne-458.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-15T13:45Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Einsatzkräfte der Polizei sind seit Dienstag östlich des Steinhuder Meeres im Einsatz",
+    "id": "gdelt-672ceb28189706b1",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "ndr.de",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00276",
+  "investigacion": [
+   {
+    "autoridad": "Bundesanwaltschaft",
+    "cita": "Nach dem Fund von Drohnenteilen nahe dem Bundeswehr-Fliegerhorst Wunstorf prüft die Bundesanwaltschaft einen möglichen Zusammenhang mit dem Drohnenvorfall am Flughafen Leipzig.",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-09-18T00:00Z"
+    },
+    "fuente_id": "oficial-de-bundesanwaltschaft-2026-09-18-wunstorf-declaracion-1"
+   }
+  ],
+  "lugar": {
+   "fuente_punto": "revisada-7373ea93f01837f3-declaracion-1",
+   "geocodificacion": "oficial",
+   "localidad": "Fliegerhorst Wunstorf (Wunstorfer Moor)",
+   "nivel": "instalacion",
+   "pais": "DE",
+   "punto": {
+    "lat": 52.45526,
+    "lon": 9.42821
+   },
+   "radio_km": 2.0,
+   "region": "Niedersachsen",
+   "suceso": "Steinhuder Meer"
+  },
+  "presencia_dron": "confirmada",
+  "pruebas": {
+   "dron_estatal": true,
+   "entrada_exterior": false,
+   "evidencia": [
+    "caida",
+    "restos"
+   ]
+  },
+  "respuesta": {
+   "medidas": [
+    "patrulla"
+   ]
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-09-15T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "gdelt-672ceb28189706b1",
+    "motivo": "«dienstag» en una nota publicada el 2026-09-15 15:45 (hora local del medio)",
+    "tipo": "relativa"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "Drone parts found near Steinhuder Meer in Germany",
+   "es": "Restos de dron hallados cerca del Steinhuder Meer en Alemania"
+  },
+  "zona": {
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ }
+}
