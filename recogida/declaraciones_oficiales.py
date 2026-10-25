@@ -31,6 +31,7 @@ el de un incidente que no está atribuido no dice la nacionalidad del dron ni se
 import copy
 import json
 import logging
+import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from functools import cache
@@ -213,6 +214,41 @@ def aplicar(
     return resumen
 
 
+# La fuente de una declaración citada lleva el identificador de su noticia con esta marca.
+_DECLARACION = re.compile(r"-declaracion-\d+$")
+
+
+def declaraciones_que_faltan(destino: Documento, absorbido: Documento) -> list[Documento]:
+    """Las declaraciones de autoridad del registro unido que el que queda no tiene, cuya noticia sí
+    tiene (la noticia pasó con la unión; la declaración se leyó después, al volver a extraer el
+    candidato del unido). Solo esas: una noticia que una separación quitó no vuelve."""
+    tiene = {str(f["id"]) for f in destino["fuentes"]}
+    return [
+        f for f in absorbido["fuentes"]
+        if f.get("es_autoridad") and str(f["id"]) not in tiene
+        and _DECLARACION.sub("", str(f["id"])) in tiene
+    ]  # fmt: skip
+
+
+def con_declaraciones_del_unido(
+    destino: Documento, absorbido: Documento, ahora: datetime
+) -> Documento:
+    """El que queda con las declaraciones de autoridad del unido que le faltan (con sus
+    afirmaciones), o el mismo documento si no le falta ninguna. EODI-2026-00108 (Auvere) perdió así
+    la de la KAPO, que el 4 de octubre de 2026 estaba en EODI-2026-00333: el 21 se quedó sin
+    ninguna autoridad y pasó a «posible dron»."""
+    faltan = declaraciones_que_faltan(destino, absorbido)
+    if not faltan:
+        return destino
+    ids = {f["id"] for f in faltan}
+    parte = {
+        **{k: v for k, v in absorbido.items() if k != "fusionado_en"},
+        "fuentes": faltan,
+        "afirmaciones": [a for a in absorbido.get("afirmaciones", []) if a["fuente_id"] in ids],
+    }
+    return incidentes.absorber(destino, parte, ahora)[0]
+
+
 def uniones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
     """Los incidentes que recuperan la confirmación oficial de un registro unido en ellos. Desde
     el 14 de octubre de 2026 una unión pasa al que queda los pasos a confirmado del unido si su
@@ -228,12 +264,13 @@ def uniones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[
         destino = vivo(almacen, str(absorbido["fusionado_en"]))
         if destino is None:
             continue
+        con_declaraciones = con_declaraciones_del_unido(destino, absorbido, ahora)
         pasos = [p for p in absorbido["estado"]["historial"] if p["estado"] != MARCA_ATRIBUIDO]
         sin_autoria = {**absorbido, "estado": {**absorbido["estado"], "historial": pasos}}
-        estado = incidentes.estado_con_el_absorbido(destino, sin_autoria)
-        if estado == destino["estado"]:
+        estado = incidentes.estado_con_el_absorbido(con_declaraciones, sin_autoria)
+        if estado == destino["estado"] and con_declaraciones is destino:
             continue
-        nuevo = incidentes.aplicar_reglas({**copy.deepcopy(destino), "estado": estado})
+        nuevo = incidentes.aplicar_reglas({**copy.deepcopy(con_declaraciones), "estado": estado})
         nuevo["control"] = {**nuevo["control"], "ultima_actualizacion": _instante(ahora)}
         try:
             almacen.guardar_incidente(nuevo, ahora, modelos)

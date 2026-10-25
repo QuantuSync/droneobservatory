@@ -22,7 +22,7 @@ Dos partes, separadas:
   existente, como mucho `por_recogida` por recogida: los de datos, a la verificación del control
   de las fichas hecha por el experto; los duplicados, a su comparación hecha por el experto; los
   de rectificaciones, a la cola del barrido mensual (recogida/rectificaciones.encolar). El
-  experto los paga con el modo «segunda_lectura» (0,10 dólares al día dentro de su tope normal,
+  experto los paga con el modo «segunda_lectura» (0,30 dólares al día dentro de su tope normal,
   nunca de la reserva crítica); lo que no cabe espera al día siguiente. Lo que decide el experto
   se aplica con las reglas de siempre y queda guardado (clave `segunda:…` del control de las
   fichas) para no repetirlo. Nunca cambia el código de salida de la recogida.
@@ -875,6 +875,16 @@ def _paso(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Documen
     hecho.update(decididos=decididos, entregados=entregados, con_cupo=con_cupo,
                  esperan=sum(1 for c in resto if PREFIJO + c["clave"] not in nuevas),
                  experto=experto.parado, gasto_experto=round(experto.gasto, 6))  # fmt: skip
+    # Cuántas fichas lee el experto al día con su tope (0,30 USD desde el 25 de octubre de 2026).
+    dia = coste.dia(ahora)
+    hecho.update(
+        fichas_experto_hoy=sum(
+            1 for ll in almacen.llamadas()
+            if ll.get("modo") == coste.Modo.SEGUNDA_LECTURA.value and coste.dia(
+                datetime.fromisoformat(str(ll["fecha"]).replace("Z", "+00:00"))) == dia
+        ),
+        tope_experto=coste.LIMITE_SEGUNDA_EXPERTO_DIARIO_USD,
+    )  # fmt: skip
     return hecho
 
 

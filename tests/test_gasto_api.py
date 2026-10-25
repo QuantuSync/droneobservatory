@@ -183,6 +183,27 @@ def test_avisos_al_80_y_al_100_una_vez_al_mes() -> None:
     assert gasto_api.revisar(almacen, noviembre, avisos) == [gasto_api.TITULO_80]
 
 
+def test_un_tope_nuevo_vuelve_a_avisar_al_80(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # El 19 de octubre de 2026 el aviso del 80 % ya constaba con el tope de antes: a 48 de 60 USD
+    # no habría avisado. Un estado sin «tope» (el de antes del 25 de octubre) cuenta como nuevo.
+    almacen = Almacen.abrir()
+    avisos = Avisos()
+    (tmp_path / "gasto_api.json").write_text(
+        json.dumps({"mes": coste.mes(AHORA), "aviso_80": True}), encoding="utf-8"
+    )
+    _llamada(almacen, "2026-10-03T10:00:00Z", 49.0)
+    assert gasto_api.revisar(almacen, AHORA, avisos) == [gasto_api.TITULO_80]
+    assert gasto_api.revisar(almacen, AHORA, avisos) == []
+    # Sube el tope: con 49 de 80 no toca; al pasar del 80 % del nuevo, avisa otra vez.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "80")
+    assert gasto_api.revisar(almacen, AHORA, avisos) == []
+    _llamada(almacen, "2026-10-04T10:00:00Z", 16.0)
+    assert gasto_api.revisar(almacen, AHORA, avisos) == [gasto_api.TITULO_80]
+    assert json.loads((tmp_path / "gasto_api.json").read_text(encoding="utf-8"))["tope"] == 80.0
+
+
 def test_saldo_agotado_un_aviso_por_episodio(tmp_path: Path) -> None:
     almacen = Almacen.abrir()
     avisos = Avisos()

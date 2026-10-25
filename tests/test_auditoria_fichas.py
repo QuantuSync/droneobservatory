@@ -308,3 +308,50 @@ def test_b_acepta_el_objetivo_revisado_a_mano() -> None:
         "https://adevarul.ro/stiri-interne/evenimente/nou-atac-cu-drone-langa-frontiera-cu-romania-2418348.html"
     )
     assert not auditoria_fichas._b(documento)
+
+
+def test_l_la_que_queda_sin_autoridad_cuando_la_unida_la_tenia() -> None:
+    # EODI-2026-00108 (Auvere): la declaración de la KAPO se quedó en la unida.
+    queda = {**ejemplos.incidente_minimo(), "id": "EODI-2026-00108",
+             "fuentes": [ejemplos.fuente("gdelt-a", "C")]}  # fmt: skip
+    unida = {**ejemplos.incidente_minimo(), "id": "EODI-2026-00333",
+             "fusionado_en": "EODI-2026-00108",
+             "fuentes": [ejemplos.fuente("gdelt-a-declaracion-1", "B",
+                                         es_autoridad=True)]}  # fmt: skip
+    assert auditoria_fichas.auditar([queda, unida])["L"] == ["EODI-2026-00108"]
+    con = {**queda, "fuentes": [*queda["fuentes"], *unida["fuentes"]]}
+    assert auditoria_fichas.auditar([con, unida])["L"] == []
+
+
+def test_m_el_lugar_revisado_con_el_punto_de_otro_sitio() -> None:
+    # EODI-2026-00238: la revisión dice Rachelu (Luncavița) y el punto era el de Tulcea, a 40 km.
+    from proceso import decidir
+
+    documento = ejemplos.incidente_minimo()
+    documento["id"] = "EODI-2026-00238"
+    enlace = ("https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-"
+              "incarcatura-exploziva-descoperita-in-tulcea-3840077")  # fmt: skip
+    documento["fuentes"] = [{**documento["fuentes"][0], "enlace": enlace}]
+    documento["lugar"] = {"pais": "RO", "localidad": "Rachelu", "radio_km": 5,
+                          "punto": {"lat": 45.1787, "lon": 28.80501}}  # fmt: skip
+    assert auditoria_fichas.auditar([documento])["M"] == ["EODI-2026-00238"]
+    decidido = decidir.decidir_datos(documento)
+    assert decidido["lugar"]["nivel"] == "localidad"
+    assert abs(decidido["lugar"]["punto"]["lon"] - 28.32) < 0.05
+    assert auditoria_fichas.auditar([decidido])["M"] == []
+
+
+def test_n_la_noticia_de_otro_mes_con_la_fecha_de_publicacion() -> None:
+    # EODI-2026-00663: una noticia de octubre sobre los drones de Leipzig de septiembre.
+    documento = ejemplos.incidente_minimo()
+    documento["tiempo"] = {"inicio": ejemplos.instante("2026-10-20T00:00Z", "dia"),
+                           "origen_inicio": {"tipo": "publicacion"}}  # fmt: skip
+    frase = "Im September kreisten Drohnen über dem Flughafen Leipzig"
+    fuente = {**documento["fuentes"][0], "idioma": "de", "frase_origen": frase}
+    documento["fuentes"] = [fuente]
+    assert auditoria_fichas.auditar([documento])["N"] == [documento["id"]]
+    # Con el mes de la noticia, o en inglés «may», no cuenta.
+    fuente["frase_origen"] = "Am 19. Oktober kreisten Drohnen über dem Flughafen Leipzig"
+    assert auditoria_fichas.auditar([documento])["N"] == []
+    documento["fuentes"] = [{**fuente, "idioma": "en", "frase_origen": "Drones may return"}]
+    assert auditoria_fichas.auditar([documento])["N"] == []

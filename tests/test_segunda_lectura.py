@@ -516,9 +516,10 @@ def test_margen_para_los_escalados_del_resto_del_dia() -> None:
         coste.comprobar_segunda(libre - 0.06, 0.0, 0.05, momento)
         with pytest.raises(coste.LimiteGasto, match="escalados"):
             coste.comprobar_segunda(libre - 0.04, 0.0, 0.05, momento)
-    # Su modo, como mucho 0,10 USD al día.
+    # Su modo, como mucho 0,30 USD al día (desde el 25 de octubre de 2026).
+    assert coste.LIMITE_SEGUNDA_EXPERTO_DIARIO_USD == 0.30
     with pytest.raises(coste.LimiteGasto, match="segunda_lectura"):
-        coste.comprobar_segunda(0.0, 0.08, 0.05, datetime(2026, 10, 19, 12, 0, tzinfo=UTC))
+        coste.comprobar_segunda(0.0, 0.28, 0.05, datetime(2026, 10, 19, 12, 0, tzinfo=UTC))
 
 
 def test_fecha_sin_apoyo_sola_no_va_al_experto() -> None:

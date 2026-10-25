@@ -229,6 +229,7 @@ PREFIJO_REVISADA = "revisada-"
 MARCA_CITADA = "-declaracion-1"
 MOTIVO_CITA = "cita revisada a mano (configuracion/incidentes_revisados.json, citas)"
 MOTIVO_UBICACION = "lugar del suceso según la autoridad (configuracion/incidentes_revisados.json)"
+MOTIVO_LUGAR_REVISADO = "lugar revisado a mano (configuracion/incidentes_revisados.json, datos)"
 
 
 @dataclass
@@ -237,13 +238,15 @@ class Corregidos:
     citas: list[str] = field(default_factory=list)
     titulares: list[str] = field(default_factory=list)
     ubicados: list[str] = field(default_factory=list)
+    lugares: list[str] = field(default_factory=list)
     sin_guardar: list[str] = field(default_factory=list)
     contradicen_rectificacion: list[str] = field(default_factory=list)
 
     def texto(self) -> str:
         return (
             f"retirados {len(self.retirados)}, con citas {len(self.citas)}, titulares "
-            f"{len(self.titulares)}, ubicados {len(self.ubicados)}, sin guardar "
+            f"{len(self.titulares)}, ubicados {len(self.ubicados)}, lugares revisados "
+            f"{self.lugares}, sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
             f"{self.contradicen_rectificacion}"
         )
@@ -651,7 +654,7 @@ def _retirar(
 
 
 def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corregidos:
-    """Aplica las retiradas, las citas, los titulares y las ubicaciones revisados."""
+    """Aplica las retiradas, las citas, los titulares, las ubicaciones y los lugares revisados."""
     hechos = Corregidos()
     datos = cargar()
     _retirar(almacen, ahora, modelos, hechos)
@@ -692,6 +695,18 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
             and _guardar(almacen, documento, con_punto, ahora, modelos, motivo, hechos)
         ):
             hechos.ubicados.append(id_)
+    # El lugar revisado («datos») se aplica al guardar la ficha (decidir.decidir_datos); una ficha
+    # que nada vuelve a guardar se quedaba con el punto de antes (EODI-2026-00238, en Tulcea con
+    # la revisión en Rachelu). Solo se guarda si cambia el lugar.
+    lugares = [e for e in datos.get("datos", []) if e.get("campo") == "lugar"]
+    for id_ in _por_incidente(almacen, lugares):
+        documento = almacen.incidente(id_)
+        assert documento is not None
+        decidido = decidir.decidir_datos(documento)
+        if decidido.get("lugar") != documento.get("lugar") and _guardar(
+            almacen, documento, decidido, ahora, modelos, MOTIVO_LUGAR_REVISADO, hechos
+        ):
+            hechos.lugares.append(id_)
     registro.info("revisión del contenido: %s", hechos.texto())
     return hechos
 

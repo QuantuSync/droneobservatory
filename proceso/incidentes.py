@@ -840,16 +840,18 @@ def destino_de(
     uno: Documento, otro: Documento, publicados: frozenset[str] = frozenset()
 ) -> tuple[Documento, Documento]:
     """(destino, absorbido) de dos incidentes que encajan. Queda el que ya estaba publicado si
-    solo lo estaba uno (su enlace sigue valiendo); si no, el que tiene más fuentes oficiales
-    leídas directamente, después el de más fuentes, el que se conoció antes (su primera
-    noticia salió antes) y, a la par, el de número más bajo. Una noticia que vuelve semanas
-    después sobre un suceso no le quita su número: Copenhague sigue siendo el
-    EODI-2025-00154, con las notas de la policía y casi 300 noticias."""
+    solo lo estaba uno (su enlace sigue valiendo); si no, el de un año anterior (entre una
+    ficha de 2025 y una de 2026 queda la de 2025: EODI-2025-00199, Bruselas, se quedó dentro
+    de EODI-2026-00094 por tener esta más fuentes), después el que tiene más fuentes oficiales
+    leídas directamente, el de más fuentes, el que se conoció antes (su primera noticia salió
+    antes) y, a la par, el de número más bajo. Una noticia que vuelve semanas después sobre un
+    suceso no le quita su número: Copenhague sigue siendo el EODI-2025-00154, con las notas de
+    la policía y casi 300 noticias."""
 
-    def clave(d: Documento) -> tuple[bool, int, int, str, str]:
+    def clave(d: Documento) -> tuple[bool, str, int, int, str, str]:
         oficiales = sum(1 for f in d["fuentes"] if f["fiabilidad"] == "A" and f.get("es_autoridad"))
-        return (d["id"] not in publicados, -oficiales, -len(d["fuentes"]), primera_noticia(d),
-                d["id"])  # fmt: skip
+        return (d["id"] not in publicados, d["id"][:9], -oficiales, -len(d["fuentes"]),
+                primera_noticia(d), d["id"])  # fmt: skip
 
     primero, segundo = sorted((uno, otro), key=clave)
     return primero, segundo

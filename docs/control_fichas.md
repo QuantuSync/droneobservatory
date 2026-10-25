@@ -372,6 +372,33 @@ convertida, u otra hora, no se toca. Las fichas ya guardadas no conservan la fra
 corrigen con una revisión del inicio con su cita (`titulares.inicio` en
 `incidentes_revisados.json`), y la comprobación J de la auditoría avisa de las que queden.
 
+### Uniones, lugar revisado y noticias retrospectivas (desde el 25 de octubre de 2026)
+
+- **La declaración del unido pasa a la que queda.** Al volver a leer una noticia que ya estaba en
+  un registro unido, la declaración de autoridad que se saca de ella (`<noticia>-declaracion-N`) se
+  quedaba en el unido: EODI-2026-00108 (Auvere) tenía la noticia de cbsnews.com pero no la
+  declaración de la KAPO, y el 21 de octubre pasó a «posible dron». En cada recogida
+  (`recogida/declaraciones_oficiales.uniones`), las declaraciones del unido cuya noticia está en la
+  que queda pasan a esta con sus afirmaciones; el 25 de octubre eran 8 fichas, y solo 00108 cambió
+  de estado y de presencia. La comprobación L avisa de una ficha sin ninguna autoridad que tenga
+  alguna unida con ella.
+- **Queda el identificador más antiguo.** Entre dos fichas publicadas, queda la de un año anterior
+  antes que la de más fuentes (`incidentes.destino_de`): EODI-2025-00199 (Bruselas, 5 de diciembre
+  de 2025) se había quedado dentro de EODI-2026-00094.
+- **El lugar revisado fija el punto.** Una revisión del lugar con la localidad y sin el punto deja
+  el nivel y el punto de esa localidad (la del nomenclátor, si es una sola) cuando el que tenía la
+  ficha queda a más de 15 km más el radio de la localidad (`decidir.en_la_localidad_revisada`):
+  EODI-2026-00238 tenía el punto de Tulcea y la revisión dice Rachelu, a 40 km. La comprobación M
+  avisa de un lugar revisado con otro nivel u otro punto que los de la revisión.
+- **Noticias retrospectivas.** La comprobación N avisa de una ficha cuyo inicio es la fecha de
+  publicación y cuyas fuentes nombran otro mes: la noticia cuenta un suceso anterior y, con la
+  fecha de publicación, no casa con la ficha del suceso. Se revisan a mano (unir con la ficha del
+  suceso o corregir el inicio con su cita); la regla que lo evita al hacer la ficha está pendiente.
+- **Frontera.** El 25 de octubre, en los 90 días anteriores, había 2 parejas de fichas de frontera
+  del mismo día y país sin unir a 15-30 km: una era el mismo suceso (Moldavia, EODI-2026-00676 y
+  00682, unidas a mano) y la otra no (Lunga por la mañana y Brănești por la noche del 30 de
+  septiembre). El radio no se amplía.
+
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 
 La red de seguridad antes de cambiar la estructura: unas 50 fichas cuyo valor correcto de cada dato

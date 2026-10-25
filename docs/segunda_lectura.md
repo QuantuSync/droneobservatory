@@ -28,8 +28,9 @@ la recogida) y [`configuracion/segunda_lectura.json`](../configuracion/segunda_l
    reintenta en la pasada siguiente. Nunca avisa y la pasada siempre termina con código 0.
 5. **Gasto.** El servicio secundario es gratuito. Lo único que cuesta es el experto al revisar lo
    marcado: modo `segunda_lectura` de [`modelo/coste.py`](../modelo/coste.py), como mucho
-   **0,10 dólares al día** (`LIMITE_SEGUNDA_EXPERTO_DIARIO_USD`; 0,30 hasta el 19 de octubre de
-   2026: de 30 candidatos revisados, 2 cambiaron algo), que cuentan dentro del tope normal del
+   **0,30 dólares al día** (`LIMITE_SEGUNDA_EXPERTO_DIARIO_USD`; 0,30 hasta el 19 de octubre de
+   2026, 0,10 del 19 al 25 de octubre, con el experto parado cada día por el tope; el registro de
+   cada recogida dice cuántas fichas ha leído en el día, `fichas_experto_hoy`), que cuentan dentro del tope normal del
    experto y **nunca** salen de la reserva crítica. Además, solo gasta lo que los escalados
    normales no necesitan: el gasto del experto en el día tiene que ir por debajo del ritmo de su
    tope (el tope entero libre a las 00:00 UTC, la mitad a las 12:00, `margen_escalados`). Con el
@@ -152,7 +153,7 @@ contradicho; después los duplicados; después la atribución, el lugar y la dur
 resto; y, a la par, del suceso más reciente al más antiguo (`segunda_busqueda.fecha_del_suceso`).
 Cada recogida entrega como mucho 2 candidatos a la extracción (`busqueda.por_recogida`) y manda
 como mucho 2 al experto (`recogida.por_recogida`). Lo que revisa el experto en el modo
-`segunda_lectura` cabe en sus 0,10 dólares al día y por debajo del ritmo de su tope. Cada decisión
+`segunda_lectura` cabe en sus 0,30 dólares al día y por debajo del ritmo de su tope. Cada decisión
 queda guardada (clave `segunda:…` del control de las fichas) y no se repite.
 
 **Cupo propio de las dos búsquedas de lo que falta** (desde el 20 de octubre de 2026). Las

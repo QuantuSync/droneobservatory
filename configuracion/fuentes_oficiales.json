@@ -297,14 +297,6 @@
       "url": "https://www.puertos.es/rss.xml"
     },
     {
-      "id": "csn_sucesos",
-      "medio": "Consejo de Seguridad Nuclear",
-      "pais": "ES",
-      "idioma": "es",
-      "tipo": "rss",
-      "url": "https://www.csn.es/sucesos-notificados/-/asset_publisher/AhgtIexAjt0q/rss"
-    },
-    {
       "id": "moncloa_notas",
       "medio": "La Moncloa (notas de los ministerios)",
       "pais": "ES",

@@ -370,3 +370,36 @@ def test_un_punto_de_la_respuesta_defensiva_no_se_pone(revision: dict[str, Any])
     revision["ubicaciones"] = [misil]
     assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).ubicados == []
     assert "punto" not in almacen.incidente("EODI-2025-00295")["lugar"]  # type: ignore[index]
+
+
+def test_el_lugar_revisado_llega_aunque_nada_vuelva_a_guardar_la_ficha(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2026-00238: guardada antes de la regla con el punto de Tulcea; la revisión dice Rachelu.
+    from datetime import UTC, datetime
+
+    from proceso import decidir
+
+    # Después del 29 de junio de 2026, el inicio revisado de la ficha.
+    ahora = datetime(2026, 10, 25, 12, 0, tzinfo=UTC)
+    documento = ejemplos.incidente_minimo()
+    documento["id"] = "EODI-2026-00238"
+    enlace = ("https://digi24.ro/stiri/actualitate/momentul-in-care-militarii-detoneaza-drona-cu-"
+              "incarcatura-exploziva-descoperita-in-tulcea-3840077")  # fmt: skip
+    documento["fuentes"] = [{**documento["fuentes"][0], "enlace": enlace}]
+    documento["lugar"] = {"pais": "RO", "localidad": "Rachelu", "radio_km": 5,
+                          "punto": {"lat": 45.1787, "lon": 28.80501}}  # fmt: skip
+    almacen = Almacen.abrir()
+    with monkeypatch.context() as antes:
+        antes.setattr(decidir, "_revisiones_de_datos", lambda: {})
+        almacen.guardar_incidente(documento, ahora, VOCABULARIO_MODELOS)
+    guardado = almacen.incidente("EODI-2026-00238")
+    assert guardado is not None and guardado["lugar"]["punto"]["lon"] == 28.80501
+    solo: dict[str, Any] = {"datos": [e for e in revisados.cargar()["datos"]
+                                      if e["incidente"] == "EODI-2026-00238"]}  # fmt: skip
+    monkeypatch.setattr(revisados, "cargar", lambda: solo)
+    hechos = revisados.corregir(almacen, ahora, VOCABULARIO_MODELOS)
+    assert hechos.lugares == ["EODI-2026-00238"] and not hechos.sin_guardar
+    despues = almacen.incidente("EODI-2026-00238")
+    assert despues is not None and abs(despues["lugar"]["punto"]["lon"] - 28.32) < 0.05
+    assert revisados.corregir(almacen, ahora, VOCABULARIO_MODELOS).lugares == []
