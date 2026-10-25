@@ -403,3 +403,36 @@ def test_el_lugar_revisado_llega_aunque_nada_vuelva_a_guardar_la_ficha(
     despues = almacen.incidente("EODI-2026-00238")
     assert despues is not None and abs(despues["lugar"]["punto"]["lon"] - 28.32) < 0.05
     assert revisados.corregir(almacen, ahora, VOCABULARIO_MODELOS).lugares == []
+
+
+def test_el_inicio_revisado_llega_aunque_nada_vuelva_a_guardar_la_ficha(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2026-00108, Auvere: publicaba las 06:00 UTC por «mercredi matin»; ERR da las 3:43 hora
+    # de Estonia (01:43 UTC) y la revisión no llegaba porque nada volvía a guardar la ficha.
+    from datetime import UTC, datetime
+
+    from proceso import decidir
+
+    ahora = datetime(2026, 10, 25, 17, 0, tzinfo=UTC)
+    documento = ejemplos.incidente_minimo()
+    documento["id"] = "EODI-2026-00108"
+    enlace = ("https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-"
+              "against-estonia-in-auvere-drone-incident")  # fmt: skip
+    documento["fuentes"] = [{**documento["fuentes"][0], "enlace": enlace}]
+    documento["lugar"] = {"pais": "EE", "localidad": "Auvere", "radio_km": 5,
+                          "punto": {"lat": 59.2889, "lon": 27.8998}}  # fmt: skip
+    documento["tiempo"] = {"inicio": {"valor": "2026-03-25T06:00Z", "precision": "hora"}}
+    almacen = Almacen.abrir()
+    with monkeypatch.context() as antes:
+        antes.setattr(decidir, "_revisiones_de_datos", lambda: {})
+        almacen.guardar_incidente(documento, ahora, VOCABULARIO_MODELOS)
+    solo: dict[str, Any] = {"datos": [e for e in revisados.cargar()["datos"]
+                                      if e["incidente"] == "EODI-2026-00108"]}  # fmt: skip
+    monkeypatch.setattr(revisados, "cargar", lambda: solo)
+    hechos = revisados.corregir(almacen, ahora, VOCABULARIO_MODELOS)
+    assert hechos.inicios == ["EODI-2026-00108"] and not hechos.sin_guardar
+    despues = almacen.incidente("EODI-2026-00108")
+    assert despues is not None
+    assert despues["tiempo"]["inicio"] == {"valor": "2026-03-25T01:43Z", "precision": "minuto"}
+    assert revisados.corregir(almacen, ahora, VOCABULARIO_MODELOS).inicios == []
