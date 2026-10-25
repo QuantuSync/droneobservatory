@@ -65,10 +65,13 @@ def revisar(almacen: Almacen, ahora: datetime, avisador: Avisador) -> list[str]:
     ruta = ruta_estado()
     estado = _leer(ruta)
     mes = coste.mes(ahora)
-    if estado.get("mes") != mes:
-        estado = {"mes": mes, "saldo_avisado": estado.get("saldo_avisado")}
-    total = coste.del_mes(almacen, ahora).total
     tope = coste.tope_mensual()
+    if estado.get("mes") != mes or estado.get("tope") != tope:
+        # Un mes nuevo o un tope nuevo: los avisos del 80 % y del 100 % vuelven a valer (el 19 de
+        # octubre de 2026 el del 80 % ya constaba con el tope de antes y a 48 de 60 USD no habría
+        # avisado). Sin «tope» guardado (lo anterior al 25 de octubre de 2026) cuenta como nuevo.
+        estado = {"mes": mes, "tope": tope, "saldo_avisado": estado.get("saldo_avisado")}
+    total = coste.del_mes(almacen, ahora).total
     enviados: list[str] = []
     resumen = f"Gastado en {mes}: {total:.2f} de {tope:.2f} USD."
     if total >= tope and not estado.get("aviso_100"):

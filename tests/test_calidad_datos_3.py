@@ -347,6 +347,18 @@ def test_en_la_fusion_queda_el_publicado_y_despues_el_de_mas_fuentes_oficiales(
     assert destino["id"] == "EODI-2025-00025"  # solo él estaba publicado
 
 
+def test_entre_una_ficha_de_2025_y_una_de_2026_queda_la_de_2025() -> None:
+    # EODI-2025-00199 (Bruselas, 5 de diciembre de 2025) quedó dentro de EODI-2026-00094 porque
+    # esta tenía más fuentes; las dos estaban publicadas.
+    antigua = inc("EODI-2025-00199", "2025-12-05T09:00Z", "hora")
+    nueva = inc("EODI-2026-00094", "2025-12-05T09:30Z", "hora", fuentes=4)
+    ambas = frozenset({"EODI-2025-00199", "EODI-2026-00094"})
+    assert incidentes.destino_de(nueva, antigua, ambas)[0]["id"] == "EODI-2025-00199"
+    # Lo publicado sigue mandando: solo la de 2026 tenía enlace.
+    solo_nueva = frozenset({"EODI-2026-00094"})
+    assert incidentes.destino_de(nueva, antigua, solo_nueva)[0]["id"] == "EODI-2026-00094"
+
+
 def test_lo_que_hereda_el_destino_lleva_su_afirmacion_aunque_compartan_fuente() -> None:
     destino = inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto")
     absorbido = inc("EODI-2025-00002", "2025-10-02T21:00Z", "hora")

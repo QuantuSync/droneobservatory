@@ -267,6 +267,54 @@ def test_una_union_de_antes_devuelve_la_confirmacion_del_registro_unido(carpeta:
     assert _incidente(almacen, "EODI-2025-00998") == nuevo
 
 
+def test_la_declaracion_del_unido_pasa_a_la_que_queda() -> None:
+    """EODI-2026-00108 (Auvere): la noticia de cbsnews.com pasó al unirse EODI-2026-00333 (4 de
+    octubre de 2026), pero la declaración de la KAPO que contaba se leyó después en el unido y no
+    pasó; el 21 de octubre la ficha se quedó sin ninguna autoridad y pasó a «posible dron»."""
+    from datetime import UTC, datetime
+
+    from tests import ejemplos
+
+    ahora = datetime(2025, 11, 5, tzinfo=UTC)
+    almacen = Almacen.abrir()
+    noticia = {
+        **ejemplos.fuente("gdelt-ae54", "C"),
+        "frase_origen": "Estonia and Latvia say Russian drones hit their NATO territory",
+    }
+    declaracion = {
+        **ejemplos.fuente("gdelt-ae54-declaracion-1", "B", es_autoridad=True),
+        "enlace": noticia["enlace"],
+        "medio": "Estonia's Internal Security Service (declaración oficial citada en cbsnews.com)",
+        "frase_origen": "Estonia's Internal Security Service said a drone entered the country "
+        "from Russia and slammed into the chimney of a power station",
+        "campos_respaldados": ["estado", "presencia_dron"],
+    }
+    otra = {**ejemplos.fuente("gdelt-otra", "C"), "frase_origen": "Droon tabas Auvere korstent"}
+    destino = ejemplos.incidente_minimo()
+    destino.update(id="EODI-2026-00108", lugar={"punto": {"lat": 59.35, "lon": 27.94},
+                                                "radio_km": 3, "pais": "EE"},
+                   fuentes=[otra, noticia])  # fmt: skip
+    destino["estado"]["historial"][0]["fuente_id"] = "gdelt-otra"
+    destino["presencia_dron"] = "no_confirmada"
+    almacen.guardar_incidente(destino, ahora, MODELOS)
+    unido = {**ejemplos.incidente_minimo(), "id": "EODI-2026-00333",
+             "lugar": destino["lugar"], "fuentes": [noticia, declaracion],
+             "fusionado_en": "EODI-2026-00108"}  # fmt: skip
+    unido["estado"]["historial"][0]["fuente_id"] = "gdelt-ae54"
+    almacen.guardar_incidente(unido, ahora, MODELOS)
+    assert oficiales.declaraciones_que_faltan(destino, unido) == [declaracion]
+    assert oficiales.uniones(almacen, ahora + timedelta(hours=1), MODELOS) == ["EODI-2026-00108"]
+    queda = almacen.incidente("EODI-2026-00108")
+    assert queda is not None
+    assert "gdelt-ae54-declaracion-1" in {f["id"] for f in queda["fuentes"]}
+    assert queda["estado"]["actual"] == "confirmado"
+    assert queda["presencia_dron"] == "confirmada"
+    # Ya hecho, no cambia nada; y una noticia que no está en la que queda no vuelve.
+    assert oficiales.uniones(almacen, ahora + timedelta(hours=2), MODELOS) == []
+    sin_noticia = {**destino, "fuentes": [otra]}
+    assert oficiales.declaraciones_que_faltan(sin_noticia, unido) == []
+
+
 def test_la_autoria_vuelve_si_una_union_dejo_la_fuente_sin_atribucion(carpeta: Path) -> None:
     """EODI-2026-00211, atribuida por la Presidencia de Rumanía, se unió el 14 de octubre de 2026
     en la EODI-2026-00187: la que quedó recibió las fuentes oficiales, no la atribución."""

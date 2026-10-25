@@ -279,8 +279,9 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   incidencia del experto. La decisión no se borra.
 - **Segunda lectura** (desde el 18 de octubre de 2026): lo que marca la capa secundaria
   ([`docs/segunda_lectura.md`](segunda_lectura.md)) lo revisa el experto con el modo
-  `segunda_lectura`, como mucho 0,10 USD al día (0,30 hasta el 19 de octubre de 2026: de 30
-  candidatos revisados, 2 cambiaron algo), al ritmo de su tope normal y nunca de la reserva
+  `segunda_lectura`, como mucho 0,30 USD al día desde el 25 de octubre de 2026 (0,30 hasta el 19
+  de octubre: de 30 candidatos revisados, 2 cambiaron algo; 0,10 del 19 al 25, con el experto
+  parado cada día por el tope), al ritmo de su tope normal y nunca de la reserva
   crítica; lo que no cabe espera al día siguiente. El servicio secundario de modelos que marca los
   candidatos es gratuito y no decide nada.
 
@@ -364,7 +365,7 @@ del tope (0,45 USD al día como mucho) y 40 escalan siempre (0,17 USD al día, c
 |---|---|---|
 | recogida horaria, experto | 27 | 4,3 como mucho entre todo el experto, más lo crítico de la reserva |
 | control de las fichas, experto | 5 | (dentro del experto; lo de la noche, por lote) |
-| segunda lectura, experto | 4,5 | 0,10 al día como mucho, dentro del experto |
+| segunda lectura, experto | 4,5 | 0,30 al día como mucho, dentro del experto |
 | recogida horaria, base | 3 | 2,8 |
 | control de las fichas, base | 2 | 2,0 |
 | partes de Ucrania, rectificaciones | 0,4 | 0,5 |

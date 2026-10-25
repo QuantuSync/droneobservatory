@@ -31,7 +31,7 @@ Límites, compartidos por todo lo que llama al extractor:
   «traducciones», `python -m recogida.control_fichas traducir-pendientes`).
 
 El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio registro de gasto
-fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
+fuera de la base: 0,30 dólares al día y 3 dólares una vez para su primera pasada.
 
 El modelo experto lleva su propio gasto, aparte de todos los modos (docs/modelos.md): lo que
 gasta cuenta solo contra su tope, nunca contra el de la recogida horaria ni el de otro modo. Su
@@ -54,7 +54,7 @@ los casos críticos con la reserva del experto; los demás modos de cada día es
 siguiente.
 
 La segunda lectura (docs/segunda_lectura.md) usa un servicio secundario gratuito; lo único que
-cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,10 dólares al
+cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,30 dólares al
 día (LIMITE_SEGUNDA_EXPERTO_DIARIO_USD), dentro del tope normal del experto y nunca de la reserva
 crítica. Lo que no cabe espera al día siguiente.
 
@@ -117,8 +117,9 @@ MARGEN_ESCALADOS_USD = 0.30
 RESERVA_CRITICA_DIARIA_USD = 0.50
 # Lo que el experto gasta cada día en revisar lo que marca la segunda lectura: cuenta dentro de su
 # tope normal (nunca de la reserva crítica).
-# Era 0,30 hasta el 19 de octubre de 2026: de 30 candidatos revisados, 2 cambiaron algo.
-LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.10
+# Era 0,30 hasta el 19 de octubre de 2026 (de 30 candidatos revisados, 2 cambiaron algo) y 0,10
+# hasta el 25: con 0,10 el experto se paraba cada día con candidatos esperando.
+LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.30
 # Cupo propio de la segunda lectura para las dos búsquedas de lo que falta (declaraciones oficiales
 # e incidentes que faltan, docs/segunda_lectura.md): su extracción con el experto, como mucho
 # configuracion/segunda_lectura.json (busqueda.cupo_experto.por_dia, 20 casos al día desde el 20 de
@@ -372,7 +373,7 @@ def comprobar_segunda(
     gastado_experto_hoy: float, gastado_segunda_hoy: float, previsto: float,
     momento: datetime | None = None, mes: Mes | None = None,
 ) -> None:  # fmt: skip
-    """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,10 al
+    """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,30 al
     día) y en el tope normal del experto, nunca en la reserva crítica, y solo al ritmo de su tope
     (comprobar_al_ritmo). Lanza LimiteGasto si no."""
     if gastado_segunda_hoy + previsto > LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:

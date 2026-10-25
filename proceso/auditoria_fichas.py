@@ -41,6 +41,17 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   viejo) 3 veces o más: dos reglas que se pisan en cada recogida (EODI-2025-00378, el titular,
   22-23 de octubre de 2026). Lo lee de la tabla de motivos y de los cambios guardados
   (`Almacen.cambios_desde`); un arreglo deshecho una sola vez no cuenta.
+- **L, autoridad perdida al unir**: la ficha que queda de una unión no tiene ninguna fuente de
+  autoridad y alguna de las fichas unidas en ella sí la tenía (EODI-2026-00108, Auvere: la
+  declaración de la KAPO se quedó en la unida EODI-2026-00333 y la ficha pasó a «posible dron»;
+  recogida/declaraciones_oficiales.con_declaraciones_del_unido).
+- **M, lugar revisado**: el lugar de una ficha con una revisión a mano del lugar no es el que fija
+  la revisión: otro nivel u otro punto que el revisado, o, si la revisión da solo la localidad,
+  un punto lejos de ella (EODI-2026-00278, Dublín; proceso/decidir.en_la_localidad_revisada).
+- **N, noticia retrospectiva**: el inicio de la ficha es la fecha de publicación y una de sus
+  fuentes nombra otro mes (EODI-2026-00134 y EODI-2026-00663, noticias de octubre sobre los drones
+  de Leipzig de septiembre, y EODI-2026-00108, Auvere en marzo): la noticia cuenta un suceso
+  anterior y la ficha no casa con la del suceso por la fecha.
 """
 
 import json
@@ -71,7 +82,7 @@ from proceso.presencia import (
 )
 from proceso.ubicacion import CATEGORIA_LUGAR
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "R")
+COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "R")
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -84,6 +95,9 @@ NOMBRES = {
     "I": "alias genérico",
     "J": "hora local como UTC",
     "K": "dato que oscila",
+    "L": "autoridad perdida al unir",
+    "M": "lugar revisado",
+    "N": "noticia retrospectiva",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -340,9 +354,73 @@ def _j(incidente: Documento) -> bool:
     return bool(malas) and not bien
 
 
+def _m(incidente: Documento) -> bool:
+    revision = decidir.revision_de(incidente, "lugar")
+    if revision is None or revision.get("valor") is None:
+        return False
+    valor, lugar = revision["valor"], incidente.get("lugar") or {}
+    if "punto" in valor:
+        return any(lugar.get(c) != valor[c] for c in ("nivel", "punto") if c in valor)
+    return decidir.en_la_localidad_revisada(lugar) != lugar
+
+
+# Formas de un mes que en su idioma también son una palabra corriente.
+_MESES_AMBIGUOS = {"en": frozenset({"may", "march"})}
+
+
+def _n(incidente: Documento) -> bool:
+    tiempo = incidente.get("tiempo") or {}
+    if (tiempo.get("origen_inicio") or {}).get("tipo") != "publicacion":
+        return False
+    inicio = date.fromisoformat(str(tiempo["inicio"]["valor"])[:10])
+    # El mes anterior en los primeros días del mes es el de la víspera, no otro suceso.
+    vale = {inicio.month} | ({(inicio.month - 2) % 12 + 1} if inicio.day <= 3 else set())
+    for fuente in incidente.get("fuentes", []):
+        idioma = str(fuente.get("idioma") or "")
+        lexico = fechas.lexicos().get(idioma)
+        if lexico is None:
+            continue
+        ambiguos = _MESES_AMBIGUOS.get(idioma, frozenset())
+        for palabra in fechas.normal(str(fuente.get("frase_origen") or "")).split():
+            mes = lexico.meses.get(palabra)
+            if mes is not None and mes not in vale and palabra not in ambiguos:
+                return True
+    return False
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
+    "M": _m, "N": _n,
 }  # fmt: skip
+
+
+def _con_autoridad(documento: Documento) -> bool:
+    return any(f.get("es_autoridad") for f in documento.get("fuentes", []))
+
+
+def autoridad_perdida(documentos: list[Documento]) -> list[str]:
+    """Las fichas vigentes sin ninguna fuente de autoridad con alguna unida en ellas que sí la
+    tenía (L). Sigue la cadena de uniones hasta la que queda."""
+    por_id = {str(d["id"]): d for d in documentos}
+
+    def final(documento: Documento) -> Documento | None:
+        vistos: set[str] = set()
+        while "fusionado_en" in documento and documento["id"] not in vistos:
+            vistos.add(documento["id"])
+            siguiente = por_id.get(str(documento["fusionado_en"]))
+            if siguiente is None:
+                return None
+            documento = siguiente
+        return documento if incidentes.activo(documento) else None
+
+    salida: set[str] = set()
+    for documento in documentos:
+        if "fusionado_en" not in documento or not _con_autoridad(documento):
+            continue
+        destino = final(documento)
+        if destino is not None and not _con_autoridad(destino):
+            salida.add(str(destino["id"]))
+    return sorted(salida)
 
 
 HORAS_OSCILA = 48
@@ -401,6 +479,7 @@ def auditar(
             if fallo:
                 resultado[clave].append(str(documento["id"]))
     vigentes = {str(d["id"]) for d in vistos if incidentes.activo(d)}
+    resultado["L"] = autoridad_perdida(vistos)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
                       if i in vigentes]  # fmt: skip
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor

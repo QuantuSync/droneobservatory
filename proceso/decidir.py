@@ -356,6 +356,8 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
         lugar = {k: v for k, v in resultado.get("lugar", {}).items() if k not in quitar}
         if valor is not None:
             lugar.update(valor)
+            if "punto" not in valor:
+                lugar = en_la_localidad_revisada(lugar)
         resultado["lugar"] = lugar
     elif campo == "inicio":
         # El día del suceso en UTC que dice la fuente (no el de la publicación ni el día local).
@@ -370,6 +372,45 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
         anterior = (resultado.get("consecuencias") or {}).get("cierre") or {}
         cierre = {**anterior, "valor": valor} if valor == "si" else {"valor": valor}
         resultado["consecuencias"] = {**resultado.get("consecuencias", {}), "cierre": cierre}
+
+
+# Lo más lejos que puede quedar el punto de la localidad revisada, además del radio de esta: el
+# de la instalación de la ficha suele estar a pocos km (la base aérea junto a Geilenkirchen); más
+# lejos, el punto es de otro sitio que dejó una extracción anterior.
+MAX_KM_LOCALIDAD_REVISADA = 15.0
+
+
+def en_la_localidad_revisada(lugar: Documento) -> Documento:
+    """El lugar de una revisión a mano que da la localidad sin el punto, con el nivel y el punto
+    de esa localidad (la del nomenclátor, si es una sola) cuando el punto que tenía queda lejos
+    de ella: la revisión fija la localidad, y lo que deje después una extracción no la mueve a
+    otro sitio (EODI-2026-00278: Dublín con el punto y el nivel de antes de revisarlo). Sin
+    cambios si la localidad no está en el nomenclátor o el punto ya es de ella."""
+    from proceso import control_fichas, noticias
+    from proceso.deduccion.geo import distancia_km
+
+    pais, nombre = lugar.get("pais"), lugar.get("localidad")
+    if not pais or not nombre:
+        return lugar
+    hallado = control_fichas.lugar_de_nombre(
+        str(nombre), "localidad", str(pais), lugar.get("region"), noticias.nomenclator()
+    )
+    if hallado is None:
+        return lugar
+    sitio = hallado[0]
+    punto = lugar.get("punto")
+    if punto and distancia_km(punto["lat"], punto["lon"], sitio.lat, sitio.lon) <= (
+        MAX_KM_LOCALIDAD_REVISADA + sitio.radio_km
+    ):
+        return lugar
+    nuevo = {k: v for k, v in lugar.items() if k != "fuente_punto"}
+    nuevo.update(
+        nivel="localidad",
+        punto={"lat": round(sitio.lat, incidentes.DECIMALES),
+               "lon": round(sitio.lon, incidentes.DECIMALES)},
+        radio_km=sitio.radio_km,
+    )  # fmt: skip
+    return nuevo
 
 
 def decidir_datos(incidente: Documento) -> Documento:

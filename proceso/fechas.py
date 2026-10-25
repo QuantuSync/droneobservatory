@@ -77,6 +77,11 @@ def _normal(texto: str) -> str:
     return normalizar(_APOSTROFOS.sub("", texto))
 
 
+def normal(texto: str) -> str:
+    """La frase normalizada como la leen los léxicos (la auditoría de las fichas)."""
+    return _normal(texto)
+
+
 @dataclass(frozen=True)
 class Lexico:
     meses: dict[str, int]
