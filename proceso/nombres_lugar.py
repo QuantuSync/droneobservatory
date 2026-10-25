@@ -770,9 +770,16 @@ def _cambios(incidente: Documento, idioma: str) -> dict[str, str]:
             r"^(?:Aeropuerto|Base|Central|Puerto|Muelle|Estación)\b", destino
         ):
             destino = destino[0].lower() + destino[1:]
-            cambios[f"de {nombre_objetivo}"] = f"del {destino}"
-            cambios[f"en {nombre_objetivo}"] = f"en el {destino}"
-        cambios[str(nombre_objetivo)] = destino
+        # También la forma a medio corregir que publicaba la versión anterior («Bruselas
+        # Airport»: la ciudad cambiada y el resto no), para que vuelva a salir bien.
+        a_medias = _patron_formas(idioma).sub(
+            _sustituir(_formas_ajenas()[idioma]), str(nombre_objetivo)
+        )
+        for forma in dict.fromkeys((str(nombre_objetivo), a_medias)):
+            if destino != escrito_objetivo[idioma]:
+                cambios[f"de {forma}"] = f"del {destino}"
+                cambios[f"en {forma}"] = f"en el {destino}"
+            cambios[forma] = destino
     for original, escrito in pares:
         if not original or escrito is None:
             continue
