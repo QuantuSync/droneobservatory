@@ -581,6 +581,33 @@
       "conserva": "EODI-2026-00672",
       "motivo": "el mismo suceso: el único dron que entró en Moldavia el 23 de octubre de 2026, detectado a las 13:59 (hora local) desde Verhnia Slobidka, perdido en el radar cerca de Pepeni (Sîngerei) y Meșeni (Rezina) y hallado caído junto a una vivienda de Chiștelnița (Telenești). El Ministerio de Defensa confirmó a PRO TV que el dron de Chiștelnița «este aceeași care a survolat anterior spațiul aerian al Republicii Moldova»; 00676 y 00682 (la declaración de Maia Sandu) son noticias de la caída",
       "motivo_en": "the same event: the only drone that entered Moldova on 23 October 2026, detected at 13:59 (local time) from Verhnia Slobidka, lost on radar near Pepeni (Sîngerei) and Meșeni (Rezina) and found crashed next to a house in Chiștelnița (Telenești). The Defence Ministry confirmed to PRO TV that the Chiștelnița drone was the same one; 00676 and 00682 (Maia Sandu's statement) are reports of the crash"
+    },
+    {
+      "registros": [
+        "EODI-2025-00164",
+        "EODI-2026-00006"
+      ],
+      "conserva": "EODI-2025-00164",
+      "motivo": "el mismo suceso: los drones de RAF Lakenheath de noviembre de 2024. 00006 es la noticia del 4 de febrero de 2026 (eadt.co.uk) de que la policía del Ministerio de Defensa cierra sus pesquisas: «its inquiries into the mystery activity near RAF Lakenheath in November 2024 have come to an end», fechada por su publicación",
+      "motivo_en": "the same event: the RAF Lakenheath drones of November 2024. 00006 is the 4 February 2026 report (eadt.co.uk) that the Ministry of Defence Police has closed its inquiries, dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00121",
+        "EODI-2026-00343"
+      ],
+      "conserva": "EODI-2026-00121",
+      "motivo": "el mismo suceso: el dron que alcanzó un bloque de viviendas de Galați. 00343 son noticias del 13 de junio de 2026 sobre sus consecuencias en la OTAN («o dronă rusească încărcată cu explozibil a lovit un bloc din Galați», stiripesurse.ro), fechadas por su publicación",
+      "motivo_en": "the same event: the drone that hit an apartment block in Galați. 00343 are 13 June 2026 reports on its consequences for NATO, dated by their publication"
+    },
+    {
+      "registros": [
+        "EODI-2025-00131",
+        "EODI-2025-00091"
+      ],
+      "conserva": "EODI-2025-00131",
+      "motivo": "el mismo suceso: los sobrevuelos de la base de Kleine-Brogel del fin de semana del 1 y 2 de noviembre de 2025. 00091 es una nota del 7 de noviembre (evz.ro) que lo recuerda («În weekend, baza militară belgiană Kleine-Brogel […] a fost survolată de trei ori»), fechada por su publicación",
+      "motivo_en": "the same event: the overflights of Kleine-Brogel air base on the weekend of 1-2 November 2025. 00091 is a 7 November note (evz.ro) recalling them, dated by its publication"
     }
   ],
   "reextraer": [
@@ -634,6 +661,20 @@
       "motivo": {
         "es": "No es un suceso con dron: la única fuente es un reportaje de contenido de socio de delfi.lt (sección «Pulsas / Poveikis», 14 de octubre de 2026) sobre cómo actúa la defensa aérea de la OTAN cuando entra un dron; recuerda de pasada un derribo en Rumanía sin fecha ni lugar y no cuenta ningún hecho del 14 de octubre. Los sucesos de esos días en Rumanía son EODI-2026-00532, EODI-2026-00538 y EODI-2026-00541.",
         "en": "Not a drone event: the only source is a partner-content feature on delfi.lt («Pulsas / Poveikis» section, 14 October 2026) about how NATO air defence acts when a drone enters; it mentions in passing a shoot-down over Romania with no date or place and reports nothing that happened on 14 October. The events of those days in Romania are EODI-2026-00532, EODI-2026-00538 and EODI-2026-00541."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00189",
+      "motivo": {
+        "es": "No es un suceso con dron: la única noticia (t-online.de, 28 de septiembre de 2025) da la cifra del año, «An den Flughäfen Hannover und Bremen haben Drohnen in diesem Jahr bis Ende August den Flugbetrieb jeweils viermal gestört», sin ningún hecho de un día. Los cierres de Hannover de esos días tienen su ficha (EODI-2025-00087).",
+        "en": "Not a drone event: the only report (t-online.de, 28 September 2025) gives the year's figure (four disruptions at Hannover up to the end of August) without any event on a given day. The Hannover closures of those days have their own record (EODI-2025-00087)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00400",
+      "motivo": {
+        "es": "No es un suceso con dron: las noticias del 10 de julio de 2026 cuentan la declaración del ministro Radu Miruță sobre cinco restos de drones destruidos en el mar en fechas que no dan («patru dintre aceste situaţii au avut loc înainte de incidentul cu drona care a explodat în Portul Constanţa, la începutul lunii iunie, iar una după aceea»). La explosión del puerto es EODI-2026-00152.",
+        "en": "Not a drone event: the 10 July 2026 reports cover Minister Radu Miruță's statement on five drone remnants destroyed at sea on dates they do not give (four before and one after the early-June explosion in the Port of Constanța). The port explosion is EODI-2026-00152."
       }
     }
   ],
@@ -9715,6 +9756,28 @@
       "enlace": "https://www.aa.com.tr/en/world/brussels-airport-temporarily-halts-air-traffic-after-drone-sighting/3763000",
       "pais": "BE",
       "motivo": "hacia las 10:00 hora de Bélgica del viernes 5 de diciembre de 2025 (09:00 UTC); la ficha daba las 10:15 UTC, la hora de publicación de la primera nota"
+    },
+    {
+      "incidente": "EODI-2025-00346",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2024-11-30T00:00Z",
+        "precision": "aproximada"
+      },
+      "cita": "Ende November, Anfang Dezember sind offenbar Aufklärungsdrohnen in das Sperrgebiet der US Air Base Ramstein eingedrungen",
+      "enlace": "https://rheinpfalz.de/rheinpfalz-am-sonntag_artikel,-milit%C3%A4rexpertin-ulrike-franke-brauchen-mehr-drohnenabwehr-_arid,5733962.html",
+      "motivo": "a finales de noviembre o principios de diciembre de 2024, según la entrevista del 17 de enero de 2025; la ficha tenía la fecha de la entrevista"
+    },
+    {
+      "incidente": "EODI-2025-00388",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2025-01-09T00:00Z",
+        "precision": "dia"
+      },
+      "cita": "kam es auf der Basis nahe der Nordsee zu „sechs Sicherheitsvorkommnissen“ mit professionellen Drohnen unbekannter Herkunft zwischen dem 9. und 29. Januar.",
+      "enlace": "https://taz.de/Spionagealarm-bei-Luftwaffenbasis-Husum/!6068132",
+      "motivo": "seis avistamientos entre el 9 y el 29 de enero de 2025 (taz, citando a la Süddeutsche Zeitung); la ficha tenía la fecha de la noticia, el 9 de febrero"
     }
   ]
 }
