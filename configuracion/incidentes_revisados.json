@@ -543,6 +543,44 @@
       "conserva": "EODI-2025-00127",
       "motivo": "el mismo suceso: el dron que retrasó seis vuelos en el aeropuerto de Sofía (LBSF) el viernes 7 de febrero de 2025; 00157 y 00124 son noticias del 10 y el 12 de febrero sobre ese dron. El control de fichas los unió el 14 de octubre de 2026, la reversión en bloque de su primera ronda deshizo también esta unión y el repaso de esa noche los dio por distintos (leyó el 9 de febrero, la fecha de la noticia, como día del suceso); el 23 de octubre volvió a unirlos. Revisado a mano para que no vuelva a deshacerse",
       "motivo_en": "the same event: the drone that delayed six flights at Sofia airport (LBSF) on Friday 7 February 2025; 00157 and 00124 are reports of 10 and 12 February about that drone. The record check joined them on 14 October 2026, the bulk reversal of its first round also undid this union and that night's review took them as different (it read 9 February, the date of the report, as the day of the event); on 23 October it joined them again. Reviewed by hand so that it is not undone again"
+    },
+    {
+      "registros": [
+        "EODI-2026-00094",
+        "EODI-2026-00033"
+      ],
+      "conserva": "EODI-2026-00094",
+      "motivo": "el mismo suceso: el dron que paró media hora el tráfico de Brussels Airport (Zaventem) el viernes 11 de septiembre de 2026 por la noche, según skeyes. 00033 son noticias rumanas del 12 y el 13 de septiembre sobre ese cierre («aeroportul din Bruxelles»); la primera extracción leyó «Bruxelles» como el aeropuerto de Charleroi-Bruxelles-Sud y la ficha se publicaba con el punto de Charleroi, a unos 45 km",
+      "motivo_en": "the same event: the drone that halted traffic at Brussels Airport (Zaventem) for half an hour on the evening of Friday 11 September 2026, according to skeyes. 00033 are Romanian reports of 12 and 13 September about that closure («aeroportul din Bruxelles»); the first extraction read «Bruxelles» as Brussels South Charleroi airport and the record was shown at Charleroi, about 45 km away"
+    },
+    {
+      "registros": [
+        "EODI-2026-00134",
+        "EODI-2026-00663",
+        "EODI-2026-00499"
+      ],
+      "conserva": "EODI-2026-00134",
+      "motivo": "el mismo suceso: el intento de atentado con dron en el aeropuerto de Leipzig/Halle del 4 de agosto de 2026. 00663 (avaz.ba, 21 de octubre: «neuspjeli napad dronovima na aerodromu Lajpcig/Hale u Njemačkoj u augustu, objavio je Wall Street Journal») y 00499 (freiepresse.de, notiziegeopolitiche.net y la-croix.com, 8 y 9 de octubre: «Der Anschlagsversuch auf eine ukrainische Transportmaschine auf dem Flughafen Leipzig/Halle») son noticias posteriores sobre ese ataque, fechadas por su publicación",
+      "motivo_en": "the same event: the attempted drone attack at Leipzig/Halle airport on 4 August 2026. 00663 (avaz.ba, 21 October: «neuspjeli napad dronovima na aerodromu Lajpcig/Hale u Njemačkoj u augustu, objavio je Wall Street Journal») and 00499 (freiepresse.de, notiziegeopolitiche.net and la-croix.com, 8 and 9 October) are later reports about that attack, dated by their publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00276",
+        "EODI-2026-00666"
+      ],
+      "conserva": "EODI-2026-00276",
+      "motivo": "el mismo suceso: el dron estrellado que un agricultor encontró a mediados de septiembre de 2026 cerca de la base aérea de Wunstorf. 00666 (dagbladet.no, 22 de octubre) cuenta el informe interno de la Bundeswehr que sube el nivel de amenaza por ese hallazgo («Wesentlichen Anteil für die Bewertung hat dem Bericht zu Folge der Fund eines Landwirtes Mitte September unweit des Fliegerhorsts Wunstorf», stuttgarter-zeitung.de, 21 de octubre); estaba fechada por su publicación",
+      "motivo_en": "the same event: the crashed drone a farmer found in mid-September 2026 near Wunstorf air base. 00666 (dagbladet.no, 22 October) reports the internal Bundeswehr report that raises the threat level because of that find (stuttgarter-zeitung.de, 21 October); it was dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00672",
+        "EODI-2026-00676",
+        "EODI-2026-00682"
+      ],
+      "conserva": "EODI-2026-00672",
+      "motivo": "el mismo suceso: el único dron que entró en Moldavia el 23 de octubre de 2026, detectado a las 13:59 (hora local) desde Verhnia Slobidka, perdido en el radar cerca de Pepeni (Sîngerei) y Meșeni (Rezina) y hallado caído junto a una vivienda de Chiștelnița (Telenești). El Ministerio de Defensa confirmó a PRO TV que el dron de Chiștelnița «este aceeași care a survolat anterior spațiul aerian al Republicii Moldova»; 00676 y 00682 (la declaración de Maia Sandu) son noticias de la caída",
+      "motivo_en": "the same event: the only drone that entered Moldova on 23 October 2026, detected at 13:59 (local time) from Verhnia Slobidka, lost on radar near Pepeni (Sîngerei) and Meșeni (Rezina) and found crashed next to a house in Chiștelnița (Telenești). The Defence Ministry confirmed to PRO TV that the Chiștelnița drone was the same one; 00676 and 00682 (Maia Sandu's statement) are reports of the crash"
     }
   ],
   "reextraer": [
@@ -3511,6 +3549,55 @@
         "fecha": "2026-10-22",
         "en": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828 (original)"
       }
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
+      "medio": "cbsnews.com",
+      "fecha": "2026-03-25",
+      "idioma": "en",
+      "frase": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+      "comprobada": {
+        "fecha": "2026-10-25",
+        "en": "https://www.cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory/ (original); la declaración estaba en EODI-2026-00333, unida en 00108 el 4 de octubre de 2026, y no pasó a 00108"
+      },
+      "declaracion": {
+        "autoridad": "Estonia's Internal Security Service",
+        "pais": "EE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident",
+      "medio": "news.err.ee",
+      "fecha": "2026-10-23",
+      "idioma": "en",
+      "frase": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+      "comprobada": {
+        "fecha": "2026-10-25",
+        "en": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident (original; en estonio, https://www.err.ee/1610174596/uurimine-ei-tuvastanud-auvere-droonijuhtumis-tahtlikku-tegevust-eesti-vastu)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00672",
+      "enlace": "https://army.md/ro/comunicate-de-presa/doua-cazuri-de-incalcare-spatiului-aerian-al-republicii-moldova-perioada-16-23",
+      "medio": "army.md",
+      "fecha": "2026-10-23",
+      "idioma": "ro",
+      "frase": "Ulterior un cetățean a anunțat Poliția despre depistarea unui aparat de zbor lângă locuința sa din satul Chiștelnița, raionul Telenești.",
+      "comprobada": {
+        "fecha": "2026-10-25",
+        "en": "https://army.md/ro/comunicate-de-presa/doua-cazuri-de-incalcare-spatiului-aerian-al-republicii-moldova-perioada-16-23 (original)"
+      },
+      "oficial": true,
+      "declaracion": {
+        "autoridad": "Ministerul Apărării",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [
@@ -4241,6 +4328,28 @@
       "motivo": {
         "es": "La ficha publicaba las 02:00 UTC; el Ministerio de Defensa detectó el dron «la ora 04:07», hora de Chisináu, que en agosto (UTC+3) son las 01:07 UTC.",
         "en": "The record showed 02:00 UTC; the Defence Ministry detected the drone «la ora 04:07», Chișinău time, which in August (UTC+3) is 01:07 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "titulo": {
+        "es": "Un dron alcanza la chimenea de la central eléctrica de Auvere (Estonia)",
+        "en": "Drone hits the chimney of the Auvere power plant in Estonia"
+      },
+      "motivo": {
+        "es": "La KAPO (Servicio de Seguridad Interior de Estonia) declaró que un dron entró desde Rusia y se estrelló contra la chimenea de una central (cbsnews.com, 25 de marzo de 2026). La Fiscalía cerró la investigación el 23 de octubre de 2026 sin poder determinar el origen del dron: el titular no dice «posible» ni «desviado», que daba por hecho un dron ucraniano.",
+        "en": "KAPO (the Estonian Internal Security Service) stated that a drone entered from Russia and slammed into the chimney of a power station (cbsnews.com, 25 March 2026). The Prosecutor's Office closed the investigation on 23 October 2026 without being able to determine the drone's origin: the headline does not say «possible» or «stray», which assumed a Ukrainian drone."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00672",
+      "titulo": {
+        "es": "Un dron que entró sin autorización en Moldavia cae junto a una vivienda de Chiștelnița (Telenești)",
+        "en": "Drone that entered Moldova without authorisation crashes next to a house in Chiștelnița (Telenești)"
+      },
+      "motivo": {
+        "es": "El dron que cruzó el espacio aéreo de Moldavia el 23 de octubre de 2026 es el mismo que cayó en Chiștelnița, según el Ministerio de Defensa (army.md y PRO TV): la ficha une las tres que lo contaban.",
+        "en": "The drone that crossed Moldovan airspace on 23 October 2026 is the same one that crashed in Chiștelnița, according to the Defence Ministry (army.md and PRO TV): the record joins the three that reported it."
       }
     }
   ],
@@ -6292,6 +6401,37 @@
         "frase": "Ambele incidente s-au produs în apropierea orașului Sulina."
       },
       "motivo": "Los dos drones se derribaron sobre las aguas territoriales del mar Negro junto a Sulina (ziare.com; capital.ro: «deasupra Mării Negre, în apropierea localității Sulina»). La recogida de la 01:17 UTC del 23 de octubre de 2026 dejó solo la región «Marea Neagră» y la ficha perdió su punto."
+    },
+    {
+      "incidente": "EODI-2026-00672",
+      "lugar": {
+        "nombre": "Chiștelnița",
+        "nivel": "localidad",
+        "lat": 47.5688,
+        "lon": 28.66106,
+        "radio_km": 3,
+        "region": "Telenești"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00672",
+        "enlace": "https://army.md/ro/comunicate-de-presa/doua-cazuri-de-incalcare-spatiului-aerian-al-republicii-moldova-perioada-16-23",
+        "medio": "army.md",
+        "fecha": "2026-10-23",
+        "idioma": "ro",
+        "frase": "Ulterior un cetățean a anunțat Poliția despre depistarea unui aparat de zbor lângă locuința sa din satul Chiștelnița, raionul Telenești.",
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Apărării",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "drones"
+        },
+        "comprobada": {
+          "fecha": "2026-10-25",
+          "en": "https://army.md/ro/comunicate-de-presa/doua-cazuri-de-incalcare-spatiului-aerian-al-republicii-moldova-perioada-16-23 (original)"
+        }
+      },
+      "motivo": "El dron cayó junto a una vivienda del pueblo de Chiștelnița (Telenești), según el Ministerio de Defensa; la ficha solo tenía el país."
     }
   ],
   "separar": [
@@ -8788,6 +8928,38 @@
           "lugar": "LBSF"
         }
       ]
+    },
+    {
+      "incidente": "EODI-2025-00199",
+      "distintos": true,
+      "motivo": {
+        "es": "junta dos cierres distintos de Brussels Airport (Zaventem) por un aviso de dron: el de unos quince minutos del viernes 5 de diciembre de 2025 hacia las 10:00 (nieuwsblad.be; lavenir.net, según skeyes: «interrompu durant une quinzaine de minutes vendredi vers 10h00») y el de media hora del viernes 11 de septiembre de 2026 por la noche (gdnonline.com), que es EODI-2026-00094. Al recibir las noticias de 2026 la ficha tomó su fecha y una regla la fundió en EODI-2026-00094 el 25 de octubre de 2026.",
+        "en": "it merges two different closures of Brussels Airport (Zaventem) over a drone report: the one of about fifteen minutes on Friday 5 December 2025 around 10:00 (nieuwsblad.be; lavenir.net, citing skeyes) and the half-hour one on the evening of Friday 11 September 2026 (gdnonline.com), which is EODI-2026-00094. On receiving the 2026 reports the record took their date and a rule merged it into EODI-2026-00094 on 25 October 2026."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-12-05",
+          "pais": "BE",
+          "descripcion": "Tráfico de Brussels Airport parado unos quince minutos por un aviso de dron, viernes 5 de diciembre de 2025 hacia las 10:00",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-3e7a157c411e8d63"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-11",
+          "pais": "BE",
+          "descripcion": "Dron interrumpe media hora el tráfico de Brussels Airport, viernes 11 de septiembre de 2026 por la noche",
+          "coincide_con": "EODI-2026-00094",
+          "fuentes": [
+            "gdelt-e9f0fe25506f415a",
+            "gdelt-e9f0fe25506f415a-declaracion-1",
+            "gdelt-e9f0fe25506f415a-declaracion-2"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
@@ -8991,7 +9163,13 @@
       "incidente": "EODI-2026-00278",
       "campo": "lugar",
       "valor": {
-        "localidad": "costa de Wicklow"
+        "localidad": "costa de Wicklow",
+        "nivel": "localidad",
+        "punto": {
+          "lat": 53.33306,
+          "lon": -6.24889
+        },
+        "radio_km": 20.0
       },
       "cita": "which would put it somewhere off the Co Wicklow coast.",
       "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
@@ -9491,6 +9669,17 @@
       "cita": "La base navale de Toulon survolée par des drones non autorisés, une enquête judiciaire ouverte",
       "enlace": "https://nicematin.com/societe/securite/la-base-navale-de-toulon-survolee-par-des-drones-non-autorises-une-enquete-judiciaire-ouverte-10744254",
       "motivo": "es la base naval de Toulon; el nomenclátor casó «base navale» con una base de La Reunión del mismo nombre"
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+      "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
+      "motivo": "un dron, según la KAPO"
     }
   ]
 }

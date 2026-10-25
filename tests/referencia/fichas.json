@@ -2393,7 +2393,7 @@
     },
     "presencia_dron": {
      "valor": "confirmada",
-     "cita": "Scafandrii de lupt\u0103 EOD \u0061i For\u021belor Navale Rom\u00e2ne au intervenit duminic\u0103 diminea\u021b\u0103 pentru a neutraliza resturi de dron\u0103 g\u0103site \u00een Marea Neagr\u0103, \u00een zona Grindului Chituc din jude\u021bul Constan\u021ba, a anun\u021bat Ministerul Ap\u0103r\u0103rii Na\u021bionale (MApN)",
+     "cita": "Scafandrii de lupt\u0103 EOD ai For\u021belor Navale Rom\u00e2ne au intervenit duminic\u0103 diminea\u021b\u0103 pentru a neutraliza resturi de dron\u0103 g\u0103site \u00een Marea Neagr\u0103, \u00een zona Grindului Chituc din jude\u021bul Constan\u021ba, a anun\u021bat Ministerul Ap\u0103r\u0103rii Na\u021bionale (MApN)",
      "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
      "nota": "Valor sin cambio; cita sustituida por la de hotnews.ro sobre Chituc (la de bursa.ro era de otro suceso). El estado ya usa esta cita del MApN y no necesita cambio."
     },
@@ -3023,6 +3023,67 @@
      "valor": "Aeropuerto de Riga",
      "cita": "Ba\u017e\u0101s par dronu R\u012bgas lidostas tuvum\u0101 otrdien uz neilgu laiku aptur\u0113ta lidma\u0161\u012bnu pacel\u0161an\u0101s un nolai\u0161an\u0101s",
      "enlace": "https://diena.lv/raksts/latvija/zinas/bazas-par-dronu-rigas-lidostas-tuvuma-otrdien-uz-neilgu-laiku-aptureta-lidmasinu-pacelsanas-un-nolaisanas-14343137"
+    }
+   }
+  },
+  {
+   "id": "EODI-2026-00108",
+   "por_que": "Dron que golpea la chimenea de la central de Auvere (EE) el 25-03-2026: la KAPO dice que entro desde Rusia; la Fiscalia cierra el caso el 23-10-2026 sin determinar su origen, asi que no hay atribucion. Su declaracion se perdio al unir 00333.",
+   "valores": {
+    "estado": {
+     "valor": "confirmado",
+     "cita": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+     "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory"
+    },
+    "presencia_dron": {
+     "valor": "confirmada",
+     "cita": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+     "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory"
+    },
+    "tipo": {
+     "valor": "incursion",
+     "cita": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+     "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory"
+    },
+    "objetivo": {
+     "valor": {
+      "categoria": "energia",
+      "nombre": "Auvere elektrijaam"
+     },
+     "cita": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+     "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident"
+    },
+    "pais": {
+     "valor": "EE",
+     "cita": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+     "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident"
+    },
+    "lugar": {
+     "valor": "Auvere",
+     "cita": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+     "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident"
+    },
+    "inicio": {
+     "valor": "2026-03-25",
+     "cita": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+     "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident"
+    },
+    "zona": {
+     "valor": "frontera",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva del lugar"
+    },
+    "drones": {
+     "valor": 1,
+     "cita": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+     "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory"
+    },
+    "cabecera": {
+     "valor": "Central el\u00e9ctrica de Auvere",
+     "cita": "sin fuente",
+     "enlace": null,
+     "nota": "deriva de los demas datos"
     }
    }
   }

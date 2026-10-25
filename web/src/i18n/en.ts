@@ -631,12 +631,12 @@ export const en: Textos = {
     industrial: "industrial plant",
   },
   medida: {
-    cierre_espacio_aereo: "airspace closure",
-    patrulla: "patrol",
-    cazas: "fighter jets scrambled",
-    derribo: "shootdown",
-    inhibicion: "jamming",
-    ninguna_conocida: "none known",
+    cierre_espacio_aereo: "Airspace closure",
+    patrulla: "Patrol",
+    cazas: "Fighter jets scrambled",
+    derribo: "Shootdown",
+    inhibicion: "Jamming",
+    ninguna_conocida: "None known",
   },
   sentido: {
     RU_UA: "From Russia against Ukraine",

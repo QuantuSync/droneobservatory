@@ -271,6 +271,23 @@ def test_sin_extractor_el_que_se_queda_pierde_lo_del_otro_suceso(vilna: Almacen)
     assert cierre["afirmaciones"] == []
 
 
+def test_el_fundido_por_una_regla_se_separa_igual(vilna: Almacen) -> None:
+    # EODI-2025-00199 recibió las fuentes de otro suceso y una regla lo fundió en EODI-2026-00094
+    # (25 de octubre de 2026): la separación deshace esa fusión antes de repartir.
+    mezclado = vilna.incidente("EODI-2026-00072")
+    destino = vilna.incidente("EODI-2026-00179")
+    assert mezclado is not None and destino is not None
+    nuevo, aportadas = incidentes.absorber(destino, mezclado, AHORA)
+    vilna.guardar_incidente(nuevo, AHORA, MODELOS)
+    vilna.guardar_incidente({**mezclado, "fusionado_en": destino["id"]}, AHORA, MODELOS)
+    vilna.registrar_fusion("2026-10-25T05:17Z", mezclado["id"], destino["id"],
+                           "mismo sitio y misma ventana", aportadas)  # fmt: skip
+    hechos = revisados.separar(vilna, AHORA, MODELOS, cliente=None)
+    assert hechos.repartidos == ["EODI-2026-00072"]
+    assert all(f["revertida"] for f in vilna.fusiones() if f["absorbido"] == "EODI-2026-00072"
+               and f["destino"] == "EODI-2026-00179")  # fmt: skip
+
+
 def test_lo_que_no_es_un_suceso_sale_sin_formar_otro(
     vilna: Almacen, monkeypatch: pytest.MonkeyPatch
 ) -> None:

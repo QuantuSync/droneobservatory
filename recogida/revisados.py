@@ -984,6 +984,23 @@ def repartir(
     None si no se puede (el incidente ya no está activo o se quedaría sin fuentes)."""
     id_ = revision["incidente"]
     original = almacen.incidente(id_)
+    if (
+        original is not None
+        and "fusionado_en" in original
+        and "retirado" not in original
+        and any(
+            f["absorbido"] == id_
+            and not f["revertida"]
+            and not f["motivo"].startswith(incidentes.PREFIJO_REVISADA)
+            for f in almacen.fusiones()
+        )
+    ):
+        # Un registro que una regla fundió en otro después de recibir las fuentes de otro suceso
+        # (EODI-2025-00199, el cierre de Zaventem del 5 de diciembre de 2025, fundido en
+        # EODI-2026-00094 el 25 de octubre de 2026): la fusión se deshace y se separa como los
+        # demás. Las fusiones revisadas a mano, no.
+        incidentes.revertir(almacen, id_, ahora, modelos)
+        original = almacen.incidente(id_)
     if original is None or not incidentes.activo(original):
         registro.warning("separación sin hacer: %s no está activo", id_)
         return None

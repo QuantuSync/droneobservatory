@@ -975,6 +975,11 @@ def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: froz
     # 2026: la patrulla del dron de Palanca se quedaba en la ficha de Tudora).
     if "respuesta" in destino and not any(a["campo"] == "medidas" for a in destino["afirmaciones"]):
         del destino["respuesta"]
+    # Los pasos del estado que dio una fuente del absorbido (estado_con_el_absorbido) se van con
+    # ella: si no, el destino cita una fuente que ya no tiene y no se puede guardar.
+    pasos = [p for p in destino["estado"]["historial"] if p.get("fuente_id") not in aportadas]
+    if pasos and len(pasos) < len(destino["estado"]["historial"]):
+        destino["estado"] = {"actual": pasos[-1]["estado"], "historial": pasos}
     nivel = credibilidad_noticias(len(destino["fuentes"]))
     for fuente in destino["fuentes"]:
         fuente["credibilidad"] = nivel

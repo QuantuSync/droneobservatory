@@ -157,6 +157,8 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             "EODI-2026-00263",
             "EODI-2026-00281",
             "EODI-2026-00064",
+            # Zaventem: el cierre del 5/12/2025 y el del 11/09/2026 (25 de octubre de 2026).
+            "EODI-2025-00199",
         }
     )
     # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.

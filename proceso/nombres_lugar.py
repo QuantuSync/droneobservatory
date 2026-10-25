@@ -827,12 +827,14 @@ def _ya_dice(texto: str, inicio: int, destino: str) -> bool:
 
 def corregir_texto(texto: str, cambios: dict[str, str], idioma: str | None = None) -> str:
     """El texto con cada forma ajena cambiada por la de la página (y, con `idioma`, también las
-    formas ajenas generales de las ciudades conocidas)."""
+    formas ajenas generales de las ciudades conocidas). Primero las del incidente, que son más
+    largas: con las generales antes, «Brussels Airport» pasaba a «Bruselas Airport» y ya no casaba
+    con el nombre del objetivo (EODI-2025-00136, 25 de octubre de 2026)."""
+    if cambios:
+        texto = _alternativas(cambios).sub(_sustituir(cambios), texto)
     if idioma is not None:
         texto = _patron_formas(idioma).sub(_sustituir(_formas_ajenas()[idioma]), texto)
-    if not cambios:
-        return texto
-    return _alternativas(cambios).sub(_sustituir(cambios), texto)
+    return texto
 
 
 # «Possible possible drone», «posible posible dron»: el calificativo repetido (2025-00299).
