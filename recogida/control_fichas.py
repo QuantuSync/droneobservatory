@@ -65,6 +65,7 @@ from proceso import (
     buques,
     decidir,
     escalado,
+    fechas,
     incidentes,
     lugar_preciso,
     no_es_suceso,
@@ -1340,6 +1341,96 @@ def citas_pendientes(almacen: Almacen, capa: str) -> dict[str, tuple[str, str]]:
     return {h: (str(v[0]), str(v[1])) for h, v in (cursor.get(capa) or {}).items()}
 
 
+# --- Noticias retrospectivas ---------------------------------------------------------------
+
+
+def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
+    """Las fichas nuevas fechadas por la publicación que parecen contar un suceso anterior
+    (reglas.pide_fecha) van al experto con la pregunta de la fecha del suceso y de si es el de una
+    ficha anterior del mismo sitio, sin ventana de días (docs/control_fichas.md, «Noticias
+    retrospectivas»). Si es el mismo, se unen; si da la fecha con su frase, la ficha la toma; si
+    no lo es, queda marcada. Mientras no hay respuesta comprobada, `retener` no la publica. Lo ya
+    decidido se vuelve a poner si una extracción nueva devuelve la fecha de publicación."""
+    activos = _activos(ctx.almacen)
+    por_id = {d["id"]: d for d in activos}
+    for clave, decision in ctx.decisiones.items():
+        if not clave.startswith("retrospectiva:"):
+            continue
+        documento = por_id.get(clave.removeprefix("retrospectiva:"))
+        if documento is not None:
+            nuevo = reglas.con_fecha_retrospectiva(documento, decision)
+            if nuevo is not documento:
+                ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
+    activos = _activos(ctx.almacen)
+    for incidente in activos:
+        id_ = incidente["id"]
+        if id_ in vistos or (motivo := reglas.pide_fecha(incidente, activos)) is None:
+            continue
+        clave = reglas.clave_retrospectiva(id_)
+        huella = reglas.huella_fuentes(incidente)
+        previa = ctx.decisiones.get(clave) or {}
+        if previa.get("huella") == huella and (
+            previa.get("decision")
+            or "respuesta" in previa
+            or _leer(previa.get("espera_experto") or _iso(ctx.ahora)) > ctx.ahora
+        ):
+            continue
+        if ctx.llamador.parado:
+            break
+        candidatas = reglas.previas_del_sitio(incidente, activos)
+        fuentes = fuentes_de_ficha(ctx.almacen, incidente, {})
+        resumenes = [
+            {
+                "id": c["id"],
+                "fecha": c["tiempo"]["inicio"]["valor"][:10],
+                "titular": (c.get("titulo") or {}).get("es", ""),
+            }
+            for c in candidatas
+        ]
+        cuerpo = peticiones.cuerpo_retrospectiva(
+            reglas.vista(incidente), fuentes.bloques, resumenes
+        )
+        leida = ctx.llamador.llamar(
+            cuerpo,
+            peticiones.MAX_SALIDA_RETROSPECTIVA,
+            clave,
+            escalar=lambda _: [f"noticia_retrospectiva: {motivo}"],
+        )
+        base = {
+            "huella": huella,
+            "motivo": motivo,
+            "fecha": _iso(ctx.ahora),
+            "version": peticiones.VERSION_RETROSPECTIVA,
+        }
+        if leida is None or not ctx.llamador.ultimos_motivos:
+            # Sin el experto (tope, fallo o sin configurar) no se decide: la ficha sigue retenida.
+            if ctx.llamador.ultima_espera:
+                ctx.nuevas[clave] = {
+                    **base,
+                    "decision": None,
+                    "espera_experto": ctx.llamador.ultima_espera,
+                }
+            continue
+        decidida = reglas.comprobar_retrospectiva(
+            leida, fuentes.comprobar, [c["id"] for c in candidatas], reglas.instante(incidente)
+        )
+        if decidida is None:
+            ctx.nuevas[clave] = {**base, "decision": None, "respuesta": leida}
+            ctx.resultado.dudas.setdefault(id_, []).append("retrospectiva sin comprobar")
+            continue
+        if decidida["decision"] == "mismo":
+            conserva, une = reglas.mas_antiguo(por_id[decidida["conserva"]], incidente)
+            unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos)
+            ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
+            decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}
+        else:
+            nuevo = reglas.con_fecha_retrospectiva(incidente, decidida)
+            if nuevo is not incidente:
+                ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
+                ctx.resultado.corregidos.setdefault(id_, []).append("inicio")
+        ctx.nuevas[clave] = {**base, **decidida}
+
+
 # --- Retención -----------------------------------------------------------------------------
 
 
@@ -1382,7 +1473,14 @@ def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documen
             motivos.append("verificación pendiente")
         if id_ in esperan:
             motivos.append("espera al modelo experto")
-        if motivos and (id_ in esperan or ctx.ahora - _leer(desde) < ESPERA):
+        # Una noticia que cuenta un suceso anterior no sale con la fecha de su publicación: se
+        # retiene hasta que el experto dé la fecha o la una a su ficha, sin el límite de 6 horas.
+        # La que solo comparte instalación con una ficha anterior (sin palabra del pasado) es
+        # casi siempre un suceso nuevo: espera al experto como mucho las 6 horas de siempre.
+        sin_fecha = fechas.retrospectiva(incidente) is not None
+        if reglas.pide_fecha(incidente, activos) is not None:
+            motivos.append("fecha del suceso sin respaldar (noticia retrospectiva)")
+        if motivos and (id_ in esperan or sin_fecha or ctx.ahora - _leer(desde) < ESPERA):
             nuevos_retenidos[id_] = {"desde": desde, "motivo": "; ".join(motivos)}
             ctx.resultado.retenidos[id_] = "; ".join(motivos)
             continue
@@ -1466,6 +1564,13 @@ def ejecutar(
     ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
     ctx.nuevas = {}
     aplicar_verificaciones(ctx)
+    try:
+        if alcance != "noche":
+            retrospectivas(ctx, vistos)
+    finally:
+        almacen.guardar_controles(ctx.nuevas, _iso(ahora))
+    ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
+    ctx.nuevas = {}
     hechas = set(almacen.traducciones())
     # Las citas de lo nuevo y lo cambiado; lo atrasado, de madrugada y en el repaso, para que no
     # se coma el gasto del día que necesitan las fichas nuevas.

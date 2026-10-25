@@ -720,3 +720,127 @@ def bajar_estado(incidente: Documento, instante_: Documento) -> Documento | None
 
 def resumen_json(datos: Any) -> str:
     return json.dumps(datos, ensure_ascii=False, sort_keys=True)
+
+
+# --- Noticias retrospectivas ---------------------------------------------------------------
+
+# Hasta dónde se buscan fichas anteriores de la misma instalación para una noticia fechada por su
+# publicación: la ventana de los pares (30 o 48 horas) no casa una noticia de octubre sobre el
+# ataque de agosto en Leipzig (EODI-2026-00499 con 00134) ni el hallazgo de Wunstorf contado una
+# semana después (00666 con 00276).
+DIAS_RETROSPECTIVA = 400
+MAX_CANDIDATAS_RETROSPECTIVA = 6
+_FECHA_RETROSPECTIVA = re.compile(r"^(\d{4})-(\d{2})(?:-(\d{2}))?$")
+
+
+def clave_retrospectiva(id_: str) -> str:
+    return f"retrospectiva:{id_}"
+
+
+def previas_del_sitio(incidente: Documento, activos: list[Documento]) -> list[Documento]:
+    """Las fichas anteriores del mismo sitio (la misma instalación, o el mismo lugar sin
+    instalación), con su fecha comprobada, de más reciente a más antigua, sin ventana de días: las
+    que una noticia retrospectiva puede contar otra vez."""
+    inicio = instante(incidente)
+    desde = inicio - timedelta(days=DIAS_RETROSPECTIVA)
+    previas = [
+        d
+        for d in activos
+        if d["id"] != incidente["id"]
+        and incidentes.fecha_verificada(d)
+        and desde <= instante(d) < inicio - timedelta(days=1)
+        and incidentes.mismo_sitio(incidente, d)
+    ]
+    return sorted(previas, key=instante, reverse=True)[:MAX_CANDIDATAS_RETROSPECTIVA]
+
+
+def pide_fecha(incidente: Documento, activos: list[Documento]) -> str | None:
+    """Por qué la ficha tiene que preguntar la fecha del suceso antes de publicarse, o None: tomó
+    la fecha de publicación y una fuente sitúa el suceso antes (fechas.retrospectiva), o su
+    instalación tiene una ficha anterior con la fecha comprobada en el mismo sitio (Leipzig/Halle
+    para EODI-2026-00499; el Fliegerhorst Wunstorf y la ficha del Steinhuder Meer para 00666)."""
+    if (palabra := fechas.retrospectiva(incidente)) is not None:
+        return f"una fuente sitúa el suceso antes: «{palabra}»"
+    tipo = ((incidente.get("tiempo") or {}).get("origen_inicio") or {}).get("tipo")
+    if (
+        tipo != fechas.PUBLICACION
+        or fechas.retrospectiva_revisada(incidente)
+        or not (incidente.get("objetivo") or {}).get("nombre")
+    ):
+        return None
+    if previas := previas_del_sitio(incidente, activos):
+        return f"ficha anterior del mismo sitio: {previas[0]['id']}"
+    return None
+
+
+def comprobar_retrospectiva(
+    respuesta: dict[str, Any],
+    fuentes: list[tuple[str, str]],
+    candidatas: list[str],
+    publicacion: datetime,
+) -> dict[str, Any] | None:
+    """La decisión comprobada del experto: {"decision": "mismo", "conserva": id} si es el suceso
+    de una ficha anterior; {"decision": "fecha", "inicio": {...}, "fuente_id", "frase"} con la
+    fecha que respalda una frase literal; {"decision": "no_retrospectiva"}; o None si la
+    respuesta no se sostiene (la ficha sigue retenida). Un mes sin día (el esquema no tiene
+    precisión de mes) va como el día 1 con precisión «aproximada»."""
+    motivos = {
+        "motivo_es": str(respuesta.get("motivo_es") or "")[:300],
+        "motivo_en": str(respuesta.get("motivo_en") or "")[:300],
+    }
+    if respuesta.get("retrospectiva") is False:
+        return {"decision": "no_retrospectiva", **motivos}
+    if respuesta.get("retrospectiva") is not True:
+        return None
+    misma = str(respuesta.get("misma_que") or "").strip()
+    if misma:
+        return {"decision": "mismo", "conserva": misma, **motivos} if misma in candidatas else None
+    numero, frase = respuesta.get("fuente"), str(respuesta.get("frase") or "")
+    if not isinstance(numero, int) or not 1 <= numero <= len(fuentes) or not frase:
+        return None
+    id_, texto = fuentes[numero - 1]
+    m = _FECHA_RETROSPECTIVA.match(str(respuesta.get("fecha") or "").strip())
+    if not frase_valida(frase, texto) or m is None:
+        return None
+    try:
+        dia = datetime(int(m[1]), int(m[2]), int(m[3] or 1), tzinfo=publicacion.tzinfo)
+    except ValueError:
+        return None
+    if dia.date() >= publicacion.date():
+        return None
+    precision = "dia" if m[3] else incidentes.APROXIMADA
+    inicio = {"valor": dia.strftime("%Y-%m-%dT00:00Z"), "precision": precision}
+    return {
+        "decision": "fecha",
+        "inicio": inicio,
+        "fuente_id": id_,
+        "frase": " ".join(frase.split()),
+        **motivos,
+    }
+
+
+def con_fecha_retrospectiva(incidente: Documento, decision: dict[str, Any]) -> Documento:
+    """La ficha con lo que decidió el experto sobre su fecha: la fecha que respalda la frase, o
+    la marca de revisada en el motivo del inicio (no era retrospectiva). Sin cambios si ya lo
+    tiene o el inicio ya no es el de la publicación."""
+    tiempo = incidente.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if origen.get("tipo") != fechas.PUBLICACION or fechas.retrospectiva_revisada(incidente):
+        return incidente
+    if decision.get("decision") == "fecha":
+        nuevo_origen = {
+            "tipo": fechas.EXPLICITA,
+            "fuente_id": decision["fuente_id"],
+            "motivo": (f"control de fichas ({fechas.MARCA_RETROSPECTIVA}): «{decision['frase']}»")[
+                :300
+            ],
+        }
+        nuevo_tiempo = {k: v for k, v in tiempo.items() if k not in {"inicio", "fin"}}
+        return {
+            **incidente,
+            "tiempo": {**nuevo_tiempo, "inicio": decision["inicio"], "origen_inicio": nuevo_origen},
+        }
+    if decision.get("decision") == "no_retrospectiva":
+        motivo = f"{origen.get('motivo', '')}; {fechas.MARCA_RETROSPECTIVA}: no lo es"[-300:]
+        return {**incidente, "tiempo": {**tiempo, "origen_inicio": {**origen, "motivo": motivo}}}
+    return incidente

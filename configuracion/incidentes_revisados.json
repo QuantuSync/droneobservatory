@@ -639,6 +639,18 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2025-00199",
+      "enlace": "https://www.aa.com.tr/en/world/brussels-airport-temporarily-halts-air-traffic-after-drone-sighting/3763000",
+      "medio": "aa.com.tr",
+      "fecha": "2025-12-05",
+      "idioma": "en",
+      "frase": "Air traffic at Brussels Airport was briefly interrupted on Friday around 10.00 am local time (0900GMT)",
+      "comprobada": {
+        "fecha": "2026-10-25",
+        "en": "https://www.aa.com.tr/en/world/brussels-airport-temporarily-halts-air-traffic-after-drone-sighting/3763000 (original)"
+      }
+    },
+    {
       "incidente": "EODI-2026-00668",
       "enlace": "https://inewsgr.com/441/synechizoun-oi-tourkikes-voltes-sto-aigaio-machitika-kataskopeftiko-kai-drones-ston-elliniko-enaerio-choro.htm",
       "medio": "inewsgr.com",
@@ -9680,6 +9692,29 @@
       "cita": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
       "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
       "motivo": "un dron, según la KAPO"
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-03-25T01:43Z",
+        "precision": "minuto"
+      },
+      "cita": "At 3:43 a.m. on March 25 this year, a drone struck a smokestack at the Auvere Power Plant near the Russian border, causing an explosion.",
+      "enlace": "https://news.err.ee/1610174695/investigation-finds-no-deliberate-activity-aimed-against-estonia-in-auvere-drone-incident",
+      "motivo": "las 3:43 hora de Estonia del 25 de marzo de 2026 (UTC+2, aún en horario de invierno): 01:43 UTC; la ficha daba las 06:00 UTC por «mercredi matin»"
+    },
+    {
+      "incidente": "EODI-2025-00199",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2025-12-05T09:00Z",
+        "precision": "aproximada"
+      },
+      "cita": "Air traffic at Brussels Airport was briefly interrupted on Friday around 10.00 am local time (0900GMT)",
+      "enlace": "https://www.aa.com.tr/en/world/brussels-airport-temporarily-halts-air-traffic-after-drone-sighting/3763000",
+      "pais": "BE",
+      "motivo": "hacia las 10:00 hora de Bélgica del viernes 5 de diciembre de 2025 (09:00 UTC); la ficha daba las 10:15 UTC, la hora de publicación de la primera nota"
     }
   ]
 }

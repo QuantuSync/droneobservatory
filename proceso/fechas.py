@@ -587,3 +587,54 @@ def dia_escrito(valor: str, frase: str, publicacion: datetime) -> bool:
         dia in {f, f - timedelta(days=1)}
         for f, _ in _explicitas(frase, lexico, publicacion.astimezone(UTC).date())
     )
+
+
+# --- Noticias retrospectivas ---------------------------------------------------------------
+
+# Lo que marca en el motivo del inicio que el control ya preguntó la fecha de una noticia que
+# parecía contar un suceso anterior (recogida/control_fichas.retrospectivas): el experto dijo
+# que no lo es o dio la fecha. La auditoría (N) y la retención ya no la vuelven a marcar.
+MARCA_RETROSPECTIVA = "noticia retrospectiva revisada"
+# Formas de un mes que en su idioma también son una palabra corriente («mai», «más» en rumano).
+MESES_AMBIGUOS = {"en": frozenset({"may", "march"}), "ro": frozenset({"mai"})}
+
+
+def retrospectiva_revisada(incidente: dict[str, Any]) -> bool:
+    """El control ya preguntó al experto la fecha de esta noticia y no era retrospectiva."""
+    origen = (incidente.get("tiempo") or {}).get("origen_inicio") or {}
+    return MARCA_RETROSPECTIVA in str(origen.get("motivo", ""))
+
+
+@cache
+def _anteriores() -> tuple[str, ...]:
+    """Los pasados lejanos o sin medida («el mes pasado», «earlier this year»), normalizados."""
+    formas = configuracion().get("pasados", {}).get("anterior", [])
+    return tuple(sorted({_normal(f) for f in formas}, key=len, reverse=True))
+
+
+def retrospectiva(incidente: dict[str, Any]) -> str | None:
+    """La palabra que sitúa el suceso antes de la noticia, si la ficha tomó la fecha de
+    publicación como inicio: un mes que no es el del inicio (ni el de la víspera en los
+    primeros días del mes: «u augustu» en una nota del 22 de octubre, EODI-2026-00663) o un
+    pasado lejano («last month», «letzten Monat»). None si no la hay o el control ya la revisó.
+    Una noticia así cuenta un suceso anterior y no casa con su ficha por la fecha."""
+    tiempo = incidente.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if origen.get("tipo") != PUBLICACION or retrospectiva_revisada(incidente):
+        return None
+    inicio = date.fromisoformat(str(tiempo["inicio"]["valor"])[:10])
+    vale = {inicio.month} | ({(inicio.month - 2) % 12 + 1} if inicio.day <= 3 else set())
+    for fuente in incidente.get("fuentes", []):
+        frase = _normal(str(fuente.get("frase_origen") or ""))
+        idioma = str(fuente.get("idioma") or "")
+        lexico = lexicos().get(idioma)
+        if lexico is not None:
+            ambiguos = MESES_AMBIGUOS.get(idioma, frozenset())
+            for palabra in frase.split():
+                mes = lexico.meses.get(palabra)
+                if mes is not None and mes not in vale and palabra not in ambiguos:
+                    return palabra
+        for expresion in _anteriores():
+            if _contiene(frase, expresion) >= 0:
+                return expresion
+    return None
