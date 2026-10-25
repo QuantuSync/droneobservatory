@@ -74,6 +74,12 @@ def test_el_objetivo_en_otro_idioma_antes_que_la_ciudad() -> None:
     assert titulo["es"] == "Suspendidos los vuelos en el aeropuerto de Bruselas por un posible dron"
     assert titulo["en"] == "Flights suspended at Brussels Airport over possible drone sighting"
     assert nombres_lugar.problemas_texto(titulo["es"], "es") == []
+    # Lo ya publicado a medio corregir también sale bien al publicar otra vez.
+    doc["titulo"] = {
+        **doc["titulo"],
+        "es": "Suspendidos los vuelos en Bruselas Airport por un posible dron",
+    }
+    assert nombres_lugar.titulo_corregido(doc)["es"] == titulo["es"]
 
 
 def test_larnaca_sin_localidad_lleva_la_ciudad_de_su_aeropuerto() -> None:
