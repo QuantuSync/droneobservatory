@@ -25,12 +25,6 @@ export interface FuenteDelegada {
 
 export const FUENTES: readonly FuenteDelegada[] = [
   {
-    // Ministerio de Defensa de Letonia: la lista de noticias y cada noticia.
-    id: "mod_lv",
-    base: "https://www.mod.gov.lv",
-    caminos: [/^\/robots\.txt$/, /^\/lv\/zinas$/, /^\/lv\/zinas\/[a-z0-9-]{10,}$/],
-  },
-  {
     // Consejo de Seguridad Nuclear: el canal de sucesos notificados.
     id: "csn_sucesos",
     base: "https://www.csn.es",

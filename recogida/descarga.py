@@ -127,6 +127,20 @@ class Descargador:
         otro._cabeceras = self._cabeceras
         return otro
 
+    def con_transporte(self, transporte: Transporte) -> "Descargador":
+        """Otro descargador igual, con otro transporte (el lector delegado, recogida/
+        lector_delegado.py): la misma pausa, los mismos reintentos y la misma comprobación."""
+        otro = self.con_limites(self._reintentos, self._limite_s)
+        otro._transporte = transporte
+        # La misma cuenta de la pausa por sitio y los mismos recuentos.
+        otro._ultima = self._ultima
+        otro.recuentos = self.recuentos
+        return otro
+
+    @property
+    def transporte(self) -> Transporte:
+        return self._transporte
+
     def _dentro_del_plazo(self, espera_s: float = 0.0) -> None:
         if self.plazo is not None:
             self.plazo.comprobar(espera_s)

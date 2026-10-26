@@ -161,10 +161,11 @@ def test_las_fuentes_oficiales_espanolas_y_portuarias_estan_en_la_recogida() -> 
     fuentes = {f["id"]: f for f in oficiales.fuentes()}
     for id_ in ("aesa", "mde_es", "puertos_del_estado", "valenciaport"):
         assert fuentes[id_]["pais"] == "ES" and fuentes[id_]["tipo"] == "rss"
-    # csn.es bloquea la red de la recogida desde el 23 de octubre de 2026
-    # (docs/fuentes_retiradas.md).
-    assert "csn_sucesos" not in fuentes
-    # Ni mod.gov.lv, que no acepta conexiones de fuera desde el 21 de octubre de 2026.
+    # csn.es bloqueó la red de la recogida del 23 al 26 de octubre de 2026: se lee por el lector
+    # delegado de la web (docs/lector_delegado.md).
+    assert fuentes["csn_sucesos"]["delegada"] is True
+    # mod.gov.lv no acepta conexiones de fuera desde el 21 de octubre de 2026, tampoco desde
+    # Vercel ni GitHub (docs/fuentes_retiradas.md).
     assert "mod_lv" not in fuentes
     for id_ in ("port_gdansk", "tallinna_sadam", "koge_havn"):
         assert fuentes[id_]["tipo"] == "rss"
