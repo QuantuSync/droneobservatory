@@ -6,7 +6,10 @@
   "outputDirectory": "web/dist",
   "ignoreCommand": "node web/scripts/omitir-build.ts",
   "crons": [{ "path": "/api/vigia", "schedule": "*/10 * * * *" }],
-  "functions": { "api/almacen.ts": { "regions": ["fra1"] } },
+  "functions": {
+    "api/almacen.ts": { "regions": ["fra1"] },
+    "api/lector.ts": { "regions": ["arn1"], "maxDuration": 60 }
+  },
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [{ "source": "/es", "destination": "/", "permanent": true }],
