@@ -34,6 +34,7 @@ from datetime import UTC, date, datetime, timedelta
 from functools import cache
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from almacen.base import Almacen
 from esquema import Documento
@@ -378,6 +379,30 @@ def lugar_sin_buque(lugar: Documento, textos: list[str]) -> Documento:
     return nuevo
 
 
+def _fin_con_frase(
+    ficha: Validada,
+    fin: datetime,
+    inicio: datetime,
+    articulos: list[Documento],
+    enviadas: list[str],
+    ubicacion: Ubicacion,
+) -> bool:
+    """La frase del fin escribe esa hora o la duración que lleva a ella (fechas.fin_escrito):
+    un fin que el extractor deduce sin que nadie lo escriba no se guarda (EODI-2025-00154)."""
+    campo = ficha.campos.get("fin") or {}
+    fuente = campo.get("fuente")
+    url = enviadas[fuente - 1] if isinstance(fuente, int) and 1 <= fuente <= len(enviadas) else None
+    idioma = next((a.get("idioma") for a in articulos if a.get("url") == url), None)
+    punto = ubicacion.sitio
+    zona_suceso = fechas.zona(
+        ubicacion.pais, punto.lat if punto else None, punto.lon if punto else None
+    )
+    return fechas.fin_escrito(
+        str(campo.get("frase") or ""), idioma, fin.replace(tzinfo=fin.tzinfo or UTC),
+        inicio.replace(tzinfo=inicio.tzinfo or UTC), zona_suceso or ZoneInfo("UTC"),
+    )  # fmt: skip
+
+
 def construir(
     id_: str,
     ubicacion: Ubicacion,
@@ -412,6 +437,7 @@ def construir(
         and "T" in ficha.valor("fin")
         and resolucion.precision in PRECISIONES_HORA
         and timedelta(0) <= fin_ficha - resolucion.valor <= MAX_DURACION
+        and _fin_con_frase(ficha, fin_ficha, resolucion.valor, articulos, enviadas, ubicacion)
     ):
         tiempo["fin"] = _instante(fin_ficha, "minuto")
         tiempo["duracion_min"] = int((fin_ficha - _leer_instante(inicio)).total_seconds()) // 60

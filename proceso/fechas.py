@@ -26,6 +26,7 @@ en Europa central es medianoche en UTC) y un suceso de la noche, en la madrugada
 esos márgenes no son una discrepancia.
 """
 
+import copy
 import json
 import re
 from dataclasses import dataclass, replace
@@ -638,3 +639,107 @@ def retrospectiva(incidente: dict[str, Any]) -> str | None:
             if _contiene(frase, expresion) >= 0:
                 return expresion
     return None
+
+
+# Margen entre el fin publicado y lo que escribe la frase (una hora en punto, una duración
+# redondeada): diez minutos. «pendant quatre heures» desde las 18:30 no respalda las 23:00
+# (EODI-2025-00154).
+MARGEN_FIN = timedelta(minutes=10)
+
+
+def fin_escrito(frase: str, idioma: str | None, fin: datetime, inicio: datetime | None,
+                zona_suceso: ZoneInfo) -> bool:  # fmt: skip
+    """La frase respalda el fin: escribe esa hora (en la hora local del suceso o en UTC) o una
+    duración que, contada desde el inicio, da ese fin (EODI-2026-00112: «monitorizat până la
+    ora 22:03» son las 19:03 UTC en Moldavia en marzo, no las 20:03 que publicaba)."""
+    from proceso.textos_dron import duraciones, horas_escritas
+
+    fin = fin.astimezone(UTC)
+    for hora, minuto in horas_escritas(frase):
+        for momento in (fin, fin.astimezone(zona_suceso)):
+            escrita = momento.replace(hour=hora, minute=minuto)
+            if (
+                abs(escrita - momento) <= MARGEN_FIN
+                or abs(escrita - momento) >= timedelta(hours=24) - MARGEN_FIN
+            ):
+                return True
+    if inicio is not None:
+        real = fin - inicio.astimezone(UTC)
+        return any(
+            abs(real - timedelta(minutes=m)) <= MARGEN_FIN for m in duraciones(frase, idioma)
+        )
+    return False
+
+
+def _instante_utc(fecha: dict[str, Any] | str | None) -> datetime | None:
+    texto = str(fecha.get("valor") if isinstance(fecha, dict) else fecha or "")
+    if "T" not in texto:
+        return None
+    return datetime.fromisoformat(texto.rstrip("Z")).replace(tzinfo=UTC)
+
+
+def frases_del_fin(incidente: dict[str, Any], fin: datetime) -> list[tuple[str, str | None]]:
+    """Las frases (con su idioma) de las fuentes que afirman ese fin o lo respaldan."""
+    ids = {
+        a["fuente_id"] for a in incidente.get("afirmaciones", [])
+        if a.get("campo") == "fin" and _instante_utc(a.get("valor")) == fin
+    }  # fmt: skip
+    return [
+        (str(f.get("frase_origen") or ""), f.get("idioma"))
+        for f in incidente.get("fuentes", [])
+        if f["id"] in ids or "fin" in (f.get("campos_respaldados") or [])
+    ]
+
+
+def fin_respaldado(incidente: dict[str, Any]) -> bool:
+    """El fin publicado lo escribe alguna frase de las fuentes de la ficha (fin_escrito). Sin
+    fin, no hay nada que respaldar."""
+    tiempo = incidente.get("tiempo") or {}
+    fin = _instante_utc(tiempo.get("fin"))
+    if fin is None:
+        return True
+    lugar = incidente.get("lugar") or {}
+    punto = lugar.get("punto") or {}
+    zona_suceso = zona(lugar.get("pais"), punto.get("lat"), punto.get("lon")) or ZoneInfo("UTC")
+    inicio = _instante_utc(tiempo.get("inicio"))
+    return any(
+        fin_escrito(frase, idioma, fin, inicio, zona_suceso)
+        for frase, idioma in frases_del_fin(incidente, fin)
+    )
+
+
+def fines_sin_frase(incidente: dict[str, Any]) -> bool:
+    """El fin de la ficha o alguna afirmación de fin no los escribe ninguna frase."""
+    return not fin_respaldado(incidente) or len(
+        sin_fin_sin_frase(copy.deepcopy(incidente)).get("afirmaciones", [])
+    ) != len(incidente.get("afirmaciones", []))
+
+
+def sin_fin_sin_frase(incidente: dict[str, Any]) -> dict[str, Any]:
+    """Quita del documento el fin que ninguna frase respalda, con su duración, y las
+    afirmaciones de fin cuya frase no lo escribe: «fin sin frase que lo respalde» (auditoría O;
+    EODI-2025-00154, 23:00 UTC de «gut vier Stunden lang» desde las 18:30)."""
+    tiempo = incidente.get("tiempo") or {}
+    if tiempo.get("fin") and not fin_respaldado(incidente):
+        tiempo.pop("fin", None)
+        tiempo.pop("duracion_min", None)
+    fuentes = {f["id"]: f for f in incidente.get("fuentes", [])}
+    lugar = incidente.get("lugar") or {}
+    punto = lugar.get("punto") or {}
+    zona_suceso = zona(lugar.get("pais"), punto.get("lat"), punto.get("lon")) or ZoneInfo("UTC")
+    inicio = _instante_utc(tiempo.get("inicio"))
+
+    def vale(afirmacion: dict[str, Any]) -> bool:
+        if afirmacion.get("campo") != "fin":
+            return True
+        fin = _instante_utc(afirmacion.get("valor"))
+        fuente = fuentes.get(afirmacion.get("fuente_id", ""))
+        return (
+            fin is not None and fuente is not None
+            and fin_escrito(str(fuente.get("frase_origen") or ""), fuente.get("idioma"), fin,
+                            inicio, zona_suceso)
+        )  # fmt: skip
+
+    if "afirmaciones" in incidente:
+        incidente["afirmaciones"] = [a for a in incidente["afirmaciones"] if vale(a)]
+    return incidente

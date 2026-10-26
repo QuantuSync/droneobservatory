@@ -608,6 +608,15 @@
       "conserva": "EODI-2025-00131",
       "motivo": "el mismo suceso: los sobrevuelos de la base de Kleine-Brogel del fin de semana del 1 y 2 de noviembre de 2025. 00091 es una nota del 7 de noviembre (evz.ro) que lo recuerda («În weekend, baza militară belgiană Kleine-Brogel […] a fost survolată de trei ori»), fechada por su publicación",
       "motivo_en": "the same event: the overflights of Kleine-Brogel air base on the weekend of 1-2 November 2025. 00091 is a 7 November note (evz.ro) recalling them, dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00649",
+        "EODI-2026-00664"
+      ],
+      "conserva": "EODI-2026-00649",
+      "motivo": "el mismo suceso: los sobrevuelos de drones no autorizados de la base naval de Toulon y otros sitios militares del Var durante el ejercicio Typhon. 00664 es la nota de maritime-executive.com del 22 de octubre de 2026 sobre el anuncio de la Marine nationale («several unauthorized drone flights were detected in restricted airspace during a series of exercises near Toulon»), fechada por su publicación",
+      "motivo_en": "the same event: the unauthorised drone overflights of the Toulon naval base and other military sites in the Var during exercise Typhon. 00664 is the 22 October 2026 maritime-executive.com report on the Marine nationale announcement, dated by its publication"
     }
   ],
   "reextraer": [
@@ -676,9 +685,119 @@
         "es": "No es un suceso con dron: las noticias del 10 de julio de 2026 cuentan la declaración del ministro Radu Miruță sobre cinco restos de drones destruidos en el mar en fechas que no dan («patru dintre aceste situaţii au avut loc înainte de incidentul cu drona care a explodat în Portul Constanţa, la începutul lunii iunie, iar una după aceea»). La explosión del puerto es EODI-2026-00152.",
         "en": "Not a drone event: the 10 July 2026 reports cover Minister Radu Miruță's statement on five drone remnants destroyed at sea on dates they do not give (four before and one after the early-June explosion in the Port of Constanța). The port explosion is EODI-2026-00152."
       }
+    },
+    {
+      "incidente": "EODI-2026-00235",
+      "motivo": {
+        "es": "No es un suceso con dron: la única fuente (cursdeguvernare.ro, 28 de septiembre de 2026) resume una entrevista del primer ministro moldavo Vasile Tofan en un pódcast de Fox News, que habla en general de «incursiunile tot mai frecvente ale dronelor rusești pe teritoriul moldovean» sin ningún hecho con fecha ni lugar. Los drones caídos en Moldavia tienen cada uno su ficha.",
+        "en": "Not a drone event: the only source (cursdeguvernare.ro, 28 September 2026) summarises an interview of Moldovan Prime Minister Vasile Tofan on a Fox News podcast, who speaks in general of increasingly frequent Russian drone incursions into Moldova without any event with a date or place. The drones that came down in Moldova each have their own record."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00260",
+      "motivo": {
+        "es": "No es un suceso con dron: la única fuente es una entrevista de bnn-news.com (20 de mayo de 2026) con el antiguo comandante de las Fuerzas Armadas letonas Juris Maklakovs sobre «military drones armed with explosives regularly approached or violated Latvian airspace», sin ningún hecho con fecha ni lugar.",
+        "en": "Not a drone event: the only source is a bnn-news.com interview (20 May 2026) with former Latvian Armed Forces commander Juris Maklakovs about drones that «regularly approached or violated Latvian airspace», without any event with a date or place."
+      }
     }
   ],
   "citas": [
+    {
+      "incidente": "EODI-2025-00017",
+      "enlace": "https://lavenir.net/regions/brabantwallon/2025/11/18/cinq-drones-ont-survole-la-maison-de-mathieu-michel-a-jodoigne-et-la-base-militaire-de-beauvechain-3U45VOC3NJFAVLABMPOU66ABAA",
+      "medio": "lavenir.net",
+      "fecha": "2025-11-18",
+      "idioma": "fr",
+      "frase": "Ce lundi soir, le domicile jodoignois du député fédéral Mathieu Michel a été survolé entre 21 et 23 heures.",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://lavenir.net/regions/brabantwallon/2025/11/18/cinq-drones-ont-survole-la-maison-de-mathieu-michel-a-jodoigne-et-la-base-militaire-de-beauvechain-3U45VOC3NJFAVLABMPOU66ABAA (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00291",
+      "enlace": "https://kristeligt-dagblad.dk/droner-blev-observeret-taet-paa-men-ikke-paa-billund-lufthavns-omraade",
+      "medio": "kristeligt-dagblad.dk",
+      "fecha": "2025-09-25",
+      "idioma": "da",
+      "frase": "lukkede Billund Lufthavn af sikkerhedsmæssige hensyn for flytrafikken fra klokken 04.30 til 05.41",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://kristeligt-dagblad.dk/droner-blev-observeret-taet-paa-men-ikke-paa-billund-lufthavns-omraade (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00116",
+      "enlace": "https://t-online.de/nachrichten/panorama/id_101449736/berlin-drohnenalarm-am-flughafen-ber-luftraum-zeitweise-gesperrt.html",
+      "medio": "t-online.de",
+      "fecha": "2026-09-23",
+      "idioma": "de",
+      "frase": "Um 20 Uhr sei eine Drohe gesichtet worden.",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://t-online.de/nachrichten/panorama/id_101449736/berlin-drohnenalarm-am-flughafen-ber-luftraum-zeitweise-gesperrt.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00116",
+      "enlace": "https://t-online.de/nachrichten/panorama/id_101449736/berlin-drohnenalarm-am-flughafen-ber-luftraum-zeitweise-gesperrt.html",
+      "medio": "t-online.de",
+      "fecha": "2026-09-23",
+      "idioma": "de",
+      "frase": "Um 21.05 Uhr war demnach die Sperrung wieder aufgehoben.",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://t-online.de/nachrichten/panorama/id_101449736/berlin-drohnenalarm-am-flughafen-ber-luftraum-zeitweise-gesperrt.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00154",
+      "enlace": "https://www.tv2kosmopol.dk/koebenhavn/overblik-det-ved-vi-om-drone-situationen-som-lukkede-kobenhavns-lufthavn-i-knap-fire-timer-7e4e1",
+      "medio": "tv2kosmopol.dk",
+      "fecha": "2025-09-23",
+      "idioma": "da",
+      "frase": "Det skete klokken 20.30, og herefter blev al flytrafik til og fra lufthavnen indstillet, inden lufthavnen natten til tirsdag klokken 00.20 genåbnede.",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://www.tv2kosmopol.dk/koebenhavn/overblik-det-ved-vi-om-drone-situationen-som-lukkede-kobenhavns-lufthavn-i-knap-fire-timer-7e4e1 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "enlace": "https://frognews.bg/novini/zashto-zatvoriha-letishte-sofiia-mvr-sloji-krai-misteriiata-drona.html",
+      "medio": "frognews.bg",
+      "fecha": "2026-03-09",
+      "idioma": "bg",
+      "frase": "Защо затвориха летище София? МВР сложи край на мистерията с дрона",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://frognews.bg/novini/zashto-zatvoriha-letishte-sofiia-mvr-sloji-krai-misteriiata-drona.html (original; antes en EODI-2026-00077, separación del 26/10/2026)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00649",
+      "enlace": "https://www.clubic.com/actualite-635395-brouilles-en-vain-des-drones-ont-survole-de-nuit-la-base-navale-de-toulon.html",
+      "medio": "clubic.com",
+      "fecha": "2026-10-21",
+      "idioma": "fr",
+      "frase": "le 54e régiment d’artillerie d’Hyères entre le 9 et le 13 octobre, selon ICI Provence.",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://www.clubic.com/actualite-635395-brouilles-en-vain-des-drones-ont-survole-de-nuit-la-base-navale-de-toulon.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00112",
+      "enlace": "https://protv.md/actualitate/ministerul-apararii-confirma-drona-descoperita-la-telenesti-corespunde-aparatului-care-a-survolat-spatiul-aerian-al-tarii-in-martie---2757111.html",
+      "medio": "protv.md",
+      "fecha": "2026-04-29",
+      "idioma": "ro",
+      "frase": "Aparatul a fost monitorizat până la ora 22:03, moment în care a dispărut de pe radar în zona raionului Orhei.",
+      "comprobada": {
+        "fecha": "2026-10-26",
+        "en": "https://protv.md/actualitate/ministerul-apararii-confirma-drona-descoperita-la-telenesti-corespunde-aparatului-care-a-survolat-spatiul-aerian-al-tarii-in-martie---2757111.html (original)"
+      }
+    },
     {
       "incidente": "EODI-2025-00199",
       "enlace": "https://www.aa.com.tr/en/world/brussels-airport-temporarily-halts-air-traffic-after-drone-sighting/3763000",
@@ -3655,6 +3774,51 @@
   ],
   "titulares": [
     {
+      "incidente": "EODI-2025-00017",
+      "inicio": {
+        "valor": "2025-11-17T20:00Z",
+        "precision": "minuto",
+        "cita": "Ce lundi soir, le domicile jodoignois du député fédéral Mathieu Michel a été survolé entre 21 et 23 heures.",
+        "motivo": "lavenir.net: «entre 21 et 23 heures» del lunes 17 de noviembre de 2025, hora de Bélgica (UTC+1)",
+        "fin": "2025-11-17T22:00Z",
+        "fin_cita": "Ce lundi soir, le domicile jodoignois du député fédéral Mathieu Michel a été survolé entre 21 et 23 heures."
+      },
+      "motivo": {
+        "es": "Los drones se vieron entre las 21:00 y las 23:00 hora de Bélgica (20:00-22:00 UTC); el fin lo escribe lavenir.net.",
+        "en": "The drones were seen between 21:00 and 23:00 Belgian time (20:00-22:00 UTC); the end is written by lavenir.net."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00291",
+      "inicio": {
+        "valor": "2025-09-25T02:30Z",
+        "precision": "minuto",
+        "cita": "lukkede Billund Lufthavn af sikkerhedsmæssige hensyn for flytrafikken fra klokken 04.30 til 05.41",
+        "motivo": "kristeligt-dagblad.dk: cerrado «fra klokken 04.30 til 05.41» la noche del jueves 25 de septiembre de 2025, hora de Dinamarca (UTC+2)",
+        "fin": "2025-09-25T03:41Z",
+        "fin_cita": "lukkede Billund Lufthavn af sikkerhedsmæssige hensyn for flytrafikken fra klokken 04.30 til 05.41"
+      },
+      "motivo": {
+        "es": "El aeropuerto de Billund cerró de las 04:30 a las 05:41 hora de Dinamarca (02:30-03:41 UTC; kristeligt-dagblad.dk).",
+        "en": "Billund Airport closed from 04:30 to 05:41 Danish time (02:30-03:41 UTC; kristeligt-dagblad.dk)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00116",
+      "inicio": {
+        "valor": "2026-09-23T18:00Z",
+        "precision": "minuto",
+        "cita": "Um 20 Uhr sei eine Drohe gesichtet worden.",
+        "motivo": "t-online.de: el dron se vio «Um 20 Uhr» del miércoles 23 de septiembre de 2026, hora de Berlín (UTC+2), y el cierre se levantó «Um 21.05 Uhr»",
+        "fin": "2026-09-23T19:05Z",
+        "fin_cita": "Um 21.05 Uhr war demnach die Sperrung wieder aufgehoben."
+      },
+      "motivo": {
+        "es": "El dron se vio a las 20:00 y el cierre del BER se levantó a las 21:05 hora de Berlín (18:00-19:05 UTC; t-online.de).",
+        "en": "The drone was seen at 20:00 and the BER closure was lifted at 21:05 Berlin time (18:00-19:05 UTC; t-online.de)."
+      }
+    },
+    {
       "incidente": "EODI-2025-00109",
       "inicio": {
         "valor": "2025-10-03T00:00Z",
@@ -4335,7 +4499,9 @@
         "valor": "2025-09-22T18:30Z",
         "precision": "minuto",
         "cita": "W poniedziałek kopenhaskie lotnisko było zamknięte od godz. 20.30 z powodu zaobserwowania w pobliżu kilku dużych dronów.",
-        "motivo": "radiozet.pl: «od godz. 20.30», hora de Copenhague del lunes 22 de septiembre de 2025 (hora de verano, UTC+2)"
+        "motivo": "radiozet.pl: «od godz. 20.30», hora de Copenhague del lunes 22 de septiembre de 2025 (hora de verano, UTC+2); reabrió «klokken 00.20» (TV 2 Kosmopol), las 22:20 UTC",
+        "fin": "2025-09-22T22:20Z",
+        "fin_cita": "Det skete klokken 20.30, og herefter blev al flytrafik til og fra lufthavnen indstillet, inden lufthavnen natten til tirsdag klokken 00.20 genåbnede."
       },
       "motivo": {
         "es": "La ficha publicaba las 20:00 UTC (22:00 en Copenhague); el aeropuerto cerró hacia las 20:30 hora local («od godz. 20.30»), las 18:30 UTC.",
@@ -4348,7 +4514,9 @@
         "valor": "2026-03-30T18:29Z",
         "precision": "minuto",
         "cita": "Serviciul Operațiuni Aeriene din Armata Republicii Moldova a observat drona la ora 21:29.",
-        "motivo": "hotnews.ro: el ejército de Moldavia vio el dron «la ora 21:29», hora de Chisináu del lunes 30 de marzo de 2026 (hora de verano desde el 29, UTC+3)"
+        "motivo": "hotnews.ro: el ejército de Moldavia vio el dron «la ora 21:29», hora de Chisináu del lunes 30 de marzo de 2026 (hora de verano desde el 29, UTC+3); protv.md: seguido «până la ora 22:03» (19:03 UTC)",
+        "fin": "2026-03-30T19:03Z",
+        "fin_cita": "Aparatul a fost monitorizat până la ora 22:03, moment în care a dispărut de pe radar în zona raionului Orhei."
       },
       "motivo": {
         "es": "La ficha publicaba las 21:29 UTC: tomó como UTC la hora local del ejército de Moldavia («la ora 21:29»), que el 30 de marzo (UTC+3) son las 18:29 UTC.",
@@ -6488,6 +6656,47 @@
     }
   ],
   "separar": [
+    {
+      "incidente": "EODI-2026-00077",
+      "motivo": {
+        "es": "Junta los tres avisos de dron del domingo 8 de marzo de 2026 por la noche en el aeropuerto de Sofía con una nota de frognews.bg del lunes 9 sobre el cierre del sábado 7 («Защо затвориха летище София? МВР сложи край на мистерията с дрона»), que es EODI-2026-00064: la nota sale de esta ficha y pasa a 00064 como cita",
+        "en": "Merged the three drone reports at Sofia airport on the night of Sunday 8 March 2026 with a frognews.bg note of Monday 9 on the Saturday 7 closure, which is EODI-2026-00064: the note leaves this record and moves to 00064 as a quote"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-08",
+          "pais": "BG",
+          "descripcion": "Tres avisos de dron en el aeropuerto Vasil Levski de Sofía la noche del domingo 8 de marzo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-0b075ccc73b0da45",
+            "gdelt-759c60b47863f946",
+            "gdelt-952f22f05b26fd31",
+            "gdelt-b370a8a8c7e7286c",
+            "gdelt-1db405884abd4850",
+            "gdelt-1e86fbe6d9ff2c02",
+            "gdelt-334bebfbe6a3ca08",
+            "gdelt-334bebfbe6a3ca08-declaracion-1",
+            "gdelt-334bebfbe6a3ca08-declaracion-2",
+            "gdelt-a3ec2f4e5e7f51f7",
+            "gdelt-d48de5dae3aa0505",
+            "gdelt-00af61ba693d5cf9",
+            "revisada-7380f775101dbefb"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-07",
+          "pais": "BG",
+          "descripcion": "Nota del lunes 9 de marzo sobre el cierre del aeropuerto de Sofía del sábado 7 (el aficionado con su cámara según el MVR): es EODI-2026-00064, adonde pasa como cita",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-322765d4226f8472"
+          ]
+        }
+      ]
+    },
     {
       "incidente": "EODI-2026-00072",
       "motivo": {
@@ -9016,6 +9225,64 @@
     }
   ],
   "datos": [
+    {
+      "incidente": "EODI-2026-00582",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Sulina",
+        "nivel": "localidad",
+        "punto": {
+          "lat": 45.15564,
+          "lon": 29.65403
+        },
+        "radio_km": 10.0
+      },
+      "cita": "Ambele incidente s-au produs în apropierea orașului Sulina.",
+      "enlace": "https://ziare.com/drone/doborate-piloti-romani-2042065",
+      "motivo": "los dos drones se derribaron sobre el mar junto a Sulina (ziare.com); la reextracción de la 01:17 UTC del 23 de octubre de 2026, con noticias nuevas, dejó solo la región «Marea Neagră» y la ficha perdió su punto"
+    },
+    {
+      "incidente": "EODI-2026-00649",
+      "campo": "inicio",
+      "valor": "2026-10-09",
+      "cita": "le 54e régiment d’artillerie d’Hyères entre le 9 et le 13 octobre, selon ICI Provence.",
+      "enlace": "https://www.clubic.com/actualite-635395-brouilles-en-vain-des-drones-ont-survole-de-nuit-la-base-navale-de-toulon.html",
+      "pais": "FR",
+      "motivo": "los sobrevuelos fueron de noche entre el 9 y el 13 de octubre de 2026 (ICI Provence, citado por clubic.com): el inicio es el primero; la ficha tenía el 13, «dernier jour des survols»"
+    },
+    {
+      "incidente": "EODI-2026-00186",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "aeropuerto",
+        "nombre": "Tarptautinis Vilniaus oro uostas",
+        "oaci": "EYVI"
+      },
+      "cita": "Perceived drone sighting in its airspace earlier on Sunday prompted authorities to close Vilnius airport and NATO to summon at least one fighter jet",
+      "enlace": "https://www.thestar.com.my/news/world/2026/09/13/lithuania-closes-vilnius-airport-nato-summons-jets-in-response-to-possible-drone",
+      "pais": "LT",
+      "motivo": "el aeródromo que cerró Lituania es el aeropuerto de Vilna (EYVI); la única fuente de la ficha (informer.rs) solo dice «aerodrom»"
+    },
+    {
+      "incidente": "EODI-2026-00186",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-09-13T09:59Z",
+        "precision": "minuto"
+      },
+      "cita": "issued a yellow air alert at 12:59 PM local time",
+      "enlace": "https://aviationa2z.com/index.php/2026/09/14/nato-fighter-jets-scrambled-as-suspected-drone-shuts-vilnius-airport/",
+      "pais": "LT",
+      "motivo": "alerta amarilla a las 12:59 hora de Lituania del domingo 13 de septiembre de 2026 (UTC+3): 09:59 UTC; la ficha tenía la publicación de la nota serbia del 17"
+    },
+    {
+      "incidente": "EODI-2025-00317",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "Dies gilt auch in Bezug auf eine nähere Ortsangabe.",
+      "enlace": "https://t-online.de/nachrichten/deutschland/militaer-verteidigung/id_100685212/bundeswehr-drohne-ueber-kaserne-in-sachsen-anhalt-abgeschossen.html",
+      "motivo": "el Ministerio de Defensa alemán no dice sobre qué terreno militar de Sajonia-Anhalt se derribó el dron; ninguna fuente nombra la instalación"
+    },
     {
       "incidente": "EODI-2025-00233",
       "campo": "zona",

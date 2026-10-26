@@ -316,3 +316,112 @@ def pais_de_entrada(frase: str, pais_incidente: str | None = None) -> str | None
         return None
     nombrados = {p for p, e in _PAISES_ENTRADA if e.search(texto) and p != pais_incidente}
     return nombrados.pop() if len(nombrados) == 1 else None
+
+
+# Horas sin minutos de los rangos («tra le 19 e le 21», «zwischen 19 und 21 Uhr») y la
+# medianoche escrita con palabras.
+_HORA_SUELTA = re.compile(
+    r"(?<!\w)(?:le|alle|dalle|tra le|e le|fino alle|bis|und|zwischen|between|and|until|till|entre|"
+    r"to|y las|hasta las|de las|jusqu'à|et)\s+([01]?\d|2[0-3])(?![\d:.,h])(?:\s*(?:uhr|h\b))?"
+)
+_MEDIANOCHE = re.compile(
+    r"midnight|mitternacht|minuit|medianoche|mezzanotte|północ|midnat|midnatt|middernacht|"
+    r"miezul nopții|miezul nopţii|keskiyö|vidurnakt|pusnakt|полунощ|полночь|опівночі"
+)
+# «00.35 val.» (lituano), «22.03 h» y la segunda hora de un rango: «fra klokken 04.30 til 05.41».
+_HORA_PUNTO = re.compile(
+    r"(?<![\d.,:])([01]?\d|2[0-3])\.([0-5]\d)\s*(?:val\b|h\b|godz)"
+    r"|(?<!\w)(?:til|till|bis|until|tot|do|jusqu'à|hasta las|până la)\s+([01]?\d|2[0-3])\.([0-5]\d)"
+)
+
+
+def horas_escritas(frase: str) -> list[tuple[int, int]]:
+    """Todas las horas del día que escribe la frase («von 0.35 bis 1.45 Uhr»: 0:35 y 1:45), sin
+    mirar de qué hablan."""
+    texto = _plano(frase)
+    horas = []
+    for m in _HORA.finditer(texto):
+        grupos = m.groups()
+        for i in (0, 2, 4):
+            if grupos[i] is not None:
+                horas.append((int(grupos[i]), int(grupos[i + 1])))
+                break
+        else:
+            if grupos[6] is not None:
+                horas.append((int(grupos[6]), 0))
+        sufijo = texto[m.end() : m.end() + 6].strip().replace(".", "")
+        if horas and sufijo.startswith("pm") and horas[-1][0] < 12:
+            horas[-1] = (horas[-1][0] + 12, horas[-1][1])
+    horas += [(int(m.group(1)), 0) for m in _HORA_SUELTA.finditer(texto)]
+    for m in _HORA_PUNTO.finditer(texto):
+        hora, minuto = (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
+        horas.append((int(hora), int(minuto)))
+    if _MEDIANOCHE.search(texto):
+        horas.append((0, 0))
+    return horas
+
+
+# Unidad de una duración: «45 minutos», «vier Stunden», «an hour», «două ore».
+_MINUTOS = re.compile(r"^(?:min|minut|minuten|minutter|minuter|minuty|minuti|minutes?|минут)")
+_HORAS = re.compile(
+    r"^(?:h|hrs?|hours?|stunden?|std|timer?|timmar|timme|godzin\w*|ore|oră|ora|"
+    r"heures?|horas?|uur|ure|часа?|часов|tunnin?|tuntia?|valand\w*)$"
+)
+# Decenas, en cualquier idioma (las listas de NUMEROS llegan a doce).
+_DECENAS = {
+    "quince": 15, "veinte": 20, "treinta": 30, "cuarenta": 40, "fifteen": 15, "twenty": 20,
+    "thirty": 30, "forty": 40, "fünfzehn": 15, "zwanzig": 20, "dreißig": 30, "vierzig": 40,
+    "quinze": 15, "vingt": 20, "trente": 30, "quarante": 40, "venti": 20, "trenta": 30,
+    "quaranta": 40, "cincisprezece": 15, "douăzeci": 20, "treizeci": 30, "patruzeci": 40,
+    "piętnaście": 15, "dwadzieścia": 20, "trzydzieści": 30, "czterdzieści": 40, "femten": 15,
+    "tyve": 20, "tjue": 20, "tjugo": 20, "tredive": 30, "tretti": 30, "trettio": 30,
+    "fyrre": 40, "førti": 40, "fyrtio": 40, "twintig": 20, "dertig": 30, "veertig": 40,
+}  # fmt: skip
+# Media hora y hora y media, escritas con palabras.
+_MEDIA = re.compile(
+    r"half an hour|half( |-)?uur|halve uur|halv time|halvtimme|halbe stunde|halben stunde|"
+    r"demi-heure|demi heure|media hora|mezz'?ora|jumătate de oră|pół godziny|półgodzin|pusvaland"
+)
+_HORA_Y_MEDIA = re.compile(
+    r"an hour and a half|anderthalb|eineinhalb|halvanden|halvannen|hora y media|ora e mezza|"
+    r"heure et demie|oră și jumătate|półtorej"
+)
+_Y_MEDIA = re.compile(
+    r"(\w+)(?: and a half| og en halv| och en halv| und eine halbe| et demie| y media| e mezza|"
+    r" și jumătate|einhalb)\s*(?:hours?|time[r]?|timmar|stunden?|heures?|horas?|ore)?"
+)
+
+
+def duraciones(frase: str, idioma: str | None) -> list[int]:
+    """Las duraciones en minutos que escribe la frase («gut vier Stunden»: 240; «Durante 40
+    minutos»: 40; «an hour»: 60; «to og en halv time»: 150; «een half uur»: 30)."""
+    texto = _plano(frase)
+    palabras = re.findall(r"[\w.,]+", texto)
+
+    def numero(palabra: str) -> float | None:
+        cifra = palabra.replace(",", ".")
+        if re.fullmatch(r"\d+(?:\.\d+)?", cifra):
+            return float(cifra)
+        if palabra in ("an", "a", "une", "eine", "una", "un", "o", "jedna", "jedną"):
+            return 1
+        entero = _valor(palabra, idioma) or _DECENAS.get(palabra)
+        return float(entero) if entero is not None else None
+
+    salida = []
+    for i, palabra in enumerate(palabras[:-1]):
+        unidad = palabras[i + 1].strip(".,")
+        valor = numero(palabra)
+        if valor is None:
+            continue
+        if _MINUTOS.match(unidad):
+            salida.append(round(valor))
+        elif _HORAS.match(unidad):
+            salida.append(round(valor * 60))
+    if _MEDIA.search(texto):
+        salida.append(30)
+    if _HORA_Y_MEDIA.search(texto):
+        salida.append(90)
+    for m in _Y_MEDIA.finditer(texto):
+        if (valor := numero(m.group(1).removesuffix("ein") or m.group(1))) is not None:
+            salida.append(round(valor * 60) + 30)
+    return salida

@@ -430,6 +430,27 @@ así que nunca casaba con la ficha del suceso. Así entraron EODI-2026-00663 («
   anterior (casi siempre un suceso nuevo) espera como mucho las 6 horas de siempre.
 - **Comprobación fija**: la N de la auditoría es la misma regla sobre todo lo publicado.
 
+### Fin sin frase que lo respalde (desde el 26 de octubre de 2026)
+
+El extractor daba una hora de fin que ninguna frase escribía y se guardaba sin comprobarla (el
+inicio sí se comprobaba con su frase). EODI-2025-00154 publicaba las 23:00 UTC en Copenhague por
+«gut vier Stunden» desde las 18:30, y EODI-2026-00112 las 20:03 UTC por «până la ora 22:03», que
+en Moldavia en marzo son las 19:03 UTC. De las 40 fichas con fin, 18 lo publicaban sin frase; en la
+muestra de 10, seis estaban mal (cuatro con la hora local tomada como UTC) y cuatro bien, pero con
+la frase guardada en otra parte de la nota: esas cuatro y Copenhague llevan ahora el fin revisado
+con su cita.
+
+- **La regla** (`proceso/fechas.fin_escrito`): una frase respalda un fin si escribe esa hora, en
+  la hora local del suceso o en UTC («fra klokken 04.30 til 05.41», «tra le 19 e le 21», «um
+  Mitternacht»), o una duración que, contada desde el inicio, da ese fin («Durante 40 minutos»,
+  «een half uur», «to og en halv time»), con 10 minutos de margen.
+- **En el origen** (`proceso/incidentes._fin_con_frase`): el fin de una ficha nueva solo se guarda
+  si su frase lo respalda.
+- **Al publicar** (`fechas.sin_fin_sin_frase`, en `exportacion/geojson.con_afirmaciones`): el fin
+  y la duración sin frase no se publican, ni las afirmaciones de fin de una fuente cuya frase no
+  lo escribe. El fin revisado a mano (`titulares`, `inicio.fin` con `fin_cita`) lleva su frase.
+- **Comprobación fija**: la O de la auditoría, sobre lo que publica la web.
+
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 
 La red de seguridad antes de cambiar la estructura: unas 50 fichas cuyo valor correcto de cada dato
