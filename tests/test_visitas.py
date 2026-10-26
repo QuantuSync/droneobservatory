@@ -409,14 +409,22 @@ def test_el_resumen_cuenta_las_fuentes_oficiales_en_pausa(
         "WARNING recogida.oficiales: oficiales: fuente aesa falló: x; en pausa 6 h",
         "WARNING recogida.oficiales: oficiales: fuente aesa en pausa hasta 2026-10-11T20:00:00Z "
         "(falló 3 recogidas seguidas: x)",
-        "WARNING recogida.oficiales: oficiales: fuente mapn falló: código 500",
+        "WARNING recogida.oficiales: oficiales: fuente mapn falló: código 500 (1 recogidas "
+        "seguidas)",
         "WARNING recogida.oficiales: oficiales: fuente lfv en pausa hasta 2026-10-11T22:00:00Z (x)",
+        # Desde el 26 de octubre de 2026 cada fallo dice cuántas recogidas seguidas lleva: sale
+        # en el resumen desde el segundo, sin esperar a la pausa ni al aviso de los 7 días.
+        "WARNING recogida.oficiales: oficiales: fuente mod_md falló: código 523 (2 recogidas "
+        "seguidas)",
+        "WARNING recogida.oficiales: oficiales: fuente mod_lv en pausa hasta 2026-10-26T19:17:03Z "
+        "(falló 22 recogidas seguidas: cortada al agotar su tope de 45 s)",
     ]
-    assert visitas.oficiales_en_pausa_del_dia(diario) == ["aesa", "lfv"]
-    datos = dataclasses.replace(_datos(goatcounter, tmp_path), oficiales_en_pausa=["aesa", "lfv"])
+    fallidas = {"aesa": 3, "lfv": 0, "mod_lv": 22, "mod_md": 2}
+    assert visitas.oficiales_en_pausa_del_dia(diario) == fallidas
+    datos = dataclasses.replace(_datos(goatcounter, tmp_path), oficiales_en_pausa=fallidas)
     assert (
-        "Fuentes oficiales en pausa por fallar 3 recogidas seguidas: aesa, lfv"
-        in visitas.texto_resumen(datos)
+        "Fuentes oficiales que fallan en recogidas seguidas (en pausa desde 3): mod_lv (22 "
+        "seguidas), aesa (3 seguidas), mod_md (2 seguidas), lfv" in visitas.texto_resumen(datos)
     )
 
 

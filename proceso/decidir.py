@@ -188,7 +188,7 @@ def decidir_presencia(
        pruebas físicas con el suceso confirmado: confirmada;
     6. si no, no confirmada (lo dejan abierto o solo lo cuentan la prensa o los testigos).
     """
-    pasos = [p for p in incidente.get("presencia_historial") or [] if not p.get("parcial")]
+    pasos = rectificaciones.pasos_de_valor(incidente)
     if pasos:
         return Decision(str(pasos[-1]["valor"]), pasos[-1].get("fuente_id"), "rectificacion")
     fuentes = incidente.get("fuentes", [])

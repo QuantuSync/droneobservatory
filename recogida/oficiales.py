@@ -487,8 +487,11 @@ def ejecutar(
             continue
         recuentos.fallidas[fuente["id"]] = motivo
         pausa = anotar_fallo(estados.setdefault(fuente["id"], {}), motivo, ahora)
+        # Con las recogidas seguidas que lleva fallando: el resumen diario privado las cuenta
+        # (recogida/visitas.py) desde el segundo fallo, sin esperar al aviso de los 7 días.
         registro.warning(
-            "oficiales: fuente %s falló: %s%s", fuente["id"], motivo,
+            "oficiales: fuente %s falló: %s (%d recogidas seguidas)%s", fuente["id"], motivo,
+            estados[fuente["id"]]["fallos_seguidos"],
             f"; en pausa {PAUSA.total_seconds() / 3600:.0f} h" if pausa else "",
         )  # fmt: skip
     descargador.plazo = None

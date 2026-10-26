@@ -4,7 +4,12 @@ Al final de cada recogida horaria (nunca en un ensayo), un aviso único por su t
 en cada uno de estos casos:
 
 - **sin_incidentes**: 24 horas sin ningún incidente nuevo en Europa mientras siguen entrando
-  noticias candidatas (al menos MIN_CANDIDATAS artículos de candidatos en esas 24 horas);
+  noticias candidatas (al menos MIN_CANDIDATAS artículos de candidatos en esas 24 horas). El aviso
+  lleva lo necesario para saber si es un día tranquilo o una avería (desde el 26 de octubre de
+  2026): las fichas que retiene el control y sus motivos, los artículos de drones en Europa de
+  las 24 horas frente a la mediana de los 7 días anteriores, los candidatos y las fichas nuevas de
+  las 24 horas, el código de la última recogida y si publicó en el almacén principal o en la
+  reserva;
 - **esperas**: candidatos que esperan al experto por los topes de gasto desde hace más de 6 horas,
   o la API sin saldo desde hace más de 6 horas;
 - **sin_llamadas**: la extracción lleva más de 3 horas sin llamar al modelo y desde entonces han
@@ -23,6 +28,7 @@ código de salida de la recogida. Sin token de ntfy (fuera del servidor) no se a
 import json
 import logging
 import os
+import statistics
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -61,6 +67,16 @@ class Medidas:
     saldo_desde: str | None = None
     # Los recuentos de la auditoría de las fichas por día (recogida/control_fichas.py).
     auditoria: dict[str, dict[str, int]] = field(default_factory=dict)
+    # Para el aviso sin incidentes: las fichas que retiene el control (id: motivos), los
+    # artículos de candidatos de las últimas 24 horas y de cada uno de los 7 días anteriores, los
+    # candidatos y las fichas nuevas de las 24 horas, el resultado de la última recogida
+    # terminada (recogida/estado.py) y dónde publicó («principal» o «reserva»).
+    retenidos: dict[str, str] = field(default_factory=dict)
+    articulos_dias: tuple[int, ...] = ()
+    candidatos_nuevos_24h: int = 0
+    altas_24h: int = 0
+    ultima_recogida: str | None = None
+    publicacion: str | None = None
 
 
 def _iso(momento: datetime) -> str:
@@ -74,10 +90,18 @@ def medir(almacen: Almacen, ahora: datetime) -> Medidas:
         if isinstance(e, dict) and e.get("por") == "tope"
     }  # fmt: skip
     saldo = _leer(cliente.ruta_saldo())
-    # El estado del control de las fichas, junto al del silencio (~/.eodi/control.json).
-    auditoria = (_leer(ruta_estado().parent / "control.json").get("auditoria") or {}).get(
-        "dias"
-    ) or {}
+    # El estado del control de las fichas, junto al del silencio (~/.eodi/control.json), como
+    # el de la última recogida (estado.json) y los registros de la publicación.
+    carpeta = ruta_estado().parent
+    control = _leer(carpeta / "control.json")
+    auditoria = (control.get("auditoria") or {}).get("dias") or {}
+    retenidos = control.get("retenidos") or {}
+    dias = tuple(
+        almacen.articulos_candidatos_entre(
+            _iso(ahora - SIN_INCIDENTES * (n + 1)), _iso(ahora - SIN_INCIDENTES * n)
+        )
+        for n in range(8)
+    )
     return Medidas(
         ultima_alta=almacen.ultima_alta("incidentes"),
         candidatas_24h=almacen.articulos_candidatos_desde(_iso(ahora - SIN_INCIDENTES)),
@@ -86,6 +110,56 @@ def medir(almacen: Almacen, ahora: datetime) -> Medidas:
         esperas=esperas,
         saldo_desde=saldo.get("desde"),
         auditoria=auditoria if isinstance(auditoria, dict) else {},
+        retenidos={
+            str(id_): str(r.get("motivo", "")) for id_, r in retenidos.items()
+            if isinstance(r, dict)
+        } if isinstance(retenidos, dict) else {},
+        articulos_dias=dias,
+        candidatos_nuevos_24h=almacen.candidatos_nuevos_desde(_iso(ahora - SIN_INCIDENTES)),
+        altas_24h=almacen.altas_desde("incidentes", _iso(ahora - SIN_INCIDENTES)),
+        ultima_recogida=_leer(carpeta / "estado.json").get("resultado"),
+        publicacion=_publicacion(
+            _leer(carpeta / "publicacion.json"), _leer(carpeta / "publicacion_reserva.json")
+        ),
+    )  # fmt: skip
+
+
+def _publicacion(principal: dict[str, Any], reserva: dict[str, Any]) -> str | None:
+    """Dónde fue la última publicación: la reserva si su subida es la más reciente."""
+    en_principal, en_reserva = str(principal.get("subido") or ""), str(reserva.get("subido") or "")
+    if not en_principal and not en_reserva:
+        return None
+    return "reserva" if en_reserva > en_principal else "principal"
+
+
+# El código de salida de cada resultado de recogida/estado.py.
+CODIGOS = {"correcta": "código 0", "con_avisos": "código 2, con avisos", "fallida": "fallida"}
+
+
+def detalle_silencio(medidas: Medidas) -> str:
+    """Lo que acompaña al aviso sin incidentes, en frases cortas."""
+    if medidas.retenidos:
+        motivos = "; ".join(f"{id_}: {m}" for id_, m in sorted(medidas.retenidos.items()))
+        retenidas = f"{len(medidas.retenidos)} ({motivos})"
+    else:
+        retenidas = "ninguna"
+    if medidas.articulos_dias:
+        previos = medidas.articulos_dias[1:]
+        mediana = statistics.median(previos) if previos else 0
+        articulos = (
+            f"{medidas.articulos_dias[0]} en 24 h; mediana de los 7 días anteriores, {mediana:g}"
+        )
+    else:
+        articulos = "sin dato"
+    recogida = CODIGOS.get(str(medidas.ultima_recogida), "sin dato")
+    publicacion = {
+        "principal": "almacén principal",
+        "reserva": "reserva de Helsinki (el principal no respondió)",
+    }.get(str(medidas.publicacion), "sin dato")
+    return (
+        f"Retenidas por el control: {retenidas}. Artículos de drones en Europa: {articulos}. "
+        f"En 24 h: {medidas.candidatos_nuevos_24h} candidatos nuevos y {medidas.altas_24h} fichas "
+        f"nuevas. Última recogida: {recogida}. Publicación: {publicacion}."
     )
 
 
@@ -107,7 +181,7 @@ def avisos(medidas: Medidas, ahora: datetime) -> dict[str, tuple[str, str]]:
     ):
         casos["sin_incidentes"] = (TITULO, (
             f"24 h sin incidentes nuevos con {medidas.candidatas_24h} noticias candidatas "
-            f"recogidas (el último, {medidas.ultima_alta})."
+            f"recogidas (el último, {medidas.ultima_alta}). {detalle_silencio(medidas)}"
         ))  # fmt: skip
     largas = sorted(
         str(e.get("desde", "")) for e in medidas.esperas.values()

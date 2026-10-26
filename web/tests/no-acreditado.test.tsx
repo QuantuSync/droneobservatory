@@ -14,7 +14,7 @@ import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { Filtros } from "../src/componentes/Filtros.tsx";
 import { COLUMNAS_INCIDENTES, csvIncidentes } from "../src/datos/csv.ts";
 import { cifras, detalleIncidente, resumir, resumirIncidente, resumirUcrania } from "../src/datos/derivar.ts";
-import { confirmadoPorAutoridad, estadoEscrito, marcaDe, pasosDePresencia } from "../src/datos/presencia.ts";
+import { confirmadoPorAutoridad, estadoEscrito, historialEnCelda, marcaDe, pasosDePresencia } from "../src/datos/presencia.ts";
 import type { FeatureIncidente, PasoPresencia, PropiedadesIncidente } from "../src/datos/tipos.ts";
 import { tolerarCamposNuevos, validarColeccion, validarDetalleIncidente } from "../src/datos/validar.ts";
 import { GRAVES, SIN_FILTROS, TODO, escribirFiltros, filtrar, leerFiltros, ultimas24Horas } from "../src/estado/filtros.ts";
@@ -296,6 +296,30 @@ describe("la ficha", () => {
     expect(parcial?.className).toContain("text-secundario");
     expect(container.querySelector("[data-presencia]")?.textContent).toBe("Dron no acreditado");
     expect(pasosDePresencia(en, "en", detalle).at(-1)?.texto).toBe("Partial correction on 02/07/2026 by Copenhagen Police");
+  });
+
+  it("una investigación cerrada sin cambio es una nota que no cambia la presencia ni el estado (Auvere)", () => {
+    const cierre: PasoPresencia = {
+      valor: "no_acreditada",
+      fecha: { valor: "2026-10-23T00:00Z", precision: "dia" },
+      fuente_id: POLITI_2026.id,
+      quien: POLITI,
+      motivo: { es: "no pudo determinar el origen del dron", en: "it could not determine the drone's origin" },
+      cierre: true,
+    };
+    const detalle = detalleIncidente(copenhague({ presencia_historial: [...HISTORIAL, cierre] }));
+    expect(validarDetalleIncidente(detalle).ok).toBe(true);
+    const { container } = render(<FichaIncidente t={es} idioma="es" incidente={detalle} />);
+    const nota = container.querySelectorAll("[data-presencia-historial] li[data-parcial]");
+    expect(leido(nota[nota.length - 1] ?? null)).toBe(
+      "Investigación cerrada el 23/10/2026 por la policía de Copenhague, sin cambio en la presencia del dron: no pudo determinar el origen del dron",
+    );
+    expect(container.querySelector("[data-presencia]")?.textContent).toBe("Dron no acreditado");
+    expect(container.querySelector('[data-historial-presencia="cierre"]')?.textContent).toContain("Investigación cerrada, sin cambio en la presencia");
+    expect(pasosDePresencia(en, "en", detalle).at(-1)?.texto).toBe(
+      "Investigation closed on 23/10/2026 by Copenhagen Police, with no change to the drone presence",
+    );
+    expect(historialEnCelda(detalle)).toBe("2025-09-23:confirmada|2026-06-25:no_acreditada|2026-10-23:no_acreditada:cierre");
   });
 
   it("sin historial, solo la presencia, como antes", () => {

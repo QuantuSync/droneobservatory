@@ -730,11 +730,11 @@ def inicios_revisados(ruta: Path = RUTA) -> dict[str, dict[str, Any]]:
 
 def contradice_rectificacion(revision: Documento, incidente: Documento) -> bool:
     """La presencia revisada a mano contradice la que dejó una rectificación oficial de la ficha
-    (el último paso de su `presencia_historial` que no es parcial, cuando hay más de uno). Desde el
+    (el último paso de su `presencia_historial` que no es una nota, cuando hay más de uno). Desde el
     20 de octubre de 2026: EODI-2025-00164 seguía revisada «no confirmada» cuando la rectificación
     del UK Airprox Board la había dejado «descartada»."""
     presencia = revision.get("presencia") or {}
-    pasos = [p for p in incidente.get("presencia_historial") or [] if not p.get("parcial")]
+    pasos = rectificaciones.pasos_de_valor(incidente)
     return bool(presencia) and len(pasos) > 1 and presencia.get("valor") != pasos[-1].get("valor")
 
 
@@ -743,14 +743,15 @@ def revisiones_contra_rectificaciones(
 ) -> list[str]:
     """Las revisiones a mano de la presencia (`titulares` con `presencia`) que no dicen lo mismo que
     la última rectificación oficial revisada a mano del mismo incidente
-    (configuracion/rectificaciones_oficiales.json, sin las parciales). Vacía si todo cuadra."""
+    (configuracion/rectificaciones_oficiales.json, sin las parciales ni los cierres sin cambio).
+    Vacía si todo cuadra."""
     from recogida import rectificaciones as oficiales_
 
     revisiones = cargar() if revisiones is None else revisiones
     oficiales = oficiales_.cargar() if oficiales is None else oficiales
     ultima: dict[str, Documento] = {}
     for r in sorted(oficiales.get("rectificaciones", []), key=lambda r: r["fecha_declaracion"]):
-        if r.get("tipo") != rectificaciones.PARCIAL:
+        if r.get("tipo") not in rectificaciones.SIN_CAMBIO:
             ultima[r["incidente"]] = r
     return [
         f"{t['incidente']}: revisada «{t['presencia']['valor']}», rectificada "

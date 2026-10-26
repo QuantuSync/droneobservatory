@@ -346,7 +346,8 @@ CAMPOS_CSV = {
     "objetivo_es / objetivo_en": "Name of the affected site shown on the website, in Spanish and "
     "English.",
     "presencia_historial": "Changes of the drone presence, `date:value` separated by `|` "
-    "(`:parcial` marks a partial official correction that does not change the value); empty if "
+    "(`:parcial` marks a partial official correction and `:cierre` an investigation closed "
+    "without changing the presence; neither changes the value); empty if "
     "never rectified.",
 }
 

@@ -85,6 +85,7 @@ export function historialDePresencia(p: { presencia_historial?: PasoPresencia[] 
 /** Un paso escrito: la frase que enlaza a su fuente y lo que la sigue (el motivo). */
 export interface PasoPresenciaEscrito {
   valor: PresenciaDron;
+  /** Una nota que no cambia el valor: una corrección parcial o una investigación cerrada sin cambio. */
   parcial: boolean;
   /** «Confirmado el 23/09/2025 por la policía de Copenhague», «Corrección parcial el …». */
   texto: string;
@@ -103,25 +104,27 @@ export function pasosDePresencia(
   const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
   const p = t.presenciaHistorial;
   return historialDePresencia(incidente).map((paso) => {
-    const parcial = paso.parcial === true;
+    const cierre = paso.cierre === true;
+    const parcial = paso.parcial === true || cierre;
     const quien = paso.quien?.[idioma] ?? null;
     const fecha = instante(paso.fecha);
     const motivo = paso.motivo?.[idioma];
     return {
       valor: paso.valor,
       parcial,
-      texto: parcial ? p.parcial(fecha, quien) : p.paso(p.valor[paso.valor], fecha, quien),
+      texto: cierre ? p.cierre(fecha, quien) : parcial ? p.parcial(fecha, quien) : p.paso(p.valor[paso.valor], fecha, quien),
       resto: motivo === undefined ? "" : parcial ? `: ${motivo}` : `, ${motivo}`,
       fuente: porFuente.get(paso.fuente_id),
     };
   });
 }
 
-/** El historial para una celda del CSV: «2025-09-23:confirmada|2026-06-25:no_acreditada». */
+/** El historial para una celda del CSV: «2025-09-23:confirmada|2026-06-25:no_acreditada» (una nota
+ * lleva «:parcial» o «:cierre»). */
 export function historialEnCelda(p: { presencia_historial?: PasoPresencia[] | undefined }): string | undefined {
   const pasos = historialDePresencia(p);
   if (pasos.length === 0) return undefined;
-  return pasos.map((paso) => `${paso.fecha.valor.slice(0, 10)}:${paso.valor}${paso.parcial === true ? ":parcial" : ""}`).join("|");
+  return pasos.map((paso) => `${paso.fecha.valor.slice(0, 10)}:${paso.valor}${paso.parcial === true ? ":parcial" : paso.cierre === true ? ":cierre" : ""}`).join("|");
 }
 
 /** Un paso del «Historial de estados» de la ficha: un cambio de estado o uno de la presencia. */
@@ -129,9 +132,10 @@ export type PasoDelHistorial =
   | { clase: "estado"; paso: PasoHistorial; fecha: string }
   | {
       clase: "presencia";
-      /** «no_acreditado» o «descartado»; null en una corrección parcial (no cambia la presencia). */
+      /** «no_acreditado» o «descartado»; null en una nota (corrección parcial o investigación
+       * cerrada sin cambio: no cambia la presencia). */
       marca: "no_acreditado" | "descartado" | null;
-      /** «No acreditado», «Descartado» o «Corrección parcial». */
+      /** «No acreditado», «Descartado», «Corrección parcial» o «Investigación cerrada». */
       rotulo: string;
       /** Quién lo declara, sin artículo y con mayúscula: «Policía de Dinamarca». */
       quien: string | null;
@@ -175,7 +179,8 @@ export function historialCompleto(
   const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
   const estados: PasoDelHistorial[] = incidente.estado.historial.map((paso) => ({ clase: "estado", paso, fecha: paso.fecha.valor }));
   const presencia: PasoDelHistorial[] = historialDePresencia(incidente).flatMap((paso): PasoDelHistorial[] => {
-    const parcial = paso.parcial === true;
+    const cierre = paso.cierre === true;
+    const parcial = paso.parcial === true || cierre;
     const marca = marcaDePresencia(paso.valor);
     if (!parcial && marca === null) return [];
     const quien = paso.quien?.[idioma];
@@ -183,7 +188,11 @@ export function historialCompleto(
       {
         clase: "presencia",
         marca: parcial ? null : marca,
-        rotulo: parcial ? t.presenciaHistorial.correccionParcial : rotuloDeMarca(t, marca ?? "no_acreditado"),
+        rotulo: cierre
+          ? t.presenciaHistorial.investigacionCerrada
+          : parcial
+            ? t.presenciaHistorial.correccionParcial
+            : rotuloDeMarca(t, marca ?? "no_acreditado"),
         quien: quien === undefined ? null : quienSinArticulo(quien),
         motivo: paso.motivo?.[idioma] === undefined ? null : conMayuscula(paso.motivo[idioma]),
         fuente: porFuente.get(paso.fuente_id),

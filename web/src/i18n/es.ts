@@ -591,6 +591,11 @@ export const es: Textos = {
     parcial: (fecha, quien) =>
       quien === null ? `Corrección parcial el ${fecha}` : `Corrección parcial el ${fecha} por ${quien}`,
     correccionParcial: "Corrección parcial",
+    cierre: (fecha, quien) =>
+      quien === null
+        ? `Investigación cerrada el ${fecha}, sin cambio en la presencia del dron`
+        : `Investigación cerrada el ${fecha} por ${quien}, sin cambio en la presencia del dron`,
+    investigacionCerrada: "Investigación cerrada, sin cambio en la presencia",
   },
   precision: {
     minuto: "hora exacta",
@@ -1059,7 +1064,8 @@ export const es: Textos = {
                 "declara y el enlace a su fuente: «Confirmado el 23/09/2025 por la policía de " +
                 "Copenhague · No acreditado el 25/06/2026 por la policía de Copenhague, tras la " +
                 "investigación». Una corrección oficial parcial queda anotada en ese historial sin " +
-                "cambiar el valor.",
+                "cambiar el valor, como una investigación que la autoridad cierra sin cambiar lo " +
+                "que se sabía del dron.",
             ],
           },
           {

@@ -439,6 +439,10 @@ export interface Textos {
     parcial: (fecha: string, quien: string | null) => string;
     /** El nombre de una corrección parcial en el historial de estados. */
     correccionParcial: string;
+    /** Una investigación cerrada sin cambiar la presencia: «Investigación cerrada el … por …». */
+    cierre: (fecha: string, quien: string | null) => string;
+    /** El nombre de una investigación cerrada sin cambio en el historial de estados. */
+    investigacionCerrada: string;
   };
   precision: Record<Precision, string>;
   categoria: Record<CategoriaObjetivo, string>;

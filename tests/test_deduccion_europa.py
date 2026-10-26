@@ -164,6 +164,8 @@ def test_las_fuentes_oficiales_espanolas_y_portuarias_estan_en_la_recogida() -> 
     # csn.es bloquea la red de la recogida desde el 23 de octubre de 2026
     # (docs/fuentes_retiradas.md).
     assert "csn_sucesos" not in fuentes
+    # Ni mod.gov.lv, que no acepta conexiones de fuera desde el 21 de octubre de 2026.
+    assert "mod_lv" not in fuentes
     for id_ in ("port_gdansk", "tallinna_sadam", "koge_havn"):
         assert fuentes[id_]["tipo"] == "rss"
 

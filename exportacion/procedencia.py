@@ -458,7 +458,7 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             # la presencia sale de la fuente del último paso; el historial, de las de todos.
             pasos = documento["presencia_historial"]
             if ruta == "presencia_dron":
-                pasos = [p for p in pasos if not p.get("parcial")][-1:]
+                pasos = [p for p in pasos if not (p.get("parcial") or p.get("cierre"))][-1:]
             valor.fuentes = {p["fuente_id"] for p in pasos if p["fuente_id"] in fuentes}
             valor.origenes = {origen[f] for f in valor.fuentes}
             valor.metodo = REGLA

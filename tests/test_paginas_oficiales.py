@@ -41,14 +41,6 @@ CASOS = [
         (datetime(2026, 9, 22, 12, 30, tzinfo=UTC), "minuto"),
     ),
     (
-        "mod_lv",
-        '<a href="/lv/zinas/drons-virs-lielvardes-bazes">Drons virs Lielvārdes bāzes</a>',
-        "https://www.mod.gov.lv/lv/zinas/drons-virs-lielvardes-bazes",
-        "Drons virs Lielvārdes bāzes",
-        "<h1>Drons virs Lielvārdes bāzes</h1><span>28.09.2026</span>",
-        (datetime(2026, 9, 28, tzinfo=UTC), "dia"),
-    ),
-    (
         "mod_md",
         '<a href="/ro/comunicate-de-presa/drona-cazuta-in-raionul-cahul">Dronă căzută în '
         "raionul Cahul</a>",

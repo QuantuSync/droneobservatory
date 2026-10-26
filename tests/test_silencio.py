@@ -1,5 +1,6 @@
 """Aviso de silencio (recogida/silencio.py): un aviso único por caso, hasta que se resuelve."""
 
+import json
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -87,3 +88,54 @@ def test_mide_de_la_base() -> None:
     medidas = silencio.medir(almacen, AHORA)
     assert medidas.ultima_llamada is None and medidas.esperas == {}
     assert silencio.avisos(medidas, AHORA) == {}
+
+
+def test_el_aviso_sin_incidentes_trae_lo_que_hace_falta_para_juzgarlo() -> None:
+    medidas = silencio.Medidas(
+        ultima_alta="2026-10-19T09:12:00Z", candidatas_24h=6,
+        retenidos={"EODI-2026-00700": "verificación pendiente",
+                   "EODI-2026-00701": "espera al modelo experto"},
+        articulos_dias=(6, 20, 31, 18, 25, 40, 22, 19), candidatos_nuevos_24h=3, altas_24h=0,
+        ultima_recogida="con_avisos", publicacion="reserva",
+    )  # fmt: skip
+    texto = silencio.avisos(medidas, AHORA)["sin_incidentes"][1]
+    assert texto == (
+        "24 h sin incidentes nuevos con 6 noticias candidatas recogidas (el último, "
+        "2026-10-19T09:12:00Z). Retenidas por el control: 2 (EODI-2026-00700: verificación "
+        "pendiente; EODI-2026-00701: espera al modelo experto). Artículos de drones en Europa: 6 "
+        "en 24 h; mediana de los 7 días anteriores, 22. En 24 h: 3 candidatos nuevos y 0 fichas "
+        "nuevas. Última recogida: código 2, con avisos. Publicación: reserva de Helsinki (el "
+        "principal no respondió)."
+    )
+    # Sin datos del servidor, lo dice en vez de inventarlo.
+    vacio = silencio.Medidas(ultima_alta="2026-10-19T09:12:00Z", candidatas_24h=6)
+    assert silencio.avisos(vacio, AHORA)["sin_incidentes"][1].endswith(
+        "Retenidas por el control: ninguna. Artículos de drones en Europa: sin dato. En 24 h: 0 "
+        "candidatos nuevos y 0 fichas nuevas. Última recogida: sin dato. Publicación: sin dato."
+    )
+
+
+def test_mide_retenidas_recogida_y_publicacion_de_sus_ficheros(tmp_path: Path) -> None:
+    def escribir(nombre: str, datos: object) -> None:
+        (tmp_path / nombre).write_text(json.dumps(datos), encoding="utf-8")
+
+    escribir(
+        "control.json",
+        {
+            "retenidos": {
+                "EODI-2026-00700": {
+                    "desde": "2026-10-20T09:17:00Z",
+                    "motivo": "verificación pendiente",
+                }
+            }
+        },
+    )
+    escribir("estado.json", {"resultado": "correcta"})
+    escribir("publicacion.json", {"subido": "2026-10-20T14:34:07Z"})
+    escribir("publicacion_reserva.json", {"subido": "2026-10-20T13:34:44Z"})
+    medidas = silencio.medir(Almacen.abrir(), AHORA)
+    assert medidas.retenidos == {"EODI-2026-00700": "verificación pendiente"}
+    assert medidas.ultima_recogida == "correcta" and medidas.publicacion == "principal"
+    assert medidas.articulos_dias == (0,) * 8
+    escribir("publicacion_reserva.json", {"subido": "2026-10-20T15:34:44Z"})
+    assert silencio.medir(Almacen.abrir(), AHORA).publicacion == "reserva"

@@ -1057,7 +1057,7 @@
       "pattern": "^[0-9a-f]{64}$"
     },
     "presencia_historial": {
-      "description": "Secuencia de la presencia del dron con las rectificaciones oficiales (proceso/rectificaciones.py): el valor que había, con la fuente y la fecha en que una autoridad lo declaró, y cada cambio posterior por una rectificación oficial (no_acreditada, descartada), con su fuente, su fecha y su motivo. Las correcciones parciales (la autoridad rectifica un episodio y mantiene otros) quedan anotadas con parcial y no cambian el valor. Solo se añade, nunca se borra. Sin rectificaciones, no está.",
+      "description": "Secuencia de la presencia del dron con las rectificaciones oficiales (proceso/rectificaciones.py): el valor que había, con la fuente y la fecha en que una autoridad lo declaró, y cada cambio posterior por una rectificación oficial (no_acreditada, descartada), con su fuente, su fecha y su motivo. Las correcciones parciales (la autoridad rectifica un episodio y mantiene otros) quedan anotadas con parcial, y las investigaciones cerradas sin cambiar la presencia, con cierre; ninguna de las dos cambia el valor. Solo se añade, nunca se borra. Sin rectificaciones, no está.",
       "type": "array",
       "minItems": 1,
       "items": {
@@ -1091,6 +1091,7 @@
             }
           },
           "parcial": {"x-visibilidad": "publico", "description": "Corrección parcial: se anota y no cambia el valor.", "const": true},
+          "cierre": {"x-visibilidad": "publico", "description": "Investigación cerrada sin cambiar la presencia (desde el 26 de octubre de 2026): la autoridad cierra o archiva su investigación sin retirar lo dicho del dron ni decir que fuera otra cosa. Se anota y no cambia el valor ni el estado.", "const": true},
           "revision": {"x-visibilidad": "interno", "description": "De dónde sale el paso: la entrada revisada de configuracion/rectificaciones_oficiales.json o la detección de la recogida, con la decisión del experto.", "type": "string", "minLength": 1}
         }
       }

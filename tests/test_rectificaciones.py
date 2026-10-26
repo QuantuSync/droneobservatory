@@ -295,6 +295,44 @@ def test_la_correccion_parcial_se_anota_sin_cambiar_el_valor(
     assert d["titulo"]["es"] == "Drones cierran el aeropuerto de Copenhague"
 
 
+def test_la_investigacion_cerrada_sin_cambio_se_anota_sin_tocar_presencia_ni_estado(
+    almacen: Almacen, modelos: dict[str, Any]
+) -> None:
+    # Auvere (EODI-2026-00108), 23 de octubre de 2026: la Fiscalía de Estonia cierra la
+    # investigación sin determinar el origen del dron; el dron y el impacto siguen probados.
+    cierre = copy.deepcopy(REVISADA)
+    cierre["tipo"] = "cierre_sin_cambio"
+    modelos["rectificaciones"] = [cierre]
+    antes = almacen.incidente(ID)
+    assert antes is not None
+    _pasar(almacen, Cliente([_decision("cierre_sin_cambio")]))
+    d = almacen.incidente(ID)
+    assert d is not None and d["presencia_dron"] == antes["presencia_dron"] == "confirmada"
+    assert d["estado"] == antes["estado"]
+    semilla, nota = d["presencia_historial"]
+    assert nota["cierre"] is True and "parcial" not in nota
+    assert nota["valor"] == semilla["valor"] == "confirmada"
+    assert nota["fecha"]["valor"].startswith("2026-06-25")
+    assert set(nota["quien"]) == set(nota["motivo"]) == {"es", "en"}
+    assert rectificaciones.vigente(d) == "confirmada" and not rectificaciones.rectificado(d)
+    assert rectificaciones.errores(d) == []
+    assert d["titulo"]["es"] == "Drones cierran el aeropuerto de Copenhague"
+
+
+def test_el_tipo_revisado_que_cambia_se_vuelve_a_preguntar() -> None:
+    propuesta = seguimiento.Propuesta(
+        "revisada:x", ID, "revisada", {"id": "f"}, "texto", esperado="cierre_sin_cambio"
+    )
+    antigua = {"huella": seguimiento.huella("texto"), "tipo": None}
+    assert seguimiento.cambio_revisado(antigua, propuesta)
+    leida = {**antigua, "tipo": "cierre_sin_cambio"}
+    assert not seguimiento.cambio_revisado(leida, propuesta)
+    guardada = {**antigua, "esperado": "cierre_sin_cambio"}
+    assert not seguimiento.cambio_revisado(guardada, propuesta)
+    assert seguimiento.cambio_revisado({**guardada, "esperado": "parcial"}, propuesta)
+    assert seguimiento.cambio_revisado({**leida, "huella": "otra"}, propuesta)
+
+
 def test_la_fuente_oficial_que_llega_despues_entra_sin_repetir_el_paso(almacen: Almacen,
                                                                         modelos: dict[str, Any]
                                                                         ) -> None:  # fmt: skip
@@ -325,7 +363,7 @@ def test_errores_del_historial() -> None:
     ]  # fmt: skip
     errores = rectificaciones.errores(d)
     assert any("no-esta" in e for e in errores)
-    assert any("parcial cambia" in e for e in errores)
+    assert any("(parcial o cierre) cambia el valor" in e for e in errores)
     assert any("acaba en no_acreditada" in e for e in errores)
 
 

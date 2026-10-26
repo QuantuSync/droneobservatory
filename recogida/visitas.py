@@ -612,13 +612,25 @@ def candidatos_del_dia(lineas: Iterable[str]) -> tuple[int, int]:
     return apartados, retirados
 
 
-PAUSA_OFICIAL = re.compile(r"oficiales: fuente (\S+) (?:en pausa hasta|falló: .*; en pausa)")
+FALLO_OFICIAL = re.compile(r"oficiales: fuente (\S+) (?:en pausa hasta|falló: )")
+SEGUIDAS_OFICIAL = re.compile(r"(?:falló |\()(\d+) recogidas seguidas")
+# Desde cuántas recogidas seguidas fallando sale una fuente oficial en el resumen.
+FALLOS_RESUMEN = 2
 
 
-def oficiales_en_pausa_del_dia(lineas: Iterable[str]) -> list[str]:
-    """Las fuentes oficiales que estuvieron en pausa ese día (recogida/oficiales.py), en el
-    diario de la recogida."""
-    return sorted({m[1] for linea in lineas if (m := PAUSA_OFICIAL.search(linea))})
+def oficiales_en_pausa_del_dia(lineas: Iterable[str]) -> dict[str, int]:
+    """Las fuentes oficiales que ese día fallaron en recogidas seguidas o estuvieron en pausa
+    (recogida/oficiales.py), con el mayor número de recogidas seguidas fallidas que dice el diario
+    de la recogida (0 si la línea no lo dice, las de antes del 26 de octubre de 2026)."""
+    fuentes: dict[str, int] = {}
+    for linea in lineas:
+        if not (fuente := FALLO_OFICIAL.search(linea)):
+            continue
+        seguidas = SEGUIDAS_OFICIAL.search(linea)
+        numero = int(seguidas[1]) if seguidas else 0
+        if numero >= FALLOS_RESUMEN or "en pausa" in linea:
+            fuentes[fuente[1]] = max(fuentes.get(fuente[1], 0), numero)
+    return dict(sorted(fuentes.items()))
 
 
 def resueltos_del_dia(vigilancia_json: Path, dia: date) -> list[tuple[str, bool]]:
@@ -867,8 +879,9 @@ class Datos:
     guardian: Documento | None = None
     # Las rectificaciones oficiales de la presencia decididas ese día (rectificaciones_del_dia).
     rectificaciones: list[tuple[str, str]] = field(default_factory=list)
-    # Las fuentes oficiales que estuvieron en pausa ese día (oficiales_en_pausa_del_dia).
-    oficiales_en_pausa: list[str] = field(default_factory=list)
+    # Las fuentes oficiales que fallaron en recogidas seguidas o estuvieron en pausa ese día, con
+    # cuántas seguidas (oficiales_en_pausa_del_dia).
+    oficiales_en_pausa: dict[str, int] = field(default_factory=dict)
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -981,9 +994,13 @@ def texto_resumen(d: Datos) -> str:
             f"{retirados}"
         )
     if d.oficiales_en_pausa:
+        fuentes = [
+            f"{id_} ({n} seguidas)" if n else id_
+            for id_, n in sorted(d.oficiales_en_pausa.items(), key=lambda par: -par[1])
+        ]
         lineas.append(
-            f"  Fuentes oficiales en pausa por fallar 3 recogidas seguidas: "
-            f"{', '.join(d.oficiales_en_pausa[:LIMITE])}"
+            "  Fuentes oficiales que fallan en recogidas seguidas (en pausa desde 3): "
+            f"{', '.join(fuentes[:LIMITE])}"
         )
     if d.resueltos:
         solos = [f for f, incidencia in d.resueltos if not incidencia]

@@ -156,7 +156,7 @@ export function Historial({ t, historial, fuentes, atribucion = null, idioma, pa
             <li
               key={i}
               className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5"
-              data-historial-presencia={entrada.marca ?? "parcial"}
+              data-historial-presencia={entrada.marca ?? (entrada.paso.cierre === true ? "cierre" : "parcial")}
             >
               <span className="inline-flex items-center gap-1.5">
                 {entrada.marca !== null && <Simbolo estado={entrada.marca} />}

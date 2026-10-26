@@ -65,6 +65,8 @@ export interface PasoPresencia {
   quien?: Titulo;
   motivo?: Titulo;
   parcial?: true;
+  /** Investigación cerrada sin cambiar la presencia: una nota que no cambia el valor. */
+  cierre?: true;
 }
 
 /** Lo que una autoridad dice que investiga del incidente, con su cita literal. */

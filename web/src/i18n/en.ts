@@ -584,6 +584,11 @@ export const en: Textos = {
     parcial: (fecha, quien) =>
       quien === null ? `Partial correction on ${fecha}` : `Partial correction on ${fecha} by ${quien}`,
     correccionParcial: "Partial correction",
+    cierre: (fecha, quien) =>
+      quien === null
+        ? `Investigation closed on ${fecha}, with no change to the drone presence`
+        : `Investigation closed on ${fecha} by ${quien}, with no change to the drone presence`,
+    investigacionCerrada: "Investigation closed, presence unchanged",
   },
   precision: {
     minuto: "exact time",
@@ -1053,7 +1058,8 @@ export const en: Textos = {
                 "states it and the link to its source: “Confirmed on 23/09/2025 by Copenhagen " +
                 "Police · Not substantiated on 25/06/2026 by Copenhagen Police, after the " +
                 "investigation”. A partial official correction is noted in that history without " +
-                "changing the value.",
+                "changing the value, like an investigation that the authority closes without " +
+                "changing what was known about the drone.",
             ],
           },
           {

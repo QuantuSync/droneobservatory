@@ -302,6 +302,7 @@ def decidir(experto: Experto, propuesta: Propuesta, incidente: Documento) -> Doc
         "incidente": propuesta.incidente,
         "fuente_id": fuente["id"],
         "huella": huella(propuesta.texto),
+        "esperado": propuesta.esperado,
         "fecha": _iso(experto.ahora),
         "version": peticion.VERSION,
         "motivo_escalado": MOTIVO_ESCALADO,
@@ -364,6 +365,18 @@ def aplicar(almacen: Almacen, propuesta: Propuesta, decision: Documento, ahora: 
         hechos.aplicadas.append(f"{incidente['id']} {decision['tipo']}")
 
 
+def cambio_revisado(decision: Documento, propuesta: Propuesta) -> bool:
+    """La revisión a mano cambió desde que decidió el experto: otro texto, u otro tipo esperado
+    que la decisión no cumple (las decisiones de antes del 26 de octubre de 2026 no guardaban el
+    tipo esperado: la de Auvere, leída «ninguna» cuando se esperaba «parcial», se vuelve a
+    preguntar al revisarla como cierre_sin_cambio)."""
+    if decision.get("huella") != huella(propuesta.texto):
+        return True
+    if "esperado" in decision:
+        return bool(decision["esperado"] != propuesta.esperado)
+    return decision.get("tipo") != propuesta.esperado
+
+
 def revisar(almacen: Almacen, experto: Experto, propuestas: list[Propuesta], ahora: datetime,
             vocabulario: frozenset[str], hechos: Hechos, nuevas_max: int | None = None
             ) -> None:  # fmt: skip
@@ -379,9 +392,9 @@ def revisar(almacen: Almacen, experto: Experto, propuestas: list[Propuesta], aho
         if (
             decision is not None
             and propuesta.origen == "revisada"
-            and decision.get("huella") != huella(propuesta.texto)
+            and cambio_revisado(decision, propuesta)
         ):
-            decision = None  # la revisión a mano cambió el texto: se vuelve a preguntar
+            decision = None  # la revisión a mano cambió el texto o el tipo: se vuelve a preguntar
         if decision is None:
             if nuevas_max is not None and len(nuevas) >= nuevas_max:
                 continue
