@@ -2,6 +2,7 @@
 EODI-2025-00154 y EODI-2026-00112, 26 de octubre de 2026."""
 
 from datetime import UTC, datetime
+from typing import Any
 from zoneinfo import ZoneInfo
 
 from proceso import fechas
@@ -19,21 +20,21 @@ def _utc(texto: str) -> datetime:
     return datetime.fromisoformat(texto).replace(tzinfo=UTC)
 
 
-def test_la_hora_local_de_la_frase_respalda_su_utc_y_no_otra():
+def test_la_hora_local_de_la_frase_respalda_su_utc_y_no_otra() -> None:
     inicio = _utc("2026-03-30T18:29")
     assert fechas.fin_escrito(FRASE_ORHEI, "ro", _utc("2026-03-30T19:03"), inicio, CHISINAU)
     # 20:03 UTC era la hora de Moldavia tomada como UTC+2: ninguna frase la escribe.
     assert not fechas.fin_escrito(FRASE_ORHEI, "ro", _utc("2026-03-30T20:03"), inicio, CHISINAU)
 
 
-def test_una_duracion_respalda_el_fin_que_da_desde_el_inicio():
+def test_una_duracion_respalda_el_fin_que_da_desde_el_inicio() -> None:
     frase = "pendant quatre heures lundi soir 22 septembre"
     inicio = _utc("2025-09-22T18:30")
     assert fechas.fin_escrito(frase, "fr", _utc("2025-09-22T22:30"), inicio, COPENHAGUE)
     assert not fechas.fin_escrito(frase, "fr", _utc("2025-09-22T23:00"), inicio, COPENHAGUE)
 
 
-def test_formas_de_escribir_horas_y_duraciones():
+def test_formas_de_escribir_horas_y_duraciones() -> None:
     assert horas_escritas("tra le 19 e le 21 di venerdì sera") == [(19, 0), (21, 0)]
     assert horas_escritas("operacijos atnaujintos apie 00.35 val.") == [(0, 35)]
     assert (0, 0) in horas_escritas("bis zum Beginn des Nachtflugverbots um Mitternacht")
@@ -44,7 +45,7 @@ def test_formas_de_escribir_horas_y_duraciones():
     assert duraciones("Gardaí investigating sighting of large drone", "en") == []
 
 
-def _ficha(fin: str, frase: str) -> dict:
+def _ficha(fin: str, frase: str) -> dict[str, Any]:
     return {
         "id": "EODI-2025-00154",
         "lugar": {"pais": "DK", "punto": {"lat": 55.618, "lon": 12.656}},
@@ -65,7 +66,7 @@ def _ficha(fin: str, frase: str) -> dict:
     }
 
 
-def test_sin_frase_se_quitan_el_fin_su_duracion_y_sus_afirmaciones():
+def test_sin_frase_se_quitan_el_fin_su_duracion_y_sus_afirmaciones() -> None:
     ficha = _ficha("2025-09-22T23:00Z", "gut vier Stunden lang keine Flüge")
     assert fechas.fines_sin_frase(ficha)
     limpia = fechas.sin_fin_sin_frase(ficha)
@@ -74,7 +75,7 @@ def test_sin_frase_se_quitan_el_fin_su_duracion_y_sus_afirmaciones():
     assert not fechas.fines_sin_frase(limpia)
 
 
-def test_con_frase_el_fin_se_queda():
+def test_con_frase_el_fin_se_queda() -> None:
     ficha = _ficha("2025-09-22T22:30Z", "gut vier Stunden lang keine Flüge")
     limpia = fechas.sin_fin_sin_frase(ficha)
     assert limpia["tiempo"]["fin"]["valor"] == "2025-09-22T22:30Z"
