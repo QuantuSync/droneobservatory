@@ -1423,6 +1423,32 @@ class Almacen:
         ).fetchone()
         return fila[0] if fila else None
 
+    def altas_desde(self, tabla: str, fecha: str) -> int:
+        """Cuántas altas del historial tiene la tabla desde `fecha` (ISO)."""
+        fila = self._conexion.execute(
+            "SELECT count(DISTINCT entidad_id) FROM historial "
+            "WHERE tabla = ? AND operacion = 'alta' AND fecha >= ?",
+            (tabla, fecha),
+        ).fetchone()
+        return int(fila[0])
+
+    def candidatos_nuevos_desde(self, fecha: str) -> int:
+        """Cuántos candidatos empiezan (su primer artículo) desde `fecha` (ISO)."""
+        fila = self._conexion.execute(
+            "SELECT count(*) FROM candidatos WHERE json_extract(documento, '$.inicio') >= ?",
+            (fecha,),
+        ).fetchone()
+        return int(fila[0])
+
+    def articulos_candidatos_entre(self, desde: str, hasta: str) -> int:
+        """Cuántos artículos de algún candidato tienen fecha en [desde, hasta) (ISO)."""
+        fila = self._conexion.execute(
+            "SELECT count(*) FROM articulos WHERE fecha >= ? AND fecha < ? "
+            "AND candidato IS NOT NULL",
+            (desde, hasta),
+        ).fetchone()
+        return int(fila[0])
+
     def articulos_candidatos_desde(self, fecha: str) -> int:
         """Cuántos artículos de algún candidato tienen fecha desde `fecha` (ISO)."""
         fila = self._conexion.execute(

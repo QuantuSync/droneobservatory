@@ -1,5 +1,5 @@
 {
-  "descripcion": "Rectificaciones oficiales de la presencia del dron revisadas a mano (recogida/rectificaciones.py, docs/rectificaciones.md). Cada una lleva la declaración literal de la autoridad, con su enlace y su fecha (fuente, como las citas de incidentes_revisados.json), el tipo (no_acreditada: cierra la investigación sin pruebas del dron o retira lo que dijo; descartada: dice que era otra cosa; parcial: rectifica un episodio o una prueba y mantiene el dron, se anota sin cambiar el valor), quién lo declara y qué dijo, en español y en inglés, y, en anterior, quién declaró el valor que había. contexto: más frases literales del mismo documento para el experto. Solo se aplica si el experto lo lee igual; el incidente y su efecto (el cierre, los desvíos) no cambian nunca.",
+  "descripcion": "Rectificaciones oficiales de la presencia del dron revisadas a mano (recogida/rectificaciones.py, docs/rectificaciones.md). Cada una lleva la declaración literal de la autoridad, con su enlace y su fecha (fuente, como las citas de incidentes_revisados.json), el tipo (no_acreditada: cierra la investigación sin pruebas del dron o retira lo que dijo; descartada: dice que era otra cosa; parcial: rectifica un episodio o una prueba y mantiene el dron, se anota sin cambiar el valor; cierre_sin_cambio: cierra o archiva la investigación sin cambiar lo que se sabía del dron, se anota sin cambiar el valor ni el estado), quién lo declara y qué dijo, en español y en inglés, y, en anterior, quién declaró el valor que había. contexto: más frases literales del mismo documento para el experto. Solo se aplica si el experto lo lee igual; el incidente y su efecto (el cierre, los desvíos) no cambian nunca.",
   "rectificaciones": [
     {
       "incidente": "EODI-2025-00154",
@@ -67,7 +67,7 @@
     },
     {
       "incidente": "EODI-2026-00108",
-      "tipo": "parcial",
+      "tipo": "cierre_sin_cambio",
       "fecha_declaracion": "2026-10-23",
       "fuente": {
         "enlace": "https://www.err.ee/1610174596/uurimine-ei-tuvastanud-auvere-droonijuhtumis-tahtlikku-tegevust-eesti-vastu",

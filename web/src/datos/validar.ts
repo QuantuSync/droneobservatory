@@ -413,7 +413,7 @@ const nombres = objeto(
 const historialPresencia = lista(
   objeto(
     { valor: enumerado(v.PRESENCIAS), fecha: instante, fuente_id: cadena() },
-    { quien: titulo, motivo: titulo, parcial: constante(true) },
+    { quien: titulo, motivo: titulo, parcial: constante(true), cierre: constante(true) },
   ),
   1,
 );

@@ -679,7 +679,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
         entrada.clase === "presencia"
           ? e(
               "li",
-              { "data-historial-presencia": entrada.marca ?? "parcial" },
+              { "data-historial-presencia": entrada.marca ?? (entrada.paso.cierre === true ? "cierre" : "parcial") },
               e("strong", null, entrada.rotulo),
               " · ",
               e("span", { class: "mono" }, instante(entrada.paso.fecha)),

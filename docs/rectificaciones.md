@@ -29,6 +29,17 @@ modelo). Pruebas: `tests/test_rectificaciones.py`.
 Una **corrección parcial** (la autoridad rectifica un episodio o una prueba concreta y mantiene
 los demás) se anota en el historial con `parcial: true` y no cambia el valor.
 
+Una **investigación cerrada sin cambiar la presencia** (`cierre_sin_cambio`, desde el 26 de
+octubre de 2026) es la autoridad que cierra o archiva su investigación sin retirar lo que se sabía
+del dron ni decir que fuera otra cosa: el dron sigue probado, pero, por ejemplo, no puede
+determinar su origen ni su autor. Se anota en el historial con `cierre: true`, su fecha, su
+fuente, quién lo declara y su motivo, en español y en inglés, y no cambia ni la presencia ni el
+estado. La web lo escribe «Investigación cerrada el 23/10/2026 por la Fiscalía de Estonia…, sin
+cambio en la presencia del dron» («Investigation closed on … with no change to the drone
+presence»), y el CSV, `día:valor:cierre`. Primer caso: Auvere (EODI-2026-00108), que el
+experto leía «ninguna» cuando estaba revisada como `parcial`. Si cambia el tipo de una
+rectificación revisada a mano, el experto vuelve a leerla (`cambio_revisado`).
+
 ## El historial
 
 `presencia_historial` (público, esquema 1.20.0) guarda la secuencia: el primer paso es el valor
@@ -43,8 +54,8 @@ Lo rectificado no lo deshace la recogida. `Almacen.guardar_incidente` llama a
 ficha sin historial, con otra presencia o sin la fuente oficial, se conservan el historial, sus
 fuentes y el valor vigente (con su afirmación y el titular coherente). Para volver a cambiarla
 hace falta otra rectificación. La validación (`rectificaciones.errores`) exige que cada paso cite
-una fuente del incidente, que un paso parcial no cambie el valor y que el último paso que no es
-parcial sea la presencia del incidente.
+una fuente del incidente, que una nota (parcial o cierre) no cambie el valor y que el último paso
+que no es una nota sea la presencia del incidente.
 
 Si llega otra fuente que dice lo mismo que el valor vigente (la declaración oficial después de
 la noticia que la contaba), no es un paso nuevo: la fuente entra en la ficha con su afirmación.

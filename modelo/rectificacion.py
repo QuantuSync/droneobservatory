@@ -14,7 +14,7 @@ from typing import Any
 
 from modelo.control import TEMPERATURA
 
-VERSION = "rectificacion/1"
+VERSION = "rectificacion/2"
 ESFUERZO = "medium"
 MAX_SALIDA = 700
 MAX_SALIDA_MENSUAL = 300
@@ -39,9 +39,12 @@ que fuera otra cosa. No encontrar pruebas no es demostrar que no hubo dron: eso 
 globo, una estrella...).
 - "parcial": la autoridad rectifica un episodio o una prueba concreta (un vídeo, una hora, un \
 disparo) y mantiene que hubo drones en el incidente.
+- "cierre_sin_cambio": la autoridad oficial cierra o archiva su investigación y no cambia lo que \
+se sabía del dron: no lo retira ni dice que fuera otra cosa (por ejemplo, el dron está probado \
+pero no ha podido determinar su origen ni su autor).
 - "ninguna": no es una autoridad oficial (periodistas, analistas, la comunidad OSINT, \
-testigos), la autoridad mantiene el dron, solo lo deja abierto el mismo día sin haberlo \
-afirmado antes, o el texto habla de otro suceso (otra fecha, otro lugar).
+testigos), la autoridad mantiene el dron sin cerrar su investigación, solo lo deja abierto el \
+mismo día sin haberlo afirmado antes, o el texto habla de otro suceso (otra fecha, otro lugar).
 
 Reglas:
 - mismo_suceso: el texto habla del mismo suceso que la ficha (misma fecha o noche y mismo lugar).
@@ -66,7 +69,9 @@ ESQUEMA = {
         "motivo_es", "motivo_en", "confianza",
     ],
     "properties": {
-        "tipo": {"enum": ["no_acreditada", "descartada", "parcial", "ninguna"]},
+        "tipo": {
+            "enum": ["no_acreditada", "descartada", "parcial", "cierre_sin_cambio", "ninguna"]
+        },
         "mismo_suceso": {"type": "boolean"},
         "autoridad_oficial": {"type": "boolean"},
         "frase": {"type": "string"},

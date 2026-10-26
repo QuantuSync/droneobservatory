@@ -196,6 +196,7 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "presencia_historial[].motivo.es",
         "presencia_historial[].motivo.en",
         "presencia_historial[].parcial",
+        "presencia_historial[].cierre",
         "tiempo",
         *_instante("tiempo.inicio"),
         *_instante("tiempo.fin"),
