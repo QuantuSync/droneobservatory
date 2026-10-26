@@ -97,93 +97,85 @@ jobs:
     needs: destino
     if: needs.destino.outputs.base != ''
     runs-on: ubuntu-latest
-    # Dos intentos de instalación (20 min) y dos de recorridos (25 min) como mucho, y el resto.
-    timeout-minutes: 100
+    # Preparación (dos intentos de 10 min como mucho) y recorridos (35 min), y el resto.
+    timeout-minutes: 60
+    env:
+      # La imagen oficial de Playwright trae los tres navegadores y las librerías del sistema que
+      # necesitan: nada se instala con apt en cada ejecución. El 23 y el 26 de octubre de 2026 el
+      # espejo de Ubuntu de los runners servía los paquetes tan despacio que la instalación de
+      # WebKit pasó de 40 minutos y el trabajo murió antes de abrir la web. La etiqueta es la versión
+      # exacta de @playwright/test en web/package.json (los navegadores de la imagen son los de esa
+      # versión); al subir Playwright hay que subirla aquí también.
+      IMAGEN: mcr.microsoft.com/playwright:v1.63.0-noble
     strategy:
       fail-fast: false
       matrix:
         include:
           # Los recorridos de una persona (e2e/*recorridos.spec.ts), cada uno en su dispositivo.
-          - { proyecto: android, trozo: 1/1, navegadores: chromium }
-          - { proyecto: iphone, trozo: 1/1, navegadores: webkit }
-          - { proyecto: tableta, trozo: 1/1, navegadores: chromium }
-          - { proyecto: escritorio-chromium, trozo: 1/1, navegadores: chromium }
-          - { proyecto: escritorio-webkit, trozo: 1/1, navegadores: webkit }
+          - { proyecto: android, trozo: 1/1 }
+          - { proyecto: iphone, trozo: 1/1 }
+          - { proyecto: tableta, trozo: 1/1 }
+          - { proyecto: escritorio-chromium, trozo: 1/1 }
+          - { proyecto: escritorio-webkit, trozo: 1/1 }
           # El resto de las comprobaciones, repartidas en trozos para que ninguno pase de media hora.
-          - { proyecto: escritorio, trozo: 1/3, navegadores: chromium }
-          - { proyecto: escritorio, trozo: 2/3, navegadores: chromium }
-          - { proyecto: escritorio, trozo: 3/3, navegadores: chromium }
-          - { proyecto: movil, trozo: 1/3, navegadores: chromium }
-          - { proyecto: movil, trozo: 2/3, navegadores: chromium }
-          - { proyecto: movil, trozo: 3/3, navegadores: chromium }
+          - { proyecto: escritorio, trozo: 1/3 }
+          - { proyecto: escritorio, trozo: 2/3 }
+          - { proyecto: escritorio, trozo: 3/3 }
+          - { proyecto: movil, trozo: 1/3 }
+          - { proyecto: movil, trozo: 2/3 }
+          - { proyecto: movil, trozo: 3/3 }
     name: ${{ matrix.proyecto }} ${{ matrix.trozo }}
-    defaults:
-      run:
-        working-directory: web
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ needs.destino.outputs.sha }}
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: "24"
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-      - run: npm ci
-      # Los paquetes de Ubuntu que pide Playwright, de la caché: el 23 de octubre de 2026 el espejo
-      # de Ubuntu de los runners servía cada paquete grande en 1-5 minutos y la instalación de
-      # WebKit tardó 47 y 55 minutos (las pruebas, 10); un trabajo llegó al tope y se canceló.
+      # La caché de npm (en los deployment_status Actions la salta: el evento no va ligado a una
+      # rama; entonces npm descarga los paquetes, que es rápido).
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/paquetes-playwright
-          key: paquetes-playwright-${{ runner.os }}-${{ matrix.navegadores }}-${{ hashFiles('web/package-lock.json') }}
-          restore-keys: paquetes-playwright-${{ runner.os }}-${{ matrix.navegadores }}-
-      # Cada intento con su tiempo máximo; si se agota (código 124), un segundo intento y nada más.
-      # Un fallo de verdad no se repite. La caché no sirve en los deployment_status (producción):
-      # Actions la salta porque el evento no va ligado a una rama. Al agotarse el tiempo, timeout
-      # para npx pero no el apt-get que lanzó con sudo, que sigue con el cerrojo de dpkg: el 23 de
-      # octubre de 2026 el segundo intento salió al momento con código 100 («Could not get lock»).
-      # Antes de repetir se para ese apt-get y se deja dpkg en orden; lo ya descargado se reutiliza.
-      - name: Navegadores y paquetes de Playwright
+          path: ~/.npm
+          key: npm-recorridos-${{ runner.os }}-${{ hashFiles('web/package-lock.json') }}
+          restore-keys: npm-recorridos-${{ runner.os }}-
+      # La imagen y las dependencias de la web. Si algo de esto falla (red, registro, tiempo
+      # agotado), se repite una vez y solo una: es un fallo antes de abrir la primera página, no de
+      # la web. Sustituye al segundo intento «solo si se agota el tiempo» del 23 de octubre de 2026.
+      # Las fuentes vienen en la imagen (las mismas que instalaba «playwright install --with-deps»).
+      # La zona horaria y el idioma del sistema se fijan al correr los recorridos (TZ=UTC y
+      # LANG=C.UTF-8, los del runner de antes): los dispositivos de Playwright no fijan ni locale
+      # ni timezoneId, así que el navegador toma los del sistema, y la imagen trae otra zona.
+      - name: Preparación (imagen de Playwright y dependencias)
+        timeout-minutes: 22
         run: |
           set -uo pipefail
-          mkdir -p ~/paquetes-playwright
-          printf '%s\n' 'Acquire::Retries "3";' 'Acquire::http::Timeout "30";' \
-            'APT::Keep-Downloaded-Packages "true";' | sudo tee /etc/apt/apt.conf.d/99recorridos
-          if compgen -G "$HOME/paquetes-playwright/*.deb" > /dev/null; then
-            sudo cp "$HOME"/paquetes-playwright/*.deb /var/cache/apt/archives/
-          fi
+          mkdir -p ~/.npm
+          preparar() {
+            timeout -k 20s 8m docker pull --quiet "$IMAGEN" || return 1
+            docker run --rm --name preparacion -v "$GITHUB_WORKSPACE:/w" -v "$HOME/.npm:/root/.npm" \
+              -w /w/web "$IMAGEN" timeout -k 20s 8m npm ci --no-audit --no-fund
+          }
           for intento in 1 2; do
-            codigo=0
-            timeout -k 30s 20m npx playwright install --with-deps ${{ matrix.navegadores }} || codigo=$?
-            [ "$codigo" -eq 124 ] || [ "$codigo" -eq 137 ] || break
-            echo "::warning::la instalación de Playwright pasó de 20 minutos (intento $intento)"
-            sudo pkill -TERM -x apt-get || true
-            for _ in $(seq 1 12); do pgrep -x apt-get > /dev/null || break; sleep 5; done
-            sudo pkill -KILL -x apt-get || true
-            sudo dpkg --configure -a || true
+            inicio=$SECONDS
+            if preparar; then
+              echo "preparación lista en $((SECONDS - inicio)) s (intento $intento)"
+              exit 0
+            fi
+            echo "::warning::la preparación de los recorridos falló (intento $intento de 2)"
+            docker kill preparacion > /dev/null 2>&1 || true
           done
-          if compgen -G "/var/cache/apt/archives/*.deb" > /dev/null; then
-            cp /var/cache/apt/archives/*.deb ~/paquetes-playwright/
-          fi
-          exit "$codigo"
+          exit 1
       - name: Recorridos contra ${{ needs.destino.outputs.base }}
+        timeout-minutes: 35
         env:
           BASE: ${{ needs.destino.outputs.base }}
           BYPASS: ${{ secrets.EODI_VERCEL_BYPASS }}
           VERCEL_BYPASS: ${{ secrets.EODI_VERCEL_BYPASS }}
-          CAPTURAS: ${{ runner.temp }}/capturas
-          PLAYWRIGHT_HTML_OPEN: never
         run: |
           set -uo pipefail
-          for intento in 1 2; do
-            codigo=0
-            timeout -k 30s 25m npx playwright test --project=${{ matrix.proyecto }} \
-              --shard=${{ matrix.trozo }} --reporter=list,html || codigo=$?
-            [ "$codigo" -eq 124 ] || [ "$codigo" -eq 137 ] || break
-            echo "::warning::los recorridos pasaron de 25 minutos (intento $intento)"
-          done
-          exit "$codigo"
+          mkdir -p "$RUNNER_TEMP/capturas"
+          docker run --rm --init --ipc=host -v "$GITHUB_WORKSPACE:/w" -v "$RUNNER_TEMP/capturas:/capturas" \
+            -w /w/web -e CI -e TZ=UTC -e LANG=C.UTF-8 -e BASE -e BYPASS -e VERCEL_BYPASS -e CAPTURAS=/capturas \
+            -e PLAYWRIGHT_HTML_OPEN=never "$IMAGEN" \
+            npx playwright test --project=${{ matrix.proyecto }} --shard=${{ matrix.trozo }} --reporter=list,html
       - name: Informe de Playwright
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -193,39 +185,59 @@ jobs:
           retention-days: 14
 
   # Tras un despliegue de producción: incidencia abierta si los recorridos fallan, cerrada si
-  # vuelven a pasar.
+  # vuelven a pasar. El título dice si falló la web o la preparación (.github/scripts/
+  # fallo_recorridos.py, por el paso en que se paró cada trabajo). La preparación ya se ha
+  # repetido una vez dentro de cada trabajo: si llega aquí, el fallo persiste tras el reintento.
   incidencia:
     needs: [destino, recorridos]
     if: always() && needs.destino.outputs.produccion == 'true' && needs.recorridos.result != 'cancelled' && needs.recorridos.result != 'skipped'
     runs-on: ubuntu-latest
     permissions:
+      actions: read
       issues: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: .github/scripts
       - env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RESULTADO: ${{ needs.recorridos.result }}
           EJECUCION: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RUN_ID: ${{ github.run_id }}
+          INTENTO: ${{ github.run_attempt }}
           SHA: ${{ needs.destino.outputs.sha }}
         run: |
           set -euo pipefail
-          titulo="Los recorridos fallan en producción"
-          abierta="$(gh issue list --state open --search "\"$titulo\" in:title" --json number,title \
-            --jq "map(select(.title == \"$titulo\")) | .[0].number // empty")"
+          comun="Los recorridos fallan en producción"
+          abiertas="$(gh issue list --state open --search "\"$comun\" in:title" --json number,title \
+            --jq "map(select(.title | startswith(\"$comun\"))) | .[] | \"\(.number)\t\(.title)\"")"
           if [ "$RESULTADO" = "success" ]; then
-            if [ -n "$abierta" ]; then
-              gh issue close "$abierta" --comment "Los recorridos vuelven a pasar en producción (commit $SHA): $EJECUCION"
-            fi
+            printf '%s\n' "$abiertas" | while IFS="$(printf '\t')" read -r numero _; do
+              [ -n "$numero" ] || continue
+              gh issue close "$numero" --comment "Los recorridos vuelven a pasar en producción (commit $SHA): $EJECUCION"
+            done
             echo "recorridos en verde en producción"
             exit 0
           fi
-          cuerpo="Los recorridos de Playwright contra https://droneobservatory.eu fallan tras el despliegue del commit $SHA.
+          fase="$(gh api "repos/$GH_REPO/actions/runs/$RUN_ID/attempts/$INTENTO/jobs" --paginate \
+            --jq '.jobs[]' | python3 .github/scripts/fallo_recorridos.py)"
+          if [ "$fase" = "preparacion" ]; then
+            titulo="$comun: la preparación"
+            que="Ningún recorrido llegó a abrir la web: falló la preparación (descarga de la imagen de Playwright o de las dependencias), también en el segundo intento. No es un fallo de la web."
+          else
+            titulo="$comun: la web"
+            que="Al menos un recorrido falló al recorrer la web."
+          fi
+          echo "fallo: ${fase:-desconocido} → «$titulo»"
+          cuerpo="Los recorridos de Playwright contra https://droneobservatory.eu fallan tras el despliegue del commit $SHA. $que
 
           Ejecución e informes de Playwright (artefactos «informe-…»): $EJECUCION
 
           Qué hacer: interno: operacion, «Pruebas en la nube». La incidencia se cierra sola cuando un despliegue de producción vuelve a pasar los recorridos."
-          if [ -n "$abierta" ]; then
-            gh issue comment "$abierta" --body "Siguen fallando tras el commit $SHA: $EJECUCION"
+          numero="$(printf '%s\n' "$abiertas" | awk -F '\t' -v t="$titulo" '$2 == t { print $1; exit }')"
+          if [ -n "$numero" ]; then
+            gh issue comment "$numero" --body "Siguen fallando tras el commit $SHA: $EJECUCION"
           else
             gh issue create --title "$titulo" --body "$cuerpo"
           fi
