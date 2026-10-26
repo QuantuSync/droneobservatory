@@ -1,15 +1,165 @@
 {
  "afirmaciones": [
   {
+   "campo": "drones",
+   "confianza_extraccion": 0.8,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  {
+   "campo": "es_incidente",
+   "confianza_extraccion": 0.9,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": true
+  },
+  {
+   "campo": "inicio",
+   "confianza_extraccion": 0.7,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": "2026-09-08T16:00"
+  },
+  {
+   "campo": "inicio_precision",
+   "confianza_extraccion": 0.8,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": "hora"
+  },
+  {
+   "campo": "lugar_suceso",
+   "confianza_extraccion": 0.7,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": {
+    "nivel": "region",
+    "nombre": "Dublin Bay",
+    "pais": "IE",
+    "region": ""
+   }
+  },
+  {
+   "campo": "objetivo_conocido",
+   "confianza_extraccion": 0.6,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": false
+  },
+  {
+   "campo": "pais",
+   "confianza_extraccion": 0.9,
+   "fuente_id": "gdelt-242bb21d1e850e3b",
+   "valor": "IE"
+  },
+  {
    "campo": "presencia_dron",
+   "confianza_extraccion": 0.85,
    "fuente_id": "gdelt-242bb21d1e850e3b",
    "valor": "no_confirmada"
+  },
+  {
+   "campo": "tipo",
+   "confianza_extraccion": 0.8,
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "valor": "sobrevuelo"
+  }
+ ],
+ "afirmaciones_publicas": [
+  {
+   "campo": "drones.numero",
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-09T11:45Z"
+   },
+   "fiabilidad": "C",
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "medio": "newstalk.com",
+   "valor": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  {
+   "campo": "lugar.pais",
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-09T10:15Z"
+   },
+   "fiabilidad": "C",
+   "fuente_id": "gdelt-242bb21d1e850e3b",
+   "medio": "irishtimes.com",
+   "valor": "IE"
+  },
+  {
+   "campo": "presencia_dron",
+   "cita": "Garda\u00ed investigating reported sighting of large drone close to Dublin Bay",
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-09T10:15Z"
+   },
+   "fiabilidad": "C",
+   "fuente_id": "gdelt-242bb21d1e850e3b",
+   "medio": "irishtimes.com",
+   "valor": "no_confirmada"
+  },
+  {
+   "campo": "tiempo.inicio",
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-09T11:45Z"
+   },
+   "fiabilidad": "C",
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "medio": "newstalk.com",
+   "valor": {
+    "precision": "minuto",
+    "valor": "2026-09-08T16:00Z"
+   }
+  },
+  {
+   "campo": "tipo",
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-09T11:45Z"
+   },
+   "fiabilidad": "C",
+   "fuente_id": "gdelt-417400cfb5a5d6b6",
+   "medio": "newstalk.com",
+   "valor": "sobrevuelo"
   }
  ],
  "consecuencias": {
   "cierre": {
    "valor": "desconocido"
   }
+ },
+ "control": {
+  "alta": {
+   "precision": "minuto",
+   "valor": "2026-10-02T10:17Z"
+  },
+  "candidato": "CAND-20260909T0930-loc:2964574-avistamiento",
+  "huella_fuentes": "21bae7e84125885641858958c4062765165543117624f89af9559acd0d2cf148",
+  "modelos": {
+   "drones": "claude-sonnet-5-5",
+   "es_incidente": "claude-sonnet-5-5",
+   "inicio": "claude-sonnet-5-5",
+   "inicio_precision": "claude-sonnet-5-5",
+   "lugar_suceso": "claude-sonnet-5-5",
+   "objetivo_conocido": "claude-sonnet-5-5",
+   "pais": "claude-sonnet-5-5",
+   "presencia_dron": "claude-sonnet-5-5",
+   "tipo": "claude-sonnet-5-5"
+  },
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-25T14:17Z"
+  },
+  "version_extractor": "ficha/5"
  },
  "drones": {
   "numero": {
@@ -32,20 +182,14 @@
     "estado": "confirmado",
     "fecha": {
      "precision": "aproximada",
-     "valor": "2026-09-09T09:30Z"
+     "valor": "2026-09-09T10:15Z"
     },
-    "fuente_id": "gdelt-1b5202738536d388-declaracion-1"
+    "fuente_id": "gdelt-242bb21d1e850e3b-declaracion-1"
    }
   ]
  },
  "fuentes": [
   {
-   "campos_respaldados": [
-    "es_incidente",
-    "lugar_suceso",
-    "objetivo_conocido",
-    "pais"
-   ],
    "credibilidad": 3,
    "enlace": "https://breakingnews.ie/ireland/gardai-investigating-alleged-sighting-of-large-drone-close-to-dublin-bay-1948364.html",
    "es_autoridad": false,
@@ -54,14 +198,17 @@
     "valor": "2026-09-09T09:30Z"
    },
    "fiabilidad": "C",
-   "frase_origen": "Garda\u00ed investigating alleged sighting of large drone close to Dublin Bay.",
+   "frase_origen": "Garda\u00ed investigating alleged sighting of large drone close to Dublin Bay",
    "id": "gdelt-1b5202738536d388",
    "idioma": "en",
-   "medio": "breakingnews.ie"
+   "interna_fuera_de_ucrania": false,
+   "medio": "breakingnews.ie",
+   "publica": true,
+   "replicas": 0
   },
   {
    "campos_respaldados": [
-    "dron_estatal",
+    "pais",
     "presencia_dron"
    ],
    "credibilidad": 3,
@@ -72,16 +219,22 @@
     "valor": "2026-09-09T10:15Z"
    },
    "fiabilidad": "C",
-   "frase_origen": "It will also seek to rule out the possibility a drone was being flown as part of US security preparations.",
+   "frase_origen": "Garda\u00ed investigating reported sighting of large drone close to Dublin Bay",
    "id": "gdelt-242bb21d1e850e3b",
    "idioma": "en",
-   "medio": "irishtimes.com"
+   "interna_fuera_de_ucrania": false,
+   "medio": "irishtimes.com",
+   "publica": true,
+   "replicas": 0
   },
   {
    "campos_respaldados": [
     "drones",
+    "es_incidente",
     "inicio",
     "inicio_precision",
+    "lugar_suceso",
+    "objetivo_conocido",
     "tipo"
    ],
    "credibilidad": 3,
@@ -95,7 +248,10 @@
    "frase_origen": "An Aer Lingus pilot has reported seeing a large drone close to Dublin Bay.",
    "id": "gdelt-417400cfb5a5d6b6",
    "idioma": "en",
-   "medio": "newstalk.com"
+   "interna_fuera_de_ucrania": false,
+   "medio": "newstalk.com",
+   "publica": true,
+   "replicas": 0
   },
   {
    "credibilidad": 3,
@@ -109,7 +265,10 @@
    "frase_origen": "Garda\u00ed Investigating Report Of 'Large Black Drone' Spotted Near Dublin Bay",
    "id": "gdelt-51393358f3501359",
    "idioma": "en",
-   "medio": "nova.ie"
+   "interna_fuera_de_ucrania": false,
+   "medio": "nova.ie",
+   "publica": true,
+   "replicas": 0
   },
   {
    "campos_respaldados": [
@@ -117,23 +276,36 @@
     "presencia_dron"
    ],
    "credibilidad": 1,
-   "enlace": "https://breakingnews.ie/ireland/gardai-investigating-alleged-sighting-of-large-drone-close-to-dublin-bay-1948364.html",
+   "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
    "es_autoridad": true,
    "fecha": {
     "precision": "aproximada",
-    "valor": "2026-09-09T09:30Z"
+    "valor": "2026-09-09T10:15Z"
    },
    "fiabilidad": "B",
-   "frase_origen": "Garda\u00ed investigating alleged sighting of large drone close to Dublin Bay.",
-   "id": "gdelt-1b5202738536d388-declaracion-1",
+   "frase_origen": "Though the sighting is being taken seriously, Garda sources said the primary goal of the inquiry was to test the accuracy of the report.",
+   "id": "gdelt-242bb21d1e850e3b-declaracion-1",
    "idioma": "en",
-   "medio": "Garda\u00ed (declaraci\u00f3n oficial citada en breakingnews.ie)"
+   "interna_fuera_de_ucrania": false,
+   "medio": "Garda\u00ed (declaraci\u00f3n oficial citada en irishtimes.com)",
+   "publica": true,
+   "replicas": 0
   }
  ],
  "id": "EODI-2026-00278",
+ "investigacion": [
+  {
+   "autoridad": "Garda\u00ed",
+   "cita": "Though the sighting is being taken seriously, Garda sources said the primary goal of the inquiry was to test the accuracy of the report.",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-09T10:15Z"
+   },
+   "fuente_id": "gdelt-242bb21d1e850e3b-declaracion-1"
+  }
+ ],
  "lugar": {
-  "geocodificacion": "frase_origen",
-  "localidad": "Dublin",
+  "localidad": "costa de Wicklow",
   "nivel": "localidad",
   "pais": "IE",
   "punto": {
@@ -146,12 +318,12 @@
  },
  "nombres": {
   "localidad": {
-   "en": "Dublin",
-   "es": "Dubl\u00edn"
+   "en": "Wicklow coast",
+   "es": "costa de Wicklow"
   },
   "lugar": {
-   "en": "Dublin, Ireland",
-   "es": "Dubl\u00edn, Irlanda"
+   "en": "Wicklow coast, Ireland",
+   "es": "costa de Wicklow, Irlanda"
   },
   "region": {
    "en": "Dublin Bay",
@@ -167,7 +339,7 @@
  "tiempo": {
   "inicio": {
    "precision": "hora",
-   "valor": "2026-09-08T17:00Z"
+   "valor": "2026-09-08T16:00Z"
   },
   "origen_inicio": {
    "fuente_id": "gdelt-417400cfb5a5d6b6",
@@ -177,7 +349,11 @@
  },
  "tipo": "sobrevuelo",
  "titulo": {
-  "en": "Large possible drone sighting near Dublin Bay",
-  "es": "Avistamiento de un posible dron grande cerca de la bah\u00eda de Dubl\u00edn"
+  "en": "Garda\u00ed investigate sighting of large possible drone near Dublin Bay",
+  "es": "Investigan el avistamiento de un gran posible dron cerca de la bah\u00eda de Dubl\u00edn"
+ },
+ "zona": {
+  "grupo": "interior",
+  "motivo": "lejos_de_la_frontera"
  }
 }

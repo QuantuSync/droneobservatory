@@ -55,6 +55,12 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   month», «letzten Monat»); «mai» en rumano es «más», no mayo. Desde el 25 de octubre de 2026 es
   la regla que retiene la ficha nueva hasta que el experto da la fecha o la une a la del suceso
   (proceso/fechas.retrospectiva): lo que marca es lo ya publicado antes o sin decidir.
+- **O, fin sin frase que lo respalde**: la ficha publica una hora de fin (o una fuente con una
+  afirmación de fin) que ninguna frase escribe, ni como hora ni como duración desde el inicio
+  (proceso/fechas.fin_escrito). EODI-2025-00154 publicaba las 23:00 UTC en Copenhague por «gut
+  vier Stunden» desde las 18:30 y EODI-2026-00112 las 20:03 UTC por «până la ora 22:03», que en
+  Moldavia en marzo son las 19:03 UTC. Desde el 26 de octubre de 2026 el extractor no guarda un
+  fin sin frase (proceso/incidentes._fin_con_frase) y la exportación no lo publica.
 """
 
 import json
@@ -85,7 +91,9 @@ from proceso.presencia import (
 )
 from proceso.ubicacion import CATEGORIA_LUGAR
 
-COMPROBACIONES = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "R")
+COMPROBACIONES = (
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "R",
+)  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
     "B": "instalación no reconocida",
@@ -101,6 +109,7 @@ NOMBRES = {
     "L": "autoridad perdida al unir",
     "M": "lugar revisado",
     "N": "noticia retrospectiva",
+    "O": "fin sin frase que lo respalde",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -373,9 +382,19 @@ def _n(incidente: Documento) -> bool:
     return fechas.retrospectiva(incidente) is not None
 
 
+def _o(incidente: Documento) -> bool:
+    # Lo que publica la web: un fin (o una afirmación de fin) que ninguna frase de sus fuentes
+    # escribe (proceso/fechas.fines_sin_frase). La exportación ya los quita
+    # (fechas.sin_fin_sin_frase); esto avisa si algo los vuelve a publicar.
+    from exportacion.geojson import con_afirmaciones
+
+    publicado = con_afirmaciones(incidente)
+    return publicado is not None and fechas.fines_sin_frase(publicado)
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
-    "M": _m, "N": _n,
+    "M": _m, "N": _n, "O": _o,
 }  # fmt: skip
 
 

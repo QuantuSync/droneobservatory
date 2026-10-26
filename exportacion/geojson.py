@@ -20,7 +20,7 @@ from exportacion.proyeccion import (
     proyectar,
     solo_fuentes_publicas,
 )
-from proceso import cita_titular, coherencia, nombres_lugar
+from proceso import cita_titular, coherencia, fechas, nombres_lugar
 from proceso.estados import Capa
 from proceso.focos_termicos import solo_detectado
 from proceso.mediciones import solo_publico
@@ -96,6 +96,8 @@ def con_afirmaciones(incidente: Documento) -> Documento | None:
         return None
     solo_detectado(documento)
     solo_publico(documento)
+    # Un fin que ninguna frase escribe no se publica (proceso/fechas.sin_fin_sin_frase).
+    fechas.sin_fin_sin_frase(documento)
     afirmaciones = afirmaciones_publicas(documento)
     if afirmaciones:
         documento["afirmaciones_publicas"] = afirmaciones

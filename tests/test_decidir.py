@@ -189,3 +189,23 @@ def test_la_presencia_revisada_manda_sobre_la_cita_revisada() -> None:
     assert decidido["presencia_dron"] == "no_confirmada"
     # Y se puede guardar: la revisión a mano, con su cita, manda sobre la frase de la autoridad.
     assert validaciones.errores_presencia(decidido) == []
+
+
+def test_una_reextraccion_no_quita_el_punto_revisado() -> None:
+    # Sulina: la reextracción de la 01:17 UTC del 23 de octubre de 2026 (noticias nuevas, el
+    # experto en el lugar) dejó solo la región «Marea Neagră» y la ficha perdió su punto. El lugar
+    # revisado manda con su nivel y su punto en cada guardado (decidir_datos).
+    reextraida: Documento = {
+        "id": "EODI-2026-00582",
+        "lugar": {"nivel": "region", "pais": "RO", "region": "Marea Neagră",
+                  "suceso": "Marea Neagră"},
+        "fuentes": [{"id": "g1", "enlace": "https://ziare.com/drone/doborate-piloti-romani-2042065"}],
+        "tiempo": {"inicio": {"valor": "2026-10-17T08:45Z", "precision": "aproximada"}},
+    }  # fmt: skip
+    lugar = decidir.decidir_datos(reextraida)["lugar"]
+    assert (lugar["nivel"], lugar["localidad"]) == ("localidad", "Sulina")
+    assert lugar["punto"] == {"lat": 45.15564, "lon": 29.65403}
+    # Y la auditoría M no la marca.
+    from proceso import auditoria_fichas
+
+    assert not auditoria_fichas._m({**reextraida, "lugar": lugar})
