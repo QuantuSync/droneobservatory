@@ -1,0 +1,15 @@
+name: prueba-mod-lv
+on:
+  push:
+    branches: [prueba-mod-lv]
+permissions:
+  contents: read
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -s -m 5 https://ipinfo.io/json | grep -E '"(ip|city|country|org)"' || true
+          for u in https://www.mod.gov.lv/robots.txt https://www.mod.gov.lv/lv/zinas http://www.mod.gov.lv/ https://www.mk.gov.lv/ https://www.sargs.lv/ https://www.csn.es/robots.txt; do
+            curl -s -o /dev/null -m 20 -A "EODI-bot/1.0 (+https://droneobservatory.eu)" -w "%{http_code} %{time_total}s %{remote_ip} $u\n" "$u" || echo "fallo($?) $u"
+          done
