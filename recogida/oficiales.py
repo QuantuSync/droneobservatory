@@ -17,6 +17,10 @@ después se vuelve a probar; si falla otra vez, otra PAUSA. Una fuente en pausa 
 la recogida: sale en el registro y en el resumen diario, y solo se avisa al responsable, una vez
 por fuente, si lleva AVISO_PAUSA seguido en pausa. El estado de las pausas va en el cursor
 CURSOR_PAUSAS de la base, como el de los demás pasos de la recogida.
+
+Las fuentes con "delegada": true no dejan entrar a la dirección del servidor: se descargan a
+través del lector delegado de la web (recogida/lector_delegado.py), con el mismo descargador, la
+misma pausa y los mismos reintentos. Si el lector falla, la fuente falla como cualquier otra.
 """
 
 import contextlib
@@ -45,7 +49,7 @@ from proceso import incidentes
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.noticias import filtro, lugar, lugar_del_suceso, nomenclator
-from recogida import navegador, paginas_oficiales
+from recogida import lector_delegado, navegador, paginas_oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 from recogida.plazo import Plazo, TiempoAgotado
 
@@ -472,8 +476,13 @@ def ejecutar(
         restante = math.inf if plazo is None else plazo.restante()
         propio = restante > TOPE_FUENTE_S
         descargador.plazo = Plazo(min(TOPE_FUENTE_S, restante), reloj)
+        de_la_fuente = descargador
+        if fuente.get("delegada"):
+            de_la_fuente = descargador.con_transporte(
+                lector_delegado.transporte_delegado(fuente["id"], descargador.transporte)
+            )
         try:
-            motivo = recoger(almacen, descargador, fuente, ahora, modelos, recuentos, motivos)
+            motivo = recoger(almacen, de_la_fuente, fuente, ahora, modelos, recuentos, motivos)
         except TiempoAgotado as error:
             if not propio:
                 recuentos.sin_leer = len(activas) - leidas
