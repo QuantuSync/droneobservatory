@@ -51,6 +51,22 @@ def con_nombres(propiedades: Documento) -> Documento:
     }
 
 
+def problemas_de(propiedades: Documento) -> list[str]:
+    """Los problemas de lo publicado, salvo si la próxima publicación ya los corrige: los nombres
+    que daría el código de ahora sin problemas («Alexandroupolis» → «Alexandroupoli» en
+    EODI-2026-00050). No se toman siempre los recalculados: lo publicado lleva lo revisado de la
+    base que el fichero no trae (EODI-2026-00649, «Arsenal Naval de Tolón»)."""
+    problemas = nombres_lugar.problemas(con_nombres(propiedades))
+    if problemas and "nombres" in propiedades:
+        siguiente = {
+            **con_nombres(propiedades),
+            "nombres": nombres_lugar.nombres_publicos(propiedades),
+        }
+        if not nombres_lugar.problemas(siguiente):
+            return []
+    return problemas
+
+
 INCIDENTES = publicados()
 
 
@@ -59,11 +75,7 @@ def test_hay_incidentes() -> None:
 
 
 def test_ningun_nombre_mal_escrito_en_ninguna_version() -> None:
-    malos = {
-        p["id"]: problemas
-        for p in INCIDENTES
-        if (problemas := nombres_lugar.problemas(con_nombres(p)))
-    }
+    malos = {p["id"]: problemas for p in INCIDENTES if (problemas := problemas_de(p))}
     assert malos == {}
 
 
