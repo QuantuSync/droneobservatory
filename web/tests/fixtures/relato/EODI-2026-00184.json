@@ -1,0 +1,133 @@
+{
+ "ataque": {
+  "id": "EODI-UA-2026-0268",
+  "jornada": {
+   "desde": "2026-09-23",
+   "hasta": "2026-09-24",
+   "tipo": "noche"
+  },
+  "por": "fecha"
+ },
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "control": {
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-21T05:17Z"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-24T05:15Z"
+    },
+    "fuente_id": "gdelt-a24a08bec3b12466"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-24T05:15Z"
+    },
+    "fuente_id": "gdelt-a24a08bec3b12466-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20261014025141/https://zch.ro/suceava-o-drona-a-survolat-cerul-in-zona-radauti-si-s-a-prabusit-la-solca",
+    "fecha": "2026-10-14T02:51:41Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://zch.ro/suceava-o-drona-a-survolat-cerul-in-zona-radauti-si-s-a-prabusit-la-solca",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-24T05:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "a detectat o țintă aeriană care evolua pe teritoriul Ucrainei, în apropierea graniței cu România",
+   "id": "gdelt-a24a08bec3b12466",
+   "idioma": "ro",
+   "medio": "zch.ro",
+   "replicas": 0,
+   "traduccion": {
+    "en": "detected an aerial target moving over Ukrainian territory, near the border with Romania",
+    "es": "detectó un objetivo aéreo que evolucionaba en territorio ucraniano, cerca de la frontera con Rumanía"
+   }
+  },
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20261014025141/https://zch.ro/suceava-o-drona-a-survolat-cerul-in-zona-radauti-si-s-a-prabusit-la-solca",
+    "fecha": "2026-10-14T02:51:41Z"
+   },
+   "credibilidad": 1,
+   "enlace": "https://zch.ro/suceava-o-drona-a-survolat-cerul-in-zona-radauti-si-s-a-prabusit-la-solca",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-09-24T05:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "sistemul de supraveghere radar al Ministerului Apărării Naționale a detectat o țintă aeriană care evolua pe teritoriul Ucrainei, în apropierea graniței cu România",
+   "id": "gdelt-a24a08bec3b12466-declaracion-1",
+   "idioma": "ro",
+   "medio": "Ministerul Apărării Naționale (declaración oficial citada en zch.ro)",
+   "replicas": 0,
+   "traduccion": {
+    "en": "the radar surveillance system of the Ministry of National Defence detected an aerial target moving over Ukrainian territory, near the border with Romania",
+    "es": "el sistema de vigilancia radar del Ministerio de Defensa Nacional detectó un objetivo aéreo que evolucionaba en territorio ucraniano, cerca de la frontera con Rumanía"
+   }
+  }
+ ],
+ "id": "EODI-2026-00184",
+ "lugar": {
+  "localidad": "Solca",
+  "pais": "RO",
+  "radio_km": 3
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Solca",
+   "es": "Solca"
+  },
+  "lugar": {
+   "en": "Solca, Romania",
+   "es": "Solca, Rumanía"
+  },
+  "region": {
+   "en": "Suceava",
+   "es": "Suceava"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2026-09-24T00:00Z"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drone enters Romanian airspace and crashes near Solca, Suceava County",
+  "es": "Un dron entra en el espacio aéreo rumano y cae cerca de Solca, en Suceava"
+ },
+ "zona": {
+  "grupo": "frontera",
+  "motivo": "ataque"
+ },
+ "lon": 25.85,
+ "lat": 47.7
+}

@@ -1,0 +1,86 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "control": {
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-21T05:17Z"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "notificado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-04-01T01:00Z"
+    },
+    "fuente_id": "gdelt-64189478bdbc9dfb"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20250331213209/https://suasnews.com/2025/03/raf-lakenheath-ufo-drone-mystery-police-helicopter-incident-fuels-speculation-foia-requests-reveal-details",
+    "fecha": "2025-03-31T21:32:09Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://suasnews.com/2025/03/raf-lakenheath-ufo-drone-mystery-police-helicopter-incident-fuels-speculation-foia-requests-reveal-details",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-04-01T01:00Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "cluster of sightings around the airbase at RAF Lakenheath",
+   "id": "gdelt-64189478bdbc9dfb",
+   "idioma": "en",
+   "medio": "suasnews.com",
+   "replicas": 0,
+   "traduccion": {
+    "en": "cluster of sightings around the airbase at RAF Lakenheath",
+    "es": "grupo de avistamientos alrededor de la base aérea de RAF Lakenheath"
+   }
+  }
+ ],
+ "id": "EODI-2025-00019",
+ "lugar": {
+  "pais": "GB",
+  "radio_km": 5
+ },
+ "nombres": {
+  "lugar": {
+   "en": "United Kingdom",
+   "es": "Reino Unido"
+  },
+  "region": {
+   "en": "Suffolk",
+   "es": "Suffolk"
+  }
+ },
+ "presencia_dron": "no_confirmada",
+ "tiempo": {
+  "inicio": {
+   "precision": "aproximada",
+   "valor": "2025-04-01T01:00Z"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Possible drone or UAP sightings over Newmarket near RAF Lakenheath",
+  "es": "Avistamientos de posibles drones o UAP sobre Newmarket cerca de RAF Lakenheath"
+ },
+ "zona": {
+  "grupo": "interior",
+  "motivo": "lejos_de_la_frontera"
+ },
+ "lon": 0.40418,
+ "lat": 52.24467
+}

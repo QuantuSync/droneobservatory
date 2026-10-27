@@ -1,0 +1,187 @@
+{
+ "autoridades": {
+  "Estonia's Internal Security Service": {
+   "en": "Estonia's Internal Security Service",
+   "es": "el Servicio de Seguridad Interior de Estonia"
+  },
+  "Prokuratuur": {
+   "en": "the Estonian Prosecutor's Office",
+   "es": "la Fiscalía de Estonia"
+  }
+ },
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "control": {
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-26T22:17Z"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 1,
+   "min": 1
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-03-25T00:00Z"
+    },
+    "fuente_id": "revisada-ca546f452b617f78-declaracion-1"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-03-25T00:00Z"
+    },
+    "fuente_id": "revisada-ca546f452b617f78-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20260325160451/https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
+    "fecha": "2026-03-25T16:04:51Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://cbsnews.com/news/russia-ukraine-war-drone-attack-estonia-latvia-drones-hit-nato-territory",
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-25T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+   "id": "revisada-ca546f452b617f78-declaracion-1",
+   "idioma": "en",
+   "medio": "Estonia's Internal Security Service (declaración oficial citada en cbsnews.com)",
+   "replicas": 0,
+   "traduccion": {
+    "en": "Estonia's Internal Security Service said a drone entered the country from Russia and slammed into the chimney of a power station",
+    "es": "El Servicio de Seguridad Interior de Estonia declaró que un dron entró en el país desde Rusia y se estrelló contra la chimenea de una central eléctrica."
+   }
+  },
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20261026224505/https://www.err.ee/1610174596/uurimine-ei-tuvastanud-auvere-droonijuhtumis-tahtlikku-tegevust-eesti-vastu",
+    "fecha": "2026-10-26T22:45:05Z"
+   },
+   "credibilidad": 1,
+   "enlace": "https://www.err.ee/1610174596/uurimine-ei-tuvastanud-auvere-droonijuhtumis-tahtlikku-tegevust-eesti-vastu",
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-10-23T00:00Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Kuna droon hävines kokkupõrke ja plahvatuse tagajärjel sedavõrd ulatuslikult, ei olnud säilinud osade põhjal võimalik selle päritolu usaldusväärselt kindlaks teha, ütles riigiprokurör Gardi Anderson.",
+   "id": "revisada-e836f8791b745365-declaracion-1",
+   "idioma": "et",
+   "medio": "Prokuratuur (declaración oficial citada en err.ee)",
+   "replicas": 0,
+   "traduccion": {
+    "en": "Because the drone was so extensively destroyed by the collision and explosion, it was not possible to reliably establish its origin on the basis of the preserved parts, said State Prosecutor Gardi Anderson.",
+    "es": "Como el dron quedó tan destruido por la colisión y la explosión, no fue posible determinar de forma fiable su origen a partir de los restos conservados, dijo el fiscal del Estado, Gardi Anderson."
+   }
+  }
+ ],
+ "id": "EODI-2026-00108",
+ "lugar": {
+  "pais": "EE",
+  "radio_km": 3
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Auvere",
+   "es": "Auvere"
+  },
+  "lugar": {
+   "en": "Auvere, Estonia",
+   "es": "Auvere, Estonia"
+  },
+  "objetivo": {
+   "en": "Auvere Power Plant",
+   "es": "Central eléctrica de Auvere"
+  }
+ },
+ "objetivo": {
+  "categoria": "energia",
+  "nombre": "Auvere elektrijaam"
+ },
+ "presencia_dron": "confirmada",
+ "presencia_historial": [
+  {
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-03-25T00:00Z"
+   },
+   "fuente_id": "revisada-ca546f452b617f78-declaracion-1",
+   "quien": {
+    "en": "an authority",
+    "es": "una autoridad"
+   },
+   "valor": "confirmada"
+  },
+  {
+   "cierre": true,
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-10-23T00:00Z"
+   },
+   "fuente_id": "revisada-e836f8791b745365-declaracion-1",
+   "motivo": {
+    "en": "the investigation is closed without the drone's origin being determined; the hypothesis of a stray Ukrainian drone was not confirmed",
+    "es": "la investigación se cierra sin poder determinar el origen del dron; la hipótesis de un dron ucraniano desviado no se confirmó"
+   },
+   "quien": {
+    "en": "the Estonian Prosecutor's Office (state prosecutor Gardi Anderson)",
+    "es": "la Fiscalía de Estonia (fiscal estatal Gardi Anderson)"
+   },
+   "valor": "confirmada"
+  }
+ ],
+ "relacionados": [
+  {
+   "id": "EODI-2026-00090",
+   "nota": {
+    "en": "Mixes the Ukrainian drone that crashed in Lithuania (23 Mar 2026) with the drone attack on the Leningrad region and the drones that fell in Estonia and Latvia on 25 Mar",
+    "es": "Junta el dron ucraniano estrellado en Lituania (23 mar 2026) con el ataque de drones sobre Leningrado y los drones caídos en Estonia y Letonia el 25 mar"
+   },
+   "separado_de": "EODI-2026-00090"
+  },
+  {
+   "id": "EODI-2026-00519",
+   "nota": {
+    "en": "Mixes the Ukrainian drone that crashed in Lithuania (23 Mar 2026) with the drone attack on the Leningrad region and the drones that fell in Estonia and Latvia on 25 Mar",
+    "es": "Junta el dron ucraniano estrellado en Lituania (23 mar 2026) con el ataque de drones sobre Leningrado y los drones caídos en Estonia y Letonia el 25 mar"
+   },
+   "separado_de": "EODI-2026-00090"
+  }
+ ],
+ "tiempo": {
+  "inicio": {
+   "precision": "minuto",
+   "valor": "2026-03-25T01:43Z"
+  }
+ },
+ "tipo": "incursion",
+ "titulo": {
+  "en": "Drone hits the chimney of the Auvere power plant in Estonia",
+  "es": "Un dron alcanza la chimenea de la central eléctrica de Auvere (Estonia)"
+ },
+ "zona": {
+  "distancia_km": 4,
+  "grupo": "frontera",
+  "motivo": "cerca_de_la_frontera"
+ },
+ "lon": 27.9375,
+ "lat": 59.34583
+}

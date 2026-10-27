@@ -1,6 +1,7 @@
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
 import { ACTOR_SIN_NOMBRE, atribucionResumida } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
+import { relato } from "../datos/relato.ts";
 import { historialCompleto, marcaDe, marcaDePresencia, pasosDePresencia, rotuloDeMarca } from "../datos/presencia.ts";
 import type {
   AfirmacionPublica,
@@ -56,6 +57,8 @@ interface Props {
   t: Textos;
   idioma: Idioma;
   incidente: IncidenteDetalle;
+  /** Fecha de los datos publicados, para la frase del estado actual («A 27 de octubre de 2026…»). */
+  actualizado?: string | null;
 }
 
 /** Campos públicos que respalda cada fila de la ficha, para listar qué dice cada fuente. */
@@ -210,7 +213,7 @@ function tieneCifra(valor: RangoODesconocido | undefined): boolean {
   return valor !== undefined && valor !== "desconocido";
 }
 
-export function FichaIncidente({ t, idioma, incidente }: Props) {
+export function FichaIncidente({ t, idioma, incidente, actualizado = null }: Props) {
   const { tiempo, lugar, objetivo, drones, consecuencias, respuesta, atribucion } = incidente;
   // El marcador de un atribuido: su bandera y, si es una persona, el punto.
   const marcador = atribucionResumida(incidente);
@@ -288,6 +291,10 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
       <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
       {nombre !== titulo && <p className="mt-2 text-texto">{titulo}</p>}
       <p className="mono mt-1 text-xs text-secundario">{incidente.id}</p>
+      {/* La ficha contada en un párrafo, antes de los campos (datos/relato.ts). */}
+      <p className="mt-3 text-sm leading-relaxed text-texto" data-relato="">
+        {relato(incidente, idioma, actualizado ?? incidente.control.ultima_actualizacion.valor).join(" ")}
+      </p>
 
       <dl className="mt-3">
         <Fila nombre={t.ficha.estado}>

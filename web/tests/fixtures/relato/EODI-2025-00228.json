@@ -1,0 +1,162 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "si"
+  },
+  "vuelos_desviados": {
+   "max": 3,
+   "min": 3
+  }
+ },
+ "control": {
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-22T11:17Z"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 10,
+   "min": 2
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-24T21:15Z"
+    },
+    "fuente_id": "gdelt-f80270dad2f01812"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-24T21:15Z"
+    },
+    "fuente_id": "gdelt-f80270dad2f01812-declaracion-1"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20250924210538/https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+    "fecha": "2025-09-24T21:05:38Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "uautoriseret droneflyvning har skabt kaos",
+   "id": "gdelt-f80270dad2f01812",
+   "idioma": "da",
+   "medio": "ekstrabladet.dk",
+   "replicas": 1,
+   "traduccion": {
+    "en": "unauthorized drone flight has caused chaos",
+    "es": "el vuelo no autorizado de drones ha causado caos"
+   }
+  },
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20250924210538/https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+    "fecha": "2025-09-24T21:05:38Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://ekstrabladet.dk/nyheder/samfund/luftrummet-lukket-over-aalborg-melder-om-uautoriseret-droneflyvning/10955972",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-24T21:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Luftrummet over Flyvestation Aalborg er i øjeblikket lukket grundet uautoriseret droneflyvning.",
+   "id": "gdelt-f80270dad2f01812-declaracion-1",
+   "idioma": "da",
+   "medio": "Flyvevåbnets afdeling for transportfly (declaración oficial citada en ekstrabladet.dk)",
+   "replicas": 0,
+   "traduccion": {
+    "en": "The airspace over Aalborg Air Base is currently closed due to unauthorized drone flights",
+    "es": "El espacio aéreo sobre la Base Aérea de Aalborg está actualmente cerrado debido a vuelos de drones no autorizados"
+   }
+  }
+ ],
+ "id": "EODI-2025-00228",
+ "lugar": {
+  "fuente_punto": "revisada-f363208a1dc0de4e",
+  "localidad": "Aalborg",
+  "pais": "DK",
+  "radio_km": 5
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Aalborg",
+   "es": "Aalborg"
+  },
+  "lugar": {
+   "en": "Aalborg, Denmark",
+   "es": "Aalborg, Dinamarca"
+  },
+  "objetivo": {
+   "en": "Aalborg Airport",
+   "es": "Aeropuerto de Aalborg"
+  },
+  "region": {
+   "en": "North Jutland",
+   "es": "Jutlandia Septentrional"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Flyvestation Aalborg",
+  "oaci": "EKYT"
+ },
+ "presencia_dron": "no_acreditada",
+ "relacionados": [
+  {
+   "id": "EODI-2025-00154",
+   "nota": {
+    "en": "It merged the Copenhagen closure of 22 September 2025 with the Aalborg closure and drones at other Danish airports on the night of 24-25 September, plus a mention of the Oslo closure.",
+    "es": "Juntaba el cierre de Copenhague del 22 de septiembre de 2025 con el cierre de Aalborg y los drones en otros aeropuertos daneses de la noche del 24 al 25, y una mención al cierre de Oslo."
+   },
+   "separado_de": "EODI-2025-00172"
+  },
+  {
+   "id": "EODI-2025-00459",
+   "nota": {
+    "en": "Merged the Aalborg airport closure with drone sightings near Esbjerg, Sønderborg and Skrydstrup.",
+    "es": "Juntaba el cierre del aeropuerto de Aalborg con los avistamientos de drones en Esbjerg, Sønderborg y Skrydstrup."
+   },
+   "separado_de": "EODI-2025-00349"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2025-09-24T00:00Z"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Possible drones force the closure of Aalborg airport",
+  "es": "Posibles drones obligan a cerrar el aeropuerto de Aalborg"
+ },
+ "zona": {
+  "distancia_km": 658,
+  "grupo": "interior",
+  "motivo": "lejos_de_la_frontera"
+ },
+ "lon": 9.85314,
+ "lat": 57.09449
+}

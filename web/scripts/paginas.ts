@@ -27,6 +27,7 @@ import { e, html } from "../src/texto/html.ts";
 import { jsonLd, marco, paginas } from "../src/texto/paginas.ts";
 import type { PaginaTexto } from "../src/texto/paginas.ts";
 import { llmsTxt, noEncontrada, redirecciones, sitemap } from "../src/texto/salidas.ts";
+import { escribirImagenes } from "./imagenes.ts";
 import { escribirQrAvisos } from "./qr-avisos.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -96,6 +97,7 @@ function cabeceraDe(pagina: PaginaTexto) {
     titulo: pagina.titulo,
     descripcion: pagina.descripcion,
     rutas: pagina.rutas,
+    ...(pagina.imagen !== undefined ? { imagen: pagina.imagen } : {}),
     precargas: pagina.conMapa ? ["/datos/resumen.json", ...(ficha === undefined ? [] : [`/datos/incidentes/${ficha}.json`])] : [],
   };
 }
@@ -186,6 +188,8 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   await writeFile(join(carpeta, "404.html"), paginaSoloTexto(plantillaEs, noEncontrada(), resumen.actualizado), "utf-8");
   await writeFile(join(carpeta, "sitemap.xml"), sitemap(todas), "utf-8");
   await writeFile(join(carpeta, "llms.txt"), llmsTxt(resumen), "utf-8");
+  // Las imágenes de la vista previa al compartir: la general con los puntos de hoy y la de cada ficha.
+  await escribirImagenes(carpeta, resumen.incidentes, detalles);
   // Los códigos QR de los canales de avisos (página «Avisos» y panel del mapa).
   await escribirQrAvisos(carpeta);
   const publicados = new Set(resumen.incidentes.map((i) => i.id));

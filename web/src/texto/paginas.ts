@@ -36,10 +36,14 @@ import {
   LICENCIA_DATOS,
   LICENCIA_DATOS_URL,
   NOMBRE,
+  NOMBRE_ES,
   ORCID,
   ORCID_URL,
   ORIGEN,
   autorEstructurado,
+  editorEstructurado,
+  imagenDeFicha,
+  SIGLAS,
   rutaDeFicha,
   rutaDeIdioma,
   versionDeDatos,
@@ -60,6 +64,7 @@ import {
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { traduccionParaMostrar } from "../datos/citas.ts";
+import { estadoActual, estadoCorto, queDespues, relato } from "../datos/relato.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
 import { paginaAvisos } from "./avisos.ts";
@@ -100,6 +105,8 @@ export interface PaginaTexto {
   conMapa: boolean;
   /** Última modificación de lo que dice la página (instante ISO), para el sitemap. */
   modificada: string;
+  /** Imagen propia de la vista previa (la de cada ficha); sin ella, la general. */
+  imagen?: { ruta: string; alt: string };
   /** Scripts de este sitio que necesita una página solo de texto (el botón de privacidad). */
   scripts?: readonly string[];
 }
@@ -319,9 +326,10 @@ function sitioEstructurado(idioma: Idioma): unknown {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: NOMBRE,
-    alternateName: "EODI",
+    alternateName: [NOMBRE_ES, SIGLAS, "droneobservatory.eu"],
     url: direccionCompleta(PORTADA[idioma]),
     inLanguage: idioma,
+    publisher: editorEstructurado(idioma),
     author: autorEstructurado(),
     creator: autorEstructurado(),
     copyrightHolder: autorEstructurado(),
@@ -352,6 +360,7 @@ function portada(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
     ),
     // Qué quiere decir «confirmados por una autoridad», como la nota junto al mapa.
     e("p", { class: "texto-nota", "data-nota-mapa": "" }, t.mapa.nota),
+    casosRecientes(datos, idioma, t, tp),
     e("h2", null, tp.portada.ultimos),
     listaDeIncidentes(ultimos, idioma, t, tp),
     e("p", null, enlace(RUTAS.incidentes[idioma], tp.portada.todos)),
@@ -379,6 +388,36 @@ function portada(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
     conMapa: true,
     modificada: datos.resumen.actualizado,
   };
+}
+
+/** Cuántos casos con el historial cambiado lista la portada. */
+export const CASOS_RECIENTES = 10;
+
+/**
+ * «Casos cerrados o rectificados recientemente»: las últimas fichas cuyo historial cambió después
+ * de la noticia (datos/relato.ts, queDespues), con la fecha del cambio, cómo constan hoy y el enlace.
+ */
+function casosRecientes(datos: DatosPaginas, idioma: Idioma, t: Textos, tp: TextosPagina): Html | false {
+  const casos = datos.resumen.incidentes
+    .flatMap((i) => {
+      const d = datos.detalles.get(i.id);
+      const ultimo = d === undefined ? undefined : queDespues(d, idioma).at(-1);
+      return ultimo === undefined ? [] : [{ i, ultimo }];
+    })
+    .sort((a, b) => b.ultimo.instante.localeCompare(a.ultimo.instante) || b.i.id.localeCompare(a.i.id))
+    .slice(0, CASOS_RECIENTES);
+  if (casos.length === 0) return false;
+  return html(
+    e("h2", null, tp.portada.recientes),
+    e("p", { class: "texto-nota" }, tp.portada.recientesNota),
+    e(
+      "ul",
+      { class: "texto-lista", "data-casos-recientes": "" },
+      casos.map(({ i, ultimo }) =>
+        e("li", null, e("span", { class: "mono" }, ultimo.fecha), " · ", enlace(rutaDeFicha(i.id, idioma), i.titulo[idioma]), " · ", estadoEscrito(t, idioma, i), " · ", ultimo.texto),
+      ),
+    ),
+  );
 }
 
 function aniosDe(incidentes: readonly IncidenteResumen[]): [string, number][] {
@@ -472,7 +511,25 @@ function definicionDeTipo(t: Textos, nombre: string): readonly Trozo[] | null {
   return null;
 }
 
-function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
+/** «Qué pasó después»: los pasos del historial tras la noticia, con su fecha, quién y por qué. */
+function quePasoDespues(d: IncidenteDetalle, idioma: Idioma, t: Textos, tp: TextosPagina): Html | false {
+  const pasos = queDespues(d, idioma);
+  if (pasos.length === 0) return false;
+  const porFuente = new Map(d.fuentes.map((f) => [f.id, f]));
+  return html(
+    e("h2", null, tp.incidente.despues),
+    e(
+      "ol",
+      { class: "texto-historial", "data-que-paso-despues": "" },
+      pasos.map((paso) => {
+        const fuente = paso.fuenteId === null ? undefined : porFuente.get(paso.fuenteId);
+        return e("li", null, e("strong", null, paso.fecha), " · ", paso.texto, fuente !== undefined && html(" · ", enlaceDeFuente(t, fuente, t.ficha.verFuente)));
+      }),
+    ),
+  );
+}
+
+function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): PaginaTexto {
   const t = textos(idioma);
   const tp = textosPagina(idioma);
   const de = (campos: readonly string[]) => afirmacionesDe(d, campos);
@@ -521,11 +578,18 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
   );
   const medios = new Map(d.fuentes.map((f) => [f.id, medioEscrito(f.medio, idioma, t.ficha.declaracionCitada)]));
 
+  // La respuesta primero: cómo consta hoy el caso, con su fecha; después lo que cambió y el relato.
+  const estadoHoy = estadoActual(d, idioma, actualizado);
   const cuerpo = html(
+    e("p", { "data-estado-actual": "" }, e("strong", null, estadoHoy)),
     e("p", { class: "texto-rotulo" }, t.tipo[d.tipo]),
     e("h1", { "data-titular": "" }, titulo),
     e("p", { class: "mono" }, d.id),
     e("p", null, enlace(rutaDeFicha(d.id, idioma), tp.incidente.verEnMapa)),
+    quePasoDespues(d, idioma, t, tp),
+    e("h2", null, tp.incidente.quepaso),
+    e("p", { "data-relato": "" }, relato(d, idioma, actualizado, { conOficial: true }).join(" ")),
+    e("h2", null, tp.incidente.datos),
     e(
       "dl",
       { class: "texto-ficha" },
@@ -716,10 +780,11 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
   return {
     idioma,
     rutas: rutasDeIncidente(d.id),
-    titulo: t.compartir.tituloIncidente(titulo),
-    descripcion: tp.incidente.descripcion(estadoTexto, instante(d.tiempo.inicio), lugar),
+    titulo: t.compartir.tituloIncidente(`${titulo} (${estadoCorto(d, idioma, actualizado)})`),
+    descripcion: `${estadoHoy} ${tp.incidente.descripcion(titulo, instante(d.tiempo.inicio), lugar)}`,
     cuerpo,
-    estructurados: [suceso(d, idioma, titulo, lugar)],
+    estructurados: [suceso(d, idioma, titulo, lugar, estadoHoy)],
+    imagen: { ruta: imagenDeFicha(d.id, idioma), alt: `${titulo} · ${estadoCorto(d, idioma, actualizado)} · ${lugar}` },
     conMapa: true,
     modificada: d.control.ultima_actualizacion.valor,
   };
@@ -746,33 +811,52 @@ function historialDePresenciaHtml(t: Textos, idioma: Idioma, d: IncidenteDetalle
   );
 }
 
-/** El incidente como suceso de schema.org, solo con campos que están en los datos. */
-function suceso(d: IncidenteDetalle, idioma: Idioma, titulo: string, lugar: string): unknown {
-  const fechaIso = (v: string, precision: string) => (precision === "dia" || precision === "aproximada" ? v.slice(0, 10) : v);
+/**
+ * La ficha en schema.org: un informe (Report) sobre lo que pasó, con el lugar (contentLocation, con
+ * coordenadas si hay punto), cuándo (temporalCoverage), la última actualización y quién lo publica.
+ * No es un Event: para Google un Event es algo a lo que se puede asistir (con entradas, organizador
+ * y artistas), y marcar así un incidente daba avisos de evento mal formado. Solo campos que están en
+ * la ficha; la descripción es la frase del estado actual.
+ */
+function suceso(d: IncidenteDetalle, idioma: Idioma, titulo: string, lugar: string, estadoHoy: string): unknown {
+  const fechaIso = (v: string, precision: string) => (precision === "dia" || precision === "aproximada" ? v.slice(0, 10) : v.replace(/Z$/, ":00Z"));
   const sitio: Record<string, unknown> = {
     "@type": "Place",
     name: lugar,
     address: {
       "@type": "PostalAddress",
       addressCountry: paisGeografico(d),
-      ...(d.lon === null && regionEscrita(d, idioma) !== null ? { addressRegion: regionEscrita(d, idioma) } : {}),
+      ...(regionEscrita(d, idioma) !== null ? { addressRegion: regionEscrita(d, idioma) } : {}),
       ...(localidadEscrita(d, idioma) !== null ? { addressLocality: localidadEscrita(d, idioma) } : {}),
     },
   };
   if (d.lon !== null) sitio["geo"] = { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon };
+  const inicio = fechaIso(d.tiempo.inicio.valor, d.tiempo.inicio.precision);
+  const cobertura = d.tiempo.fin === undefined ? inicio : `${inicio}/${fechaIso(d.tiempo.fin.valor, d.tiempo.fin.precision)}`;
+  const primera = d.estado.historial[0]?.fecha.valor;
+  const url = direccionCompleta(rutaDeFicha(d.id, idioma));
   return {
     "@context": "https://schema.org",
-    "@type": "Event",
-    "@id": direccionCompleta(rutaDeFicha(d.id, idioma)),
+    "@type": "Report",
+    "@id": url,
     identifier: d.id,
     name: titulo,
+    headline: titulo,
     inLanguage: idioma,
-    url: direccionCompleta(rutaDeFicha(d.id, idioma)),
-    startDate: fechaIso(d.tiempo.inicio.valor, d.tiempo.inicio.precision),
-    ...(d.tiempo.fin !== undefined ? { endDate: fechaIso(d.tiempo.fin.valor, d.tiempo.fin.precision) } : {}),
-    location: sitio,
-    // Con la presencia de dron rectificada, también lo que se sabe del dron («Dron no acreditado»).
-    description: `${textos(idioma).estado[d.estado.actual]}.${d.presencia_historial !== undefined && d.presencia_dron !== undefined ? ` ${textos(idioma).presencia[d.presencia_dron]}.` : ""} ${textos(idioma).tipo[d.tipo]}.`,
+    url,
+    description: estadoHoy,
+    genre: textos(idioma).tipo[d.tipo],
+    keywords: [textos(idioma).tipo[d.tipo], textos(idioma).estado[d.estado.actual], ...(d.presencia_dron !== undefined ? [textos(idioma).presencia[d.presencia_dron]] : [])].join(", "),
+    contentLocation: sitio,
+    temporalCoverage: cobertura,
+    ...(primera !== undefined ? { datePublished: fechaIso(primera, "minuto") } : {}),
+    dateModified: fechaIso(d.control.ultima_actualizacion.valor, "minuto"),
+    image: direccionCompleta(imagenDeFicha(d.id, idioma)),
+    author: autorEstructurado(),
+    editor: autorEstructurado(),
+    publisher: editorEstructurado(idioma),
+    isPartOf: { "@type": "WebSite", name: NOMBRE, url: direccionCompleta(PORTADA[idioma]) },
+    license: LICENCIA_DATOS_URL,
   };
 }
 
@@ -1201,7 +1285,7 @@ function todasLasPaginas(datos: DatosPaginas): PaginaTexto[] {
     for (const i of datos.resumen.incidentes) {
       const detalle = datos.detalles.get(i.id);
       if (detalle === undefined) throw new Error(`sin ficha completa: ${i.id}`);
-      resultado.push(incidente(detalle, idioma));
+      resultado.push(incidente(detalle, idioma, datos.resumen.actualizado));
     }
     resultado.push(listaCompleta(datos, idioma));
     for (const anio of anios) resultado.push(listaDeAnio(datos, anio, idioma));
@@ -1431,6 +1515,7 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
     e(
       "footer",
       { class: "texto-pie" },
+      e("p", { "data-nombre-completo": "" }, idioma === "es" ? `${NOMBRE} (${NOMBRE_ES}) · ${SIGLAS} · droneobservatory.eu` : `${NOMBRE} · ${SIGLAS} · droneobservatory.eu`),
       e("p", { class: "mono", "data-datos-de": "" }, tp.datosDe(fechaHora(actualizado))),
       e("p", null, tp.licencia, " ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS), " · ", tp.codigo),
       e("p", { "data-autoria-pie": "" }, lineaAutoria(idioma)),
