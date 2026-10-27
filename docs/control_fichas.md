@@ -340,7 +340,8 @@ estadio, o su instalación está a más de 30 km de la localidad de la ficha); I
 fuentes nombran su instalación solo con un nombre o una ciudad genéricos, como «im Norden», «en el
 norte», por el aeródromo de Norden-Norddeich); J, hora local como UTC (desde el 22/10/2026: la
 hora UTC de la ficha es la hora local que escribe una de sus fuentes y ninguna escribe la que le
-toca en la zona del suceso). Los recuentos del día y los
+toca en la zona del suceso; desde el 27/10/2026 también con el desfase del otro horario del año y
+con 10 minutos de margen). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
@@ -371,6 +372,24 @@ a UTC; el fin de la misma ficha se corrige en lo mismo. Si la frase escribe la h
 convertida, u otra hora, no se toca. Las fichas ya guardadas no conservan la frase del inicio: se
 corrigen con una revisión del inicio con su cita (`titulares.inicio` en
 `incidentes_revisados.json`), y la comprobación J de la auditoría avisa de las que queden.
+
+Desde el 27 de octubre de 2026 la regla y la comprobación cubren tres caminos más, que dejaron
+pasar 14 inicios desplazados una o dos horas (y a veces de día):
+
+- **La frase del inicio no nombra el dron.** «Le trafic aérien a été brièvement interrompu jeudi
+  vers 21h20» (EODI-2025-00335, Bruselas) no se leía porque `hora_local` exigía la palabra dron; la
+  frase de la que el extractor tomó el inicio ya vale sin ella.
+- **Horas aproximadas con su unidad.** «gegen 19 Uhr» (EODI-2025-00092, Lieja), «apie 21
+  valandą» (EODI-2025-00099, Vilna), «vers 21 heures», «rond 19 uur».
+- **El desfase del otro horario.** La hora local convertida con el desfase de verano en invierno o
+  al revés: «12.05 val.» en Vilna el 29 de octubre de 2025, ya en hora de invierno (UTC+2),
+  publicado como 09:05 UTC (EODI-2025-00178) (`fechas.desfases_errados`).
+
+La comprobación J mira el inicio publicado frente a cualquier hora que escriba una frase de sus
+fuentes, nombre o no el dron, con 10 minutos de margen, en la zona del suceso y con su horario
+de ese día; una frase que da la hora en UTC o GMT no cuenta. Si la hora solo está en el artículo y
+no en la frase guardada (EODI-2025-00222: «between 12.30 and 12.45 am local time (2230-2245GMT)»
+en aa.com.tr), J no la ve: se corrige con una cita revisada y la revisión del inicio.
 
 ### Uniones, lugar revisado y noticias retrospectivas (desde el 25 de octubre de 2026)
 

@@ -83,3 +83,11 @@ def test_con_frase_el_fin_se_queda() -> None:
     assert [a["valor"] for a in limpia["afirmaciones"] if a["campo"] == "fin"] == [
         "2025-09-22T22:30"
     ]
+
+
+def test_la_hora_de_agencia_en_gmt_respalda_el_fin() -> None:
+    # EODI-2025-00222: «(2230-2245GMT)» en aa.com.tr, el dron en Moldavia el 3 de febrero de 2025.
+    from proceso.textos_dron import horas_escritas
+
+    frase = "The violation occurred between 12.30 and 12.45 am local time (2230-2245GMT)."
+    assert horas_escritas(frase) == [(22, 30), (22, 45)]
