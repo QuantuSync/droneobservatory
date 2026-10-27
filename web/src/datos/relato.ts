@@ -137,13 +137,28 @@ export function cuandoEscrito(d: IncidenteDetalle, idioma: Idioma): string {
   }
   if (conHora) {
     const aproximada = inicio.precision === "hora";
+    // El fin, si la ficha lo publica (siempre con una frase que lo escribe: proceso/fechas.fin_escrito).
+    const fin = d.tiempo.fin;
+    const finUtc = fin === undefined ? null : new Date(fin.valor);
+    const horaFinUtc = finUtc === null ? null : `${dosCifras(finUtc.getUTCHours())}:${dosCifras(finUtc.getUTCMinutes())}`;
     if (local !== null) {
       const horaLocal = `${dosCifras(local.hora)}:${dosCifras(local.minuto)}`;
       const donde = pais(paisGeografico(d), idioma);
-      cuando +=
-        idioma === "es"
-          ? `, ${aproximada ? "hacia las" : "a las"} ${horaLocal} hora local de ${donde} (${horaUtc} UTC)`
-          : `, ${aproximada ? "around" : "at"} ${horaLocal} local time in ${donde} (${horaUtc} UTC)`;
+      const finLocal = fin === undefined || zona === null ? null : partesEn(fin.valor, zona);
+      if (finLocal !== null && horaFinUtc !== null) {
+        const horaFinLocal = `${dosCifras(finLocal.hora)}:${dosCifras(finLocal.minuto)}`;
+        cuando +=
+          idioma === "es"
+            ? `, de las ${horaLocal} a las ${horaFinLocal} hora local de ${donde} (de las ${horaUtc} a las ${horaFinUtc} UTC)`
+            : `, from ${horaLocal} to ${horaFinLocal} local time in ${donde} (${horaUtc} to ${horaFinUtc} UTC)`;
+      } else {
+        cuando +=
+          idioma === "es"
+            ? `, ${aproximada ? "hacia las" : "a las"} ${horaLocal} hora local de ${donde} (${horaUtc} UTC)`
+            : `, ${aproximada ? "around" : "at"} ${horaLocal} local time in ${donde} (${horaUtc} UTC)`;
+      }
+    } else if (horaFinUtc !== null) {
+      cuando += idioma === "es" ? `, de las ${horaUtc} a las ${horaFinUtc} UTC` : `, from ${horaUtc} to ${horaFinUtc} UTC`;
     } else {
       cuando += idioma === "es" ? `, ${aproximada ? "hacia las" : "a las"} ${horaUtc} UTC` : `, ${aproximada ? "around" : "at"} ${horaUtc} UTC`;
     }
@@ -350,39 +365,74 @@ function quienLoDijo(d: IncidenteDetalle, idioma: Idioma): string | null {
   return cita === null ? `It was stated by ${autoridad}${citada}.` : `According to ${autoridad}${citada}: “${cita}”.`;
 }
 
-function rangoEscrito(r: RangoODesconocido | undefined, idioma: Idioma): string | null {
+/** Los números del uno al diez en letra (masculino en español): «tres vuelos», «three flights». */
+const EN_LETRA: Record<Idioma, readonly string[]> = {
+  es: ["cero", "un", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez"],
+  en: ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"],
+};
+
+function cantidad(n: number, idioma: Idioma): string {
+  return Number.isInteger(n) && n >= 0 && n <= 10 ? (EN_LETRA[idioma][n] ?? numero(n, idioma)) : numero(n, idioma);
+}
+
+/** Un rango en palabras: «tres», «entre 12 y 15» / «three», «between 12 and 15»; null si no se sabe. */
+function rangoEnLetra(r: RangoODesconocido | undefined, idioma: Idioma): string | null {
   if (r === undefined || r === "desconocido") return null;
-  if (r.min === r.max) return numero(r.min, idioma);
+  if (r.min === r.max) return cantidad(r.min, idioma);
   return idioma === "es" ? `entre ${numero(r.min, idioma)} y ${numero(r.max, idioma)}` : `between ${numero(r.min, idioma)} and ${numero(r.max, idioma)}`;
 }
 
-/** Las consecuencias que la ficha tiene, en una frase; null si no tiene ninguna. */
+/** Lo que duró el cierre: «45 minutos», «cuatro horas», «unas tres horas», «entre 120 y 240 minutos». */
+function duracionEscrita(r: RangoODesconocido | undefined, idioma: Idioma): string | null {
+  if (r === undefined || r === "desconocido") return null;
+  const es = idioma === "es";
+  if (r.min !== r.max) return es ? `entre ${numero(r.min, idioma)} y ${numero(r.max, idioma)} minutos` : `between ${numero(r.min, idioma)} and ${numero(r.max, idioma)} minutes`;
+  const minutos = r.min;
+  if (minutos < 90) return es ? `${numero(minutos, idioma)} ${minutos === 1 ? "minuto" : "minutos"}` : `${numero(minutos, idioma)} ${minutos === 1 ? "minute" : "minutes"}`;
+  const horas = minutos / 60;
+  const enHoras = (n: number) => (es ? `${cantidad(n, idioma)} horas` : `${cantidad(n, idioma)} hours`);
+  if (Number.isInteger(horas)) return enHoras(horas);
+  return es ? `unas ${enHoras(Math.round(horas))}` : `about ${enHoras(Math.round(horas))}`;
+}
+
+/** Quién cerró: «el aeropuerto», «la base»; con otra instalación, el cierre sin sujeto. */
+const QUIEN_CIERRA: Partial<Record<Clase, Record<Idioma, string>>> = {
+  aeropuerto: { es: "el aeropuerto", en: "the airport" },
+  base_militar: { es: "la base", en: "the base" },
+  puerto: { es: "el puerto", en: "the port" },
+};
+
+/**
+ * Las consecuencias que la ficha tiene, en prosa («El aeropuerto cerró cuatro horas, tres vuelos
+ * fueron desviados y hubo patrullas»), no en telegrama; null si no tiene ninguna.
+ */
 function consecuencias(d: IncidenteDetalle, idioma: Idioma): string | null {
   const c = d.consecuencias;
   const es = idioma === "es";
   const partes: string[] = [];
   if (c?.cierre?.valor === "si") {
-    const minutos = rangoEscrito(c.cierre.minutos, idioma);
-    partes.push(minutos === null ? (es ? "hubo un cierre" : "there was a closure") : es ? `hubo un cierre de ${minutos} minutos` : `there was a closure of ${minutos} minutes`);
+    const duracion = duracionEscrita(c.cierre.minutos, idioma);
+    const clase = claseDe(d);
+    const sujeto = clase === null ? undefined : QUIEN_CIERRA[clase]?.[idioma];
+    if (sujeto !== undefined) {
+      partes.push(duracion === null ? (es ? `${sujeto} cerró` : `${sujeto} closed`) : es ? `${sujeto} cerró ${duracion}` : `${sujeto} closed for ${duracion}`);
+    } else {
+      partes.push(duracion === null ? (es ? "hubo un cierre" : "there was a closure") : es ? `hubo un cierre de ${duracion}` : `there was a closure of ${duracion}`);
+    }
   }
-  const cifras: [RangoODesconocido | undefined, string, string][] = [
-    [c?.vuelos_desviados, "se desviaron {n} vuelos", "{n} flights were diverted"],
-    [c?.vuelos_cancelados, "se cancelaron {n} vuelos", "{n} flights were cancelled"],
-    [c?.vuelos_retrasados, "se retrasaron {n} vuelos", "{n} flights were delayed"],
-    [c?.heridos, "hubo {n} heridos", "{n} people were injured"],
-    [c?.fallecidos, "hubo {n} fallecidos", "{n} people died"],
+  // [valor, español con uno, español con varios, inglés con uno, inglés con varios]
+  const cifras: [RangoODesconocido | undefined, string, string, string, string][] = [
+    [c?.vuelos_desviados, "un vuelo fue desviado", "{n} vuelos fueron desviados", "one flight was diverted", "{n} flights were diverted"],
+    [c?.vuelos_cancelados, "un vuelo fue cancelado", "{n} vuelos fueron cancelados", "one flight was cancelled", "{n} flights were cancelled"],
+    [c?.vuelos_retrasados, "un vuelo se retrasó", "{n} vuelos se retrasaron", "one flight was delayed", "{n} flights were delayed"],
+    [c?.heridos, "hubo un herido", "hubo {n} heridos", "one person was injured", "{n} people were injured"],
+    [c?.fallecidos, "hubo un fallecido", "hubo {n} fallecidos", "one person died", "{n} people died"],
   ];
-  for (const [valor, enEs, enEn] of cifras) {
-    const n = rangoEscrito(valor, idioma);
+  for (const [valor, unoEs, variosEs, unoEn, variosEn] of cifras) {
+    const n = rangoEnLetra(valor, idioma);
     if (n === null) continue;
     const uno = valor !== undefined && valor !== "desconocido" && valor.min === 1 && valor.max === 1;
-    let frase = (es ? enEs : enEn).replace("{n}", n);
-    if (uno) {
-      frase = es
-        ? frase.replace("se desviaron 1 vuelos", "se desvió 1 vuelo").replace("se cancelaron 1 vuelos", "se canceló 1 vuelo").replace("se retrasaron 1 vuelos", "se retrasó 1 vuelo").replace("hubo 1 heridos", "hubo 1 herido").replace("hubo 1 fallecidos", "hubo 1 fallecido")
-        : frase.replace("1 flights were", "1 flight was").replace("1 people were injured", "1 person was injured").replace("1 people died", "1 person died");
-    }
-    partes.push(frase);
+    partes.push(uno ? (es ? unoEs : unoEn) : (es ? variosEs : variosEn).replace("{n}", n));
   }
   const danos = c?.danos?.nivel;
   if (danos === "graves") partes.push(es ? "hubo daños graves" : "there was serious damage");
@@ -399,17 +449,20 @@ function consecuencias(d: IncidenteDetalle, idioma: Idioma): string | null {
     const frase = MEDIDAS[medida]?.[idioma];
     if (frase !== undefined && !(medida === "cierre_espacio_aereo" && c?.cierre?.valor === "si")) partes.push(frase);
   }
+  const frases: string[] = [];
+  if (partes.length > 0) {
+    const lista = partes.length === 1 ? (partes[0] ?? "") : `${partes.slice(0, -1).join(", ")}${es ? " y " : " and "}${partes.at(-1) ?? ""}`;
+    frases.push(`${mayuscula(lista)}.`);
+  }
   const medido = d.trafico_aereo?.cierre;
   if (medido !== undefined) {
-    partes.push(
+    frases.push(
       es
-        ? `el tráfico aéreo medido (adsb.lol) muestra ${numero(medido.duracion_min, idioma)} minutos sin movimientos en ${medido.aeropuerto} y ${numero(medido.vuelos_desviados, idioma)} vuelos desviados`
-        : `measured air traffic (adsb.lol) shows ${numero(medido.duracion_min, idioma)} minutes without movements at ${medido.aeropuerto} and ${numero(medido.vuelos_desviados, idioma)} diverted flights`,
+        ? `El tráfico aéreo medido (adsb.lol) muestra ${numero(medido.duracion_min, idioma)} minutos sin movimientos en ${medido.aeropuerto} y ${numero(medido.vuelos_desviados, idioma)} vuelos desviados.`
+        : `Measured air traffic (adsb.lol) shows ${numero(medido.duracion_min, idioma)} minutes without movements at ${medido.aeropuerto} and ${numero(medido.vuelos_desviados, idioma)} diverted flights.`,
     );
   }
-  if (partes.length === 0) return null;
-  const lista = partes.length === 1 ? partes[0] ?? "" : `${partes.slice(0, -1).join("; ")}${es ? " y " : " and "}${partes.at(-1) ?? ""}`;
-  return `${mayuscula(lista)}.`;
+  return frases.length === 0 ? null : frases.join(" ");
 }
 
 /** El último paso del historial de la presencia que cambia algo o la cierra (no la confirmación). */
@@ -433,7 +486,10 @@ function pasoEnFrase(paso: PasoPresencia, idioma: Idioma): string {
   const base = es
     ? quien === null ? `según una declaración del ${cuando}` : `${quien} lo declaró el ${cuando}`
     : quien === null ? `according to a statement of ${cuando}` : `${quien} stated it on ${cuando}`;
-  return motivo === null ? base : `${base}: ${motivo}`;
+  if (motivo === null) return base;
+  // Un motivo que empieza contando cuándo («al cerrar la investigación…», «on closing…») sigue a la
+  // fecha sin dos puntos.
+  return /^(al|tras|on|after|when) /u.test(motivo) ? `${base} ${motivo}` : `${base}: ${motivo}`;
 }
 
 /** Cómo consta el caso, en palabras: lo que publica la ficha (estado y presencia de dron). */
@@ -442,9 +498,9 @@ function comoConsta(d: IncidenteDetalle, idioma: Idioma): string {
   const es = idioma === "es";
   switch (marca) {
     case "no_acreditado":
-      return es ? "no acreditado (la presencia del dron no se acreditó)" : "not substantiated (the drone's presence was not substantiated)";
+      return es ? "no acreditado" : "not substantiated";
     case "descartado":
-      return es ? "descartado (una autoridad dice que no fue un dron)" : "ruled out (an authority says it was not a drone)";
+      return es ? "descartado" : "ruled out";
     case "atribuido": {
       const a = d.atribucion;
       if (a === undefined) return es ? "atribuido" : "attributed";
@@ -469,7 +525,9 @@ export function estadoActual(d: IncidenteDetalle, idioma: Idioma, aFecha: string
   const fecha = diaEscrito(aFecha, idioma);
   const consta = comoConsta(d, idioma);
   const paso = ultimoPasoQueCuenta(d);
-  const detalle = paso === null ? "" : `; ${pasoEnFrase(paso, idioma)}`;
+  // Rebajada (no acreditada o descartada): quién y cuándo, tras dos puntos; sin historial, solo el estado.
+  const rebajada = d.presencia_dron === "no_acreditada" || d.presencia_dron === "descartada";
+  const detalle = paso === null ? "" : `${rebajada ? ":" : ";"} ${pasoEnFrase(paso, idioma)}`;
   const motivoDesmentido = d.estado.actual === "desmentido" ? (d.control.motivo_desmentido_traduccion?.[idioma] ?? null) : null;
   const desmentido = motivoDesmentido === null ? "" : `: ${motivoDesmentido.replace(/[\s.]+$/u, "")}`;
   const frase = idioma === "es" ? `A ${fecha} el caso consta como ${consta}${detalle}${desmentido}` : `As of ${fecha}, the case is recorded as ${consta}${detalle}${desmentido}`;

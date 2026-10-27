@@ -46,19 +46,21 @@ export function rotuloDeMarca(t: Textos, marca: MarcaIncidente): string {
 }
 
 /**
- * El estado escrito junto al símbolo (listas, letrero y lector de pantalla del mapa): «Atribuido a
- * Rusia» en un atribuido; con la presencia no acreditada o descartada, el estado y la presencia,
- * para que el círculo morado o gris nunca vaya con un texto que solo diga «Confirmado».
+ * El estado escrito junto al símbolo (listas, letrero y lector de pantalla del mapa): el estado
+ * («Atribuido a Rusia» en un atribuido) y siempre la presencia del dron, como en la ficha
+ * completa: «Confirmado · Dron no confirmado», «Confirmado · Dron no acreditado». Desde el 27 de
+ * octubre de 2026 también con el dron confirmado o sin confirmar: «Confirmado» a secas junto a un
+ * titular con la palabra «drones» se leía como dron confirmado. Un desmentido va solo (el
+ * incidente no ocurrió).
  */
 export function estadoEscrito(
   t: Textos,
   idioma: Idioma,
   i: ConPresencia & { atribucion: AtribucionResumen | null },
 ): string {
-  const marca = marcaDe(i);
-  if (marca === "no_acreditado") return `${t.estado[i.estado]} · ${t.presencia.no_acreditada}`;
-  if (marca === "descartado") return `${t.estado[i.estado]} · ${t.presencia.descartada}`;
-  return i.estado === "atribuido" ? textoAtribuido(t, idioma, i.atribucion) : t.estado[i.estado];
+  const estado = i.estado === "atribuido" ? textoAtribuido(t, idioma, i.atribucion) : t.estado[i.estado];
+  if (i.estado === "desmentido" || i.presencia === null) return estado;
+  return `${estado} · ${t.presencia[i.presencia]}`;
 }
 
 /** Presencias que una autoridad rectificó: sin pruebas del dron, o fue otra cosa. */

@@ -279,6 +279,46 @@ def test_descartado_si_la_autoridad_dice_que_era_otra_cosa() -> None:
     assert rectificaciones.errores(nuevo) == []
 
 
+def test_la_ficha_ya_rebajada_sin_historial_parte_del_valor_de_antes() -> None:
+    # EODI-2025-00228 (Aalborg): una revisión a mano la dejó «no acreditada» sin decir quién ni
+    # cuándo. La rectificación de la policía de Jutlandia del Norte (25 de junio de 2026) añade el
+    # historial: el primer paso es el valor de antes (`anterior.valor`), no el ya rebajado.
+    d = {**_copenhague(), "presencia_dron": "no_acreditada"}
+    fuente = {
+        **ejemplos.fuente("TV2NORD", "A", es_autoridad=True),
+        "frase_origen": "Politikredsen kan hverken påvise eller afvise, hvorvidt der har været "
+                        "tale om droneaktivitet.",
+    }  # fmt: skip
+    quien = {"es": "la Policía de Jutlandia del Norte (Nordjyllands Politi)",
+             "en": "the North Jutland Police (Nordjyllands Politi)"}  # fmt: skip
+    motivo = {"es": "al cerrar la investigación", "en": "on closing the investigation"}
+    sin = rectificaciones.aplicar(
+        d, "no_acreditada", fuente, ejemplos.instante("2026-06-25T00:00Z", "dia"), quien, motivo,
+        "rectificacion:prueba",
+    )  # fmt: skip
+    assert [p["valor"] for p in sin["presencia_historial"]] == ["no_acreditada", "no_acreditada"]
+    nuevo = rectificaciones.aplicar(
+        d, "no_acreditada", fuente, ejemplos.instante("2026-06-25T00:00Z", "dia"), quien, motivo,
+        "rectificacion:prueba", None, "confirmada",
+    )  # fmt: skip
+    assert [p["valor"] for p in nuevo["presencia_historial"]] == ["confirmada", "no_acreditada"]
+    assert nuevo["presencia_historial"][-1]["quien"] == quien
+    assert nuevo["presencia_historial"][-1]["fecha"]["valor"] == "2026-06-25T00:00Z"
+    assert rectificaciones.errores(nuevo) == []
+
+
+def test_revisadas_de_aalborg_y_las_descartadas_con_su_autoridad() -> None:
+    # Las rebajadas sin fecha ni autoridad del cierre (auditoría P, 27 de octubre de 2026).
+    datos = json.loads(seguimiento.RUTA.read_text(encoding="utf-8"))
+    revisadas = {r["incidente"]: r for r in datos["rectificaciones"]}
+    for id_ in ("EODI-2025-00228", "EODI-2025-00238", "EODI-2025-00112", "EODI-2025-00225",
+                "EODI-2025-00352", "EODI-2026-00007", "EODI-2026-00064"):  # fmt: skip
+        assert revisadas[id_]["anterior"]["valor"] in ("confirmada", "no_confirmada")
+    assert revisadas["EODI-2025-00228"]["fecha_declaracion"] == "2026-06-25"
+    # «keine Drohne bestätigen können» no dice que fuera otra cosa: no acreditada, no descartada.
+    assert revisadas["EODI-2025-00352"]["tipo"] == "no_acreditada"
+
+
 def test_la_correccion_parcial_se_anota_sin_cambiar_el_valor(
     almacen: Almacen, modelos: dict[str, Any]
 ) -> None:
@@ -560,8 +600,9 @@ def test_revisadas_de_verdad_validan() -> None:
         assert entrada["tipo"] in rectificaciones.TIPOS
         assert entrada["quien"]["es"] and entrada["quien"]["en"]
         assert entrada["motivo"]["es"] and entrada["motivo"]["en"]
-        # Leída en la página de la autoridad o citada por un medio de fiabilidad A (Auvere).
-        citada = (entrada["fuente"].get("citada_en") or {}).get("fiabilidad") == "A"
+        # Leída en la página de la autoridad o citada por un medio de fiabilidad A o B (Auvere;
+        # B desde el 27 de octubre de 2026: t-online, 15min con BNS y Focus).
+        citada = (entrada["fuente"].get("citada_en") or {}).get("fiabilidad") in ("A", "B")
         assert entrada["fuente"]["declaracion"] and (entrada["fuente"]["oficial"] or citada)
         assert len(entrada["fecha_declaracion"]) == 10
         # La fuente que se añade a la ficha valida (su frase, como mucho 25 palabras: el

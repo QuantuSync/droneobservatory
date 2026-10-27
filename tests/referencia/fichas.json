@@ -134,7 +134,7 @@
   },
   {
    "id": "EODI-2025-00238",
-   "por_que": "Cierre breve del espacio a\u00e9reo del aeropuerto de Aalborg (DK) la noche del 25 de septiembre de 2025 por algo que parec\u00eda un dron; la polic\u00eda confirma el cierre pero no encontr\u00f3 nada (estado, presencia, tipo, instalaci\u00f3n).",
+   "por_que": "Cierre breve del espacio a\u00e9reo del aeropuerto de Aalborg (DK) la noche del 25 de septiembre de 2025 por algo que parec\u00eda un dron; la polic\u00eda confirma el cierre pero no encontr\u00f3 nada; el 25 de junio de 2026 cerr\u00f3 la investigaci\u00f3n sin poder probar ni descartar los drones (estado, presencia, tipo, instalaci\u00f3n).",
    "valores": {
     "estado": {
      "valor": "confirmado",
@@ -142,9 +142,9 @@
      "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/mere-end-500-droneanmeldelser-paa-nationalt-plan-i-det-seneste-doegn/2025/09/26"
     },
     "presencia_dron": {
-     "valor": "no_confirmada",
-     "cita": "it is one of our own people who discovered something that looks like a drone,\" North Jutland Police Chief Christian Tilsted said. \"We have thoroughly investigated the area, and we have not found anything.\"",
-     "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything"
+     "valor": "no_acreditada",
+     "cita": "Konklusionen af unders\u00f8gelsen: Politikredsen kan hverken p\u00e5vise eller afvise, hvorvidt der har v\u00e6ret tale om droneaktivitet.",
+     "enlace": "https://www.tv2nord.dk/aalborg/politiet-melder-ud-om-droner-over-nordjylland-86803"
     },
     "tipo": {
      "valor": "interrupcion_aeroportuaria",

@@ -721,6 +721,30 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2025-00095",
+      "enlace": "https://tv2nord.dk/aalborg/aalborg-lufthavn-lukkede-luftrummet-i-otte-minutter-i-nat-pa-grund-af-mistanke-om-droner-5f778",
+      "medio": "tv2nord.dk",
+      "fecha": "2025-09-30",
+      "idioma": "da",
+      "frase": "De ringer til os klokken 00.45 og siger, at de har valgt at lukke luftrummet",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://tv2nord.dk/aalborg/aalborg-lufthavn-lukkede-luftrummet-i-otte-minutter-i-nat-pa-grund-af-mistanke-om-droner-5f778 (original; lo dice el jefe de guardia de Nordjyllands Politi, Michael Mow: la llamada del aeropuerto, la noche del lunes 29 al martes 30 de septiembre de 2025)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00183",
+      "enlace": "https://cphpost.dk/2025-11-17/news/round-up/air-traffic-controllers-report-drones-at-aalborg-airport",
+      "medio": "cphpost.dk",
+      "fecha": "2025-11-17",
+      "idioma": "en",
+      "frase": "The air traffic controllers reported the incident at 21:20, and Naviair, which is responsible for controlling and directing air traffic, reopened the airspace at 23:17",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://cphpost.dk/2025-11-17/news/round-up/air-traffic-controllers-report-drones-at-aalborg-airport (original, 17 de noviembre de 2025; la noche del domingo 16; dr.dk da la reapertura «Kl. 23.15 - efter cirka en time»)"
+      }
+    },
+    {
       "incidente": "EODI-2025-00017",
       "enlace": "https://lavenir.net/regions/brabantwallon/2025/11/18/cinq-drones-ont-survole-la-maison-de-mathieu-michel-a-jodoigne-et-la-base-militaire-de-beauvechain-3U45VOC3NJFAVLABMPOU66ABAA",
       "medio": "lavenir.net",
@@ -857,6 +881,18 @@
         "pais": "DK",
         "categoria": "policia",
         "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00228",
+      "enlace": "https://ekstrabladet.dk/krimi/droner-har-forladt-luftrum-aalborg-lufthavn-er-genaabnet/10956013",
+      "medio": "ekstrabladet.dk",
+      "fecha": "2025-09-25",
+      "idioma": "da",
+      "frase": "Senest en drone blev observeret i luftrummet nær lufthavnen var natten til torsdag klokken 00.54, fremgår det.",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://ekstrabladet.dk/krimi/droner-har-forladt-luftrum-aalborg-lufthavn-er-genaabnet/10956013 (original, 25 de septiembre de 2025 a las 03:42; recoge la nota de prensa de Nordjyllands Politi de poco antes de las 03:00: «Den første observation af droner ved Aalborg Lufthavn skete klokken 21.44 onsdag aften»)"
       }
     },
     {
@@ -3864,6 +3900,34 @@
   ],
   "titulares": [
     {
+      "incidente": "EODI-2025-00095",
+      "inicio": {
+        "valor": "2025-09-29T22:45Z",
+        "precision": "minuto",
+        "cita": "De ringer til os klokken 00.45 og siger, at de har valgt at lukke luftrummet",
+        "motivo": "tv2nord.dk: el aeropuerto avisó a la policía «klokken 00.45» de la noche del lunes 29 al martes 30 de septiembre de 2025, hora de Dinamarca (UTC+2), de que cerraba el espacio aéreo"
+      },
+      "motivo": {
+        "es": "El aeropuerto de Aalborg cerró el espacio aéreo ocho minutos a las 00:45 del martes 30 de septiembre de 2025, hora de Dinamarca (22:45 UTC del lunes 29), según el jefe de guardia de la policía de Jutlandia del Norte.",
+        "en": "Aalborg Airport closed its airspace for eight minutes at 00:45 on Tuesday 30 September 2025, Danish time (22:45 UTC on Monday 29), according to the North Jutland Police duty officer."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00183",
+      "inicio": {
+        "valor": "2025-11-16T20:20Z",
+        "precision": "minuto",
+        "cita": "The air traffic controllers reported the incident at 21:20, and Naviair, which is responsible for controlling and directing air traffic, reopened the airspace at 23:17",
+        "motivo": "cphpost.dk: los controladores avisaron a las 21:20 y Naviair reabrió el espacio aéreo a las 23:17 del domingo 16 de noviembre de 2025, hora de Dinamarca (UTC+1)",
+        "fin": "2025-11-16T22:17Z",
+        "fin_cita": "The air traffic controllers reported the incident at 21:20, and Naviair, which is responsible for controlling and directing air traffic, reopened the airspace at 23:17"
+      },
+      "motivo": {
+        "es": "El aviso de los controladores fue a las 21:20 y Naviair reabrió el espacio aéreo a las 23:17 del domingo 16 de noviembre de 2025, hora de Dinamarca (20:20-22:17 UTC; cphpost.dk).",
+        "en": "Air traffic controllers reported it at 21:20 and Naviair reopened the airspace at 23:17 on Sunday 16 November 2025, Danish time (20:20-22:17 UTC; cphpost.dk)."
+      }
+    },
+    {
       "incidente": "EODI-2025-00017",
       "inicio": {
         "valor": "2025-11-17T20:00Z",
@@ -4504,17 +4568,25 @@
         "motivo": "ekstrabladet.dk: el espacio aéreo de Aalborg se cerró «sent torsdag aften», el jueves 25 de septiembre de 2025, a las 23.40 hora de Dinamarca (UTC+2); las 21:44 venían de la nota de la policía de la noche anterior (miércoles 24)"
       },
       "presencia": {
-        "valor": "no_confirmada",
-        "cita": "Det blev lukket her 23.40, og det er under mistanke om, at man mener måske at have set en drone",
-        "enlace": "https://ekstrabladet.dk/krimi/luftrummet-over-aalborg-lufthavn-lukket-igen-anmeldelse-om-dronelignende-genstand/10957314"
+        "valor": "no_acreditada",
+        "cita": "Konklusionen af undersøgelsen: Politikredsen kan hverken påvise eller afvise, hvorvidt der har været tale om droneaktivitet.",
+        "enlace": "https://www.tv2nord.dk/aalborg/politiet-melder-ud-om-droner-over-nordjylland-86803"
       },
       "motivo": {
-        "es": "Es el segundo cierre de Aalborg, la noche del jueves 25 de septiembre de 2025. El jefe de guardia de la policía de Jutlandia del Norte dice que «quizá» se vio un dron y que, tras buscar, no se encontró nada: no atribuye el suceso a drones. La nota de la policía «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) es de la noche anterior, el miércoles 24, y no sirve para esta ficha.",
-        "en": "This is the second Aalborg closure, on the night of Thursday 25 September 2025. The North Jutland police duty officer says a drone was «maybe» seen and that, after searching, nothing was found: police do not attribute the event to drones. The police note «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) is about the previous night, Wednesday 24, and does not support this record."
+        "es": "Es el segundo cierre de Aalborg, la noche del jueves 25 de septiembre de 2025. El jefe de guardia de la policía de Jutlandia del Norte dice que «quizá» se vio un dron y que, tras buscar, no se encontró nada: no atribuye el suceso a drones. El 25 de junio de 2026 la policía cerró la investigación de las noches del 24 y el 25 sin poder probar ni descartar que fueran drones (TV 2 Nord): no acreditada. La nota de la policía «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) es de la noche anterior, el miércoles 24, y no sirve para esta ficha.",
+        "en": "This is the second Aalborg closure, on the night of Thursday 25 September 2025. The North Jutland police duty officer says a drone was «maybe» seen and that, after searching, nothing was found: police do not attribute the event to drones. On 25 June 2026 police closed the investigation into the nights of 24 and 25 September without being able to prove or rule out drones (TV 2 Nord): not established. The police note «Droner observeret over Aalborg Lufthavn» (politi.dk, 25/09/2025, 01:05) is about the previous night, Wednesday 24, and does not support this record."
       }
     },
     {
       "incidente": "EODI-2025-00228",
+      "inicio": {
+        "valor": "2025-09-24T19:44Z",
+        "precision": "minuto",
+        "cita": "Nordjyllands Politi modtog klokken 21:44 en anmeldelse om flere uidentificerede droner i luftrummet over Aalborg Lufthavn.",
+        "motivo": "politi.dk: la policía de Jutlandia del Norte recibió el aviso de drones sobre el aeropuerto de Aalborg a las 21:44 del miércoles 24 de septiembre de 2025, hora de Dinamarca (UTC+2); el último dron se vio a las 00:54 del jueves 25 (ekstrabladet.dk, con la nota de la policía)",
+        "fin": "2025-09-24T22:54Z",
+        "fin_cita": "Senest en drone blev observeret i luftrummet nær lufthavnen var natten til torsdag klokken 00.54, fremgår det."
+      },
       "presencia": {
         "valor": "no_acreditada",
         "cita": "I enkelte efterforskninger har det hverken kunnet påvises eller afvises, at der har været tale om droner. Dette gør sig bl.a. gældende for så vidt angår efterforskningerne i Københavns Politi og Nordjyllands Politi.",

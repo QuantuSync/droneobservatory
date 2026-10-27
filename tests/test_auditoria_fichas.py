@@ -323,6 +323,25 @@ def test_l_la_que_queda_sin_autoridad_cuando_la_unida_la_tenia() -> None:
     assert auditoria_fichas.auditar([con, unida])["L"] == []
 
 
+def test_p_la_rebajada_sin_quien_ni_cuando() -> None:
+    # EODI-2025-00228 (Aalborg): «no acreditada» por una revisión a mano, sin el cierre de la
+    # investigación de la policía en su historial.
+    sin = {**ejemplos.incidente_minimo(), "presencia_dron": "no_acreditada"}
+    assert auditoria_fichas.auditar([sin])["P"] == [sin["id"]]
+    fuente_id = sin["fuentes"][0]["id"]
+    paso = {"valor": "no_acreditada", "fecha": ejemplos.instante("2026-06-25T00:00Z", "dia"),
+            "fuente_id": fuente_id}  # fmt: skip
+    semilla = {"valor": "confirmada", "fecha": ejemplos.instante("2025-09-24T21:15Z", "dia"),
+               "fuente_id": fuente_id}  # fmt: skip
+    sin_quien = {**sin, "presencia_historial": [semilla, paso]}
+    assert auditoria_fichas.auditar([sin_quien])["P"] == [sin["id"]]
+    quien = {"es": "la Policía de Jutlandia del Norte", "en": "the North Jutland Police"}
+    con = {**sin, "presencia_historial": [semilla, {**paso, "quien": quien}]}
+    assert auditoria_fichas.auditar([con])["P"] == []
+    # Con la presencia sin rebajar no cuenta.
+    assert auditoria_fichas.auditar([ejemplos.incidente_minimo()])["P"] == []
+
+
 def test_m_el_lugar_revisado_con_el_punto_de_otro_sitio() -> None:
     # EODI-2026-00238: la revisión dice Rachelu (Luncavița) y el punto era el de Tulcea, a 40 km.
     from proceso import decidir

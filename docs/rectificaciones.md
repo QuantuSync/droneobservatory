@@ -80,10 +80,14 @@ seguridad llega a 0,7 y, si la rectificación estaba revisada a mano, el tipo co
 
 1. **Revisadas a mano**: [`configuracion/rectificaciones_oficiales.json`](../configuracion/rectificaciones_oficiales.json).
    Cada entrada lleva la declaración literal de la autoridad con su enlace y su fecha, el tipo,
-   quién y qué dijo en los dos idiomas y, si hace falta, quién declaró el valor de antes. Se
+   quién y qué dijo en los dos idiomas y, si hace falta, quién declaró el valor de antes
+   (`anterior.quien`) y cuál era (`anterior.valor`, desde el 27 de octubre de 2026: la ficha que ya
+   estaba rebajada sin historial, como Aalborg, EODI-2025-00228, que una revisión a mano dejó «no
+   acreditada» sin decir quién ni cuándo; sin él, el primer paso repetiría el valor rebajado). Se
    aplican en cada recogida horaria, la primera vez con la decisión del experto. La declaración
    se lee en la página de la autoridad (`oficial`) o, si la autoridad no la publica, en un medio
-   de fiabilidad A que la cita con el nombre de quien habla (`citada_en`, con el medio y su
+   de fiabilidad A o B (B desde el 27 de octubre de 2026) que la cita con el nombre de quien
+   habla (`citada_en`, con el medio y su
    fiabilidad): es una declaración oficial citada, como las que encuentra el extractor (el
    cierre de la investigación de Auvere, EODI-2026-00108, que solo cuenta ERR citando al fiscal
    estatal Gardi Anderson).

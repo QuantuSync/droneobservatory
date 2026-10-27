@@ -101,6 +101,286 @@
         "es": "la investigación se cierra sin poder determinar el origen del dron; la hipótesis de un dron ucraniano desviado no se confirmó",
         "en": "the investigation is closed without the drone's origin being determined; the hypothesis of a stray Ukrainian drone was not confirmed"
       }
+    },
+    {
+      "incidente": "EODI-2025-00228",
+      "tipo": "no_acreditada",
+      "fecha_declaracion": "2026-06-25",
+      "fuente": {
+        "enlace": "https://www.tv2nord.dk/aalborg/politiet-melder-ud-om-droner-over-nordjylland-86803",
+        "medio": "tv2nord.dk",
+        "fecha": "2026-06-25",
+        "idioma": "da",
+        "frase": "Konklusionen af undersøgelsen: Politikredsen kan hverken påvise eller afvise, hvorvidt der har været tale om droneaktivitet.",
+        "oficial": false,
+        "citada_en": {
+          "medio": "TV 2 Nord",
+          "fiabilidad": "A",
+          "motivo": "la emisora regional de servicio público TV 2 Nord publica la conclusión de la Policía de Jutlandia del Norte con la respuesta escrita del jefe de policía Jesper Bøjgaard Madsen y las noches que cubre; la nota de Rigspolitiet del mismo día (politi.dk) nombra la investigación de Nordjyllands Politi sin dar las noches"
+        },
+        "declaracion": {
+          "autoridad": "Nordjyllands Politi",
+          "pais": "DK",
+          "categoria": "policia",
+          "afirma": "incidente"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://www.tv2nord.dk/aalborg/politiet-melder-ud-om-droner-over-nordjylland-86803 (original, TV 2 Nord, 25 de junio de 2026, 14:48 hora de Dinamarca; Rigspolitiet lo resume en https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25)"
+        }
+      },
+      "contexto": "Anmeldelserne, som politiet har undersøgt, drejer sig blandt andet om droneobservationer over Palmestranden i Frederikshavn 23. september 2025 samt over Aalborg Lufthavn 24. og 25. september 2025. 'I en stor del af observationerne har det været andre hændelser end droneaktivitet, mens det i enkelte andre tilfælde ikke har været muligt at fastslå noget med sikkerhed', oplyser chefpolitiinspektør ved Nordjyllands Politi Jesper Bøjgaard Madsen, i et skriftligt svar. [...] (Rigspolitiet, politi.dk, 25 de junio de 2026: «I enkelte efterforskninger har det hverken kunnet påvises eller afvises, at der har været tale om droner. Dette gør sig bl.a. gældende for så vidt angår efterforskningerne i Københavns Politi og Nordjyllands Politi.»)",
+      "quien": {
+        "es": "la Policía de Jutlandia del Norte (Nordjyllands Politi)",
+        "en": "the North Jutland Police (Nordjyllands Politi)"
+      },
+      "motivo": {
+        "es": "al cerrar la investigación de las observaciones sobre el aeropuerto de Aalborg del 24 y el 25 de septiembre de 2025: no pudo probar ni descartar que fueran drones; el cierre del aeropuerto se mantiene",
+        "en": "on closing the investigation into the sightings over Aalborg Airport on 24 and 25 September 2025: it could neither prove nor rule out that they were drones; the airport closure stands"
+      },
+      "anterior": {
+        "valor": "confirmada"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00238",
+      "tipo": "no_acreditada",
+      "fecha_declaracion": "2026-06-25",
+      "fuente": {
+        "enlace": "https://www.tv2nord.dk/aalborg/politiet-melder-ud-om-droner-over-nordjylland-86803",
+        "medio": "tv2nord.dk",
+        "fecha": "2026-06-25",
+        "idioma": "da",
+        "frase": "Konklusionen af undersøgelsen: Politikredsen kan hverken påvise eller afvise, hvorvidt der har været tale om droneaktivitet.",
+        "oficial": false,
+        "citada_en": {
+          "medio": "TV 2 Nord",
+          "fiabilidad": "A",
+          "motivo": "la emisora regional de servicio público TV 2 Nord publica la conclusión de la Policía de Jutlandia del Norte con la respuesta escrita del jefe de policía Jesper Bøjgaard Madsen y las noches que cubre; la nota de Rigspolitiet del mismo día (politi.dk) nombra la investigación de Nordjyllands Politi sin dar las noches"
+        },
+        "declaracion": {
+          "autoridad": "Nordjyllands Politi",
+          "pais": "DK",
+          "categoria": "policia",
+          "afirma": "incidente"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://www.tv2nord.dk/aalborg/politiet-melder-ud-om-droner-over-nordjylland-86803 (original, TV 2 Nord, 25 de junio de 2026, 14:48 hora de Dinamarca; Rigspolitiet lo resume en https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25)"
+        }
+      },
+      "contexto": "Anmeldelserne, som politiet har undersøgt, drejer sig blandt andet om droneobservationer over Palmestranden i Frederikshavn 23. september 2025 samt over Aalborg Lufthavn 24. og 25. september 2025. 'I en stor del af observationerne har det været andre hændelser end droneaktivitet, mens det i enkelte andre tilfælde ikke har været muligt at fastslå noget med sikkerhed', oplyser chefpolitiinspektør ved Nordjyllands Politi Jesper Bøjgaard Madsen, i et skriftligt svar. [...] (Rigspolitiet, politi.dk, 25 de junio de 2026: «I enkelte efterforskninger har det hverken kunnet påvises eller afvises, at der har været tale om droner. Dette gør sig bl.a. gældende for så vidt angår efterforskningerne i Københavns Politi og Nordjyllands Politi.»)",
+      "quien": {
+        "es": "la Policía de Jutlandia del Norte (Nordjyllands Politi)",
+        "en": "the North Jutland Police (Nordjyllands Politi)"
+      },
+      "motivo": {
+        "es": "al cerrar la investigación de las observaciones sobre el aeropuerto de Aalborg del 24 y el 25 de septiembre de 2025: no pudo probar ni descartar que fueran drones; el cierre del espacio aéreo se mantiene",
+        "en": "on closing the investigation into the sightings over Aalborg Airport on 24 and 25 September 2025: it could neither prove nor rule out that they were drones; the airspace closure stands"
+      },
+      "anterior": {
+        "valor": "no_confirmada"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00112",
+      "tipo": "descartada",
+      "fecha_declaracion": "2025-10-05",
+      "fuente": {
+        "enlace": "https://www.lrt.lt/en/news-in-english/19/2702118/smuggler-balloons-from-belarus-disrupt-flights-at-vilnius-airport",
+        "medio": "lrt.lt",
+        "fecha": "2025-10-05",
+        "idioma": "en",
+        "frase": "These were airspace violations – a total of 25 meteorological balloons entering from Belarus",
+        "oficial": false,
+        "citada_en": {
+          "medio": "LRT (Lietuvos radijas ir televizija), con BNS",
+          "fiabilidad": "A",
+          "motivo": "la radiotelevisión pública de Lituania cita al portavoz del Centro Nacional de Gestión de Crisis, Darius Buta, en LRT RADIO"
+        },
+        "declaracion": {
+          "autoridad": "Nacionalinis krizių valdymo centras",
+          "pais": "LT",
+          "categoria": "gobierno",
+          "afirma": "sin_drones"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://www.lrt.lt/en/news-in-english/19/2702118/smuggler-balloons-from-belarus-disrupt-flights-at-vilnius-airport (original, LRT, 5 de octubre de 2025, 08:34 UTC; el portavoz habló «on Sunday», el domingo 5)"
+        }
+      },
+      "contexto": "According to the National Crisis Management Centre (NKVC), 13 to 14 balloons were spotted over Vilnius and the surrounding region, including two above Vilnius Airport. Lithuanian Airports said Vilnius Airport airspace was closed at 22:16 Saturday because of the balloons.",
+      "quien": {
+        "es": "el Centro Nacional de Gestión de Crisis de Lituania (NKVC)",
+        "en": "Lithuania's National Crisis Management Centre (NKVC)"
+      },
+      "motivo": {
+        "es": "el cierre se debió a 25 globos meteorológicos de contrabando llegados de Bielorrusia, no a drones",
+        "en": "the closure was caused by 25 smuggling weather balloons from Belarus, not drones"
+      },
+      "anterior": {
+        "valor": "no_confirmada"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00225",
+      "tipo": "descartada",
+      "fecha_declaracion": "2025-10-09",
+      "fuente": {
+        "enlace": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/nato-flugplatz-geilenkirchen-drohnenalarm-stellt-sich-als-fehlalarm-heraus.html",
+        "medio": "t-online.de",
+        "fecha": "2025-10-09",
+        "idioma": "de",
+        "frase": "Es gab gestern hier keine Drohne.",
+        "oficial": false,
+        "citada_en": {
+          "medio": "t-online",
+          "fiabilidad": "B",
+          "motivo": "cita al portavoz de la OTAN en la base de Geilenkirchen y a la policía de Heinsberg («Es sei aber keine Drohne zu sehen gewesen»)"
+        },
+        "declaracion": {
+          "autoridad": "NATO Airborne Early Warning & Control Force Geilenkirchen",
+          "pais": "DE",
+          "categoria": "ejercito",
+          "afirma": "sin_drones"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://t-online.de/nachrichten/deutschland/innenpolitik/id_100949508/nato-flugplatz-geilenkirchen-drohnenalarm-stellt-sich-als-fehlalarm-heraus.html (original, t-online, 9 de octubre de 2025; «gestern» es el miércoles 8)"
+        }
+      },
+      "contexto": "Zwar sei ein Detektionsgerät für Drohnen angeschlagen, was häufiger geschehe. Das Gerät könne auch durch einen Vogel ausgelöst worden sein. \"Wir gehen davon aus, es war keine Drohne.\"",
+      "quien": {
+        "es": "un portavoz de la OTAN en la base de Geilenkirchen",
+        "en": "a NATO spokesperson at Geilenkirchen air base"
+      },
+      "motivo": {
+        "es": "no hubo dron: saltó un detector, que a veces lo hace, quizá por un pájaro",
+        "en": "there was no drone: a detector went off, as it sometimes does, possibly because of a bird"
+      },
+      "anterior": {
+        "valor": "no_confirmada"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00352",
+      "tipo": "no_acreditada",
+      "fecha_declaracion": "2025-11-04",
+      "fuente": {
+        "enlace": "https://sueddeutsche.de/bayern/luftverkehr-drohne-am-muenchner-flughafen-landebahn-kurz-gesperrt-dpa.urn-newsml-dpa-com-20090101-251104-930-250571",
+        "medio": "sueddeutsche.de",
+        "fecha": "2025-11-04",
+        "idioma": "de",
+        "frase": "Die Sicherheitsbehörden hätten die Lage geprüft, aber keine Drohne bestätigen können, sagte der Sprecher weiter.",
+        "oficial": false,
+        "citada_en": {
+          "medio": "Süddeutsche Zeitung, con el despacho de dpa",
+          "fiabilidad": "A",
+          "motivo": "el despacho de dpa cita por su nombre al portavoz de la Policía Federal, Stefan Bayer"
+        },
+        "declaracion": {
+          "autoridad": "Bundespolizei",
+          "pais": "DE",
+          "categoria": "policia",
+          "afirma": "incidente"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://sueddeutsche.de/bayern/luftverkehr-drohne-am-muenchner-flughafen-landebahn-kurz-gesperrt-dpa.urn-newsml-dpa-com-20090101-251104-930-250571 (original, SZ con dpa, 4 de noviembre de 2025, 21:19 UTC)"
+        }
+      },
+      "contexto": "Ein Pilot habe gegen 19.45 Uhr beim Landeanflug die Sichtung einer Drohne gemeldet, bestätigte der Bundespolizei-Sprecher Stefan Bayer der Deutschen Presse-Agentur. Es habe keine Gefahr für den Luftverkehr bestanden. (Nota del observatorio: la Policía Federal no dice que fuera otra cosa; solo que no pudo confirmar el dron.)",
+      "quien": {
+        "es": "la Policía Federal (Bundespolizei)",
+        "en": "the Federal Police (Bundespolizei)"
+      },
+      "motivo": {
+        "es": "tras revisar el aviso de un piloto, las autoridades no pudieron confirmar ningún dron; no dice que fuera otra cosa",
+        "en": "after checking a pilot's report, the authorities could not confirm any drone; it does not say it was something else"
+      },
+      "anterior": {
+        "valor": "no_confirmada"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00007",
+      "tipo": "descartada",
+      "fecha_declaracion": "2026-09-13",
+      "fuente": {
+        "enlace": "https://www.15min.lt/naujiena/aktualu/lietuva/nkvc-geltonas-oro-pavojus-buvo-paskelbtas-del-pauksciu-burio-56-2762780",
+        "medio": "15min.lt",
+        "fecha": "2026-09-13",
+        "idioma": "lt",
+        "frase": "Objektui patikrinti buvo pasitelkti NATO oro policijos misiją vykdantys naikintuvai. Jie nustatė, kad radarų fiksuotos atžymos buvo paukščių būrys",
+        "oficial": false,
+        "citada_en": {
+          "medio": "15min.lt, con la agencia BNS",
+          "fiabilidad": "B",
+          "motivo": "recoge lo que el Centro Nacional de Gestión de Crisis dijo a los periodistas («žurnalistams pranešė NKVC»); lo repite Xinhua citando al mismo centro"
+        },
+        "declaracion": {
+          "autoridad": "Nacionalinis krizių valdymo centras",
+          "pais": "LT",
+          "categoria": "gobierno",
+          "afirma": "sin_drones"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://www.15min.lt/naujiena/aktualu/lietuva/nkvc-geltonas-oro-pavojus-buvo-paskelbtas-del-pauksciu-burio-56-2762780 (original, 15min con BNS, 13 de septiembre de 2026, 14:25 hora de Lituania)"
+        }
+      },
+      "contexto": "NKVC teigimu, geltonas oro pavojus iš viso truko apie 38 minutes – nuo 12.59 iki 13.37 valandos. Tuo metu buvo sustabdytas orlaivių eismas Vilniaus oro uoste.",
+      "quien": {
+        "es": "el Centro Nacional de Gestión de Crisis de Lituania (NKVC)",
+        "en": "Lithuania's National Crisis Management Centre (NKVC)"
+      },
+      "motivo": {
+        "es": "los cazas de la misión de policía aérea de la OTAN comprobaron que los ecos del radar eran una bandada de aves",
+        "en": "fighter jets of the NATO air policing mission found that the radar returns were a flock of birds"
+      },
+      "anterior": {
+        "valor": "no_confirmada"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00064",
+      "tipo": "descartada",
+      "fecha_declaracion": "2026-03-09",
+      "fuente": {
+        "enlace": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828",
+        "medio": "focus-news.net",
+        "fecha": "2026-03-09",
+        "idioma": "bg",
+        "frase": "Дрон няма, не сме установили в този сигнал дрон",
+        "oficial": false,
+        "citada_en": {
+          "medio": "Agencia de noticias Focus",
+          "fiabilidad": "B",
+          "motivo": "cita por su nombre al comisario jefe Lyubomir Nikolov, del Ministerio del Interior; frognews.bg atribuye el desmentido al Ministerio del Interior"
+        },
+        "declaracion": {
+          "autoridad": "МВР",
+          "pais": "BG",
+          "categoria": "policia",
+          "afirma": "sin_drones"
+        },
+        "comprobada": {
+          "fecha": "2026-10-27",
+          "en": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828 (original, Focus, 9 de marzo de 2026, 18:24 hora de Bulgaria)"
+        }
+      },
+      "contexto": "\"Постъпват и други сигнали, но те не се потвърждават\", уточни той.",
+      "quien": {
+        "es": "el Ministerio del Interior de Bulgaria (comisario jefe Lyubomir Nikolov)",
+        "en": "Bulgaria's Ministry of the Interior (Chief Commissioner Lyubomir Nikolov)"
+      },
+      "motivo": {
+        "es": "no hubo dron: la policía no lo encontró en el aviso que cerró el aeropuerto",
+        "en": "there was no drone: police found none in the report that closed the airport"
+      },
+      "anterior": {
+        "valor": "no_confirmada"
+      }
     }
   ]
 }

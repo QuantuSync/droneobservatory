@@ -341,7 +341,9 @@ fuentes nombran su instalación solo con un nombre o una ciudad genéricos, como
 norte», por el aeródromo de Norden-Norddeich); J, hora local como UTC (desde el 22/10/2026: la
 hora UTC de la ficha es la hora local que escribe una de sus fuentes y ninguna escribe la que le
 toca en la zona del suceso; desde el 27/10/2026 también con el desfase del otro horario del año y
-con 10 minutos de margen). Los recuentos del día y los
+con 10 minutos de margen); P, presencia rebajada sin cierre (desde el 27/10/2026: «no acreditada»
+o «descartada» sin un paso del historial que diga qué autoridad la rebajó y cuándo; se completa con
+su rectificación oficial, docs/rectificaciones.md). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
