@@ -30,7 +30,7 @@ from proceso.noticias import normalizar
 
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 # Los datos que una revisión a mano puede fijar, con su cita («datos»).
-CAMPOS_REVISABLES = ("objetivo", "lugar", "inicio", "drones", "cierre", "titulo", "zona")
+CAMPOS_REVISABLES = ("objetivo", "lugar", "inicio", "drones", "cierre", "danos", "titulo", "zona")
 # Una cárcel es una instalación de categoría «otra» (docs/control_fichas.md).
 _CARCEL = re.compile(
     r"\b(?:centro penitenciario|prisi[oó]n|c[aá]rcel|prison|penitenciar|zak[lł]ad karny|"
@@ -372,6 +372,10 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
         anterior = (resultado.get("consecuencias") or {}).get("cierre") or {}
         cierre = {**anterior, "valor": valor} if valor == "si" else {"valor": valor}
         resultado["consecuencias"] = {**resultado.get("consecuencias", {}), "cierre": cierre}
+    elif campo == "danos":
+        # Los daños con la frase de la fuente que los cuenta: el esquema no tiene dónde contar
+        # los buques alcanzados, y la frase los dice (EODI-2026-00512, mar Negro).
+        resultado["consecuencias"] = {**resultado.get("consecuencias", {}), "danos": valor}
 
 
 # Lo más lejos que puede quedar el punto de la localidad revisada, además del radio de esta: el
@@ -414,12 +418,12 @@ def en_la_localidad_revisada(lugar: Documento) -> Documento:
 
 
 def decidir_datos(incidente: Documento) -> Documento:
-    """El incidente con el objetivo, el lugar, el inicio y el cierre que deciden sus fuentes y sus
-    revisiones a mano (el titular, al final de `aplicar`). Sin cambios si ya los tenía. Si cambia
+    """El incidente con el objetivo, el lugar, el inicio, el cierre y los daños que deciden sus
+    fuentes y sus revisiones a mano (el titular, al final de `aplicar`). Sin cambios si ya los tenía. Si cambia
     la instalación o el lugar, los nombres publicados se vuelven a calcular."""
     resultado = copy.deepcopy(incidente)
     revisiones = _revisiones(incidente)
-    for campo in ("lugar", "inicio", "cierre"):
+    for campo in ("lugar", "inicio", "cierre", "danos"):
         if campo in revisiones:
             _con_revision(resultado, campo, revisiones[campo])
     if "lugar" not in revisiones:

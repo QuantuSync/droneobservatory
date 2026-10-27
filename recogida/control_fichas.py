@@ -2524,7 +2524,9 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
     try:
         desde = ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)
         resultado = auditoria_fichas.auditar(
-            almacen.incidentes(), almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ"))
+            almacen.incidentes(),
+            almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ")),
+            almacen.copias_archivadas(),
         )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])

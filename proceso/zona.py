@@ -20,7 +20,10 @@ En orden, la primera regla que se cumple:
    drones rusos del 10 de septiembre de 2025, queda a 151 km de Bielorrusia;
 1. enlazado con el ataque ruso contra Ucrania de esa noche (proceso/cruces.py): frontera;
 2. con punto: frontera si está a 150 km o menos de la frontera terrestre con Ucrania, Rusia o
-   Bielorrusia, o a 50 km o menos de la costa del mar Negro; si no, interior;
+   Bielorrusia, o a 50 km o menos de la costa del mar Negro; si no, interior. La distancia se
+   mide desde la localidad de la ficha (la del nomenclátor de su país) cuando la hay, y si no
+   desde el punto: el punto puede ser la instalación (el aeropuerto Chopin queda a 151 km de
+   Bielorrusia y Varsovia, la localidad de EODI-2025-00233, a 147 km);
 3. sin punto, con un lugar del nomenclátor de su país en su localidad, su región o su titular:
    la misma distancia desde ese lugar; un titular que lo sitúa en el mar Negro, frontera;
 4. sin punto ni lugar: frontera si el dron entró desde fuera (incursión, entrada desde el
@@ -49,7 +52,7 @@ from proceso.deduccion import geo
 if TYPE_CHECKING:
     from almacen.base import Almacen
 
-VERSION = "zona-1.0.0"
+VERSION = "zona-1.1.0"
 FRONTERA = "frontera"
 INTERIOR = "interior"
 GRUPOS = (FRONTERA, INTERIOR)
@@ -208,6 +211,18 @@ def _lugar_nombrado(incidente: Documento) -> tuple[float, float] | None:
     return None
 
 
+def _localidad(incidente: Documento) -> tuple[float, float] | None:
+    """El punto del nomenclátor de su país que lleva el nombre entero de su localidad."""
+    lugar = incidente.get("lugar", {})
+    localidad = lugar.get("localidad")
+    if not localidad:
+        return None
+    hallado = _nombres().get(
+        (lugar.get("pais", ""), " ".join(re.findall(r"\w+", _plano(str(localidad)))))
+    )
+    return (hallado[0], hallado[1]) if hallado else None
+
+
 def clasificar(incidente: Documento) -> Documento:
     """{grupo, motivo, distancia_km?}: la distancia (a la frontera con Ucrania, Rusia o
     Bielorrusia, redondeada al km) solo cuando hay punto o lugar nombrado."""
@@ -226,7 +241,11 @@ def clasificar(incidente: Documento) -> Documento:
         # (el puerto de Constanza, Sulina) manda el punto.
         return {"grupo": FRONTERA, "motivo": "costa_mar_negro"}
     punto = lugar.get("punto")
-    situado = (punto["lat"], punto["lon"]) if punto else _lugar_nombrado(incidente)
+    situado = (
+        (_localidad(incidente) or (punto["lat"], punto["lon"]))
+        if punto
+        else _lugar_nombrado(incidente)
+    )
     if situado is not None:
         grupo, motivo, distancia = _por_punto(round(situado[0], 4), round(situado[1], 4))
         resultado: Documento = {"grupo": grupo, "motivo": motivo}
