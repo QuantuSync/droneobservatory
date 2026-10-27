@@ -10,6 +10,10 @@
 // - Teselas reales en una prueba: test.use({ teselasReales: true }); en todas: TESELAS_REALES=1.
 //   La única prueba que comprueba el camino real es «el mapa de fondo se sirve por la web»
 //   (e2e/web.spec.ts).
+// - En WebKit (iPhone y escritorio-webkit) no hay caché: con la interceptación de peticiones
+//   puesta, WebKit da «Importing a module script failed» al navegar mientras la página aún carga
+//   su código (las fichas unidas que redirigen, en control-fichas-recorridos.spec.ts; visto en el
+//   PR del 27 de octubre de 2026, y sin interceptar no pasa). Son 2 de los 11 trabajos.
 // - Las rutas que registra una prueba después tienen prioridad (Playwright prueba primero la
 //   última registrada, y las de la página antes que las del contexto).
 // - Al añadir algún trozo se deja el fichero «nuevos» en la carpeta: la CI solo guarda la caché
@@ -34,6 +38,7 @@ const REALES_SIEMPRE = process.env.TESELAS_REALES === "1";
 
 const cuenta = { red: 0, cache: 0 };
 let reales = REALES_SIEMPRE;
+let enWebkit = false;
 const instalados = new WeakSet<BrowserContext>();
 
 /** Quita lo más antiguo si la caché ha crecido demasiado (es del ejecutor, no del repositorio). */
@@ -100,7 +105,7 @@ async function servir(ruta: Route): Promise<void> {
 }
 
 async function instalar(contexto: BrowserContext): Promise<void> {
-  if (instalados.has(contexto)) return;
+  if (enWebkit || instalados.has(contexto)) return;
   instalados.add(contexto);
   await contexto.route((url) => trozoDe(url.href, "bytes=0-0") !== null, servir);
 }
@@ -110,7 +115,12 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
   // Una vez por proceso: recortar la caché y poner la ruta también en los contextos que las
   // pruebas abren por su cuenta (browser.newContext).
   _cacheTeselas: [
-    async ({ browser }, usar) => {
+    async ({ browser, browserName }, usar) => {
+      enWebkit = browserName === "webkit";
+      if (enWebkit) {
+        await usar(undefined);
+        return;
+      }
       if (!existsSync(CARPETA)) mkdirSync(CARPETA, { recursive: true });
       recortar();
       const original = browser.newContext.bind(browser);
