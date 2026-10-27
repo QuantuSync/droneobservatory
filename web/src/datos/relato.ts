@@ -487,6 +487,8 @@ export function relato(d: IncidenteDetalle, idioma: Idioma, aFecha: string, opci
 export interface PasoDespues {
   /** El instante del paso (ISO), para ordenar. */
   instante: string;
+  /** De dónde sale: la presencia de dron, el estado del suceso o el punto del mapa. */
+  clase: "presencia" | "estado" | "lugar";
   fecha: string;
   texto: string;
   fuenteId: string | null;
@@ -517,6 +519,7 @@ export function queDespues(d: IncidenteDetalle, idioma: Idioma): PasoDespues[] {
     pasos.push({
       orden: paso.fecha.valor,
       fecha: diaEscrito(paso.fecha.valor, idioma),
+      clase: "presencia",
       texto: `${rotulo}${segun}${motivo === null ? "" : `: ${motivo}`}`,
       fuenteId: paso.fuente_id,
     });
@@ -535,6 +538,7 @@ export function queDespues(d: IncidenteDetalle, idioma: Idioma): PasoDespues[] {
     pasos.push({
       orden: paso.fecha.valor,
       fecha: diaEscrito(paso.fecha.valor, idioma),
+      clase: "estado",
       texto: detalle === null ? nombre[paso.estado]?.[idioma] ?? paso.estado : `${nombre[paso.estado]?.[idioma] ?? paso.estado}: ${detalle}`,
       fuenteId: paso.fuente_id ?? null,
     });
@@ -543,11 +547,12 @@ export function queDespues(d: IncidenteDetalle, idioma: Idioma): PasoDespues[] {
     pasos.push({
       orden: cambio.fecha.valor,
       fecha: diaEscrito(cambio.fecha.valor, idioma),
+      clase: "lugar",
       texto: `${es ? "Lugar corregido" : "Location corrected"}: ${cambio.motivo[idioma]}`,
       fuenteId: null,
     });
   }
-  return pasos.sort((a, b) => a.orden.localeCompare(b.orden)).map(({ orden, fecha, texto, fuenteId }) => ({ instante: orden, fecha, texto, fuenteId }));
+  return pasos.sort((a, b) => a.orden.localeCompare(b.orden)).map(({ orden, clase, fecha, texto, fuenteId }) => ({ instante: orden, clase, fecha, texto, fuenteId }));
 }
 
 /** La fecha del estado para el título y la descripción: «27/10/2026». */

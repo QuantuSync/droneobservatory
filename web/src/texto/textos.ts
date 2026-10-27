@@ -179,7 +179,7 @@ const ES: TextosPagina = {
     recientes: "Casos cerrados o rectificados recientemente",
     recientesNota:
       "Las últimas fichas cuyo historial cambió después de la noticia: una autoridad cerró su " +
-      "investigación, rectificó la presencia del dron, lo atribuyó o lo desmintió, o se corrigió el lugar.",
+      "investigación, rectificó la presencia del dron, lo atribuyó o lo desmintió.",
   },
   lista: {
     titulo: "Todos los incidentes",
@@ -349,7 +349,7 @@ const EN: TextosPagina = {
     recientes: "Recently closed or corrected cases",
     recientesNota:
       "The latest records whose history changed after the news: an authority closed its " +
-      "investigation, corrected the drone's presence, attributed or denied it, or the location was corrected.",
+      "investigation, corrected the drone's presence, attributed or denied it.",
   },
   lista: {
     titulo: "All incidents",
