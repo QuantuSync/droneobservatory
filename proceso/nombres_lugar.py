@@ -832,6 +832,27 @@ def _ya_dice(texto: str, inicio: int, destino: str) -> bool:
     return texto.startswith(destino, inicio) and (fin == len(texto) or not texto[fin].isalnum())
 
 
+def formas_de_sus_lugares(nombres: Documento, idioma: str) -> dict[str, str]:
+    """Las otras formas de los lugares que enseña la ficha (`nombres`: su localidad y los otros
+    lugares), cada una con la de esta versión: el nombre del otro idioma y las formas de la tabla
+    revisada. Para las traducciones de las citas, que escribía cada una a su manera
+    («Alexandrópolis», «Alexandroupolis» y «Alejandrópolis» en EODI-2026-00050). Solo los lugares
+    de la ficha: con todas las formas ajenas generales salían «Byala» → «Bielsko-Biała» o
+    «Grenada» → «Granada» (27 de octubre de 2026)."""
+    otro = "en" if idioma == "es" else "es"
+    revisadas = {(e["es"], e["en"]): e for e in manual().get("localidades") or []}
+    cambios: dict[str, str] = {}
+    for escrito in [nombres.get("localidad"), *(nombres.get("otros") or [])]:
+        if not isinstance(escrito, dict) or not escrito.get(idioma) or not escrito.get(otro):
+            continue
+        destino = str(escrito[idioma])
+        entrada = revisadas.get((escrito["es"], escrito["en"])) or {}
+        for forma in {str(escrito[otro]), *entrada.get("formas", [])}:
+            if forma != destino and len(forma) >= 4 and forma not in destino:
+                cambios[forma] = destino
+    return cambios
+
+
 def corregir_texto(texto: str, cambios: dict[str, str], idioma: str | None = None) -> str:
     """El texto con cada forma ajena cambiada por la de la página (y, con `idioma`, también las
     formas ajenas generales de las ciudades conocidas). Primero las del incidente, que son más

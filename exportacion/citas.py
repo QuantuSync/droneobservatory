@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from esquema import Documento
-from proceso import autoridades
+from proceso import autoridades, nombres_lugar
 
 # Dato de la verificación -> campo público de «Qué dice la fuente».
 CAMPO_PUBLICO = {
@@ -167,7 +167,31 @@ def con_traducciones(
     if recorrido and recorrido.get("cita"):
         idioma = idiomas.get(str(recorrido.get("fuente")), "")
         _traducir(recorrido, "cita", "cita_traduccion", idioma, traducciones, faltan)
+    con_sus_lugares(publico)
     con_autoridades(publico, traducciones, faltan)
+
+
+def con_sus_lugares(publico: Documento) -> None:
+    """Las traducciones de las citas con los lugares de la ficha escritos como en la ficha
+    (proceso/nombres_lugar.formas_de_sus_lugares): «Alejandrópolis» en la versión española,
+    «Alexandroupoli» en la inglesa, la escribiera como la escribiera el traductor."""
+    nombres = publico.get("nombres") or {}
+    cambios = {i: nombres_lugar.formas_de_sus_lugares(nombres, i) for i in ("es", "en")}
+    if not cambios["es"] and not cambios["en"]:
+        return
+    objetos = [
+        *[(f, "traduccion") for f in publico.get("fuentes", [])],
+        *[(a, "cita_traduccion") for a in publico.get("afirmaciones_publicas", [])],
+        *[(e, "cita_traduccion") for e in publico.get("investigacion", []) or []],
+    ]
+    for objeto, clave in objetos:
+        hecha = objeto.get(clave)
+        if not isinstance(hecha, dict):
+            continue
+        objeto[clave] = {
+            i: nombres_lugar.corregir_texto(str(t), cambios[i]) if i in cambios else t
+            for i, t in hecha.items()
+        }
 
 
 def con_autoridades(

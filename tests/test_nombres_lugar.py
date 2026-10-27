@@ -391,3 +391,35 @@ def test_autoridades_en_cada_version() -> None:
     # de la web; tests/test_avisos_autoridades.py).
     assert autoridades.escrita("Ministerstvo obrany SR", "en") == "an authority"
     assert autoridades.escrita("Неизвестно ведомство", "en") == "an authority"
+
+
+def test_las_traducciones_escriben_los_lugares_como_la_ficha() -> None:
+    """EODI-2026-00050: las traducciones de las citas decían «Alexandrópolis», «Alexandroupolis»
+    o «Alejandrópolis» según la fuente; la ficha dice Alejandrópolis en español y Alexandroupoli
+    en inglés (el aeropuerto LGAL revisado a mano). Solo se cambian los lugares de la ficha."""
+    from exportacion import citas
+
+    nombres = nombres_lugar.nombres_publicos(
+        {"pais": "GR", "objetivo": {"categoria": "aeropuerto", "oaci": "LGAL"}}
+    )
+    assert nombres["localidad"] == {"es": "Alejandrópolis", "en": "Alexandroupoli"}
+    publico: Documento = {
+        "nombres": nombres,
+        "fuentes": [
+            {
+                "traduccion": {
+                    "es": "Un dron cerca de Alexandrópolis; otro en Byala.",
+                    "en": "A drone near Alexandroupolis; another in Byala.",
+                }
+            }
+        ],
+        "afirmaciones_publicas": [{"cita_traduccion": {"en": "Seen over Alejandrópolis."}}],
+    }
+    citas.con_sus_lugares(publico)
+    assert publico["fuentes"][0]["traduccion"] == {
+        "es": "Un dron cerca de Alejandrópolis; otro en Byala.",
+        "en": "A drone near Alexandroupoli; another in Byala.",
+    }
+    assert publico["afirmaciones_publicas"][0]["cita_traduccion"] == {
+        "en": "Seen over Alexandroupoli."
+    }
