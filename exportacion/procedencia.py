@@ -239,6 +239,7 @@ REVISADOS_A_RUTA = {
     "consecuencias.cierre.valor": "cierre", "tiempo.inicio": "inicio",
     "lugar.localidad": "lugar", "lugar.suceso": "lugar", "drones.numero": "drones",
     "objetivo.categoria": "objetivo", "objetivo.nombre": "objetivo", "objetivo.oaci": "objetivo",
+    "consecuencias.danos": "danos",
 }  # fmt: skip
 # Rutas cuyo valor puede cambiarlo una regla: la afirmación cuenta solo si coincide.
 MISMO_VALOR = frozenset({

@@ -191,3 +191,19 @@ def test_el_foco_termico_de_una_region_es_medido() -> None:
     region = origenes.procedencia_region(ataque["regiones"][0], procedencia)
     assert region["foco_termico"] == {"origen": "medido", "metodo": "parser", "fuentes": []}
     assert region["origen"] == "oficial"
+
+
+def test_los_danos_revisados_a_mano_salen_de_su_fuente(monkeypatch: pytest.MonkeyPatch) -> None:
+    """EODI-2026-00512: los daños revisados con la frase que cuenta los buques no tenían origen
+    y la exportación semanal no validaba (ensayo del 27 de octubre de 2026)."""
+    from proceso import decidir
+
+    danos = {"nivel": "graves", "frase": "Zwei Frachtschiffe wurden von Drohnen getroffen."}
+    documento = de_prensa()
+    documento["consecuencias"] = {"danos": danos}
+    revision = {"valor": danos, "enlace": "https://ejemplo.org/otra", "motivo": "buques"}
+    monkeypatch.setattr(decidir, "revisiones", lambda _incidente: {"danos": revision})
+    exportado = exportar(documento)
+    assert exportado["consecuencias"]["danos"] == danos
+    marca = exportado["procedencia"]["consecuencias.danos"]
+    assert (marca["origen"], marca["metodo"], marca["fuentes"]) == ("prensa", "regla", ["gdelt-1"])
