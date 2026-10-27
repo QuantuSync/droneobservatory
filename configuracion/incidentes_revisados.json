@@ -617,6 +617,24 @@
       "conserva": "EODI-2026-00649",
       "motivo": "el mismo suceso: los sobrevuelos de drones no autorizados de la base naval de Toulon y otros sitios militares del Var durante el ejercicio Typhon. 00664 es la nota de maritime-executive.com del 22 de octubre de 2026 sobre el anuncio de la Marine nationale («several unauthorized drone flights were detected in restricted airspace during a series of exercises near Toulon»), fechada por su publicación",
       "motivo_en": "the same event: the unauthorised drone overflights of the Toulon naval base and other military sites in the Var during exercise Typhon. 00664 is the 22 October 2026 maritime-executive.com report on the Marine nationale announcement, dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00512",
+        "EODI-2026-00549"
+      ],
+      "conserva": "EODI-2026-00512",
+      "motivo": "el mismo suceso: 00549 (newstodaynet.com, 15 de octubre de 2026) es una nota de reacción sobre los dos mercantes alcanzados por drones en el mar Negro «on Tuesday» 13 de octubre, la reacción del primer ministro Radev en el Parlamento y la búsqueda de los tripulantes; nombra el Chelsea-3 («The other vessel involved was the Ukrainian-owned Chelsea-3»), que es el de 00512, y no cuenta ningún ataque propio; estaba fechada por su publicación",
+      "motivo_en": "the same event: 00549 (newstodaynet.com, 15 October 2026) is a reaction report on the two merchant ships hit by drones in the Black Sea «on Tuesday» 13 October, Prime Minister Radev's statement in Parliament and the search for the crew; it names the Chelsea-3 («The other vessel involved was the Ukrainian-owned Chelsea-3»), which is 00512's, and reports no attack of its own; it was dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00649",
+        "EODI-2026-00660"
+      ],
+      "conserva": "EODI-2026-00649",
+      "motivo": "el mismo suceso: 00660 (01net.com, 21 de octubre de 2026) cuenta los sobrevuelos de drones no autorizados sobre la base naval de Toulon y otros sitios militares del Var durante el ejercicio Typhon («Entre le 9 et le 13 octobre 2026, plusieurs bases militaires dans le Var ont été survolées de nuit par des drontes non autorisés»), que es 00649; la nota se leyó el 27 de octubre de 2026 y no cuenta ningún sobrevuelo propio",
+      "motivo_en": "the same event: 00660 (01net.com, 21 October 2026) reports the unauthorised drone overflights of the Toulon naval base and other military sites in the Var during the Typhon exercise («Entre le 9 et le 13 octobre 2026, plusieurs bases militaires dans le Var ont été survolées de nuit par des drontes non autorisés»), which is 00649; the report was read on 27 October 2026 and reports no overflight of its own"
     }
   ],
   "reextraer": [
@@ -3770,6 +3788,78 @@
         "categoria": "ministerio",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2025-00099",
+      "enlace": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas",
+      "medio": "ve.lt",
+      "fecha": "2025-09-12",
+      "idioma": "lt",
+      "frase": "Pastarasis turėjo tūpti 21.45 val., o informacija apie įtariamą objektą gauta apie 21 valandą.",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00099",
+      "enlace": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas",
+      "medio": "ve.lt",
+      "fecha": "2025-09-12",
+      "idioma": "lt",
+      "frase": "Visi skrydžiai atnaujinti maždaug po pusvalandžio.",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00222",
+      "enlace": "https://aa.com.tr/en/europe/moldova-reports-airspace-violation-by-unmanned-drone/3470382",
+      "medio": "aa.com.tr",
+      "fecha": "2025-02-03",
+      "idioma": "en",
+      "frase": "The violation occurred between 12.30 and 12.45 am local time (2230-2245GMT).",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://aa.com.tr/en/europe/moldova-reports-airspace-violation-by-unmanned-drone/3470382 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00092",
+      "enlace": "https://brf.be/national/2023080",
+      "medio": "brf.be",
+      "fecha": "2025-11-09",
+      "idioma": "de",
+      "frase": "Die Unterbrechung dauerte eine halbe Stunde, anschließend war der Flughafen wieder voll funktionsfähig.",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://brf.be/national/2023080 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00335",
+      "enlace": "https://rtbf.be/article/intrusions-de-drones-de-nouveaux-drones-apercus-aux-abords-de-l-aeroport-de-bruxelles-ainsi-qu-a-la-centrale-nucleaire-de-doel-11628336",
+      "medio": "rtbf.be",
+      "fecha": "2025-11-06",
+      "idioma": "fr",
+      "frase": "Les vols ont repris après une demi-heure, conformément à la procédure standard en cas d'\"observation sérieuse\", a indiqué une porte-parole de Skeyes.",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://rtbf.be/article/intrusions-de-drones-de-nouveaux-drones-apercus-aux-abords-de-l-aeroport-de-bruxelles-ainsi-qu-a-la-centrale-nucleaire-de-doel-11628336 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00113",
+      "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-12",
+      "medio": "army.md",
+      "fecha": "2026-09-12",
+      "idioma": "ro",
+      "frase": "Serviciul operații aeriene al Armatei Naționale a detectat, astăzi, 12 septembrie curent, la ora 15:26, un obiect care a pătruns neautorizat în spațiul aerian al țării noastre dinspre Ucraina.",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-12 (original)"
+      }
     }
   ],
   "titulares": [
@@ -3979,6 +4069,14 @@
     },
     {
       "incidente": "EODI-2025-00099",
+      "inicio": {
+        "valor": "2025-09-11T18:00Z",
+        "precision": "hora",
+        "cita": "Pastarasis turėjo tūpti 21.45 val., o informacija apie įtariamą objektą gauta apie 21 valandą.",
+        "motivo": "ve.lt (BNS): «apie 21 valandą» del jueves 11 de septiembre de 2025; los vuelos se reanudaron «maždaug po pusvalandžio», hora local (UTC+3); en UTC, 18:00 del 11",
+        "fin": "2025-09-11T18:30Z",
+        "fin_cita": "Visi skrydžiai atnaujinti maždaug po pusvalandžio."
+      },
       "titulo": {
         "es": "Objeto volador sospechoso sobre el aeropuerto de Vilna obliga a desviar un vuelo a Riga",
         "en": "Suspected flying object over Vilnius airport forces flight diversion to Riga"
@@ -4380,6 +4478,14 @@
     },
     {
       "incidente": "EODI-2025-00066",
+      "inicio": {
+        "valor": "2025-11-21T18:00Z",
+        "precision": "minuto",
+        "cita": "Allarme in Olanda, dove sono stati avvistati dei droni sulla base aereo di Volkel tra le 19 e le 21 di venerdì sera.",
+        "motivo": "ilmessaggero.it: «tra le 19 e le 21 di venerdì sera», el viernes 21 de noviembre de 2025, hora local (UTC+1); en UTC, 18:00 del 21",
+        "fin": "2025-11-21T20:00Z",
+        "fin_cita": "Allarme in Olanda, dove sono stati avvistati dei droni sulla base aereo di Volkel tra le 19 e le 21 di venerdì sera."
+      },
       "presencia": {
         "valor": "confirmada",
         "cita": "The Dutch military opened fire at drones over Volkel Air Base in the east of the country"
@@ -4571,6 +4677,174 @@
       "motivo": {
         "es": "El dron que cruzó el espacio aéreo de Moldavia el 23 de octubre de 2026 es el mismo que cayó en Chiștelnița, según el Ministerio de Defensa (army.md y PRO TV): la ficha une las tres que lo contaban.",
         "en": "The drone that crossed Moldovan airspace on 23 October 2026 is the same one that crashed in Chiștelnița, according to the Defence Ministry (army.md and PRO TV): the record joins the three that reported it."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00032",
+      "inicio": {
+        "valor": "2025-11-05T21:00Z",
+        "precision": "minuto",
+        "cita": "Der Flughafen sei am Mittwoch von 22 Uhr bis 22.45 Uhr gesperrt gewesen.",
+        "motivo": "mopo.de (Bundespolizei): «von 22 Uhr bis 22.45 Uhr» del miércoles 5 de noviembre de 2025, hora local (UTC+1); en UTC, 21:00 del 05",
+        "fin": "2025-11-05T21:45Z",
+        "fin_cita": "Der Flughafen sei am Mittwoch von 22 Uhr bis 22.45 Uhr gesperrt gewesen."
+      },
+      "motivo": {
+        "es": "El aeropuerto de Hannover estuvo cerrado de las 22:00 a las 22:45 hora de Alemania (21:00-21:45 UTC; la policía federal en mopo.de); la ficha publicaba las 20:00 UTC.",
+        "en": "Hannover airport was closed from 22:00 to 22:45 German time (21:00-21:45 UTC; the federal police in mopo.de); the record showed 20:00 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00092",
+      "inicio": {
+        "valor": "2025-11-08T18:00Z",
+        "precision": "hora",
+        "cita": "Das teilte die Flugsicherung Skeyes mit. Die Drohne wurde gegen 19 Uhr gemeldet.",
+        "motivo": "brf.be (skeyes): «gegen 19 Uhr» del sábado 8 de noviembre de 2025; la interrupción «dauerte eine halbe Stunde», hora local (UTC+1); en UTC, 18:00 del 08",
+        "fin": "2025-11-08T18:30Z",
+        "fin_cita": "Die Unterbrechung dauerte eine halbe Stunde, anschließend war der Flughafen wieder voll funktionsfähig."
+      },
+      "motivo": {
+        "es": "Skeyes avisó del dron hacia las 19:00 hora de Bélgica (18:00 UTC) y el cierre duró media hora (brf.be); la ficha tomó como UTC la hora local y publicaba las 19:00 UTC.",
+        "en": "Skeyes reported the drone around 19:00 Belgian time (18:00 UTC) and the closure lasted half an hour (brf.be); the record took the local time as UTC and showed 19:00 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00101",
+      "inicio": {
+        "valor": "2025-08-19T21:05Z",
+        "precision": "hora",
+        "cita": "Maždaug pusvalandžiui buvo sustabdytas orlaivių eismas, visos oro uosto operacijos visa apimtimi atnaujintos apie 00.35 val.",
+        "motivo": "kauno.diena.lt (aeropuertos de Lituania): unos treinta minutos parados («Maždaug pusvalandžiui») hasta «apie 00.35 val.» de la noche del martes 19 al miércoles 20 de agosto de 2025, hora local (UTC+3); en UTC, 21:05 del 19",
+        "fin": "2025-08-19T21:35Z",
+        "fin_cita": "Maždaug pusvalandžiui buvo sustabdytas orlaivių eismas, visos oro uosto operacijos visa apimtimi atnaujintos apie 00.35 val."
+      },
+      "motivo": {
+        "es": "Los vuelos de Vilna se pararon una media hora y se reanudaron hacia las 00:35 hora de Lituania del miércoles 20 (21:35 UTC del 19; kauno.diena.lt); la ficha publicaba las 00:00 UTC del 20 y tomó como UTC la hora local del fin.",
+        "en": "Vilnius flights were halted for about half an hour and resumed around 00:35 Lithuanian time on Wednesday 20th (21:35 UTC on the 19th; kauno.diena.lt); the record showed 00:00 UTC on the 20th and took the local end time as UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00104",
+      "inicio": {
+        "valor": "2025-04-27T22:00Z",
+        "precision": "hora",
+        "cita": "Det stemmer at det ble observert drone over Oslo lufthavn rundt midnatt natt til mandag 28. april",
+        "motivo": "vg.no (Avinor): «rundt midnatt natt til mandag 28. april» de 2025, hora local (UTC+2); en UTC, 22:00 del 27"
+      },
+      "motivo": {
+        "es": "El dron se vio sobre Gardermoen hacia la medianoche de la noche del domingo 27 al lunes 28 de abril de 2025, hora de Noruega (22:00 UTC del 27; vg.no); la ficha publicaba las 00:00 UTC del 28.",
+        "en": "The drone was seen over Gardermoen around midnight on the night of Sunday 27 to Monday 28 April 2025, Norwegian time (22:00 UTC on the 27th; vg.no); the record showed 00:00 UTC on the 28th."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00178",
+      "inicio": {
+        "valor": "2025-10-29T10:05Z",
+        "precision": "minuto",
+        "cita": "Šalia Vilniaus oro uosto trečiadienį 12.05 val. fiksuotas dronas.",
+        "motivo": "lrt.lt: «trečiadienį 12.05 val.», el miércoles 29 de octubre de 2025 (hora de invierno desde el 26), hora local (UTC+2); en UTC, 10:05 del 29"
+      },
+      "motivo": {
+        "es": "El dron se registró a las 12:05 hora de Lituania del miércoles 29 de octubre de 2025, ya en hora de invierno (10:05 UTC; lrt.lt); la ficha publicaba las 09:05 UTC, con el desfase de verano.",
+        "en": "The drone was recorded at 12:05 Lithuanian time on Wednesday 29 October 2025, already on winter time (10:05 UTC; lrt.lt); the record showed 09:05 UTC, with the summer offset."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00221",
+      "inicio": {
+        "valor": "2025-10-31T19:08Z",
+        "precision": "minuto",
+        "cita": "Les décollages et atterrissages ont été interrompus entre 20h08 et 21h58.",
+        "motivo": "vosgesmatin.fr: «entre 20h08 et 21h58» del viernes 31 de octubre de 2025 (hora de invierno desde el 26), hora local (UTC+1); en UTC, 19:08 del 31",
+        "fin": "2025-10-31T20:58Z",
+        "fin_cita": "Les décollages et atterrissages ont été interrompus entre 20h08 et 21h58."
+      },
+      "motivo": {
+        "es": "Los vuelos del BER se pararon entre las 20:08 y las 21:58 hora de Berlín del viernes 31 de octubre de 2025, ya en hora de invierno (19:08-20:58 UTC; vosgesmatin.fr y zazoom.it); la ficha publicaba las 18:08-19:58 UTC, con el desfase de verano.",
+        "en": "BER flights were halted between 20:08 and 21:58 Berlin time on Friday 31 October 2025, already on winter time (19:08-20:58 UTC; vosgesmatin.fr and zazoom.it); the record showed 18:08-19:58 UTC, with the summer offset."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00222",
+      "inicio": {
+        "valor": "2025-02-02T22:30Z",
+        "precision": "minuto",
+        "cita": "The violation occurred between 12.30 and 12.45 am local time (2230-2245GMT).",
+        "motivo": "aa.com.tr (Ministerio de Defensa de Moldavia): «between 12.30 and 12.45 am local time (2230-2245GMT)», la madrugada del lunes 3 de febrero de 2025, hora local (UTC+2); en UTC, 22:30 del 02",
+        "fin": "2025-02-02T22:45Z",
+        "fin_cita": "The violation occurred between 12.30 and 12.45 am local time (2230-2245GMT)."
+      },
+      "motivo": {
+        "es": "El dron violó el espacio aéreo de Moldavia entre las 00:30 y las 00:45 hora local del lunes 3 de febrero de 2025, las 22:30-22:45 UTC del domingo 2 (aa.com.tr); la ficha tomó como UTC la hora local y publicaba las 00:30 UTC del 3.",
+        "en": "The drone violated Moldovan airspace between 00:30 and 00:45 local time on Monday 3 February 2025, 22:30-22:45 UTC on Sunday 2nd (aa.com.tr); the record took the local time as UTC and showed 00:30 UTC on the 3rd."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00335",
+      "inicio": {
+        "valor": "2025-11-06T20:20Z",
+        "precision": "minuto",
+        "cita": "Le trafic aérien a été brièvement interrompu jeudi vers 21h20 à l'aéroport de Bruxelles.",
+        "motivo": "rtbf.be (skeyes): «jeudi vers 21h20», el jueves 6 de noviembre de 2025; los vuelos se reanudaron «après une demi-heure», hora local (UTC+1); en UTC, 20:20 del 06",
+        "fin": "2025-11-06T20:50Z",
+        "fin_cita": "Les vols ont repris après une demi-heure, conformément à la procédure standard en cas d'\"observation sérieuse\", a indiqué une porte-parole de Skeyes."
+      },
+      "motivo": {
+        "es": "El tráfico de Bruselas se interrumpió hacia las 21:20 hora de Bélgica del jueves 6 de noviembre de 2025 y se reanudó media hora después (20:20-20:50 UTC; rtbf.be); la ficha publicaba las 21:00 UTC.",
+        "en": "Brussels air traffic was halted around 21:20 Belgian time on Thursday 6 November 2025 and resumed half an hour later (20:20-20:50 UTC; rtbf.be); the record showed 21:00 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00037",
+      "inicio": {
+        "valor": "2026-05-13T15:50Z",
+        "precision": "minuto",
+        "cita": "incidentas įvyko trečiadienį apie 18.50 val., kai prie Palangos oro uosto buvo užfiksuotas nesankcionuotas bepiločio orlaivio skrydis",
+        "motivo": "lrt.lt (VST): «trečiadienį apie 18.50 val.», el miércoles 13 de mayo de 2026, hora local (UTC+3); en UTC, 15:50 del 13"
+      },
+      "motivo": {
+        "es": "El vuelo del dron sobre el aeropuerto de Palanga fue el miércoles 13 de mayo de 2026 hacia las 18:50 hora de Lituania (15:50 UTC; lrt.lt); la ficha publicaba las 16:50 UTC, con el desfase de invierno.",
+        "en": "The drone flight over Palanga airport was on Wednesday 13 May 2026 around 18:50 Lithuanian time (15:50 UTC; lrt.lt); the record showed 16:50 UTC, with the winter offset."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00113",
+      "inicio": {
+        "valor": "2026-09-12T12:26Z",
+        "precision": "minuto",
+        "cita": "Serviciul operații aeriene al Armatei Naționale a detectat, astăzi, 12 septembrie curent, la ora 15:26, un obiect care a pătruns neautorizat în spațiul aerian al țării noastre dinspre Ucraina.",
+        "motivo": "army.md (Ejército Nacional de Moldavia): «la ora 15:26» del sábado 12 de septiembre de 2026, hora local (UTC+3); en UTC, 12:26 del 12"
+      },
+      "motivo": {
+        "es": "El ejército de Moldavia detectó el objeto a las 15:26 hora de Chisináu del 12 de septiembre de 2026 (12:26 UTC; army.md); la ficha publicaba las 13:26 UTC, con el desfase de invierno.",
+        "en": "The Moldovan army detected the object at 15:26 Chișinău time on 12 September 2026 (12:26 UTC; army.md); the record showed 13:26 UTC, with the winter offset."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00305",
+      "inicio": {
+        "valor": "2026-04-03T05:13Z",
+        "precision": "minuto",
+        "cita": "Ministerul Apărării informează că incidentul a avut loc în jurul orei 08:13",
+        "motivo": "evz.ro (Ministerio de Defensa de Moldavia): «în dimineața zilei de 3 aprilie» y «în jurul orei 08:13» de 2026 (hora de verano desde el 29 de marzo), hora local (UTC+3); en UTC, 05:13 del 03"
+      },
+      "motivo": {
+        "es": "El Ministerio de Defensa de Moldavia sitúa el sobrevuelo hacia las 08:13 hora de Chisináu de la mañana del 3 de abril de 2026 (05:13 UTC; evz.ro y ziarulnational.md); la ficha tomó como UTC la hora local y publicaba las 08:13 UTC.",
+        "en": "Moldova's Defence Ministry puts the overflight at around 08:13 Chișinău time on the morning of 3 April 2026 (05:13 UTC; evz.ro and ziarulnational.md); the record took the local time as UTC and showed 08:13 UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00489",
+      "inicio": {
+        "valor": "2026-10-06T00:00Z",
+        "precision": "hora",
+        "cita": "The attacks took place at about 3am local time on Tuesday (6 October), approximately 128 kilometres off the Bulgarian coast near Byala",
+        "motivo": "insurancebusinessmag.com: «at about 3am local time on Tuesday (6 October)» de 2026, hora local (UTC+3); en UTC, 00:00 del 06"
+      },
+      "motivo": {
+        "es": "Los ataques fueron hacia las 03:00 hora de Bulgaria del martes 6 de octubre de 2026 (00:00 UTC; insurancebusinessmag.com); la ficha publicaba las 01:00 UTC, con el desfase de invierno.",
+        "en": "The attacks were at about 03:00 Bulgarian time on Tuesday 6 October 2026 (00:00 UTC; insurancebusinessmag.com); the record showed 01:00 UTC, with the winter offset."
       }
     }
   ],

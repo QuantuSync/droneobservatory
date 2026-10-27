@@ -250,6 +250,14 @@ _HORA = re.compile(
     rf"([01]?\d|2[0-3]){_FIN}(?!\s?[:h]\s?[0-5]\d)(?:\s*(?:uhr|h\b|hrs|o'clock))?",
     re.IGNORECASE,
 )
+# Hora en punto aproximada, con su unidad detrás: «gegen 19 Uhr» (EODI-2025-00092), «apie 21
+# valandą» (EODI-2025-00099), «vers 21 heures», «rond 19 uur», «około 22 godz.».
+_HORA_CERCA = re.compile(
+    r"(?<!\w)(?:gegen|vers|rond|omstreeks|apie|około|около|kolem|hacia las|sobre las|"
+    r"cerca de las|verso le|intorno alle)\s+(?:les\s+)?([01]?\d|2[0-3])\s*"
+    r"(?:uhr|heures?|uur|valand\w*|val\b|godz\w*|horas?\b|ore\b|sata\b|o'clock)",
+    re.IGNORECASE,
+)
 # Frases que dan la hora de otra cosa (la reapertura, el final).
 _OTRA_HORA = re.compile(
     r"reopen|re-open|wieder ge|wiedereröffn|genåbn|gjenåpn|återöppn|heropend|rouvert|reabri|"
@@ -259,11 +267,16 @@ _OTRA_HORA = re.compile(
 )
 
 
-def hora_local(frase: str) -> tuple[int, int] | None:
+def hora_local(frase: str, con_dron: bool = True) -> tuple[int, int] | None:
     """La hora local del suceso que escribe una frase que habla de drones, o None. Si la frase
-    habla también de una reapertura o de un «hasta», no se lee: la hora puede ser la de eso."""
+    habla también de una reapertura o de un «hasta», no se lee: la hora puede ser la de eso.
+    Con `con_dron` falso basta con la hora: la frase de la que el extractor tomó el inicio no
+    siempre nombra el dron («Le trafic aérien a été brièvement interrompu jeudi vers 21h20»,
+    EODI-2025-00335)."""
     texto = _plano(frase)
-    if not re.search(PALABRA_DRON, texto, re.IGNORECASE) or _OTRA_HORA.search(texto):
+    if con_dron and not re.search(PALABRA_DRON, texto, re.IGNORECASE):
+        return None
+    if _OTRA_HORA.search(texto):
         return None
     horas = []
     for m in _HORA.finditer(texto):
@@ -282,6 +295,7 @@ def hora_local(frase: str) -> tuple[int, int] | None:
                 horas[-1] = (hora + 12, minuto)
             elif sufijo.startswith("am") and hora == 12:
                 horas[-1] = (0, minuto)
+    horas += [(int(m.group(1)), 0) for m in _HORA_CERCA.finditer(texto)]
     return horas[0] if len(set(horas)) == 1 else None
 
 
@@ -324,6 +338,8 @@ _HORA_SUELTA = re.compile(
     r"(?<!\w)(?:le|alle|dalle|tra le|e le|fino alle|bis|und|zwischen|between|and|until|till|entre|"
     r"to|y las|hasta las|de las|jusqu'à|et)\s+([01]?\d|2[0-3])(?![\d:.,h])(?:\s*(?:uhr|h\b))?"
 )
+# Horas de agencia en UTC, sin separador: «(2230-2245GMT)» (EODI-2025-00222, aa.com.tr).
+_HORA_GMT = re.compile(r"(?<![\d.:])([01]\d|2[0-3])([0-5]\d)(?=\s*(?:-\s*\d{4}\s*)?(?:gmt|utc)\b)")
 _MEDIANOCHE = re.compile(
     r"midnight|mitternacht|minuit|medianoche|mezzanotte|północ|midnat|midnatt|middernacht|"
     r"miezul nopții|miezul nopţii|keskiyö|vidurnakt|pusnakt|полунощ|полночь|опівночі"
@@ -353,6 +369,8 @@ def horas_escritas(frase: str) -> list[tuple[int, int]]:
         if horas and sufijo.startswith("pm") and horas[-1][0] < 12:
             horas[-1] = (horas[-1][0] + 12, horas[-1][1])
     horas += [(int(m.group(1)), 0) for m in _HORA_SUELTA.finditer(texto)]
+    horas += [(int(m.group(1)), 0) for m in _HORA_CERCA.finditer(texto)]
+    horas += [(int(m.group(1)), int(m.group(2))) for m in _HORA_GMT.finditer(texto)]
     for m in _HORA_PUNTO.finditer(texto):
         hora, minuto = (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
         horas.append((int(hora), int(minuto)))

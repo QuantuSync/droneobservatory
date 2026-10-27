@@ -32,10 +32,13 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   las fuentes de la ficha nombran su instalación solo con un nombre o una ciudad genéricos y
   nunca con uno propio (EODI-2025-00174: «Drohnen-Alarm im Norden», «en el norte», por el
   aeródromo de Norden-Norddeich; proceso/noticias.generico).
-- **J, hora local como UTC**: la hora UTC de la ficha es la hora local que escribe una de sus
-  fuentes y ninguna escribe la que le toca en la zona del suceso (EODI-2025-00007: «gegen 19.30
-  Uhr» en Bremen en noviembre son las 18:30 UTC, y la ficha daba las 19:30 UTC;
-  proceso/fechas.hora_en_utc).
+- **J, hora local como UTC**: el inicio publicado, leído como UTC o con el desfase del otro
+  horario del año, es una hora que escribe una frase de sus fuentes (cualquier hora, nombre o no
+  el dron, con 10 minutos de margen) y ninguna escribe la que le toca en la zona del suceso ese
+  día (EODI-2025-00007: «gegen 19.30 Uhr» en Bremen en noviembre son las 18:30 UTC, y la ficha
+  daba las 19:30 UTC; EODI-2025-00178: «12.05 val.» en Vilna el 29 de octubre de 2025, ya en
+  hora de invierno, publicado como 09:05 UTC con el desfase de verano; proceso/fechas.hora_en_utc).
+  No cuenta una frase que da la hora en UTC o GMT.
 - **K, dato que oscila**: el mismo dato de una ficha vuelve, en las últimas 48 horas, a un valor
   que ya había dejado (A → B → A, o dos reglas que lo cambian desde el mismo valor y se queda el
   viejo) 3 veces o más: dos reglas que se pisan en cada recogida (EODI-2025-00378, el titular,
@@ -341,10 +344,16 @@ def _i(incidente: Documento) -> bool:
     return bool(nombrados) and all(noticias.generico(n) for n in nombrados)
 
 
+# Una frase que da la hora en UTC no dice nada de la hora local («2230-2245GMT»).
+_EN_UTC = re.compile(r"(?<![a-z])(?:utc|gmt|zulu)(?![a-z])|\d{2}:?\d{2} ?z\b", re.IGNORECASE)
+
+
 def _j(incidente: Documento) -> bool:
-    """La hora de una cita frente a la hora UTC de la ficha: marca la ficha cuya hora UTC es la
-    hora local que escribe una de sus fuentes, si ninguna fuente escribe la hora local que de
-    verdad le corresponde (fechas.hora_en_utc)."""
+    """La hora de las citas frente al inicio publicado: marca la ficha cuyo inicio, leído como
+    UTC (o con el desfase del otro horario del año: fechas.desfases_errados), es una hora que
+    escribe una frase de sus fuentes, con 10 minutos de margen, si ninguna frase escribe la hora
+    local que de verdad le corresponde en la zona del suceso ese día. Cualquier hora de la frase,
+    nombre o no el dron: «vers 21h20» en Bruselas (EODI-2025-00335) publicado como 21:00 UTC."""
     inicio = (incidente.get("tiempo") or {}).get("inicio") or {}
     precision = inicio.get("precision")
     if precision not in {"minuto", "hora"}:
@@ -356,14 +365,18 @@ def _j(incidente: Documento) -> bool:
         return False
     valor = datetime.fromisoformat(str(inicio["valor"]).replace("Z", "+00:00"))
     frases = [str(f.get("frase_origen") or "") for f in incidente.get("fuentes") or []]
-    malas = [f for f in frases if fechas.hora_en_utc(valor, precision, f, zona) is not None]
+    escritas = {
+        h for f in frases if not _EN_UTC.search(f) for h in textos_dron.horas_escritas(f)
+    }  # fmt: skip
+    margen = fechas.MARGEN_FIN
     local = valor.astimezone(zona)
-    bien = any(
-        (h := textos_dron.hora_local(f)) is not None
-        and h[0] == local.hour and (precision == "hora" or h[1] == local.minute)
-        for f in frases
-    )  # fmt: skip
-    return bool(malas) and not bien
+    if any(fechas.misma_hora(local, h, precision, margen) for h in escritas):
+        return False
+    return any(
+        fechas.misma_hora(valor + desfase, h, precision, margen)
+        for desfase in fechas.desfases_errados(valor, zona)
+        for h in escritas
+    )
 
 
 def _m(incidente: Documento) -> bool:

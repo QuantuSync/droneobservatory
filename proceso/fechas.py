@@ -340,18 +340,44 @@ def hora_en_utc(valor: datetime, precision: str | None, frase: str,
 
     if precision not in {"minuto", "hora"}:
         return None
-    escrita = hora_local(frase)
+    # La frase es la del inicio: el extractor tomó de ella la hora aunque no nombre el dron.
+    escrita = hora_local(frase, con_dron=False)
     if escrita is None:
         return None
-
-    def igual(momento: datetime) -> bool:
-        return momento.hour == escrita[0] and (precision == "hora" or momento.minute == escrita[1])
-
     utc = valor.astimezone(UTC)
-    if not igual(utc) or igual(utc.astimezone(zona_suceso)):
+    if misma_hora(utc.astimezone(zona_suceso), escrita, precision):
         return None
-    local = datetime.combine(utc.date(), time(*escrita), zona_suceso)
-    return local.astimezone(UTC)
+    for desfase in desfases_errados(utc, zona_suceso):
+        leida = utc + desfase
+        if misma_hora(leida, escrita, precision):
+            local = datetime.combine(leida.date(), time(*escrita), zona_suceso)
+            return local.astimezone(UTC)
+    return None
+
+
+def misma_hora(momento: datetime, escrita: tuple[int, int], precision: str | None,
+               margen: timedelta = timedelta(0)) -> bool:  # fmt: skip
+    """La hora del reloj de `momento` es la escrita, con `margen` a cada lado (también pasada la
+    medianoche). Con precisión «hora» basta con la misma hora."""
+    if precision == "hora" and momento.hour == escrita[0]:
+        return True
+    diferencia = abs(momento.hour * 60 + momento.minute - escrita[0] * 60 - escrita[1])
+    return min(diferencia, 24 * 60 - diferencia) <= margen.total_seconds() / 60
+
+
+def desfases_errados(momento: datetime, zona_suceso: ZoneInfo) -> list[timedelta]:
+    """Lo que un extractor pudo sumar a la hora UTC creyendo que era la local: nada (la hora
+    local tomada como UTC: «gegen 19.30 Uhr» en Bremen el 2 de noviembre de 2025 publicado como
+    19:30 UTC, EODI-2025-00007) o el desfase del otro horario del año («apie 21 valandą» en
+    Vilna el 11 de septiembre de 2025, UTC+3, publicado como 19:00 UTC con el UTC+2 de invierno,
+    EODI-2025-00099). Nunca el desfase correcto de ese día."""
+    correcto = momento.astimezone(zona_suceso).utcoffset()
+    anio = momento.astimezone(UTC).year
+    posibles = [timedelta(0)] + [
+        datetime(anio, mes, 15, 12, tzinfo=UTC).astimezone(zona_suceso).utcoffset() or timedelta(0)
+        for mes in (1, 7)
+    ]
+    return [d for d in dict.fromkeys(posibles) if d != correcto]
 
 
 def _con_dia(momento: datetime, dia: date, zona_suceso: ZoneInfo) -> datetime:
