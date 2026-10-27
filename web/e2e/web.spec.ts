@@ -218,14 +218,15 @@ test("la dirección de un incidente abre su ficha en el panel y sobrevive a reca
   if (incidente === undefined) throw new Error("no hay incidentes publicados");
   const respuesta = await page.goto(`/${incidente.id}`);
   expect(respuesta?.status()).toBe(200);
-  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
-    "content",
-    `${incidente.titulo.es} · ${NOMBRE}`,
-  );
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
-    "content",
-    "https://droneobservatory.eu/compartir.png",
-  );
+  // El título dice el estado de hoy entre paréntesis; la imagen es la de la ficha y se sirve.
+  const titulo = await page.locator('meta[property="og:title"]').getAttribute("content");
+  expect(titulo?.startsWith(`${incidente.titulo.es} (`)).toBe(true);
+  expect(titulo?.endsWith(`) · ${NOMBRE}`)).toBe(true);
+  const imagen = `/compartir/${incidente.id}.png`;
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", `https://droneobservatory.eu${imagen}`);
+  const servida = await page.request.get(imagen, { headers: ACCESO });
+  expect(servida.status()).toBe(200);
+  expect(servida.headers()["content-type"]).toContain("image/png");
   const ficha = page.getByRole("complementary", { name: new RegExp(incidente.id) });
   await expect(ficha).toContainText(incidente.titulo.es);
   await expect(ficha.getByRole("heading", { name: "Historial de estados" })).toBeVisible();
