@@ -88,11 +88,15 @@ def _quien(fuente: Documento) -> Documento:
     }
 
 
-def semilla(incidente: Documento, quien: Documento | None = None) -> Documento:
+def semilla(
+    incidente: Documento, quien: Documento | None = None, valor_anterior: str | None = None
+) -> Documento:
     """El primer paso del historial: el valor que había y la fuente con que se declaró (la
     autoridad más temprana que lo afirma; si no la hay, la primera fuente que lo afirma o la
-    primera del incidente)."""
-    valor = str(incidente.get("presencia_dron") or NO_CONFIRMADA)
+    primera del incidente). `valor_anterior` es el valor de antes cuando la ficha ya estaba
+    rebajada sin historial (una revisión a mano que bajó la presencia sin decir quién ni cuándo,
+    EODI-2025-00228): sin él, el primer paso repetiría el valor rebajado."""
+    valor = str(valor_anterior or incidente.get("presencia_dron") or NO_CONFIRMADA)
     fuentes = {f["id"]: f for f in incidente["fuentes"]}
     afirmantes = [
         fuentes[a["fuente_id"]] for a in incidente.get("afirmaciones", [])
@@ -142,6 +146,7 @@ def aplicada(incidente: Documento, revision: str) -> bool:
 def aplicar(
     incidente: Documento, tipo: str, fuente: Documento, fecha: Documento, quien: Documento,
     motivo: Documento, revision: str, semilla_quien: Documento | None = None,
+    semilla_valor: str | None = None,
 ) -> Documento:  # fmt: skip
     """El incidente con la rectificación añadida (el mismo si ya la tiene): la fuente si le
     falta, el historial (con el valor que había delante, si es el primer paso), la presencia, su
@@ -167,7 +172,7 @@ def aplicar(
         resultado["fuentes"].append(copy.deepcopy(fuente))
     historial = list(resultado.get("presencia_historial") or [])
     if not historial:
-        historial.append(semilla(incidente, semilla_quien))
+        historial.append(semilla(incidente, semilla_quien, semilla_valor))
     actual = vigente({"presencia_historial": historial}) or str(resultado.get("presencia_dron"))
     historial.append(paso_de(tipo, fecha, fuente["id"], quien, motivo, revision, actual))
     resultado["presencia_historial"] = historial

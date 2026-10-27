@@ -11,6 +11,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { Ayuda } from "../src/componentes/Ayuda.tsx";
 import { BarraEstado } from "../src/componentes/BarraEstado.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
+import { Lista } from "../src/componentes/Lista.tsx";
 import { Simbolo } from "../src/componentes/Simbolo.tsx";
 import { detalleIncidente, resumir, resumirIncidente, resumirUcrania } from "../src/datos/derivar.ts";
 import { MARCAS, conMayuscula, confirmadoPorAutoridad, estadoEscrito, historialCompleto, marcaDe, quienSinArticulo } from "../src/datos/presencia.ts";
@@ -133,6 +134,28 @@ describe("la marca", () => {
     expect(estadoEscrito(es, "es", resumen)).toBe("Notificado · Dron descartado");
     expect(estadoEscrito(en, "en", resumen)).toBe("Reported · Drone ruled out");
     expect(confirmadoPorAutoridad(resumirIncidente(copenhague()))).toBe(false);
+  });
+
+  it("en las listas la presencia va siempre, también confirmada o sin confirmar, en los dos idiomas", () => {
+    const sinConfirmar = resumirIncidente(incidente({ id: "EODI-2025-00238", estado: { actual: "confirmado", historial: [] }, presencia_dron: "no_confirmada" }, PUNTO_CPH));
+    const conDron = resumirIncidente(confirmado("EODI-2025-00095"));
+    expect(estadoEscrito(es, "es", sinConfirmar)).toBe("Confirmado · Dron no confirmado");
+    expect(estadoEscrito(en, "en", sinConfirmar)).toBe("Confirmed · Drone not confirmed");
+    expect(estadoEscrito(es, "es", conDron)).toBe("Confirmado · Dron confirmado");
+    expect(estadoEscrito(es, "es", resumirIncidente(copenhague()))).toBe("Confirmado · Dron no acreditado");
+    for (const [t, idioma, esperado] of [
+      [es, "es", ["Confirmado · Dron no acreditado", "Confirmado · Dron no confirmado", "Confirmado · Dron confirmado"]],
+      [en, "en", ["Confirmed · Drone not substantiated", "Confirmed · Drone not confirmed", "Confirmed · Drone confirmed"]],
+    ] as const) {
+      const { container, unmount } = render(
+        <Lista t={t} idioma={idioma} incidentes={[resumirIncidente(copenhague()), sinConfirmar, conDron]} regiones={[]} onRegion={() => undefined} />,
+      );
+      const textos_ = [...container.querySelectorAll("li")].map((li) => leido(li));
+      for (const e of esperado) expect(textos_.some((x) => x.includes(e))).toBe(true);
+      // Nunca «Confirmado» a secas junto al titular.
+      expect(textos_.every((x) => / · (Dron|Drone) /u.test(x))).toBe(true);
+      unmount();
+    }
   });
 });
 

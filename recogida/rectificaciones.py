@@ -343,7 +343,7 @@ def aplicar(almacen: Almacen, propuesta: Propuesta, decision: Documento, ahora: 
     anterior = (propuesta.revision or {}).get("anterior") or {}
     nuevo = rectificaciones.aplicar(
         incidente, str(decision["tipo"]), propuesta.fuente, _fecha_de(decision, propuesta), quien,
-        motivo, PREFIJO + propuesta.clave, anterior.get("quien"),
+        motivo, PREFIJO + propuesta.clave, anterior.get("quien"), anterior.get("valor"),
     )  # fmt: skip
     if nuevo is incidente:
         return

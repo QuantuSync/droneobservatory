@@ -29,28 +29,49 @@ describe("el párrafo de la ficha", () => {
     expect(es).toMatch(/^El 24 de septiembre de 2025, se notificó la presencia de entre 2 y 10 drones en el Aeropuerto de Aalborg \(Flyvestation Aalborg\), Dinamarca/u);
     expect(es).toContain("(declaración citada en ekstrabladet.dk)");
     expect(es).toContain("«El espacio aéreo sobre la Base Aérea de Aalborg está actualmente cerrado");
-    expect(es).toContain("Hubo un cierre; se desviaron 3 vuelos y hubo patrullas.");
-    expect(es).toMatch(/A 27 de octubre de 2026 el caso consta como no acreditado \(la presencia del dron no se acreditó\)\.$/u);
+    // Las consecuencias en prosa, no en telegrama.
+    expect(es).toContain("El aeropuerto cerró, tres vuelos fueron desviados y hubo patrullas.");
+    // Sin historial: solo el estado, sin paréntesis.
+    expect(es).toMatch(/A 27 de octubre de 2026 el caso consta como no acreditado\.$/u);
     // Sin hora en la ficha: ninguna hora en el párrafo.
     expect(es).not.toMatch(/\d{2}:\d{2}/u);
     const en = texto("2025-00228", "en");
     expect(en).toMatch(/^On 24 September 2025, between 2 and 10 drones were reported at Aalborg Airport \(Flyvestation Aalborg\), Denmark/u);
-    expect(en).toMatch(/As of 27 October 2026, the case is recorded as not substantiated/u);
+    expect(en).toContain("The airport closed, three flights were diverted and there were patrols.");
+    expect(en).toMatch(/As of 27 October 2026, the case is recorded as not substantiated\.$/u);
     // Sin historial de la presencia en la ficha: no se cuenta ningún cierre de la investigación.
     expect(queDespues(ficha("2025-00228"), "es")).toEqual([]);
     expect(es).not.toContain("investigación");
   });
 
+  it("Aalborg con la rectificación de la policía: la noche con su hora de inicio y fin, y quién cerró el caso y cuándo", () => {
+    const es = texto("2025-00228-despues", "es");
+    expect(es).toMatch(/^La noche del 24 al 25 de septiembre de 2025, de las 21:44 a las 00:54 hora local de Dinamarca \(de las 19:44 a las 22:54 UTC\)/u);
+    expect(es).toContain(
+      "A 27 de octubre de 2026 el caso consta como no acreditado: la Policía de Jutlandia del Norte (Nordjyllands Politi) lo declaró el 25 de junio de 2026 al cerrar la investigación de las observaciones sobre el aeropuerto de Aalborg del 24 y el 25 de septiembre de 2025: no pudo probar ni descartar que fueran drones; el cierre del aeropuerto se mantiene.",
+    );
+    expect(es).not.toContain("(la presencia del dron");
+    const en = texto("2025-00228-despues", "en");
+    expect(en).toMatch(/^On the night of 24 to 25 September 2025, from 21:44 to 00:54 local time in Denmark \(19:44 to 22:54 UTC\)/u);
+    expect(en).toContain(
+      "As of 27 October 2026, the case is recorded as not substantiated: the North Jutland Police (Nordjyllands Politi) stated it on 25 June 2026 on closing the investigation",
+    );
+    expect(estadoActual(ficha("2025-00228-despues"), "es", HOY)).toMatch(/^A 27 de octubre de 2026 el caso consta como no acreditado: la Policía de Jutlandia del Norte/u);
+    const despues = queDespues(ficha("2025-00228-despues"), "es");
+    expect(despues.map((p) => p.fecha)).toEqual(["25 de junio de 2026"]);
+  });
+
   it("Copenhague: la noche, la hora local con la UTC, el cierre medido y la rectificación con fecha y motivo", () => {
     const es = texto("2025-00154", "es");
-    expect(es).toMatch(/^La noche del 22 al 23 de septiembre de 2025, a las 20:30 hora local de Dinamarca \(18:30 UTC\)/u);
-    expect(es).toContain("Hubo un cierre de 240 minutos; se desviaron 35 vuelos");
+    // Con el fin publicado (siempre con la frase que lo escribe), de cuándo a cuándo.
+    expect(es).toMatch(/^La noche del 22 al 23 de septiembre de 2025, de las 20:30 a las 00:20 hora local de Dinamarca \(de las 18:30 a las 22:20 UTC\)/u);
+    expect(es).toContain("El aeropuerto cerró cuatro horas, 35 vuelos fueron desviados");
     expect(es).toContain("252 minutos sin movimientos en EKCH");
     expect(es).toContain(
-      "consta como no acreditado (la presencia del dron no se acreditó); la policía de Dinamarca lo declaró el 25 de junio de 2026: no dispone de pruebas concluyentes",
+      "consta como no acreditado: la policía de Dinamarca lo declaró el 25 de junio de 2026: no dispone de pruebas concluyentes",
     );
     const en = texto("2025-00154", "en");
-    expect(en).toMatch(/^On the night of 22 to 23 September 2025, at 20:30 local time in Denmark \(18:30 UTC\)/u);
+    expect(en).toMatch(/^On the night of 22 to 23 September 2025, from 20:30 to 00:20 local time in Denmark \(18:30 to 22:20 UTC\)/u);
     expect(en).toContain("Danish Police stated it on 25 June 2026: it has no conclusive evidence");
     const despues = queDespues(ficha("2025-00154"), "es");
     expect(despues.map((p) => p.fecha)).toEqual(["25 de junio de 2026"]);
@@ -106,6 +127,6 @@ describe("el párrafo de la ficha", () => {
     const base = ficha("2025-00154");
     // Un país fuera de la tabla (el JSON quita los nombres, que dirían Dinamarca).
     const sinZona = JSON.parse(JSON.stringify({ ...base, nombres: undefined, lugar: { ...base.lugar, pais: "ZZ" } })) as IncidenteDetalle;
-    expect(cuandoEscrito(sinZona, "es")).toBe("el 22 de septiembre de 2025, a las 18:30 UTC");
+    expect(cuandoEscrito(sinZona, "es")).toBe("el 22 de septiembre de 2025, de las 18:30 a las 22:20 UTC");
   });
 });

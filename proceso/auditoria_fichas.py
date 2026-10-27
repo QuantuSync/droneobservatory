@@ -64,6 +64,13 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   vier Stunden» desde las 18:30 y EODI-2026-00112 las 20:03 UTC por «până la ora 22:03», que en
   Moldavia en marzo son las 19:03 UTC. Desde el 26 de octubre de 2026 el extractor no guarda un
   fin sin frase (proceso/incidentes._fin_con_frase) y la exportación no lo publica.
+- **P, presencia rebajada sin cierre**: la presencia es «no acreditada» o «descartada» y su
+  historial no dice qué autoridad la rebajó ni cuándo (no hay paso con ese valor, o le falta la
+  fecha o quién lo declara). EODI-2025-00228, Aalborg: rebajada con una revisión a mano, sin el
+  cierre de la investigación de la policía de Jutlandia del Norte (25 de junio de 2026), y cinco
+  descartadas por la extracción con la declaración de la autoridad solo dentro de una noticia
+  (Vilna, Geilenkirchen, Múnich, Sofía). Se completa con su rectificación oficial
+  (configuracion/rectificaciones_oficiales.json, docs/rectificaciones.md).
 """
 
 import json
@@ -84,6 +91,7 @@ from proceso import (
     incidentes,
     nombres_lugar,
     noticias,
+    rectificaciones,
     textos_dron,
 )
 from proceso.presencia import (
@@ -95,7 +103,7 @@ from proceso.presencia import (
 from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "R",
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -113,6 +121,7 @@ NOMBRES = {
     "M": "lugar revisado",
     "N": "noticia retrospectiva",
     "O": "fin sin frase que lo respalde",
+    "P": "presencia rebajada sin cierre",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -405,9 +414,25 @@ def _o(incidente: Documento) -> bool:
     return publicado is not None and fechas.fines_sin_frase(publicado)
 
 
+def _p(incidente: Documento) -> bool:
+    # La rebajada cuyo historial no dice quién la rebajó ni cuándo (proceso/rectificaciones).
+    valor = incidente.get("presencia_dron")
+    if valor not in rectificaciones.RECTIFICADOS:
+        return False
+    pasos = rectificaciones.pasos_de_valor(incidente)
+    ultimo = pasos[-1] if pasos else {}
+    quien = ultimo.get("quien") or {}
+    return not (
+        ultimo.get("valor") == valor
+        and (ultimo.get("fecha") or {}).get("valor")
+        and quien.get("es")
+        and quien.get("en")
+    )
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
-    "M": _m, "N": _n, "O": _o,
+    "M": _m, "N": _n, "O": _o, "P": _p,
 }  # fmt: skip
 
 
