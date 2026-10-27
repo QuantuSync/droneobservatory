@@ -212,15 +212,22 @@ def _lugar_nombrado(incidente: Documento) -> tuple[float, float] | None:
 
 
 def _localidad(incidente: Documento) -> tuple[float, float] | None:
-    """El punto del nomenclátor de su país que lleva el nombre entero de su localidad."""
+    """El punto del nomenclátor de su país que lleva el nombre entero de su localidad: la de la
+    ficha o, si no la tiene, la que enseña la web en «Lugar» (proceso/nombres_lugar.sitio: la
+    ciudad del aeropuerto, Varsovia para el aeropuerto Chopin)."""
+    from proceso import nombres_lugar
+
     lugar = incidente.get("lugar", {})
-    localidad = lugar.get("localidad")
-    if not localidad:
-        return None
-    hallado = _nombres().get(
-        (lugar.get("pais", ""), " ".join(re.findall(r"\w+", _plano(str(localidad)))))
-    )
-    return (hallado[0], hallado[1]) if hallado else None
+    pais = lugar.get("pais", "")
+    nombres: list[str] = [str(lugar["localidad"])] if lugar.get("localidad") else []
+    if not nombres:
+        sitio = nombres_lugar.sitio(incidente) or {}
+        nombres = [str(sitio[i]) for i in ("en", "es") if sitio.get(i)]
+    for nombre in nombres:
+        hallado = _nombres().get((pais, " ".join(re.findall(r"\w+", _plano(nombre)))))
+        if hallado:
+            return hallado[0], hallado[1]
+    return None
 
 
 def clasificar(incidente: Documento) -> Documento:
