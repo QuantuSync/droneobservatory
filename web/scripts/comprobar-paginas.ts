@@ -19,7 +19,7 @@ import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 import { cifras } from "../src/datos/derivar.ts";
 import type { IncidenteDetalle, Resumen } from "../src/datos/tipos.ts";
 import { fechaHora, numero } from "../src/i18n/index.ts";
-import { IDIOMAS, NOMBRE, rutaDeFicha } from "../src/sitio.ts";
+import { IDIOMAS, NOMBRE, imagenDeFicha, rutaDeFicha } from "../src/sitio.ts";
 import { direccionCompleta, RUTAS, rutasDeAnio, rutasDePais } from "../src/texto/paginas.ts";
 import { ficheroDeRuta } from "./paginas.ts";
 
@@ -65,12 +65,14 @@ function comprobarEstructurados(html: string, ruta: string): void {
   for (const d of datosEstructurados(html)) {
     assert.equal(d["@context"], "https://schema.org", `${ruta}: @context`);
     const tipo = d["@type"];
-    if (tipo === "Event") {
-      for (const campo of ["name", "startDate", "location", "url", "identifier"]) {
-        assert.ok(d[campo] !== undefined && d[campo] !== "", `${ruta}: Event sin ${campo}`);
+    if (tipo === "Report") {
+      // La ficha de un incidente: un informe con su lugar, su fecha y su estado actual.
+      for (const campo of ["name", "headline", "description", "temporalCoverage", "contentLocation", "url", "identifier", "dateModified", "image", "publisher"]) {
+        assert.ok(d[campo] !== undefined && d[campo] !== "", `${ruta}: Report sin ${campo}`);
       }
-      assert.match(String(d["startDate"]), /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}Z)?$/, `${ruta}: startDate`);
-      const lugar = d["location"] as Record<string, unknown>;
+      assert.match(String(d["temporalCoverage"]), /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:00Z)?(\/\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:00Z)?)?$/, `${ruta}: temporalCoverage`);
+      assert.match(String(d["image"]), /^https:\/\/droneobservatory\.eu\/compartir\/EODI-[\d-]+(-en)?\.png$/, `${ruta}: image`);
+      const lugar = d["contentLocation"] as Record<string, unknown>;
       assert.equal(lugar["@type"], "Place");
       assert.match(String((lugar["address"] as Record<string, unknown>)["addressCountry"]), /^[A-Z]{2}$/);
     } else if (tipo === "Dataset") {
@@ -226,6 +228,10 @@ async function principal(): Promise<void> {
   }
   const ficheros = (await readdir(DIST)).filter((f) => /^EODI-\d{4}-\d{5}\.html$/.test(f));
   assert.equal(ficheros.length, publicados.size, "páginas de incidentes que no están publicados");
+  // Cada ficha publicada tiene su imagen de vista previa en los dos idiomas.
+  for (const id of publicados) {
+    for (const idioma of IDIOMAS) assert.ok(await existe(join(DIST, imagenDeFicha(id, idioma).slice(1))), `${id} sin imagen (${idioma})`);
+  }
 
   // Lista de la función del borde: cada unido redirige a una página que existe y nunca desde
   // una que existe, en los dos idiomas; los ataques son los publicados.
