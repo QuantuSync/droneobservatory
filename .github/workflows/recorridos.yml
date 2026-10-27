@@ -175,9 +175,10 @@ jobs:
           key: npm-recorridos-${{ runner.os }}-${{ hashFiles('web/package-lock.json') }}
           restore-keys: npm-recorridos-${{ runner.os }}-
       # Los trozos del mapa de fondo ya descargados (web/e2e/base.ts), por la huella del mapa: si
-      # el mapa cambia, la caché empieza de cero. En los deployment_status la caché de Actions se
-      # niega a funcionar porque el evento no lleva rama («not tied to a branch or tag ref»): se le
-      # da la de main, de donde leen todas las ramas.
+      # el mapa cambia, la caché empieza de cero. Entre ejecuciones solo se conserva en las de reloj,
+      # las de PR y las manuales: en los deployment_status la caché de Actions no funciona («not tied
+      # to a branch or tag ref»; tampoco dándole GITHUB_REF, probado el 27 de octubre de 2026) y la
+      # carpeta empieza vacía, pero cada trozo se sigue pidiendo una sola vez por trabajo.
       - name: Huella del mapa de fondo
         id: huella
         run: |
@@ -186,8 +187,6 @@ jobs:
           mkdir -p "$RUNNER_TEMP/teselas"
       - name: Caché del mapa de fondo
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        env:
-          GITHUB_REF: ${{ github.ref || 'refs/heads/main' }}
         with:
           path: ${{ runner.temp }}/teselas
           key: teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
@@ -250,8 +249,6 @@ jobs:
       - name: Guardar la caché del mapa de fondo
         if: always() && steps.nuevos.outputs.hay == 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        env:
-          GITHUB_REF: ${{ github.ref || 'refs/heads/main' }}
         with:
           path: ${{ runner.temp }}/teselas
           key: teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
