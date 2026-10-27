@@ -5,8 +5,10 @@ La web tiene dos versiones. Cada nombre de lugar sale en la forma española habi
 Larnaca, Warsaw, Bucharest, Kyiv, Constanța). Sin forma propia, el nombre local en alfabeto latino
 como lo escribe la prensa. Nunca una transliteración académica, nunca el alfabeto original y nunca
 un tercer idioma. Los aeropuertos, «Aeropuerto de X» / «X Airport» (o su nombre inglés habitual:
-«Paphos International Airport»); las bases, por su nombre corriente (RAF Akrotiri, base aérea de
-Volkel / Volkel Air Base).
+«Paphos International Airport»); si el inglés es solo «X Airport», el español es «Aeropuerto de X»
+aunque la ciudad tenga otro aeródromo (Hamburg Airport, nunca «Aeropuerto de
+Hamburgo-Fuhlsbüttel»); las bases, por su nombre corriente (RAF Akrotiri, base aérea de Volkel /
+Volkel Air Base).
 
 ## Dónde se deciden
 
