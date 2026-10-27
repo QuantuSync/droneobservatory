@@ -401,7 +401,8 @@ function casosRecientes(datos: DatosPaginas, idioma: Idioma, t: Textos, tp: Text
   const casos = datos.resumen.incidentes
     .flatMap((i) => {
       const d = datos.detalles.get(i.id);
-      const ultimo = d === undefined ? undefined : queDespues(d, idioma).at(-1);
+      // Lo que cambia cómo consta el caso (presencia, atribución, desmentido), no el punto del mapa.
+      const ultimo = d === undefined ? undefined : queDespues(d, idioma).filter((p) => p.clase !== "lugar").at(-1);
       return ultimo === undefined ? [] : [{ i, ultimo }];
     })
     .sort((a, b) => b.ultimo.instante.localeCompare(a.ultimo.instante) || b.i.id.localeCompare(a.i.id))
