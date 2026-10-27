@@ -1,0 +1,257 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "minutos": {
+    "max": 240,
+    "min": 240
+   },
+   "valor": "si"
+  },
+  "vuelos_desviados": {
+   "max": 35,
+   "min": 35
+  }
+ },
+ "control": {
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-26T21:17Z"
+  }
+ },
+ "drones": {
+  "numero": {
+   "max": 3,
+   "min": 2
+  }
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2025-09-23T09:15Z"
+    },
+    "fuente_id": "gdelt-43a09a408be869cd"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-09-25T00:00Z"
+    },
+    "fuente_id": "detalle-c164c43ddf12cd41"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20250922201030/https://tv2bornholm.dk/bornholm/fly-kan-ikke-lande-i-kobenhavn-grundet-droner-i-omradet-6af19",
+    "fecha": "2025-09-22T20:10:30Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://tv2bornholm.dk/bornholm/fly-kan-ikke-lande-i-kobenhavn-grundet-droner-i-omradet-6af19",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T20:15Z"
+   },
+   "fiabilidad": "B",
+   "frase_origen": "Lufthavnen er pt. lukket ned, og det er grundet to til tre droner, som flyver omkring lufthavnsområdet",
+   "id": "gdelt-9e0a0524f60e569b-declaracion-1",
+   "idioma": "da",
+   "medio": "Københavns Politi (declaración oficial citada en tv2bornholm.dk)",
+   "replicas": 0,
+   "traduccion": {
+    "en": "The airport is currently closed, and it is due to two or three drones flying around the airport area",
+    "es": "El aeropuerto está actualmente cerrado, y es debido a dos o tres drones que vuelan alrededor del área del aeropuerto"
+   }
+  },
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20250923090549/https://tvsyd.dk/billund/billund-lufthavn-modtog-flere-fly-efter-droner-forstyrrede-luftrum-61ea5",
+    "fecha": "2025-09-23T09:05:49Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://tvsyd.dk/billund/billund-lufthavn-modtog-flere-fly-efter-droner-forstyrrede-luftrum-61ea5",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-23T09:15Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Luftrummet blev lukket omkring klokken 20.30.",
+   "id": "gdelt-43a09a408be869cd",
+   "idioma": "da",
+   "medio": "tvsyd.dk",
+   "replicas": 0,
+   "traduccion": {
+    "en": "Airspace was closed around 20:30.",
+    "es": "El espacio aéreo fue cerrado alrededor de las 20.30 horas."
+   }
+  },
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20251001083955/https://politi.dk/rigspolitiet/nyhedsliste/nosten-er-i-operationsberedskab-grundet-de-seneste-dages-droneaktivitet/2025/09/25",
+    "fecha": "2025-10-01T08:39:55Z"
+   },
+   "credibilidad": 1,
+   "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/nosten-er-i-operationsberedskab-grundet-de-seneste-dages-droneaktivitet/2025/09/25",
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-09-25T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Mandag aften var der mistænkelig droneaktivitet ved Københavns Lufthavn",
+   "id": "detalle-c164c43ddf12cd41",
+   "idioma": "da",
+   "medio": "Rigspolitiet",
+   "replicas": 0,
+   "traduccion": {
+    "en": "On Monday evening there was suspicious drone activity at Copenhagen airport",
+    "es": "El lunes por la noche hubo actividad sospechosa de drones en el aeropuerto de Copenhague"
+   }
+  },
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20260630045408/https://duma.bg/devet-mesetsa-po-kasno-datskata-politsiya-nyama-dokazatelstva-che-dronove-sa-prichinili-zatvaryaneto-na-letishteto-v-kopenhagen-n321182",
+    "fecha": "2026-06-30T04:54:08Z"
+   },
+   "credibilidad": 3,
+   "enlace": "https://duma.bg/devet-mesetsa-po-kasno-datskata-politsiya-nyama-dokazatelstva-che-dronove-sa-prichinili-zatvaryaneto-na-letishteto-v-kopenhagen-n321182",
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2026-06-25T14:45Z"
+   },
+   "fiabilidad": "C",
+   "frase_origen": "Девет месеца по-късно: Датската полиция няма доказателства, че дронове са причинили затварянето на летището в Копенхаген",
+   "id": "gdelt-c3900a03bd9503d2",
+   "idioma": "bg",
+   "medio": "duma.bg",
+   "replicas": 0,
+   "traduccion": {
+    "en": "Nine months later: Danish police have no evidence that drones caused the closure of Copenhagen Airport",
+    "es": "Nueve meses después: la policía danesa no tiene pruebas de que los drones causaran el cierre del aeropuerto de Copenhague"
+   }
+  }
+ ],
+ "id": "EODI-2025-00154",
+ "lugar": {
+  "pais": "DK",
+  "radio_km": 5
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Copenhagen",
+   "es": "Copenhague"
+  },
+  "lugar": {
+   "en": "Copenhagen, Denmark",
+   "es": "Copenhague, Dinamarca"
+  },
+  "objetivo": {
+   "en": "Copenhagen Airport",
+   "es": "Aeropuerto de Copenhague"
+  },
+  "region": {
+   "en": "Capital Region of Denmark",
+   "es": "Región Capital"
+  }
+ },
+ "objetivo": {
+  "categoria": "aeropuerto",
+  "nombre": "Københavns Lufthavn",
+  "oaci": "EKCH"
+ },
+ "presencia_dron": "no_acreditada",
+ "presencia_historial": [
+  {
+   "fecha": {
+    "precision": "aproximada",
+    "valor": "2025-09-22T20:15Z"
+   },
+   "fuente_id": "gdelt-9e0a0524f60e569b-declaracion-1",
+   "quien": {
+    "en": "the Copenhagen Police (Københavns Politi)",
+    "es": "la Policía de Copenhague (Københavns Politi)"
+   },
+   "valor": "confirmada"
+  },
+  {
+   "fecha": {
+    "precision": "dia",
+    "valor": "2026-06-25T00:00Z"
+   },
+   "fuente_id": "gdelt-c3900a03bd9503d2",
+   "motivo": {
+    "en": "it has no conclusive evidence that the flying objects that disrupted Copenhagen airport were drones",
+    "es": "no dispone de pruebas concluyentes de que los objetos voladores que alteraron el aeropuerto de Copenhague fueran drones"
+   },
+   "quien": {
+    "en": "Danish Police",
+    "es": "la policía de Dinamarca"
+   },
+   "valor": "no_acreditada"
+  }
+ ],
+ "relacionados": [
+  {
+   "id": "EODI-2025-00228",
+   "nota": {
+    "en": "It merged the Copenhagen closure of 22 September 2025 with the Aalborg closure and drones at other Danish airports on the night of 24-25 September, plus a mention of the Oslo closure.",
+    "es": "Juntaba el cierre de Copenhague del 22 de septiembre de 2025 con el cierre de Aalborg y los drones en otros aeropuertos daneses de la noche del 24 al 25, y una mención al cierre de Oslo."
+   },
+   "separado_de": "EODI-2025-00172"
+  }
+ ],
+ "respuesta": {
+  "medidas": [
+   "patrulla"
+  ]
+ },
+ "tiempo": {
+  "duracion_min": 230,
+  "fin": {
+   "precision": "minuto",
+   "valor": "2025-09-22T22:20Z"
+  },
+  "inicio": {
+   "precision": "minuto",
+   "valor": "2025-09-22T18:30Z"
+  }
+ },
+ "tipo": "interrupcion_aeroportuaria",
+ "titulo": {
+  "en": "Possible drones close Copenhagen Airport and divert over 35 flights",
+  "es": "Posibles drones cierran el aeropuerto de Copenhague y desvían más de 35 vuelos"
+ },
+ "trafico_aereo": {
+  "cierre": {
+   "aeropuerto": "EKCH",
+   "difiere_de_declarado": true,
+   "duracion_min": 252,
+   "fin": {
+    "precision": "minuto",
+    "valor": "2025-09-22T22:38Z"
+   },
+   "inicio": {
+    "precision": "minuto",
+    "valor": "2025-09-22T18:26Z"
+   },
+   "resultado": "cierre_medido",
+   "vuelos_desviados": 48,
+   "vuelos_en_espera": 13
+  },
+  "datos": [
+   "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0",
+   "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.23-planes-readsb-prod-0"
+  ]
+ },
+ "zona": {
+  "distancia_km": 456,
+  "grupo": "interior",
+  "motivo": "lejos_de_la_frontera"
+ },
+ "lon": 12.63793,
+ "lat": 55.60927
+}

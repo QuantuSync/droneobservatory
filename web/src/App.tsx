@@ -1516,7 +1516,7 @@ export function App() {
           )}
           <div className="overflow-y-auto px-4 py-3">
             <SegunCarga t={t} carga={incidente} onReintentar={() => setIntentoFicha((n) => n + 1)}>
-              {(detalle) => <FichaIncidente t={t} idioma={idioma} incidente={detalle} />}
+              {(detalle) => <FichaIncidente t={t} idioma={idioma} incidente={detalle} actualizado={actualizado} />}
             </SegunCarga>
           </div>
         </>

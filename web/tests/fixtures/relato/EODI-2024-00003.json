@@ -1,0 +1,95 @@
+{
+ "consecuencias": {
+  "cierre": {
+   "valor": "desconocido"
+  }
+ },
+ "control": {
+  "ultima_actualizacion": {
+   "precision": "minuto",
+   "valor": "2026-10-21T05:17Z"
+  }
+ },
+ "drones": {
+  "numero": "desconocido"
+ },
+ "estado": {
+  "actual": "confirmado",
+  "historial": [
+   {
+    "estado": "notificado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-02-07T00:00Z"
+    },
+    "fuente_id": "detalle-5ef7ded991a8303c"
+   },
+   {
+    "estado": "confirmado",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-02-07T00:00Z"
+    },
+    "fuente_id": "detalle-5ef7ded991a8303c"
+   }
+  ]
+ },
+ "fuentes": [
+  {
+   "copia_archivada": {
+    "enlace": "https://web.archive.org/web/20261025185314/https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document(3666b551-75d5-454e-9486-b8fcd0c57034)/resource",
+    "fecha": "2026-10-25T18:53:14Z"
+   },
+   "credibilidad": 1,
+   "enlace": "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document(3666b551-75d5-454e-9486-b8fcd0c57034)/resource",
+   "fecha": {
+    "precision": "dia",
+    "valor": "2025-02-07T00:00Z"
+   },
+   "fiabilidad": "A",
+   "frase_origen": "Er zijn meerdere drones gesignaleerd boven de Penitentiaire Inrichting (PI) Vught",
+   "id": "detalle-5ef7ded991a8303c",
+   "idioma": "nl",
+   "medio": "Rijksoverheid (Justitie en Veiligheid)",
+   "replicas": 0,
+   "traduccion": {
+    "en": "Multiple drones have been sighted above the Penitentiaire Inrichting (PI) Vught",
+    "es": "Se han detectado múltiples drones sobre el Establecimiento Penitenciario (PI) Vught"
+   }
+  }
+ ],
+ "id": "EODI-2024-00003",
+ "lugar": {
+  "localidad": "Vught",
+  "pais": "NL",
+  "radio_km": 5
+ },
+ "nombres": {
+  "localidad": {
+   "en": "Vught",
+   "es": "Vught"
+  },
+  "lugar": {
+   "en": "Vught, Netherlands",
+   "es": "Vught, Países Bajos"
+  }
+ },
+ "presencia_dron": "confirmada",
+ "tiempo": {
+  "inicio": {
+   "precision": "dia",
+   "valor": "2024-12-23T00:00Z"
+  }
+ },
+ "tipo": "sobrevuelo",
+ "titulo": {
+  "en": "Drone overflights over Vught Penitentiary",
+  "es": "Sobrevuelos de drones sobre la Penitenciaria de Vught"
+ },
+ "zona": {
+  "grupo": "interior",
+  "motivo": "lejos_de_la_frontera"
+ },
+ "lon": 5.2875,
+ "lat": 51.65333
+}

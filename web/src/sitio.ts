@@ -2,6 +2,8 @@
 
 /** El nombre del proyecto va siempre en inglés, también en la versión española. */
 export const NOMBRE = "European Observatory of Drone Incidents";
+/** El nombre en español, al lado del oficial en la portada y en el pie de las páginas de texto. */
+export const NOMBRE_ES = "Observatorio Europeo de Incidentes con Drones";
 export const SIGLAS = "EODI";
 export const ORIGEN = "https://droneobservatory.eu";
 export const CONTACTO_SEGURIDAD = "192205734+QuantuSync@users.noreply.github.com";
@@ -74,6 +76,24 @@ export function autorEstructurado(): Record<string, unknown> {
     sameAs: [ORCID_URL],
     url: ORCID_URL,
   };
+}
+
+/** El observatorio como editor de schema.org: el nombre completo, la forma corta y el sitio. */
+export function editorEstructurado(idioma: Idioma): Record<string, unknown> {
+  return {
+    "@type": "Organization",
+    "@id": `${ORIGEN}/#observatorio`,
+    name: NOMBRE,
+    alternateName: [NOMBRE_ES, SIGLAS, "droneobservatory.eu"],
+    url: ORIGEN + rutaDeIdioma(idioma),
+    logo: `${ORIGEN}/marca/logo-384.png`,
+    founder: autorEstructurado(),
+  };
+}
+
+/** Imagen de la vista previa de un incidente: el contorno de Europa con su punto, su titular y su estado. */
+export function imagenDeFicha(id: string, idioma: Idioma): string {
+  return `/compartir/${id}${idioma === "en" ? "-en" : ""}.png`;
 }
 
 /** Imagen de la vista previa al compartir (logo, nombre y mapa), una por idioma. */

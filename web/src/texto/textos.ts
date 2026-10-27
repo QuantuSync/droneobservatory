@@ -3,7 +3,7 @@
 // aquí solo lo propio de estas páginas: navegación, títulos y rótulos de las listas.
 
 import type { Estado, PresenciaDron } from "../datos/tipos.ts";
-import { NOMBRE } from "../sitio.ts";
+import { NOMBRE, NOMBRE_ES, SIGLAS } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 
 export interface TextosPagina {
@@ -29,6 +29,9 @@ export interface TextosPagina {
     titulo: string;
     descripcion: string;
     que: string[];
+    /** «Casos cerrados o rectificados recientemente» y su nota. */
+    recientes: string;
+    recientesNota: string;
     cifras: string;
     incidentes: string;
     confirmados: string;
@@ -61,7 +64,13 @@ export interface TextosPagina {
     otros: string;
   };
   incidente: {
-    descripcion: (estado: string, fecha: string, lugar: string) => string;
+    descripcion: (titular: string, fecha: string, lugar: string) => string;
+    /** «Qué pasó después»: los cambios del historial tras la noticia. */
+    despues: string;
+    /** «Qué pasó»: el párrafo que cuenta la ficha. */
+    quepaso: string;
+    /** «Datos de la ficha»: los campos. */
+    datos: string;
     significa: string;
     tipo: string;
     objetivo: string;
@@ -143,12 +152,12 @@ const ES: TextosPagina = {
   licencia: "Datos con licencia",
   codigo: "Código abierto (Apache-2.0)",
   portada: {
-    titulo: `${NOMBRE} · Incidentes con drones en Europa`,
+    titulo: `${NOMBRE} (${SIGLAS}) · ${NOMBRE_ES}`,
     descripcion:
       "Mapa y registro abierto de incidentes con drones en Europa: sobrevuelos, incursiones e " +
       "interrupciones de aeropuertos, con sus fuentes, su estado y su grado de confirmación.",
     que: [
-      `El ${NOMBRE} registra incidentes con drones en Europa: aparatos no tripulados que ` +
+      `El ${NOMBRE} (${NOMBRE_ES}, ${SIGLAS}) registra incidentes con drones en Europa: aparatos no tripulados que ` +
         "sobrevuelan una instalación, entran en un espacio aéreo desde fuera o interrumpen el " +
         "funcionamiento de un aeropuerto.",
       "Cada incidente lleva sus fuentes con la frase de origen y el enlace, su estado " +
@@ -167,6 +176,10 @@ const ES: TextosPagina = {
     porAnio: "Incidentes por año",
     porPais: "Incidentes por país",
     descargas: "Descargar los datos",
+    recientes: "Casos cerrados o rectificados recientemente",
+    recientesNota:
+      "Las últimas fichas cuyo historial cambió después de la noticia: una autoridad cerró su " +
+      "investigación, rectificó la presencia del dron, lo atribuyó o lo desmintió, o se corrigió el lugar.",
   },
   lista: {
     titulo: "Todos los incidentes",
@@ -187,7 +200,10 @@ const ES: TextosPagina = {
     otros: "Otros países",
   },
   incidente: {
-    descripcion: (estado, fecha, lugar) => `${estado}. ${fecha}. ${lugar}.`,
+    descripcion: (titular, fecha, lugar) => `${titular}. ${fecha}. ${lugar}.`,
+    despues: "Qué pasó después",
+    quepaso: "Qué pasó",
+    datos: "Datos de la ficha",
     significa: "Qué significa",
     tipo: "Tipo",
     objetivo: "Instalación",
@@ -307,12 +323,12 @@ const EN: TextosPagina = {
   licencia: "Data licence",
   codigo: "Open source (Apache-2.0)",
   portada: {
-    titulo: `${NOMBRE} · Drone incidents in Europe`,
+    titulo: `${NOMBRE} (${SIGLAS}) · Drone incidents in Europe`,
     descripcion:
       "Open map and record of drone incidents in Europe: overflights, incursions and airport " +
       "disruptions, with their sources, status and level of confirmation.",
     que: [
-      `The ${NOMBRE} records drone incidents in Europe: unmanned aircraft that fly over a ` +
+      `The ${NOMBRE} (${SIGLAS}) records drone incidents in Europe: unmanned aircraft that fly over a ` +
         "facility, enter an airspace from outside or disrupt the operation of an airport.",
       "Each incident carries its sources with the original sentence and the link, its status " +
         "(reported, confirmed, attributed or denied) and the history of changes. The data are " +
@@ -330,6 +346,10 @@ const EN: TextosPagina = {
     porAnio: "Incidents by year",
     porPais: "Incidents by country",
     descargas: "Download the data",
+    recientes: "Recently closed or corrected cases",
+    recientesNota:
+      "The latest records whose history changed after the news: an authority closed its " +
+      "investigation, corrected the drone's presence, attributed or denied it, or the location was corrected.",
   },
   lista: {
     titulo: "All incidents",
@@ -350,7 +370,10 @@ const EN: TextosPagina = {
     otros: "Other countries",
   },
   incidente: {
-    descripcion: (estado, fecha, lugar) => `${estado}. ${fecha}. ${lugar}.`,
+    descripcion: (titular, fecha, lugar) => `${titular}. ${fecha}. ${lugar}.`,
+    despues: "What happened next",
+    quepaso: "What happened",
+    datos: "Record data",
     significa: "What it means",
     tipo: "Type",
     objetivo: "Facility",

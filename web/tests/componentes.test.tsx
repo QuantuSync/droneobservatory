@@ -226,7 +226,7 @@ describe("ficha de un incidente", () => {
     // Lublin no está en la tabla de regiones: el marcador queda en el centro del país.
     expect(screen.getByText("Lugar aproximado: país")).toBeTruthy();
     expect(screen.getByText(/La fuente solo nombra el país\. El marcador está en el centro de Polonia/)).toBeTruthy();
-    expect(screen.getByText("Lublin, Polonia", { exact: false })).toBeTruthy();
+    expect(document.querySelector("[data-lugar]")?.textContent).toContain("Lublin, Polonia");
     expect(screen.queryByText(/km de radio/)).toBeNull();
     cleanup();
     const enMar = detalleSinUbicacion({
@@ -243,7 +243,7 @@ describe("ficha de un incidente", () => {
     render(<FichaIncidente t={en} idioma="en" incidente={detalle} />);
     expect(screen.getByText("Airport disruption")).toBeTruthy();
     expect(screen.getByText("Munich airport closure")).toBeTruthy();
-    expect(screen.getByText("Germany", { exact: false })).toBeTruthy();
+    expect(document.querySelector("[data-lugar]")?.textContent).toContain("Germany");
   });
 
   it.each(Object.entries(CARGAS_MALICIOSAS))(

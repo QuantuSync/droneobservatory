@@ -39,6 +39,8 @@ export interface Pagina {
   descripcion: string;
   /** Dirección en cada idioma, para las páginas que no son la portada ni una ficha. */
   rutas?: Record<Idioma, string>;
+  /** Imagen de la vista previa propia (la de una ficha) y su texto; si no, la general. */
+  imagen?: { ruta: string; alt: string };
   /** Datos que la página con el mapa pide nada más arrancar: se piden ya desde la cabecera. */
   precargas?: readonly string[];
 }
@@ -75,7 +77,8 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
   const titulo = escaparHtml(pagina.titulo);
   const descripcion = escaparHtml(pagina.descripcion);
   const url = escaparHtml(direccion(pagina, pagina.idioma));
-  const imagen = escaparHtml(ORIGEN + IMAGEN_COMPARTIR[pagina.idioma]);
+  const imagen = escaparHtml(ORIGEN + (pagina.imagen?.ruta ?? IMAGEN_COMPARTIR[pagina.idioma]));
+  const alt = escaparHtml(pagina.imagen?.alt ?? t.compartir.altImagen);
   const alternativas = [
     ...IDIOMAS.map(
       (idioma) =>
@@ -100,14 +103,15 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
     `<meta property="og:description" content="${descripcion}">`,
     `<meta property="og:url" content="${url}">`,
     `<meta property="og:image" content="${imagen}">`,
+    `<meta property="og:image:type" content="image/png">`,
     `<meta property="og:image:width" content="${IMAGEN_COMPARTIR_ANCHO}">`,
     `<meta property="og:image:height" content="${IMAGEN_COMPARTIR_ALTO}">`,
-    `<meta property="og:image:alt" content="${escaparHtml(t.compartir.altImagen)}">`,
+    `<meta property="og:image:alt" content="${alt}">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${titulo}">`,
     `<meta name="twitter:description" content="${descripcion}">`,
     `<meta name="twitter:image" content="${imagen}">`,
-    `<meta name="twitter:image:alt" content="${escaparHtml(t.compartir.altImagen)}">`,
+    `<meta name="twitter:image:alt" content="${alt}">`,
     ...precargas,
   ].join("\n    ");
 }
