@@ -423,3 +423,25 @@ def test_las_traducciones_escriben_los_lugares_como_la_ficha() -> None:
     assert publico["afirmaciones_publicas"][0]["cita_traduccion"] == {
         "en": "Seen over Alexandroupoli."
     }
+
+
+def test_el_aeropuerto_de_la_ciudad_se_llama_igual_en_las_dos_versiones() -> None:
+    """EODI-2026-00322: «Aeropuerto de Hamburgo-Fuhlsbüttel» frente a «Hamburg Airport». Con
+    dos aeropuertos en la ciudad, el español tomaba la etiqueta de Wikidata aunque el inglés
+    fuera solo «Hamburg Airport»; ahora los dos nombran el aeropuerto de la ciudad."""
+
+    def fila(oaci: str, item: str, en: str, es: str) -> dict[str, str]:
+        return {"icao": oaci, "item": item, "en": en, "es": es, "cen": "Hamburg", "ces": "Hamburgo"}
+
+    tabla = nombres_wikidata.aeropuertos(
+        [
+            fila("EDDH", "Q27706", "Hamburg Airport", "Aeropuerto de Hamburgo-Fuhlsbüttel"),
+            fila(
+                "EDHI", "Q1", "Hamburg Finkenwerder Airport", "Aeropuerto de Hamburgo-Finkenwerder"
+            ),
+        ]
+    )
+    assert tabla["EDDH"]["aeropuerto"] == {"es": "Aeropuerto de Hamburgo", "en": "Hamburg Airport"}
+    # El otro sigue con su nombre propio en las dos versiones.
+    assert tabla["EDHI"]["aeropuerto"]["es"] == "Aeropuerto de Hamburgo-Finkenwerder"
+    assert nombres_lugar._aeropuerto("EDDH")["aeropuerto"]["es"] == "Aeropuerto de Hamburgo"

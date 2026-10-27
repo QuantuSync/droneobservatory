@@ -189,8 +189,8 @@ def _aeropuerto_es(etiqueta: str) -> str | None:
 def aeropuertos(filas: list[dict[str, str]]) -> dict[str, Any]:
     """OACI -> {"aeropuerto": {es, en}, "base": {es, en}, "ciudad": {es, en}} a partir de las filas
     de Wikidata. En español, «Aeropuerto de <ciudad>» si es el único aeropuerto de su ciudad en la
-    tabla; si la ciudad tiene varios, la etiqueta española limpia («Aeropuerto de
-    Londres-Heathrow»)."""
+    tabla o si el inglés es solo «<ciudad> Airport»; si la ciudad tiene varios, la etiqueta
+    española limpia («Aeropuerto de Londres-Heathrow»)."""
     por_oaci: dict[str, dict[str, list[dict[str, str]]]] = defaultdict(lambda: defaultdict(list))
     for fila in filas:
         por_oaci[fila["icao"]][fila["item"]].append(fila)
@@ -228,8 +228,12 @@ def aeropuertos(filas: list[dict[str, str]]) -> dict[str, Any]:
             r"\b(?:Airport|Aerodrome|Airfield|Airstrip)\b", entrada["aeropuerto"]["en"]
         ):
             entrada["aeropuerto"]["en"] = f"{ciudad['en']} Airport"
+        # También si el inglés es solo «<ciudad> Airport»: las dos versiones nombran lo mismo
+        # (salía «Aeropuerto de Hamburgo-Fuhlsbüttel» frente a «Hamburg Airport»).
         if "aeropuerto" in entrada and (
-            cuantos[ciudad["en"]] == 1 or not entrada["aeropuerto"]["es"]
+            cuantos[ciudad["en"]] == 1
+            or not entrada["aeropuerto"]["es"]
+            or entrada["aeropuerto"]["en"] == f"{ciudad['en']} Airport"
         ):
             entrada["aeropuerto"]["es"] = f"Aeropuerto de {ciudad['es']}"
         if "base" in entrada and not entrada["base"]["es"]:
