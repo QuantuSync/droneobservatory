@@ -71,6 +71,12 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   descartadas por la extracción con la declaración de la autoridad solo dentro de una noticia
   (Vilna, Geilenkirchen, Múnich, Sofía). Se completa con su rectificación oficial
   (configuracion/rectificaciones_oficiales.json, docs/rectificaciones.md).
+- **Q, ninguna fuente legible**: todas las fuentes de la ficha tienen el original caído y ninguna
+  copia archivada (tabla copias_archivadas, recogida/archivo_web.py): nadie puede leer ya lo que
+  la sostiene. EODI-2025-00278 (Taraclia, febrero de 2025): su única fuente, news.yam.md, daba
+  404 y no tenía copia; se le añadió la noticia de adevarul.ro con la declaración de la policía
+  (configuracion/incidentes_revisados.json, «citas»). Una fuente sin resultado del archivo cuenta
+  como legible. Sin la tabla (las pruebas), no se mira.
 """
 
 import json
@@ -103,7 +109,7 @@ from proceso.presencia import (
 from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R",
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -122,6 +128,7 @@ NOMBRES = {
     "N": "noticia retrospectiva",
     "O": "fin sin frase que lo respalde",
     "P": "presencia rebajada sin cierre",
+    "Q": "ninguna fuente legible",
     "R": "referencia",
 }
 MIN_PALABRAS_CABECERA = 3
@@ -430,6 +437,18 @@ def _p(incidente: Documento) -> bool:
     )
 
 
+def sin_fuente_legible(incidente: Documento, copias: dict[str, Documento]) -> bool:
+    """Q: todas sus fuentes tienen el original caído y ninguna tiene copia archivada (`copias`,
+    lo vigente de cada enlace: Almacen.copias_archivadas)."""
+    fuentes = incidente.get("fuentes") or []
+
+    def ilegible(fuente: Documento) -> bool:
+        copia = copias.get(str(fuente.get("enlace", ""))) or {}
+        return bool(copia.get("caido")) and not copia.get("copia")
+
+    return bool(fuentes) and all(ilegible(f) for f in fuentes)
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p,
@@ -502,10 +521,13 @@ def oscilan(cambios: Iterable[Documento]) -> dict[str, list[str]]:
 
 
 def auditar(
-    documentos: Iterable[Documento], cambios: Iterable[Documento] = ()
+    documentos: Iterable[Documento],
+    cambios: Iterable[Documento] = (),
+    copias: dict[str, Documento] | None = None,
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
-    son los de las últimas 48 horas (`Almacen.cambios_desde`), para K."""
+    son los de las últimas 48 horas (`Almacen.cambios_desde`), para K; `copias`, las copias
+    archivadas de los enlaces (`Almacen.copias_archivadas`), para Q."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
     for documento in vistos:
@@ -521,6 +543,9 @@ def auditar(
             if fallo:
                 resultado[clave].append(str(documento["id"]))
     vigentes = {str(d["id"]) for d in vistos if incidentes.activo(d)}
+    if copias:
+        resultado["Q"] = [str(d["id"]) for d in vistos
+                          if incidentes.activo(d) and sin_fuente_legible(d, copias)]  # fmt: skip
     resultado["L"] = autoridad_perdida(vistos)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
                       if i in vigentes]  # fmt: skip

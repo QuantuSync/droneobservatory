@@ -35,7 +35,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         almacen = Almacen.abrir(copia(args.base, Path(temporal) / "eodi.sqlite"))
         desde = datetime.now(UTC) - timedelta(hours=auditoria_fichas.HORAS_OSCILA)
         resultado = auditoria_fichas.auditar(
-            almacen.incidentes(), almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ"))
+            almacen.incidentes(),
+            almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ")),
+            almacen.copias_archivadas(),
         )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))

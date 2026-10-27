@@ -231,6 +231,7 @@ MOTIVO_CITA = "cita revisada a mano (configuracion/incidentes_revisados.json, ci
 MOTIVO_UBICACION = "lugar del suceso según la autoridad (configuracion/incidentes_revisados.json)"
 MOTIVO_LUGAR_REVISADO = "lugar revisado a mano (configuracion/incidentes_revisados.json, datos)"
 MOTIVO_INICIO_REVISADO = "inicio revisado a mano (configuracion/incidentes_revisados.json, datos)"
+MOTIVO_DANOS_REVISADOS = "daños revisados a mano (configuracion/incidentes_revisados.json, datos)"
 
 
 @dataclass
@@ -241,6 +242,7 @@ class Corregidos:
     ubicados: list[str] = field(default_factory=list)
     lugares: list[str] = field(default_factory=list)
     inicios: list[str] = field(default_factory=list)
+    danos: list[str] = field(default_factory=list)
     sin_guardar: list[str] = field(default_factory=list)
     contradicen_rectificacion: list[str] = field(default_factory=list)
 
@@ -248,7 +250,8 @@ class Corregidos:
         return (
             f"retirados {len(self.retirados)}, con citas {len(self.citas)}, titulares "
             f"{len(self.titulares)}, ubicados {len(self.ubicados)}, lugares revisados "
-            f"{self.lugares}, inicios revisados {self.inicios}, sin guardar "
+            f"{self.lugares}, inicios revisados {self.inicios}, daños revisados {self.danos}, "
+            f"sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
             f"{self.contradicen_rectificacion}"
         )
@@ -697,7 +700,7 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
             and _guardar(almacen, documento, con_punto, ahora, modelos, motivo, hechos)
         ):
             hechos.ubicados.append(id_)
-    # El lugar y el inicio revisados («datos») se aplican al guardar la ficha
+    # El lugar, el inicio y los daños revisados («datos») se aplican al guardar la ficha
     # (decidir.decidir_datos); una ficha que nada vuelve a guardar se quedaba con el punto de antes
     # (EODI-2026-00238, en Tulcea con la revisión en Rachelu) o con su hora de antes
     # (EODI-2026-00108, Auvere, a las 06:00 UTC con la revisión a las 01:43). Solo se guarda si
@@ -705,6 +708,7 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
     for campo, clave, motivo, lista in (
         ("lugar", "lugar", MOTIVO_LUGAR_REVISADO, hechos.lugares),
         ("inicio", "tiempo", MOTIVO_INICIO_REVISADO, hechos.inicios),
+        ("danos", "consecuencias", MOTIVO_DANOS_REVISADOS, hechos.danos),
     ):
         revisadas = [e for e in datos.get("datos", []) if e.get("campo") == campo]
         for id_ in _por_incidente(almacen, revisadas):

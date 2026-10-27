@@ -209,3 +209,20 @@ def test_una_reextraccion_no_quita_el_punto_revisado() -> None:
     from proceso import auditoria_fichas
 
     assert not auditoria_fichas._m({**reextraida, "lugar": lugar})
+
+
+def test_los_danos_revisados_cuentan_los_buques() -> None:
+    # Mar Negro, noche del 12 al 13 de octubre de 2026: dos mercantes alcanzados, uno hundido. El
+    # esquema no tiene un campo de buques; la frase de los daños los cuenta.
+    ficha = {
+        "id": "EODI-2026-00512",
+        "lugar": {"pais": "BG"},
+        "fuentes": [],
+        "consecuencias": {"cierre": {"valor": "desconocido"}},
+    }
+    danos = decidir.decidir_datos(ficha)["consecuencias"]
+    assert danos["cierre"] == {"valor": "desconocido"}
+    assert danos["danos"]["nivel"] == "graves"
+    assert "zwei Frachtschiffe" in danos["danos"]["frase"]
+    otra = {**ficha, "id": "EODI-2026-00489"}
+    assert "danos" not in decidir.decidir_datos(otra)["consecuencias"]

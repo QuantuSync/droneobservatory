@@ -3896,6 +3896,18 @@
         "fecha": "2026-10-27",
         "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-12 (original)"
       }
+    },
+    {
+      "incidente": "EODI-2025-00278",
+      "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-a-cazut-in-republica-moldova-politia-2421467.html",
+      "medio": "adevarul.ro",
+      "fecha": "2025-02-12",
+      "idioma": "ro",
+      "frase": "O dronă a fost descoperită pe un câmp din apropierea satului Salcia, raionul Taraclia, din sudul Republicii Moldova",
+      "comprobada": {
+        "fecha": "2026-10-27",
+        "en": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-a-cazut-in-republica-moldova-politia-2421467.html (original, 12.02.2025 a las 14:31 hora de Rumanía); la única fuente de la ficha, https://news.yam.md/ro/story/16381588, da 404 y no tiene copia archivada"
+      }
     }
   ],
   "titulares": [
@@ -10391,6 +10403,18 @@
       "cita": "kam es auf der Basis nahe der Nordsee zu „sechs Sicherheitsvorkommnissen“ mit professionellen Drohnen unbekannter Herkunft zwischen dem 9. und 29. Januar.",
       "enlace": "https://taz.de/Spionagealarm-bei-Luftwaffenbasis-Husum/!6068132",
       "motivo": "seis avistamientos entre el 9 y el 29 de enero de 2025 (taz, citando a la Süddeutsche Zeitung); la ficha tenía la fecha de la noticia, el 9 de febrero"
+    },
+    {
+      "incidente": "EODI-2026-00512",
+      "campo": "danos",
+      "valor": {
+        "nivel": "graves",
+        "frase": "In der Nacht wurden zwei Frachtschiffe nahe der Küste des NATO-Mitglieds von Drohnen getroffen, wobei eines sank, wie Behördenvertreter am Dienstag mitteilten."
+      },
+      "cita": "In der Nacht wurden zwei Frachtschiffe nahe der Küste des NATO-Mitglieds von Drohnen getroffen, wobei eines sank, wie Behördenvertreter am Dienstag mitteilten.",
+      "enlace": "https://az-online.de/politik/drohnen-versenken-frachter-nahe-bulgarien-sofia-ruft-nato-zu-hilfe-zr-94540958.html",
+      "pais": "BG",
+      "motivo": "dos buques mercantes alcanzados por drones la noche del 12 al 13 de octubre de 2026, uno hundido (HS Dignity, frente a Krapets; Chelsea-3, frente a Byala), según las autoridades búlgaras citadas en az-online.de (fiabilidad B) y como dicen también el Consejo de Seguridad (mediafax.ro, «Două nave comerciale au fost lovite») y la Presidencia (hotnews.ro, «două nave comerciale au fost atacate cu drone»); el esquema no tiene un campo de buques alcanzados y la frase de los daños los cuenta; comprobado el 27 de octubre de 2026 en el original"
     }
   ]
 }

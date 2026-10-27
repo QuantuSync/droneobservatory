@@ -374,3 +374,21 @@ def test_n_la_noticia_de_otro_mes_con_la_fecha_de_publicacion() -> None:
     assert auditoria_fichas.auditar([documento])["N"] == []
     documento["fuentes"] = [{**fuente, "idioma": "en", "frase_origen": "Drones may return"}]
     assert auditoria_fichas.auditar([documento])["N"] == []
+
+
+def test_q_ninguna_fuente_legible() -> None:
+    # EODI-2025-00278 (Taraclia): su única fuente, news.yam.md, da 404 y no tiene copia archivada.
+    documento = ejemplos.incidente_minimo()
+    enlace = documento["fuentes"][0]["enlace"]
+    caida = {enlace: {"caido": True}}
+    assert auditoria_fichas.auditar([documento], [], caida)["Q"] == [documento["id"]]
+    # Con copia archivada, o sin resultado del archivo, se puede leer.
+    con_copia = {enlace: {"caido": True, "copia": {"enlace": "https://web.archive.org/web/x"}}}
+    assert auditoria_fichas.auditar([documento], [], con_copia)["Q"] == []
+    assert auditoria_fichas.auditar([documento], [], {"https://otro": {"caido": True}})["Q"] == []
+    # Otra fuente legible basta; sin la tabla no se mira; la retirada no cuenta.
+    otra = {**documento["fuentes"][0], "id": "otra", "enlace": "https://ejemplo.org/otra"}
+    assert auditoria_fichas.auditar([{**documento, "fuentes": [*documento["fuentes"], otra]}],
+                                    [], caida)["Q"] == []  # fmt: skip
+    assert auditoria_fichas.auditar([documento])["Q"] == []
+    assert auditoria_fichas.auditar([{**documento, "retirado": {}}], [], caida)["Q"] == []
