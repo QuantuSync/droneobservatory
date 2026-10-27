@@ -53,10 +53,11 @@ let cargada: Promise<Lista | null> | undefined;
 
 /**
  * Las cabeceras de acceso de la petición, para las lecturas propias: en una vista previa
- * protegida, sin ellas la lista y las páginas no se pueden leer. En producción no hay ninguna.
+ * protegida, sin ellas la lista y las páginas no se pueden leer. En producción no hay ninguna. Con
+ * el agente de la web (el de api/almacen.ts): sin él, el cortafuegos de Vercel las cuenta como «node».
  */
 function acceso(peticion: Request): Headers {
-  const cabeceras = new Headers();
+  const cabeceras = new Headers({ "User-Agent": "EODI-web (+https://droneobservatory.eu)" });
   for (const nombre of ["cookie", "x-vercel-protection-bypass"]) {
     const valor = peticion.headers.get(nombre);
     if (valor !== null) cabeceras.set(nombre, valor);
