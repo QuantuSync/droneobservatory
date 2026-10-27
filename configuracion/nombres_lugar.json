@@ -812,6 +812,16 @@
     }
   },
   "aeropuertos": {
+    "LGAL": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Alejandrópolis",
+        "en": "Alexandroupoli International Airport \"Democritus\""
+      },
+      "ciudad": {
+        "es": "Alejandrópolis",
+        "en": "Alexandroupoli"
+      }
+    },
     "ETNG": {
       "base": {
         "es": "Base aérea de la OTAN en Geilenkirchen",
@@ -1540,10 +1550,11 @@
     {
       "pais": "GR",
       "es": "Alejandrópolis",
-      "en": "Alexandroupolis",
+      "en": "Alexandroupoli",
       "formas": [
-        "Alexandroupoli",
+        "Alexandroupolis",
         "Alexandrópolis",
+        "Alexandroúpoli",
         "Αλεξανδρούπολη"
       ]
     },
