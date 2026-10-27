@@ -247,3 +247,18 @@ def test_una_presencia_revisada_contra_la_rectificacion_se_detecta_y_no_se_aplic
     assert not revisados.contradice_rectificacion(acorde, ficha)
     assert not revisados.contradice_rectificacion(revision, {"presencia_historial": [
         {"valor": "confirmada"}]})  # fmt: skip
+
+
+def test_las_citas_revisadas_caben_en_la_frase_de_una_fuente() -> None:
+    # El esquema admite como mucho 25 palabras en frase_origen: una cita más larga no se guarda
+    # (EODI-2026-00113, 27 de octubre de 2026, «revisión sin guardar»).
+    datos = revisados.cargar()
+    frases = [c["frase"] for c in datos["citas"]] + [
+        t["inicio"][clave]
+        for t in datos["titulares"]
+        if isinstance(t.get("inicio"), dict)
+        for clave in ("cita", "fin_cita")
+        if clave in t["inicio"]
+    ]
+    largas = [f for f in frases if len(f.split()) > 25]
+    assert largas == []

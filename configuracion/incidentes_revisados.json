@@ -3855,7 +3855,7 @@
       "medio": "army.md",
       "fecha": "2026-09-12",
       "idioma": "ro",
-      "frase": "Serviciul operații aeriene al Armatei Naționale a detectat, astăzi, 12 septembrie curent, la ora 15:26, un obiect care a pătruns neautorizat în spațiul aerian al țării noastre dinspre Ucraina.",
+      "frase": "Serviciul operații aeriene al Armatei Naționale a detectat, astăzi, 12 septembrie curent, la ora 15:26, un obiect care a pătruns neautorizat în spațiul aerian",
       "comprobada": {
         "fecha": "2026-10-27",
         "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-12 (original)"
@@ -4813,7 +4813,7 @@
       "inicio": {
         "valor": "2026-09-12T12:26Z",
         "precision": "minuto",
-        "cita": "Serviciul operații aeriene al Armatei Naționale a detectat, astăzi, 12 septembrie curent, la ora 15:26, un obiect care a pătruns neautorizat în spațiul aerian al țării noastre dinspre Ucraina.",
+        "cita": "Serviciul operații aeriene al Armatei Naționale a detectat, astăzi, 12 septembrie curent, la ora 15:26, un obiect care a pătruns neautorizat în spațiul aerian",
         "motivo": "army.md (Ejército Nacional de Moldavia): «la ora 15:26» del sábado 12 de septiembre de 2026, hora local (UTC+3); en UTC, 12:26 del 12"
       },
       "motivo": {
