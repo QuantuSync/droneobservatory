@@ -419,8 +419,8 @@ def en_la_localidad_revisada(lugar: Documento) -> Documento:
 
 def decidir_datos(incidente: Documento) -> Documento:
     """El incidente con el objetivo, el lugar, el inicio, el cierre y los daños que deciden sus
-    fuentes y sus revisiones a mano (el titular, al final de `aplicar`). Sin cambios si ya los tenía. Si cambia
-    la instalación o el lugar, los nombres publicados se vuelven a calcular."""
+    fuentes y sus revisiones a mano (el titular, al final de `aplicar`). Sin cambios si ya los
+    tenía. Si cambia la instalación o el lugar, los nombres publicados se vuelven a calcular."""
     resultado = copy.deepcopy(incidente)
     revisiones = _revisiones(incidente)
     for campo in ("lugar", "inicio", "cierre", "danos"):
