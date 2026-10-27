@@ -4,7 +4,7 @@
 // prueba, así que la prueba no depende de lo que haya publicado en ese momento.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Locator, Page } from "@playwright/test";
 
 import { aviso, directo, ficheroGnss, indiceGnss } from "../tests/ejemplos-europa.ts";

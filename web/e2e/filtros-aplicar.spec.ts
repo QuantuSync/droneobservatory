@@ -7,7 +7,7 @@
 // BASE=<vista previa> y BYPASS=<clave>, contra una vista previa protegida.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
 import type { Resumen } from "../src/datos/tipos.ts";

@@ -8,7 +8,7 @@
 // BASE=http://localhost:4173, contra el servidor local.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
 import type { IncidenteResumen, Resumen } from "../src/datos/tipos.ts";

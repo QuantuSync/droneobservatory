@@ -1,7 +1,7 @@
 // Las páginas se leen y se recorren sin ejecutar código, y con el código activo la web es la de
 // siempre: el texto no se pinta nunca, ni siquiera antes de que llegue la aplicación.
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 
 import { ORIGEN_ALMACEN } from "../src/almacenPublico.ts";
 import { NOMBRE } from "../src/sitio.ts";

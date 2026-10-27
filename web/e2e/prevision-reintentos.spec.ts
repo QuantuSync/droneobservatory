@@ -3,7 +3,7 @@
 // qué pasa y ofrece «Reintentar», que la trae en cuanto vuelve a responder. En el teléfono (390 px)
 // y en escritorio. Va contra producción por defecto; con BASE=http://localhost:…, contra el
 // servidor local.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
 const MAPA = "[data-mapa-listo=true]";

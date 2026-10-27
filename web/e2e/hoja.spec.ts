@@ -7,7 +7,7 @@
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { CDPSession, Locator, Page } from "@playwright/test";
 
 const CAPTURAS = join(import.meta.dirname, "..", "..", "data", "capturas", "hoja");
@@ -75,7 +75,7 @@ for (const viewport of TAMANOS) {
         const propio = new URL(baseURL).origin;
         await page.route(
           (url) => url.origin === propio,
-          (ruta) => ruta.continue({ headers: { ...ruta.request().headers(), ...ACCESO } }),
+          (ruta) => ruta.fallback({ headers: { ...ruta.request().headers(), ...ACCESO } }),
         );
       }
       // Sin pulsos animados, para comparar el mapa antes y después de un gesto.

@@ -14,7 +14,7 @@
 //
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit (playwright.config.ts).
 // Va contra producción por defecto; con BASE y BYPASS (o VERCEL_BYPASS), contra una vista previa.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, CDPSession, Locator, Page } from "@playwright/test";
 
 const MAPA = "[data-mapa-listo=true]";

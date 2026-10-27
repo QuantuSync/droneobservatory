@@ -8,6 +8,8 @@ src/generado/
 # Resultados de Playwright
 test-results/
 playwright-report/
+# Caché del mapa de fondo de los recorridos (e2e/base.ts)
+.cache/
 .vite-react-ssg-temp/
 *.local
 .vercel/

@@ -5,7 +5,7 @@
 // encendidas, se salta. Va contra producción por defecto; deja capturas en CAPTURAS.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Page } from "@playwright/test";
 
 import ajuste from "../../configuracion/rutas_en_la_web.json" with { type: "json" };

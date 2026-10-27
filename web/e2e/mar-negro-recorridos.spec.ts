@@ -12,7 +12,7 @@
 // Va contra producción por defecto; con BASE, contra otra dirección. Capturas en CAPTURAS.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
 const MAPA = "[data-mapa-listo=true]";

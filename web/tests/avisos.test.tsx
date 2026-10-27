@@ -80,6 +80,13 @@ describe("canales de avisos", () => {
     expect(dispositivoDe("Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/141.0")).toBe("ordenador");
   });
 
+  it("los navegadores de las pruebas, con su sufijo, siguen siendo el dispositivo que son", () => {
+    const sufijo = " EODI-recorrido/1.0 (+https://droneobservatory.eu)";
+    expect(dispositivoDe(`Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 Mobile${sufijo}`)).toBe("android");
+    expect(dispositivoDe(`Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15${sufijo}`)).toBe("iphone");
+    expect(dispositivoDe(`Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/141.0${sufijo}`)).toBe("ordenador");
+  });
+
   it("el código QR es un SVG en negro sobre blanco con el margen de la norma", () => {
     const svg = svgQr("https://ntfy.droneobservatory.eu/drones-europe", "drones-europe");
     expect(svg.startsWith("<svg")).toBe(true);

@@ -5,7 +5,7 @@
 // sin errores de consola ni enlaces internos rotos. Elige el incidente de los datos que sirve la web
 // (/datos/incidentes.geojson), así vale en producción y con datos de ensayo en local.
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Page } from "@playwright/test";
 
 interface FuenteDatos {

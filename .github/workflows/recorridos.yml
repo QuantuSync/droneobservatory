@@ -8,9 +8,17 @@ name: recorridos
 #   las vistas previas en el secreto EODI_VERCEL_BYPASS).
 # - En cada PR que no cambia la web (Vercel no construye: web/scripts/omitir-build.ts), los
 #   recorridos van contra producción, que es la web con la que se va a fusionar.
-# - Tras cada despliegue de producción, los recorridos se repiten contra producción. Si fallan,
-#   se abre (o se comenta) la incidencia «Los recorridos fallan en producción»; si pasan, se
-#   cierra.
+# - Producción se recorre tras el despliegue de cada commit nuevo y cada 6 horas por reloj
+#   (schedule). Los redespliegues de datos del mismo commit (el gancho de despliegue de la recogida
+#   horaria añade otro estado «success» al mismo despliegue) ya no: desde el 27 de octubre de
+#   2026, cuando recorrían el mismo commit cada hora y el 97 % de los 1,5 millones de peticiones
+#   diarias que recibía Vercel eran de los recorridos. Si fallan, se abre (o se comenta) la
+#   incidencia «Los recorridos fallan en producción»; si pasan, se cierra.
+# - El mapa de fondo no se descarga de la web en cada prueba: web/e2e/base.ts guarda cada trozo
+#   en una carpeta que se conserva entre ejecuciones con la caché de Actions (clave: la huella
+#   del mapa en configuracion/almacen_publico.json). Solo la prueba «el mapa de fondo se sirve por
+#   la web» (e2e/web.spec.ts) lo pide de verdad. Los navegadores llevan «EODI-recorrido/1.0» en
+#   su agente de usuario (web/e2e/agente.ts).
 # - A mano: Actions → recorridos → Run workflow, con la dirección que se quiera.
 #
 # Cómo ver los resultados: interno: operacion, «Pruebas en la nube».
@@ -18,6 +26,9 @@ name: recorridos
 on:
   deployment_status:
   pull_request:
+  # Producción, cada 6 horas (además de tras cada commit nuevo).
+  schedule:
+    - cron: "7 */6 * * *"
   workflow_dispatch:
     inputs:
       base:
@@ -33,10 +44,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Contra qué se recorre, o nada: un deployment_status que no es un éxito, o un PR que cambia
-  # la web (lo recorre su vista previa, que llega después como deployment_status).
+  # Contra qué se recorre, o nada: un deployment_status que no es un éxito, un redespliegue de
+  # datos de un commit ya recorrido en producción, o un PR que cambia la web (lo recorre su vista
+  # previa, que llega después como deployment_status).
   destino:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     outputs:
       base: ${{ steps.decidir.outputs.base }}
       produccion: ${{ steps.decidir.outputs.produccion }}
@@ -57,6 +72,8 @@ jobs:
           BASE_MANUAL: ${{ github.event.inputs.base }}
           BASE_PR: origin/${{ github.event.pull_request.base.ref }}
           SHA_PR: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           base=""; produccion=false; sha="$GITHUB_SHA"
@@ -66,10 +83,31 @@ jobs:
                 sha="$SHA_DESPLIEGUE"
                 if [ "$ENTORNO" = "Production" ]; then
                   base="https://droneobservatory.eu"; produccion=true
+                  # ¿Ya se recorrió producción con este commit? Lo dice una ejecución anterior
+                  # terminada (éxito o fallo, no cancelada) cuyo trabajo «incidencia» corrió: solo
+                  # corre tras recorrer producción. Si la API falla, se recorre.
+                  if previas="$(gh api "repos/$GH_REPO/actions/workflows/recorridos.yml/runs?event=deployment_status&status=completed&head_sha=$sha&per_page=100" \
+                      --jq '.workflow_runs[] | select(.conclusion == "success" or .conclusion == "failure") | "\(.id) \(.created_at)"')"; then
+                    while read -r id creada; do
+                      [ -n "$id" ] || continue
+                      if corrio="$(gh api "repos/$GH_REPO/actions/runs/$id/jobs" \
+                          --jq '[.jobs[] | select(.name == "incidencia" and (.conclusion == "success" or .conclusion == "failure"))] | length')" \
+                          && [ "$corrio" != "0" ]; then
+                        base=""; produccion=false
+                        echo "redespliegue de datos del commit ${sha:0:7}: ya recorrido a las $(date -u -d "$creada" +%H:%M) UTC; producción se recorre cada 6 horas y tras cada commit nuevo"
+                        break
+                      fi
+                    done <<< "$previas"
+                  else
+                    echo "::warning::no se pudo consultar si el commit ya se recorrió: se recorre"
+                  fi
                 else
                   base="$URL_DESPLIEGUE"
                 fi
               fi
+              ;;
+            schedule)
+              base="https://droneobservatory.eu"; produccion=true
               ;;
             workflow_dispatch)
               base="$BASE_MANUAL"
@@ -136,6 +174,26 @@ jobs:
           path: ~/.npm
           key: npm-recorridos-${{ runner.os }}-${{ hashFiles('web/package-lock.json') }}
           restore-keys: npm-recorridos-${{ runner.os }}-
+      # Los trozos del mapa de fondo ya descargados (web/e2e/base.ts), por la huella del mapa: si
+      # el mapa cambia, la caché empieza de cero. En los deployment_status la caché de Actions se
+      # niega a funcionar porque el evento no lleva rama («not tied to a branch or tag ref»): se le
+      # da la de main, de donde leen todas las ramas.
+      - name: Huella del mapa de fondo
+        id: huella
+        run: |
+          huella="$(python3 -c 'import json; print(json.load(open("configuracion/almacen_publico.json"))["huellas_sha256"]["europa-z14.pmtiles"])')"
+          echo "huella=$huella" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/teselas"
+      - name: Caché del mapa de fondo
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        env:
+          GITHUB_REF: ${{ github.ref || 'refs/heads/main' }}
+        with:
+          path: ${{ runner.temp }}/teselas
+          key: teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
+          restore-keys: |
+            teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-
+            teselas-${{ steps.huella.outputs.huella }}-
       # La imagen y las dependencias de la web. Si algo de esto falla (red, registro, tiempo
       # agotado), se repite una vez y solo una: es un fallo antes de abrir la primera página, no de
       # la web. Sustituye al segundo intento «solo si se agota el tiempo» del 23 de octubre de 2026.
@@ -172,10 +230,31 @@ jobs:
         run: |
           set -uo pipefail
           mkdir -p "$RUNNER_TEMP/capturas"
+          mkdir -p "$RUNNER_TEMP/teselas"
           docker run --rm --init --ipc=host -v "$GITHUB_WORKSPACE:/w" -v "$RUNNER_TEMP/capturas:/capturas" \
+            -v "$RUNNER_TEMP/teselas:/teselas" -e TESELAS_CACHE=/teselas \
             -w /w/web -e CI -e TZ=UTC -e LANG=C.UTF-8 -e BASE -e BYPASS -e VERCEL_BYPASS -e CAPTURAS=/capturas \
             -e PLAYWRIGHT_HTML_OPEN=never "$IMAGEN" \
             npx playwright test --project=${{ matrix.proyecto }} --shard=${{ matrix.trozo }} --reporter=list,html
+      # Se guarda la caché solo si alguna prueba añadió trozos: el fichero «nuevos» de base.ts, que
+      # sale de la carpeta antes de guardarla.
+      - name: ¿Trozos nuevos del mapa de fondo?
+        id: nuevos
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/teselas/nuevos" ]; then
+            mv -f "$RUNNER_TEMP/teselas/nuevos" "$RUNNER_TEMP/teselas-nuevos"
+            echo "hay=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "caché del mapa de fondo: $(find "$RUNNER_TEMP/teselas" -name '*.bin' | wc -l) trozos, $(du -sh "$RUNNER_TEMP/teselas" | cut -f1)"
+      - name: Guardar la caché del mapa de fondo
+        if: always() && steps.nuevos.outputs.hay == 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        env:
+          GITHUB_REF: ${{ github.ref || 'refs/heads/main' }}
+        with:
+          path: ${{ runner.temp }}/teselas
+          key: teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
       - name: Informe de Playwright
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -207,6 +286,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           INTENTO: ${{ github.run_attempt }}
           SHA: ${{ needs.destino.outputs.sha }}
+          EVENTO: ${{ github.event_name }}
         run: |
           set -euo pipefail
           comun="Los recorridos fallan en producción"
@@ -230,7 +310,8 @@ jobs:
             que="Al menos un recorrido falló al recorrer la web."
           fi
           echo "fallo: ${fase:-desconocido} → «$titulo»"
-          cuerpo="Los recorridos de Playwright contra https://droneobservatory.eu fallan tras el despliegue del commit $SHA. $que
+          if [ "$EVENTO" = "schedule" ]; then cuando="en el recorrido de cada 6 horas (commit $SHA)"; else cuando="tras el despliegue del commit $SHA"; fi
+          cuerpo="Los recorridos de Playwright contra https://droneobservatory.eu fallan $cuando. $que
 
           Ejecución e informes de Playwright (artefactos «informe-…»): $EJECUCION
 

@@ -6,7 +6,8 @@
 // contra producción por defecto; con BASE=<vista previa> y BYPASS=<clave>, contra una vista previa.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { SUFIJO_AGENTE } from "./agente.ts";
+import { expect, test } from "./base.ts";
 import type { Page } from "@playwright/test";
 
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "avisos-sencillos");
@@ -44,7 +45,7 @@ for (const caso of CASOS) {
       viewport: { width: caso.width, height: caso.height },
       hasTouch: caso.tactil,
       isMobile: caso.equipo !== "ordenador",
-      userAgent: AGENTES[caso.equipo],
+      userAgent: `${AGENTES[caso.equipo]}${SUFIJO_AGENTE}`,
       ...(baseURL === undefined ? {} : { baseURL }),
       ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
     });
