@@ -7,7 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 
 // El paquete no exporta su versión para el navegador; se toma del directorio del paquete.
 const WEB_VITALS = join(
@@ -53,7 +53,7 @@ test("LCP, CLS e INP reales dentro de los umbrales de «bueno»", async ({ page,
     const propio = new URL(baseURL).origin;
     await page.route(
       (url) => url.origin === propio,
-      (ruta) => ruta.continue({ headers: { ...ruta.request().headers(), ...ACCESO } }),
+      (ruta) => ruta.fallback({ headers: { ...ruta.request().headers(), ...ACCESO } }),
     );
   }
   if (info.project.name === "movil") {

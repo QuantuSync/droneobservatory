@@ -6,7 +6,7 @@
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Locator, Page } from "@playwright/test";
 
 const CAPTURAS = join(import.meta.dirname, "..", "..", "data", "capturas", "telefono");

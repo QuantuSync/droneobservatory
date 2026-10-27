@@ -6,7 +6,7 @@
 // el almacén público, que solo admite el dominio propio.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
 import { varianteDe } from "../src/banderas.ts";

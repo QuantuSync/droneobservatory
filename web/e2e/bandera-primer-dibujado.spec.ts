@@ -5,7 +5,7 @@
 // liso que después cambia. Lo mismo con un atribuido abierto al entrar por su enlace. Va contra
 // producción por defecto; con BASE=http://localhost:4173 contra el servidor local, reenviando el
 // almacén público, que solo admite el dominio propio.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 import type { Map as MapaGL } from "maplibre-gl";
 

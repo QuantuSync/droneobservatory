@@ -4,7 +4,7 @@
 //
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit. Va contra producción
 // por defecto; con BASE, contra otra dirección (y con BYPASS, la clave de las vistas previas).
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 
 const MAPA = "[data-mapa-listo=true]";
 const FICHA = process.env.FICHA ?? "EODI-2026-00532";

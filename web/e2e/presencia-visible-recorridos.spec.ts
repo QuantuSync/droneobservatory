@@ -19,7 +19,7 @@
 // Va contra producción por defecto; con BASE, contra otra dirección. Capturas en CAPTURAS.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Locator, Page } from "@playwright/test";
 
 import { textos } from "../src/i18n/index.ts";

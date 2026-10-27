@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Locator, Page } from "@playwright/test";
 
 import type { Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
@@ -60,7 +60,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   const propio = new URL(baseURL).origin;
   await page.route(
     (url) => url.origin === propio,
-    (ruta) => ruta.continue({ headers: { ...ruta.request().headers(), ...ACCESO } }),
+    (ruta) => ruta.fallback({ headers: { ...ruta.request().headers(), ...ACCESO } }),
   );
 });
 
@@ -122,6 +122,18 @@ async function menu(pagina: Page, proyecto: string): Promise<() => Promise<void>
     if (await dialogo.isVisible()) await dialogo.getByRole("button", { name: /^(Cerrar el menú|Close the menu)$/ }).click();
   };
 }
+
+// Las demás pruebas reciben el mapa de fondo de la caché de los recorridos (e2e/base.ts): esta es
+// la única que lo pide de verdad a la web, una petición por ejecución.
+test("el mapa de fondo se sirve por la web", async ({ request, baseURL }, info) => {
+  test.skip(info.project.name !== "escritorio", "una vez por ejecución, en escritorio");
+  test.skip(baseURL?.includes("localhost") === true, "en local no hay /almacen");
+  const respuesta = await request.get(`${baseURL ?? ""}/almacen/europa-z14.pmtiles?o=0&l=127`, { headers: ACCESO });
+  expect(respuesta.status()).toBe(200);
+  const cuerpo = await respuesta.body();
+  expect(cuerpo.subarray(0, 7).toString("latin1")).toBe("PMTiles");
+  expect(respuesta.headers()["cache-control"] ?? "").not.toBe("");
+});
 
 test("carga el mapa sin errores ni violaciones de la política de contenido", async ({ page, baseURL }, info) => {
   const problemas = vigilar(page);

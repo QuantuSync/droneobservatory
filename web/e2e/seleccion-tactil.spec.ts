@@ -3,7 +3,7 @@
 // de Ucrania, con eventos táctiles de bajo nivel en 360 × 800 y 768 × 1024. Al quitar la selección,
 // el control vuelve a verse inactivo (el «hover» no se queda pegado en una pantalla táctil).
 // Va contra producción por defecto; BASE y BYPASS como en los demás.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { CDPSession, Locator, Page } from "@playwright/test";
 
 const MAPA = "[data-mapa-listo=true]";

@@ -6,7 +6,7 @@
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Page } from "@playwright/test";
 
 import type { Resumen } from "../src/datos/tipos.ts";
@@ -158,7 +158,7 @@ for (const { ancho, alto } of TAMANOS) {
           const propio = new URL(baseURL).origin;
           await page.route(
             (url) => url.origin === propio,
-            (ruta) => ruta.continue({ headers: { ...ruta.request().headers(), ...ACCESO } }),
+            (ruta) => ruta.fallback({ headers: { ...ruta.request().headers(), ...ACCESO } }),
           );
         }
         await page.goto("/");

@@ -3,7 +3,7 @@
 // filtros; sin el contador la web funciona igual; fuera de producción y en un navegador excluido
 // no envía nada. Cada envío se intercepta: ninguna prueba llega al contador de verdad.
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Page } from "@playwright/test";
 
 const CONTADOR = "https://stats.droneobservatory.eu/count**";

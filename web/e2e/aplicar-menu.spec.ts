@@ -8,7 +8,7 @@
 // BYPASS=<clave>, contra una vista previa.
 import { join } from "node:path";
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./base.ts";
 import type { Browser, Page } from "@playwright/test";
 
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "aplicar-menu");
