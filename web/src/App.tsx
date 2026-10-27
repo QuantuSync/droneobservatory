@@ -158,15 +158,19 @@ import { ORIGEN, rutaDeFicha, rutaDeIdioma } from "./sitio.ts";
 import type { Idioma } from "./sitio.ts";
 import { diaDeInstante, enPeriodo, incidenteEnPeriodo } from "./tiempo/dias.ts";
 import type { Periodo } from "./tiempo/dias.ts";
+import { refrescarAlaVista } from "./tiempo/refresco.ts";
 
 const Mapa = lazy(() => importarOAvisar(() => import("./mapa/Mapa.tsx")));
 
 /** Cada cuánto se vuelve a calcular la antigüedad de los datos. */
 const MS_ENTRE_COMPROBACIONES = 60_000;
-/** Cada cuánto se vuelve a pedir estado.json, que la recogida publica cada hora. */
-const MS_ENTRE_ESTADOS = 300_000;
-/** Cada cuánto se vuelve a pedir directo.json mientras la pestaña está a la vista. */
-const MS_ENTRE_DIRECTOS = 60_000;
+/** Cada cuánto se vuelve a pedir estado.json, que la recogida publica cada hora (minuto 17). */
+const MS_ENTRE_ESTADOS = 10 * 60 * 1000;
+/**
+ * Cada cuánto se vuelve a pedir directo.json mientras la pestaña está a la vista: el servicio de
+ * cierres en vivo lo rehace cada minuto, pero un cierre dura bastante más que dos.
+ */
+const MS_ENTRE_DIRECTOS = 2 * 60 * 1000;
 /** Zoom al que vuela el mapa al abrir un aviso de aeropuerto. */
 const ZOOM_DE_AVISO = 9;
 /** Zoom al abrir un incidente con lugar aproximado: por encima del de los grupos (5), para que su
@@ -363,11 +367,10 @@ export function App() {
         })
         .catch(() => undefined);
     };
-    pedir();
-    const intervalo = window.setInterval(pedir, MS_FOCOS_VIVOS);
+    const parar = refrescarAlaVista(pedir, MS_FOCOS_VIVOS);
     return () => {
       control.abort();
-      window.clearInterval(intervalo);
+      parar();
     };
   }, [verFocosVivos]);
   // Ciudades con alumbrado reducido de forma permanente: del almacén público, una vez por visita
@@ -491,40 +494,36 @@ export function App() {
   }, [pedidoPrevision]);
   const datosPrevision = prevision.estado === "listo" ? prevision.datos : ultimaPrevision;
 
-  // Estado del sistema: si no está publicado o no valida, la barra usa el cambio de datos.
+  // Estado del sistema: si no está publicado o no valida, la barra usa el cambio de datos. Solo con
+  // la pestaña a la vista (tiempo/refresco.ts).
   useEffect(() => {
     const control = new AbortController();
     const pedir = () =>
       void cargarEstadoSistema(fetch, control.signal).then((carga) => {
         if (!control.signal.aborted) setSistema(carga.estado === "listo" ? carga.datos : null);
       });
-    pedir();
-    const temporizador = window.setInterval(pedir, MS_ENTRE_ESTADOS);
+    const parar = refrescarAlaVista(pedir, MS_ENTRE_ESTADOS);
     return () => {
       control.abort();
-      window.clearInterval(temporizador);
+      parar();
     };
   }, []);
 
-  // Detección en directo: directo.json cada minuto mientras la pestaña está a la vista, y
-  // en cuanto vuelve a estarlo.
+  // Detección en directo: directo.json cada poco mientras la pestaña está a la vista, y en cuanto
+  // vuelve a estarlo.
   useEffect(() => {
     const control = new AbortController();
     const pedir = () => {
-      if (document.visibilityState === "hidden") return;
       void cargarDirecto(descargarConReintentos, control.signal).then((carga) => {
         if (control.signal.aborted) return;
         if (carga.estado === "listo") setDirecto(carga.datos);
         else if (carga.estado !== "no_disponible") setDirecto(null);
       });
     };
-    pedir();
-    const temporizador = window.setInterval(pedir, MS_ENTRE_DIRECTOS);
-    document.addEventListener("visibilitychange", pedir);
+    const parar = refrescarAlaVista(pedir, MS_ENTRE_DIRECTOS);
     return () => {
       control.abort();
-      window.clearInterval(temporizador);
-      document.removeEventListener("visibilitychange", pedir);
+      parar();
     };
   }, []);
 
