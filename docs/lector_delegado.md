@@ -34,7 +34,8 @@ pausa de 6 horas tras tres fallos seguidos) y la recogida sigue con las demás.
 | `csn_sucesos` (Consejo de Seguridad Nuclear) | 27 de octubre de 2026 | csn.es respondió 403 a la dirección del servidor del 23 al 26 de octubre de 2026 ([fuentes_retiradas.md](fuentes_retiradas.md)). |
 
 `mod_lv` (Ministerio de Defensa de Letonia) no se puede delegar: mod.gov.lv tampoco acepta la
-conexión desde Vercel ni desde GitHub ([fuentes_retiradas.md](fuentes_retiradas.md)).
+conexión desde Vercel ni desde GitHub, y desde el 27 de octubre de 2026 tampoco mil.lv ni sargs.lv
+sirven de sustitutas ([fuentes_retiradas.md](fuentes_retiradas.md)).
 
 ## Por qué no es un proxy abierto
 
