@@ -2,8 +2,10 @@
 
 import copy
 
+import pytest
+
 from almacen.base import Almacen
-from proceso import zona
+from proceso import decidir, zona
 from tests import base_prueba
 from tests.ejemplos import AHORA, VOCABULARIO_MODELOS
 
@@ -83,19 +85,30 @@ def test_la_decide_el_guardado_y_la_pasada_no_cambia_nada() -> None:
     assert zona.clasificar_todos(almacen, AHORA, VOCABULARIO_MODELOS)["cambiados"] == 0
 
 
-def test_zona_revisada_a_mano_con_su_cita() -> None:
-    # Chopin (EODI-2025-00233), cerrado por los drones rusos del 10 de septiembre de 2025, a 151 km
-    # de Bielorrusia: la regla de los 150 km no puede y manda la revisión con la cita.
-    enlace = (
-        "https://saudigazette.com.sa/article/654845/World/Europe/"
-        "Warsaw-airport-shut-after-Ukrainian-reports-of-Russian-drones-over-Poland"
-    )
+def test_la_distancia_se_mide_desde_la_localidad() -> None:
+    # Chopin (EODI-2025-00233), cerrado por los drones rusos del 10 de septiembre de 2025: el punto
+    # es el aeropuerto, a 151 km de Bielorrusia, y la localidad que enseña la ficha, Varsovia, a
+    # 147 km. Se mide desde la localidad: frontera.
     chopin = {
         **incidente("PL", "interrupcion_aeroportuaria", punto=punto(52.16309, 20.96362)),
-        "id": "EODI-2025-00233", "fuentes": [{"enlace": enlace}],
+        "id": "EODI-2025-00233",
+        "objetivo": {"categoria": "aeropuerto", "nombre": "Lotnisko Chopina", "oaci": "EPWA"},
     }  # fmt: skip
-    assert zona.clasificar(chopin) == {"grupo": "frontera", "motivo": "ataque"}
-    # Sin esa fuente (una ficha de prueba con el mismo identificador), la regla: interior.
-    sin_fuente = {**chopin, "fuentes": []}
-    assert zona.clasificar(sin_fuente)["grupo"] == "interior"
-    assert zona.clasificar(sin_fuente)["distancia_km"] == 151
+    assert zona.clasificar(chopin) == {
+        "grupo": "frontera", "motivo": "cerca_de_la_frontera", "distancia_km": 147,
+    }  # fmt: skip
+    con_localidad = {**chopin, "lugar": {**chopin["lugar"], "localidad": "Warszawa"}}
+    assert zona.clasificar(con_localidad)["distancia_km"] == 147
+    # Sin localidad que encontrar en el nomenclátor, el punto.
+    sin_localidad = {k: v for k, v in chopin.items() if k != "objetivo"}
+    assert zona.clasificar(sin_localidad)["distancia_km"] == 151
+
+
+def test_zona_revisada_a_mano_con_su_cita(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Una revisión a mano con su cita manda sobre las reglas (cuando la regla no puede).
+    revision = {"campo": "zona", "valor": {"grupo": "frontera", "motivo": "ataque"}}
+    monkeypatch.setattr(
+        decidir, "revision_de", lambda _i, campo: revision if campo == "zona" else None
+    )
+    lejos = incidente("PL", "interrupcion_aeroportuaria", punto=punto(52.4, 16.9))
+    assert zona.clasificar(lejos) == {"grupo": "frontera", "motivo": "ataque"}
