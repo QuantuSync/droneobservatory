@@ -21,6 +21,10 @@ const TAMANOS = [
 
 async function preparar(contexto: BrowserContext, baseURL: string | undefined) {
   if (baseURL?.includes("localhost") !== true) return;
+  // Desde el #193 la web pide el almacén por /almacen/… (api/almacen.ts); lo único que va a
+  // your-objectstorage.com es la caída a la reserva de Helsinki (src/almacenPublico.ts,
+  // reservaDe y urlDeLaReserva), pedida directamente cuando /almacen/… falla de forma pasajera.
+  // La reserva solo admite el dominio propio: contra el servidor local se le añade el permiso.
   await contexto.route(/your-objectstorage\.com/, async (ruta) => {
     try {
       const respuesta = await ruta.fetch();

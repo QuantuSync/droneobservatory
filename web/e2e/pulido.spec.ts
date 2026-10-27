@@ -1,8 +1,8 @@
 // Los ocho arreglos del pulido de la web, en un navegador real: primero en el teléfono (360,
 // 390 y 412 px de ancho, con tacto) y después en escritorio. Deja las capturas de cada punto
 // en una carpeta de capturas (CAPTURAS para otra carpeta). Va contra producción por defecto; con
-// BASE=http://localhost:4173 contra el servidor local, reenviando el almacén público, que solo
-// admite el dominio propio.
+// BASE=http://localhost:4173 contra el servidor local, reenviando la reserva del almacén, que
+// solo admite el dominio propio.
 import { join } from "node:path";
 
 import { expect, test } from "./base.ts";
@@ -29,6 +29,10 @@ const MS_24H = 24 * 3_600_000;
 
 async function preparar(contexto: BrowserContext, baseURL: string | undefined) {
   if (baseURL?.includes("localhost") !== true) return;
+  // Desde el #193 la web pide el almacén por /almacen/… (api/almacen.ts); lo único que va a
+  // your-objectstorage.com es la caída a la reserva de Helsinki (src/almacenPublico.ts,
+  // reservaDe y urlDeLaReserva), pedida directamente cuando /almacen/… falla de forma pasajera.
+  // La reserva solo admite el dominio propio: contra el servidor local se le añade el permiso.
   await contexto.route(/your-objectstorage\.com/, async (ruta) => {
     const respuesta = await ruta.fetch();
     await ruta.fulfill({ response: respuesta, headers: { ...respuesta.headers(), "access-control-allow-origin": "*" } });
