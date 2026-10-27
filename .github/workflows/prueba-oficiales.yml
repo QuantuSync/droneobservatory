@@ -24,5 +24,8 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Sondear las fuentes oficiales
         run: python -m recogida.sondeo_oficiales
-      - name: Leer las fuentes activas
-        run: python -m recogida.sondeo_oficiales --activas
+      - name: Tiempos de conexion
+        run: |
+          for u in https://www.mil.lv/robots.txt https://www.mil.lv/lv/zinas https://www.sargs.lv/robots.txt https://www.sargs.lv/ https://www.mod.gov.lv/lv/rss.xml http://www.mod.gov.lv/; do
+            echo "$u -> $(curl -sS -A 'EODI-bot/1.0 (+https://droneobservatory.eu)' -o /tmp/r -w '%{http_code} con=%{time_connect} tot=%{time_total} bytes=%{size_download}' --max-time 25 $u 2>&1) titulo=$(grep -o '<title>[^<]*' /tmp/r 2>/dev/null | head -1)"
+          done
