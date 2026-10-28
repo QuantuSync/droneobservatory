@@ -39,8 +39,9 @@ Gasto: modo «control», 0,15 dólares al día (horaria y madrugada); el repaso 
 modo «control_repaso», 4 dólares y después 6 más (el 14 de octubre de 2026). Uso:
 
     python -m recogida.control_fichas noche|repaso|estado|traducir-pendientes [--base DB.age]
-    python -m recogida.control_fichas repaso-entrada --accion decidir|muestra|aplicar|estado
-        --grupo a|b|c|d [--muestreo FICHERO --semilla N] --cerrojo …
+    python -m recogida.control_fichas repaso-entrada
+        --accion decidir|recalcular|muestra|aplicar|estado --grupo a|b|c|d
+        [--muestreo FICHERO --semilla N] --cerrojo …
         [--ensayo CARPETA]
 """
 
@@ -2720,8 +2721,11 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--sin-servicio", action="store_true",
                           help="solo las reglas que no llaman a nada")  # fmt: skip
     # repaso-entrada (recogida/repaso_entrada.py)
-    opciones.add_argument("--accion", choices=("decidir", "muestra", "aplicar", "estado"),
-                          default="estado")  # fmt: skip
+    opciones.add_argument(
+        "--accion",
+        choices=("decidir", "recalcular", "muestra", "aplicar", "estado"),
+        default="estado",
+    )
     opciones.add_argument("--grupo", choices=("a", "b", "c", "d"), default="a")
     opciones.add_argument("--muestreo", type=Path, help="fichero del muestreo (muestra, aplicar)")
     opciones.add_argument("--semilla", type=int, default=0)

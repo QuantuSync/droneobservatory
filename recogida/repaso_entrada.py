@@ -17,6 +17,8 @@ aproximada; c, las de lugar vago; d, el resto):
   el control (`repaso_entrada:<id>`, con la huella de la ficha) y el gasto en la base, con el
   cerrojo de la recogida y nunca entre los minutos 12 y 45 (la recogida horaria). Lo ya decidido
   con la misma huella no se repite;
+- `recalcular`: las decisiones sin aplicar de un grupo, otra vez comprobadas con las reglas de
+  ahora (`ajustar`), sin llamar al experto;
 - `muestra`: los cambios de un grupo elegidos al azar con una semilla, para leerlos en su fuente;
   el resultado se escribe en un fichero (`bien` de cada uno);
 - `aplicar`: solo con el muestreo aprobado del grupo (las muestras que tocan, el azar de la
@@ -35,7 +37,7 @@ import time
 from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -45,6 +47,7 @@ from modelo import coste
 from modelo import entrada as peticiones
 from proceso import control_fichas as reglas
 from proceso import incidentes
+from proceso.focos_termicos import distancia_km
 from proceso.presencia import TABLA_MOTIVOS
 from recogida import control_fichas, entrada
 from recogida.plazo import Plazo
@@ -62,6 +65,14 @@ POR_TANDA = 12
 # La recogida horaria toma el cerrojo hacia el minuto 17 y publica hacia el 35: el repaso no lo
 # toma entre estos minutos.
 VENTANA_RECOGIDA = (12, 45)
+# Una unión es imposible (mismo_imposible) si las noticias de una ficha son todas de antes del día
+# firme de la otra (con este margen por la hora local), o si las dos tienen un lugar preciso a más
+# de esta distancia. Muestreo del grupo a del 28 de octubre de 2026: el aeropuerto de Vilna del 25
+# y del 26 de septiembre (EODI-2025-00060 y 00004) y dos drones de la misma noche en Moldavia,
+# en Hîrbovăț y en Orhei (EODI-2026-00168 y 00636), salían unidos.
+MARGEN_DIA_H = 3
+DISTANCIA_MAX_KM = 25.0
+PRECISOS = frozenset({"localidad", "instalacion"})
 
 UNIR, DIA, RETIRAR, SEPARAR, LUGAR, AUTORIDAD, DATO = (
     "unir", "dia", "retirar", "separar", "lugar", "autoridad", "dato"
@@ -218,6 +229,51 @@ def decidir(
                         "fuente_id": con_frase[0], "frase": con_frase[1]})  # fmt: skip
     decision["errores"] = errores
     return decision
+
+
+def _ultima_noticia(incidente: Documento) -> datetime | None:
+    fechas = [incidentes._leer_instante(f["fecha"]) for f in incidente.get("fuentes", [])
+              if f.get("fecha")]  # fmt: skip
+    return max(fechas) if fechas else None
+
+
+def mismo_imposible(incidente: Documento, otra: Documento) -> str | None:
+    """Por qué las dos fichas no pueden ser el mismo suceso, o None: las noticias de una son
+    todas de antes del día firme de la otra, o sus lugares precisos están a más de
+    DISTANCIA_MAX_KM."""
+    for una, dos in ((incidente, otra), (otra, incidente)):
+        if not entrada.fecha_firme(una):
+            continue
+        dia = reglas.instante(una).replace(hour=0, minute=0, second=0, microsecond=0)
+        ultima = _ultima_noticia(dos)
+        if ultima is not None and ultima < dia - timedelta(hours=MARGEN_DIA_H):
+            return f"las noticias de {dos['id']} son de antes del {dia.date().isoformat()}"
+    a, b = incidente["lugar"], otra["lugar"]
+    if {a.get("nivel"), b.get("nivel")} <= PRECISOS and "punto" in a and "punto" in b:
+        km = distancia_km(a["punto"]["lat"], a["punto"]["lon"], b["punto"]["lat"],
+                          b["punto"]["lon"])  # fmt: skip
+        if km > DISTANCIA_MAX_KM:
+            return f"lugares a {km:.0f} km"
+    return None
+
+
+def ajustar(decision: Documento, incidente: Documento, otra: Documento | None) -> Documento:
+    """La decisión con las comprobaciones del repaso: una autoridad solo deja de ser oficial si
+    es de otro país (la que no tiene una frase con su país se queda: Skeyes en Lieja,
+    EODI-2025-00092), y una unión imposible (mismo_imposible) no vale."""
+    nueva = dict(decision)
+    fuera = nueva.get("autoridades_fuera") or {}
+    de_otro = {n: m for n, m in fuera.items() if "otro país" in str(m)}
+    if de_otro != fuera:
+        nueva["autoridades_sin_pais"] = {n: m for n, m in fuera.items() if n not in de_otro}
+        nueva["autoridades_fuera"] = de_otro
+    if nueva.get("mismo") and otra is not None:
+        imposible = mismo_imposible(incidente, otra)
+        if imposible:
+            mismo = nueva.pop("mismo")
+            nueva["invalida"] = f"no es el mismo suceso que {mismo}: {imposible}"
+    nueva["cambios"] = cambios(nueva, incidente)
+    return nueva
 
 
 def cambios(decision: Documento, incidente: Documento) -> list[str]:
@@ -446,12 +502,45 @@ def _preguntar(
             if fechas:
                 mismo = decision.pop("mismo")
                 decision["invalida"] = f"el mismo suceso que {mismo} con fechas firmes ({fechas})"
-        nuevas[clave(incidente["id"])] = {
+        otra = por_id.get(str(decision.get("mismo"))) if decision.get("mismo") else None
+        nuevas[clave(incidente["id"])] = ajustar({
             **decision, "version": peticiones.VERSION_REPASO, "fecha": _iso(ahora),
             "grupo": grupo_de(incidente), "huella": entrada.huella(incidente),
-            "conjunto": len(pregunta.elegidas), "cambios": cambios(decision, incidente),
-        }  # fmt: skip
+            "conjunto": len(pregunta.elegidas),
+        }, incidente, otra)  # fmt: skip
     return nuevas, llamadas
+
+
+def recalcular(
+    base: control_fichas.Base, grupo: str, reloj: Callable[[], datetime] | None = None,
+    dormir: Callable[[float], None] | None = None,
+) -> int:  # fmt: skip
+    """Vuelve a comprobar (ajustar) las decisiones sin aplicar del grupo con las reglas de ahora,
+    sin preguntar otra vez al experto. Devuelve cuántas cambian. Después hace falta otro
+    muestreo: la huella del grupo cambia."""
+    reloj = reloj or (lambda: datetime.now(UTC))
+    dormir = dormir or time.sleep
+    esperar_ventana(reloj, dormir)
+    with base.cerrojo():
+        almacen = base.abrir()
+        nuevas: dict[str, Documento] = {}
+        for k, decision in almacen.controles(PREFIJO).items():
+            if decision.get("grupo") != grupo or decision.get("aplicada"):
+                continue
+            incidente = almacen.incidente(k.removeprefix(PREFIJO))
+            if incidente is None:
+                continue
+            mismo = decision.get("mismo")
+            otra = almacen.incidente(str(mismo)) if mismo else None
+            nueva = ajustar(decision, incidente, otra)
+            if nueva != decision:
+                nuevas[k] = nueva
+        if nuevas:
+            almacen.guardar_controles(nuevas, _iso(reloj()))
+            base.guardar(almacen)
+        base.soltar(almacen)
+    registro.info("repaso de entrada %s: %d decisiones recalculadas", grupo, len(nuevas))
+    return len(nuevas)
 
 
 # --- Muestra ------------------------------------------------------------------------------
@@ -671,6 +760,9 @@ def principal(base: control_fichas.Base, fabrica: Callable[[], Any] | None, acci
         if fabrica is None:
             return 1
         print(decidir_grupo(base, fabrica, grupo, tope_s).texto())
+        return 0
+    if accion == "recalcular":
+        print(f"recalculadas={recalcular(base, grupo)}")
         return 0
     copia = base.abrir()
     decisiones = copia.controles(PREFIJO)

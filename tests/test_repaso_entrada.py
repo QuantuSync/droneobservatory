@@ -171,3 +171,74 @@ def test_nunca_aplica_sin_un_muestreo_aprobado() -> None:
     assert sorted(hecho.retiradas) == [f["id"] for f in fichas]
     assert repaso.con_cambios(almacen.controles(repaso.PREFIJO), "b") == {}
     assert repaso.PREFIJO_MUESTREO + "b" in almacen.controles(repaso.PREFIJO_MUESTREO)
+
+
+def _firme(ficha: dict[str, Any]) -> dict[str, Any]:
+    return {**ficha, "tiempo": {**ficha["tiempo"], "origen_inicio": {"tipo": "explicita"}}}
+
+
+def test_una_union_imposible_no_vale() -> None:
+    # Vilna, 28 de octubre de 2026: el cierre del 26 de septiembre (día firme) no puede ser el que
+    # contaban noticias del 25 (EODI-2025-00004 y 00060).
+    viernes = _firme(_ficha("EODI-2025-00004", "LT", "2025-09-26T00:00Z", punto=(54.64, 25.29),
+                            nivel="instalacion", publicada="2025-09-26T12:00Z"))  # fmt: skip
+    jueves = _ficha("EODI-2025-00060", "LT", "2025-09-25T12:57Z", "aproximada",
+                    punto=(54.64, 25.29), nivel="instalacion",
+                    publicada="2025-09-25T15:00Z")  # fmt: skip
+    assert "antes del 2025-09-26" in (repaso.mismo_imposible(viernes, jueves) or "")
+    assert "antes del 2025-09-26" in (repaso.mismo_imposible(jueves, viernes) or "")
+    decision = {"mismo": "EODI-2025-00060", "motivo_mismo": "el mismo cierre"}
+    ajustada = repaso.ajustar(decision, viernes, jueves)
+    assert "mismo" not in ajustada and ajustada["cambios"] == []
+    assert ajustada["invalida"].startswith("no es el mismo suceso que EODI-2025-00060")
+    # Moldavia, 30 de septiembre de 2026: Hîrbovăț y Orhei, la misma noche, a más de 25 km.
+    orhei = _ficha("EODI-2026-00636", "MD", "2026-09-30T00:00Z", punto=(47.38, 28.82),
+                   nivel="localidad")  # fmt: skip
+    hirbovat = _ficha("EODI-2026-00168", "MD", "2026-09-30T00:00Z", punto=(46.86, 29.33),
+                      nivel="localidad")  # fmt: skip
+    assert "km" in (repaso.mismo_imposible(orhei, hirbovat) or "")
+    # El mismo aeropuerto el mismo día sí puede serlo.
+    otra = _ficha("EODI-2025-00061", "LT", "2025-09-26T00:00Z", punto=(54.65, 25.30),
+                  nivel="instalacion", publicada="2025-09-26T13:00Z")  # fmt: skip
+    assert repaso.mismo_imposible(viernes, otra) is None
+    assert repaso.ajustar(decision | {"mismo": otra["id"]}, viernes, otra)["cambios"] == [
+        repaso.UNIR
+    ]
+
+
+def test_solo_deja_de_ser_oficial_la_autoridad_de_otro_pais() -> None:
+    ficha = _ficha("EODI-2025-00092", "BE", "2025-11-08T18:00Z", "hora", punto=(50.64, 5.44),
+                   nivel="instalacion")  # fmt: skip
+    sin_pais = {"frase_lugar": ["x", "y"], "autoridades_fuera": {
+        "Skeyes": "ninguna frase la nombra con su país"}}  # fmt: skip
+    ajustada = repaso.ajustar(sin_pais, ficha, None)
+    assert ajustada["autoridades_fuera"] == {} and repaso.AUTORIDAD not in ajustada["cambios"]
+    assert ajustada["autoridades_sin_pais"] == sin_pais["autoridades_fuera"]
+    de_otro = {"frase_lugar": ["x", "y"], "autoridades_fuera": {
+        "Skeyes": "ninguna frase la nombra con su país",
+        "Lettische Streitkräfte": "de otro país (LV) sin que la frase lo diga"}}  # fmt: skip
+    ajustada = repaso.ajustar(de_otro, ficha, None)
+    assert list(ajustada["autoridades_fuera"]) == ["Lettische Streitkräfte"]
+    assert ajustada["cambios"] == [repaso.AUTORIDAD]
+
+
+def test_recalcular_comprueba_lo_ya_decidido_sin_llamar() -> None:
+    viernes = _firme(_ficha("EODI-2025-00004", "LT", "2025-09-26T00:00Z", punto=(54.64, 25.29),
+                            nivel="instalacion", publicada="2025-09-26T12:00Z"))  # fmt: skip
+    jueves = _ficha("EODI-2025-00060", "LT", "2025-09-25T12:57Z", "aproximada",
+                    punto=(54.64, 25.29), nivel="instalacion",
+                    publicada="2025-09-25T15:00Z")  # fmt: skip
+    almacen = _base(viernes, jueves)
+    guardada = almacen.incidente(viernes["id"])
+    assert guardada is not None
+    decision = {"grupo": "a", "huella": entrada.huella(guardada), "mismo": jueves["id"],
+                "cambios": [repaso.UNIR], "motivo_mismo": "el mismo cierre"}  # fmt: skip
+    almacen.guardar_controles({repaso.clave(viernes["id"]): decision}, "2026-10-28T17:00:00Z")
+    antes = repaso.plantilla(almacen.controles(repaso.PREFIJO), "a", 1)
+    assert repaso.recalcular(_base_de(almacen), "a", reloj=lambda: FUERA,
+                             dormir=lambda s: None) == 1  # fmt: skip
+    queda = almacen.controles(repaso.PREFIJO)[repaso.clave(viernes["id"])]
+    assert queda["cambios"] == [] and "mismo" not in queda
+    assert repaso.con_cambios(almacen.controles(repaso.PREFIJO), "a") == {}
+    # El muestreo de antes ya no vale.
+    assert antes["huella"] != repaso.plantilla(almacen.controles(repaso.PREFIJO), "a", 1)["huella"]
