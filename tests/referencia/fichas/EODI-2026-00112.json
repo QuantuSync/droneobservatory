@@ -413,13 +413,18 @@
   ]
  },
  "tiempo": {
+  "duracion_min": 34,
+  "fin": {
+   "precision": "minuto",
+   "valor": "2026-03-30T19:03Z"
+  },
   "inicio": {
    "precision": "minuto",
-   "valor": "2026-03-30T21:29Z"
+   "valor": "2026-03-30T18:29Z"
   },
   "origen_inicio": {
-   "fuente_id": "gdelt-f81b6c59d2ba510d",
-   "motivo": "\u00ab30 martie\u00bb en una nota publicada el 2026-03-31 00:30 (hora local del medio)",
+   "fuente_id": "gdelt-fa5368a648f1aaf6",
+   "motivo": "hotnews.ro: el ej\u00e9rcito de Moldavia vio el dron \u00abla ora 21:29\u00bb, hora de Chisin\u00e1u del lunes 30 de marzo de 2026 (hora de verano desde el 29, UTC+3); protv.md: seguido \u00abp\u00e2n\u0103 la ora 22:03\u00bb (19:03 UTC)",
    "tipo": "explicita"
   }
  },
