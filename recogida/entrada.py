@@ -50,6 +50,8 @@ PREFIJO_MEDIDA = "medida:"
 DIAS_ANTES = 30
 DIAS_DESPUES = 3
 MAX_CONJUNTO = 40
+# Dos fichas con su día sacado de una frase y a más de estos días no se unen sin revisión.
+DIAS_FIRMES = 2
 MEDIDA_TRAS = timedelta(hours=24)
 # Las medidas no pasan de 7 días: lo publicado antes del filtro no se mide.
 MEDIDA_HASTA = timedelta(days=7)
@@ -281,6 +283,27 @@ def decidir(
     return decision
 
 
+def fecha_firme(incidente: Documento) -> bool:
+    """El inicio sale de una frase con su día (no es la fecha de publicación ni aproximado)."""
+    inicio = incidente["tiempo"]["inicio"]
+    origen = incidente["tiempo"].get("origen_inicio") or {}
+    con_dia = inicio.get("precision") in ("dia", "hora", "minuto")
+    return con_dia and origen.get("tipo") not in ("publicacion", None)
+
+
+def fechas_distintas(incidente: Documento, otra: Documento) -> str | None:
+    """Las dos fichas tienen fechas firmes a más de DIAS_FIRMES días: el texto de las dos fechas,
+    o None. Un mismo suceso con dos días firmes tan separados casi siempre son dos sucesos (en la
+    prueba del 28 de octubre de 2026, el ataque a buques frente a Bulgaria del 12 de octubre,
+    EODI-2026-00512, salía unido al del 6, EODI-2026-00489)."""
+    if not (fecha_firme(incidente) and fecha_firme(otra)):
+        return None
+    a, b = reglas.instante(incidente), reglas.instante(otra)
+    if abs((a - b).total_seconds()) <= DIAS_FIRMES * 86400:
+        return None
+    return f"{a.date().isoformat()} y {b.date().isoformat()}"
+
+
 def _pais_en_la_frase(pais: str, frase: str) -> bool:
     """La frase nombra el país (el principio de su nombre en alguna lengua de Natural Earth:
     «bulgar» vale para «Bulgarian officials»)."""
@@ -425,8 +448,12 @@ def preguntar(
     if leida is None:
         return None, elegidas, fuentes
     decision = decidir(leida, fuentes.comprobar, ids, incidente)
-    if decision.get("duda") or sin_frase(decision) or decision.get("invalida"):
-        por_id = {c["id"]: c for c in elegidas}
+    por_id = {c["id"]: c for c in elegidas}
+
+    def choque(d: dict[str, Any]) -> str | None:
+        return fechas_distintas(incidente, por_id[d["mismo"]]) if "mismo" in d else None
+
+    if decision.get("duda") or sin_frase(decision) or decision.get("invalida") or choque(decision):
         dudosas = [*decision.get("dudosas", []), *([decision["mismo"]] if "mismo" in decision
                                                     else []), *ids]  # fmt: skip
         contexto = {
@@ -437,6 +464,12 @@ def preguntar(
         otra = experto.llamar(cuerpo, peticiones.MAX_SALIDA_ENTRADA, clave_ + ":contexto")
         if otra is not None:
             decision = {**decidir(otra, fuentes.comprobar, ids, incidente), "repetida": True}
+    fechas = choque(decision)
+    if fechas:
+        # Con las fuentes de las dos delante sigue diciendo que es el mismo: no se une ni se
+        # publica; lo decide una revisión.
+        mismo = decision.pop("mismo")
+        decision["invalida"] = f"el mismo suceso que {mismo} con fechas firmes distintas ({fechas})"
     return decision, elegidas, fuentes
 
 

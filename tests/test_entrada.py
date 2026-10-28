@@ -202,6 +202,32 @@ def test_otro_dia_toma_la_fecha_de_la_frase_y_vuelve_a_pasar() -> None:
     assert unida is not None and unida["fusionado_en"] == "EODI-2026-00582"
 
 
+def test_dos_fechas_firmes_distintas_no_se_unen_sin_revision() -> None:
+    # Prueba 2 del 28 de octubre de 2026: el ataque del 12 de octubre (00512) salía unido al del 6
+    # (00489). Con el día de las dos sacado de una frase, se le vuelve a preguntar con las fuentes
+    # de la otra y, si insiste, no se une ni se publica.
+    seis = _ficha("EODI-2026-00489", "BG", "2026-10-06T00:00Z", punto=(43.2, 27.9),
+                  nivel="localidad", frase="Drones hit two ships on 6 October")  # fmt: skip
+    doce = copy.deepcopy(BUQUE_512)
+    for ficha, fuente in ((seis, "EODI-2026-00489-F1"), (doce, "EODI-2026-00512-F1")):
+        ficha["tiempo"]["origen_inicio"] = {"tipo": "explicita", "fuente_id": fuente}
+    almacen = _base(seis, doce)
+    frase = "A ship sank off Krapets overnight"
+    cliente = Cliente([_respuesta(mismo_suceso="EODI-2026-00489", fecha_frase=frase,
+                                  lugar_frase=frase)] * 2)  # fmt: skip
+    ctx = _contexto(almacen, cliente)
+    entrada.filtrar(ctx, {"EODI-2026-00489"})
+    decision = ctx.nuevas[entrada.clave("EODI-2026-00512")]
+    assert decision["decision"] == entrada.RETENER
+    assert "fechas firmes distintas (2026-10-12 y 2026-10-06)" in decision["motivo"]
+    assert len(cliente.pedidas) == 2 and "Fuentes de EODI-2026-00489:" in cliente.pedidas[1]
+    seguida = almacen.incidente("EODI-2026-00512")
+    assert seguida is not None and "fusionado_en" not in seguida
+    # A dos días o menos, o con una de las fechas sin frase, se une como siempre.
+    assert entrada.fechas_distintas(doce, seis) is not None
+    assert entrada.fechas_distintas(doce, BUQUE_689) is None
+
+
 def test_sin_frase_de_la_fecha_no_se_publica_y_el_lugar_queda_en_el_pais() -> None:
     almacen = _base(SULINA_582, SULINA_692)
     # Las dos respuestas sin frase: la segunda, con las fuentes de la candidata.
