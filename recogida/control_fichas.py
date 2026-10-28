@@ -508,21 +508,35 @@ def reaplicar_uniones(
     almacen: Almacen, decisiones: dict[str, Documento], ahora: datetime, modelos: frozenset[str]
 ) -> int:
     """Las uniones del control siguen hechas: si el que queda se volvió a extraer y perdió las
-    fuentes del unido, las recupera. Devuelve cuántas rehace."""
-    rehechas = 0
+    fuentes del unido, las recupera. Devuelve cuántas rehace.
+
+    También las del repaso de entrada (recogida/repaso_entrada.py), que unen por `unir` con su
+    decisión en otro control: se leen de las fusiones anotadas. EODI-2026-00038 (28 de octubre de
+    2026): unida a EODI-2026-00048 a las 18:54, se volvió a extraer a las 21:22 y perdió sus fuentes
+    con la declaración del primer ministro de Luxemburgo (auditoría L)."""
+    pares: dict[tuple[str, str], str | None] = {}
     for decision in decisiones.values():
-        if decision.get("decision") != "mismo" or "conserva" not in decision:
-            continue
-        conserva = almacen.incidente(decision["conserva"])
-        une = almacen.incidente(decision["une"])
+        if decision.get("decision") == "mismo" and "conserva" in decision:
+            pares[(decision["conserva"], decision["une"])] = decision["motivo_es"]
+    for fusion in almacen.fusiones():
+        if not fusion["revertida"] and fusion["motivo"].startswith(
+            incidentes.PREFIJO_REVISADA + PREFIJO_UNION
+        ):
+            pares.setdefault((fusion["destino"], fusion["absorbido"]), None)
+    rehechas = 0
+    for (conserva_id, une_id), motivo in pares.items():
+        conserva = almacen.incidente(conserva_id)
+        une = almacen.incidente(une_id)
         if conserva is None or une is None or not incidentes.activo(conserva):
             continue
         propio = {k: v for k, v in une.items() if k != "fusionado_en"}
         if "fusionado_en" not in une:
-            if not incidentes.activo(une):
+            if motivo is None or not incidentes.activo(une):
                 continue
-            unir(almacen, conserva, propio, decision["motivo_es"], ahora, modelos)
+            unir(almacen, conserva, propio, motivo, ahora, modelos)
             rehechas += 1
+            continue
+        if une["fusionado_en"] != conserva_id:
             continue
         tiene = {f["id"] for f in conserva["fuentes"]}
         if any(f["id"] not in tiene for f in propio.get("fuentes", [])):
