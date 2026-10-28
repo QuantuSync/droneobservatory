@@ -314,7 +314,7 @@ def test_llevar_anade_las_propuestas_sin_tocar_el_resto(tmp_path: Any) -> None:
         '      "motivo": "m"\n    }\n  ]\n}\n'
     )
     ruta.write_text(original, encoding="utf-8")
-    propuestas = {
+    propuestas: dict[str, list[dict[str, Any]]] = {
         "datos": [
             {"incidente": "EODI-1", "campo": "drones", "valor": {"min": 2, "max": 2}},
             {"incidente": "EODI-2", "campo": "cierre", "valor": "si", "cita": "c",
