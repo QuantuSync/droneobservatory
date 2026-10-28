@@ -102,12 +102,37 @@ def completar(destino: Documento, unidos: list[Documento]) -> Documento:
     return resultado
 
 
+def sacar_de(almacen: Almacen, registros: list[str], antes_en: str, ahora: datetime,
+             modelos: frozenset[str]) -> list[str]:  # fmt: skip
+    """Deshace la fusión que una regla hizo de un registro del grupo en `antes_en`, otra ficha
+    que no es su suceso, para que la unión revisada lo lleve al suyo (EODI-2025-00302, la nota
+    del 25/09/2025 sobre el cierre de Aalborg de la víspera, fundida en el del día 25, 00238).
+    Las fusiones revisadas a mano no se deshacen. Devuelve los registros que vuelven."""
+    vueltos = []
+    for id_ in registros:
+        documento = almacen.incidente(id_)
+        if documento is None or documento.get("fusionado_en") != antes_en:
+            continue
+        fusion = next(
+            (f for f in reversed(almacen.fusiones())
+             if f["absorbido"] == id_ and not f["revertida"]), None,
+        )  # fmt: skip
+        if fusion is None or fusion["motivo"].startswith(incidentes.PREFIJO_REVISADA):
+            continue
+        incidentes.revertir(almacen, id_, ahora, modelos)
+        vueltos.append(id_)
+    return vueltos
+
+
 def unir_grupo(
     almacen: Almacen, registros: list[str], motivo: str, ahora: datetime,
-    modelos: frozenset[str], conserva: str | None = None,
+    modelos: frozenset[str], conserva: str | None = None, antes_en: str | None = None,
 ) -> int:  # fmt: skip
     """Funde en uno los registros vivos del grupo. Devuelve cuántos funde. Con `conserva`, queda
-    ese registro (el más antiguo, para que su enlace siga siendo el del suceso)."""
+    ese registro (el más antiguo, para que su enlace siga siendo el del suceso). Con `antes_en`,
+    primero sale de esa ficha el registro del grupo que una regla fundió en ella."""
+    if antes_en is not None:
+        sacar_de(almacen, registros, antes_en, ahora, modelos)
     vivos: dict[str, Documento] = {}
     for id_ in registros:
         documento = _vivo(almacen, id_)
@@ -155,8 +180,9 @@ def unir(
     for grupo in cargar()["unir"]:
         try:
             unidos += unir_grupo(
-                almacen, grupo["registros"], grupo["motivo"], ahora, modelos, grupo.get("conserva")
-            )
+                almacen, grupo["registros"], grupo["motivo"], ahora, modelos,
+                grupo.get("conserva"), grupo.get("antes_en"),
+            )  # fmt: skip
         except Exception as error:
             texto = f"{'+'.join(grupo['registros'])}: {str(error)[:300]}"
             registro.warning("unión revisada sin aplicar %s", texto)
