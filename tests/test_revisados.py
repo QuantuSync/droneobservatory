@@ -122,9 +122,9 @@ def test_un_registro_fundido_por_la_regla_en_otro_suceso_pasa_al_suyo(
     leipzig.guardar_incidente({**origen, "fusionado_en": destino["id"]}, AHORA, MODELOS)
     leipzig.registrar_fusion("2026-10-04T16:17Z", origen["id"], destino["id"],
                              "mismo sitio y misma ventana", aportadas)  # fmt: skip
-    monkeypatch.setattr(revisados, "cargar", lambda: {"unir": [{
-        "registros": ["EODI-2026-00134", "EODI-2026-00239"], "conserva": "EODI-2026-00134",
-        "antes_en": "EODI-2026-00391", "motivo": "el suceso de la víspera"}], "reextraer": []})
+    grupo = {"registros": ["EODI-2026-00134", "EODI-2026-00239"], "conserva": "EODI-2026-00134",
+             "antes_en": "EODI-2026-00391", "motivo": "el suceso de la víspera"}  # fmt: skip
+    monkeypatch.setattr(revisados, "cargar", lambda: {"unir": [grupo], "reextraer": []})
     assert revisados.unir(leipzig, AHORA, MODELOS) == 1
     movido = leipzig.incidente("EODI-2026-00239")
     assert movido is not None and movido["fusionado_en"] == "EODI-2026-00134"
