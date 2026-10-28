@@ -588,6 +588,14 @@ python -m recogida.control_fichas repaso-entrada --accion estado
 control (`repaso_entrada:<id>`, con la huella de la ficha) y su gasto a la base, con el cerrojo de
 la recogida y nunca entre los minutos 12 y 45. Lo decidido con la misma huella no se repite.
 
+**Comprobaciones del repaso** (`ajustar`, desde el muestreo del grupo a del 28 de octubre de 2026, que salió con 3 de 15 mal):
+
+- una unión es imposible si las noticias de una ficha son todas de antes del día firme de la otra (el aeropuerto de Vilna del 25 y del 26 de septiembre de 2025);
+- también si las dos tienen un lugar preciso a más de 25 km (dos drones de la misma noche en Moldavia, en Hîrbovăț y en Orhei);
+- una autoridad solo deja de ser oficial si es de otro país. La que no tiene una frase con su país se queda (Skeyes, en Lieja).
+
+`--accion recalcular` vuelve a comprobar lo ya decidido sin llamar al experto; después hace falta otro muestreo.
+
 **Muestra.** Elige los cambios del grupo al azar con una semilla y escribe un fichero para
 rellenar: `bien` de cada uno, leído en su fuente.
 

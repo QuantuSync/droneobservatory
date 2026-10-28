@@ -268,6 +268,9 @@ Además:
 - fecha_desconocida: true si las fuentes cuentan un suceso anterior a su publicación sin decir \
 en qué día fue (un recuerdo, «recientemente», «en las últimas semanas»); false si dan el día o si \
 cuentan algo de la noche o el día de la publicación.
+- mismo_suceso: solo si es seguro que es el mismo suceso. El mismo día y país no bastan: \
+en una noche con varios drones, cada uno en otro lugar es otro suceso; y una noticia publicada \
+antes del día del suceso no puede contarlo. Si es solo probable, duda.
 - varios_sucesos: true si la ficha junta sucesos de días o lugares distintos (un resumen, un \
 balance, «durante tres noches», drones en varios aeropuertos en noches distintas). partes: cada \
 suceso con su día (AAAA-MM-DD), una descripción corta y los números de las fuentes que lo \
