@@ -272,3 +272,10 @@ def test_una_fuente_sin_cursor_no_impide_leer_las_demas(
     salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
     assert salida == horaria.SALIDA_AVISO
     assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
+
+
+def test_el_ensayo_falla_si_una_union_revisada_o_rectificacion_no_se_aplica() -> None:
+    assert horaria.salida_de_ensayo(0, []) == 0
+    assert horaria.salida_de_ensayo(2, []) == 2
+    assert horaria.salida_de_ensayo(0, ["EODI-2025-00039+EODI-2025-00243: atribucion"]) == 1
+    assert horaria.salida_de_ensayo(2, ["rectificación sin guardar en EODI-2026-00064"]) == 1

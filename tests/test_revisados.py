@@ -84,6 +84,31 @@ def test_los_registros_del_mismo_suceso_quedan_en_uno(leipzig: Almacen) -> None:
     assert revisados.unir(leipzig, AHORA, MODELOS) == 0
 
 
+def test_un_grupo_que_no_valida_no_corta_los_demas(
+    leipzig: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """10:17 del 28/10/2026: la unión de 2025-00039 y 2025-00243 no validaba y cortó las de
+    detrás. Ahora se salta, queda en `fallidos` y las demás se aplican."""
+    grupos = [
+        {"registros": ["EODI-2025-00039", "EODI-2025-00243"], "motivo": "no valida"},
+        {"registros": ["EODI-2026-00391", "EODI-2026-00134", "EODI-2026-00239"],
+         "motivo": "el mismo suceso"},
+    ]  # fmt: skip
+    monkeypatch.setattr(revisados, "cargar", lambda: {"unir": grupos, "reextraer": []})
+    original = revisados.unir_grupo
+
+    def unir_grupo(almacen: Almacen, registros: list[str], *args: Any) -> int:
+        if "EODI-2025-00039" in registros:
+            raise ValueError("atribucion: estado atribuido sin atribución")
+        return original(almacen, registros, *args)
+
+    monkeypatch.setattr(revisados, "unir_grupo", unir_grupo)
+    fallidos: list[str] = []
+    assert revisados.unir(leipzig, AHORA, MODELOS, fallidos) == 2
+    assert fallidos == ["EODI-2025-00039+EODI-2025-00243: atribucion: estado atribuido sin "
+                        "atribución"]  # fmt: skip
+
+
 def test_el_que_queda_toma_el_cierre_y_con_el_el_tipo(monkeypatch: pytest.MonkeyPatch) -> None:
     """EODI-2026-00183 (Gran Canaria, sobrevuelo) y EODI-2026-00398 (el mismo suceso, con el
     cierre del aeropuerto): la unión no se guardaba («hay interrupción de aeropuerto»)."""
