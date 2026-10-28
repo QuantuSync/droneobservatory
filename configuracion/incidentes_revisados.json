@@ -662,6 +662,51 @@
       "conserva": "EODI-2026-00582",
       "motivo": "el mismo suceso: los dos drones Geran derribados por cazas F-16 rumanos sobre el mar Negro cerca de Sulina el sábado 17 de octubre de 2026. 00620 son notas del 19 y 20 de octubre de 2026 («Rumänische F-16-Kampfjets haben am Samstag zwei Drohnen über den Territorialgewässern des Landes im Schwarzen Meer abgeschossen», focus.de) fechadas el 18 por el «Sonntag» de las declaraciones del ministro Radu Miruță, no por el derribo",
       "motivo_en": "the same event: the two Geran drones shot down by Romanian F-16 fighters over the Black Sea near Sulina on Saturday 17 October 2026. 00620 are 19 and 20 October 2026 reports («Romanian F-16 fighter jets shot down two drones over the country's territorial waters in the Black Sea on Saturday», focus.de) dated the 18th from the «Sunday» of Minister Radu Miruță's statements, not from the shoot-down"
+    },
+    {
+      "registros": [
+        "EODI-2026-00577",
+        "EODI-2026-00578"
+      ],
+      "conserva": "EODI-2026-00577",
+      "motivo": "el mismo suceso: los hombres detenidos por volar drones sin permiso cerca de los aeropuertos de Vilna y Kaunas. Las dos fichas tienen la misma y única fuente, la nota de lrytas.lt del 16 de octubre de 2026 («Prie Vilniaus ir Kauno oro uostų sulaikyti neteisėtai dronus skraidinę vyrai»); una se puso en cada aeropuerto",
+      "motivo_en": "the same event: the men detained for flying drones without permission near Vilnius and Kaunas airports. Both records have the same single source, the 16 October 2026 lrytas.lt report («men flying drones illegally detained near Vilnius and Kaunas airports»); each was placed at one airport"
+    },
+    {
+      "registros": [
+        "EODI-2026-00593",
+        "EODI-2026-00594"
+      ],
+      "conserva": "EODI-2026-00593",
+      "motivo": "el mismo suceso: el dron que entró en Lituania desde Polonia la mañana del domingo 18 de octubre de 2026, con la alerta aérea, los cazas de la OTAN y el aeropuerto de Kaunas parado, y que cayó cerca de Pasvalys («Drone enters Lithuania from Poland, debris hits a car on rural road», lrt.lt)",
+      "motivo_en": "the same event: the drone that entered Lithuania from Poland on the morning of Sunday 18 October 2026, with the air alert, NATO fighters and Kaunas airport halted, and that came down near Pasvalys («Drone enters Lithuania from Poland, debris hits a car on rural road», lrt.lt)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00039",
+        "EODI-2025-00243"
+      ],
+      "conserva": "EODI-2025-00039",
+      "motivo": "el mismo suceso: el cierre temporal del espacio aéreo de Moldavia por dos drones la noche del viernes 28 de noviembre de 2025, con vuelos desviados a Bacău («Două zboruri, redirecționate spre Bacău, noaptea trecută, din cauza a două drone», news.yam.md)",
+      "motivo_en": "the same event: the temporary closure of Moldovan airspace because of two drones on the night of Friday 28 November 2025, with flights diverted to Bacău («Two flights diverted to Bacău last night because of two drones», news.yam.md)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00512",
+        "EODI-2026-00559"
+      ],
+      "conserva": "EODI-2026-00512",
+      "motivo": "el mismo suceso: los ataques con drones a buques mercantes frente a la costa búlgara del mar Negro de la noche del 12 al 13 de octubre de 2026. 00559 es la nota de worthynews.com del 15 de octubre de 2026 sobre la sospecha del Gobierno búlgaro («Bulgaria said Wednesday it suspected Russia was behind a series of devastating drone attacks on commercial vessels near its Black Sea coast»), fechada por el día de la declaración",
+      "motivo_en": "the same event: the drone attacks on merchant ships off Bulgaria's Black Sea coast on the night of 12 to 13 October 2026. 00559 is the 15 October 2026 worthynews.com report on the Bulgarian government's suspicion («Bulgaria said Wednesday it suspected Russia was behind a series of devastating drone attacks on commercial vessels near its Black Sea coast»), dated by the day of the statement"
+    },
+    {
+      "registros": [
+        "EODI-2026-00649",
+        "EODI-2026-00656"
+      ],
+      "conserva": "EODI-2026-00649",
+      "motivo": "el mismo suceso: los sobrevuelos de drones no autorizados de la base naval de Toulon y otros sitios militares del sureste de Francia durante el ejercicio de octubre de 2026, que anunció la Marine nationale el 21 de octubre. 00656 son las notas de ese día («Suspicious drones flew over military facilities in southeastern France earlier this month, the French navy said on Wednesday», politico.eu), con el lugar en el país",
+      "motivo_en": "the same event: the unauthorised drone overflights of the Toulon naval base and other military sites in south-eastern France during the October 2026 exercise, announced by the French Navy on 21 October. 00656 is that day's reports («Suspicious drones flew over military facilities in southeastern France earlier this month, the French navy said on Wednesday», politico.eu), placed at country level"
     }
   ],
   "reextraer": [
