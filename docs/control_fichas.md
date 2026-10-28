@@ -586,7 +586,7 @@ python -m recogida.control_fichas repaso-entrada --accion estado
 
 **Decidir.** Llamadas directas, no por lotes, en tandas de 12 con 4 hilos. Las decisiones van al
 control (`repaso_entrada:<id>`, con la huella de la ficha) y su gasto a la base, con el cerrojo de
-la recogida y nunca entre los minutos 12 y 45. Lo decidido con la misma huella no se repite.
+la recogida y nunca entre los minutos 10 y 45: si al tomar el cerrojo ya es la ventana (otro lo tenía), lo suelta y espera. Lo decidido con la misma huella no se repite.
 
 **Comprobaciones del repaso** (`ajustar`, desde el muestreo del grupo a del 28 de octubre de 2026, que salió con 3 de 15 mal):
 

@@ -29,12 +29,13 @@ aproximada; c, las de lugar vago; d, el resto):
   incidentes_revisados.json («separar», «datos» y «retirar», que la recogida aplica cada hora).
 """
 
+import contextlib
 import hashlib
 import json
 import logging
 import random
 import time
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
@@ -63,8 +64,9 @@ MAX_MAL = 1
 HILOS = 4
 POR_TANDA = 12
 # La recogida horaria toma el cerrojo hacia el minuto 17 y publica hacia el 35: el repaso no lo
-# toma entre estos minutos.
-VENTANA_RECOGIDA = (12, 45)
+# toma entre estos minutos. Empieza en el 10 porque guardar la base (con su copia) tarda hasta
+# dos minutos y el cerrojo tiene que estar suelto antes del 15.
+VENTANA_RECOGIDA = (10, 45)
 # Una unión es imposible (mismo_imposible) si las noticias de una ficha son todas de antes del día
 # firme de la otra (con este margen por la hora local), o si las dos tienen un lugar preciso a más
 # de esta distancia. Muestreo del grupo a del 28 de octubre de 2026: el aeropuerto de Vilna del 25
@@ -343,6 +345,23 @@ def esperar_ventana(reloj: Callable[[], datetime], dormir: Callable[[float], Non
         dormir(float(espera))
 
 
+@contextlib.contextmanager
+def cerrojo_fuera_de_la_recogida(
+    base: control_fichas.Base, reloj: Callable[[], datetime], dormir: Callable[[float], None]
+) -> Iterator[None]:
+    """El cerrojo de la base, fuera de los minutos de la recogida también después de tomarlo: si
+    otro lo tenía y se ha entrado en la ventana mientras se esperaba, se suelta y se espera
+    (28 de octubre de 2026: se tomó a las 18:10 y se guardó a las 18:12)."""
+    while True:
+        esperar_ventana(reloj, dormir)
+        with base.cerrojo():
+            desde, hasta = VENTANA_RECOGIDA
+            if not desde <= reloj().minute < hasta:
+                yield
+                return
+        registro.info("repaso de entrada: cerrojo tomado dentro de la ventana; se suelta")
+
+
 def _llamada(respuesta: dict[str, Any], clave_: str, ahora: datetime) -> Documento:
     """La llamada para anotar. Como las del repaso con el experto, no va como escalada: cuenta
     solo en su modo (Almacen.gastado), fuera del cupo del experto y del mes."""
@@ -423,8 +442,7 @@ def decidir_grupo(
         preguntas = [_preparar(copia, d, activos, plazo) for d in tanda]
         nuevas, llamadas = _preguntar(copia, cliente, preguntas, reloj(), resumen)
         base.soltar(copia)
-        esperar_ventana(reloj, dormir)
-        with base.cerrojo():
+        with cerrojo_fuera_de_la_recogida(base, reloj, dormir):
             almacen = base.abrir()
             for llamada in llamadas:
                 almacen.registrar_llamada(llamada)
@@ -523,8 +541,7 @@ def recalcular(
     muestreo: la huella del grupo cambia."""
     reloj = reloj or (lambda: datetime.now(UTC))
     dormir = dormir or time.sleep
-    esperar_ventana(reloj, dormir)
-    with base.cerrojo():
+    with cerrojo_fuera_de_la_recogida(base, reloj, dormir):
         almacen = base.abrir()
         nuevas: dict[str, Documento] = {}
         for k, decision in almacen.controles(PREFIJO).items():
@@ -722,8 +739,7 @@ def aplicar_grupo(
     aprobado(muestreo, copia.controles(PREFIJO), grupo)
     base.soltar(copia)
     hecho = Aplicado()
-    esperar_ventana(reloj, dormir)
-    with base.cerrojo():
+    with cerrojo_fuera_de_la_recogida(base, reloj, dormir):
         almacen = base.abrir()
         ahora = reloj()
         decisiones = almacen.controles(PREFIJO)

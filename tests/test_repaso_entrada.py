@@ -246,3 +246,24 @@ def test_recalcular_comprueba_lo_ya_decidido_sin_llamar() -> None:
     assert repaso.con_cambios(almacen.controles(repaso.PREFIJO), "a") == {}
     # El muestreo de antes ya no vale.
     assert antes["huella"] != repaso.plantilla(almacen.controles(repaso.PREFIJO), "a", 1)["huella"]
+
+
+def test_el_cerrojo_tomado_dentro_de_la_ventana_se_suelta_y_se_espera() -> None:
+    # 28 de octubre de 2026: se miró la hora a las 18:09, se esperó el cerrojo y se guardó a las
+    # 18:12. Ahora, si al tomarlo ya es la ventana, se suelta y se espera al minuto 45.
+    horas = iter([datetime(2026, 10, 28, 18, 9, tzinfo=UTC), datetime(2026, 10, 28, 18, 11,
+                  tzinfo=UTC), datetime(2026, 10, 28, 18, 11, tzinfo=UTC)])  # fmt: skip
+    despues = datetime(2026, 10, 28, 18, 45, 5, tzinfo=UTC)
+    tomas: list[str] = []
+    esperas: list[float] = []
+
+    @contextlib.contextmanager
+    def cerrojo() -> Any:
+        tomas.append("toma")
+        yield
+
+    base = control_fichas.Base(Almacen.abrir, lambda a: None, cerrojo)
+    with repaso.cerrojo_fuera_de_la_recogida(base, lambda: next(horas, despues), esperas.append):
+        dentro = True
+    assert dentro and len(tomas) == 2
+    assert esperas == [34 * 60]
