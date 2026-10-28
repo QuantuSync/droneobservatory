@@ -165,7 +165,9 @@ class Avisos:
         return lambda texto: self.enviados.append((titulo, texto))
 
 
-def test_avisos_al_80_y_al_100_una_vez_al_mes() -> None:
+def test_avisos_al_80_y_al_100_una_vez_al_mes(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Con un tope de 60 USD (el de antes del 28 de octubre de 2026), por la variable.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "60")
     almacen = Almacen.abrir()
     avisos = Avisos()
     _llamada(almacen, "2026-10-03T10:00:00Z", 42.0)
@@ -188,6 +190,7 @@ def test_un_tope_nuevo_vuelve_a_avisar_al_80(
 ) -> None:
     # El 19 de octubre de 2026 el aviso del 80 % ya constaba con el tope de antes: a 48 de 60 USD
     # no habría avisado. Un estado sin «tope» (el de antes del 25 de octubre) cuenta como nuevo.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "60")
     almacen = Almacen.abrir()
     avisos = Avisos()
     (tmp_path / "gasto_api.json").write_text(
@@ -220,7 +223,7 @@ def test_saldo_agotado_un_aviso_por_episodio(tmp_path: Path) -> None:
 
 def test_sin_token_de_ntfy_no_se_avisa_ni_se_anota() -> None:
     almacen = Almacen.abrir()
-    _llamada(almacen, "2026-10-03T10:00:00Z", 54.0)
+    _llamada(almacen, "2026-10-03T10:00:00Z", 0.9 * coste.TOPE_MENSUAL_USD)
     assert gasto_api.revisar(almacen, AHORA, lambda titulo: None) == []
     assert gasto_api.revisar(almacen, AHORA, Avisos()) == [gasto_api.TITULO_80]
 

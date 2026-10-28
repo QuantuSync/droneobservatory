@@ -1439,9 +1439,13 @@ def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
 # --- Retención -----------------------------------------------------------------------------
 
 
-def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documento:
-    """Las fichas nuevas que aún no han pasado el control se retienen como mucho 6 horas.
-    Devuelve el cursor nuevo."""
+def retener(
+    ctx: Contexto, cursor: Documento, verificar_nuevos: bool, con_entrada: bool = False
+) -> Documento:
+    """Las fichas nuevas que aún no han pasado el control se retienen. Con el filtro de entrada
+    (recogida/entrada.py, `con_entrada`), hasta que decida, sin límite de tiempo: sin decisión no
+    sale ninguna (desde el 28 de octubre de 2026; antes salían a las 6 horas con lo que hubiera).
+    Sin él (el repaso), como mucho 6 horas. Devuelve el cursor nuevo."""
     vistos: dict[str, str] = dict(cursor.get("vistos", {}))
     retenidos: dict[str, Documento] = dict(cursor.get("retenidos", {}))
     decisiones = {**ctx.decisiones, **ctx.nuevas}
@@ -1485,7 +1489,14 @@ def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documen
         sin_fecha = fechas.retrospectiva(incidente) is not None
         if reglas.pide_fecha(incidente, activos) is not None:
             motivos.append("fecha del suceso sin respaldar (noticia retrospectiva)")
-        if motivos and (id_ in esperan or sin_fecha or ctx.ahora - _leer(desde) < ESPERA):
+        if con_entrada:
+            from recogida import entrada
+
+            filtro = entrada.motivo_retencion(decisiones.get(entrada.clave(id_)), incidente)
+            if filtro is not None:
+                motivos.append(filtro)
+        sin_limite = con_entrada or id_ in esperan or sin_fecha
+        if motivos and (sin_limite or ctx.ahora - _leer(desde) < ESPERA):
             nuevos_retenidos[id_] = {"desde": desde, "motivo": "; ".join(motivos)}
             ctx.resultado.retenidos[id_] = "; ".join(motivos)
             continue
@@ -1576,6 +1587,22 @@ def ejecutar(
         almacen.guardar_controles(ctx.nuevas, _iso(ahora))
     ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
     ctx.nuevas = {}
+    if horaria:
+        # El filtro de entrada de las fichas nuevas y la medida a las 24 horas, con el experto y
+        # su cupo propio (recogida/entrada.py).
+        from recogida import entrada
+
+        plazo_entrada = Plazo(entrada.TOPE_S)
+        try:
+            entrada.filtrar(ctx, vistos, plazo_entrada)
+            entrada.medir(ctx, dict(cursor.get("vistos", {})), plazo_entrada)
+        except Exception as error:
+            registro.warning("filtro de entrada: %s", repr(error)[:300])
+            resultado.errores.append(f"filtro de entrada: {repr(error)[:150]}")
+        finally:
+            almacen.guardar_controles(ctx.nuevas, _iso(ahora))
+        ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
+        ctx.nuevas = {}
     hechas = set(almacen.traducciones())
     # Las citas de lo nuevo y lo cambiado; lo atrasado, de madrugada y en el repaso, para que no
     # se coma el gasto del día que necesitan las fichas nuevas.
@@ -1596,7 +1623,7 @@ def ejecutar(
         traducir(ctx, atrasadas, set(almacen.traducciones()))
         traducir(ctx, citas_pendientes(almacen, "ucrania"), set(almacen.traducciones()))
     if alcance != "repaso":
-        nuevo_cursor = retener(ctx, cursor, verificar_nuevos=True)
+        nuevo_cursor = retener(ctx, cursor, verificar_nuevos=True, con_entrada=True)
     else:
         nuevo_cursor = retener(ctx, cursor, verificar_nuevos=False)
     almacen.guardar_cursor(CURSOR, nuevo_cursor)
@@ -2506,6 +2533,7 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "api": gasto_api(almacen, ahora, anterior.get("api") or {}),
         "criticos_esperando": criticos_esperando(almacen),
         "auditoria": auditoria_del_dia(almacen, ahora, anterior.get("auditoria") or {}),
+        "entrada": _estado_entrada(almacen, ahora, anterior.get("entrada") or {}),
     }
     if segunda is not None:
         datos["segunda_lectura"] = segunda
@@ -2515,6 +2543,12 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
     temporal = ruta.with_suffix(".tmp")
     temporal.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
     temporal.replace(ruta)
+
+
+def _estado_entrada(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
+    from recogida import entrada
+
+    return entrada.estado_por_dia(almacen, ahora, anterior)
 
 
 # Días que se guardan de la auditoría de las fichas (proceso/auditoria_fichas.py).

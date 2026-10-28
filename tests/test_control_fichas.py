@@ -121,6 +121,30 @@ def _nuremberg_griega() -> dict[str, Any]:
     return d
 
 
+def entrada_que_deja_pasar(contenido: str) -> dict[str, Any]:
+    """La respuesta del filtro de entrada (modelo/entrada.py) que deja publicar la ficha: ninguna
+    de la lista, y la fecha, el lugar y cada autoridad (del país de la ficha) con el titular de
+    su primera fuente como frase."""
+    lineas = contenido.splitlines()
+    fuente = next(linea for linea in lineas if linea.startswith("Fuente 1 ("))
+    titular = fuente.split("Titular: ", 1)[1].split(". Texto:", 1)[0].rstrip(".")
+    pais = next(linea for linea in lineas if linea.startswith("- lugar:")).rsplit(",", 1)[1]
+    inicio = lineas.index("Autoridades citadas:") + 1
+    citadas = []
+    for linea in lineas[inicio:]:
+        if not linea.startswith("- "):
+            break
+        citadas.append(linea[2:])
+    return {
+        "mismo_suceso": "ninguna", "motivo_mismo": "", "otro_dia": False, "fecha_suceso": "",
+        "fecha_fuente": 1, "fecha_frase": titular, "lugar_fuente": 1, "lugar_frase": titular,
+        "autoridades": [
+            {"nombre": n, "pais": pais.strip(), "fuente": 1, "frase": titular} for n in citadas
+        ],
+        "duda": False, "dudosas": [], "motivo_es": "nueva", "motivo_en": "new",
+    }  # fmt: skip
+
+
 class Servicio:
     """El servicio de mensajes, falso: decide por el tipo de petición."""
 
@@ -166,6 +190,9 @@ class Servicio:
                     "frase": "Am Flughafen Nürnberg",
                 },
             }
+        elif contenido.startswith("Ficha nueva:") and "Fichas que ya tenemos" in contenido:
+            self.pedidas.append("entrada")
+            salida = entrada_que_deja_pasar(contenido)
         else:
             self.pedidas.append("traducir")
             lineas = [linea for linea in contenido.splitlines() if linea.strip()]
@@ -537,7 +564,9 @@ def test_lo_distinto_no_se_une() -> None:
     assert griega is not None and "fusionado_en" not in griega
 
 
-def test_lo_nuevo_sin_controlar_se_retiene_como_mucho_seis_horas() -> None:
+def test_lo_nuevo_sin_decision_no_sale_por_tiempo() -> None:
+    # Hasta el 28 de octubre de 2026 salía a las 6 horas con lo que hubiera; ahora, sin decisión
+    # del filtro de entrada (aquí sin servicio), no sale nunca.
     almacen = _base(_nuremberg_alemana())
     _ejecutar(almacen, None)  # primera pasada: lo que había se da por visto
     almacen.guardar_incidente(_nuremberg_griega(), AHORA, VOCABULARIO_MODELOS)
@@ -546,9 +575,10 @@ def test_lo_nuevo_sin_controlar_se_retiene_como_mucho_seis_horas() -> None:
     assert control_fichas.retenidos(almacen) == frozenset({"EODI-2026-09516"})
     # Lo ya publicado no se retiene nunca.
     assert "EODI-2026-09515" not in resultado.retenidos
-    tarde = _ejecutar(almacen, None, AHORA + timedelta(hours=7, minutes=30))
-    assert "EODI-2026-09516" in tarde.liberados
-    assert control_fichas.retenidos(almacen) == frozenset()
+    for horas in (7, 30, 24 * 8):
+        tarde = _ejecutar(almacen, None, AHORA + timedelta(hours=horas))
+        assert "EODI-2026-09516" in tarde.retenidos and not tarde.liberados
+        assert control_fichas.retenidos(almacen) == frozenset({"EODI-2026-09516"})
 
 
 def test_dudoso_se_resuelve_a_las_seis_horas() -> None:

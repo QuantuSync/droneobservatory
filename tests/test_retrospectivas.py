@@ -163,8 +163,8 @@ def test_sin_fecha_respaldada_no_se_publica_ni_a_las_seis_horas() -> None:
     _ejecutar(almacen, ahora + timedelta(hours=1))
     assert control_fichas.retenidos(almacen) >= {"EODI-2026-00663", "EODI-2026-00499"}
     tarde = _ejecutar(almacen, ahora + timedelta(hours=8))
-    # La del mes del pasado sigue retenida sin el experto; la que solo comparte el aeropuerto
-    # sale a las 6 horas, como lo demás que espera.
+    # Sin el experto, ninguna sale: tampoco la que solo comparte el aeropuerto (hasta el 28 de
+    # octubre de 2026 salía a las 6 horas; ahora espera al filtro de entrada).
     assert "EODI-2026-00663" in tarde.retenidos
     assert "EODI-2026-00663" in control_fichas.retenidos(almacen)
-    assert "EODI-2026-00499" in tarde.liberados
+    assert "EODI-2026-00499" in tarde.retenidos and not tarde.liberados

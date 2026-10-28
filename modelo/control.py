@@ -186,9 +186,11 @@ habitual en cada idioma). Da siempre las dos, también si la cita ya está en un
 idiomas: entonces repítela tal cual en ese idioma. Ninguna traducción puede quedar vacía. Lo \
 que empieza por «[autoridad]» no es una cita: es el nombre de una institución, un organismo o \
 un cargo que declara. Escríbelo sin la marca, como se diría en cada idioma y con su artículo \
-(«el Ministerio de Defensa de Rumanía», «the Romanian Ministry of Defence»; «la Policía de \
-Moldavia», «the Moldovan Police»), con el país si el nombre no lo dice y se sabe; si es una \
-persona, con su cargo delante («el primer ministro de Polonia, Donald Tusk»)."""
+(«Ministerul Apărării Naționale»: «el Ministerio de Defensa Nacional», «the Ministry of \
+National Defence»), con el país solo si el nombre lo dice. Nunca deduzcas el país de la lengua \
+del nombre: en rumano, en ruso o en inglés se nombran instituciones de muchos países (el \
+Consejo de Seguridad búlgaro, en una noticia rumana, no es de Moldavia). Si es una persona, \
+con su cargo delante, como lo da el nombre («el primer ministro Donald Tusk»)."""
 
 
 @dataclass(frozen=True)

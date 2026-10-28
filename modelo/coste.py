@@ -44,14 +44,21 @@ hora del día siguiente (su tope se renueva a las 00:00 UTC, y así las esperas 
 medianoche); el crítico, a la recogida siguiente, y se reintenta en cada una.
 
 Tope mensual (desde el 19 de octubre de 2026): todo lo que se gasta en la API en el mes (UTC),
-también lo de las sesiones, cuenta contra TOPE_MENSUAL_USD (60 dólares desde el 20 de octubre de
-2026, con los créditos mensuales de la API incluidos en el plan; la variable
+también lo de las sesiones, cuenta contra TOPE_MENSUAL_USD (150 dólares desde el 28 de octubre de
+2026, 60 desde el 20, con los créditos mensuales de la API incluidos en el plan; la variable
 EODI_TOPE_MENSUAL_USD lo cambia), repartido entre el experto y los modos de cada día
 (REPARTO_MENSUAL_USD). Cada modo de cada día y el experto gastan como mucho lo que queda de su parte
 del mes entre los días que quedan (tope_del_dia). Al 80 % se avisa una vez (recogida/gasto_api.py);
 al 100 % solo siguen la recogida horaria con el modelo base (sin ella no se sabe qué es crítico) y
 los casos críticos con la reserva del experto; los demás modos de cada día esperan al mes
 siguiente.
+
+Filtro de entrada (desde el 28 de octubre de 2026, recogida/entrada.py): cada ficha nueva pasa
+por el experto antes de publicarse, comparada con todas las que pueden contar el mismo suceso, y 24
+horas después otra vez (la medida). Modo «entrada»: 3 dólares al día (LIMITE_ENTRADA_DIARIO_USD),
+solo con el experto y con su cupo propio: no cuenta contra el tope diario del experto, ni contra su
+reserva crítica, ni contra el control; sí dentro de su parte del mes (90 de los 150). Lo que no
+cabe espera a la recogida siguiente, sin publicarse.
 
 La segunda lectura (docs/segunda_lectura.md) usa un servicio secundario gratuito; lo único que
 cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,30 dólares al
@@ -139,6 +146,10 @@ LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD = 0.80
 # el tope del experto y su reserva crítica. De madrugada va por lote (escalar_lote). 0,25 desde el
 # 20 de octubre de 2026 (era 0,06): el control manda al experto los fallos de las fichas.
 LIMITE_CONTROL_EXPERTO_DIARIO_USD = 0.25
+# Cupo propio del experto en el filtro de entrada de las fichas nuevas y en su medida a las 24 horas
+# (recogida/entrada.py), desde el 28 de octubre de 2026: aparte del tope normal del experto, de su
+# reserva crítica y del control; dentro de su parte del mes.
+LIMITE_ENTRADA_DIARIO_USD = 3.00
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
@@ -148,8 +159,9 @@ ESPERA_REINTENTO = timedelta(minutes=50)
 # medido del 15 al 19 de octubre de 2026 en funcionamiento normal, por día: base de la recogida
 # 0,094; base del control 0,064; guerra 0,002; rectificaciones, una pasada al mes de hasta 0,30.
 # 10 USD del 19 al 20 de octubre de 2026; 60 desde el 20, con los créditos mensuales de la API
-# incluidos en el plan (caducan cada mes y no se acumulan).
-TOPE_MENSUAL_USD = 60.00
+# incluidos en el plan (caducan cada mes y no se acumulan). 150 desde el 28 de octubre de 2026, con
+# el filtro de entrada (3 dólares al día).
+TOPE_MENSUAL_USD = 150.00
 VARIABLE_TOPE_MENSUAL = "EODI_TOPE_MENSUAL_USD"
 EXPERTO = "experto"
 OTROS = "otros"
@@ -176,6 +188,7 @@ class Modo(StrEnum):
     SEGUNDA_LECTURA = "segunda_lectura"
     SEGUNDA_BUSQUEDA = "segunda_busqueda"
     REPASO_EXPERTO = "repaso_experto"
+    ENTRADA = "entrada"
 
 
 # Lo que le toca a cada uno del tope mensual (suman TOPE_MENSUAL_USD). «otros»: lo que no es de
@@ -187,7 +200,8 @@ class Modo(StrEnum):
 # que usaron la reserva eran entregas de la segunda lectura, que ya no la usan). Reparto de 60 USD
 # desde el 20 de octubre: el experto, 40 (1,50 al día y la reserva crítica de lo que pase); la
 # recogida horaria, 4 (0,13 al día); el control, 6 (su base y su cupo del experto); la segunda
-# búsqueda, 6 (20 casos al día); otros, 3,50 (las sesiones).
+# búsqueda, 6 (20 casos al día); otros, 3,50 (las sesiones). Desde el 28 de octubre de 2026, 150
+# USD: lo mismo y 90 para el filtro de entrada (3 al día durante 30 días).
 REPARTO_MENSUAL_USD: dict[str, float] = {
     EXPERTO: 40.00,
     Modo.HORARIO: 4.00,
@@ -195,6 +209,7 @@ REPARTO_MENSUAL_USD: dict[str, float] = {
     Modo.GUERRA: 0.20,
     Modo.RECTIFICACIONES: 0.30,
     Modo.SEGUNDA_BUSQUEDA: 6.00,
+    Modo.ENTRADA: 90.00,
     OTROS: 3.50,
 }
 # Los modos de cada día que paran al llegar al tope mensual. La recogida horaria sigue con el
@@ -468,6 +483,7 @@ def limite(modo: Modo) -> float:
         Modo.SEGUNDA_LECTURA: LIMITE_SEGUNDA_EXPERTO_DIARIO_USD,
         Modo.SEGUNDA_BUSQUEDA: LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD,
         Modo.REPASO_EXPERTO: LIMITE_REPASO_EXPERTO_USD,
+        Modo.ENTRADA: LIMITE_ENTRADA_DIARIO_USD,
     }[modo]
 
 
@@ -475,7 +491,7 @@ def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
     return modo in {
         Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA,
-        Modo.SEGUNDA_BUSQUEDA,
+        Modo.SEGUNDA_BUSQUEDA, Modo.ENTRADA,
     }  # fmt: skip
 
 
