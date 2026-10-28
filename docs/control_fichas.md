@@ -528,7 +528,13 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
    - una autoridad sin frase, o de otro país sin una frase que lo diga: no cuenta como declaración
      oficial (la fuente se queda, con fiabilidad C) y se anota en `autoridades_fuera`;
    - si duda, o falta una frase, se le vuelve a preguntar una vez con las fuentes de las
-     candidatas más cercanas (`MAX_CANDIDATAS_CONTEXTO`).
+     candidatas más cercanas (`MAX_CANDIDATAS_CONTEXTO`);
+   - **fechas firmes** (`fecha_firme`: el día sale de una frase, no de la publicación): dos fichas
+     con fechas firmes a más de 2 días (`DIAS_FIRMES`) no se unen; se le vuelve a preguntar con
+     las fuentes de la otra y, si insiste, la ficha se retiene para una revisión. Tampoco se cambia
+     un día firme por otro a más de 2 días. En la prueba del 28 de octubre de 2026 el experto unía
+     el ataque a buques del 12 de octubre (EODI-2026-00512) al del 6 (00489), tras moverlo al 6 por
+     «o săptămână după ce atacurile au dus la scufundarea», que no da ningún día.
 4. **Sin respuesta del experto** (tope, caída, tiempo de la pasada) la ficha **espera** y cuenta
    como caso crítico (`esperan_experto` del estado). Nada sale por tiempo: se quitó la salida a las
    6 horas de las fichas nuevas.
