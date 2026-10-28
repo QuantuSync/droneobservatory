@@ -267,3 +267,76 @@ def test_el_cerrojo_tomado_dentro_de_la_ventana_se_suelta_y_se_espera() -> None:
         dentro = True
     assert dentro and len(tomas) == 2
     assert esperas == [34 * 60]
+
+
+def _error(dato: str, correcto: str, frase: str = "Die Polizei bestätigte die Drohne") -> Any:
+    return {"dato": dato, "correcto": correcto, "fuente_id": "f1", "frase": frase}
+
+
+def test_las_propuestas_de_datos_salen_como_las_aplica_la_recogida() -> None:
+    # Las del 28 de octubre de 2026 traían el tipo «interrupción» y la presencia como «datos», y
+    # valores libres; había que reescribirlas a mano.
+    ficha = {"id": "EODI-2026-00001", "lugar": {"pais": "DE"},
+             "fuentes": [{"id": "f1", "enlace": "https://ejemplo.de/a"}]}  # fmt: skip
+    decision = {"motivo_es": "motivo", "motivo_en": "reason"}
+    interrupcion = _error("tipo", "interrupcion_aeroportuaria")
+    seccion, cierre = repaso.propuesta_dato(ficha, decision, interrupcion)
+    assert seccion == "datos" and (cierre["campo"], cierre["valor"]) == ("cierre", "si")
+    assert cierre["enlace"] == "https://ejemplo.de/a" and cierre["pais"] == "DE"
+    assert repaso.propuesta_dato(ficha, decision, _error("tipo", "incursion"))[0] == "datos"
+    assert repaso.propuesta_dato(ficha, decision, _error("tipo", "derribo"))[0] == "descartadas"
+    assert repaso.propuesta_dato(ficha, decision, _error("drones", "6"))[1]["valor"] == {
+        "min": 6, "max": 6}  # fmt: skip
+    assert repaso.propuesta_dato(ficha, decision, _error("drones", "3-5"))[1]["valor"] == {
+        "min": 3, "max": 5}  # fmt: skip
+    libre = repaso.propuesta_dato(ficha, decision, _error("drones", "1 dron confirmado; otro no"))
+    assert libre[0] == "descartadas" and libre[1]["razon"]
+    seccion, presencia = repaso.propuesta_dato(ficha, decision, _error("presencia", "confirmada"))
+    assert seccion == "titulares"
+    assert presencia["presencia"] == {"valor": "confirmada",
+                                      "cita": "Die Polizei bestätigte die Drohne",
+                                      "enlace": "https://ejemplo.de/a"}  # fmt: skip
+    assert set(presencia["motivo"]) == {"es", "en"}
+    assert repaso.propuesta_dato(ficha, decision, _error("estado", "confirmado"))[0] == (
+        "descartadas"
+    )
+    larga = _error("presencia", "confirmada", " ".join(["palabra"] * 26))
+    assert repaso.propuesta_dato(ficha, decision, larga)[0] == "descartadas"
+
+
+def test_llevar_anade_las_propuestas_sin_tocar_el_resto(tmp_path: Any) -> None:
+    ruta = tmp_path / "incidentes_revisados.json"
+    original = (
+        '{\n  "descripcion": "Galați \\u021b",\n  "titulares": [\n    {\n      "incidente": '
+        '"EODI-1",\n      "titulo": {"es": "x", "en": "x"}\n    }\n  ],\n  "separar": [],\n'
+        '  "datos": [\n    {\n      "incidente": "EODI-1",\n      "campo": "drones",\n'
+        '      "valor": {"min": 1, "max": 1},\n      "cita": "c",\n      "enlace": "e",\n'
+        '      "motivo": "m"\n    }\n  ]\n}\n'
+    )
+    ruta.write_text(original, encoding="utf-8")
+    propuestas = {
+        "datos": [
+            {"incidente": "EODI-1", "campo": "drones", "valor": {"min": 2, "max": 2}},
+            {"incidente": "EODI-2", "campo": "cierre", "valor": "si", "cita": "c",
+             "enlace": "e", "pais": None, "motivo": "m"},
+        ],
+        "titulares": [{"incidente": "EODI-2", "presencia": {"valor": "confirmada"}}],
+        "descartadas": [{"incidente": "EODI-3", "razon": "r"}],
+    }  # fmt: skip
+    assert repaso.llevar(propuestas, ruta) == {"retirar": 0, "titulares": 1, "separar": 0,
+                                               "datos": 1}  # fmt: skip
+    texto = ruta.read_text(encoding="utf-8")
+    # Lo que había sigue escrito igual (con sus escapes).
+    for trozo in (original[: original.index("    }\n  ],")], original[original.index('  "datos"') :]
+                  .split("\n  ]")[0]):  # fmt: skip
+        assert trozo in texto
+    import json
+
+    datos = json.loads(texto)
+    assert datos["datos"][-1] == {"incidente": "EODI-2", "campo": "cierre", "valor": "si",
+                                  "cita": "c", "enlace": "e", "motivo": "m"}  # fmt: skip
+    assert datos["datos"][0]["valor"] == {"min": 1, "max": 1}
+    assert datos["titulares"][-1]["incidente"] == "EODI-2"
+    # Otra vez, nada nuevo.
+    assert set(repaso.llevar(propuestas, ruta).values()) == {0}
+    assert ruta.read_text(encoding="utf-8") == texto

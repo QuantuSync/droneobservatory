@@ -423,3 +423,65 @@ def test_la_ficha_publicada_lleva_sus_sucesos_relacionados() -> None:
     sin_punto = {**documento, "lugar": {"pais": "LT", "nivel": "pais"}}
     publico = geojson.sin_ubicacion(sin_punto)
     assert publico is not None and publico["relacionados"] == [relacionado]
+
+
+def test_el_que_se_queda_sin_articulos_propios_toma_los_de_su_parte(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2026-00541 (28 de octubre de 2026): el candidato de la ficha solo tenía las dos primeras
+    # noticias del dron del día 15; las del petrolero, el suceso que conserva el identificador,
+    # estaban en el candidato de un registro fundido. Vacío, no se guardaba y, al volver a
+    # extraerlo, la ficha del petrolero recuperó las noticias del dron.
+    almacen = Almacen.abrir()
+    sulina = [
+        ("https://novinite.com/petrolero", "2026-09-14T22:30:00Z", "Drone hits tanker", "CAND-P"),
+        ("https://sfin.ro/dron", "2026-09-15T04:45:00Z", "Drone in Romanian airspace", "CAND-M"),
+        ("https://jurnalul.ro/dron", "2026-09-15T06:00:00Z", "O drona a patruns", "CAND-M"),
+    ]
+    for url, fecha, titular, _ in sulina:
+        almacen.guardar_articulo({
+            "url": url, "medio": url.split("/")[2], "fecha": fecha, "idioma": "en",
+            "titular": titular, "titular_normalizado": noticias.normalizar(titular),
+            "lugares": ["LRCK"],
+        })  # fmt: skip
+    for cand in ("CAND-P", "CAND-M"):
+        suyos = [s for s in sulina if s[3] == cand]
+        almacen.corregir_candidatos([{
+            "id": cand, "tipo": "espacio_aereo", "lugar": "LRCK", "precision": "dia",
+            "inicio": suyos[0][1], "ultimo": suyos[-1][1], "articulos": [s[0] for s in suyos],
+        }], "prueba")  # fmt: skip
+    fuentes = [_fuente(f"f{n}", url, fecha, titular)
+               for n, (url, fecha, titular, _) in enumerate(sulina, 1)]  # fmt: skip
+    mezclado = _incidente("EODI-2026-00541", fuentes, "2026-09-14T00:00Z")
+    mezclado["control"]["candidato"] = "CAND-M"
+    almacen.guardar_incidente(mezclado, AHORA, MODELOS)
+    almacen.guardar_extraccion("CAND-M", "2026-09-15T06:17Z", "ficha/5", "h", True,
+                               {"incidente": "EODI-2026-00541",
+                                "enviadas": [s[0] for s in sulina[1:]]})  # fmt: skip
+    revision = {
+        "incidente": "EODI-2026-00541",
+        "motivo": {"es": "petrolero y dron", "en": "tanker and drone"},
+        "partes": [
+            {"es_suceso": True, "fecha": "2026-09-14", "pais": "RO", "descripcion": "petrolero",
+             "coincide_con": None, "fuentes": ["f1"]},
+            {"es_suceso": True, "fecha": "2026-09-15", "pais": "RO", "descripcion": "dron",
+             "coincide_con": None, "fuentes": ["f2", "f3"]},
+        ],
+    }  # fmt: skip
+    monkeypatch.setattr(revisados, "cargar", lambda: {"unir": [], "separar": [revision]})
+    monkeypatch.setattr(revisados, "REEXTRAER_DESDE", "2026-10-01T00:00Z")
+    llamadas: list[str] = []
+    monkeypatch.setattr(revisados, "_extraer", _extractor_falso(llamadas))
+    revisados.separar(almacen, AHORA, MODELOS, cliente=object())
+    candidatos = {c["id"]: c for c in almacen.candidatos()}
+    assert candidatos["CAND-M"]["articulos"] == [sulina[0][0]]
+    assert "CAND-M" in llamadas
+    petrolero = almacen.incidente("EODI-2026-00541")
+    assert petrolero is not None
+    assert {f["enlace"] for f in petrolero["fuentes"]} == {sulina[0][0]}
+    # El dron, en su candidato nuevo con sus dos noticias.
+    (dron,) = [c for c in candidatos.values() if c.get("separado_de") == "CAND-M"]
+    assert dron["articulos"] == [sulina[1][0], sulina[2][0]]
+    # Ya con sus artículos y extraído, no se vuelve a tocar.
+    revisados.separar(almacen, AHORA + timedelta(hours=1), MODELOS, cliente=object())
+    assert llamadas.count("CAND-M") == 1

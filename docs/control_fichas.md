@@ -614,7 +614,21 @@ los demás, 10. Cada cambio va por el camino normal, con el motivo en el histori
 
 Las fichas de varios sucesos y los datos con su frase se escriben como propuestas, en
 `aplicado_<grupo>.json`. Las retiradas también van ahí, para que no vuelvan si la ficha se vuelve
-a extraer. Todo ello se lleva a `incidentes_revisados.json` (`separar`, `datos`, `retirar`).
+a extraer. Todo ello se lleva a `incidentes_revisados.json` (`separar`, `datos`, `titulares`,
+`retirar`) con `--accion llevar`, que las añade al final de su sección sin tocar el resto del
+fichero y sin repetir las que ya están.
+
+Los datos salen ya en la forma que la recogida aplica (`propuesta_dato`): el tipo «interrupción»
+como `cierre: si` (el tipo sale del cierre del aeropuerto), la incursión y el sobrevuelo como
+`tipo`, el número de drones como `{min, max}` y la presencia como entrada de `titulares` con su
+cita y su enlace. Lo que no se puede aplicar queda en `descartadas` con su razón: un tipo que no
+es de la ficha («derribo»), un número de drones en texto libre, el estado (lo decide
+`proceso/decidir.py` con las pruebas; se corrige con su cita en `citas`) o una cita de más de 25
+palabras. Las 17 propuestas de datos de los grupos a y b del 28 de octubre de 2026 venían como
+«datos» que la recogida no aplicaba y hubo que reescribirlas a mano; de ellas, 10 se aplicaron y 7
+se rechazaron al leer la fuente (presencias que daban por cierta la prensa, un vídeo o un
+sindicato). La pregunta (`repaso_entrada/2`) dice ahora qué valores caben y que la presencia es
+confirmada solo si lo dice una autoridad o hay pruebas físicas.
 
 **Gasto.** Modo `repaso_entrada`: 40 USD en total (`LIMITE_REPASO_ENTRADA_USD`), aparte del tope
 diario del experto, de su reserva, del modo `entrada` y del mes (`CUPOS_PROPIOS` y
@@ -701,7 +715,10 @@ siguen escribiendo en memoria, pero lo que queda al guardar es lo que deciden es
 - **titular** (`decidir_titulo`, desde el 23 de octubre de 2026), en español y en inglés, al
   final, con todo lo demás ya decidido: el texto revisado a mano («datos» y, si no, «titulares»)
   o el de la ficha; el dron como confirmado o posible según la presencia
-  (`proceso/titulares.py`); y, sin atribución de una autoridad, sin el país del dron ni su autor
+  (`proceso/titulares.py`), y en masculino en español: «Una dron entra…» (EODI-2026-00698) y «Una
+  posible dron…» (EODI-2026-00322) venían de traducir el rumano «o dronă» y el alemán «eine
+  Drohne»; `titulares.concordar` pone en masculino lo que acompaña al dron (determinantes delante,
+  con «posible» en medio o no, y los adjetivos corrientes detrás); y, sin atribución de una autoridad, sin el país del dron ni su autor
   (`atribucion.titulo_sin_atribucion`). Solo se quita la nacionalidad pegada al dron («drones
   rusos», «drones y aviones turcos», «Russian Shahed drones»), en los dos idiomas; se quedan la
   del espacio aéreo («espacio aéreo ucraniano»), el lugar, una persona o un buque. Un titular no
@@ -714,10 +731,13 @@ siguen escribiendo en memoria, pero lo que queda al guardar es lo que deciden es
   el derribo, la caída o los restos con el suceso confirmado, o hay pruebas físicas con el suceso
   confirmado; en el mar, solo si lo atribuye. Si no, sobrevuelo.
 - **revisiones a mano** (`configuracion/incidentes_revisados.json`, «datos»): una por ficha y dato
-  (`objetivo`, `lugar`, `inicio`, `drones`, `cierre`, `titulo`), con el valor, la cita (25
+  (`objetivo`, `lugar`, `inicio`, `drones`, `cierre`, `titulo`, `tipo`), con el valor, la cita (25
   palabras como mucho) y el enlace de la fuente que lo dice, y el motivo. Valen para la ficha que
   tiene esa fuente o, si la fuente leída no está en la ficha, la de su país (`pais`). La
-  revisión `cierre` dice si hubo cierre; su duración citada se queda. Ninguna otra regla cambia
+  revisión `cierre` dice si hubo cierre; su duración citada se queda. La revisión `tipo` fija
+  `incursion` (con `origen_demostrado_por: autoridad`) o `sobrevuelo` cuando una autoridad dice
+  algo que las reglas no leen de las fuentes (EODI-2026-00281: la Policía de Fronteras de Moldavia
+  vio el Shahed cruzar la frontera); la interrupción de un aeropuerto manda. Ninguna otra regla cambia
   un dato revisado a mano: la fecha de una nota oficial no pisa el inicio revisado, el control
   no corrige el número de drones ni el inicio revisados ni quita la instalación revisada, y la
   ubicación oficial toma la localidad de la revisión. Si dos reglas se pisan, la comprobación K

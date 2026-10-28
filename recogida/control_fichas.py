@@ -2723,7 +2723,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     # repaso-entrada (recogida/repaso_entrada.py)
     opciones.add_argument(
         "--accion",
-        choices=("decidir", "recalcular", "muestra", "aplicar", "estado"),
+        choices=("decidir", "recalcular", "muestra", "aplicar", "llevar", "estado"),
         default="estado",
     )
     opciones.add_argument("--grupo", choices=("a", "b", "c", "d"), default="a")

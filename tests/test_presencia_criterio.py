@@ -7,6 +7,8 @@ el aviso de un dron el sábado 8 de noviembre de 2025 y, de nuevo, el domingo 9 
 from datetime import UTC, datetime
 from typing import Any
 
+import pytest
+
 from almacen.base import Almacen
 from esquema import Documento
 from proceso import declaraciones, incidentes, presencia, titulares
@@ -376,3 +378,32 @@ def test_la_presencia_publicada_lleva_la_cita_de_la_fuente_que_la_justifica() ->
     assert publica["cita"] == "Het luchtruim werd gesloten door een drone"
     otras = [a for a in afirmaciones_publicas(resultado) if a["campo"] != "presencia_dron"]
     assert all("cita" not in a for a in otras)
+
+
+@pytest.mark.parametrize(
+    ("titulo", "presencia", "esperado"),
+    [
+        # EODI-2026-00698 y EODI-2026-00322 (28 de octubre de 2026): traducidos de «o dronă» y
+        # «eine Drohne».
+        ("Una dron entra en el espacio aéreo de Rumanía cerca de Sulina y despegan cazas",
+         "confirmada",
+         "Un dron entra en el espacio aéreo de Rumanía cerca de Sulina y despegan cazas"),
+        ("Una posible dron interrumpe brevemente las operaciones del aeropuerto de Hamburgo",
+         "no_confirmada",
+         "Un posible dron interrumpe brevemente las operaciones del aeropuerto de Hamburgo"),
+        ("Alerta por la dron rusa estrellada", "confirmada", "Alerta por el dron ruso estrellada"),
+        ("Hallazgo de la dron cerca de la base", "confirmada",
+         "Hallazgo del dron cerca de la base"),
+        ("Las drones misteriosas sobre Kleine-Brogel", "confirmada",
+         "Los drones misteriosos sobre Kleine-Brogel"),
+        # Lo que no acompaña al dron no cambia.
+        ("Una posible incursión de dron en la base aérea", "confirmada",
+         "Una posible incursión de dron en la base aérea"),
+        ("Drones sobre la planta de la Armada", "confirmada",
+         "Drones sobre la planta de la Armada"),
+    ],
+)  # fmt: skip
+def test_el_dron_es_masculino(titulo: str, presencia: str, esperado: str) -> None:
+    assert titulares.ajustar(titulo, presencia, "es") == esperado
+    assert titulares.concuerda(esperado, "es")
+    assert titulares.ajustar("A drone over the base", "confirmada", "en") == "A drone over the base"

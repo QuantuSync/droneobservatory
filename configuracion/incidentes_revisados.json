@@ -5172,6 +5172,42 @@
         "es": "Desde la separación del 28 de octubre de 2026, esta ficha es la del petrolero YARA J alcanzado frente a Sulina el 14 de octubre; el dron que entró en el espacio aéreo rumano el 15 está en EODI-2026-00698. Al volver a extraerla, el titular seguía hablando del dron.",
         "en": "Since the separation of 28 October 2026, this record is the tanker YARA J hit off Sulina on 14 October; the drone that entered Romanian airspace on the 15th is in EODI-2026-00698. When extracted again, the headline still spoke of the drone."
       }
+    },
+    {
+      "incidente": "EODI-2025-00445",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "I droni avvistati, ha riferito Francken, sono modelli di grandi dimensioni, che hanno volato ad alta quota",
+        "enlace": "https://eurofocus.adnkronos.com/sicurezza/droni-sulla-base-aerea-kleine-brogel-per-il-ministro-della-difesa-belga-era-un-obiettivo"
+      },
+      "motivo": {
+        "es": "El ministro de Defensa belga, Theo Francken, describe los drones vistos sobre Kleine-Brogel: una autoridad los da por ciertos.",
+        "en": "Belgian Defence Minister Theo Francken describes the drones seen over Kleine-Brogel: an authority treats them as real."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00278",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "O dronă a fost descoperită pe un câmp din apropierea satului Salcia, raionul Taraclia",
+        "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-a-cazut-in-republica-moldova-politia-2421467.html"
+      },
+      "motivo": {
+        "es": "El dron se encontró en un campo de Salcia y lo examinó la Inspección General de Policía de Moldavia: prueba física.",
+        "en": "The drone was found in a field near Salcia and examined by Moldova's General Police Inspectorate: physical evidence."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00317",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Die Soldatinnen und Soldaten wurden durch visuelle Sichtung auf die Drohne aufmerksam",
+        "enlace": "https://t-online.de/nachrichten/deutschland/militaer-verteidigung/id_100685212/bundeswehr-drohne-ueber-kaserne-in-sachsen-anhalt-abgeschossen.html"
+      },
+      "motivo": {
+        "es": "Una portavoz de la Bundeswehr confirma que los soldados vieron el dron y que se derribó.",
+        "en": "A Bundeswehr spokeswoman confirms the soldiers saw the drone and that it was shot down."
+      }
     }
   ],
   "titular_justificado": [],
@@ -10720,6 +10756,113 @@
       "enlace": "https://az-online.de/politik/drohnen-versenken-frachter-nahe-bulgarien-sofia-ruft-nato-zu-hilfe-zr-94540958.html",
       "pais": "BG",
       "motivo": "dos buques mercantes alcanzados por drones la noche del 12 al 13 de octubre de 2026, uno hundido (HS Dignity, frente a Krapets; Chelsea-3, frente a Byala), según las autoridades búlgaras citadas en az-online.de (fiabilidad B) y como dicen también el Consejo de Seguridad (mediafax.ro, «Două nave comerciale au fost lovite») y la Presidencia (hotnews.ro, «două nave comerciale au fost atacate cu drone»); el esquema no tiene un campo de buques alcanzados y la frase de los daños los cuenta; comprobado el 27 de octubre de 2026 en el original"
+    },
+    {
+      "incidente": "EODI-2026-00538",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-10-14T14:38Z",
+        "precision": "minuto"
+      },
+      "cita": "Ţinta aeriană a pătruns în spaţiul aerian naţional la ora 17:38, la aproximativ 22 km nord-est de Sulina, deasupra apelor teritoriale naţionale",
+      "enlace": "https://antena3.ro/actualitate/doua-avioane-f-16-au-fost-ridicate-de-la-baza-borcea-dupa-ce-armata-a-detectat-o-drona-in-marea-neagra-ro-alert-trimis-in-tulcea-807247.html",
+      "pais": "RO",
+      "motivo": "el blanco aéreo entró en el espacio aéreo a las 17:38 hora de Rumanía (UTC+3) del 14 de octubre de 2026, según el Ministerio de Defensa: 14:38 UTC; la ficha tenía las 17:45 UTC"
+    },
+    {
+      "incidente": "EODI-2026-00538",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Sulina",
+        "nivel": "localidad",
+        "punto": {
+          "lat": 45.15564,
+          "lon": 29.65403
+        },
+        "radio_km": 25.0
+      },
+      "cita": "Ţinta aeriană a pătruns în spaţiul aerian naţional la ora 17:38, la aproximativ 22 km nord-est de Sulina, deasupra apelor teritoriale naţionale",
+      "enlace": "https://antena3.ro/actualitate/doua-avioane-f-16-au-fost-ridicate-de-la-baza-borcea-dupa-ce-armata-a-detectat-o-drona-in-marea-neagra-ro-alert-trimis-in-tulcea-807247.html",
+      "pais": "RO",
+      "motivo": "el dron estuvo sobre las aguas territoriales a unos 22 km al nordeste de Sulina; la ficha lo situaba en la base de Borcea, de donde despegaron los F-16"
+    },
+    {
+      "incidente": "EODI-2026-00538",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "Ţinta aeriană a pătruns în spaţiul aerian naţional la ora 17:38, la aproximativ 22 km nord-est de Sulina, deasupra apelor teritoriale naţionale",
+      "enlace": "https://antena3.ro/actualitate/doua-avioane-f-16-au-fost-ridicate-de-la-baza-borcea-dupa-ce-armata-a-detectat-o-drona-in-marea-neagra-ro-alert-trimis-in-tulcea-807247.html",
+      "pais": "RO",
+      "motivo": "Borcea es la base de los cazas que despegaron, no el sitio del dron; ninguna fuente nombra una instalación sobrevolada"
+    },
+    {
+      "incidente": "EODI-2025-00060",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Dėl galimai pastebėto drono buvo laikinai sustabdyta Vilniaus oro uosto veikla",
+      "enlace": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/del-galimai-pastebeto-drono-buvo-laikinai-sustabdyta-vilniaus-oro-uosto-veikla",
+      "pais": "LT",
+      "motivo": "se suspendió la actividad del aeropuerto de Vilna (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2025-00291",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "lukkede Billund Lufthavn af sikkerhedsmæssige hensyn for flytrafikken fra klokken 04.30 til 05.41",
+      "enlace": "https://kristeligt-dagblad.dk/droner-blev-observeret-taet-paa-men-ikke-paa-billund-lufthavns-omraade",
+      "pais": "DK",
+      "motivo": "el aeropuerto de Billund cerró de 04:30 a 05:41 (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2026-00497",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Έκλεισαν τα νατοϊκά αεροδρόμια Lublin και Rzeszów μετά από εκτόξευση ρωσικού drone",
+      "enlace": "https://bankingnews.gr/diethni/articles/903887/synagermos-stin-polonia-ekleisan-ta-natoika-aerodromia-lublin-kai-rzeszow-meta-apo-ektoksefsi-rosikoy-drone",
+      "pais": "PL",
+      "motivo": "cerraron los aeropuertos de Lublin y Rzeszów (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2025-00208",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Norway's Oslo airport temporarily paused landings early on Monday after a report of a drone sighting near the airport",
+      "enlace": "https://thestar.com.my/news/world/2025/10/06/drone-sighting-temporarily-disrupt-flights-at-norway039s-oslo-airport-ntb-reports",
+      "pais": "NO",
+      "motivo": "el aeropuerto de Oslo paró los aterrizajes (Reuters; propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2025-00446",
+      "campo": "drones",
+      "valor": {
+        "min": 6,
+        "max": 6
+      },
+      "cita": "Burgers spotten dinsdag zes drones boven militaire luchtmachtbasis van Kleine-Brogel",
+      "enlace": "https://hbvl.be/regio/limburg/peer/burgers-spotten-dinsdag-zes-drones-boven-militaire-luchtmachtbasis-van-kleine-brogel-niet-meer-zichtbaar-bij-aankomst-politiehelikopter/102524895.html",
+      "pais": "BE",
+      "motivo": "seis drones el martes 4 de noviembre de 2025 (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2026-00230",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "One of five drones detected by Romanian military radars overnight near the border with Ukraine briefly entered Romanian airspace near Tulcea County",
+      "enlace": "https://b92.net/english/world/258558/a-drone-entered-romanian-airspace-near-tulcea-and-f-16-fighter-jets-were-scrambled/vest",
+      "pais": "RO",
+      "motivo": "de los cinco drones detectados solo uno entró (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2026-00281",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "O dronă de tip Shahed a survolat frontiera de stat a Republicii Moldova între Ucraina și Crocmaz, potrivit unui anunț făcut de Poliția de Frontieră.",
+      "enlace": "https://antena3.ro/externe/alerta-de-securitate-in-republica-moldova-o-drona-shahed-a-intrat-in-spatiul-aerian-780956.html",
+      "pais": "MD",
+      "motivo": "la Policía de Fronteras de Moldavia vio el Shahed cruzar la frontera (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
     }
   ]
 }

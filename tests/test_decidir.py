@@ -226,3 +226,20 @@ def test_los_danos_revisados_cuentan_los_buques() -> None:
     assert "zwei Frachtschiffe" in danos["danos"]["frase"]
     otra = {**ficha, "id": "EODI-2026-00489"}
     assert "danos" not in decidir.decidir_datos(otra)["consecuencias"]
+
+
+def test_el_tipo_revisado_manda_salvo_la_interrupcion() -> None:
+    # EODI-2026-00281 (28 de octubre de 2026): la Policía de Fronteras de Moldavia vio el Shahed
+    # cruzar la frontera; las reglas no lo leen de las fuentes y lo dejaban en sobrevuelo.
+    revisiones = [r for r in revisados.cargar()["datos"] if r["campo"] == "tipo"]
+    assert {r["valor"] for r in revisiones} <= set(decidir.TIPOS_REVISABLES)
+    moldavia = {"id": "EODI-2026-00281", "lugar": {"pais": "MD"}, "fuentes": [],
+                "tipo": "sobrevuelo"}  # fmt: skip
+    resultado = decidir._con_tipo_revisado(copy.deepcopy(moldavia))
+    assert resultado["tipo"] == "incursion"
+    assert resultado["origen_demostrado_por"] == ["autoridad"]
+    assert validaciones.errores_tipo(resultado) == []
+    cierre = {**copy.deepcopy(moldavia), "tipo": "interrupcion_aeroportuaria"}
+    assert decidir._con_tipo_revisado(cierre)["tipo"] == "interrupcion_aeroportuaria"
+    ajena = {**copy.deepcopy(moldavia), "lugar": {"pais": "ES"}}
+    assert decidir._con_tipo_revisado(ajena)["tipo"] == "sobrevuelo"

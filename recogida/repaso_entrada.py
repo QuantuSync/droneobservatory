@@ -26,7 +26,11 @@ aproximada; c, las de lugar vago; d, el resto):
   (queda la más antigua), el día que da una frase, la retirada de una ficha sin fecha conocida o
   que es un resumen, el lugar en el país y las autoridades no oficiales. Las separaciones y los
   datos corregidos con su frase se escriben como propuestas para configuracion/
-  incidentes_revisados.json («separar», «datos» y «retirar», que la recogida aplica cada hora).
+  incidentes_revisados.json («separar», «datos», «titulares» y «retirar», que la recogida aplica
+  cada hora), ya en la forma que la recogida aplica (`propuesta_dato`); las que no se pueden
+  aplicar quedan en «descartadas» con su razón;
+- `llevar`: añade las propuestas de un grupo aplicado a configuracion/incidentes_revisados.json
+  (las que ya están no se repiten), para el PR que las publica.
 """
 
 import contextlib
@@ -34,6 +38,8 @@ import hashlib
 import json
 import logging
 import random
+import re
+import textwrap
 import time
 from collections.abc import Callable, Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
@@ -47,9 +53,10 @@ from esquema import Documento
 from modelo import coste
 from modelo import entrada as peticiones
 from proceso import control_fichas as reglas
+from proceso import decidir as decide
 from proceso import incidentes
 from proceso.focos_termicos import distancia_km
-from proceso.presencia import TABLA_MOTIVOS
+from proceso.presencia import REVISADOS, TABLA_MOTIVOS
 from recogida import control_fichas, entrada
 from recogida.plazo import Plazo
 
@@ -638,7 +645,9 @@ class Aplicado:
     retiradas: list[str] = field(default_factory=list)
     corregidas: list[str] = field(default_factory=list)
     propuestas: dict[str, list[Documento]] = field(
-        default_factory=lambda: {"separar": [], "datos": [], "retirar": []}
+        default_factory=lambda: {
+            s: [] for s in ("separar", "datos", "titulares", "retirar", "descartadas")
+        }
     )
     sin_aplicar: list[str] = field(default_factory=list)
 
@@ -646,6 +655,8 @@ class Aplicado:
         return (f"unidas={len(self.unidas)} dias={len(self.dias)} "
                 f"retiradas={len(self.retiradas)} corregidas={len(self.corregidas)} "
                 f"separar={len(self.propuestas['separar'])} datos={len(self.propuestas['datos'])} "
+                f"titulares={len(self.propuestas['titulares'])} "
+                f"descartadas={len(self.propuestas['descartadas'])} "
                 f"sin_aplicar={len(self.sin_aplicar)}")  # fmt: skip
 
 
@@ -668,12 +679,64 @@ def propuesta_separar(incidente: Documento, decision: Documento) -> Documento:
     }  # fmt: skip
 
 
-def propuestas_datos(incidente: Documento, decision: Documento) -> list[Documento]:
+# Las propuestas del 28 de octubre de 2026 (grupos a y b) traían el tipo «interrupción» y la
+# presencia como «datos», que la recogida no aplica, y valores libres («derribo», «1 dron
+# confirmado; un segundo…»): había que reescribirlas a mano. Ahora salen en la forma que se aplica.
+PRESENCIAS = ("confirmada", "no_confirmada", "no_acreditada")
+_NUMERO = re.compile(r"^\s*(\d+)\s*(?:(?:-|–|a|to)\s*(\d+))?\s*$")
+MAX_PALABRAS_CITA = 25
+
+
+def _descartada(base: Documento, razon: str) -> tuple[str, Documento]:
+    return "descartadas", {**base, "razon": razon}
+
+
+def propuesta_dato(incidente: Documento, decision: Documento,
+                   error: Documento) -> tuple[str, Documento]:  # fmt: skip
+    """(sección de configuracion/incidentes_revisados.json, entrada) de un dato corregido, o
+    («descartadas», entrada con su razón) si no se puede aplicar tal cual."""
     enlaces = {f["id"]: f.get("enlace") for f in incidente.get("fuentes", [])}
-    return [{"incidente": incidente["id"], "campo": e["dato"], "valor": e["correcto"],
-             "cita": e["frase"], "enlace": enlaces.get(e["fuente_id"]),
-             "motivo": f"repaso de entrada con el experto: {decision.get('motivo_es', '')}"[:300]}
-            for e in decision.get("errores") or []]  # fmt: skip
+    dato, valor = str(error["dato"]), str(error["correcto"]).strip()
+    frase = str(error.get("frase") or "").strip()
+    motivo = f"repaso de entrada con el experto: {decision.get('motivo_es', '')}"[:300]
+    base: Documento = {
+        "incidente": incidente["id"], "campo": dato, "valor": valor, "cita": frase,
+        "enlace": enlaces.get(error.get("fuente_id")),
+        "pais": (incidente.get("lugar") or {}).get("pais"), "motivo": motivo,
+    }  # fmt: skip
+    if not base["enlace"] or not frase:
+        return _descartada(base, "sin la fuente o sin la frase que lo dice")
+    if len(frase.split()) > MAX_PALABRAS_CITA:
+        return _descartada(base, f"la cita pasa de {MAX_PALABRAS_CITA} palabras")
+    if dato == "tipo":
+        if valor == "interrupcion_aeroportuaria":
+            return "datos", {**base, "campo": "cierre", "valor": "si"}
+        if valor in decide.TIPOS_REVISABLES:
+            return "datos", base
+        return _descartada(base, f"«{valor}» no es un tipo de la ficha")
+    if dato == "drones":
+        numero = _NUMERO.match(valor)
+        if numero is None:
+            return _descartada(base, "el número de drones no es un número ni un intervalo")
+        minimo = int(numero.group(1))
+        maximo = int(numero.group(2) or minimo)
+        if minimo < 1 or maximo < minimo:
+            return _descartada(base, "el intervalo de drones no vale")
+        return "datos", {**base, "valor": {"min": minimo, "max": maximo}}
+    if dato == "presencia":
+        if valor not in PRESENCIAS:
+            return _descartada(base, f"«{valor}» no es una presencia de la ficha")
+        return "titulares", {
+            "incidente": incidente["id"],
+            "presencia": {"valor": valor, "cita": frase, "enlace": base["enlace"]},
+            "motivo": {"es": motivo, "en": f"entry review: {decision.get('motivo_en', '')}"[:300]},
+        }
+    return _descartada(base, "el estado lo decide proceso/decidir.py con las pruebas de la ficha: "
+                             "se corrige con su cita en «citas»")  # fmt: skip
+
+
+def propuestas_datos(incidente: Documento, decision: Documento) -> list[tuple[str, Documento]]:
+    return [propuesta_dato(incidente, decision, e) for e in decision.get("errores") or []]
 
 
 def aplicar_una(ctx: control_fichas.Contexto, incidente: Documento, decision: Documento,
@@ -723,7 +786,8 @@ def aplicar_una(ctx: control_fichas.Contexto, incidente: Documento, decision: Do
             hecho.corregidas.append(f"{incidente['id']}: {'; '.join(propios)}")
             cambiada = True
     if DATO in pasos:
-        hecho.propuestas["datos"] += propuestas_datos(incidente, decision)
+        for seccion, propuesta in propuestas_datos(incidente, decision):
+            hecho.propuestas[seccion].append(propuesta)
     return cambiada
 
 
@@ -768,13 +832,61 @@ def aplicar_grupo(
     return hecho
 
 
+# --- Llevar las propuestas a la configuración -----------------------------------------------
+
+
+def _clave_propuesta(seccion: str, propuesta: Documento) -> tuple[str, ...]:
+    if seccion == "datos":
+        return (str(propuesta["incidente"]), str(propuesta["campo"]))
+    return (str(propuesta["incidente"]),)
+
+
+def llevar(propuestas: dict[str, list[Documento]], ruta: Path = REVISADOS) -> dict[str, int]:
+    """Añade las propuestas a configuracion/incidentes_revisados.json, al final de su sección y sin
+    tocar el resto del fichero; las que ya tienen entrada (el mismo incidente, y el mismo dato en
+    «datos») no se repiten. Devuelve cuántas añade por sección."""
+    texto = ruta.read_text(encoding="utf-8")
+    datos = json.loads(texto)
+    añadidas: dict[str, int] = {}
+    for seccion in ("retirar", "titulares", "separar", "datos"):
+        tiene = {_clave_propuesta(seccion, e) for e in datos.get(seccion, [])}
+        nuevas: list[Documento] = []
+        for propuesta in propuestas.get(seccion, []):
+            clave_ = _clave_propuesta(seccion, propuesta)
+            if clave_ not in tiene:
+                tiene.add(clave_)
+                nuevas.append({k: v for k, v in propuesta.items() if v is not None})
+        añadidas[seccion] = len(nuevas)
+        if not nuevas:
+            continue
+        inicio = re.search(rf'\n  "{seccion}": \[', texto)
+        if inicio is None:
+            raise ValueError(f"sin la sección «{seccion}» en {ruta}")
+        fin = texto.index("\n  ]", inicio.end())
+        bloque = ",\n".join(textwrap.indent(json.dumps(e, ensure_ascii=False, indent=2), "    ")
+                            for e in nuevas)  # fmt: skip
+        separador = ",\n" if datos.get(seccion) else "\n"
+        texto = texto[:fin] + separador + bloque + texto[fin:]
+    nuevo = json.loads(texto)
+    for seccion, cuantas in añadidas.items():
+        assert len(nuevo.get(seccion, [])) == len(datos.get(seccion, [])) + cuantas, seccion
+    ruta.write_text(texto, encoding="utf-8", newline="")
+    return añadidas
+
+
 # --- Orden --------------------------------------------------------------------------------
 
 
 def principal(base: control_fichas.Base, fabrica: Callable[[], Any] | None, accion: str,
               grupo: str, ruta: Path | None, semilla: int, tope_s: float) -> int:  # fmt: skip
     """decidir | muestra (escribe la plantilla en `ruta`) | aplicar (lee el muestreo de `ruta` y
-    escribe las propuestas junto a él) | estado."""
+    escribe las propuestas junto a él) | llevar (las propuestas escritas junto a `ruta`, a
+    configuracion/incidentes_revisados.json) | estado."""
+    if accion == "llevar":
+        assert ruta is not None
+        hecho = json.loads(ruta.with_name(f"aplicado_{grupo}.json").read_text(encoding="utf-8"))
+        print(json.dumps(llevar(hecho["propuestas"]), ensure_ascii=False))
+        return 0
     if accion == "decidir":
         if fabrica is None:
             return 1

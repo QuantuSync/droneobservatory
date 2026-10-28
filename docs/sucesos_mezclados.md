@@ -143,6 +143,18 @@ EODI-2026-00541 se queda con el petrolero, que es el suceso más temprano, y EOD
 
 La primera pasada en producción dejó a EODI-2026-00541 con el titular del dron: la parte que conserva el identificador no se volvió a extraer. `extraccion.articulos_retirados` compara con los artículos enviados en la última extracción, y las extracciones antiguas no los guardan. Desde entonces, la parte que conserva el identificador se vuelve a extraer también si su última extracción es anterior al reparto (`revisados._extraido_antes`, prueba en `tests/test_sucesos_mezclados.py`). Solo para los repartos desde el 28 de octubre de 2026 (`REEXTRAER_DESDE`). Hay diez repartos anteriores en el mismo caso, del 13 y el 19 de octubre: EODI-2025-00268, EODI-2025-00335, EODI-2025-00397, EODI-2026-00094, EODI-2026-00112, EODI-2026-00204, EODI-2026-00217, EODI-2026-00225, EODI-2026-00234 y EODI-2026-00384. Desde entonces las han revisado el control de fichas y los titulares revisados, y volver a extraerlas las rehace sin esas revisiones. Las vivas pasan por el repaso de entrada.
 
+Tampoco bastó: al volver a extraerla, EODI-2026-00541 recuperó las noticias del dron. Su candidato
+solo tenía las dos primeras noticias del dron del día 15 (sfin.ro y jurnalul.ro); las del
+petrolero estaban en los candidatos de los registros que tiene fundidos. Al salir las del dron, el
+candidato se quedaba vacío, `repartir` no guarda un candidato vacío y seguía con las dos del dron:
+la reextracción leyó las declaraciones del Ministerio de Defensa sobre ese dron y la ficha pasó a
+«Un dron alcanza un petrolero» con la presencia del otro suceso. Desde el 28 de octubre de 2026,
+si todos los artículos del candidato del que conserva el identificador son de otras partes, toma
+los de su parte y se vuelve a extraer (`revisados._con_su_parte`, prueba en
+`tests/test_sucesos_mezclados.py`). El titular afirmativo sí tiene respaldo: el presidente Nicușor
+Dan confirmó que los dos buques fueron alcanzados por drones (focus.de, 15 de octubre; Bloomberg,
+16 de octubre). La auditoría T cuenta los titulares que no casan con la presencia.
+
 ## Dudosos (no se tocan)
 
 | Incidente | Motivo |

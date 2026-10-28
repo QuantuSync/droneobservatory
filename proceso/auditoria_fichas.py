@@ -82,6 +82,12 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   404 y no tenía copia; se le añadió la noticia de adevarul.ro con la declaración de la policía
   (configuracion/incidentes_revisados.json, «citas»). Una fuente sin resultado del archivo cuenta
   como legible. Sin la tabla (las pruebas), no se mira.
+- **T, titular incoherente con la presencia**: el titular, en español o en inglés, afirma el dron
+  y la presencia no está confirmada, o lo da como posible con el dron confirmado
+  (proceso/titulares.coherente). EODI-2026-00541 (28 de octubre de 2026): «Un dron alcanza un
+  petrolero» quedó sin «posible» mientras la ficha tenía el dron de otro suceso.
+- **U, concordancia del dron**: el titular en español escribe el dron en femenino («Una dron
+  entra…», EODI-2026-00698; «Una posible dron…», EODI-2026-00322; proceso/titulares.concordar).
 """
 
 import json
@@ -104,6 +110,7 @@ from proceso import (
     noticias,
     rectificaciones,
     textos_dron,
+    titulares,
 )
 from proceso.presencia import (
     atribuida_por_autoridad,
@@ -115,7 +122,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S",
+    "S", "T", "U",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -137,6 +144,8 @@ NOMBRES = {
     "Q": "ninguna fuente legible",
     "R": "referencia",
     "S": "día publicado distinto del día local",
+    "T": "titular incoherente con la presencia",
+    "U": "concordancia del dron",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -481,9 +490,22 @@ def _s(incidente: Documento) -> bool:
     return False
 
 
+def _t(incidente: Documento) -> bool:
+    presencia = incidente.get("presencia_dron")
+    return any(
+        not titulares.coherente(str(texto), presencia, idioma)
+        for idioma, texto in (incidente.get("titulo") or {}).items()
+        if idioma in ("es", "en")
+    )
+
+
+def _u(incidente: Documento) -> bool:
+    return not titulares.concuerda(str((incidente.get("titulo") or {}).get("es") or ""), "es")
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
-    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s,
+    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
 }  # fmt: skip
 
 

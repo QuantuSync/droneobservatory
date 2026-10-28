@@ -881,6 +881,38 @@ def _extraido_antes(almacen: Almacen, candidato: Documento, hecho: Documento) ->
     return _fecha_articulo({"fecha": ultima}) < _fecha_articulo({"fecha": hecho["fecha"]})
 
 
+def _con_su_parte(almacen: Almacen, revision: Documento, candidato: Documento,
+                  motivo: str) -> bool:  # fmt: skip
+    """El candidato del que conserva el identificador con los artículos de su parte, si todos los
+    suyos eran de otras partes. True si cambia (y queda guardado).
+
+    `repartir` no guarda un candidato que se queda sin artículos, así que conservaba los de antes:
+    al volver a extraerlo, el extractor leyó otra vez las noticias del otro suceso (EODI-2026-00541,
+    28 de octubre de 2026: el candidato del petrolero solo tenía las dos primeras noticias del dron
+    del día 15, y la ficha recuperó las declaraciones del Ministerio de Defensa sobre ese dron). Las
+    noticias de su parte estaban en los candidatos de los registros que tiene fundidos."""
+    fuentes = almacen.fuentes()
+
+    def enlaces(parte: Documento) -> set[str]:
+        return {str(fuentes[f]["enlace"]) for f in parte["fuentes"]
+                if f in fuentes and fuentes[f].get("enlace")}  # fmt: skip
+
+    queda = conservada(revision)
+    propios = enlaces(revision["partes"][queda])
+    ajenos = (
+        set().union(*(enlaces(p) for n, p in enumerate(revision["partes"]) if n != queda)) - propios
+    )
+    actuales = list(candidato["articulos"])
+    if not actuales or any(url not in ajenos for url in actuales):
+        return False
+    suyos = almacen.articulos_de(sorted(propios))
+    if not suyos:
+        return False
+    nuevo = _documento_candidato(candidato, candidato["id"], suyos, candidato.get("separado_de"))
+    almacen.corregir_candidatos([nuevo], f"{CURSOR_SEPARAR}{revision['incidente']}: {motivo}")
+    return True
+
+
 def _id_candidato(base: Documento, articulos: list[Documento], ocupados: set[str]) -> str:
     primero = min(_fecha_articulo(a) for a in articulos)
     raiz = f"CAND-{primero:%Y%m%dT%H%M}-{base['lugar']}-{base['tipo']}"
@@ -1268,11 +1300,20 @@ def separar(
             if not parte.get("es_suceso", True):
                 continue
             cand = candidatos.get(str(entrada.get("candidato")))
+            con_su_parte = (
+                n == queda
+                and cand is not None
+                and bool(hecho.get("conservado_perdio"))
+                and _con_su_parte(almacen, revision, cand, revision["motivo"]["es"])
+            )
+            if con_su_parte and cand is not None:
+                cand = {c["id"]: c for c in almacen.candidatos()}.get(str(cand["id"]), cand)
             pendiente = (
                 bool(hecho.get("conservado_perdio"))
                 and cand is not None
                 and (
-                    extraccion.articulos_retirados(almacen, cand)
+                    con_su_parte
+                    or extraccion.articulos_retirados(almacen, cand)
                     or _extraido_antes(almacen, cand, hecho)
                 )
                 if n == queda
