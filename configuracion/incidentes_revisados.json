@@ -5161,6 +5161,17 @@
         "es": "El repaso de entrada del 28 de octubre de 2026 unió en esta ficha la del cierre del aeropuerto de Múnich del 2 de octubre de 2025 (EODI-2025-00340), que era el suceso; esta contaba el láser desplegado después. Queda el titular del cierre.",
         "en": "The entry review of 28 October 2026 merged into this record the closure of Munich airport on 2 October 2025 (EODI-2025-00340), which was the event; this one reported the laser deployed afterwards. The closure headline stays."
       }
+    },
+    {
+      "incidente": "EODI-2026-00541",
+      "titulo": {
+        "es": "Un posible dron alcanza un petrolero frente a Sulina, en aguas rumanas del mar Negro",
+        "en": "Possible drone hits tanker off Sulina in Romanian Black Sea waters"
+      },
+      "motivo": {
+        "es": "Desde la separación del 28 de octubre de 2026, esta ficha es la del petrolero YARA J alcanzado frente a Sulina el 14 de octubre; el dron que entró en el espacio aéreo rumano el 15 está en EODI-2026-00698. Al volver a extraerla, el titular seguía hablando del dron.",
+        "en": "Since the separation of 28 October 2026, this record is the tanker YARA J hit off Sulina on 14 October; the drone that entered Romanian airspace on the 15th is in EODI-2026-00698. When extracted again, the headline still spoke of the drone."
+      }
     }
   ],
   "titular_justificado": [],
