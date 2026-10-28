@@ -39,6 +39,8 @@ Gasto: modo «control», 0,15 dólares al día (horaria y madrugada); el repaso 
 modo «control_repaso», 4 dólares y después 6 más (el 14 de octubre de 2026). Uso:
 
     python -m recogida.control_fichas noche|repaso|estado|traducir-pendientes [--base DB.age]
+    python -m recogida.control_fichas repaso-entrada --accion decidir|muestra|aplicar|estado
+        --grupo a|b|c|d [--muestreo FICHERO --semilla N] --cerrojo …
         [--ensayo CARPETA]
 """
 
@@ -2711,12 +2713,19 @@ def base_del_servidor(temporal: Path, correo: str, cerrojo: Path | None) -> Base
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("alcance", choices=("noche", "repaso", "estado", "traducir-pendientes",
-                                              "repaso-experto"))  # fmt: skip
+                                              "repaso-experto", "repaso-entrada"))  # fmt: skip
     opciones.add_argument("--estado", type=Path, default=RUTA_ESTADO_DEFECTO)
     opciones.add_argument("--correo", default="", help="correo del autor (solo base en GitHub)")
     opciones.add_argument("--cerrojo", type=Path, help="cerrojo de la recogida (repaso)")
     opciones.add_argument("--sin-servicio", action="store_true",
                           help="solo las reglas que no llaman a nada")  # fmt: skip
+    # repaso-entrada (recogida/repaso_entrada.py)
+    opciones.add_argument("--accion", choices=("decidir", "muestra", "aplicar", "estado"),
+                          default="estado")  # fmt: skip
+    opciones.add_argument("--grupo", choices=("a", "b", "c", "d"), default="a")
+    opciones.add_argument("--muestreo", type=Path, help="fichero del muestreo (muestra, aplicar)")
+    opciones.add_argument("--semilla", type=int, default=0)
+    opciones.add_argument("--tope-horas", type=float, default=2.0)
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     from tempfile import TemporaryDirectory
@@ -2726,6 +2735,13 @@ def principal(argumentos: list[str] | None = None) -> int:
     with TemporaryDirectory() as temporal:
         base = base_del_servidor(Path(temporal), args.correo, args.cerrojo)
         ahora = datetime.now(UTC)
+        if args.alcance == "repaso-entrada":
+            from recogida import repaso_entrada
+
+            return repaso_entrada.principal(
+                base, _fabrica() if args.accion == "decidir" else None, args.accion,
+                args.grupo, args.muestreo, args.semilla, args.tope_horas * 3600,
+            )  # fmt: skip
         if args.alcance in {"repaso", "traducir-pendientes", "repaso-experto"}:
             fabrica = _fabrica()
             if fabrica is None:

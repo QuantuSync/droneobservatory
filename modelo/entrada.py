@@ -203,3 +203,87 @@ def cuerpo_medida(
     return _cuerpo(INSTRUCCIONES_MEDIDA, ESQUEMA_MEDIDA,
                    contenido_entrada(ficha, fuentes, autoridades, conjunto),
                    MAX_SALIDA_MEDIDA, ESFUERZO_ENTRADA)  # fmt: skip
+
+
+# --- Repaso de lo publicado con la pregunta de entrada ------------------------------------
+
+VERSION_REPASO = "repaso_entrada/1"
+MAX_SALIDA_REPASO = 2200
+DATOS_REPASO = ("drones", "tipo", "estado", "presencia")
+
+ESQUEMA_REPASO: dict[str, Any] = {
+    **ESQUEMA_ENTRADA,
+    "required": [
+        *ESQUEMA_ENTRADA["required"],
+        "fecha_desconocida",
+        "varios_sucesos",
+        "resumen",
+        "partes",
+        "errores",
+    ],
+    "properties": {
+        **ESQUEMA_ENTRADA["properties"],
+        "fecha_desconocida": {"type": "boolean"},
+        "varios_sucesos": {"type": "boolean"},
+        "resumen": {"type": "boolean"},
+        "partes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["fecha", "descripcion", "fuentes"],
+                "properties": {
+                    "fecha": {"type": "string"},
+                    "descripcion": {"type": "string"},
+                    "fuentes": {"type": "array", "items": _FUENTE},
+                },
+            },
+        },
+        "errores": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["dato", "correcto", "fuente", "frase"],
+                "properties": {
+                    "dato": {"enum": list(DATOS_REPASO)},
+                    "correcto": {"type": "string"},
+                    "fuente": _FUENTE,
+                    "frase": _FRASE,
+                },
+            },
+        },
+    },
+}
+
+INSTRUCCIONES_REPASO = (
+    INSTRUCCIONES_ENTRADA.replace(
+        "Ninguna ficha nueva se publica sin pasar por ti. Recibes una ficha nueva",
+        "Repasas una ficha ya publicada como si fuera nueva: no la des por buena por estar "
+        "publicada. Recibes la ficha",
+    )
+    + """
+
+Además:
+- fecha_desconocida: true si las fuentes cuentan un suceso anterior a su publicación sin decir \
+en qué día fue (un recuerdo, «recientemente», «en las últimas semanas»); false si dan el día o si \
+cuentan algo de la noche o el día de la publicación.
+- varios_sucesos: true si la ficha junta sucesos de días o lugares distintos (un resumen, un \
+balance, «durante tres noches», drones en varios aeropuertos en noches distintas). partes: cada \
+suceso con su día (AAAA-MM-DD), una descripción corta y los números de las fuentes que lo \
+cuentan (una fuente que cuenta dos va en las dos); lista vacía si es un solo suceso.
+- resumen: true si la ficha es un resumen o un balance sin ningún suceso de un día concreto.
+- errores: los errores claros del número de drones, el tipo, el estado (notificado, confirmado, \
+atribuido, desmentido) o la presencia del dron (confirmada o no) frente a lo que dicen las \
+fuentes, cada uno con el valor correcto y la fuente y la frase literal que lo muestran; ninguno, \
+lista vacía."""
+)
+
+
+def cuerpo_repaso(
+    ficha: dict[str, Any], fuentes: list[FuenteControl], autoridades: list[str],
+    conjunto: list[dict[str, Any]], contexto: dict[str, list[FuenteControl]] | None = None,
+) -> dict[str, Any]:  # fmt: skip
+    return _cuerpo(INSTRUCCIONES_REPASO, ESQUEMA_REPASO,
+                   contenido_entrada(ficha, fuentes, autoridades, conjunto, contexto),
+                   MAX_SALIDA_REPASO, ESFUERZO_ENTRADA)  # fmt: skip

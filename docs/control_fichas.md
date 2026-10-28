@@ -559,6 +559,58 @@ resumen diario (`recogida/visitas.py`) lleva la línea «Fichas nuevas de ayer: 
 Modo `entrada` (`modelo/coste.py`): 3,00 USD al día, solo del experto, aparte del tope del experto,
 de su reserva y del cupo del control (`CUPOS_PROPIOS`). El tope mensual pasa de 60 a 150 USD.
 
+### Repaso de entrada de todo lo publicado (desde el 28 de octubre de 2026)
+
+Lo publicado antes del filtro no pasó por él. El mismo 28 de octubre de 2026 se encontraron
+publicados duplicados, fechas de noticias retrospectivas y una autoridad de otro país. El repaso
+(`recogida/repaso_entrada.py`) pasa cada ficha publicada por el experto como si fuera nueva:
+
+- el conjunto de comparación es el del filtro (`entrada.conjunto`);
+- la pregunta es la del filtro, con dos preguntas más:
+  - ¿junta varios sucesos de días o lugares distintos, o es un resumen?
+  - ¿hay un error en el número de drones, el tipo, el estado o la presencia, con su frase?
+
+```
+python -m recogida.control_fichas repaso-entrada --accion decidir --grupo a --cerrojo …
+python -m recogida.control_fichas repaso-entrada --accion muestra --grupo a --semilla N --muestreo m.json
+python -m recogida.control_fichas repaso-entrada --accion aplicar --grupo a --muestreo m.json --cerrojo …
+python -m recogida.control_fichas repaso-entrada --accion estado
+```
+
+**Grupos**, por este orden, para que lo más probable de estar mal vaya primero:
+
+- `a`: la lista de sospechosas de la revisión del 23 de octubre (`SOSPECHOSAS`);
+- `b`: las de fecha aproximada;
+- `c`: las de lugar en el país, una región o el mar;
+- `d`: el resto.
+
+**Decidir.** Llamadas directas, no por lotes, en tandas de 12 con 4 hilos. Las decisiones van al
+control (`repaso_entrada:<id>`, con la huella de la ficha) y su gasto a la base, con el cerrojo de
+la recogida y nunca entre los minutos 12 y 45. Lo decidido con la misma huella no se repite.
+
+**Muestra.** Elige los cambios del grupo al azar con una semilla y escribe un fichero para
+rellenar: `bien` de cada uno, leído en su fuente.
+
+**Aplicar.** Solo con el muestreo aprobado: la muestra que da su semilla, todas leídas, como
+mucho una mal, y las decisiones sin cambios desde el muestreo. Para el grupo a se leen 15; para
+los demás, 10. Cada cambio va por el camino normal, con el motivo en el historial:
+
+- mismo suceso: se unen y queda la más antigua;
+- otro día con su frase: la ficha toma ese día y vuelve a pasar por el repaso con él;
+- fecha aproximada que el experto da por un suceso anterior sin día: se retira, con «Fecha del
+  suceso desconocida»;
+- resumen sin un suceso de un día concreto: se retira;
+- lugar sin frase: queda en el país;
+- autoridad sin frase o de otro país: no es declaración oficial.
+
+Las fichas de varios sucesos y los datos con su frase se escriben como propuestas, en
+`aplicado_<grupo>.json`. Las retiradas también van ahí, para que no vuelvan si la ficha se vuelve
+a extraer. Todo ello se lleva a `incidentes_revisados.json` (`separar`, `datos`, `retirar`).
+
+**Gasto.** Modo `repaso_entrada`: 40 USD en total (`LIMITE_REPASO_ENTRADA_USD`), aparte del tope
+diario del experto, de su reserva, del modo `entrada` y del mes (`CUPOS_PROPIOS` y
+`FUERA_DEL_MES`).
+
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 
 La red de seguridad antes de cambiar la estructura: unas 50 fichas cuyo valor correcto de cada dato
