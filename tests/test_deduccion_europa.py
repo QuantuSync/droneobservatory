@@ -164,9 +164,10 @@ def test_las_fuentes_oficiales_espanolas_y_portuarias_estan_en_la_recogida() -> 
     # csn.es bloqueó la red de la recogida del 23 al 26 de octubre de 2026: se lee por el lector
     # delegado de la web (docs/lector_delegado.md).
     assert fuentes["csn_sucesos"]["delegada"] is True
-    # mod.gov.lv no acepta conexiones de fuera desde el 21 de octubre de 2026, tampoco desde
-    # Vercel ni GitHub (docs/fuentes_retiradas.md).
-    assert "mod_lv" not in fuentes
+    # mod.gov.lv no aceptó conexiones de fuera del 21 al 27 de octubre de 2026 y vuelve a
+    # responder desde el 28 (docs/fuentes_retiradas.md, «Fuentes que volvieron»).
+    assert fuentes["mod_lv"]["tipo"] == "pagina" and not fuentes["mod_lv"].get("delegada")
+    assert fuentes["mil_lv"]["tipo"] == "pagina"
     for id_ in ("port_gdansk", "tallinna_sadam", "koge_havn"):
         assert fuentes[id_]["tipo"] == "rss"
 

@@ -97,6 +97,28 @@
       "fecha": "(\\d{2}/\\d{2}/\\d{4})"
     },
     {
+      "id": "mil_lv",
+      "medio": "Nacionālie bruņotie spēki",
+      "pais": "LV",
+      "idioma": "lv",
+      "tipo": "pagina",
+      "zona": "Europe/Riga",
+      "url": "https://www.mil.lv/lv/zinas",
+      "enlace": "mil\\.lv/lv/zinas/[a-z0-9-]{10,}",
+      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})"
+    },
+    {
+      "id": "mod_lv",
+      "medio": "Aizsardzības ministrija",
+      "pais": "LV",
+      "idioma": "lv",
+      "tipo": "pagina",
+      "zona": "Europe/Riga",
+      "url": "https://www.mod.gov.lv/lv/zinas",
+      "enlace": "mod\\.gov\\.lv/lv/zinas/[a-z0-9-]{10,}",
+      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})"
+    },
+    {
       "id": "finavia",
       "medio": "Finavia",
       "pais": "FI",

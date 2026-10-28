@@ -128,8 +128,8 @@ def test_si_el_lector_falla_la_fuente_falla_sin_tumbar_la_recogida(
     assert "oficiales: fuente delegada falló" in caplog.text
 
 
-def test_en_la_configuracion_el_csn_va_delegado_y_mod_lv_sigue_retirada() -> None:
+def test_en_la_configuracion_el_csn_va_delegado_y_mod_lv_vuelve_directa() -> None:
     fuentes = {f["id"]: f for f in oficiales.fuentes()}
     assert fuentes["csn_sucesos"]["delegada"] is True
-    assert "mod_lv" not in fuentes
+    assert "mod_lv" in fuentes
     assert [f for f in fuentes if fuentes[f].get("delegada")] == ["csn_sucesos"]
