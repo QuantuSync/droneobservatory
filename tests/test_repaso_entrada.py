@@ -340,3 +340,23 @@ def test_llevar_anade_las_propuestas_sin_tocar_el_resto(tmp_path: Any) -> None:
     # Otra vez, nada nuevo.
     assert set(repaso.llevar(propuestas, ruta).values()) == {0}
     assert ruta.read_text(encoding="utf-8") == texto
+
+
+def test_la_union_del_repaso_recupera_las_fuentes_tras_volver_a_extraer() -> None:
+    # EODI-2026-00038 (28 de octubre de 2026): unida a EODI-2026-00048 por el repaso de entrada,
+    # se volvió a extraer y perdió las fuentes de la unida; la unión no estaba entre las
+    # decisiones del control y nada las recuperaba (auditoría L).
+    queda = _ficha("EODI-2026-00038", "LU", "2026-09-19T00:00Z", punto=(49.63, 6.21))
+    unida = _ficha("EODI-2026-00048", "LU", "2026-09-19T00:00Z", punto=(49.63, 6.21))
+    almacen = _base(queda, unida)
+    control_fichas.unir(almacen, queda, unida, "repaso de entrada: el mismo cierre", AHORA,
+                        VOCABULARIO_MODELOS)  # fmt: skip
+    unido = almacen.incidente("EODI-2026-00038")
+    assert unido is not None and "EODI-2026-00048-F1" in {f["id"] for f in unido["fuentes"]}
+    # La recogida la vuelve a extraer: solo con sus artículos.
+    almacen.guardar_incidente(queda, AHORA, VOCABULARIO_MODELOS)
+    assert control_fichas.reaplicar_uniones(almacen, {}, AHORA, VOCABULARIO_MODELOS) == 1
+    recuperado = almacen.incidente("EODI-2026-00038")
+    assert recuperado is not None
+    assert "EODI-2026-00048-F1" in {f["id"] for f in recuperado["fuentes"]}
+    assert control_fichas.reaplicar_uniones(almacen, {}, AHORA, VOCABULARIO_MODELOS) == 0
