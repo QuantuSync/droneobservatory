@@ -457,8 +457,15 @@ test("mapa: tocar un incidente abre su ficha y cerrarla no mueve el mapa", async
     if (elemento === null || mapa === undefined) return null;
     const caja = elemento.getBoundingClientRect();
     const marca = (r: Rasgo) => r.source !== "protomaps" && r.layer.type !== "fill";
-    for (const rasgo of mapa.queryRenderedFeatures().filter((r) => r.layer.id.startsWith("incidentes-") && r.geometry.type === "Point")) {
-      const q = mapa.project(rasgo.geometry.coordinates);
+    // La marca aislada más alta: la hoja de la ficha en el teléfono tapa la parte de abajo y el
+    // mapa asoma lo que tapa (Mapa.tsx, «asomar»). Con la primera que devolvía el mapa, la prueba
+    // dependía de los datos del día (28 de octubre de 2026: una marca bajo la hoja).
+    const puntos = mapa
+      .queryRenderedFeatures()
+      .filter((r) => r.layer.id.startsWith("incidentes-") && r.geometry.type === "Point")
+      .map((r) => mapa.project(r.geometry.coordinates))
+      .sort((a, b) => a.y - b.y);
+    for (const q of puntos) {
       if (q.x < 60 || q.y < 140 || q.x > caja.width - 60 || q.y > caja.height - 160) continue;
       const cerca = mapa.queryRenderedFeatures([[q.x - 30, q.y - 30], [q.x + 30, q.y + 30]]).filter(marca);
       if (new Set(cerca.map((r) => JSON.stringify(r.geometry.coordinates))).size === 1) return { x: caja.x + q.x, y: caja.y + q.y };
