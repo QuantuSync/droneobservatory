@@ -67,6 +67,24 @@ def test_cada_nota_da_su_dia_y_su_texto(
     assert frase in texto
 
 
+def test_las_notas_de_drones_pasan_el_filtro_y_las_demas_no() -> None:
+    """Las NBS dicen «bezpilota lidaparāts», nunca «drons»: sin esa palabra en el filtro, la
+    recogida del 28/10/2026 a las 14:17 leyó mil_lv y mod_lv sin sacar ninguna nota."""
+    dron = oficiales.filtro().dron
+    pagina = (FIXTURES / "zinas.html").read_text(encoding="utf-8")
+    interesan = {
+        t for _, t in paginas_oficiales.enlaces(pagina, _fuente())
+        if paginas_oficiales.interesa(t, _fuente(), dron)
+    }  # fmt: skip
+    # Los avisos de amenaza en el espacio aéreo no dicen «dron» en el título: titulos_genericos.
+    assert interesan == {titulo for _, titulo, _, _ in NOTAS}
+    for nombre, titulo, _, _ in NOTAS:
+        html = (FIXTURES / f"{nombre}.html").read_text(encoding="utf-8")
+        resultado = paginas_oficiales.contenido(html, _fuente(), titulo)
+        assert resultado is not None
+        assert dron.search(f"{titulo} {resultado[2]}")
+
+
 def test_su_organismo_en_las_dos_lenguas() -> None:
     nbs = autoridades.tabla()["Nacionālie bruņotie spēki"]
     assert nbs["es"] == "las Fuerzas Armadas Nacionales de Letonia"

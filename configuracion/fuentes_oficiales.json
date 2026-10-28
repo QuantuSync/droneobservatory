@@ -105,7 +105,8 @@
       "zona": "Europe/Riga",
       "url": "https://www.mil.lv/lv/zinas",
       "enlace": "mil\\.lv/lv/zinas/[a-z0-9-]{10,}",
-      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})"
+      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})",
+      "titulos_genericos": "apdraud[eē]jums Latvijas gaisa telp"
     },
     {
       "id": "mod_lv",
@@ -116,7 +117,8 @@
       "zona": "Europe/Riga",
       "url": "https://www.mod.gov.lv/lv/zinas",
       "enlace": "mod\\.gov\\.lv/lv/zinas/[a-z0-9-]{10,}",
-      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})"
+      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})",
+      "titulos_genericos": "apdraud[eē]jums Latvijas gaisa telp"
     },
     {
       "id": "finavia",
