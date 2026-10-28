@@ -9679,8 +9679,8 @@
       "incidente": "EODI-2026-00541",
       "distintos": true,
       "motivo": {
-        "es": "junta dos sucesos distintos frente a Sulina: el petrolero YARA J (Comoras), alcanzado e incendiado en aguas territoriales rumanas el miércoles 14 de octubre de 2026 hacia las 20:00 hora local (novinite.com: «the incident reported at around 8 p.m. and a distress call received at approximately 8:25 p.m.»), y el dron que el MApN detectó durante un minuto en el espacio aéreo rumano al sudeste de Sulina a las 01:34 del jueves 15 (mediafax.ro, hotnews.ro: «La ora 01.34, o dronă a fost detectată timp de aproximativ un minut în spațiul aerian național»). El ministro de Defensa dijo que el radar no vio ningún dron ir hacia el petrolero. La regla de mismo sitio y misma ventana los fundió; además, mirror.co.uk cuenta la noche del 9 al 10 de octubre, sin entrada en el espacio aéreo rumano, y tres notas son declaraciones políticas sobre el mar Negro.",
-        "en": "it merges two different events off Sulina: the tanker YARA J (Comoros), hit and set on fire in Romanian territorial waters on Wednesday 14 October 2026 around 20:00 local time (novinite.com), and the drone that the Romanian Ministry of Defence detected for one minute in Romanian airspace south-east of Sulina at 01:34 on Thursday 15 (mediafax.ro, hotnews.ro). The defence minister said radar saw no drone heading for the tanker. The same-place, same-window rule merged them; in addition, mirror.co.uk reports the night of 9 to 10 October, with no entry into Romanian airspace, and three reports are political statements about the Black Sea."
+        "es": "Juntaba dos sucesos distintos frente a Sulina: el petrolero YARA J, alcanzado en aguas rumanas el miércoles 14 de octubre de 2026 hacia las 20:00 hora local (novinite.com), y el dron que el Ministerio de Defensa rumano detectó un minuto en el espacio aéreo al sudeste de Sulina a las 01:34 del jueves 15 (mediafax.ro, hotnews.ro). El ministro dijo que el radar no vio ningún dron ir hacia el petrolero.",
+        "en": "It merged two different events off Sulina: the tanker YARA J, hit in Romanian waters on Wednesday 14 October 2026 around 20:00 local time (novinite.com), and the drone that the Romanian Ministry of Defence detected for one minute in the airspace south-east of Sulina at 01:34 on Thursday 15 (mediafax.ro, hotnews.ro). The minister said radar saw no drone heading for the tanker."
       },
       "partes": [
         {
@@ -9703,7 +9703,7 @@
           "fecha": "2026-10-15",
           "pais": "RO",
           "descripcion": "Un dron entra durante un minuto en el espacio aéreo rumano al sudeste de Sulina a las 01:34 del jueves 15 de octubre de 2026; despegan F-18 españoles y F-16 rumanos y se envía un RO-Alert en Tulcea",
-          "coincide_con": null,
+          "coincide_con": "EODI-2026-00544",
           "fuentes": [
             "gdelt-e4e42e56f4582d9c",
             "gdelt-e4e42e56f4582d9c-declaracion-2",
