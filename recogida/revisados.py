@@ -862,6 +862,17 @@ def _fecha_articulo(articulo: Documento) -> datetime:
     return datetime.fromisoformat(str(articulo["fecha"]).replace("Z", "+00:00"))
 
 
+def _extraido_antes(almacen: Almacen, candidato: Documento, hecho: Documento) -> bool:
+    """La última extracción del candidato es anterior al reparto: su ficha es la de antes, con
+    los dos sucesos. Las extracciones antiguas no guardan los artículos enviados, así que
+    articulos_retirados no lo ve (EODI-2026-00541, 28 de octubre de 2026: la parte del petrolero
+    se quedó con el titular del dron)."""
+    ultima = (almacen.extracciones(candidato["id"]) or [{}])[-1].get("fecha")
+    if not ultima or not hecho.get("fecha"):
+        return False
+    return _fecha_articulo({"fecha": ultima}) < _fecha_articulo({"fecha": hecho["fecha"]})
+
+
 def _id_candidato(base: Documento, articulos: list[Documento], ocupados: set[str]) -> str:
     primero = min(_fecha_articulo(a) for a in articulos)
     raiz = f"CAND-{primero:%Y%m%dT%H%M}-{base['lugar']}-{base['tipo']}"
@@ -1252,7 +1263,10 @@ def separar(
             pendiente = (
                 bool(hecho.get("conservado_perdio"))
                 and cand is not None
-                and extraccion.articulos_retirados(almacen, cand)
+                and (
+                    extraccion.articulos_retirados(almacen, cand)
+                    or _extraido_antes(almacen, cand, hecho)
+                )
                 if n == queda
                 else not almacen.extracciones(str(entrada.get("candidato")))
             )

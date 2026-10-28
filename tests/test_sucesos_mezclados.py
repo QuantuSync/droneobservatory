@@ -257,6 +257,23 @@ def test_vilna_se_separa_en_sus_dos_sucesos(
     assert len(llamadas) == 2
 
 
+def test_el_que_se_queda_se_vuelve_a_extraer_aunque_su_extraccion_no_guarde_lo_enviado(
+    vilna: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Las extracciones antiguas no tienen «enviadas» (EODI-2026-00541): la del que se queda es
+    # anterior al reparto y su ficha hablaba de los dos sucesos, así que se vuelve a extraer.
+    propio = "CAND-20260914T0830-ETNG-aeropuerto"
+    vilna.guardar_extraccion(propio, "2026-09-30T19:46Z", "ficha/5", "h", True,
+                             {"incidente": "EODI-2026-00072"})  # fmt: skip
+    llamadas: list[str] = []
+    monkeypatch.setattr(revisados, "_extraer", _extractor_falso(llamadas))
+    revisados.separar(vilna, AHORA, MODELOS, cliente=object())
+    assert propio in llamadas
+    # Una vez extraído después del reparto, no se repite.
+    revisados.separar(vilna, AHORA + timedelta(hours=1), MODELOS, cliente=object())
+    assert llamadas.count(propio) == 1
+
+
 def test_sin_extractor_el_que_se_queda_pierde_lo_del_otro_suceso(vilna: Almacen) -> None:
     hechos = revisados.separar(vilna, AHORA, MODELOS, cliente=None)
     assert hechos.repartidos == ["EODI-2026-00072"]
