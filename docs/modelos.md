@@ -287,7 +287,17 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
 
 ### Tope mensual
 
-**Desde el 20 de octubre de 2026: 60 USD al mes.** El plan del responsable incluye 200 USD de
+**Desde el 28 de octubre de 2026: 150 USD al mes** (`TOPE_MENSUAL_USD`; en el servidor no hay
+`EODI_TOPE_MENSUAL_USD`, así que vale el del código). Lo de antes, más 90 USD para el filtro de
+entrada de las fichas nuevas (docs/control_fichas.md, «Filtro de entrada»): el modo `entrada`, 3,00
+USD al día, solo del experto, con su cupo propio (`LIMITE_ENTRADA_DIARIO_USD`, `CUPOS_PROPIOS`): no
+cuenta contra el tope normal del experto, ni contra su reserva crítica, ni contra el cupo del
+control. Una ficha nueva que no cabe en el cupo espera (caso crítico), no sale sin decisión.
+Medido en la prueba del 28 de octubre de 2026: COSTE_POR_FICHA USD de media por ficha. Reparto del
+mes: experto 40, horaria 4, control 6, segunda búsqueda 6, Ucrania 0,20, rectificaciones 0,30,
+otros 3,50, entrada 90.
+
+**Del 20 al 28 de octubre de 2026: 60 USD al mes.** El plan del responsable incluye 200 USD de
 créditos de la API al mes (vinculados a la organización del observatorio el 20 de octubre; caducan
 cada ciclo y no se acumulan; el saldo comprado queda detrás). Con 10 USD y el experto a 0,30 al día
 casi todo lo decidía el modelo base desde el 19 de octubre a las 22:41 UTC, y salieron fichas mal
