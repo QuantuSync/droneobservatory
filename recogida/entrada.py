@@ -503,6 +503,14 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                     "une": une["id"], "cambios": cambios}  # fmt: skip
         if "otro_dia" in decision and vuelta == 0:
             dia = decision["otro_dia"]
+            nuevo_dia = datetime.strptime(dia["dia"], "%Y-%m-%d").replace(tzinfo=UTC)
+            distancia = abs((nuevo_dia - reglas.instante(incidente)).total_seconds())
+            if fecha_firme(incidente) and distancia > DIAS_FIRMES * 86400:
+                # Un día sacado de una frase no se cambia por otro lejano sin revisión (prueba del
+                # 28 de octubre de 2026: el 12 de octubre de EODI-2026-00512 pasaba al 6 por «o
+                # săptămână după ce atacurile au dus la scufundarea», que no da ningún día).
+                return {**base, **decision, "decision": RETENER, "cambios": cambios,
+                        "motivo": f"otro día ({dia['dia']}) lejos de una fecha firme"}  # fmt: skip
             nuevo = incidentes.aplicar_reglas(
                 con_dia(incidente, dia["dia"], dia["fuente_id"], dia["frase"])
             )

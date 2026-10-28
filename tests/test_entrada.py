@@ -223,6 +223,17 @@ def test_dos_fechas_firmes_distintas_no_se_unen_sin_revision() -> None:
     assert len(cliente.pedidas) == 2 and "Fuentes de EODI-2026-00489:" in cliente.pedidas[1]
     seguida = almacen.incidente("EODI-2026-00512")
     assert seguida is not None and "fusionado_en" not in seguida
+    # Tampoco se cambia el día firme por otro lejano.
+    almacen = _base(seis, doce)
+    cliente = Cliente([_respuesta(otro_dia=True, fecha_suceso="2026-10-06", fecha_frase=frase,
+                                  lugar_frase=frase)])  # fmt: skip
+    ctx = _contexto(almacen, cliente)
+    entrada.filtrar(ctx, {"EODI-2026-00489"})
+    decision = ctx.nuevas[entrada.clave("EODI-2026-00512")]
+    assert decision["decision"] == entrada.RETENER
+    assert "lejos de una fecha firme" in decision["motivo"]
+    seguida = almacen.incidente("EODI-2026-00512")
+    assert seguida is not None and seguida["tiempo"]["inicio"]["valor"].startswith("2026-10-12")
     # A dos días o menos, o con una de las fechas sin frase, se une como siempre.
     assert entrada.fechas_distintas(doce, seis) is not None
     assert entrada.fechas_distintas(doce, BUQUE_689) is None
