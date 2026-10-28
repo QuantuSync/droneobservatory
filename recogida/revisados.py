@@ -862,6 +862,12 @@ def _fecha_articulo(articulo: Documento) -> datetime:
     return datetime.fromisoformat(str(articulo["fecha"]).replace("Z", "+00:00"))
 
 
+# Los repartos desde aquí: los anteriores se quedaron con la ficha de antes y los han revisado
+# después el control de fichas, los titulares revisados y el repaso de entrada; volver a
+# extraerlos ahora los rehace sin esas revisiones (diez fichas del 13 y el 19 de octubre).
+REEXTRAER_DESDE = "2026-10-28T00:00Z"
+
+
 def _extraido_antes(almacen: Almacen, candidato: Documento, hecho: Documento) -> bool:
     """La última extracción del candidato es anterior al reparto: su ficha es la de antes, con
     los dos sucesos. Las extracciones antiguas no guardan los artículos enviados, así que
@@ -869,6 +875,8 @@ def _extraido_antes(almacen: Almacen, candidato: Documento, hecho: Documento) ->
     se quedó con el titular del dron)."""
     ultima = (almacen.extracciones(candidato["id"]) or [{}])[-1].get("fecha")
     if not ultima or not hecho.get("fecha"):
+        return False
+    if _fecha_articulo({"fecha": hecho["fecha"]}) < _fecha_articulo({"fecha": REEXTRAER_DESDE}):
         return False
     return _fecha_articulo({"fecha": ultima}) < _fecha_articulo({"fecha": hecho["fecha"]})
 
