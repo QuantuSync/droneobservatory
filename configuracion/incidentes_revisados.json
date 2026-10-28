@@ -9956,18 +9956,18 @@
     {
       "incidente": "EODI-2026-00488",
       "campo": "inicio",
-      "valor": "2026-10-05",
+      "valor": "2026-10-06",
       "cita": "El mensaje fue enviado a las 02:20 horas, mientras los cazas espa\u00f1oles realizaban la misi\u00f3n de reconocimiento y seguimiento",
       "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097",
-      "motivo": "el mensaje se envi\u00f3 a las 02:20 hora de Ruman\u00eda del 6 (23:20 UTC del 5)"
+      "motivo": "el mensaje se envi\u00f3 a las 02:20 hora de Ruman\u00eda del 6 (23:20 UTC del 5): el d\u00eda es el local, el 6 (hasta el 28/10/2026 estaba el 5, el de UTC)"
     },
     {
       "incidente": "EODI-2026-00512",
       "campo": "inicio",
-      "valor": "2026-10-12",
+      "valor": "2026-10-12T22:30Z",
       "cita": "\u041f\u043e \u0434\u0443\u043c\u0438\u0442\u0435 \u043c\u0443 \u0432 01:30 \u0447\u0430\u0441\u0430 \u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0431\u0435\u0434\u0441\u0442\u0432\u0430\u0449 \u043a\u043e\u0440\u0430\u0431 \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u0411\u044f\u043b\u0430.",
       "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets",
-      "motivo": "la se\u00f1al de socorro lleg\u00f3 a las 01:30 hora b\u00falgara del 13 (22:30 UTC del 12)"
+      "motivo": "la se\u00f1al de socorro lleg\u00f3 a las 01:30 hora b\u00falgara del 13 (22:30 UTC del 12): se publica esa hora, local y en UTC (hasta el 28/10/2026 estaba solo el d\u00eda 12, el de UTC)"
     },
     {
       "incidente": "EODI-2025-00001",

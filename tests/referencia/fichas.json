@@ -586,7 +586,7 @@
      "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
     },
     "inicio": {
-     "valor": "2026-10-05",
+     "valor": "2026-10-06",
      "cita": "El mensaje fue enviado a las 02:20 horas, mientras los cazas espa\u00f1oles realizaban la misi\u00f3n de reconocimiento y seguimiento",
      "enlace": "https://libertaddigital.com/defensa/2026-10-06/alarma-nocturna-en-la-frontera-de-la-otan-cazas-f18-espanoles-movilizados-en-rumania-por-la-amenaza-de-drones-rusos-7471097"
     },
@@ -671,7 +671,7 @@
   },
   {
    "id": "EODI-2026-00512",
-   "por_que": "Dos mercantes (Chelsea 3 frente a Byala y HS Dignity frente a Krapets) alcanzados por drones a\u00e9reos en el mar Negro junto a las aguas b\u00falgaras; cubre buque alcanzado = incursi\u00f3n, sin instalaci\u00f3n, suceso de noche (fecha UTC) y estado confirmado sin atribuci\u00f3n formal.",
+   "por_que": "Dos mercantes (Chelsea 3 frente a Byala y HS Dignity frente a Krapets) alcanzados por drones a\u00e9reos en el mar Negro junto a las aguas b\u00falgaras; cubre buque alcanzado = incursi\u00f3n, sin instalaci\u00f3n, suceso de noche (d00eda local) y estado confirmado sin atribuci\u00f3n formal.",
    "valores": {
     "estado": {
      "valor": "confirmado",
@@ -705,7 +705,7 @@
      "enlace": "https://segabg.com/hot/category-bulgaria/dronove-udariha-korabi-kray-byala-i-krapec"
     },
     "inicio": {
-     "valor": "2026-10-12",
+     "valor": "2026-10-13",
      "cita": "\u041f\u043e \u0434\u0443\u043c\u0438\u0442\u0435 \u043c\u0443 \u0432 01:30 \u0447\u0430\u0441\u0430 \u0435 \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0441\u0438\u0433\u043d\u0430\u043b \u0437\u0430 \u0431\u0435\u0434\u0441\u0442\u0432\u0430\u0449 \u043a\u043e\u0440\u0430\u0431 \u043d\u0430 18 \u043c\u0438\u043b\u0438 \u0438\u0437\u0442\u043e\u0447\u043d\u043e \u043e\u0442 \u0411\u044f\u043b\u0430.",
      "enlace": "https://investor.bg/a/593-sigurnost-i-otbrana/437909-novi-dva-koraba-sa-bili-udareni-s-dronove-v-cherno-more-kray-byala-i-kray-krapets"
     },
@@ -1326,7 +1326,7 @@
      "enlace": "https://stirileprotv.ro/stiri/international/dupa-incidentele-cu-drona-din-germania-aeroportul-din-vilnius-a-fost-inchis-din-cauza-unor-baloane-suspecte.html"
     },
     "inicio": {
-     "valor": "2025-10-04",
+     "valor": "2025-10-05",
      "cita": "Il dit avoir \u00e9t\u00e9 inform\u00e9 de la mesure par l'agence de surveillance a\u00e9rienne Oro Navigajica \u00e0 22H16 (21H16 GMT).",
      "enlace": "https://lavenir.net/actu/monde/2025/10/05/intrusion-de-drones-dans-lespace-aerien-europeen-laeroport-de-vilnius-en-lituanie-ferme-suite-a-une-alerte-aux-ballons-suspects-73C2L5N5MFG7TLPV4MEHHUDQ2E"
     },
@@ -1510,7 +1510,7 @@
      "enlace": "https://rb.no/henlegger-dronesak/s/5-43-2605216"
     },
     "inicio": {
-     "valor": "2025-09-22",
+     "valor": "2025-09-23",
      "cita": "Det var f\u00f8rst like etter klokken 23 at NRK meldte at det hadde blitt observert en drone i n\u00e6rheten av Gardermoen.",
      "enlace": "https://rb.no/drone-observert-ved-oslo-lufthavn-politiet-varslet/s/5-43-2572373"
     },
@@ -2411,7 +2411,7 @@
      "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
     },
     "inicio": {
-     "valor": "2026-03-30",
+     "valor": "2026-03-31",
      "cita": "dup\u0103 ce o dron\u0103 de atac a traversat frontiera de stat \u00een cursul serii de luni, 30 martie.",
      "enlace": "https://ziare.com/razboi-ucraina/alerta-aeriana-republica-moldova-drona-shahed-survolat-tara-2003527"
     },

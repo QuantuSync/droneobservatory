@@ -392,3 +392,34 @@ def test_q_ninguna_fuente_legible() -> None:
                                     [], caida)["Q"] == []  # fmt: skip
     assert auditoria_fichas.auditar([documento])["Q"] == []
     assert auditoria_fichas.auditar([{**documento, "retirado": {}}], [], caida)["Q"] == []
+
+
+def _con_inicio_de_dia(dia: str, pais: str, motivo: str = "") -> dict[str, Any]:
+    d = ejemplos.incidente_minimo()
+    d["lugar"] = {"pais": pais, "nivel": "pais", "suceso": pais}
+    d["tiempo"] = {"inicio": {"valor": f"{dia}T00:00Z", "precision": "dia"},
+                   "origen_inicio": {"tipo": "explicita", "motivo": motivo}}  # fmt: skip
+    return d
+
+
+def test_s_el_dia_publicado_es_el_local_y_no_el_de_utc() -> None:
+    """EODI-2026-00512: hacia la 01:30 hora de Bulgaria del 13/10/2026 (22:30 UTC del 12),
+    publicado «12/10/2026, solo el día»."""
+    motivo = "la señal de socorro llegó a las 01:30 hora búlgara del 13 (22:30 UTC del 12)"
+    assert auditoria_fichas._s(_con_inicio_de_dia("2026-10-12", "BG", motivo))
+    assert not auditoria_fichas._s(_con_inicio_de_dia("2026-10-13", "BG", motivo))
+    # Una afirmación del inicio en UTC que en la hora local es del día siguiente.
+    d = _con_inicio_de_dia("2026-10-12", "BG")
+    d["afirmaciones"] = [{"campo": "inicio", "valor": "2026-10-12T22:30Z", "fuente_id": "f",
+                          "confianza_extraccion": 0.9}]  # fmt: skip
+    assert auditoria_fichas._s(d)
+    d["tiempo"]["inicio"]["valor"] = "2026-10-13T00:00Z"
+    assert not auditoria_fichas._s(d)
+    # Con hora, no es de esta comprobación (la hora se publica local y en UTC).
+    d["tiempo"]["inicio"] = {"valor": "2026-10-12T22:30Z", "precision": "minuto"}
+    assert not auditoria_fichas._s(d)
+
+
+def test_s_la_hora_del_motivo_sin_dia_no_cuenta() -> None:
+    motivo = "nota de las 18:16 hora de Noruega, 16:16 UTC, que no da la hora del dron"
+    assert not auditoria_fichas._s(_con_inicio_de_dia("2025-04-19", "NO", motivo))

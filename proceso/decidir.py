@@ -360,9 +360,15 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
                 lugar = en_la_localidad_revisada(lugar)
         resultado["lugar"] = lugar
     elif campo == "inicio":
-        # El día del suceso en UTC que dice la fuente (no el de la publicación ni el día local).
-        inicio = valor if isinstance(valor, dict) else {"valor": f"{valor}T00:00Z",
-                                                        "precision": "dia"}  # fmt: skip
+        # El día local del suceso que dice la fuente (no el de la publicación ni el de UTC), o su
+        # hora en UTC («2026-10-12T22:30Z»), que se publica local y en UTC (desde el 28/10/2026:
+        # EODI-2026-00512 salía el 12, el día UTC de la 01:30 hora de Bulgaria del 13).
+        if isinstance(valor, dict):
+            inicio = valor
+        elif len(str(valor)) == 10:
+            inicio = {"valor": f"{valor}T00:00Z", "precision": "dia"}
+        else:
+            inicio = {"valor": str(valor), "precision": "minuto"}
         if (resultado.get("tiempo") or {}).get("inicio") != inicio:
             origen = {"tipo": "explicita", "motivo": str(revision["motivo"])[:200]}
             resultado["tiempo"] = {"inicio": inicio, "origen_inicio": origen}

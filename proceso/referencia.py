@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from esquema import Documento
-from proceso import auditoria_fichas, coherencia, decidir, incidentes, zona
+from proceso import auditoria_fichas, coherencia, decidir, fechas, incidentes, zona
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "tests" / "referencia"
 CAMPOS = (
@@ -68,7 +68,7 @@ def valores(documento: Documento) -> dict[str, Any]:
         objetivo = None
     lugar = ficha.get("lugar") or {}
     localidad = ((ficha.get("nombres") or {}).get("localidad") or {}).get("es")
-    inicio = ((ficha.get("tiempo") or {}).get("inicio") or {}).get("valor")
+    inicio = (ficha.get("tiempo") or {}).get("inicio")
     return {
         "estado": ficha["estado"]["actual"],
         "presencia_dron": ficha.get("presencia_dron"),
@@ -78,7 +78,8 @@ def valores(documento: Documento) -> dict[str, Any]:
         else {c: objetivo.get(c) for c in ("categoria", "nombre", "oaci") if objetivo.get(c)},
         "pais": lugar.get("pais"),
         "lugar": localidad or lugar.get("localidad"),
-        "inicio": str(inicio)[:10] if inicio else None,
+        # El día local del lugar del suceso, como se publica (proceso/fechas.dia_local).
+        "inicio": fechas.dia_local(inicio, ficha) if inicio and inicio.get("valor") else None,
         "zona": zona.clasificar(ficha)["grupo"],
         "drones": _numero(ficha.get("drones")),
         "cabecera": auditoria_fichas.cabecera(ficha, "es"),

@@ -64,6 +64,11 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   vier Stunden» desde las 18:30 y EODI-2026-00112 las 20:03 UTC por «până la ora 22:03», que en
   Moldavia en marzo son las 19:03 UTC. Desde el 26 de octubre de 2026 el extractor no guarda un
   fin sin frase (proceso/incidentes._fin_con_frase) y la exportación no lo publica.
+- **S, día publicado distinto del día local**: el inicio es solo el día y no es el día local del
+  lugar del suceso: el motivo de su inicio escribe una hora local de otro día («01:30 hora búlgara
+  del 13»), o una afirmación del inicio con su hora en UTC cae otro día en la hora local y ese día
+  UTC es el publicado (EODI-2026-00512, el ataque de hacia la 01:30 hora de Bulgaria del
+  13/10/2026, publicado el 12 por sus 22:30 UTC; proceso/fechas.dia_local).
 - **P, presencia rebajada sin cierre**: la presencia es «no acreditada» o «descartada» y su
   historial no dice qué autoridad la rebajó ni cuándo (no hay paso con ese valor, o le falta la
   fecha o quién lo declara). EODI-2025-00228, Aalborg: rebajada con una revisión a mano, sin el
@@ -110,6 +115,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+    "S",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -130,6 +136,7 @@ NOMBRES = {
     "P": "presencia rebajada sin cierre",
     "Q": "ninguna fuente legible",
     "R": "referencia",
+    "S": "día publicado distinto del día local",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -449,9 +456,34 @@ def sin_fuente_legible(incidente: Documento, copias: dict[str, Documento]) -> bo
     return bool(fuentes) and all(ilegible(f) for f in fuentes)
 
 
+# «01:30 hora búlgara del 13», «02:20 hora de Rumanía del 6»: una hora local con su día.
+_HORA_LOCAL_DEL_DIA = re.compile(r"\b\d{1,2}[:.]\d{2} hora\b[^()]*?\bdel (\d{1,2})\b")
+
+
+def _s(incidente: Documento) -> bool:
+    """El inicio es solo el día y no es el día local del lugar: el motivo del inicio da una hora
+    local de otro día, o una afirmación del inicio en UTC cae otro día en la hora local y su día
+    UTC es el publicado (proceso/fechas.dia_local)."""
+    tiempo = incidente.get("tiempo") or {}
+    inicio = tiempo.get("inicio") or {}
+    if inicio.get("precision") != "dia":
+        return False
+    publicado = str(inicio["valor"])[:10]
+    motivo = str((tiempo.get("origen_inicio") or {}).get("motivo") or "")
+    if any(int(m.group(1)) != int(publicado[8:]) for m in _HORA_LOCAL_DEL_DIA.finditer(motivo)):
+        return True
+    for afirmacion in incidente.get("afirmaciones", []):
+        valor = str(afirmacion.get("valor") or "") if afirmacion.get("campo") == "inicio" else ""
+        if "T" in valor and valor.endswith("Z") and valor[:10] == publicado:
+            local = fechas.dia_local({"valor": valor, "precision": "minuto"}, incidente)
+            if local != publicado:
+                return True
+    return False
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
-    "M": _m, "N": _n, "O": _o, "P": _p,
+    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s,
 }  # fmt: skip
 
 

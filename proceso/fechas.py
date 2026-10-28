@@ -520,6 +520,23 @@ def _momento(texto: str) -> datetime:
     return datetime.fromisoformat(texto.replace("Z", "+00:00")).astimezone(UTC)
 
 
+def dia_local(instante: dict[str, Any], documento: dict[str, Any]) -> str:
+    """El día local del lugar del suceso de un instante («AAAA-MM-DD»): una fecha con precisión de
+    día es siempre el día local, nunca el de UTC (EODI-2026-00512, el ataque de hacia la 01:30
+    hora de Bulgaria del 13/10/2026, salía el 12 por sus 22:30 UTC). Si el instante ya es solo
+    el día, es ese. `documento`: la ficha (con `lugar`) o sus propiedades publicadas."""
+    valor = str(instante["valor"])
+    if instante.get("precision") == "dia":
+        return valor[:10]
+    lugar = documento.get("lugar") or {}
+    punto = lugar.get("punto") or {}
+    zona_suceso = zona(
+        lugar.get("pais") or documento.get("pais"), punto.get("lat", documento.get("lat")),
+        punto.get("lon", documento.get("lon")),
+    ) or ZoneInfo("UTC")  # fmt: skip
+    return _momento(valor).astimezone(zona_suceso).date().isoformat()
+
+
 def inicio_de_ficha(
     campos: dict[str, dict[str, Any]],
     enviadas: list[str],

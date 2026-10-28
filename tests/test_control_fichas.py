@@ -989,3 +989,15 @@ def test_la_hora_revisada_a_mano_con_su_cita_no_la_quita_la_verificacion(
     queda = almacen.incidente("EODI-2026-09515")
     assert queda is not None and queda["tiempo"]["inicio"]["valor"] == "2026-10-13T06:30Z"
     assert queda["tiempo"]["inicio"]["precision"] == "minuto"
+
+
+def test_sin_fuente_de_la_hora_queda_el_dia_local_y_no_el_de_utc() -> None:
+    """Las 22:30 UTC del 12/10/2026 en Núremberg son las 00:30 del 13: si ninguna fuente da la
+    hora, queda el 13 (proceso/fechas.dia_local), no el 12 de UTC (EODI-2026-00512)."""
+    d = _nuremberg_alemana()
+    d["tiempo"] = {"inicio": ejemplos.instante("2026-10-12T22:30Z", "minuto")}
+    almacen = _base(d)
+    _ejecutar(almacen, Servicio(), alcance="repaso")
+    queda = almacen.incidente("EODI-2026-09515")
+    assert queda is not None and queda["tiempo"]["inicio"] == {
+        "valor": "2026-10-13T00:00Z", "precision": "dia"}  # fmt: skip

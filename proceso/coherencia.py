@@ -25,6 +25,7 @@ from datetime import datetime, timedelta
 from itertools import pairwise
 
 from esquema import Documento
+from proceso.fechas import dia_local
 
 # Un aviso anterior a un inicio con hora es posible (el cierre del aeropuerto por la mañana y el
 # derribo por la noche, unidos en un incidente: EODI-2026-00072), pero no de más de un día.
@@ -74,8 +75,11 @@ def coherente(documento: Documento) -> Documento:
     inicio = (salida.get("tiempo") or {}).get("inicio")
     if historial and inicio and inicio.get("precision") in PRECISIONES_SIN_HORA:
         aviso = historial[0]["fecha"]
-        if _dia(aviso) < _dia(inicio):
-            salida["tiempo"]["inicio"] = {"valor": f"{_dia(aviso)}T00:00Z", "precision": "dia"}
+        # El día local del primer aviso, no el de UTC: una nota de las 23:30 UTC en Bulgaria es
+        # del día siguiente (proceso/fechas.dia_local).
+        dia_aviso = dia_local(aviso, salida)
+        if dia_aviso < _dia(inicio):
+            salida["tiempo"]["inicio"] = {"valor": f"{dia_aviso}T00:00Z", "precision": "dia"}
             fin = salida["tiempo"].get("fin")
             if fin is not None and _instante(fin) < _instante(salida["tiempo"]["inicio"]):
                 del salida["tiempo"]["fin"]
@@ -99,7 +103,7 @@ def contradicciones(propiedades: Documento) -> list[str]:
         aviso = historial[0]["fecha"]
         limite = _instante(inicio) - MARGEN_INICIO
         if inicio.get("precision") in PRECISIONES_SIN_HORA:
-            if _dia(aviso) < _dia(inicio):
+            if dia_local(aviso, propiedades) < _dia(inicio):
                 salida.append("el primer aviso es de un día anterior al suceso")
         elif (aviso.get("precision") == "dia" and _dia(aviso) < limite.strftime("%Y-%m-%d")) or (
             aviso.get("precision") != "dia" and _instante(aviso) < limite
