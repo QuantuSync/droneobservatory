@@ -197,6 +197,10 @@ def test_una_union_imposible_no_vale() -> None:
     hirbovat = _ficha("EODI-2026-00168", "MD", "2026-09-30T00:00Z", punto=(46.86, 29.33),
                       nivel="localidad")  # fmt: skip
     assert "km" in (repaso.mismo_imposible(orhei, hirbovat) or "")
+    # Ni dos países: el Shahed del 16 de agosto de 2026 en Moldavia y en Rumanía.
+    galati = _ficha("EODI-2026-00106", "RO", "2026-08-16T00:00Z")
+    etulia = _ficha("EODI-2026-00171", "MD", "2026-08-16T00:00Z")
+    assert "países distintos" in (repaso.mismo_imposible(galati, etulia) or "")
     # El mismo aeropuerto el mismo día sí puede serlo.
     otra = _ficha("EODI-2025-00061", "LT", "2025-09-26T00:00Z", punto=(54.65, 25.30),
                   nivel="instalacion", publicada="2025-09-26T13:00Z")  # fmt: skip
