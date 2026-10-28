@@ -152,6 +152,18 @@ class Pasos:
         return defecto if resultado is None else resultado
 
 
+def salida_de_ensayo(salida: int, revisados_fallidos: list[str]) -> int:
+    """En la recogida real, una unión revisada o una rectificación que no se aplica es un aviso; en
+    el ensayo, un fallo (código 1, y ensayo.sh termina con él): no se fusiona sin verlo. El 28 de
+    octubre de 2026 el ensayo dio 0 con una unión que no validaba."""
+    if not revisados_fallidos:
+        return salida
+    registro.error(
+        "ensayo: revisados o rectificaciones sin aplicar: %s", "; ".join(revisados_fallidos)
+    )
+    return 1
+
+
 def ultimo_dato(almacen: Almacen, cursor: str, campo: str) -> datetime | None:
     documento = almacen.cursor(cursor) or {}
     valor = documento.get(campo)
@@ -553,10 +565,12 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.warning("revisión de fusiones fallida: %s", str(error)[:300])
         # Correcciones revisadas a mano de incidentes concretos (configuracion/
         # incidentes_revisados.json): registros que se unen y fichas que se vuelven a extraer.
+        revisados_fallidos: list[str] = []
+        registro.info(
+            "registros revisados unidos: %d",
+            revisados.unir(almacen, ahora, modelos(almacen), revisados_fallidos),
+        )
         try:
-            registro.info(
-                "registros revisados unidos: %d", revisados.unir(almacen, ahora, modelos(almacen))
-            )
             from modelo import cliente as servicio
 
             hechos = revisados.reextraer(
@@ -599,10 +613,15 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Rectificaciones oficiales de la presencia del dron (recogida/rectificaciones.py): las
         # revisadas a mano, las fuentes que suenan a cierre de una investigación y la búsqueda del
         # mes, siempre con el experto. Aislado: nunca impide publicar.
-        paso(
+        rectificadas = paso(
             "rectificaciones oficiales", rectificaciones.paso_horario, almacen, ahora,
             modelos(almacen),
         )  # fmt: skip
+        if rectificadas is None:
+            revisados_fallidos.append("rectificaciones oficiales: el paso falló")
+        else:
+            revisados_fallidos += [f"rectificación sin guardar en {i}" for i in
+                                   rectificadas.sin_guardar]  # fmt: skip
         # Control de calidad de las fichas (recogida/control_fichas.py), antes de publicar:
         # duplicados también entre idiomas, el lugar más preciso, cada dato con su fuente y las
         # citas traducidas. Lo nuevo que no lo pasa se retiene como mucho 6 horas; nunca impide
@@ -683,6 +702,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             # campo nuevo sin regla de origen tiene que fallar aquí, antes de fusionar.
             if not ensayo_exportacion(almacen, ahora, args.ensayo / "exportacion"):
                 salida = 1
+            salida = salida_de_ensayo(salida, revisados_fallidos)
         elif not sitio.sin_cambios(almacen, antes):
             sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
         else:

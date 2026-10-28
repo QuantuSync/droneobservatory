@@ -143,14 +143,26 @@ def unir_grupo(
     return len(fundidos)
 
 
-def unir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
-    """Funde cada grupo revisado en uno. Devuelve cuántos registros funde."""
-    return sum(
-        unir_grupo(
-            almacen, grupo["registros"], grupo["motivo"], ahora, modelos, grupo.get("conserva")
-        )
-        for grupo in cargar()["unir"]
-    )
+def unir(
+    almacen: Almacen, ahora: datetime, modelos: frozenset[str],
+    fallidos: list[str] | None = None,
+) -> int:  # fmt: skip
+    """Funde cada grupo revisado en uno. Devuelve cuántos registros funde. Cada grupo va aislado:
+    uno que no valida se salta, queda en el registro y en `fallidos`, y no corta los demás (el
+    28 de octubre de 2026 a las 10:17 la unión de 2025-00039 y 2025-00243, sin atribución, cortó
+    las de detrás y la reextracción de esa hora)."""
+    unidos = 0
+    for grupo in cargar()["unir"]:
+        try:
+            unidos += unir_grupo(
+                almacen, grupo["registros"], grupo["motivo"], ahora, modelos, grupo.get("conserva")
+            )
+        except Exception as error:
+            texto = f"{'+'.join(grupo['registros'])}: {str(error)[:300]}"
+            registro.warning("unión revisada sin aplicar %s", texto)
+            if fallidos is not None:
+                fallidos.append(texto)
+    return unidos
 
 
 def _mezcla(documento: Documento, revision: Documento) -> bool:
