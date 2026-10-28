@@ -253,6 +253,11 @@ def test_sin_frase_de_la_fecha_no_se_publica_y_el_lugar_queda_en_el_pais() -> No
     assert entrada.motivo_retencion(decision, queda) == (
         "filtro de entrada: ninguna frase da la fecha del suceso"
     )
+    # Con su día (no aproximado), sin frase de la fecha sí sale: la regla es para las aproximadas.
+    almacen = _base(SULINA_582, BUQUE_689)
+    ctx = _contexto(almacen, Cliente([_respuesta(), _respuesta()]))
+    entrada.filtrar(ctx, {"EODI-2026-00582"})
+    assert ctx.nuevas[entrada.clave("EODI-2026-00689")]["decision"] == entrada.PUBLICAR
 
 
 def _con_declaracion(ficha: dict[str, Any], autoridad: str, frase: str) -> dict[str, Any]:

@@ -291,6 +291,14 @@ def fecha_firme(incidente: Documento) -> bool:
     return con_dia and origen.get("tipo") not in ("publicacion", None)
 
 
+def fecha_aproximada(incidente: Documento) -> bool:
+    """La fecha es la de publicación o aproximada: sin una frase que la dé, no se publica."""
+    origen = incidente["tiempo"].get("origen_inicio") or {}
+    return incidente["tiempo"]["inicio"].get("precision") == "aproximada" or (
+        origen.get("tipo") == "publicacion"
+    )
+
+
 def fechas_distintas(incidente: Documento, otra: Documento) -> str | None:
     """Las dos fichas tienen fechas firmes a más de DIAS_FIRMES días: el texto de las dos fechas,
     o None. Un mismo suceso con dos días firmes tan separados casi siempre son dos sucesos (en la
@@ -538,7 +546,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
             )
             actual = ctx.almacen.incidente(incidente["id"])
             base["huella"] = huella(actual) if actual else base["huella"]
-        if not decision.get("frase_fecha"):
+        if not decision.get("frase_fecha") and fecha_aproximada(incidente):
             return {**base, **decision, "decision": RETENER, "cambios": cambios,
                     "motivo": "ninguna frase da la fecha del suceso"}  # fmt: skip
         return {**base, **decision, "decision": PUBLICAR, "cambios": cambios}
