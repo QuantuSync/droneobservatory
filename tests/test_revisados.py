@@ -109,6 +109,32 @@ def test_un_grupo_que_no_valida_no_corta_los_demas(
                         "atribución"]  # fmt: skip
 
 
+def test_un_registro_fundido_por_la_regla_en_otro_suceso_pasa_al_suyo(
+    leipzig: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """EODI-2025-00302 (nota del 25/09/2025 sobre el cierre de Aalborg del 24) estaba fundida por
+    la regla de sitio y ventana en el cierre del 25 (00238): sale de él y se une al del 24."""
+    origen = leipzig.incidente("EODI-2026-00239")
+    destino = leipzig.incidente("EODI-2026-00391")
+    assert origen is not None and destino is not None
+    nuevo, aportadas = incidentes.absorber(destino, origen, AHORA)
+    leipzig.guardar_incidente(nuevo, AHORA, MODELOS)
+    leipzig.guardar_incidente({**origen, "fusionado_en": destino["id"]}, AHORA, MODELOS)
+    leipzig.registrar_fusion("2026-10-04T16:17Z", origen["id"], destino["id"],
+                             "mismo sitio y misma ventana", aportadas)  # fmt: skip
+    monkeypatch.setattr(revisados, "cargar", lambda: {"unir": [{
+        "registros": ["EODI-2026-00134", "EODI-2026-00239"], "conserva": "EODI-2026-00134",
+        "antes_en": "EODI-2026-00391", "motivo": "el suceso de la víspera"}], "reextraer": []})
+    assert revisados.unir(leipzig, AHORA, MODELOS) == 1
+    movido = leipzig.incidente("EODI-2026-00239")
+    assert movido is not None and movido["fusionado_en"] == "EODI-2026-00134"
+    anterior = leipzig.incidente("EODI-2026-00391")
+    assert anterior is not None and "fusionado_en" not in anterior
+    assert not {"c1"} & {f["id"] for f in anterior["fuentes"]}
+    # Ya hecho, no se repite.
+    assert revisados.unir(leipzig, AHORA, MODELOS) == 0
+
+
 def test_el_que_queda_toma_el_cierre_y_con_el_el_tipo(monkeypatch: pytest.MonkeyPatch) -> None:
     """EODI-2026-00183 (Gran Canaria, sobrevuelo) y EODI-2026-00398 (el mismo suceso, con el
     cierre del aeropuerto): la unión no se guardaba («hay interrupción de aeropuerto»)."""

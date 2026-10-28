@@ -698,6 +698,16 @@
       "conserva": "EODI-2026-00649",
       "motivo": "el mismo suceso: los sobrevuelos de drones no autorizados de la base naval de Toulon y otros sitios militares del sureste de Francia durante el ejercicio de octubre de 2026, que anunció la Marine nationale el 21 de octubre. 00656 son las notas de ese día («Suspicious drones flew over military facilities in southeastern France earlier this month, the French navy said on Wednesday», politico.eu), con el lugar en el país",
       "motivo_en": "the same event: the unauthorised drone overflights of the Toulon naval base and other military sites in south-eastern France during the October 2026 exercise, announced by the French Navy on 21 October. 00656 is that day's reports («Suspicious drones flew over military facilities in southeastern France earlier this month, the French navy said on Wednesday», politico.eu), placed at country level"
+    },
+    {
+      "registros": [
+        "EODI-2025-00228",
+        "EODI-2025-00302"
+      ],
+      "conserva": "EODI-2025-00228",
+      "antes_en": "EODI-2025-00238",
+      "motivo": "el mismo suceso: el cierre del aeropuerto de Aalborg de la noche del miércoles 24 de septiembre de 2025 (de las 21:44 a las 00:54 hora local). 00302 empieza con la nota de lbc.co.uk del jueves 25 a las 07:15 UTC, que cuenta ese cierre; la regla de sitio y ventana la había fundido en el cierre del jueves 25 por la noche (EODI-2025-00238, desde las 23:40 hora local), que aún no había ocurrido cuando se publicó",
+      "motivo_en": "the same event: the closure of Aalborg airport on the night of Wednesday 24 September 2025 (21:44 to 00:54 local time). 00302 starts with the lbc.co.uk report of Thursday 25 at 07:15 UTC, which tells of that closure; the same-site, same-window rule had merged it into the closure of Thursday 25 at night (EODI-2025-00238, from 23:40 local time), which had not yet happened when it was published"
     }
   ],
   "reextraer": [
