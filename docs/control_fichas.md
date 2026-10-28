@@ -526,7 +526,10 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
    - fecha sin frase y la ficha con fecha aproximada: no se publica;
    - lugar sin frase: el lugar baja a nivel de país;
    - una autoridad sin frase, o de otro país sin una frase que lo diga: no cuenta como declaración
-     oficial (la fuente se queda, con fiabilidad C) y se anota en `autoridades_fuera`;
+     oficial (la fuente se queda, con fiabilidad C) y se anota en `autoridades_fuera`. Una
+     extracción nueva de la ficha no la vuelve a hacer oficial: `_alta` lee la decisión guardada
+     del filtro (`extraccion.sin_oficiales_del_filtro`). Sin eso, el 28 de octubre de 2026 la
+     presencia de EODI-2026-00694 cambió cuatro veces en un día (auditoría K);
    - si duda, o falta una frase, se le vuelve a preguntar una vez con las fuentes de las
      candidatas más cercanas (`MAX_CANDIDATAS_CONTEXTO`);
    - **fechas firmes** (`fecha_firme`: el día sale de una frase, no de la publicación): dos fichas
