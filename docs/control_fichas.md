@@ -592,6 +592,7 @@ la recogida y nunca entre los minutos 12 y 45. Lo decidido con la misma huella n
 
 - una unión es imposible si las noticias de una ficha son todas de antes del día firme de la otra (el aeropuerto de Vilna del 25 y del 26 de septiembre de 2025);
 - también si las dos tienen un lugar preciso a más de 25 km (dos drones de la misma noche en Moldavia, en Hîrbovăț y en Orhei);
+- y si son de países distintos: cada país cuenta su incursión (el Shahed del 16 de agosto de 2026 que cruzó Moldavia y cayó en Rumanía);
 - una autoridad solo deja de ser oficial si es de otro país. La que no tiene una frase con su país se queda (Skeyes, en Lieja).
 
 `--accion recalcular` vuelve a comprobar lo ya decidido sin llamar al experto; después hace falta otro muestreo.

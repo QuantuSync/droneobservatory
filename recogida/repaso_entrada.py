@@ -239,8 +239,11 @@ def _ultima_noticia(incidente: Documento) -> datetime | None:
 
 def mismo_imposible(incidente: Documento, otra: Documento) -> str | None:
     """Por qué las dos fichas no pueden ser el mismo suceso, o None: las noticias de una son
-    todas de antes del día firme de la otra, o sus lugares precisos están a más de
-    DISTANCIA_MAX_KM."""
+    todas de antes del día firme de la otra, sus lugares precisos están a más de
+    DISTANCIA_MAX_KM o son de países distintos (cada país cuenta su incursión: el Shahed que
+    cruzó Moldavia y cayó en Rumanía, EODI-2026-00171 y 00106)."""
+    if incidente["lugar"]["pais"] != otra["lugar"]["pais"]:
+        return f"países distintos ({incidente['lugar']['pais']} y {otra['lugar']['pais']})"
     for una, dos in ((incidente, otra), (otra, incidente)):
         if not entrada.fecha_firme(una):
             continue
