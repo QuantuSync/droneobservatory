@@ -20,6 +20,14 @@ name: recorridos
 #   la web» (e2e/web.spec.ts) lo pide de verdad. Los navegadores llevan «EODI-recorrido/1.0» en
 #   su agente de usuario (web/e2e/agente.ts).
 # - A mano: Actions → recorridos → Run workflow, con la dirección que se quiera.
+# - Cuántos trabajos: los 11 de la matriz solo en el despliegue de un commit nuevo de main
+#   (Production), en la pasada por reloj y a mano. En los PR (pull_request) y en las vistas previas
+#   (deployment_status que no es Production), solo dos: «escritorio-chromium 1/1» y «android 1/1».
+#   La matriz la calcula el trabajo «destino» (salida «matriz», JSON) y la lee «recorridos» con
+#   fromJSON. Por qué: el 28 de octubre de 2026 el cortafuegos de Vercel medía ≈1,2 millones de
+#   peticiones al día, casi todas de estos recorridos; desde el PR 329, 13 de 21 tandas fueron de
+#   PR de las sesiones (el PR, su vista previa y cada push), con los 11 trabajos y sin la caché del
+#   mapa en las vistas previas. Lo que dos trabajos no cubren lo recorre producción tras fusionar.
 #
 # Cómo ver los resultados: interno: operacion, «Pruebas en la nube».
 
@@ -56,6 +64,7 @@ jobs:
       base: ${{ steps.decidir.outputs.base }}
       produccion: ${{ steps.decidir.outputs.produccion }}
       sha: ${{ steps.decidir.outputs.sha }}
+      matriz: ${{ steps.decidir.outputs.matriz }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: github.event_name == 'pull_request'
@@ -126,10 +135,20 @@ jobs:
               fi
               ;;
           esac
+          # Los 11 trabajos en producción (commit nuevo o reloj) y a mano; dos en los PR y en las
+          # vistas previas.
+          completa='[{"proyecto":"android","trozo":"1/1"},{"proyecto":"iphone","trozo":"1/1"},{"proyecto":"tableta","trozo":"1/1"},{"proyecto":"escritorio-chromium","trozo":"1/1"},{"proyecto":"escritorio-webkit","trozo":"1/1"},{"proyecto":"escritorio","trozo":"1/3"},{"proyecto":"escritorio","trozo":"2/3"},{"proyecto":"escritorio","trozo":"3/3"},{"proyecto":"movil","trozo":"1/3"},{"proyecto":"movil","trozo":"2/3"},{"proyecto":"movil","trozo":"3/3"}]'
+          reducida='[{"proyecto":"escritorio-chromium","trozo":"1/1"},{"proyecto":"android","trozo":"1/1"}]'
+          if [ "$produccion" = true ] || [ "$EVENTO" = workflow_dispatch ]; then
+            matriz="$completa"
+          else
+            matriz="$reducida"
+          fi
+          echo "matriz=$matriz" >> "$GITHUB_OUTPUT"
           echo "base=$base" >> "$GITHUB_OUTPUT"
           echo "produccion=$produccion" >> "$GITHUB_OUTPUT"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          echo "destino: ${base:-ninguno} (producción: $produccion)"
+          echo "destino: ${base:-ninguno} (producción: $produccion); trabajos: $(jq length <<< "$matriz")"
 
   recorridos:
     needs: destino
@@ -147,21 +166,12 @@ jobs:
       IMAGEN: mcr.microsoft.com/playwright:v1.63.0-noble
     strategy:
       fail-fast: false
+      # La calcula «destino»: los recorridos de una persona (e2e/*recorridos.spec.ts), cada uno en
+      # su dispositivo (android, iphone, tableta, escritorio-chromium, escritorio-webkit), y el resto
+      # de las comprobaciones en trozos para que ninguno pase de media hora (escritorio y movil,
+      # 1/3 a 3/3); en los PR y en las vistas previas, solo escritorio-chromium y android.
       matrix:
-        include:
-          # Los recorridos de una persona (e2e/*recorridos.spec.ts), cada uno en su dispositivo.
-          - { proyecto: android, trozo: 1/1 }
-          - { proyecto: iphone, trozo: 1/1 }
-          - { proyecto: tableta, trozo: 1/1 }
-          - { proyecto: escritorio-chromium, trozo: 1/1 }
-          - { proyecto: escritorio-webkit, trozo: 1/1 }
-          # El resto de las comprobaciones, repartidas en trozos para que ninguno pase de media hora.
-          - { proyecto: escritorio, trozo: 1/3 }
-          - { proyecto: escritorio, trozo: 2/3 }
-          - { proyecto: escritorio, trozo: 3/3 }
-          - { proyecto: movil, trozo: 1/3 }
-          - { proyecto: movil, trozo: 2/3 }
-          - { proyecto: movil, trozo: 3/3 }
+        include: ${{ fromJSON(needs.destino.outputs.matriz) }}
     name: ${{ matrix.proyecto }} ${{ matrix.trozo }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
