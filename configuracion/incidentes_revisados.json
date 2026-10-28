@@ -3971,6 +3971,18 @@
         "fecha": "2026-10-27",
         "en": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-a-cazut-in-republica-moldova-politia-2421467.html (original, 12.02.2025 a las 14:31 hora de Rumanía); la única fuente de la ficha, https://news.yam.md/ro/story/16381588, da 404 y no tiene copia archivada"
       }
+    },
+    {
+      "incidente": "EODI-2025-00304",
+      "enlace": "https://www.tu.no/nyhetsstudio/observerte-drone-i-over-400-meters-hoeyde-flesland-omdirigerte-flytrafikken/76744",
+      "medio": "tu.no",
+      "fecha": "2025-04-19",
+      "idioma": "no",
+      "frase": "Bergen lufthavn Flesland omdirigerte påskeaften trafikken etter at en drone ble observert i over 400 meters høyde innenfor forbudssonen rundt flyplassen.",
+      "comprobada": {
+        "fecha": "2026-10-28",
+        "en": "https://web.archive.org/web/20250428004516/https://www.tu.no/nyhetsstudio/observerte-drone-i-over-400-meters-hoeyde-flesland-omdirigerte-flytrafikken/76744 (copia de archive.org del 28.04.2025; nota de NTB del 19.04.2025 a las 18:16 hora de Noruega, que cita al jefe de operaciones Tore-André Brakstad, del distrito policial del Oeste); el original y la fuente que tenía la ficha, https://tu.no/nyhetsstudio/bergen-lufthavn-flesland-stengte-paa-grunn-av-ulovlig-droneflyging/76744, dan 404"
+      }
     }
   ],
   "titulares": [
@@ -9683,6 +9695,15 @@
       "enlace": "https://www.thestar.com.my/news/world/2026/09/13/lithuania-closes-vilnius-airport-nato-summons-jets-in-response-to-possible-drone",
       "pais": "LT",
       "motivo": "el aeródromo que cerró Lituania es el aeropuerto de Vilna (EYVI); la única fuente de la ficha (informer.rs) solo dice «aerodrom»"
+    },
+    {
+      "incidente": "EODI-2025-00304",
+      "campo": "inicio",
+      "valor": "2025-04-19",
+      "cita": "Bergen lufthavn Flesland omdirigerte påskeaften trafikken",
+      "enlace": "https://www.tu.no/nyhetsstudio/observerte-drone-i-over-400-meters-hoeyde-flesland-omdirigerte-flytrafikken/76744",
+      "pais": "NO",
+      "motivo": "el desvío fue en påskeaften, el sábado 19 de abril de 2025 (NTB en tu.no, nota de las 18:16 hora de Noruega, 16:16 UTC, que no da la hora del dron): el inicio es ese día; la ficha tenía las 17:00 UTC aproximadas, después de la nota, y con esa ventana se le pegaba el cierre medido del viernes 18 (17:16–18:23 UTC), que es otro día"
     },
     {
       "incidente": "EODI-2026-00186",

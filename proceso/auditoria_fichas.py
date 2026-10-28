@@ -493,9 +493,13 @@ _NO_SON_DATOS = frozenset({"control", "motivo", "nombres", "procedencia", "id"})
 
 def oscilan(cambios: Iterable[Documento]) -> dict[str, list[str]]:
     """{incidente: [datos]} que vuelven a un valor que ya habían dejado `MIN_VUELTAS` veces o más
-    (los cambios, por orden, de `Almacen.cambios_desde`)."""
+    (los cambios, por orden, de `Almacen.cambios_desde`). El mismo cambio apuntado dos veces en
+    el mismo instante (la ficha guardada y el motivo de la regla, que la zona anota con la tabla
+    de los incidentes) cuenta una: EODI-2026-00312, 7 → 6 km al pasar a zona-1.1.0 el 27 de
+    octubre de 2026, salía como vuelta."""
     dejados: dict[tuple[str, str], set[str]] = {}
     vueltas: Counter[tuple[str, str]] = Counter()
+    apuntados: set[tuple[str, str, str, str, str]] = set()
     for cambio in cambios:
         anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
         claves = (
@@ -509,6 +513,11 @@ def oscilan(cambios: Iterable[Documento]) -> dict[str, list[str]]:
             if antes == despues:
                 continue
             clave = (str(cambio["entidad_id"]), dato)
+            if cambio.get("fecha"):
+                mismo = (*clave, antes, despues, str(cambio["fecha"]))
+                if mismo in apuntados:
+                    continue
+                apuntados.add(mismo)
             vistos = dejados.setdefault(clave, set())
             if antes in vistos or despues in vistos:
                 vueltas[clave] += 1
