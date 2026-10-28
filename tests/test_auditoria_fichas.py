@@ -423,3 +423,28 @@ def test_s_el_dia_publicado_es_el_local_y_no_el_de_utc() -> None:
 def test_s_la_hora_del_motivo_sin_dia_no_cuenta() -> None:
     motivo = "nota de las 18:16 hora de Noruega, 16:16 UTC, que no da la hora del dron"
     assert not auditoria_fichas._s(_con_inicio_de_dia("2025-04-19", "NO", motivo))
+
+
+def test_t_titular_que_afirma_el_dron_sin_presencia_confirmada() -> None:
+    documento = {
+        **ejemplos.incidente_minimo(),
+        "presencia_dron": "no_confirmada",
+        "titulo": {"es": "Un dron alcanza un petrolero frente a Sulina",
+                   "en": "Possible drone hits tanker off Sulina"},
+    }  # fmt: skip
+    assert auditoria_fichas.auditar([documento])["T"] == [documento["id"]]
+    documento["titulo"]["es"] = "Un posible dron alcanza un petrolero frente a Sulina"
+    assert auditoria_fichas.auditar([documento])["T"] == []
+    documento["presencia_dron"] = "confirmada"
+    assert auditoria_fichas.auditar([documento])["T"] == [documento["id"]]
+
+
+def test_u_el_dron_en_femenino() -> None:
+    documento = {
+        **ejemplos.incidente_minimo(),
+        "titulo": {"es": "Una dron entra en el espacio aéreo de Rumanía cerca de Sulina",
+                   "en": "A drone enters Romanian airspace near Sulina"},
+    }  # fmt: skip
+    assert auditoria_fichas.auditar([documento])["U"] == [documento["id"]]
+    documento["titulo"]["es"] = "Un dron entra en el espacio aéreo de Rumanía cerca de Sulina"
+    assert auditoria_fichas.auditar([documento])["U"] == []

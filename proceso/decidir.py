@@ -30,7 +30,11 @@ from proceso.noticias import normalizar
 
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 # Los datos que una revisión a mano puede fijar, con su cita («datos»).
-CAMPOS_REVISABLES = ("objetivo", "lugar", "inicio", "drones", "cierre", "danos", "titulo", "zona")
+CAMPOS_REVISABLES = (
+    "objetivo", "lugar", "inicio", "drones", "cierre", "danos", "titulo", "zona", "tipo",
+)  # fmt: skip
+# Los tipos que fija una revisión del tipo: la interrupción sale del cierre revisado («cierre»).
+TIPOS_REVISABLES = ("incursion", "sobrevuelo")
 # Una cárcel es una instalación de categoría «otra» (docs/control_fichas.md).
 _CARCEL = re.compile(
     r"\b(?:centro penitenciario|prisi[oó]n|c[aá]rcel|prison|penitenciar|zak[lł]ad karny|"
@@ -494,7 +498,7 @@ def aplicar(
     # Los drones y el tipo, con el estado y la presencia ya decididos (sin dron según la
     # autoridad, número desconocido; la atribución demuestra la entrada).
     resultado = _con_drones(resultado)
-    tipo = incidentes.con_tipo(copy.deepcopy(resultado))
+    tipo = _con_tipo_revisado(incidentes.con_tipo(copy.deepcopy(resultado)))
     if (tipo.get("tipo"), tipo.get("origen_demostrado_por")) != (
         resultado.get("tipo"),
         resultado.get("origen_demostrado_por"),
@@ -512,6 +516,26 @@ def aplicar(
         if grupo != resultado.get("zona"):
             resultado = {**resultado, "zona": grupo}
     return resultado
+
+
+def _con_tipo_revisado(documento: Documento) -> Documento:
+    """El documento (modificado) con el tipo de su revisión a mano, si la tiene: una autoridad
+    dice que el dron cruzó la frontera y las reglas no lo leen de las fuentes (EODI-2026-00281,
+    el Shahed que la Policía de Fronteras de Moldavia vio cruzar hacia Crocmaz, 28 de octubre de
+    2026). La interrupción de un aeropuerto manda."""
+    revision = _revisiones(documento).get("tipo")
+    if (
+        revision is None
+        or revision.get("valor") not in TIPOS_REVISABLES
+        or documento.get("tipo") == "interrupcion_aeroportuaria"
+    ):
+        return documento
+    documento["tipo"] = revision["valor"]
+    if revision["valor"] == "incursion":
+        documento["origen_demostrado_por"] = documento.get("origen_demostrado_por") or ["autoridad"]
+    else:
+        documento.pop("origen_demostrado_por", None)
+    return documento
 
 
 @cache

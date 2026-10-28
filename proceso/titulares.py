@@ -173,10 +173,58 @@ def _como_posible(titulo: str, idioma: str) -> str:
 # «Possible possible drone», «posible posible dron»: el calificativo repetido (2025-00299).
 _POSIBLE_REPETIDO = re.compile(r"\b(possible|posibles?)\s+\1\b", re.IGNORECASE)
 
+# «Dron» es masculino: «Una dron entra en el espacio aéreo de Rumanía» (EODI-2026-00698) y «Una
+# posible dron interrumpe…» (EODI-2026-00322, 28 de octubre de 2026) venían de traducir el rumano
+# «o dronă» y el alemán «eine Drohne», femeninos. Las palabras que concuerdan con el dron, delante
+# (con «posible» en medio o no) y detrás.
+_MASCULINO_ANTES = {
+    "una": "un", "la": "el", "de la": "del", "a la": "al", "esta": "este", "esa": "ese",
+    "aquella": "aquel", "otra": "otro", "alguna": "algún", "ninguna": "ningún", "misma": "mismo",
+    "nueva": "nuevo", "sola": "solo", "primera": "primer", "segunda": "segundo",
+    "tercera": "tercer", "cierta": "cierto", "presunta": "presunto", "supuesta": "supuesto",
+    "sospechosa": "sospechoso", "misteriosa": "misterioso", "pequeña": "pequeño",
+    "unas": "unos", "las": "los", "estas": "estos", "esas": "esos", "aquellas": "aquellos",
+    "otras": "otros", "algunas": "algunos", "varias": "varios", "nuevas": "nuevos",
+    "mismas": "mismos", "muchas": "muchos", "pocas": "pocos", "ciertas": "ciertos",
+    "presuntas": "presuntos", "supuestas": "supuestos", "sospechosas": "sospechosos",
+    "misteriosas": "misteriosos", "pequeñas": "pequeños",
+}  # fmt: skip
+_FEMENINO_ANTES = re.compile(
+    r"\b("
+    + "|".join(sorted((re.escape(p) for p in _MASCULINO_ANTES), key=len, reverse=True))
+    + r")(\s+(?:posibles?\s+)?)(?=(?:drones|dron)\b)",
+    re.IGNORECASE,
+)
+_FEMENINO_DESPUES = re.compile(
+    r"\b(drones|dron)(\s+)(rus|ucranian|bielorrus|armad|explosiv|cargad|"
+    r"derribad|abatid|detectad|avistad|hallad|encontrad|estrellad|caíd|perdid|desviad|"
+    r"misterios|pequeñ|sospechos|no identificad)(a)(s?)\b",
+    re.IGNORECASE,
+)
+
+
+def concordar(titulo: str, idioma: str) -> str:
+    """El titular con las palabras que acompañan al dron en masculino (solo en español)."""
+    if idioma != "es":
+        return titulo
+
+    def antes(m: re.Match[str]) -> str:
+        return _mayuscula(_MASCULINO_ANTES[m.group(1).lower()], m.group(1)) + m.group(2)
+
+    def despues(m: re.Match[str]) -> str:
+        return m.group(1) + m.group(2) + m.group(3) + "o" + m.group(5)
+
+    return _FEMENINO_DESPUES.sub(despues, _FEMENINO_ANTES.sub(antes, titulo))
+
+
+def concuerda(titulo: str, idioma: str) -> bool:
+    return concordar(titulo, idioma) == titulo
+
 
 def ajustar(titulo: str, presencia: str | None, idioma: str) -> str:
     """El titular coherente con la presencia (el mismo si ya lo es)."""
     titulo = _POSIBLE_REPETIDO.sub(lambda m: m.group(0).split()[0], titulo)
+    titulo = concordar(titulo, idioma)
     if idioma not in _DRON:
         return titulo
     titulo = _sin_doble(titulo, idioma)
