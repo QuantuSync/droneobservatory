@@ -635,6 +635,33 @@
       "conserva": "EODI-2026-00649",
       "motivo": "el mismo suceso: 00660 (01net.com, 21 de octubre de 2026) cuenta los sobrevuelos de drones no autorizados sobre la base naval de Toulon y otros sitios militares del Var durante el ejercicio Typhon («Entre le 9 et le 13 octobre 2026, plusieurs bases militaires dans le Var ont été survolées de nuit par des drontes non autorisés»), que es 00649; la nota se leyó el 27 de octubre de 2026 y no cuenta ningún sobrevuelo propio",
       "motivo_en": "the same event: 00660 (01net.com, 21 October 2026) reports the unauthorised drone overflights of the Toulon naval base and other military sites in the Var during the Typhon exercise («Entre le 9 et le 13 octobre 2026, plusieurs bases militaires dans le Var ont été survolées de nuit par des drontes non autorisés»), which is 00649; the report was read on 27 October 2026 and reports no overflight of its own"
+    },
+    {
+      "registros": [
+        "EODI-2026-00512",
+        "EODI-2026-00689"
+      ],
+      "conserva": "EODI-2026-00512",
+      "motivo": "el mismo suceso: los dos mercantes alcanzados por drones frente a la costa búlgara en la noche del 12 al 13 de octubre de 2026 (el Chelsea 3 y el HS Dignity, hundido frente a Krapets). 00689 es la nota de staradvertiser.com del 13 de octubre de 2026 («Two cargo ships were hit by drones overnight, and one was sunk, Bulgarian officials said»), fechada el 13 por «tuesday» y con el lugar «coast of Bulgaria»; no cuenta ningún ataque propio",
+      "motivo_en": "the same event: the two merchant ships hit by drones off the Bulgarian coast on the night of 12 to 13 October 2026 (the Chelsea 3 and the HS Dignity, sunk off Krapets). 00689 is the 13 October 2026 staradvertiser.com report («Two cargo ships were hit by drones overnight, and one was sunk, Bulgarian officials said»), dated the 13th from «tuesday» and placed at «coast of Bulgaria»; it reports no attack of its own"
+    },
+    {
+      "registros": [
+        "EODI-2026-00582",
+        "EODI-2026-00692"
+      ],
+      "conserva": "EODI-2026-00582",
+      "motivo": "el mismo suceso: los dos drones Geran derribados por cazas F-16 rumanos sobre las aguas territoriales del mar Negro cerca de Sulina el sábado 17 de octubre de 2026 hacia las 18:00 hora de Rumanía. 00692 es una nota de portfolio.hu del 27 de octubre de 2026 que lo recuerda («Októberben a román F-16-os vadászgépek pilótái két új generációs orosz drónt lőttek le a román felségvizek felett»), fechada por su publicación",
+      "motivo_en": "the same event: the two Geran drones shot down by Romanian F-16 fighters over Romanian territorial waters in the Black Sea near Sulina on Saturday 17 October 2026 at about 18:00 Romanian time. 00692 is a 27 October 2026 portfolio.hu report recalling it («in October Romanian F-16 pilots shot down two new-generation Russian drones over Romanian territorial waters»), dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2026-00582",
+        "EODI-2026-00620"
+      ],
+      "conserva": "EODI-2026-00582",
+      "motivo": "el mismo suceso: los dos drones Geran derribados por cazas F-16 rumanos sobre el mar Negro cerca de Sulina el sábado 17 de octubre de 2026. 00620 son notas del 19 y 20 de octubre de 2026 («Rumänische F-16-Kampfjets haben am Samstag zwei Drohnen über den Territorialgewässern des Landes im Schwarzen Meer abgeschossen», focus.de) fechadas el 18 por el «Sonntag» de las declaraciones del ministro Radu Miruță, no por el derribo",
+      "motivo_en": "the same event: the two Geran drones shot down by Romanian F-16 fighters over the Black Sea near Sulina on Saturday 17 October 2026. 00620 are 19 and 20 October 2026 reports («Romanian F-16 fighter jets shot down two drones over the country's territorial waters in the Black Sea on Saturday», focus.de) dated the 18th from the «Sunday» of Minister Radu Miruță's statements, not from the shoot-down"
     }
   ],
   "reextraer": [

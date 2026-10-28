@@ -10,6 +10,7 @@ from esquema import Documento, Esquema, validador, validador_definicion
 from proceso import rectificaciones
 from proceso.validaciones import (
     Error,
+    traduccion_valida,
     validar_ataque_ucrania,
     validar_documento_oficial,
     validar_encuentro,
@@ -332,7 +333,8 @@ CREATE TRIGGER IF NOT EXISTS control_fichas_sin_update BEFORE UPDATE ON control_
 BEGIN SELECT RAISE(ABORT, 'control_fichas: una decisión nueva es una fila nueva'); END;
 CREATE TRIGGER IF NOT EXISTS control_fichas_sin_delete BEFORE DELETE ON control_fichas
 BEGIN SELECT RAISE(ABORT, 'control_fichas: nada se borra'); END;
--- Traducción de cada cita al español y al inglés, una sola vez por texto (huella SHA-256).
+-- Traducción de cada cita al español y al inglés, una sola vez por texto (huella SHA-256); si la
+-- guardada no vale (restos sin traducir), la nueva va en otra fila, «<huella>#<n>».
 CREATE TABLE IF NOT EXISTS traducciones (
     huella TEXT PRIMARY KEY,
     fecha TEXT NOT NULL,
@@ -404,6 +406,10 @@ END;
 )
 
 ESQUEMA_SQL = _TABLAS + "".join(_TRIGGERS_POR_TABLA.format(t=t) for t in TABLAS_CON_HISTORIAL)
+
+
+# Una traducción que sustituye a otra que no valía: «<huella>#<n>».
+SEPARADOR_TRADUCCION = "#"
 
 
 class DocumentoInvalido(ValueError):
@@ -1028,19 +1034,43 @@ class Almacen:
         return nuevas
 
     def traducciones(self) -> dict[str, Documento]:
-        """La traducción de cada cita, por la huella de su texto."""
-        filas = self._conexion.execute("SELECT huella, documento FROM traducciones")
-        return {huella: json.loads(documento) for huella, documento in filas.fetchall()}
+        """La traducción de cada cita, por la huella de su texto. Una con restos sin traducir
+        (validaciones.traduccion_valida) no cuenta: la cita queda pendiente y se vuelve a pedir;
+        la nueva se guarda aparte («<huella>#<n>», la tabla no cambia filas) y vale la primera
+        que sirve."""
+        filas = self._conexion.execute(
+            "SELECT huella, documento FROM traducciones ORDER BY fecha, huella"
+        )
+        resultado: dict[str, Documento] = {}
+        for clave, documento in filas.fetchall():
+            huella = clave.split(SEPARADOR_TRADUCCION)[0]
+            traduccion = json.loads(documento)
+            if huella not in resultado and traduccion_valida(traduccion):
+                resultado[huella] = traduccion
+        return resultado
 
     def guardar_traducciones(self, traducciones: dict[str, Documento], fecha: str) -> int:
-        """Guarda las traducciones nuevas (una cita traducida no cambia); devuelve cuántas."""
+        """Guarda las traducciones nuevas (una cita traducida no cambia; si la guardada no vale,
+        la nueva va en otra fila); devuelve cuántas."""
         nuevas = 0
         with self._conexion:
             for huella, documento in sorted(traducciones.items()):
+                if not traduccion_valida(documento):
+                    continue
+                guardadas = [
+                    json.loads(fila[0])
+                    for fila in self._conexion.execute(
+                        "SELECT documento FROM traducciones WHERE huella = ? OR huella LIKE ?",
+                        (huella, huella + SEPARADOR_TRADUCCION + "%"),
+                    ).fetchall()
+                ]
+                if any(traduccion_valida(g) for g in guardadas):
+                    continue
+                clave = f"{huella}{SEPARADOR_TRADUCCION}{len(guardadas)}" if guardadas else huella
                 cursor = self._conexion.execute(
                     "INSERT OR IGNORE INTO traducciones (huella, fecha, documento) "
                     "VALUES (?, ?, ?)",
-                    (huella, fecha, _json(documento)),
+                    (clave, fecha, _json(documento)),
                 )
                 nuevas += cursor.rowcount
         return nuevas
