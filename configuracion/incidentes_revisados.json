@@ -799,6 +799,132 @@
         "es": "No es un suceso con dron: la única fuente es una entrevista de bnn-news.com (20 de mayo de 2026) con el antiguo comandante de las Fuerzas Armadas letonas Juris Maklakovs sobre «military drones armed with explosives regularly approached or violated Latvian airspace», sin ningún hecho con fecha ni lugar.",
         "en": "Not a drone event: the only source is a bnn-news.com interview (20 May 2026) with former Latvian Armed Forces commander Juris Maklakovs about drones that «regularly approached or violated Latvian airspace», without any event with a date or place."
       }
+    },
+    {
+      "incidente": "EODI-2025-00141",
+      "motivo": {
+        "es": "Es un resumen o un balance sin un suceso de un día concreto (repaso de entrada con el experto): No coincide con ninguna ficha existente: es una advertencia sobre incursiones en Hawarden, distinta del incidente de Gatwick. Ninguna frase da el día del suceso.",
+        "en": "It is a summary or a tally without an event on a given day (entry review by the expert model): Does not match any existing record: it is a warning about incursions at Hawarden, unlike the Gatwick near-miss. No sentence gives the day of the event."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00577",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Es un suceso distinto de las fichas existentes. La fuente no da el día de las detenciones, y dice que los hombres volaron drones, así que la presencia del dron está confirmada.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): It is a different event from the existing records. The source gives no day for the detentions, and it says the men flew drones, so the drone's presence is confirmed."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00019",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): El suceso ocurrió una noche de noviembre pasado, no el día de la publicación (2025-04-01), y ninguna frase da el día exacto; no hay fichas previas con las que coincida.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): The event happened on a night last November, not on the publication date (2025-04-01), and no sentence gives the exact day; there are no existing records to match."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00038",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Ningún texto dice qué día se cerró el espacio aéreo de Oslo; la nota del 29 puede recoger el cierre del 22 de septiembre, pero no hay prueba, así que queda sin fecha y con duda.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): No source says on which day the Oslo airspace was closed; the 29 September item may recap the 22 September closure, but there is no proof, so the date is unknown and flagged as doubtful."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00085",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Ninguna ficha previa; las fuentes cuentan un resultado de investigación sobre vuelos de dron anteriores sin dar el día, y la presencia del dron está confirmada, no 'no_confirmada'.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): No prior records; the sources report an investigation finding about earlier drone flights without giving the day, and drone presence is confirmed rather than 'not confirmed'."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00148",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso distinto de la ficha de Lakenheath; la fuente no da el día del suceso, solo la publicación, aunque el informe del Airprox Board es de fecha desconocida.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): Different event from the Lakenheath record; the source gives no day for the incident, only the publication date, and it describes a past Airprox report."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00167",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Son dos avisos de drones en las últimas semanas sin día concreto; no hay ficha previa y la fecha del suceso es desconocida. La ficha da 2025-09-30 solo por la publicación.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): Two drone reports in recent weeks with no specific day; no earlier record exists and the event date is unknown. The record's date comes only from the publication date."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00245",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso nuevo: un dron presunto sobrevoló cinco veces en marzo el centro de investigación de Ispra, sin día concreto; la presencia no está confirmada y no hay errores claros.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): New event: a suspected drone overflew the Ispra research centre five times in March, with no specific day given; presence is unconfirmed and there are no clear errors."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00289",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso nuevo en Norwich, sin ficha coincidente; la fuente no da el día del suceso, solo cuenta que ocurrió sin fecha concreta.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): New incident at Norwich; no matching record; the source gives no day for the event."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00312",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Es un suceso distinto de todas las fichas de la lista: un dron Gerbera hallado en Pepeni, sin día concreto en las fuentes. La presencia del dron está confirmada porque se encontró físicamente, no es solo posible.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): This is a separate incident from every listed record: a Gerbera drone found in Pepeni, with no specific day given in the sources. The drone's presence is confirmed because it was physically found, not merely possible."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00001",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Es un suceso distinto del de la ficha EODI-2026-00083 (otro piloto, otra nacionalidad, otra fecha). La fuente no dice qué día ocurrieron los vuelos, solo que fueron en un periodo corto antes de la denuncia.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): This is a different event from EODI-2026-00083 (different pilot, nationality and date). The source does not say on which day the flights took place, only that they were over a short period before the police report."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00043",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso nuevo en Toulouse-Blagnac. La fuente no da el día del suceso. Además, la presencia del dron está confirmada (sobrevuelo, piloto interpelado y aparato incautado), no como 'no confirmada'.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): New incident at Toulouse-Blagnac. The source does not state the day of the event. The drone's presence is confirmed (overflight, pilot arrested, device seized), not 'unconfirmed'."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00056",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso único sin duplicado en la lista; las fuentes no dan el día. La presencia del dron figura como no confirmada, pero las fuentes dicen que un dron agrícola voló de verdad y suspendió los vuelos.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): Single incident with no duplicate in the list; the sources do not give the day. Drone presence is recorded as unconfirmed, but the sources say an agricultural drone really flew and caused flights to be suspended."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00060",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso en RAF Lakenheath no registrado en la lista; la fuente no da el día del suceso, solo la fecha de publicación.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): Lakenheath event not in the existing list; the source gives no day of the event, only the publication date."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00176",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Ninguna ficha previa; la fuente no da el día del suceso (solo informe publicado), el lugar Marlow está nombrado y la autoridad es británica. Sin errores claros en los datos.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): No prior records; the source gives no day for the incident (only a published report), Marlow is named and the authority is British. No clear data errors."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00181",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso distinto de la ficha de Luton; un solo suceso cerca de Hereford, sin día explícito en la fuente, así que la fecha queda sin determinar. El texto afirma que un dron se acercó a 100 pies de un avión, pero la ficha lo marca como presencia no confirmada.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): Different event from the Luton record; a single event near Hereford, with no explicit day in the source, so the date is undetermined. The text states a drone came within 100ft of a plane, yet the record marks presence as unconfirmed."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00194",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Es un suceso nuevo, no recogido en la lista. Ninguna fuente da el día del sobrevuelo; las fuentes 2 a 6 son análisis de la tendencia sin suceso propio.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): This is a new incident not in the list. No source states the day of the overflight; sources 2 to 6 are trend analyses with no separate incident."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00368",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso nuevo en la cárcel de Poggioreale; la fuente no da el día. El dron sí está confirmado: fue neutralizado y se halló a bordo droga y móviles.",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): New incident at Poggioreale prison; the source gives no day. The drone is confirmed: it was neutralised and drugs and phones were found aboard."
+      }
     }
   ],
   "citas": [
@@ -5023,6 +5149,17 @@
       "motivo": {
         "es": "Los ataques fueron hacia las 03:00 hora de Bulgaria del martes 6 de octubre de 2026 (00:00 UTC; insurancebusinessmag.com); la ficha publicaba las 01:00 UTC, con el desfase de invierno.",
         "en": "The attacks were at about 03:00 Bulgarian time on Tuesday 6 October 2026 (00:00 UTC; insurancebusinessmag.com); the record showed 01:00 UTC, with the winter offset."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00055",
+      "titulo": {
+        "en": "Munich airport closure due to drone sighting",
+        "es": "Cierre del aeropuerto de Múnich por avistamiento de drones"
+      },
+      "motivo": {
+        "es": "El repaso de entrada del 28 de octubre de 2026 unió en esta ficha la del cierre del aeropuerto de Múnich del 2 de octubre de 2025 (EODI-2025-00340), que era el suceso; esta contaba el láser desplegado después. Queda el titular del cierre.",
+        "en": "The entry review of 28 October 2026 merged into this record the closure of Munich airport on 2 October 2025 (EODI-2025-00340), which was the event; this one reported the laser deployed afterwards. The closure headline stays."
       }
     }
   ],
