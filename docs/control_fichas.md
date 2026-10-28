@@ -152,7 +152,8 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    («…y uno de ellos se hundió, according to»); era la única de toda la tabla.
 7. **Retención.** Una ficha nueva que todavía no ha pasado el control (un posible duplicado sin
    decidir, la verificación pendiente por el tope de gasto o por una caída del servicio) no se
-   publica, como mucho 6 horas; después se publica con lo que haya y queda anotada. Lo que ya
+   publica. Hasta el 28 de octubre de 2026 salía a las 6 horas con lo que hubiera; desde
+   entonces no sale hasta que el filtro de entrada (abajo) la deja pasar. Lo que ya
    estaba publicado nunca se retiene: se corrige. Así un duplicado nuevo se une antes de salir y
    no genera un segundo aviso.
 
@@ -453,7 +454,8 @@ así que nunca casaba con la ficha del suceso. Así entraron EODI-2026-00663 («
   publicación.
 - **Retención**: mientras no hay respuesta comprobada, la ficha no se publica. La que nombra otro
   mes o un pasado lejano se retiene sin límite; la que solo comparte instalación con una ficha
-  anterior (casi siempre un suceso nuevo) espera como mucho las 6 horas de siempre.
+  anterior (casi siempre un suceso nuevo) esperaba como mucho 6 horas (hasta el 28 de octubre de
+  2026; ahora la decide el filtro de entrada).
 - **Comprobación fija**: la N de la auditoría es la misma regla sobre todo lo publicado.
 
 ### Fin sin frase que lo respalde (desde el 26 de octubre de 2026)
@@ -476,6 +478,77 @@ con su cita.
   y la duración sin frase no se publican, ni las afirmaciones de fin de una fuente cuya frase no
   lo escribe. El fin revisado a mano (`titulares`, `inicio.fin` con `fin_cita`) lleva su frase.
 - **Comprobación fija**: la O de la auditoría, sobre lo que publica la web.
+
+## Filtro de entrada (desde el 28 de octubre de 2026)
+
+Ninguna ficha nueva se publica sin que el experto haya comprobado si repite un suceso que ya
+tenemos o si cuenta otro día. Código: [`recogida/entrada.py`](../recogida/entrada.py) (el paso y
+la medida a las 24 horas) y [`modelo/entrada.py`](../modelo/entrada.py) (las peticiones). Pruebas:
+[`tests/test_entrada.py`](../tests/test_entrada.py).
+
+### Por qué
+
+Del 7 al 28 de octubre de 2026 salieron publicadas 27 fichas nuevas que eran un suceso que ya
+teníamos (después se unieron a mano o por el control), además de un nombre de autoridad con el
+país equivocado. Tres casos del 27 y 28 de octubre:
+
+- **EODI-2026-00689** repetía el ataque a buques frente a Bulgaria de la noche del 12 al 13 de
+  octubre (EODI-2026-00512), contado dos semanas después.
+- **EODI-2026-00692** era el derribo de dos drones por cazas rumanos sobre Sulina del 17 de octubre
+  (EODI-2026-00582), contado en un resumen del mes; y **EODI-2026-00620**, el mismo derribo con la
+  fecha del domingo 18.
+- **EODI-2026-00512** daba el Consejo de Seguridad del Consejo de Ministros de Bulgaria como
+  «de Moldavia»: la traducción del nombre dedujo el país de la lengua (rumano) de la noticia.
+
+Las fichas se comparaban solo con las del mismo sitio y del mismo día o de los dos días vecinos
+(`proceso/control_fichas.candidatos`), así que un suceso contado otro día o con el lugar a nivel de
+país nunca encontraba su pareja; y lo que esperaba una decisión salía a las 6 horas con lo que
+hubiera.
+
+### Qué hace
+
+En cada recogida horaria, después de las noticias retrospectivas y antes de publicar, cada ficha
+nueva (activa y aún no publicada) que no tiene una decisión vigente para sus fuentes y su inicio
+(`huella`) pasa por el filtro:
+
+1. **Conjunto de comparación, sin mirar la distancia** (`entrada.conjunto`): las fichas activas de
+   su país con el inicio de 30 días antes a 3 días después de su inicio o de su primera noticia.
+   Si la ficha es de mar, de frontera o con el lugar a nivel de país o de región, también las de
+   los países del mismo mar o vecinos (`MARES`, `VECINOS`). Si son más de 40, las del mismo tipo y
+   las más cercanas en el tiempo, nunca menos de 40. Las que una revisión separó no entran.
+2. **Una llamada al experto** con la ficha, sus fuentes, las autoridades que cita y el conjunto
+   (una línea por ficha: id, fecha, lugar, tipo, titular y una frase). Responde en JSON: si es el
+   mismo suceso que una del conjunto (su id o «ninguna»), si cuenta otro día (fecha y frase), y la
+   frase de la fuente que da la fecha, el lugar y cada autoridad con su país (o «no»).
+3. **Lo que se hace con la respuesta** (`entrada.decidir`, que comprueba cada frase en su fuente):
+   - mismo suceso: se une antes de publicar (queda la más antigua, `mas_antiguo`);
+   - otro día con frase: la ficha toma ese día y vuelve a pasar por el filtro (como mucho una vez);
+   - fecha sin frase y la ficha con fecha aproximada: no se publica;
+   - lugar sin frase: el lugar baja a nivel de país;
+   - una autoridad sin frase, o de otro país sin una frase que lo diga: no cuenta como declaración
+     oficial (la fuente se queda, con fiabilidad C) y se anota en `autoridades_fuera`;
+   - si duda, o falta una frase, se le vuelve a preguntar una vez con las fuentes de las
+     candidatas más cercanas (`MAX_CANDIDATAS_CONTEXTO`).
+4. **Sin respuesta del experto** (tope, caída, tiempo de la pasada) la ficha **espera** y cuenta
+   como caso crítico (`esperan_experto` del estado). Nada sale por tiempo: se quitó la salida a las
+   6 horas de las fichas nuevas.
+
+La decisión es una fila de `control_fichas` con la clave `entrada:<id>`; con la misma huella no se
+vuelve a preguntar. La traducción de los nombres de autoridad ya no deduce el país de la lengua
+del nombre (`modelo/control.INSTRUCCIONES_TRADUCIR`).
+
+### Medida a las 24 horas
+
+Entre 24 horas y 7 días después de publicarse, cada ficha que pasó el filtro se vuelve a comprobar
+con el experto (`medida:<id>`, como mucho 6 por pasada): fecha, lugar, autoridad y duplicado, cada
+uno con su frase. Si encuentra un error con frase, se corrige como en el filtro y se apunta. El
+resumen diario (`recogida/visitas.py`) lleva la línea «Fichas nuevas de ayer: N; con error a las
+24 h: M (ids)».
+
+### Gasto
+
+Modo `entrada` (`modelo/coste.py`): 3,00 USD al día, solo del experto, aparte del tope del experto,
+de su reserva y del cupo del control (`CUPOS_PROPIOS`). El tope mensual pasa de 60 a 150 USD.
 
 ## Conjunto de referencia (desde el 21 de octubre de 2026)
 
