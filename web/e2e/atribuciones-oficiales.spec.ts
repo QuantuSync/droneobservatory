@@ -56,8 +56,9 @@ const APLICADAS: {
     enlace: "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
   },
   {
-    // Galați: la EODI-2026-00211 se unió el 14 de octubre de 2026 en la más antigua, la 00187.
-    id: "EODI-2026-00187",
+    // Galați: la EODI-2026-00211 se unió el 14 de octubre de 2026 en la 00187, y la 00187 el 28 de
+    // octubre de 2026 en la más antigua, la 00121 (repaso de entrada).
+    id: "EODI-2026-00121",
     autoridad: "el presidente de Rumanía (Președintele României)",
     cita: "Declar, cu toată fermitatea, că responsabilitatea integrală pentru acest incident îi aparține Federației Ruse.",
     enlace:
