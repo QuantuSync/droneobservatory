@@ -265,6 +265,7 @@ def test_el_que_se_queda_se_vuelve_a_extraer_aunque_su_extraccion_no_guarde_lo_e
     propio = "CAND-20260914T0830-ETNG-aeropuerto"
     vilna.guardar_extraccion(propio, "2026-09-30T19:46Z", "ficha/5", "h", True,
                              {"incidente": "EODI-2026-00072"})  # fmt: skip
+    monkeypatch.setattr(revisados, "REEXTRAER_DESDE", "2026-10-01T00:00Z")
     llamadas: list[str] = []
     monkeypatch.setattr(revisados, "_extraer", _extractor_falso(llamadas))
     revisados.separar(vilna, AHORA, MODELOS, cliente=object())
@@ -272,6 +273,19 @@ def test_el_que_se_queda_se_vuelve_a_extraer_aunque_su_extraccion_no_guarde_lo_e
     # Una vez extraído después del reparto, no se repite.
     revisados.separar(vilna, AHORA + timedelta(hours=1), MODELOS, cliente=object())
     assert llamadas.count(propio) == 1
+
+
+def test_un_reparto_anterior_al_cambio_no_se_vuelve_a_extraer(
+    vilna: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Los repartos de antes del 28 de octubre de 2026 ya se revisaron con su ficha de entonces.
+    propio = "CAND-20260914T0830-ETNG-aeropuerto"
+    vilna.guardar_extraccion(propio, "2026-09-30T19:46Z", "ficha/5", "h", True,
+                             {"incidente": "EODI-2026-00072"})  # fmt: skip
+    llamadas: list[str] = []
+    monkeypatch.setattr(revisados, "_extraer", _extractor_falso(llamadas))
+    revisados.separar(vilna, AHORA, MODELOS, cliente=object())
+    assert propio not in llamadas
 
 
 def test_sin_extractor_el_que_se_queda_pierde_lo_del_otro_suceso(vilna: Almacen) -> None:
