@@ -71,6 +71,7 @@ from proceso import (
     no_es_suceso,
     presencia,
     rectificaciones,
+    validaciones,
 )
 from proceso import control_fichas as reglas
 from proceso.noticias import Nomenclator
@@ -1307,6 +1308,10 @@ def procesar_traduccion(ctx: Contexto, peticion: Peticion,
             es = texto
         if idioma == "en":
             en = texto
+        if (resto := validaciones.restos_sin_traducir(idioma, es)) is not None:
+            registro.warning("traducción %s: cita %d con «%s» sin traducir", peticion.clave, n,
+                             resto)  # fmt: skip
+            continue
         if es and en:
             nuevas[huella] = {"idioma": idioma, "es": es, "en": en,
                               "version": peticiones.VERSION}  # fmt: skip

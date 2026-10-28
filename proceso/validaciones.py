@@ -5,6 +5,7 @@ acceden a los documentos de forma defensiva para poder informar de todo a la
 vez aunque el esquema ya haya fallado.
 """
 
+import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
@@ -441,3 +442,23 @@ def validar_documento_oficial(documento: Documento, ahora: datetime) -> list[Err
     if isinstance(fecha, str) and fecha > ahora.date().isoformat():
         errores.append(Error("fecha", f"fecha futura: {fecha}"))
     return errores
+
+
+# Restos en inglés en una traducción al español: la cita de EODI-2026-00689 («…y uno de ellos se
+# hundió, according to») salió así del modelo y se publicó. Una traducción con ellos no vale: no
+# se guarda y, si ya estaba guardada, se vuelve a pedir.
+RESTOS_EN_INGLES = re.compile(r"\b(?:according to|said|says|reported|told)\b", re.IGNORECASE)
+
+
+def restos_sin_traducir(idioma: str, es: str) -> str | None:
+    """El resto en inglés de la traducción al español de una cita que no estaba en español."""
+    if idioma == "es":
+        return None
+    resto = RESTOS_EN_INGLES.search(es)
+    return resto.group(0) if resto else None
+
+
+def traduccion_valida(documento: Documento) -> bool:
+    """Si una traducción guardada (tabla traducciones) se puede publicar."""
+    return restos_sin_traducir(str(documento.get("idioma") or ""),
+                               str(documento.get("es") or "")) is None  # fmt: skip

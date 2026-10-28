@@ -145,6 +145,11 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    inglés y se guarda (tabla `traducciones`, por la huella del texto). La publicación anota las
    que salen sin traducir y el control las traduce en su pasada siguiente: las de las fichas de
    Europa en cada recogida y las de la capa de Ucrania, las más recientes primero, de madrugada.
+   Una traducción al español con restos en inglés («according to», «said», «reported», «told»;
+   `validaciones.restos_sin_traducir`) no se guarda, y si ya estaba guardada no cuenta: la cita
+   vuelve a salir sin traducir y se pide otra vez, que se guarda en otra fila (`<huella>#<n>`,
+   la tabla no cambia filas). Así salió la cita de EODI-2026-00689 el 27 de octubre de 2026
+   («…y uno de ellos se hundió, according to»); era la única de toda la tabla.
 7. **Retención.** Una ficha nueva que todavía no ha pasado el control (un posible duplicado sin
    decidir, la verificación pendiente por el tope de gasto o por una caída del servicio) no se
    publica, como mucho 6 horas; después se publica con lo que haya y queda anotada. Lo que ya
