@@ -315,3 +315,18 @@ def test_las_citas_revisadas_caben_en_la_frase_de_una_fuente() -> None:
     ]
     largas = [f for f in frases if len(f.split()) > 25]
     assert largas == []
+
+
+def test_el_motivo_de_cada_separacion_cabe_en_la_nota_de_sus_relacionados() -> None:
+    # El motivo es la nota de «relacionados» de las fichas que quedan (esquema: 600 letras); el
+    # 28 de octubre de 2026 uno de 849 dejaba sin guardar los enlaces de la separación de Sulina.
+    import json
+
+    import esquema as esquemas
+
+    esquema = json.loads((esquemas.DIRECTORIO / "incidente.schema.json").read_text("utf-8"))
+    nota = esquema["properties"]["relacionados"]["items"]["properties"]["nota"]["properties"]
+    for revision in revisados.cargar()["separar"]:
+        for lengua in ("es", "en"):
+            maximo = nota[lengua]["maxLength"]
+            assert len(revision["motivo"][lengua]) <= maximo, revision["incidente"]
