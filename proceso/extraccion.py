@@ -62,6 +62,7 @@ from esquema import Documento
 from modelo import coste, ficha, modelos, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import declaraciones, detalle, escalado, no_es_suceso, presencia
+from proceso.control_fichas import sin_oficiales
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import activo, aplicar_reglas, construir, huella
 from proceso.noticias import (
@@ -1101,6 +1102,28 @@ def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:
     return resultado
 
 
+# La clave de la decisión del filtro de entrada de una ficha (recogida/entrada.clave).
+PREFIJO_ENTRADA = "entrada:"
+
+
+def sin_oficiales_del_filtro(almacen: Almacen, incidente: Documento) -> Documento:
+    """El incidente rehecho sin publicar como oficiales las declaraciones que el filtro de entrada
+    dejó como no oficiales (su decisión guardada). Sin esto, cada nueva extracción las volvía a
+    hacer oficiales y el filtro las quitaba en la misma recogida: la presencia de
+    EODI-2026-00694 (el ministro de Defensa búlgaro citado sin su país) cambió cuatro veces el
+    28 de octubre de 2026 (auditoría K)."""
+    decision = almacen.controles(PREFIJO_ENTRADA + incidente["id"]).get(
+        PREFIJO_ENTRADA + incidente["id"]
+    )
+    fuera = (decision or {}).get("autoridades_fuera") or {}
+    if not fuera:
+        return incidente
+    instante_ = dict(
+        incidente["control"].get("ultima_actualizacion") or incidente["control"]["alta"]
+    )
+    return sin_oficiales(incidente, fuera, instante_)[0]
+
+
 def _alta(
     almacen: Almacen,
     peticion: Peticion,
@@ -1163,6 +1186,7 @@ def _alta(
     )
     if anterior is not None:
         incidente = conservar_oficiales(incidente, anterior)
+        incidente = sin_oficiales_del_filtro(almacen, incidente)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
         incidente = detalle.reaplicar(almacen, incidente)
     # Criterio de presencia: sin una autoridad que diga que fue un dron, no queda confirmada (un

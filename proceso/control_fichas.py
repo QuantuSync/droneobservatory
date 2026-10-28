@@ -19,16 +19,17 @@
 - El estado: confirmado o atribuido solo con un paso de una fuente oficial.
 """
 
+import copy
 import hashlib
 import json
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any
 
 from esquema import Documento
-from proceso import buques, declaraciones, fechas, incidentes, rectificaciones
+from proceso import autoridades, buques, declaraciones, fechas, incidentes, rectificaciones
 from proceso.estados import RETIRADAS, Estado
 from proceso.fronteras import dentro_del_pais
 from proceso.noticias import (
@@ -717,6 +718,41 @@ def bajar_estado(incidente: Documento, instante_: Documento) -> Documento | None
     }
     historial = [*incidente["estado"]["historial"], paso]
     return {**incidente, "estado": {"actual": Estado.NOTIFICADO.value, "historial": historial}}
+
+
+def declaraciones_de(incidente: Documento) -> dict[str, list[str]]:
+    """Las autoridades cuyas declaraciones publica la ficha: nombre -> ids de sus fuentes."""
+    salida: dict[str, list[str]] = {}
+    for fuente in incidente.get("fuentes", []):
+        if not fuente.get("publica", True) or fuente.get("fiabilidad") in {"E", "F"}:
+            continue
+        declaracion = autoridades.DECLARACION.match(str(fuente.get("medio") or ""))
+        if declaracion and "-declaracion-" in str(fuente["id"]):
+            salida.setdefault(declaracion.group(1).strip(), []).append(str(fuente["id"]))
+    return salida
+
+
+def sin_oficiales(
+    incidente: Documento, nombres: Iterable[str], instante_: Documento
+) -> tuple[Documento, list[str]]:
+    """La ficha con las declaraciones de esas autoridades como no oficiales y el estado que daban
+    de vuelta a notificado. Devuelve la ficha y los cambios (vacío si no cambia)."""
+    ids = {i for nombre in nombres for i in declaraciones_de(incidente).get(nombre, [])}
+    if not ids:
+        return incidente, []
+    nuevo = copy.deepcopy(incidente)
+    cambios = []
+    for fuente in nuevo.get("fuentes", []):
+        if fuente["id"] in ids and (fuente.get("es_autoridad") or fuente.get("publica")):
+            fuente.update(es_autoridad=False, publica=False, fiabilidad="C")
+            cambios.append(f"declaración no oficial: {fuente['id']}")
+    if not cambios:
+        return incidente, []
+    bajado = bajar_estado(nuevo, instante_)
+    if bajado is not None:
+        nuevo = bajado
+        cambios.append("estado sin fuente oficial: notificado")
+    return nuevo, cambios
 
 
 def resumen_json(datos: Any) -> str:

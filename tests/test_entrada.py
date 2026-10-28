@@ -13,6 +13,7 @@ import pytest
 from almacen.base import Almacen
 from modelo import coste
 from proceso import control_fichas as reglas
+from proceso import extraccion
 from recogida import control_fichas, entrada, visitas
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
@@ -296,6 +297,30 @@ def test_la_autoridad_de_otro_pais_sin_frase_que_lo_diga_no_es_oficial() -> None
     otra = entrada.decidir(_respuesta(fecha_frase=dia, lugar_frase=dia, autoridades=[bien]),
                            [("a", f"{dia} {frase}")], [], nueva)  # fmt: skip
     assert otra["autoridades_fuera"] == {} and otra["autoridades"] == {consejo: "BG"}
+
+
+def test_una_nueva_extraccion_no_vuelve_a_hacer_oficial_lo_que_el_filtro_quito() -> None:
+    """EODI-2026-00694, 28/10/2026: el filtro dejaba como no oficial la declaración del ministro
+    búlgaro y la extracción de la hora siguiente la volvía a hacer oficial; la presencia cambió
+    cuatro veces en un día (auditoría K)."""
+    consejo = "Consiliul de Securitate de pe lângă Consiliul de Miniștri"
+    frase = f"{consejo} a decis convocarea ambasadorului"
+    nueva = _con_declaracion(BUQUE_689, consejo, frase)
+    almacen = _base(nueva)
+    dia = "Two cargo ships were hit by drones overnight"
+    autoridad = {"nombre": consejo, "pais": "MD", "fuente": 1, "frase": frase}
+    cliente = Cliente([_respuesta(fecha_frase=dia, lugar_frase=dia, autoridades=[autoridad])] * 2)
+    ctx = _contexto(almacen, cliente)
+    entrada.filtrar(ctx, set())
+    almacen.guardar_controles(ctx.nuevas, "2026-10-27T21:30Z")
+    # La extracción rehace la ficha con la declaración oficial y el estado que da.
+    rehecha = extraccion.sin_oficiales_del_filtro(almacen, nueva)
+    declaracion = next(f for f in rehecha["fuentes"] if "declaracion" in f["id"])
+    assert declaracion["publica"] is False and declaracion["es_autoridad"] is False
+    assert rehecha["estado"]["actual"] == "notificado"
+    # Sin decisión del filtro (o sin autoridades fuera), la extracción no cambia nada.
+    otra = _con_declaracion(SULINA_582, consejo, frase)
+    assert extraccion.sin_oficiales_del_filtro(almacen, otra) is otra
 
 
 def test_sin_experto_espera_como_caso_critico_y_no_sale_nunca_por_tiempo() -> None:

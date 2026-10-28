@@ -37,7 +37,6 @@ from esquema import Documento
 from modelo import control, coste
 from modelo import entrada as peticiones
 from modelo.cliente import LlamadaFallida
-from proceso import autoridades as nombres_autoridad
 from proceso import control_fichas as reglas
 from proceso import fechas, fronteras, incidentes, noticias
 from recogida import control_fichas
@@ -189,12 +188,7 @@ def resumen(otra: Documento) -> dict[str, Any]:
 
 def autoridades_de(incidente: Documento) -> dict[str, list[str]]:
     """Las autoridades cuyas declaraciones cita la ficha: nombre -> ids de sus fuentes."""
-    salida: dict[str, list[str]] = {}
-    for fuente in control_fichas._publicas(incidente):
-        declaracion = nombres_autoridad.DECLARACION.match(str(fuente.get("medio") or ""))
-        if declaracion and "-declaracion-" in str(fuente["id"]):
-            salida.setdefault(declaracion.group(1).strip(), []).append(str(fuente["id"]))
-    return salida
+    return reglas.declaraciones_de(incidente)
 
 
 def _normal(texto: str) -> str:
@@ -356,18 +350,12 @@ def corregida(incidente: Documento, decision: dict[str, Any]) -> tuple[Documento
         nuevo["lugar"] = {"pais": nuevo["lugar"]["pais"], "nivel": "pais"}
         nuevo.pop("objetivo", None)
         cambios.append("lugar sin frase: solo el país")
-    fuera = decision.get("autoridades_fuera") or {}
-    ids_fuera = {i for nombre in fuera for i in autoridades_de(incidente).get(nombre, [])}
-    for fuente in nuevo.get("fuentes", []):
-        if fuente["id"] in ids_fuera and (fuente.get("es_autoridad") or fuente.get("publica")):
-            fuente.update(es_autoridad=False, publica=False, fiabilidad="C")
-            cambios.append(f"declaración no oficial: {fuente['id']}")
+    nuevo, propios = reglas.sin_oficiales(
+        nuevo, decision.get("autoridades_fuera") or {}, _instante_de(incidente)
+    )
+    cambios += propios
     if not cambios:
         return incidente, []
-    bajado = reglas.bajar_estado(nuevo, _instante_de(incidente))
-    if bajado is not None:
-        nuevo = bajado
-        cambios.append("estado sin fuente oficial: notificado")
     return incidentes.aplicar_reglas(nuevo), cambios
 
 

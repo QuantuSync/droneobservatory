@@ -9674,6 +9674,71 @@
           ]
         }
       ]
+    },
+    {
+      "incidente": "EODI-2026-00541",
+      "distintos": true,
+      "motivo": {
+        "es": "junta dos sucesos distintos frente a Sulina: el petrolero YARA J (Comoras), alcanzado e incendiado en aguas territoriales rumanas el miércoles 14 de octubre de 2026 hacia las 20:00 hora local (novinite.com: «the incident reported at around 8 p.m. and a distress call received at approximately 8:25 p.m.»), y el dron que el MApN detectó durante un minuto en el espacio aéreo rumano al sudeste de Sulina a las 01:34 del jueves 15 (mediafax.ro, hotnews.ro: «La ora 01.34, o dronă a fost detectată timp de aproximativ un minut în spațiul aerian național»). El ministro de Defensa dijo que el radar no vio ningún dron ir hacia el petrolero. La regla de mismo sitio y misma ventana los fundió; además, mirror.co.uk cuenta la noche del 9 al 10 de octubre, sin entrada en el espacio aéreo rumano, y tres notas son declaraciones políticas sobre el mar Negro.",
+        "en": "it merges two different events off Sulina: the tanker YARA J (Comoros), hit and set on fire in Romanian territorial waters on Wednesday 14 October 2026 around 20:00 local time (novinite.com), and the drone that the Romanian Ministry of Defence detected for one minute in Romanian airspace south-east of Sulina at 01:34 on Thursday 15 (mediafax.ro, hotnews.ro). The defence minister said radar saw no drone heading for the tanker. The same-place, same-window rule merged them; in addition, mirror.co.uk reports the night of 9 to 10 October, with no entry into Romanian airspace, and three reports are political statements about the Black Sea."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-10-14",
+          "pais": "RO",
+          "descripcion": "Un dron alcanza el petrolero YARA J frente a Sulina, en aguas territoriales rumanas, el miércoles 14 de octubre de 2026 hacia las 20:00 hora local",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-4458c2d1fb06b50b",
+            "gdelt-5f4ccb47f1f4d5c0",
+            "gdelt-5f4ccb47f1f4d5c0-declaracion-1",
+            "gdelt-f8ec437e8d90507f",
+            "gdelt-82d0910144d52f92",
+            "gdelt-ebe42c389a7cbace"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-10-15",
+          "pais": "RO",
+          "descripcion": "Un dron entra durante un minuto en el espacio aéreo rumano al sudeste de Sulina a las 01:34 del jueves 15 de octubre de 2026; despegan F-18 españoles y F-16 rumanos y se envía un RO-Alert en Tulcea",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e4e42e56f4582d9c",
+            "gdelt-e4e42e56f4582d9c-declaracion-2",
+            "gdelt-bbe43d9181eeaa00",
+            "gdelt-bbe43d9181eeaa00-declaracion-1",
+            "gdelt-0684b60cfe146908",
+            "gdelt-0684b60cfe146908-declaracion-1",
+            "gdelt-c5200eeecbe871a6",
+            "gdelt-c5200eeecbe871a6-declaracion-1",
+            "gdelt-182235a62c879821",
+            "gdelt-182235a62c879821-declaracion-1",
+            "gdelt-f4bf3e64d8a62aeb",
+            "gdelt-5168a47058bf3852",
+            "gdelt-5f4ccb47f1f4d5c0",
+            "gdelt-5f4ccb47f1f4d5c0-declaracion-1",
+            "gdelt-f8ec437e8d90507f",
+            "gdelt-82d0910144d52f92",
+            "gdelt-2a91d4e6dd9d78a5",
+            "gdelt-2a91d4e6dd9d78a5-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-10-15",
+          "pais": "RO",
+          "descripcion": "No es un suceso de esta ficha: la noche del 9 al 10 de octubre sin entrada en el espacio aéreo rumano (mirror.co.uk) y declaraciones políticas sobre la seguridad del mar Negro (ziare.com, larazon.es, libertatea.ro)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-589982a17f19a300",
+            "gdelt-87923075cd71033f",
+            "gdelt-76156e125f699341",
+            "gdelt-4ade422ff1a3ab1e"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
