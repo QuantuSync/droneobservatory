@@ -31,12 +31,12 @@ TABLAS_CON_HISTORIAL = (
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
 # Los modos del experto con su propio cupo y su parte del mes (modelo/coste.py): lo que gastan no
 # cuenta contra el tope del experto y sí como un modo más del mes.
-CUPOS_PROPIOS = ("segunda_busqueda", "control", "repaso_experto", "entrada")
+CUPOS_PROPIOS = ("segunda_busqueda", "control", "repaso_experto", "entrada", "repaso_entrada")
 _CUPOS = ", ".join(f"'{m}'" for m in CUPOS_PROPIOS)
 # Los modos con un presupuesto aparte del tope mensual (los créditos del plan): no cuentan en el
 # total del mes, para que no paren la recogida ni el control (el repaso de todo lo publicado con el
-# experto, 15 USD desde el 20 de octubre de 2026).
-FUERA_DEL_MES = ("repaso_experto",)
+# experto, 15 USD desde el 20 de octubre de 2026; el repaso de entrada, 40 desde el 28).
+FUERA_DEL_MES = ("repaso_experto", "repaso_entrada")
 _FUERA = ", ".join(f"'{m}'" for m in FUERA_DEL_MES)
 
 _TABLAS = """

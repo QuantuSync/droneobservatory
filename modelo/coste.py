@@ -102,6 +102,11 @@ LIMITE_CONTROL_REPASO_USD = 9.46
 # del tope diario del experto, de su reserva crítica, de su parte del mes y del tope mensual
 # (almacen/base.py, CUPOS_PROPIOS y FUERA_DEL_MES): no quita nada a la recogida.
 LIMITE_REPASO_EXPERTO_USD = 15.00
+# Repaso de todo lo publicado con la pregunta del filtro de entrada (28 de octubre de 2026,
+# recogida/repaso_entrada.py): 40 USD en total, con llamadas directas (no por lotes). Va aparte,
+# como el repaso con el experto: fuera del tope diario del experto, de su reserva crítica, del modo
+# «entrada» y del reparto y el tope del mes (CUPOS_PROPIOS y FUERA_DEL_MES en almacen/base.py).
+LIMITE_REPASO_ENTRADA_USD = 40.00
 # Traducción de una sola vez de las citas atrasadas (14 de octubre de 2026), por lote.
 LIMITE_TRADUCCIONES_USD = 2.00
 # Búsqueda mensual de rectificaciones oficiales con el modelo base (recogida/rectificaciones.py):
@@ -189,6 +194,7 @@ class Modo(StrEnum):
     SEGUNDA_BUSQUEDA = "segunda_busqueda"
     REPASO_EXPERTO = "repaso_experto"
     ENTRADA = "entrada"
+    REPASO_ENTRADA = "repaso_entrada"
 
 
 # Lo que le toca a cada uno del tope mensual (suman TOPE_MENSUAL_USD). «otros»: lo que no es de
@@ -484,6 +490,7 @@ def limite(modo: Modo) -> float:
         Modo.SEGUNDA_BUSQUEDA: LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD,
         Modo.REPASO_EXPERTO: LIMITE_REPASO_EXPERTO_USD,
         Modo.ENTRADA: LIMITE_ENTRADA_DIARIO_USD,
+        Modo.REPASO_ENTRADA: LIMITE_REPASO_ENTRADA_USD,
     }[modo]
 
 

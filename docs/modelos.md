@@ -295,7 +295,8 @@ cuenta contra el tope normal del experto, ni contra su reserva crítica, ni cont
 control. Una ficha nueva que no cabe en el cupo espera (caso crítico), no sale sin decisión.
 Medido en la prueba del 28 de octubre de 2026: COSTE_POR_FICHA USD de media por ficha. Reparto del
 mes: experto 40, horaria 4, control 6, segunda búsqueda 6, Ucrania 0,20, rectificaciones 0,30,
-otros 3,50, entrada 90.
+otros 3,50, entrada 90. El repaso de entrada de todo lo publicado (modo `repaso_entrada`, 40 USD en
+total, desde el 28 de octubre de 2026) va fuera del mes, como el repaso con el experto.
 
 **Del 20 al 28 de octubre de 2026: 60 USD al mes.** El plan del responsable incluye 200 USD de
 créditos de la API al mes (vinculados a la organización del observatorio el 20 de octubre; caducan
