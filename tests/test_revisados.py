@@ -330,3 +330,33 @@ def test_el_motivo_de_cada_separacion_cabe_en_la_nota_de_sus_relacionados() -> N
         for lengua in ("es", "en"):
             maximo = nota[lengua]["maxLength"]
             assert len(revision["motivo"][lengua]) <= maximo, revision["incidente"]
+
+
+def test_los_drones_y_el_tipo_revisados_se_guardan_sin_esperar_a_otro_guardado(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Las revisiones del repaso de entrada del 28 de octubre de 2026 (cierres, drones, tipo)
+    # esperaban a que otro paso volviera a guardar la ficha.
+    from proceso import decidir
+
+    almacen = Almacen.abrir()
+    id_ = "EODI-2026-00391"
+    almacen.guardar_incidente(
+        _registro(id_, "2026-08-03T22:00Z", "explicita", [("a1", "2026-08-05T09:30Z")]),
+        AHORA, MODELOS,
+    )  # fmt: skip
+    comun = {"incidente": id_, "cita": "zes drones", "enlace": "https://ejemplo.de/a1",
+             "motivo": "prueba"}  # fmt: skip
+    drones = {**comun, "campo": "drones", "valor": {"min": 6, "max": 6}}
+    tipo = {**comun, "campo": "tipo", "valor": "incursion"}
+    monkeypatch.setattr(revisados, "cargar", lambda: {"datos": [drones, tipo]})
+    monkeypatch.setattr(decidir, "_revisiones_de_datos",
+                        lambda: {id_: {"drones": drones, "tipo": tipo}})  # fmt: skip
+    hechos = revisados.corregir(almacen, AHORA, MODELOS)
+    guardado = almacen.incidente(id_)
+    assert guardado is not None
+    assert guardado["drones"]["numero"] == {"min": 6, "max": 6}
+    assert guardado["tipo"] == "incursion"
+    assert guardado["origen_demostrado_por"] == ["autoridad"]
+    assert id_ in hechos.otros
+    assert revisados.corregir(almacen, AHORA, MODELOS).otros == []

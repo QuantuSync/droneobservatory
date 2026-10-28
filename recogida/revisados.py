@@ -270,6 +270,7 @@ MOTIVO_UBICACION = "lugar del suceso según la autoridad (configuracion/incident
 MOTIVO_LUGAR_REVISADO = "lugar revisado a mano (configuracion/incidentes_revisados.json, datos)"
 MOTIVO_INICIO_REVISADO = "inicio revisado a mano (configuracion/incidentes_revisados.json, datos)"
 MOTIVO_DANOS_REVISADOS = "daños revisados a mano (configuracion/incidentes_revisados.json, datos)"
+MOTIVO_DATO_REVISADO = "{} revisado a mano (configuracion/incidentes_revisados.json, datos)"
 
 
 @dataclass
@@ -281,6 +282,7 @@ class Corregidos:
     lugares: list[str] = field(default_factory=list)
     inicios: list[str] = field(default_factory=list)
     danos: list[str] = field(default_factory=list)
+    otros: list[str] = field(default_factory=list)
     sin_guardar: list[str] = field(default_factory=list)
     contradicen_rectificacion: list[str] = field(default_factory=list)
 
@@ -289,7 +291,7 @@ class Corregidos:
             f"retirados {len(self.retirados)}, con citas {len(self.citas)}, titulares "
             f"{len(self.titulares)}, ubicados {len(self.ubicados)}, lugares revisados "
             f"{self.lugares}, inicios revisados {self.inicios}, daños revisados {self.danos}, "
-            f"sin guardar "
+            f"cierres, drones, tipos y objetivos revisados {self.otros}, sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
             f"{self.contradicen_rectificacion}"
         )
@@ -671,6 +673,8 @@ def _guardar(
         "relacionados",
         "drones",
         "objetivo",
+        "tipo",
+        "consecuencias",
     )
     cambios = {c: antes.get(c) for c in campos if antes.get(c) != despues.get(c)}
     if cambios:
@@ -742,17 +746,24 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
     # (decidir.decidir_datos); una ficha que nada vuelve a guardar se quedaba con el punto de antes
     # (EODI-2026-00238, en Tulcea con la revisión en Rachelu) o con su hora de antes
     # (EODI-2026-00108, Auvere, a las 06:00 UTC con la revisión a las 01:43). Solo se guarda si
-    # cambia el dato revisado.
+    # cambia el dato revisado. Lo mismo el cierre, los drones, el tipo y el objetivo: las diez
+    # revisiones del repaso de entrada del 28 de octubre de 2026 (EODI-2025-00060, cierre del
+    # aeropuerto de Vilna; EODI-2026-00281, la incursión del Shahed) esperaban a otro guardado.
     for campo, clave, motivo, lista in (
         ("lugar", "lugar", MOTIVO_LUGAR_REVISADO, hechos.lugares),
         ("inicio", "tiempo", MOTIVO_INICIO_REVISADO, hechos.inicios),
         ("danos", "consecuencias", MOTIVO_DANOS_REVISADOS, hechos.danos),
+        ("cierre", "consecuencias", MOTIVO_DATO_REVISADO.format("cierre"), hechos.otros),
+        ("cierre", "tipo", MOTIVO_DATO_REVISADO.format("cierre"), hechos.otros),
+        ("drones", "drones", MOTIVO_DATO_REVISADO.format("número de drones"), hechos.otros),
+        ("tipo", "tipo", MOTIVO_DATO_REVISADO.format("tipo"), hechos.otros),
+        ("objetivo", "objetivo", MOTIVO_DATO_REVISADO.format("objetivo"), hechos.otros),
     ):
         revisadas = [e for e in datos.get("datos", []) if e.get("campo") == campo]
         for id_ in _por_incidente(almacen, revisadas):
             documento = almacen.incidente(id_)
             assert documento is not None
-            decidido = decidir.decidir_datos(documento)
+            decidido = decidir.aplicar(documento)
             if decidido.get(clave) != documento.get(clave) and _guardar(
                 almacen, documento, decidido, ahora, modelos, motivo, hechos
             ):
