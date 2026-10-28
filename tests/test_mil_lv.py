@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 
 from proceso import autoridades
+from proceso.noticias import filtro
 from recogida import oficiales, paginas_oficiales
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "mil_lv"
@@ -70,7 +71,7 @@ def test_cada_nota_da_su_dia_y_su_texto(
 def test_las_notas_de_drones_pasan_el_filtro_y_las_demas_no() -> None:
     """Las NBS dicen «bezpilota lidaparāts», nunca «drons»: sin esa palabra en el filtro, la
     recogida del 28/10/2026 a las 14:17 leyó mil_lv y mod_lv sin sacar ninguna nota."""
-    dron = oficiales.filtro().dron
+    dron = filtro().dron
     pagina = (FIXTURES / "zinas.html").read_text(encoding="utf-8")
     interesan = {
         t for _, t in paginas_oficiales.enlaces(pagina, _fuente())
