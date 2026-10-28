@@ -118,6 +118,31 @@ def semilla(
     return paso
 
 
+def con_quien_de_hoy(incidente: Documento) -> Documento:
+    """El incidente con el «quién» del primer paso del historial escrito con la tabla de
+    autoridades de hoy, al publicar. La semilla guarda el nombre que daba la tabla el día en que
+    se creó el historial, y una corrección posterior de la tabla no le llegaba (EODI-2025-00228:
+    «la unidad de aviones de transporte…» después de que el PR 330 lo cambiara por «el Ala de
+    Transporte Aéreo de Aalborg…»). Solo se reescribe la semilla (el paso sin `revision`) cuya
+    fuente es la declaración de una autoridad que está en la tabla; el «quién» revisado a mano o
+    el de una rectificación se queda como se guardó. Devuelve el mismo incidente si no cambia."""
+    historial = incidente.get("presencia_historial") or []
+    fuentes = {f["id"]: f for f in incidente.get("fuentes", [])}
+    cambiado = None
+    for posicion, paso in enumerate(historial):
+        fuente = fuentes.get(paso.get("fuente_id"))
+        if "revision" in paso or not paso.get("quien") or fuente is None:
+            continue
+        declaracion = autoridades.DECLARACION.match(str(fuente.get("medio", "")))
+        if declaracion is None or not autoridades.en_tabla(declaracion.group(1)):
+            continue
+        quien = _quien(fuente)
+        if quien != paso["quien"]:
+            cambiado = cambiado or [dict(p) for p in historial]
+            cambiado[posicion]["quien"] = quien
+    return incidente if cambiado is None else {**incidente, "presencia_historial": cambiado}
+
+
 def paso_de(
     tipo: str, fecha: Documento, fuente_id: str, quien: Documento, motivo: Documento,
     revision: str, valor_actual: str,

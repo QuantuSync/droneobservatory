@@ -28,7 +28,7 @@ from exportacion.citas import Pendientes, con_traducciones, enriquecer_incidente
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
-from proceso import impactos_guerra
+from proceso import impactos_guerra, rectificaciones
 from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.focos_termicos import con_focos
 from proceso.luces import con_luces
@@ -120,6 +120,8 @@ def publicar(
     if retenidos:
         registro.info("fichas retenidas por el control: %s", ", ".join(sorted(retenidos)))
     incidentes = [sin_retenidos(i, retenidos) for i in incidentes if i["id"] not in retenidos]
+    # El «quién» del primer paso del historial de presencia, con la tabla de autoridades de hoy.
+    incidentes = [rectificaciones.con_quien_de_hoy(i) for i in incidentes]
     verificaciones = {
         clave.removeprefix("verificacion:"): decision
         for clave, decision in almacen.controles("verificacion:").items()

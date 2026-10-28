@@ -49,6 +49,12 @@ su fuente, quién lo declara y qué dijo, en español y en inglés. La web lo en
 «Confirmado el 22/09/2025 por la policía de Copenhague · No acreditado el 25/06/2026 por la
 policía danesa (Rigspolitiet), al cerrar la investigación…». Solo crece: nada se borra.
 
+El «quién» del primer paso, cuando su fuente es la declaración de una autoridad que está en
+`configuracion/autoridades.json`, se escribe al publicar con la tabla de ese día
+(`rectificaciones.con_quien_de_hoy`), no con el nombre que daba la tabla al crear el historial:
+desde el 28 de octubre de 2026, EODI-2025-00228 dice «el Ala de Transporte Aéreo de Aalborg…»
+y no «la unidad de aviones de transporte…». El de las rectificaciones se queda como se revisó.
+
 Lo rectificado no lo deshace la recogida. `Almacen.guardar_incidente` llama a
 `rectificaciones.mantener` con la versión guardada: si una extracción nueva o una regla traen la
 ficha sin historial, con otra presencia o sin la fuente oficial, se conservan el historial, sus

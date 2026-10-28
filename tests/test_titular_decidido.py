@@ -167,6 +167,30 @@ def test_k_cuenta_el_dato_que_cambia_y_vuelve_cada_hora() -> None:
     assert resultado["K"] == []  # ninguna vigente entre los documentos
 
 
+def test_k_no_cuenta_dos_veces_el_mismo_cambio_del_mismo_instante() -> None:
+    # EODI-2026-00312 (27-28 de octubre de 2026): la zona pasó de 7 a 6 km con zona-1.1.0 y quedó
+    # apuntada dos veces en el mismo segundo (la ficha y el motivo de la regla); luego volvió a
+    # 7 con datos nuevos y pasó a «ataque». Son dos vueltas, no tres.
+    from proceso import auditoria_fichas
+
+    siete, seis = {"distancia_km": 7, "grupo": "frontera"}, {"distancia_km": 6, "grupo": "frontera"}
+    ataque = {"grupo": "frontera", "motivo": "ataque"}
+    cambios = [
+        {"entidad_id": "EODI-2026-00312", "tabla": "incidentes", "fecha": fecha,
+         "anterior": {"zona": a}, "nuevo": {"zona": b, **extra}}
+        for fecha, a, b, extra in [
+            ("2026-10-27T22:30:32Z", siete, seis, {}),
+            ("2026-10-27T22:30:32Z", siete, seis, {"motivo": "grupo recalculado"}),
+            ("2026-10-28T00:22:19Z", seis, siete, {}),
+            ("2026-10-28T00:30:26Z", siete, ataque, {}),
+        ]
+    ]  # fmt: skip
+    assert auditoria_fichas.oscilan(cambios) == {}
+    # El mismo cambio en otro instante sí cuenta.
+    otra = [{**cambios[1], "fecha": "2026-10-28T01:30:00Z"}]
+    assert auditoria_fichas.oscilan([*cambios, *otra]) == {"EODI-2026-00312": ["zona"]}
+
+
 # --- Los otros datos que oscilaban cada hora (22-23 de octubre de 2026) ----------------------
 
 

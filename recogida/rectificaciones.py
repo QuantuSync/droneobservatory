@@ -104,7 +104,7 @@ class Hechos:
 
     def texto(self) -> str:
         return (
-            f"aplicadas {self.aplicadas}, rechazadas {len(self.rechazadas)}, esperan al experto "
+            f"aplicadas {self.aplicadas}, rechazadas {self.rechazadas}, esperan al experto "
             f"{len(self.esperan)}, detectadas {self.detectadas}, sin guardar {self.sin_guardar}, "
             f"experto {self.gasto_experto:.4f} USD"
             + (f", mensual {self.mensual}" if self.mensual else "")

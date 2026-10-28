@@ -610,3 +610,59 @@ def test_revisadas_de_verdad_validan() -> None:
         fuente = revisados.fuente_de_cita(entrada["fuente"], ejemplos.incidente_minimo())
         assert not list(validador(Esquema.FUENTE).iter_errors(fuente)), entrada["incidente"]
     assert revisados.PREFIJO_REVISADA
+
+
+def test_el_registro_dice_que_rechazo_el_experto_y_por_que(almacen: Almacen) -> None:
+    # EODI-2026-00064 (Sofía, 27 de octubre de 2026): el registro solo decía «rechazadas 1», y
+    # hubo que leer la base para saber cuál y por qué.
+    hechos = _pasar(almacen, Cliente([_decision(confianza=0.6)]))
+    assert f"revisada:{ID}:" in hechos.texto() and "no está seguro (0.60)" in hechos.texto()
+
+
+def test_la_rectificacion_de_sofia_manda_lo_que_era() -> None:
+    # La policía búlgara dijo que no había dron y qué era: un aficionado que fotografiaba aviones
+    # con una radio y una cámara (descartada). Con la frase y «otras señales no se confirman»,
+    # el experto lo leyó no_acreditada con 0,60 y se rechazó: el texto que ve lleva lo que era.
+    datos = json.loads(seguimiento.RUTA.read_text(encoding="utf-8"))
+    (sofia,) = [r for r in datos["rectificaciones"] if r["incidente"] == "EODI-2026-00064"]
+    assert sofia["tipo"] == "descartada"
+    assert "Гранична полиция" in sofia["contexto"] and "фотоапарт" in sofia["contexto"]
+    assert "не се потвърждават" not in sofia["contexto"]
+
+
+def _con_semilla(quien: dict[str, str], medio: str, revision: str | None = None) -> dict[str, Any]:
+    d = _copenhague()
+    d["fuentes"][1]["medio"] = medio
+    paso: dict[str, Any] = {"valor": "confirmada", "fecha": d["fuentes"][1]["fecha"],
+                            "fuente_id": "N1-declaracion-1", "quien": quien}  # fmt: skip
+    if revision:
+        paso["revision"] = revision
+    d["presencia_historial"] = [paso]
+    return d
+
+
+def test_el_quien_de_la_semilla_sale_de_la_tabla_de_hoy() -> None:
+    # EODI-2025-00228: la semilla guardó «la unidad de aviones de transporte…», el nombre que
+    # daba la tabla antes del PR 330. Al publicar se escribe con la tabla de hoy.
+    viejo = {"es": "la unidad de aviones de transporte de la Fuerza Aérea danesa "
+                   "(Flyvevåbnets afdeling for transportfly)",
+             "en": "the Royal Danish Air Force transport wing "
+                   "(Flyvevåbnets afdeling for transportfly)"}  # fmt: skip
+    medio = "Flyvevåbnets afdeling for transportfly (declaración oficial citada en ekstrabladet.dk)"
+    d = _con_semilla(viejo, medio)
+    nuevo = rectificaciones.con_quien_de_hoy(d)
+    assert nuevo["presencia_historial"][0]["quien"] == {
+        "es": "el Ala de Transporte Aéreo de Aalborg de la Fuerza Aérea danesa "
+              "(Flyvevåbnets afdeling for transportfly)",
+        "en": "the Royal Danish Air Force's Air Transport Wing Aalborg "
+              "(Flyvevåbnets afdeling for transportfly)",
+    }  # fmt: skip
+    assert d["presencia_historial"][0]["quien"] == viejo  # el guardado no se toca
+    # El paso de una rectificación (con su revisión), una autoridad que no está en la tabla y un
+    # medio se quedan como se guardaron.
+    for otro in (
+        _con_semilla(viejo, medio, "rectificacion:revisada:x"),
+        _con_semilla(viejo, "Una autoridad nueva (declaración oficial citada en tv2.dk)"),
+        _con_semilla(viejo, "tv2.dk"),
+    ):
+        assert rectificaciones.con_quien_de_hoy(otro) is otro

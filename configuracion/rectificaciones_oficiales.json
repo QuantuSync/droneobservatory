@@ -369,14 +369,14 @@
           "en": "https://focus-news.net/novini/Bylgaria/Gl-komisar-Lyubomir-Nikolov-Signal-2917828 (original, Focus, 9 de marzo de 2026, 18:24 hora de Bulgaria)"
         }
       },
-      "contexto": "\"Постъпват и други сигнали, но те не се потвърждават\", уточни той.",
+      "contexto": "Служители от Гранична полиция установяват гражданин, който е служител в немска известна авиокомпания от 2008 година, в когото са открили радиостанция и фотоапарт, припомни той. \"С тях той обясни, че слуша радиолокационната кула за излитащи и кацащи самолети, за да има време за подготовка да направи професионални снимки на самолети и да участва с тях в първенство в социалните мрежи“, разясни Николов.",
       "quien": {
         "es": "el Ministerio del Interior de Bulgaria (comisario jefe Lyubomir Nikolov)",
         "en": "Bulgaria's Ministry of the Interior (Chief Commissioner Lyubomir Nikolov)"
       },
       "motivo": {
-        "es": "no hubo dron: la policía no lo encontró en el aviso que cerró el aeropuerto",
-        "en": "there was no drone: police found none in the report that closed the airport"
+        "es": "no hubo dron: el aviso que cerró el aeropuerto era un aficionado que fotografiaba aviones con una radio y una cámara, según la Policía de Fronteras",
+        "en": "there was no drone: the report that closed the airport was an enthusiast photographing aircraft with a radio and a camera, according to the Border Police"
       },
       "anterior": {
         "valor": "no_confirmada"
