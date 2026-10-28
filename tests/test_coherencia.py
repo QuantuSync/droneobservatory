@@ -2,6 +2,7 @@
 
 from esquema import Documento
 from proceso import coherencia
+from tests import ejemplos
 
 
 def fecha(valor: str, precision: str = "aproximada") -> Documento:
@@ -77,3 +78,18 @@ def test_un_inicio_con_hora_no_se_toca() -> None:
     assert coherencia.contradicciones(doc) == [
         "el primer aviso es de más de un día antes del suceso"
     ]
+
+
+def test_el_primer_aviso_cuenta_por_su_dia_local() -> None:
+    """Una nota de las 23:30 UTC del 12/10/2026 en Bulgaria es del 13 en la hora local: no
+    adelanta al 12 un suceso del 13 (proceso/fechas.dia_local)."""
+    doc = ejemplos.incidente_minimo()
+    doc["lugar"] = {"pais": "BG", "nivel": "pais", "suceso": "BG"}
+    doc["tiempo"] = {"inicio": {"valor": "2026-10-13T00:00Z", "precision": "dia"}}
+    doc["estado"]["historial"][0]["fecha"] = {"valor": "2026-10-12T23:30Z", "precision": "minuto"}
+    arreglado = coherencia.coherente(doc)
+    assert arreglado["tiempo"]["inicio"]["valor"] == "2026-10-13T00:00Z"
+    assert coherencia.contradicciones(arreglado) == []
+    # A las 20:30 UTC del 12 ya es el 12 en Bulgaria: el inicio sí pasa al 12.
+    doc["estado"]["historial"][0]["fecha"] = {"valor": "2026-10-12T20:30Z", "precision": "minuto"}
+    assert coherencia.coherente(doc)["tiempo"]["inicio"]["valor"] == "2026-10-12T00:00Z"

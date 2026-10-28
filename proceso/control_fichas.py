@@ -501,7 +501,8 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
     if origen in {"oficial", "parte", "medido"} or "inicio" in conservar:
         return
     if inicio["precision"] in incidentes.PRECISIONES_HORA and hora is None:
-        valor = inicio["valor"][:10] + "T00:00Z"
+        # El día local del lugar, no el de UTC (proceso/fechas.dia_local).
+        valor = fechas.dia_local(inicio, d) + "T00:00Z"
         nuevo = {**tiempo, "inicio": {"valor": valor, "precision": "dia"}}
         nuevo.pop("fin", None)
         nuevo.pop("duracion_min", None)
