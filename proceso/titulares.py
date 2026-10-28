@@ -28,8 +28,11 @@ _POSIBLE = {
         r"\b(?:posibles?|presuntos?|supuestos?|sospechosos?)\s+(?=(?:drones|dron)\b)",
         re.IGNORECASE,
     ),
+    # Con una palabra en medio en inglés: «Possible military drone discovered in Taraclia»
+    # (EODI-2025-00278) se quedaba con «Possible» con el dron ya confirmado.
     "en": re.compile(
-        r"\b(?:possible|suspected|alleged|presumed|potential)\s+(?=(?:drones|drone)\b)",
+        r"\b(?:possible|suspected|alleged|presumed|potential)\s+"
+        r"(?=(?:[a-z][\w-]*\s+)?(?:drones|drone)\b)",
         re.IGNORECASE,
     ),
 }

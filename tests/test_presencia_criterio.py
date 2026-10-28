@@ -407,3 +407,13 @@ def test_el_dron_es_masculino(titulo: str, presencia: str, esperado: str) -> Non
     assert titulares.ajustar(titulo, presencia, "es") == esperado
     assert titulares.concuerda(esperado, "es")
     assert titulares.ajustar("A drone over the base", "confirmada", "en") == "A drone over the base"
+
+
+def test_el_posible_con_una_palabra_en_medio_en_ingles() -> None:
+    # EODI-2025-00278 (28 de octubre de 2026): el dron hallado en Taraclia, ya confirmado.
+    titulo = "Possible military drone discovered in a field in Taraclia"
+    assert titulares.ajustar(titulo, "confirmada", "en") == (
+        "Military drone discovered in a field in Taraclia"
+    )
+    assert titulares.ajustar(titulo, "no_confirmada", "en") == titulo
+    assert not titulares.coherente(titulo, "confirmada", "en")
