@@ -708,6 +708,15 @@
       "antes_en": "EODI-2025-00238",
       "motivo": "el mismo suceso: el cierre del aeropuerto de Aalborg de la noche del miércoles 24 de septiembre de 2025 (de las 21:44 a las 00:54 hora local). 00302 empieza con la nota de lbc.co.uk del jueves 25 a las 07:15 UTC, que cuenta ese cierre; la regla de sitio y ventana la había fundido en el cierre del jueves 25 por la noche (EODI-2025-00238, desde las 23:40 hora local), que aún no había ocurrido cuando se publicó",
       "motivo_en": "the same event: the closure of Aalborg airport on the night of Wednesday 24 September 2025 (21:44 to 00:54 local time). 00302 starts with the lbc.co.uk report of Thursday 25 at 07:15 UTC, which tells of that closure; the same-site, same-window rule had merged it into the closure of Thursday 25 at night (EODI-2025-00238, from 23:40 local time), which had not yet happened when it was published"
+    },
+    {
+      "registros": [
+        "EODI-2025-00243",
+        "EODI-2025-00039"
+      ],
+      "conserva": "EODI-2025-00243",
+      "motivo": "el mismo suceso: los dos drones que entraron en el espacio aéreo de Moldavia la noche del 28 al 29 de noviembre de 2025 y el cierre temporal del espacio aéreo (Poliția de Frontieră y Ministerul Apărării). Queda 00243, sin atribución: ninguna autoridad atribuye los drones con sus palabras (la de la presidenta Maia Sandu es indirecta, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), y 00039 (dos notas de news.yam.md) no tenía ninguna",
+      "motivo_en": "the same event: the two drones that entered Moldovan airspace on the night of 28 to 29 November 2025 and the temporary closure of the airspace (Border Police and Ministry of Defence). 00243 stays, with no attribution: no authority attributes the drones in its own words (President Maia Sandu's is reported, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), and 00039 (two news.yam.md reports) had none"
     }
   ],
   "reextraer": [
