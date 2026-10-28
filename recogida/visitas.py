@@ -694,6 +694,7 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "api": (datos.get("api") or {}).get(dia.isoformat()),
         "criticos_esperando": list(datos.get("criticos_esperando") or []),
         "auditoria": (datos.get("auditoria") or {}).get("dias") or {},
+        "entrada": (datos.get("entrada") or {}).get(dia.isoformat()),
     }  # fmt: skip
 
 
@@ -718,12 +719,28 @@ def lineas_control(control: Documento | None) -> list[str]:
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
     lineas += lineas_auditoria(control.get("auditoria") or {})
+    lineas += lineas_entrada(control.get("entrada"))
     return (
         lineas
         + lineas_api(control.get("api"))
         + lineas_modelos(control.get("modelos"))
         + lineas_experto(control)
     )
+
+
+def lineas_entrada(dia: Documento | None) -> list[str]:
+    """La medida de las fichas nuevas a las 24 horas (recogida/entrada.py): las publicadas ese día
+    tras el filtro de entrada y las que tenían un error al medirlas. Si aún no están todas medidas
+    (se miden 24 horas después de publicarse), cuántas sí."""
+    dia = dia or {}
+    nuevas, medidas = list(dia.get("nuevas") or []), list(dia.get("medidas") or [])
+    con_error = list(dia.get("con_error") or [])
+    linea = f"  Fichas nuevas de ayer: {len(nuevas)}; con error a las 24 h: {len(con_error)}"
+    if con_error:
+        linea += f" ({', '.join(con_error[:LIMITE])})"
+    if len(medidas) < len(nuevas):
+        linea += f"; medidas {len(medidas)} de {len(nuevas)}"
+    return [linea]
 
 
 def lineas_auditoria(dias: Documento) -> list[str]:
