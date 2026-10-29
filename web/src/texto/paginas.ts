@@ -4,14 +4,12 @@
 // la guerra en Ucrania, la metodología y la ayuda son solo texto. Ninguna página dice nada que
 // no esté en los datos o en los textos de la web.
 
-import { afirmacionesDe, rangoDeFuentes } from "../datos/afirmaciones.ts";
 import { ACTOR_SIN_NOMBRE, cifras, DESCONOCIDO } from "../datos/derivar.ts";
 import type { Cifras } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import { corredoresDelPeriodo } from "../datos/guerraSatelite.ts";
 import { conMayuscula, estadoEscrito, historialCompleto, pasosDePresencia } from "../datos/presencia.ts";
 import type {
-  AfirmacionPublica,
   Atribucion,
   Fuente,
   IncidenteDetalle,
@@ -480,13 +478,9 @@ function citaConFuente(t: Textos, idioma: Idioma, fuente: Fuente): Html {
   );
 }
 
-function cifraDe(
-  idioma: Idioma,
-  t: Textos,
-  valor: RangoODesconocido | undefined,
-  afirmaciones: readonly AfirmacionPublica[],
-): string {
-  return rango(rangoDeFuentes(afirmaciones, valor), idioma) ?? t.ficha.desconocido;
+/** La cifra publicada, la misma que enseña la ficha de la web. */
+function cifraDe(idioma: Idioma, t: Textos, valor: RangoODesconocido | undefined): string {
+  return rango(valor, idioma) ?? t.ficha.desconocido;
 }
 
 function tieneCifra(valor: RangoODesconocido | undefined): boolean {
@@ -533,7 +527,6 @@ function quePasoDespues(d: IncidenteDetalle, idioma: Idioma, t: Textos, tp: Text
 function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): PaginaTexto {
   const t = textos(idioma);
   const tp = textosPagina(idioma);
-  const de = (campos: readonly string[]) => afirmacionesDe(d, campos);
   const porFuente = new Map(d.fuentes.map((f) => [f.id, f]));
   const titulo = d.titulo[idioma];
   const lugar = lugarEscrito(d, idioma);
@@ -551,7 +544,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): Pa
   if (cierre !== null) {
     efectos.push(
       cierre.clase === "con_duracion"
-        ? t.ficha.cierreDe(cifraDe(idioma, t, cierre.minutos, de(["consecuencias.cierre.minutos"])))
+        ? t.ficha.cierreDe(cifraDe(idioma, t, cierre.minutos))
         : cierre.clase === "sin_duracion"
           ? t.ficha.cierreSinDuracion
           : cierre.clase === "sin_cierre"
@@ -559,15 +552,15 @@ function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): Pa
             : t.ficha.cierreDesconocido,
     );
   }
-  const vuelos: [RangoODesconocido | undefined, string, string][] = [
-    [c?.vuelos_desviados, t.ficha.vuelosDesviados, "consecuencias.vuelos_desviados"],
-    [c?.vuelos_cancelados, t.ficha.vuelosCancelados, "consecuencias.vuelos_cancelados"],
-    [c?.vuelos_retrasados, t.ficha.vuelosRetrasados, "consecuencias.vuelos_retrasados"],
-    [c?.heridos, t.ficha.heridos, "consecuencias.heridos"],
-    [c?.fallecidos, t.ficha.fallecidos, "consecuencias.fallecidos"],
+  const vuelos: [RangoODesconocido | undefined, string][] = [
+    [c?.vuelos_desviados, t.ficha.vuelosDesviados],
+    [c?.vuelos_cancelados, t.ficha.vuelosCancelados],
+    [c?.vuelos_retrasados, t.ficha.vuelosRetrasados],
+    [c?.heridos, t.ficha.heridos],
+    [c?.fallecidos, t.ficha.fallecidos],
   ];
-  for (const [valor, unidad, campo] of vuelos) {
-    if (tieneCifra(valor)) efectos.push(`${cifraDe(idioma, t, valor, de([campo]))} ${unidad}`);
+  for (const [valor, unidad] of vuelos) {
+    if (tieneCifra(valor)) efectos.push(`${cifraDe(idioma, t, valor)} ${unidad}`);
   }
   if (c?.danos !== undefined) {
     efectos.push(html(t.ficha.danos[c.danos.nivel], c.danos.frase !== undefined && html(": ", citaTraducida(t, idioma, c.danos.frase, undefined, c.danos.frase_traduccion, "q"))));
@@ -667,7 +660,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): Pa
       ),
       filaDatos(
         t.ficha.drones,
-        cifraDe(idioma, t, d.drones?.numero, de(["drones.numero"])),
+        cifraDe(idioma, t, d.drones?.numero),
         modeloEscrito(d.drones?.modelo) !== null && e("span", { class: "texto-nota" }, t.ficha.modelo, ": ", modeloEscrito(d.drones?.modelo)),
       ),
       filaTipoDron(t, d, idioma),

@@ -81,10 +81,6 @@ export function rango(r: RangoODesconocido | undefined, idioma: Idioma): string 
     : `${numero(r.min, idioma)}–${numero(r.max, idioma)}`;
 }
 
-export function esRangoAbierto(r: RangoODesconocido | undefined): boolean {
-  return r !== undefined && r !== "desconocido" && r.min !== r.max;
-}
-
 /** Nombre del país a partir de su código ISO 3166-1; el propio código si no se conoce. */
 export function pais(codigo: string, idioma: Idioma): string {
   try {

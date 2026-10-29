@@ -695,7 +695,6 @@ export const es: Textos = {
     motivoDesmentido: "Motivo del desmentido",
     desconocido: "Sin dato",
     minutos: (n) => `${n} min`,
-    rangoDeFuentes: "rango de las fuentes A–C",
     queDiceCadaFuente: (n) => (n === 1 ? "Qué dice la fuente" : `Qué dice cada fuente (${n})`),
     valorSegun: "según",
     cierreDe: (minutos) => `Cierre de ${minutos} min`,
@@ -1108,7 +1107,8 @@ export const es: Textos = {
           {
             parrafo: [
               "Las fuentes E y F no se publican. Cuando las fuentes dan cifras distintas, la " +
-                "ficha muestra el rango que cubren las fuentes de fiabilidad A a C.",
+                "ficha muestra la cifra del suceso que publican los datos y, en «Qué dice cada " +
+                "fuente», la de cada una.",
             ],
           },
         ],
