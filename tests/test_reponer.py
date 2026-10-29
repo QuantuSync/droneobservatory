@@ -58,3 +58,42 @@ def test_las_repuestas_tienen_su_fecha_con_cita() -> None:
         revision = inicios[entrada["incidente"]]
         assert revision["cita"] and revision["enlace"] and revision["valor"][:4].isdigit()
         assert entrada["motivo"]["es"] and entrada["motivo"]["en"]
+
+
+def test_la_repuesta_sigue_en_retirar_y_no_se_vuelve_a_retirar(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Las repuestas siguen en «retirar»: la recogida siguiente a la que las repuso las retiraba
+    otra vez (EODI-2025-00312 y EODI-2026-00056, 29 de octubre de 2026). La retirada así hecha
+    se deshace una vez más; otra retirada se queda."""
+    almacen = Almacen.abrir()
+    incidente = ejemplos.incidente_minimo()
+    id_ = incidente["id"]
+    motivo = {"es": "Fecha del suceso desconocida.", "en": "Unknown date."}
+    retirado = {**incidente, "retirado": _retirada(motivo["es"])}
+    almacen.guardar_incidente(retirado, AHORA, VOCABULARIO_MODELOS)
+    configuracion = {
+        **revisados.cargar(),
+        "retirar": [{"incidente": id_, "motivo": motivo}],
+        "reponer": [{"incidente": id_, "motivo": {"es": "La fecha.", "en": "The date."}}],
+    }
+    monkeypatch.setattr(revisados, "cargar", lambda: configuracion)
+
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).repuestos == [id_]
+    despues = datetime(2026, 10, 29, 12, 17, tzinfo=UTC)
+    hechos = revisados.corregir(almacen, despues, VOCABULARIO_MODELOS)
+    assert hechos.retirados == [] and hechos.repuestos == []
+    assert "retirado" not in (almacen.incidente(id_) or {})
+
+    # Retirada otra vez por «retirar» (el código anterior): vuelve.
+    actual = almacen.incidente(id_)
+    assert actual is not None
+    retirada = {
+        "fecha": {"valor": "2026-10-29T12:17Z", "precision": "minuto"},
+        "motivo": motivo["es"],
+        "motivo_en": motivo["en"],
+    }
+    almacen.guardar_incidente({**actual, "retirado": retirada}, despues, VOCABULARIO_MODELOS)
+    luego = datetime(2026, 10, 29, 14, 17, tzinfo=UTC)
+    assert revisados.corregir(almacen, luego, VOCABULARIO_MODELOS).repuestos == [id_]
+    assert "retirado" not in (almacen.incidente(id_) or {})
