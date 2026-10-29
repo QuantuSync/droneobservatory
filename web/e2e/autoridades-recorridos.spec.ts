@@ -5,6 +5,7 @@
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit. Va contra producción
 // por defecto; con BASE, contra otra dirección (y con BYPASS, la clave de las vistas previas).
 import { expect, test } from "./base.ts";
+import { destino, publicados } from "./publicados.ts";
 
 const MAPA = "[data-mapa-listo=true]";
 const FICHA = process.env.FICHA ?? "EODI-2026-00532";
@@ -24,7 +25,9 @@ for (const idioma of ["es", "en"] as const) {
     test.setTimeout(180_000);
     const errores: string[] = [];
     pagina.on("pageerror", (e) => errores.push(e.message));
-    await pagina.goto(idioma === "en" ? `/en/${FICHA}` : `/${FICHA}`, { waitUntil: "domcontentloaded" });
+    // La ficha que queda si el repaso la unió a otra (e2e/publicados.ts).
+    const id = destino(await publicados(pagina.request), FICHA) ?? FICHA;
+    await pagina.goto(idioma === "en" ? `/en/${id}` : `/${id}`, { waitUntil: "domcontentloaded" });
     await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
     const ficha = pagina.locator("[data-ficha] article").first();
     await expect(ficha).toBeVisible({ timeout: 30_000 });

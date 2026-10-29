@@ -4,7 +4,8 @@
 //
 // - Las dos fichas de Vilna (el cierre del 13 de septiembre de 2026 y el derribo de la noche del 14
 //   al 15) se enlazan entre sí con «Suceso relacionado»; se sigue el enlace con el dedo o el ratón y
-//   se vuelve por el de la otra. El enlace antiguo de EODI-2026-00072 lleva a la ficha del cierre.
+//   se vuelve por el de la otra. El enlace antiguo de EODI-2026-00072 lleva a la ficha del cierre
+//   (adónde lleva cada identificador se lee de los datos publicados: e2e/publicados.ts).
 // - El mapa en Chipre, Moldavia, Georgia, Crimea y el Donbás, a varios zooms: ningún rótulo de las
 //   entidades que la Unión Europea no reconoce.
 // - Sin errores de consola y con los enlaces internos de las fichas respondiendo.
@@ -15,6 +16,8 @@ import { join } from "node:path";
 
 import { expect, test } from "./base.ts";
 import type { BrowserContext, CDPSession, Page } from "@playwright/test";
+
+import { destino, publicados } from "./publicados.ts";
 
 const MAPA = "[data-mapa-listo=true]";
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "vilna");
@@ -171,7 +174,11 @@ test.describe("Vilna en dos fichas y mapa con la posición de la UE, como una pe
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
       const fila = idioma === "es" ? "Suceso relacionado" : "Related incident";
-      for (const [desde, hacia] of [[CIERRE, DERRIBO], [DERRIBO, CIERRE]] as const) {
+      // Las fichas que quedan, de los datos publicados (e2e/publicados.ts): el repaso puede unirlas.
+      const datos = await publicados(pagina.request);
+      const cierre = destino(datos, CIERRE) ?? CIERRE;
+      const derribo = destino(datos, DERRIBO) ?? DERRIBO;
+      for (const [desde, hacia] of [[cierre, derribo], [derribo, cierre]] as const) {
         await pagina.goto(ruta(desde, idioma), { waitUntil: "domcontentloaded" });
         await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
         await leerComoPersona(pagina, contexto, browserName === "chromium", tactil);
@@ -188,7 +195,7 @@ test.describe("Vilna en dos fichas y mapa con la posición de la UE, como una pe
       }
       // El enlace antiguo lleva a la ficha del cierre.
       await pagina.goto(ruta(ANTIGUO, idioma), { waitUntil: "domcontentloaded" });
-      await expect(pagina).toHaveURL(new RegExp(`${CIERRE}$`), { timeout: 30_000 });
+      await expect(pagina).toHaveURL(new RegExp(`${destino(datos, ANTIGUO) ?? cierre}$`), { timeout: 30_000 });
       await expect(pagina.locator("[data-ficha] article").first()).toBeVisible({ timeout: 60_000 });
       await capturar(pagina, errores, join(CAPTURAS, `${ANTIGUO}-${idioma}-${info.project.name}.png`));
       expect(errores).toEqual([]);

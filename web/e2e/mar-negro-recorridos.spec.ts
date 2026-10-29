@@ -2,10 +2,11 @@
 // las ve una persona: en un Android (Chromium, Pixel 7), un iPhone (WebKit, iPhone 14), una tableta
 // táctil y el escritorio (Chromium y WebKit), en español y en inglés (docs/modelos.md, «Topes»).
 //
-// - Cada ficha del mar Negro (00512, 00532, 00536, 00537, 00538, 00540, 00541) se abre: o es su
-//   propia ficha o su enlace antiguo lleva a la ficha más antigua con la que se unió (UNIDAS:
-//   «antigua=destino»). Las retiradas (RETIRADAS: la 00539, un reportaje) responden 404.
-// - La EODI-2025-00248 (Malinas-Sur) sale con el dron no confirmado.
+// - Cada ficha del mar Negro (00512, 00532, 00536, 00537, 00538, 00539, 00540, 00541) se abre: o es
+//   su propia ficha o su enlace antiguo lleva a la ficha con la que se unió; las retiradas (la 00539,
+//   un reportaje) responden 404. Adónde lleva cada una se lee de los datos publicados
+//   (e2e/publicados.ts): el repaso puede unir o retirar fichas sin que el recorrido cambie.
+// - La EODI-2025-00248 (Malinas-Sur) sale con la presencia de dron de sus datos (no confirmado).
 // - Sin errores de consola y con los enlaces internos de las fichas respondiendo.
 //
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit (playwright.config.ts).
@@ -15,23 +16,17 @@ import { join } from "node:path";
 import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
+import { textos } from "../src/i18n/index.ts";
+import { destino, publicados } from "./publicados.ts";
+
 const MAPA = "[data-mapa-listo=true]";
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "mar-negro");
 const MAR_NEGRO = (
   process.env.MAR_NEGRO ??
-  "EODI-2026-00512,EODI-2026-00532,EODI-2026-00536,EODI-2026-00537,EODI-2026-00538,EODI-2026-00540,EODI-2026-00541"
+  "EODI-2026-00512,EODI-2026-00532,EODI-2026-00536,EODI-2026-00537,EODI-2026-00538,EODI-2026-00539,EODI-2026-00540,EODI-2026-00541"
 )
   .split(",")
   .filter(Boolean);
-/** Fichas unidas: el enlace antiguo lleva a la más antigua, la que queda («00536=00512»). */
-const UNIDAS = new Map(
-  (process.env.UNIDAS ?? "EODI-2026-00536=EODI-2026-00512,EODI-2026-00537=EODI-2026-00512,EODI-2026-00540=EODI-2026-00512")
-    .split(",")
-    .filter(Boolean)
-    .map((par) => par.split("=") as [string, string]),
-);
-/** Fichas retiradas con su motivo: su dirección responde 404. */
-const RETIRADAS = (process.env.RETIRADAS ?? "EODI-2026-00539").split(",").filter(Boolean);
 const MALINAS = "EODI-2025-00248";
 const PROYECTOS = ["android", "iphone", "tableta", "escritorio-chromium", "escritorio-webkit"];
 
@@ -109,8 +104,8 @@ async function enlacesInternos(pagina: Page): Promise<string[]> {
 
 async function abrir(pagina: Page, contexto: BrowserContext, id: string, idioma: "es" | "en", chromium: boolean, tactil: boolean) {
   await pagina.goto(ruta(id, idioma), { waitUntil: "domcontentloaded" });
-  const destino = UNIDAS.get(id) ?? id;
-  await expect(pagina).toHaveURL(new RegExp(`${destino}$`), { timeout: 30_000 });
+  const queda = destino(await publicados(pagina.request), id) ?? id;
+  await expect(pagina).toHaveURL(new RegExp(`${queda}$`), { timeout: 30_000 });
   await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
   await leerComoPersona(pagina, contexto, chromium, tactil);
   return pagina.locator("[data-ficha] article").first();
@@ -123,25 +118,32 @@ test.describe("Fichas del mar Negro y la 00248, como una persona", () => {
       test.setTimeout(600_000);
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
+      const datos = await publicados(pagina.request);
       for (const id of MAR_NEGRO) {
+        if (destino(datos, id) === null) {
+          expect((await pagina.request.get(ruta(id, idioma))).status(), `${id} retirada`).toBe(404);
+          continue;
+        }
         const ficha = await abrir(pagina, contexto, id, idioma, browserName === "chromium", tactil);
         await expect(ficha.locator("h2, h3").first()).toBeVisible();
         expect(await enlacesInternos(pagina), `${id} enlaces internos`).toEqual([]);
         await pagina.screenshot({ path: join(CAPTURAS, `${id}-${idioma}-${info.project.name}.png`) });
       }
-      for (const id of RETIRADAS) {
-        expect((await pagina.request.get(ruta(id, idioma))).status(), `${id} retirada`).toBe(404);
-      }
       expect(errores).toEqual([]);
     });
 
-    test(`la 00248 con el dron no confirmado (${idioma})`, async ({ page: pagina, context: contexto, browserName }, info) => {
+    test(`la 00248 con la presencia de dron de sus datos (${idioma})`, async ({ page: pagina, context: contexto, browserName }, info) => {
       test.skip(!PROYECTOS.includes(info.project.name), "en los dispositivos de los recorridos");
       test.setTimeout(300_000);
       const errores = vigilar(pagina);
       const ficha = await abrir(pagina, contexto, MALINAS, idioma, browserName === "chromium", info.project.use.hasTouch === true);
-      await expect(ficha).toContainText(idioma === "es" ? "Dron no confirmado" : "Drone not confirmed");
-      await expect(ficha).not.toContainText(idioma === "es" ? "Dron confirmado" : "Drone confirmed");
+      // Lo que dicen los datos publicados (el 15 de octubre de 2026, «no confirmado»): si una
+      // autoridad lo cambia, la ficha tiene que decir lo nuevo, no lo de entonces.
+      const datos = await publicados(pagina.request);
+      const presencia = datos.fichas.get(destino(datos, MALINAS) ?? MALINAS)?.presencia_dron ?? "no_confirmada";
+      const etiquetas = textos(idioma).presencia;
+      await expect(ficha).toContainText(etiquetas[presencia]);
+      if (presencia !== "confirmada") await expect(ficha).not.toContainText(etiquetas.confirmada);
       expect(await enlacesInternos(pagina), "enlaces internos de la 00248").toEqual([]);
       await pagina.screenshot({ path: join(CAPTURAS, `${MALINAS}-${idioma}-${info.project.name}.png`) });
       expect(errores).toEqual([]);

@@ -2,6 +2,9 @@
 // Pixel 7), un iPhone (WebKit, iPhone 14), una tableta táctil y el escritorio (Chromium y WebKit),
 // en español y en inglés, con los datos publicados (sin tocarlos).
 //
+// Las fichas y lo que se espera de ellas (presencia, estado, punto del mapa) se leen de los datos
+// publicados (e2e/publicados.ts); si una autoridad cambia la presencia de una, se prueba con otra.
+//
 // - Copenhague (EODI-2025-00154) y Oslo (EODI-2025-00042): la presencia lleva el círculo morado;
 //   el «Historial de estados» acaba en «No acreditado» con su círculo, su fecha y su fuente
 //   enlazada; el estado del suceso sigue «Confirmado».
@@ -23,13 +26,14 @@ import { expect, test } from "./base.ts";
 import type { Locator, Page } from "@playwright/test";
 
 import { textos } from "../src/i18n/index.ts";
+import { destino, elegir, publicados } from "./publicados.ts";
 
 const MAPA = "[data-mapa-listo=true]";
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "test-results", "capturas", "presencia-visible");
 const PROYECTOS = ["android", "iphone", "tableta", "escritorio-chromium", "escritorio-webkit"];
 const MORADO = "#e81cf0";
 const GRIS = "#93a0b4";
-const COPENHAGUE = { id: "EODI-2025-00154", lon: 12.63793, lat: 55.60927 };
+const COPENHAGUE_ID = "EODI-2025-00154";
 
 function ruta(idioma: "es" | "en", id = ""): string {
   return idioma === "en" ? `/en/${id}` : `/${id}`;
@@ -110,22 +114,29 @@ test.describe("No acreditado y descartado, bien visibles, como una persona", () 
     const t = textos(idioma);
 
     for (const caso of [
-      { id: "EODI-2025-00154", nombre: "Copenhague", marca: "no_acreditado", color: MORADO, estado: t.estado.confirmado, rotulo: t.noAcreditado.etiqueta, fecha: "25/06/2026" },
-      { id: "EODI-2025-00042", nombre: "Oslo", marca: "no_acreditado", color: MORADO, estado: t.estado.confirmado, rotulo: t.noAcreditado.etiqueta, fecha: null },
-      { id: "EODI-2025-00164", nombre: "Lakenheath", marca: "descartado", color: GRIS, estado: t.estado.notificado, rotulo: t.descartado.etiqueta, fecha: null },
+      { id: "EODI-2025-00154", nombre: "Copenhague", marca: "no_acreditado", presencia: "no_acreditada", color: MORADO, rotulo: t.noAcreditado.etiqueta, fecha: "25/06/2026" },
+      { id: "EODI-2025-00042", nombre: "Oslo", marca: "no_acreditado", presencia: "no_acreditada", color: MORADO, rotulo: t.noAcreditado.etiqueta, fecha: null },
+      { id: "EODI-2025-00164", nombre: "Lakenheath", marca: "descartado", presencia: "descartada", color: GRIS, rotulo: t.descartado.etiqueta, fecha: null },
     ] as const) {
       test(`${caso.nombre}: la presencia y el historial con su círculo y su fuente (${idioma})`, async ({ page: pagina }, info) => {
         test.skip(!PROYECTOS.includes(info.project.name), "en los dispositivos de los recorridos");
         test.setTimeout(180_000);
         const errores = vigilar(pagina);
         const tactil = info.project.use.hasTouch === true;
-        const ficha = await abrirFicha(pagina, idioma, caso.id, tactil);
+        // La ficha y lo que se espera de ella, de los datos publicados: si una autoridad cambia la
+        // presencia de la preferida, se prueba con otra que la tenga (e2e/publicados.ts).
+        const datos = await publicados(pagina.request);
+        const id = elegir(datos, caso.id, (f) => f.presencia_dron === caso.presencia && (f.presencia_historial?.length ?? 0) > 0);
+        test.skip(id === null, `ninguna ficha publicada con la presencia ${caso.presencia}`);
+        const datosFicha = datos.fichas.get(id as string);
+        const ficha = await abrirFicha(pagina, idioma, id as string, tactil);
+        const estado = t.estado[datosFicha?.estado.actual ?? "confirmado"];
         // Arriba, el círculo lleva su nombre al lado: no se lee como el color del tipo.
         const arriba = ficha.locator("[data-marca-ficha]");
         await expect(arriba).toHaveAttribute("data-marca-ficha", caso.marca);
         await expect(arriba).toContainText(caso.rotulo);
         // El estado del suceso no cambia.
-        await expect(ficha).toContainText(caso.estado);
+        await expect(ficha).toContainText(estado);
         // La presencia: el círculo de su marca, del mismo tamaño que los de los estados.
         const presencia = ficha.locator("[data-presencia]");
         await presencia.scrollIntoViewIfNeeded();
@@ -139,7 +150,7 @@ test.describe("No acreditado y descartado, bien visibles, como una persona", () 
         await ultimo.scrollIntoViewIfNeeded();
         await expect(ultimo).toBeVisible();
         await expect(ultimo).toContainText(caso.rotulo);
-        if (caso.fecha !== null) await expect(ultimo).toContainText(caso.fecha);
+        if (caso.fecha !== null && id === caso.id) await expect(ultimo).toContainText(caso.fecha);
         await expect(ultimo.locator(`svg[data-circulo=${caso.marca}] circle`)).toHaveAttribute("fill", caso.color);
         await expect(ultimo.locator("a[href]").first()).toBeVisible();
         // Debajo, el motivo, que empieza con mayúscula aunque el dato venga en minúscula.
@@ -165,7 +176,14 @@ test.describe("No acreditado y descartado, bien visibles, como una persona", () 
       test.setTimeout(180_000);
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
-      const ficha = await abrirFicha(pagina, idioma, "EODI-2026-00293", tactil);
+      const datos = await publicados(pagina.request);
+      const id = destino(datos, "EODI-2026-00293");
+      const bruselas = id === null ? undefined : datos.fichas.get(id);
+      test.skip(
+        bruselas?.estado.actual !== "confirmado" || !bruselas.estado.historial.some((p) => p.estado === "desmentido"),
+        "la ficha de Bruselas ya no está confirmada con el desmentido en su historial",
+      );
+      const ficha = await abrirFicha(pagina, idioma, id as string, tactil);
       await expect(ficha.locator("dl")).toContainText(t.estado.confirmado);
       const pasos = pasosDelHistorial(ficha, t.ficha.historial);
       await pasos.first().scrollIntoViewIfNeeded();
@@ -187,6 +205,14 @@ test.describe("No acreditado y descartado, bien visibles, como una persona", () 
       test.setTimeout(180_000);
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
+      const datos = await publicados(pagina.request);
+      const id = destino(datos, COPENHAGUE_ID);
+      const lugar = id === null ? undefined : datos.puntos.get(id);
+      test.skip(
+        id === null || lugar === undefined || datos.fichas.get(id)?.presencia_dron !== "no_acreditada",
+        "la ficha de Copenhague ya no está en el mapa con la presencia no acreditada",
+      );
+      const COPENHAGUE = { id: id as string, lon: (lugar as [number, number])[0], lat: (lugar as [number, number])[1] };
       await abrirFicha(pagina, idioma, COPENHAGUE.id, tactil);
       await vista(pagina);
       // Con la ficha abierta, el aro de selección es de la marca: morado.

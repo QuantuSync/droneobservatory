@@ -17,6 +17,8 @@
 import { expect, test } from "./base.ts";
 import type { BrowserContext, CDPSession, Locator, Page } from "@playwright/test";
 
+import { elegir, publicados } from "./publicados.ts";
+
 const MAPA = "[data-mapa-listo=true]";
 const CLAVE = process.env.BYPASS ?? process.env.VERCEL_BYPASS;
 /** La pausa de una persona entre soltar un arrastre y tocar otra cosa. */
@@ -656,7 +658,9 @@ test.describe("zonas táctiles de 44 × 44 px", () => {
     await pagina.keyboard.press("Escape");
 
     // La ficha de un incidente, con sus plegables «Qué dice la fuente» cerrados y abiertos.
-    await pagina.goto("/EODI-2025-00440", { waitUntil: "domcontentloaded" });
+    // La 00440, o la que queda si el repaso la unió o retiró (e2e/publicados.ts).
+    const ficha = elegir(await publicados(pagina.request), "EODI-2025-00440", () => true) ?? "EODI-2025-00440";
+    await pagina.goto(`/${ficha}`, { waitUntil: "domcontentloaded" });
     await expect(pagina.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
     await pagina.waitForTimeout(1500);
     if (telefono && (await hoja.count()) > 0) await subirHoja(persona);
