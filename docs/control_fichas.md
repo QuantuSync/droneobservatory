@@ -597,12 +597,34 @@ la recogida y nunca entre los minutos 10 y 45: si al tomar el cerrojo ya es la v
 
 `--accion recalcular` vuelve a comprobar lo ya decidido sin llamar al experto; después hace falta otro muestreo.
 
+**Fichas protegidas** (desde el 29 de octubre de 2026). Una ficha de la referencia
+(`tests/referencia/fichas.json`) o revisada a mano (la nombra una entrada de
+`configuracion/incidentes_revisados.json`, también los dos lados de una unión) nunca se une, se
+retira, se separa ni cambia de día, de lugar o de autoridad por el repaso: el cambio queda en
+`para_revisar` de la decisión, fuera del muestreo y de `aplicar`. EODI-2026-00625 (Ceuta), de la
+referencia con la fecha imprecisa a propósito, se retiró así el 29 de octubre de 2026 y estuvo
+25 minutos fuera de la web. Tampoco se proponen (quedan en `errores_fuera` con su razón):
+
+- la presencia que ya tiene la ficha;
+- otra presencia si la decidió la rectificación de una autoridad (`no_acreditada`,
+  `presencia_historial`) o una revisión a mano;
+- bajar una presencia confirmada que una autoridad atribuye a drones, dice en su documento o
+  confirma con pruebas físicas (`proceso/presencia.py`);
+- en una ficha de la referencia, un dato distinto de su valor comprobado.
+
+En el grupo d, de las 6 fichas de la referencia con algún cambio decidido, el experto contradecía
+la referencia en las 6 (la presencia no acreditada de Copenhague y Aalborg, la confirmada de
+Loviisa, el lugar de Volkel, el día de la incursión en Polonia y una separación de Aalborg).
+
+**Tandas.** `--accion muestra --tanda t.json` (una lista de ids) muestrea solo esas fichas del
+grupo; el muestreo guarda la tanda y `aplicar` aplica solo ella. En el grupo d se leen 15.
+
 **Muestra.** Elige los cambios del grupo al azar con una semilla y escribe un fichero para
 rellenar: `bien` de cada uno, leído en su fuente.
 
 **Aplicar.** Solo con el muestreo aprobado: la muestra que da su semilla, todas leídas, como
-mucho una mal, y las decisiones sin cambios desde el muestreo. Para el grupo a se leen 15; para
-los demás, 10. Cada cambio va por el camino normal, con el motivo en el historial:
+mucho una mal, y las decisiones sin cambios desde el muestreo. Para los grupos a y d se leen 15;
+para b y c, 10. Cada cambio va por el camino normal, con el motivo en el historial:
 
 - mismo suceso: se unen y queda la más antigua;
 - otro día con su frase: la ficha toma ese día y vuelve a pasar por el repaso con él;

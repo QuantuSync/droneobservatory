@@ -31,9 +31,15 @@ aproximada; c, las de lugar vago; d, el resto):
   aplicar quedan en «descartadas» con su razón;
 - `llevar`: añade las propuestas de un grupo aplicado a configuracion/incidentes_revisados.json
   (las que ya están no se repiten), para el PR que las publica.
+
+Una ficha de la referencia o revisada a mano nunca se une, se retira, se separa ni cambia de día,
+de lugar o de autoridad por el repaso: el cambio queda como propuesta para revisar
+(`para_revisar`). Las correcciones de la presencia que contradicen lo que ya decidió una
+autoridad, una rectificación o una revisión a mano no se proponen (`errores_fuera`).
 """
 
 import contextlib
+import functools
 import hashlib
 import json
 import logging
@@ -54,7 +60,7 @@ from modelo import coste
 from modelo import entrada as peticiones
 from proceso import control_fichas as reglas
 from proceso import decidir as decide
-from proceso import incidentes
+from proceso import incidentes, presencia, referencia
 from proceso.focos_termicos import distancia_km
 from proceso.presencia import REVISADOS, TABLA_MOTIVOS
 from recogida import control_fichas, entrada
@@ -66,7 +72,7 @@ PREFIJO = "repaso_entrada:"
 PREFIJO_MUESTREO = "repaso_entrada_muestreo:"
 GRUPOS = ("a", "b", "c", "d")
 # Muestras que se leen en su fuente antes de aplicar un grupo; con 2 o más mal no se aplica.
-MUESTRA = {"a": 15, "b": 10, "c": 10, "d": 10}
+MUESTRA = {"a": 15, "b": 10, "c": 10, "d": 15}
 MAX_MAL = 1
 HILOS = 4
 POR_TANDA = 12
@@ -269,11 +275,115 @@ def mismo_imposible(incidente: Documento, otra: Documento) -> str | None:
     return None
 
 
-def ajustar(decision: Documento, incidente: Documento, otra: Documento | None) -> Documento:
+# --- Fichas protegidas --------------------------------------------------------------------
+
+# Lo que el repaso no aplica nunca en una ficha protegida: queda como propuesta para revisar.
+# EODI-2026-00625 (Ceuta), de la referencia con la fecha imprecisa a propósito, se retiró el 29 de
+# octubre de 2026 y estuvo 25 minutos fuera de la web.
+NO_EN_PROTEGIDAS = (UNIR, RETIRAR, SEPARAR, DIA, LUGAR, AUTORIDAD)
+REFERENCIA = referencia.DIRECTORIO / "fichas.json"
+
+
+@dataclass(frozen=True)
+class Protegidas:
+    """Las fichas protegidas (`ids`) y los valores comprobados de las de la referencia
+    (`referencia`: por id, el valor de cada dato)."""
+
+    ids: frozenset[str]
+    referencia: dict[str, dict[str, Any]] = field(default_factory=dict, hash=False)
+
+
+@functools.cache
+def protegidas(revisados: Path = REVISADOS, ruta_referencia: Path = REFERENCIA) -> Protegidas:
+    """Las fichas de la referencia (comprobadas contra el texto completo de sus fuentes) y las
+    revisadas a mano: las que nombra cualquier entrada de configuracion/incidentes_revisados.json
+    (también los dos lados de una unión o de unos «distintos»)."""
+    fichas = json.loads(ruta_referencia.read_text(encoding="utf-8"))["fichas"]
+    valores = {
+        str(f["id"]): {c: (v or {}).get("valor") for c, v in (f.get("valores") or {}).items()}
+        for f in fichas
+    }
+    ids = set(valores)
+    datos = json.loads(revisados.read_text(encoding="utf-8"))
+    for entradas in datos.values():
+        if not isinstance(entradas, list):
+            continue
+        for e in entradas:
+            ids.update(
+                re.findall(
+                    r"EODI-\d{4}-\d{5}",
+                    json.dumps(
+                        {
+                            k: v
+                            for k, v in e.items()
+                            if k in ("incidente", "incidentes", "registros")
+                        }
+                    ),
+                )
+            )
+    return Protegidas(frozenset(ids), valores)
+
+
+def presencia_fuera(error: Documento, incidente: Documento) -> str | None:
+    """Por qué una corrección de la presencia no se propone, o None: ya es la de la ficha, la
+    presencia la decidió una rectificación de una autoridad («no_acreditada»,
+    presencia_historial) o una revisión a mano, o baja una confirmación que una autoridad atribuye
+    a drones, lo dice en su documento o confirma con pruebas físicas (proceso/presencia.py). En el
+    grupo d del 29 de octubre de 2026 el experto contradijo así la referencia de Copenhague y
+    Aalborg (no acreditada, EODI-2025-00154 y 00228) y la de Loviisa (confirmada, 2026-00040)."""
+    actual = incidente.get("presencia_dron")
+    correcto = str(error.get("correcto") or "").strip()
+    if correcto == actual:
+        return "es la presencia que ya tiene la ficha"
+    if actual == "no_acreditada" or incidente.get("presencia_historial"):
+        return "la presencia la decidió la rectificación de una autoridad"
+    if incidente["id"] in presencia.presencias_revisadas():
+        return "presencia revisada a mano"
+    if actual == "confirmada" and (
+        presencia.atribuida_por_autoridad(incidente)
+        or presencia.documento_oficial_decide(incidente)
+        or presencia.pruebas_fisicas_confirmadas(incidente)
+    ):
+        return "una autoridad confirma el dron (proceso/presencia.py)"
+    return None
+
+
+def _errores_ajustados(
+    decision: Documento, incidente: Documento, valores: dict[str, Any]
+) -> tuple[list[Documento], list[Documento]]:
+    """(errores que se proponen, errores fuera con su razón)."""
+    quedan, fuera = [], []
+    for error in decision.get("errores") or []:
+        razon = None
+        if error.get("dato") == "presencia":
+            razon = presencia_fuera(error, incidente)
+        if razon is None:
+            dato = str(error.get("dato"))
+            bien = valores.get({"presencia": "presencia_dron"}.get(dato, dato))
+            if bien is not None:
+                razon = f"contradice la referencia ({bien})"
+        if razon is None:
+            quedan.append(error)
+        else:
+            fuera.append({**error, "razon": razon})
+    return quedan, fuera
+
+
+def ajustar(decision: Documento, incidente: Documento, otra: Documento | None,
+            protegidas_: Protegidas | None = None) -> Documento:  # fmt: skip
     """La decisión con las comprobaciones del repaso: una autoridad solo deja de ser oficial si
     es de otro país (la que no tiene una frase con su país se queda: Skeyes en Lieja,
-    EODI-2025-00092), y una unión imposible (mismo_imposible) no vale."""
+    EODI-2025-00092), una unión imposible (mismo_imposible) no vale, las correcciones de la
+    presencia que contradicen a una autoridad o a la referencia no se proponen y en una ficha
+    protegida (protegidas) lo que la cambia queda para revisar."""
+    protegidas_ = protegidas() if protegidas_ is None else protegidas_
     nueva = dict(decision)
+    for viejo in ("para_revisar", "errores_fuera"):
+        nueva.pop(viejo, None)
+    if "errores_fuera" in decision:
+        nueva["errores"] = list(decision.get("errores") or []) + [
+            {k: v for k, v in e.items() if k != "razon"} for e in decision["errores_fuera"]
+        ]
     fuera = nueva.get("autoridades_fuera") or {}
     de_otro = {n: m for n, m in fuera.items() if "otro país" in str(m)}
     if de_otro != fuera:
@@ -284,7 +394,19 @@ def ajustar(decision: Documento, incidente: Documento, otra: Documento | None) -
         if imposible:
             mismo = nueva.pop("mismo")
             nueva["invalida"] = f"no es el mismo suceso que {mismo}: {imposible}"
-    nueva["cambios"] = cambios(nueva, incidente)
+    es_protegida = incidente["id"] in protegidas_.ids or (
+        otra is not None and otra["id"] in protegidas_.ids
+    )
+    quedan, fuera = _errores_ajustados(
+        nueva, incidente, protegidas_.referencia.get(incidente["id"], {})
+    )
+    if fuera:
+        nueva["errores"], nueva["errores_fuera"] = quedan, fuera
+    pasos = cambios(nueva, incidente)
+    if es_protegida and any(p in NO_EN_PROTEGIDAS for p in pasos):
+        nueva["para_revisar"] = [p for p in pasos if p in NO_EN_PROTEGIDAS]
+        pasos = [p for p in pasos if p not in NO_EN_PROTEGIDAS]
+    nueva["cambios"] = pasos
     return nueva
 
 
@@ -573,40 +695,50 @@ def recalcular(
 # --- Muestra ------------------------------------------------------------------------------
 
 
-def con_cambios(decisiones: dict[str, Documento], grupo: str) -> dict[str, Documento]:
-    """Las decisiones del grupo que cambian algo y aún no se han aplicado, por id."""
+def con_cambios(decisiones: dict[str, Documento], grupo: str,
+                tanda: Iterable[str] | None = None) -> dict[str, Documento]:  # fmt: skip
+    """Las decisiones del grupo que cambian algo y aún no se han aplicado, por id; solo las de la
+    tanda si se da (las fichas de un grupo se aplican por tandas)."""
+    solo = None if tanda is None else set(tanda)
     return {
         k.removeprefix(PREFIJO): d
         for k, d in sorted(decisiones.items())
-        if d.get("grupo") == grupo and d.get("cambios") and not d.get("aplicada")
+        if d.get("grupo") == grupo
+        and d.get("cambios")
+        and not d.get("aplicada")
+        and (solo is None or k.removeprefix(PREFIJO) in solo)
     }
 
 
 def huella_grupo(elegidas: dict[str, Documento]) -> str:
-    texto = json.dumps({i: (d.get("huella"), d.get("cambios")) for i, d in elegidas.items()},
+    texto = json.dumps({i: (d.get("huella"), d.get("cambios"), d.get("errores"))
+                        for i, d in elegidas.items()},
                        sort_keys=True, ensure_ascii=False)  # fmt: skip
     return hashlib.sha256(texto.encode("utf-8")).hexdigest()[:16]
 
 
-def muestra(decisiones: dict[str, Documento], grupo: str, semilla: int) -> list[str]:
-    """Las fichas del muestreo de un grupo: al azar con la semilla, las que tocan (todas si son
-    menos)."""
-    elegidas = sorted(con_cambios(decisiones, grupo))
+def muestra(decisiones: dict[str, Documento], grupo: str, semilla: int,
+            tanda: Iterable[str] | None = None) -> list[str]:  # fmt: skip
+    """Las fichas del muestreo de un grupo (o de su tanda): al azar con la semilla, las que tocan
+    (todas si son menos)."""
+    elegidas = sorted(con_cambios(decisiones, grupo, tanda))
     return sorted(random.Random(semilla).sample(elegidas, min(MUESTRA[grupo], len(elegidas))))
 
 
-def plantilla(decisiones: dict[str, Documento], grupo: str, semilla: int) -> Documento:
+def plantilla(decisiones: dict[str, Documento], grupo: str, semilla: int,
+              tanda: Iterable[str] | None = None) -> Documento:  # fmt: skip
     """El fichero del muestreo para rellenar: cada ficha con lo que cambia y su frase."""
-    elegidas = con_cambios(decisiones, grupo)
+    solo = None if tanda is None else sorted(tanda)
+    elegidas = con_cambios(decisiones, grupo, solo)
     return {
-        "grupo": grupo, "semilla": semilla, "huella": huella_grupo(elegidas),
+        "grupo": grupo, "semilla": semilla, "huella": huella_grupo(elegidas), "tanda": solo,
         "revisadas": [
             {"id": i, "cambios": elegidas[i]["cambios"], "bien": None, "nota": "",
              "decision": {k: elegidas[i].get(k) for k in (
                  "mismo", "motivo_mismo", "otro_dia", "frase_fecha", "frase_lugar",
                  "autoridades_fuera", "fecha_desconocida", "resumen", "partes", "errores",
                  "motivo_es")}}
-            for i in muestra(decisiones, grupo, semilla)
+            for i in muestra(decisiones, grupo, semilla, solo)
         ],
     }  # fmt: skip
 
@@ -619,14 +751,15 @@ def aprobado(muestreo: Documento, decisiones: dict[str, Documento], grupo: str) 
     """Lanza MuestreoNoAprobado si el muestreo no deja aplicar el grupo: otro grupo, decisiones
     cambiadas desde el muestreo, una muestra que no es la de la semilla, alguna sin leer o dos o
     más mal."""
-    elegidas = con_cambios(decisiones, grupo)
+    tanda = muestreo.get("tanda")
+    elegidas = con_cambios(decisiones, grupo, tanda)
     if muestreo.get("grupo") != grupo:
         raise MuestreoNoAprobado(f"el muestreo es del grupo {muestreo.get('grupo')}")
     if muestreo.get("huella") != huella_grupo(elegidas):
         raise MuestreoNoAprobado("las decisiones del grupo cambiaron desde el muestreo")
     revisadas = muestreo.get("revisadas") or []
     ids = sorted(str(r.get("id")) for r in revisadas)
-    if ids != muestra(decisiones, grupo, int(muestreo.get("semilla", -1))):
+    if ids != muestra(decisiones, grupo, int(muestreo.get("semilla", -1)), tanda):
         raise MuestreoNoAprobado("la muestra no es la de su semilla")
     if any(not isinstance(r.get("bien"), bool) for r in revisadas):
         raise MuestreoNoAprobado("hay muestras sin leer")
@@ -817,7 +950,7 @@ def aplicar_grupo(
         ctx = control_fichas.Contexto(almacen, ahora, modelos, llamador, resultado, None, None,
                                       almacen.controles())  # fmt: skip
         nuevas: dict[str, Documento] = {}
-        for id_, decision in con_cambios(decisiones, grupo).items():
+        for id_, decision in con_cambios(decisiones, grupo, muestreo.get("tanda")).items():
             incidente = almacen.incidente(id_)
             if incidente is None or not incidentes.activo(incidente):
                 hecho.sin_aplicar.append(f"{id_}: ya no está activa")
@@ -881,7 +1014,8 @@ def llevar(propuestas: dict[str, list[Documento]], ruta: Path = REVISADOS) -> di
 
 
 def principal(base: control_fichas.Base, fabrica: Callable[[], Any] | None, accion: str,
-              grupo: str, ruta: Path | None, semilla: int, tope_s: float) -> int:  # fmt: skip
+              grupo: str, ruta: Path | None, semilla: int, tope_s: float,
+              tanda: Path | None = None) -> int:  # fmt: skip
     """decidir | muestra (escribe la plantilla en `ruta`) | aplicar (lee el muestreo de `ruta` y
     escribe las propuestas junto a él) | llevar (las propuestas escritas junto a `ruta`, a
     configuracion/incidentes_revisados.json) | estado."""
@@ -913,8 +1047,9 @@ def principal(base: control_fichas.Base, fabrica: Callable[[], Any] | None, acci
         return 0
     assert ruta is not None
     if accion == "muestra":
-        ruta.write_text(json.dumps(plantilla(decisiones, grupo, semilla), ensure_ascii=False,
-                                   indent=1), encoding="utf-8")  # fmt: skip
+        solo = None if tanda is None else json.loads(tanda.read_text(encoding="utf-8"))
+        ruta.write_text(json.dumps(plantilla(decisiones, grupo, semilla, solo),
+                                   ensure_ascii=False, indent=1), encoding="utf-8")  # fmt: skip
         return 0
     from recogida.extractor import modelos_base
 
