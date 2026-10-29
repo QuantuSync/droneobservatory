@@ -285,6 +285,7 @@ class Corregidos:
     otros: list[str] = field(default_factory=list)
     sin_guardar: list[str] = field(default_factory=list)
     contradicen_rectificacion: list[str] = field(default_factory=list)
+    repuestos: list[str] = field(default_factory=list)
 
     def texto(self) -> str:
         return (
@@ -293,7 +294,7 @@ class Corregidos:
             f"{self.lugares}, inicios revisados {self.inicios}, daños revisados {self.danos}, "
             f"cierres, drones, tipos y objetivos revisados {self.otros}, sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
-            f"{self.contradicen_rectificacion}"
+            f"{self.contradicen_rectificacion}, repuestos {self.repuestos}"
         )
 
 
@@ -700,11 +701,47 @@ def _retirar(
             hechos.retirados.append(documento["id"])
 
 
+# Una ficha retirada porque no se sabía la fecha del suceso, cuya fecha da después otra fuente con
+# una frase (sección «reponer», con el inicio revisado y su cita en «datos»): vuelve a publicarse
+# una vez y como nueva, así que pasa por el filtro de entrada, que puede unirla a otra ficha del
+# mismo suceso o retenerla. Las 16 retiradas por el repaso de entrada del 28 de octubre de 2026.
+CURSOR_REPONER = CURSOR + "reponer:"
+MOTIVO_REPONER = (
+    "revisión: vuelve a publicarse con la fecha del suceso que da otra fuente "
+    "(configuracion/incidentes_revisados.json, reponer)"
+)
+
+
+def _reponer(
+    almacen: Almacen, ahora: datetime, modelos: frozenset[str], hechos: Corregidos
+) -> None:
+    from recogida import control_fichas
+
+    for revision in cargar().get("reponer", []):
+        id_ = str(revision["incidente"])
+        if almacen.cursor(CURSOR_REPONER + id_) is not None:
+            continue
+        documento = almacen.incidente(id_)
+        if documento is None or "retirado" not in documento or "fusionado_en" in documento:
+            continue
+        nuevo = {k: v for k, v in documento.items() if k != "retirado"}
+        if not _guardar(almacen, documento, nuevo, ahora, modelos, MOTIVO_REPONER, hechos):
+            continue
+        # Como una ficha nueva: el control la retiene hasta que pase el filtro de entrada.
+        control = almacen.cursor(control_fichas.CURSOR) or {}
+        vistos = {k: v for k, v in control.get("vistos", {}).items() if k != id_}
+        almacen.guardar_cursor(control_fichas.CURSOR, {**control, "vistos": vistos})
+        almacen.guardar_cursor(CURSOR_REPONER + id_, {"fecha": _instante(ahora)["valor"]})
+        hechos.repuestos.append(id_)
+
+
 def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corregidos:
-    """Aplica las retiradas, las citas, los titulares, las ubicaciones y los lugares revisados."""
+    """Aplica las retiradas, las fichas que vuelven, las citas, los titulares, las ubicaciones y
+    los lugares revisados."""
     hechos = Corregidos()
     datos = cargar()
     _retirar(almacen, ahora, modelos, hechos)
+    _reponer(almacen, ahora, modelos, hechos)
     for id_, citas in _por_incidente(almacen, datos.get("citas", [])).items():
         documento = almacen.incidente(id_)
         assert documento is not None
