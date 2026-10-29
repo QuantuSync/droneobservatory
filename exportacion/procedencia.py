@@ -236,8 +236,9 @@ REGLAS: dict[str, tuple[str, ...]] = {
 # Valores que puede revisar a mano «datos» de configuracion/incidentes_revisados.json, con el dato
 # revisado de que salen.
 REVISADOS_A_RUTA = {
-    "consecuencias.cierre.valor": "cierre", "tiempo.inicio": "inicio",
-    "lugar.localidad": "lugar", "lugar.suceso": "lugar", "drones.numero": "drones",
+    "consecuencias.cierre.valor": "cierre", "consecuencias.cierre.minutos": "cierre",
+    "tiempo.inicio": "inicio", "lugar.localidad": "lugar", "lugar.suceso": "lugar",
+    "drones.numero": "drones",
     "objetivo.categoria": "objetivo", "objetivo.nombre": "objetivo", "objetivo.oaci": "objetivo",
     "consecuencias.danos": "danos",
 }  # fmt: skip
@@ -537,6 +538,11 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
         campo = REVISADOS_A_RUTA.get(ruta)
         revision = decidir.revisiones(documento).get(campo) if campo else None
         if revision is None:
+            return None
+        if ruta == "consecuencias.cierre.minutos" and not (
+            isinstance(revision["valor"], dict) and revision["valor"].get("minutos")
+        ):
+            # La duración solo sale de una revisión que la da (EODI-2025-00183).
             return None
         ids = [i for i, f in fuentes.items() if f.get("enlace") == revision.get("enlace")]
         ids = ids or [f for f, o in origen.items() if o == PRENSA]

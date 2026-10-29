@@ -1,5 +1,6 @@
 """Origen y método de cada valor exportado, valores sin respaldo y nivel de detalle."""
 
+import copy
 from typing import Any
 
 import pytest
@@ -207,3 +208,25 @@ def test_los_danos_revisados_a_mano_salen_de_su_fuente(monkeypatch: pytest.Monke
     assert exportado["consecuencias"]["danos"] == danos
     marca = exportado["procedencia"]["consecuencias.danos"]
     assert (marca["origen"], marca["metodo"], marca["fuentes"]) == ("prensa", "regla", ["gdelt-1"])
+
+
+def test_la_duracion_del_cierre_revisada_a_mano_sale_de_su_fuente(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """EODI-2025-00183: la duración revisada con su cita no tenía origen y la exportación semanal
+    no validaba (ensayo del 29 de octubre de 2026). Una revisión sin duración no la respalda."""
+    from proceso import decidir
+
+    cierre = {"valor": "si", "minutos": {"min": 60, "max": 60}}
+    documento = de_prensa()
+    documento["consecuencias"] = {"cierre": copy.deepcopy(cierre)}
+    revision = {"valor": cierre, "enlace": "https://ejemplo.org/otra", "motivo": "una hora"}
+    monkeypatch.setattr(decidir, "revisiones", lambda _incidente: {"cierre": revision})
+    exportado = exportar(documento)
+    assert exportado["consecuencias"]["cierre"]["minutos"] == {"min": 60, "max": 60}
+    marca = exportado["procedencia"]["consecuencias.cierre.minutos"]
+    assert (marca["origen"], marca["metodo"], marca["fuentes"]) == ("prensa", "regla", ["gdelt-1"])
+    sin_duracion = {**revision, "valor": "si"}
+    monkeypatch.setattr(decidir, "revisiones", lambda _incidente: {"cierre": sin_duracion})
+    with pytest.raises(origenes.SinOrigen, match=r"consecuencias\.cierre\.minutos"):
+        exportar(documento)
