@@ -557,6 +557,21 @@ def lugar(id_: str, nom: Nomenclator) -> Lugar:
     return Lugar(id_, GKG, nombre, float(lat), float(lon), RADIO_GKG_KM[tipo], pais, (), ())
 
 
+@cache
+def renombrados(ruta: Path = DIRECTORIO / "lugares_renombrados.json") -> dict[str, str]:
+    """Identificador que el nomenclátor ya no tiene → el actual del mismo lugar
+    (configuracion/lugares_renombrados.json). Un candidato anterior al cambio conserva el viejo:
+    el de EODI-2025-00397 nombra aeropuerto:way/384875110, hoy GCFV (Fuerteventura)."""
+    if not ruta.exists():
+        return {}
+    return dict(json.loads(ruta.read_text(encoding="utf-8"))["renombrados"])
+
+
+def id_actual(id_: str) -> str:
+    """El identificador actual del lugar: el mismo, o el nuevo si se renombró."""
+    return renombrados().get(id_, id_)
+
+
 def lugar_conocido(id_: str, nom: Nomenclator) -> Lugar | None:
     """Como `lugar`, o None si el nomenclátor ya no lo tiene (salió en una versión anterior) o el
     identificador del GKG está mal formado: un lugar así no tumba la agrupación de los demás."""
