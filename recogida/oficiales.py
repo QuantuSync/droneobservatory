@@ -42,6 +42,7 @@ import math
 import os
 import re
 import time
+import unicodedata
 import xml.etree.ElementTree as ET
 from collections import Counter
 from collections.abc import Callable
@@ -339,10 +340,34 @@ def mismo_dia(incidente: Documento, nota: Nota) -> bool:
     )
 
 
+def _normal(texto: str) -> str:
+    return "".join(
+        c for c in unicodedata.normalize("NFD", texto.casefold()) if not unicodedata.combining(c)
+    )
+
+
+def nombra_la_ficha(incidente: Documento, nota: Nota) -> bool:
+    """La nota nombra la localidad de la ficha, o la ficha ya tiene otra nota de la misma
+    autoridad (la primera nota y su actualización). Las del MApN del 17 de octubre de 2026: el
+    sitio que lee la regla es la base de Borcea, de donde despegaron los F-16, a 200 km de la
+    ficha de Sulina (EODI-2026-00582); la actualización escribe «la sud-est de Sulina»."""
+    localidad = str(incidente["lugar"].get("localidad") or "").strip()
+    if localidad and re.search(
+        rf"\b{re.escape(_normal(localidad))}\b", _normal(f"{nota.titulo}. {nota.texto}")
+    ):
+        return True
+    prefijo = f"{nota.fuente['id']}-"
+    return any(
+        str(f.get("id", "")).startswith(prefijo) and f.get("es_autoridad")
+        for f in incidente["fuentes"]
+    )
+
+
 def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
     """Las fichas activas del país de la nota que pueden ser su suceso: las que encajan con su
     sitio por la regla de fusión y, del mismo día y un tipo compatible, las que no tienen punto
-    (solo el país o la región) y, si la nota no nombra un sitio que se sepa situar, todas."""
+    (solo el país o la región), las que la nota nombra (`nombra_la_ficha`) y, si la nota no
+    nombra un sitio que se sepa situar, todas."""
     punto = _punto(nota)
     resultado: list[Documento] = []
     for incidente in almacen.incidentes():
@@ -350,7 +375,11 @@ def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
             continue
         por_sitio = punto is not None and incidentes.encajan(incidente, punto)
         por_dia = (
-            (punto is None or not incidentes.con_punto(incidente))
+            (
+                punto is None
+                or not incidentes.con_punto(incidente)
+                or nombra_la_ficha(incidente, nota)
+            )
             and tipo_compatible(incidente, nota)
             and mismo_dia(incidente, nota)
         )
@@ -379,12 +408,30 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
     if any(f["id"] == nota.id for f in incidente["fuentes"]):
         return str(incidente["id"])
     fuente = fuente_oficial(nota)
-    # Si entró antes como artículo (nota sin ficha), esa fuente pasa a ser la de la autoridad.
-    previa = next((f for f in incidente["fuentes"] if f.get("enlace") == nota.enlace), None)
-    if previa is not None and previa.get("campos_respaldados"):
-        fuente["campos_respaldados"] = sorted({*previa["campos_respaldados"], "estado"})
+    # Si entró antes como artículo (nota sin ficha), esa fuente pasa a ser la de la autoridad:
+    # lo que la citaba (pasos del estado, afirmaciones, origen de la fecha) cita ahora la nota.
+    # Las declaraciones que el extractor sacó de ella siguen. EODI-2026-00704 (29 de octubre de
+    # 2026): sin cambiar las citas, la ficha no cumplía el esquema y la nota no se guardaba.
+    previa = next(
+        (f for f in incidente["fuentes"]
+         if f.get("enlace") == nota.enlace and not f.get("es_autoridad")),
+        None,
+    )  # fmt: skip
+    if previa is not None:
+        if previa.get("campos_respaldados"):
+            fuente["campos_respaldados"] = sorted({*previa["campos_respaldados"], "estado"})
+        sin_ella = [f for f in incidente["fuentes"] if f is not previa]
+        incidente = json.loads(
+            json.dumps({**incidente, "fuentes": sin_ella}, ensure_ascii=False).replace(
+                json.dumps(previa["id"]), json.dumps(nota.id)
+            )
+        )
     incidente["fuentes"] = [
-        *(f for f in incidente["fuentes"] if f.get("enlace") != nota.enlace),
+        *(
+            f
+            for f in incidente["fuentes"]
+            if f.get("enlace") != nota.enlace or f.get("es_autoridad")
+        ),
         fuente,
     ]
     for otra in incidente["fuentes"]:
