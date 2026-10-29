@@ -929,6 +929,34 @@
         "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto): Suceso nuevo en la cárcel de Poggioreale; la fuente no da el día. El dron sí está confirmado: fue neutralizado y se halló a bordo droga y móviles.",
         "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model): New incident at Poggioreale prison; the source gives no day. The drone is confirmed: it was neutralised and drugs and phones were found aboard."
       }
+    },
+    {
+      "incidente": "EODI-2026-00624",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00625",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00684",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00702",
+      "motivo": {
+        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
+        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model)."
+      }
     }
   ],
   "citas": [
@@ -5295,6 +5323,18 @@
       "motivo": {
         "es": "El aeropuerto de Riga avisó a los servicios responsables de un posible dron a las 14:20 del martes 21 de octubre de 2025, hora de Letonia (11:20 UTC).",
         "en": "Riga Airport alerted the responsible services to a possible drone at 14:20 on Tuesday 21 October 2025, Latvian time (11:20 UTC)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00629",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "han interceptado el primer dron detectado en sus instalaciones que intentaba introducir material de contrabando",
+        "enlace": "https://officialpress.es/dron-carcel-picassent/"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo en la cárcel de Picassent; la ficha publicada afirma un dron «posible» no confirmado, pero la fuente 2 dice que los funcionarios lo interceptaron y recuperaron, lo que confirma su presencia.",
+        "en": "entry review: New incident at Picassent prison; the record lists the drone as unconfirmed, but source 2 says prison staff intercepted and recovered it, which confirms its presence."
       }
     }
   ],
