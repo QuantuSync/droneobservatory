@@ -225,3 +225,17 @@ def test_auditoria_w_no_cuenta_lo_que_quita_el_control(almacen: Almacen) -> None
     assert auditoria_fichas.auditar([nuevo], cambios[:1], extracciones=extracciones)["W"] == [
         f"{anterior['id']} drones"
     ]
+
+
+def test_el_cierre_revisado_con_su_duracion() -> None:
+    """EODI-2025-00183: la duración del cierre se perdió al volver a extraerla; la revisión la
+    devuelve con su cita."""
+    from proceso import decidir
+
+    incidente = {"id": "EODI-2025-00183", "consecuencias": {"cierre": {"valor": "si"}}}
+    revision = {"valor": {"valor": "si", "minutos": {"min": 60, "max": 60}}, "motivo": "m"}
+    decidir._con_revision(incidente, "cierre", revision)
+    assert incidente["consecuencias"]["cierre"] == {
+        "valor": "si",
+        "minutos": {"min": 60, "max": 60},
+    }

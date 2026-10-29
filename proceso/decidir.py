@@ -380,7 +380,12 @@ def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None
         # Si hubo cierre; su duración con su cita (el control de las fichas) se queda: antes se
         # perdía en cada guardado y el control la volvía a poner (EODI-2025-00001, 2026-00322).
         anterior = (resultado.get("consecuencias") or {}).get("cierre") or {}
-        cierre = {**anterior, "valor": valor} if valor == "si" else {"valor": valor}
+        if isinstance(valor, dict):
+            # El cierre con su duración revisada: la que daba la ficha se perdió al volver a
+            # extraerla (EODI-2025-00183, «efter cirka en time», 29 de octubre de 2026).
+            cierre = valor
+        else:
+            cierre = {**anterior, "valor": valor} if valor == "si" else {"valor": valor}
         resultado["consecuencias"] = {**resultado.get("consecuencias", {}), "cierre": cierre}
     elif campo == "danos":
         # Los daños con la frase de la fuente que los cuenta: el esquema no tiene dónde contar

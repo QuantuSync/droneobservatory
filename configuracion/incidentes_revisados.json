@@ -11193,6 +11193,21 @@
       "motivo": "un dron posiblemente avistado («galimai pastebėto drono», en singular); el número se perdió al volver a extraer la ficha el 23 de octubre de 2026"
     },
     {
+      "incidente": "EODI-2025-00183",
+      "campo": "cierre",
+      "valor": {
+        "valor": "si",
+        "minutos": {
+          "min": 60,
+          "max": 60
+        }
+      },
+      "cita": "Kl. 23.15 - efter cirka en time - åbnede lufthavnen igen for afgange og ankomster.",
+      "enlace": "https://dr.dk/nyheder/seneste/efter-lukning-af-aalborg-lufthavn-politiet-fandt-ingen-droner",
+      "pais": "DK",
+      "motivo": "el aeropuerto de Aalborg estuvo cerrado cerca de una hora (de hacia las 22:10 a las 23:15 hora danesa); la duración se perdió al volver a extraer la ficha el 29 de octubre de 2026"
+    },
+    {
       "incidente": "EODI-2025-00291",
       "campo": "cierre",
       "valor": "si",
