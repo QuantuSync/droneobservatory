@@ -378,3 +378,49 @@ def test_la_nota_con_solo_el_dia_se_guarda_en_su_ficha() -> None:
     incidente = almacen.incidente(str(id_))
     assert incidente is not None
     assert incidente["fuentes"][-1]["fecha"] == {"valor": "2025-09-23T00:00Z", "precision": "dia"}
+
+
+def test_la_nota_que_entro_como_articulo_y_esta_citada_se_enlaza_con_sus_citas() -> None:
+    # EODI-2026-00704 (29 de octubre de 2026): el estado y las afirmaciones citaban el artículo de
+    # la nota; al cambiarlo por la fuente oficial, la ficha no cumplía el esquema.
+    almacen = Almacen.abrir()
+    id_ = _sin_punto(almacen, str(extraer_ejemplo(almacen)))
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    incidente = almacen.incidente(id_)
+    assert incidente is not None
+    citada = incidente["fuentes"][0]
+    incidente["fuentes"] = [{**f, "enlace": nota.enlace} if f is citada else f
+                            for f in incidente["fuentes"]]  # fmt: skip
+    almacen.guardar_incidente(incidente, AHORA, MODELOS)
+    assert any(p.get("fuente_id") == citada["id"] for p in incidente["estado"]["historial"])
+    assert oficiales.enlazar(almacen, nota, AHORA, MODELOS) == id_
+    enlazada = almacen.incidente(id_)
+    assert enlazada is not None
+    ids = {f["id"] for f in enlazada["fuentes"]}
+    assert citada["id"] not in ids and nota.id in ids
+    assert all(p.get("fuente_id") in ids | {None} for p in enlazada["estado"]["historial"])
+    assert all(a["fuente_id"] in ids for a in enlazada.get("afirmaciones", []))
+
+
+def test_la_nota_que_nombra_la_localidad_de_la_ficha_se_enlaza_aunque_su_sitio_sea_otro() -> None:
+    # Las notas del MApN del 17 de octubre de 2026: el sitio que se lee es Borcea (de donde
+    # despegaron los F-16) y la ficha está en Sulina (EODI-2026-00582).
+    almacen = Almacen.abrir()
+    id_ = str(extraer_ejemplo(almacen))
+    incidente = almacen.incidente(id_)
+    assert incidente is not None
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    localidad = incidente["lugar"].get("localidad") or "Kastrup"
+    incidente["lugar"] = {**incidente["lugar"], "localidad": localidad}
+    almacen.guardar_incidente(incidente, AHORA, MODELOS)
+    texto = f"Droner blev observeret i Aalborg, ved {localidad} mandag aften."
+    lejos = oficiales.Nota(nota.fuente, nota.id, nota.titulo, nota.enlace, nota.fecha, texto)
+    otra = oficiales.Nota(
+        nota.fuente, nota.id, nota.titulo, nota.enlace, nota.fecha, "Droner i Aalborg."
+    )
+    assert oficiales.nombra_la_ficha(incidente, lejos)
+    assert not oficiales.nombra_la_ficha(incidente, otra)
+    # Con otra nota de la misma autoridad ya en la ficha (la primera nota y su actualización).
+    anterior = {**incidente["fuentes"][0], "id": f"{FUENTE['id']}-anterior", "es_autoridad": True}
+    con_nota = {**incidente, "fuentes": [*incidente["fuentes"], anterior]}
+    assert oficiales.nombra_la_ficha(con_nota, otra)
