@@ -104,24 +104,29 @@ _RESERVA = re.compile(
     r"\bmulig|formod|muligvis|mistanke|possibl|suspect|mutmaß|mögliche|podejrzan|posibil",
     re.IGNORECASE,
 )
-# Lo que dice que la nota cuenta un suceso concreto (un dron en el espacio aéreo, avistado,
-# derribado, caído o hallado, una alerta aérea, un cierre), en las lenguas de las fuentes. Sin
-# ello, la nota habla de drones sin un suceso (una cumbre, un informe anual, un ejercicio, la
-# compra de equipos: medido sobre las notas de los 30 días anteriores al 29 de octubre de 2026).
+# Lo que dice que la nota cuenta un suceso concreto (un dron que entra, se ve, se detecta, se
+# derriba, cae o se halla; una alerta aérea), en las lenguas de las fuentes. Sin ello, la nota
+# habla de drones sin un suceso (una cumbre, un informe anual, un ejercicio, la normativa del
+# espacio aéreo: medido sobre las notas de las fuentes oficiales del 20 de agosto al 29 de octubre
+# de 2026). «Espacio aéreo» a secas no basta: lo dicen también las notas de normativa (LVNL).
 SUCESO = re.compile(
-    r"airspace|shot down|crash|wreck|debris|sighted|sighting|spotted|\bfound\b|"
-    r"gaisa telp|apdraudēj|atrast|nokrit|ielid|"
-    r"spațiul aerian|spaţiul aerian|spatiul aerian|ținte aeriene|ţinte aeriene|ținta aeriană|"
-    r"ţinta aeriană|doborât|prăbuș|"
-    r"przestrze[nń] powietrzn|naruszeni|zestrzel|szczątk|"
-    r"luftraum|abgeschossen|gesichtet|trümmer|absturz|"
-    r"luftrum|observeret|observert|observerad|nedskudt|"
-    r"espacio aéreo|avistamiento|avistad|derribad|"
-    r"espace aérien|survol|abattu|débris|"
-    r"luchtruim|neergehaald|waargenomen|gespot|"
-    r"oro erdv|õhuruum|ilmatila",
+    r"violat|incursion|intrusion|shot down|crash|wreck|debris|sighted|sighting|spotted|"
+    r"\bfound\b|detected|"
+    r"apdraudēj|atrast|nokrit|ielid|pārkāp|"
+    r"ținte aeriene|ţinte aeriene|ținta aeriană|ţinta aeriană|a pătruns|au pătruns|doborât|"
+    r"prăbuș|a detectat|au decolat|"
+    r"naruszeni|zestrzel|szczątk|wtargn|"
+    r"abgeschossen|gesichtet|trümmer|absturz|eingedrungen|"
+    r"observeret|observert|observerad|nedskudt|krænk|kränk|"
+    r"avistamiento|avistad|derribad|"
+    r"survol|abattu|débris|"
+    r"neergehaald|waargenomen|gespot|binnengedrongen|"
+    r"pažeid|loukka",
     re.IGNORECASE,
 )
+# Las notas más antiguas que esto no entran como candidatas: las páginas de algunas fuentes
+# guardan notas de meses atrás, y lo de entonces ya lo trajeron las noticias.
+DIAS_ENTRADA = 30
 # Una nota de un aeropuerto es de una interrupción aeroportuaria: sin sitio común no se enlaza a
 # una incursión o un sobrevuelo del mismo día (ni al revés).
 _AEROPUERTO = re.compile(
@@ -492,7 +497,11 @@ def recoger(
             previo = next((i for i in antes if i["id"] == id_), None)
             if previo is not None and previo["estado"]["actual"] != Estado.CONFIRMADO:
                 recuentos.confirmadas += 1
-        elif suceso(nota) and a_entrada(almacen, nota, ahora):
+        elif (
+            suceso(nota)
+            and fecha >= ahora - timedelta(days=DIAS_ENTRADA)
+            and a_entrada(almacen, nota, ahora)
+        ):
             recuentos.a_entrada += 1
     return None
 
