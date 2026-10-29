@@ -348,6 +348,19 @@ def presencia_fuera(error: Documento, incidente: Documento) -> str | None:
     return None
 
 
+def drones_fuera(error: Documento, incidente: Documento) -> str | None:
+    """Por qué una corrección del número de drones no se propone, o None: el número ya cabe en el
+    intervalo de la ficha (EODI-2025-00192, «bis zu zehn Drohnen» con la ficha en 2-10)."""
+    numero = (incidente.get("drones") or {}).get("numero")
+    valor = _NUMERO.match(str(error.get("correcto") or ""))
+    if not isinstance(numero, dict) or valor is None:
+        return None
+    minimo, maximo = int(valor.group(1)), int(valor.group(2) or valor.group(1))
+    if numero.get("min", 0) <= minimo and maximo <= numero.get("max", 0):
+        return "el número ya cabe en el intervalo de la ficha"
+    return None
+
+
 def _errores_ajustados(
     decision: Documento, incidente: Documento, valores: dict[str, Any]
 ) -> tuple[list[Documento], list[Documento]]:
@@ -357,6 +370,8 @@ def _errores_ajustados(
         razon = None
         if error.get("dato") == "presencia":
             razon = presencia_fuera(error, incidente)
+        elif error.get("dato") == "drones":
+            razon = drones_fuera(error, incidente)
         if razon is None:
             dato = str(error.get("dato"))
             bien = valores.get({"presencia": "presencia_dron"}.get(dato, dato))
@@ -531,6 +546,18 @@ def _cuerpo(almacen: Almacen, pregunta: _Pregunta, con_contexto: list[str] | Non
                                     pregunta.resumenes, contexto)  # fmt: skip
 
 
+def _por_decidir(decision: Documento, incidente: Documento, solo: list[str] | None) -> bool:
+    """Sin decisión con la huella de ahora; o, si se dan las fichas (`solo`), decidida con una
+    pregunta anterior y sin aplicar: se vuelve a preguntar con la de ahora."""
+    if decision.get("huella") != entrada.huella(incidente):
+        return True
+    return (
+        solo is not None
+        and decision.get("version") != peticiones.VERSION_REPASO
+        and not decision.get("aplicada")
+    )
+
+
 def decidir_grupo(
     base: control_fichas.Base, fabrica: Callable[[], Any], grupo: str, tope_s: float,
     reloj: Callable[[], datetime] | None = None, dormir: Callable[[float], None] | None = None,
@@ -555,8 +582,7 @@ def decidir_grupo(
         decisiones = copia.controles(PREFIJO)
         pendientes = [d for d in del_grupo(activos, grupo)
                       if (solo is None or d["id"] in solo)
-                      and (decisiones.get(clave(d["id"])) or {}).get("huella")
-                      != entrada.huella(d)]  # fmt: skip
+                      and _por_decidir(decisiones.get(clave(d["id"])) or {}, d, solo)]  # fmt: skip
         disponible = coste.limite(coste.Modo.REPASO_ENTRADA) - copia.gastado(
             coste.Modo.REPASO_ENTRADA.value
         )
@@ -1027,7 +1053,8 @@ def principal(base: control_fichas.Base, fabrica: Callable[[], Any] | None, acci
     if accion == "decidir":
         if fabrica is None:
             return 1
-        print(decidir_grupo(base, fabrica, grupo, tope_s).texto())
+        solo = None if tanda is None else json.loads(tanda.read_text(encoding="utf-8"))
+        print(decidir_grupo(base, fabrica, grupo, tope_s, solo=solo).texto())
         return 0
     if accion == "recalcular":
         print(f"recalculadas={recalcular(base, grupo)}")

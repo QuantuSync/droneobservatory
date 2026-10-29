@@ -2793,8 +2793,11 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--grupo", choices=("a", "b", "c", "d"), default="a")
     opciones.add_argument("--muestreo", type=Path, help="fichero del muestreo (muestra, aplicar)")
     opciones.add_argument("--semilla", type=int, default=0)
-    opciones.add_argument("--tanda", type=Path,
-                          help="JSON con los ids de la tanda del grupo (muestra)")  # fmt: skip
+    opciones.add_argument(
+        "--tanda", type=Path,
+        help="JSON con los ids de la tanda del grupo (muestra; en decidir, las fichas que se "
+        "vuelven a preguntar con la pregunta de ahora)",
+    )  # fmt: skip
     opciones.add_argument("--tope-horas", type=float, default=2.0)
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")

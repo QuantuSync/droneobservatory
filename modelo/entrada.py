@@ -207,7 +207,7 @@ def cuerpo_medida(
 
 # --- Repaso de lo publicado con la pregunta de entrada ------------------------------------
 
-VERSION_REPASO = "repaso_entrada/2"
+VERSION_REPASO = "repaso_entrada/3"
 MAX_SALIDA_REPASO = 2200
 DATOS_REPASO = ("drones", "tipo", "estado", "presencia")
 
@@ -279,7 +279,9 @@ cuentan (una fuente que cuenta dos va en las dos); lista vacía si es un solo su
 - errores: los errores claros del número de drones, el tipo, el estado (notificado, confirmado, \
 atribuido, desmentido) o la presencia del dron (confirmada o no) frente a lo que dicen las \
 fuentes, cada uno con el valor correcto y la fuente y la frase literal que lo muestran; ninguno, \
-lista vacía. correcto, según el dato: drones, un número o un intervalo «3-5»; tipo, \
+lista vacía. correcto, según el dato: drones, un número o un intervalo «3-5», el de este \
+suceso en este lugar (no el de otro suceso que cite la noticia); «hasta diez» es «1-10», y no \
+es un error si el número de la ficha ya lo incluye; tipo, \
 «incursion» (una autoridad dice que el dron entró desde fuera del país), «sobrevuelo» o \
 «interrupcion_aeroportuaria» (se cerró o se paró un aeropuerto); presencia, «confirmada» solo si \
 lo dice una autoridad (policía, ejército, ministerio, aeropuerto) o hay pruebas físicas (el dron \
