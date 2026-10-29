@@ -1,0 +1,26 @@
+{
+ "descripcion": "Identificadores que el nomenclátor ya no tiene y el actual del mismo lugar. Los aeropuertos de Canarias, Melilla, Azores, Madeira y Svalbard pasaron de instalaciones_europa.json (identificador de OpenStreetMap) a lugares_europa.json (código OACI) el 12 de octubre de 2026; los candidatos anteriores conservan el identificador viejo.",
+ "renombrados": {
+  "aeropuerto:relation/10652810": "GEML",
+  "aeropuerto:relation/13560111": "LPPD",
+  "aeropuerto:relation/16836930": "GCLP",
+  "aeropuerto:relation/17833456": "LPLA",
+  "aeropuerto:relation/17835242": "LPGR",
+  "aeropuerto:relation/17836265": "LPSJ",
+  "aeropuerto:relation/17852650": "LPPI",
+  "aeropuerto:relation/17880347": "LPFL",
+  "aeropuerto:relation/6785242": "LPPS",
+  "aeropuerto:way/1202427023": "LPHR",
+  "aeropuerto:way/133790788": "LPMA",
+  "aeropuerto:way/230256029": "GCRR",
+  "aeropuerto:way/296775627": "LPCR",
+  "aeropuerto:way/358229675": "ENSB",
+  "aeropuerto:way/384872975": "GCGM",
+  "aeropuerto:way/384875110": "GCFV",
+  "aeropuerto:way/440678817": "LPAZ",
+  "aeropuerto:way/482903476": "GCTS",
+  "aeropuerto:way/484424072": "GCXO",
+  "aeropuerto:way/52323651": "GCHI",
+  "aeropuerto:way/95712335": "GCLA"
+ }
+}

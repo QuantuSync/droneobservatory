@@ -70,6 +70,7 @@ from proceso.noticias import (
     TIPO_APARENTE,
     Nomenclator,
     configuracion,
+    id_actual,
     lugar,
     lugares_en,
     nomenclator,
@@ -428,10 +429,11 @@ def elegir_fuentes(
 
 
 def objetivo_de(almacen: Almacen, candidato: Documento, nom: Nomenclator) -> Objetivo:
-    if candidato["lugar"] in nom.lugares or candidato["lugar"].startswith(GKG + ":"):
-        return Objetivo.de_lugar(lugar(candidato["lugar"], nom))
+    id_lugar = id_actual(candidato["lugar"])
+    if id_lugar in nom.lugares or id_lugar.startswith(GKG + ":"):
+        return Objetivo.de_lugar(lugar(id_lugar, nom))
     vocabulario = almacen.vocabulario(VOCABULARIO_LUGARES)
-    return Objetivo(**vocabulario[candidato["lugar"]])
+    return Objetivo(**vocabulario[id_lugar])
 
 
 def preparar(
@@ -505,7 +507,7 @@ def _ampliar_lugares(almacen: Almacen, ubicacion: Ubicacion) -> None:
 
 def nombres_objetivo(id_lugar: str, objetivo: Objetivo) -> tuple[str, ...]:
     """Los nombres del objetivo del candidato: los del nomenclátor o el del vocabulario."""
-    sitio = nomenclator().lugares.get(id_lugar)
+    sitio = nomenclator().lugares.get(id_actual(id_lugar))
     if sitio is None:
         return (objetivo.nombre,)
     return (sitio.nombre, *sitio.alias, *sitio.ciudades)
@@ -532,7 +534,7 @@ def prefijos_genericos() -> tuple[str, ...]:
 
 def palabras_objetivo(id_lugar: str) -> frozenset[str]:
     """Palabras propias de los nombres de la instalación; vacío si no es una instalación."""
-    sitio = nomenclator().lugares.get(id_lugar)
+    sitio = nomenclator().lugares.get(id_actual(id_lugar))
     if sitio is None or sitio.tipo not in TIPO_APARENTE:
         return frozenset()
     genericos = prefijos_genericos()
