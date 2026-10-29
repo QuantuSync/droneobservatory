@@ -613,6 +613,13 @@ referencia con la fecha imprecisa a propósito, se retiró así el 29 de octubre
 - en una ficha de la referencia, un dato distinto de su valor comprobado.
 - un número de drones que ya cabe en el intervalo de la ficha («bis zu zehn Drohnen» con la ficha
   en 2-10, EODI-2025-00192).
+- quitar la interrupción de un aeropuerto: sale del cierre con su cita y se corrige ahí
+  (EODI-2025-00094, Brønnøysund: el experto decía que ninguna fuente hablaba de cierre y una lo
+  cuenta).
+
+Las separaciones quedan siempre para revisar, en cualquier ficha: la de 2026-00292 (grupo c) era
+el balance de un ministro y la de 2025-00036 sacaba una parte que ya es la ficha 2025-00084
+(`propuesta_separar` no sabe con qué ficha coincide cada parte).
 
 La pregunta `repaso_entrada/3` pide además el número de drones de este suceso en este lugar, no el
 de otro suceso que cite la noticia (EODI-2025-00051, Eindhoven, tomaba los «unos diez drones» de

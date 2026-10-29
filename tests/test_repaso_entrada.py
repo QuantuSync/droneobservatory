@@ -499,3 +499,21 @@ def test_las_fichas_dadas_se_vuelven_a_decidir_con_la_pregunta_de_ahora() -> Non
     nueva = vieja | {"version": peticiones.VERSION_REPASO}
     assert not repaso._por_decidir(nueva, ficha, [ficha["id"]])
     assert repaso._por_decidir({"huella": "otra"}, ficha, None)
+
+
+def test_la_separacion_queda_para_revisar_y_la_interrupcion_no_se_quita() -> None:
+    # Grupo d, 29 de octubre de 2026: la separación de EODI-2025-00036 sacaba una parte que ya es
+    # 2025-00084, y en Brønnøysund (2025-00094) el experto quitaba la interrupción que una fuente
+    # cuenta.
+    nada = repaso.Protegidas(frozenset())
+    ficha = _ficha("EODI-2025-00036", "NL", "2025-12-04T00:00Z")
+    partes = [{"fecha": "2025-12-04", "descripcion": "a", "fuentes": ["f1"]},
+              {"fecha": "2025-12-07", "descripcion": "b", "fuentes": ["f2"]}]  # fmt: skip
+    ajustada = repaso.ajustar({"frase_lugar": ["x", "y"], "partes": partes}, ficha, None, nada)
+    assert ajustada["cambios"] == [] and ajustada["para_revisar"] == [repaso.SEPARAR]
+    cierre = {**ficha, "tipo": "interrupcion_aeroportuaria"}
+    quitar = {"frase_lugar": ["x", "y"], "errores": [_error("tipo", "sobrevuelo")]}
+    ajustada = repaso.ajustar(quitar, cierre, None, nada)
+    assert ajustada["cambios"] == [] and "cierre" in ajustada["errores_fuera"][0]["razon"]
+    poner = {"frase_lugar": ["x", "y"], "errores": [_error("tipo", "interrupcion_aeroportuaria")]}
+    assert repaso.ajustar(poner, ficha, None, nada)["cambios"] == [repaso.DATO]
