@@ -365,13 +365,24 @@ def drones_fuera(error: Documento, incidente: Documento) -> str | None:
     return None
 
 
+# El tipo que el repaso no quita: la interrupción sale del cierre del aeropuerto con su cita y la
+# incursión, de la autoridad que dice que el dron entró desde fuera; se corrigen ahí.
+TIPOS_QUE_NO_SE_QUITAN = {
+    "interrupcion_aeroportuaria": "la interrupción sale del cierre del aeropuerto con su cita",
+    "incursion": "la incursión sale de la autoridad que dice que el dron entró desde fuera",
+}
+
+
 def tipo_fuera(error: Documento, incidente: Documento) -> str | None:
     """Por qué una corrección del tipo no se propone, o None: quita la interrupción de un
-    aeropuerto, que sale del cierre con su cita y se corrige ahí (EODI-2025-00094, Brønnøysund:
-    «ninguna fuente habla de cierre», y una lo cuenta)."""
+    aeropuerto o una incursión (TIPOS_QUE_NO_SE_QUITAN). En Brønnøysund (EODI-2025-00094) el
+    experto decía que ninguna fuente hablaba de cierre, y una lo cuenta; en Moldavia
+    (2026-00372) bajaba a sobrevuelo los cinco drones que el ejército dice que cruzaron su
+    espacio aéreo."""
     correcto = str(error.get("correcto") or "").strip()
-    if incidente.get("tipo") == "interrupcion_aeroportuaria" and correcto != incidente["tipo"]:
-        return "la interrupción sale del cierre del aeropuerto con su cita"
+    actual = incidente.get("tipo")
+    if actual in TIPOS_QUE_NO_SE_QUITAN and correcto != actual:
+        return TIPOS_QUE_NO_SE_QUITAN[str(actual)]
     return None
 
 
