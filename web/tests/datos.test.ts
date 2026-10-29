@@ -30,7 +30,7 @@ import {
 import * as vocabulario from "../src/datos/vocabulario.ts";
 import { CAMPOS_INCIDENTE, validarEstadoSistema, validarSinUbicacion } from "../src/datos/validar.ts";
 import { cierre } from "../src/datos/efecto.ts";
-import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../src/datos/afirmaciones.ts";
+import { afirmacionesDe, valorLegible } from "../src/datos/afirmaciones.ts";
 import { referenciaDeFrescura } from "../src/tiempo/frescura.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
 import {
@@ -618,12 +618,6 @@ describe("quién dice qué", () => {
       "C",
       "D",
     ]);
-  });
-
-  it("el rango sale solo de las fuentes A a C", () => {
-    const deDrones = afirmacionesDe(conAfirmaciones, ["drones.numero"]);
-    expect(rangoDeFuentes(deDrones, { min: 2, max: 10 })).toEqual({ min: 3, max: 10 });
-    expect(rangoDeFuentes([], { min: 2, max: 10 })).toEqual({ min: 2, max: 10 });
   });
 
   it("muestra cada valor como texto, sea del tipo que sea", () => {

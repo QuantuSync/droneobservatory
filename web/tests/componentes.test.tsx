@@ -82,7 +82,8 @@ describe("ficha de un incidente", () => {
     expect(screen.getByText("Dron no confirmado")).toBeTruthy();
     expect(screen.getByText("02/10/2025 · 22:18 UTC")).toBeTruthy();
     expect(screen.getByText("2–10")).toBeTruthy();
-    expect(screen.getByText(`(${es.ficha.rangoDeFuentes})`)).toBeTruthy();
+    // La cifra publicada, sin rótulos que la cambien (tests/pagina-datos.test.tsx).
+    expect(screen.queryByText(/fuentes A–C/)).toBeNull();
     expect(screen.getByText("Cierre del espacio aéreo")).toBeTruthy();
     expect(screen.getByText("EDDM", { exact: false })).toBeTruthy();
   });
@@ -155,7 +156,7 @@ describe("ficha de un incidente", () => {
     expect(screen.getByText("El centro de crisis retiró el aviso")).toBeTruthy();
   });
 
-  it("con los valores de cada fuente, el rango sale de las A–C y se despliega quién dice qué", async () => {
+  it("con los valores de cada fuente, la cifra es la publicada y se despliega quién dice qué", async () => {
     const conAfirmaciones = detalleIncidente(
       incidente({
         afirmaciones_publicas: [
@@ -171,7 +172,8 @@ describe("ficha de un incidente", () => {
       }),
     );
     render(<FichaIncidente t={es} idioma="es" incidente={conAfirmaciones} />);
-    expect(screen.getByText("3–10")).toBeTruthy();
+    expect(screen.getByText("2–10")).toBeTruthy();
+    expect(screen.queryByText("3–10")).toBeNull();
     const desplegable = screen.getByText(es.ficha.queDiceCadaFuente(3));
     await userEvent.click(desplegable);
     const lista = desplegable.closest("details")!;

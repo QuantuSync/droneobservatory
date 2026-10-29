@@ -1,8 +1,8 @@
 // Quién dice qué: los valores de cada campo según cada fuente pública, cuando el fichero
-// publicado los trae (afirmaciones_publicas). Sin ellos, la ficha usa el valor del campo.
+// publicado los trae (afirmaciones_publicas). Solo se enseñan junto al dato: el valor de la ficha
+// es siempre el publicado (lo decide la recogida), nunca uno calculado aquí con ellos.
 
-import { FIABILIDADES_DEL_RANGO } from "./vocabulario.ts";
-import type { AfirmacionPublica, IncidenteDetalle, Rango, RangoODesconocido } from "./tipos.ts";
+import type { AfirmacionPublica, IncidenteDetalle, Rango } from "./tipos.ts";
 
 export function afirmacionesDe(
   incidente: IncidenteDetalle,
@@ -22,25 +22,6 @@ function esRango(valor: unknown): valor is Rango {
   if (typeof valor !== "object" || valor === null) return false;
   const { min, max } = valor as Record<string, unknown>;
   return typeof min === "number" && typeof max === "number";
-}
-
-/**
- * Rango que cubren las fuentes de fiabilidad A a C: del menor mínimo al mayor máximo. Si
- * ninguna de ellas da una cifra, se queda el valor publicado del campo.
- */
-export function rangoDeFuentes(
-  afirmaciones: readonly AfirmacionPublica[],
-  publicado: RangoODesconocido | undefined,
-): RangoODesconocido | undefined {
-  const cifras = afirmaciones
-    .filter((afirmacion) => FIABILIDADES_DEL_RANGO.includes(afirmacion.fiabilidad))
-    .map((afirmacion) => afirmacion.valor)
-    .filter(esRango);
-  if (cifras.length === 0) return publicado;
-  return {
-    min: Math.min(...cifras.map((cifra) => cifra.min)),
-    max: Math.max(...cifras.map((cifra) => cifra.max)),
-  };
 }
 
 export type ValorLegible =

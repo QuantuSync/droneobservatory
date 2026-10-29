@@ -1,4 +1,4 @@
-import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
+import { afirmacionesDe, valorLegible } from "../datos/afirmaciones.ts";
 import { ACTOR_SIN_NOMBRE, atribucionResumida } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import { relato } from "../datos/relato.ts";
@@ -11,7 +11,6 @@ import type {
   RangoODesconocido,
 } from "../datos/tipos.ts";
 import {
-  esRangoAbierto,
   fechaHora,
   instante,
   jornadaEscrita,
@@ -173,30 +172,24 @@ function QueDiceCadaFuente({
   );
 }
 
+/** La cifra publicada, tal cual: lo que dice cada fuente va aparte («qué dice cada fuente»). */
 function Cifra({
   t,
   idioma,
-  valor: publicado,
+  valor,
   unidad,
-  afirmaciones = [],
 }: {
   t: Textos;
   idioma: Idioma;
   valor: RangoODesconocido | undefined;
   unidad?: string;
-  /** Lo que dice cada fuente sobre este campo: si lo hay, el rango sale de las A–C. */
-  afirmaciones?: readonly AfirmacionPublica[];
 }) {
-  const valor = rangoDeFuentes(afirmaciones, publicado);
   const texto = rango(valor, idioma);
   if (texto === null) return <span className="text-secundario">{t.ficha.desconocido}</span>;
   return (
     <>
       <span className="mono">{texto}</span>
       {unidad !== undefined && ` ${unidad}`}
-      {esRangoAbierto(valor) && (
-        <span className="text-xs text-secundario"> ({t.ficha.rangoDeFuentes})</span>
-      )}
     </>
   );
 }
@@ -236,12 +229,12 @@ export function FichaIncidente({ t, idioma, incidente, actualizado = null }: Pro
   const instalacion = objetivo !== undefined && objetivo.categoria !== "otra";
   const nombre = (instalacion ? objetivoEscrito(incidente, idioma) : null) ?? titulo;
   const modelo = modeloEscrito(drones?.modelo);
-  const vuelos: [RangoODesconocido | undefined, string, string][] = [
-    [consecuencias?.vuelos_desviados, t.ficha.vuelosDesviados, "consecuencias.vuelos_desviados"],
-    [consecuencias?.vuelos_cancelados, t.ficha.vuelosCancelados, "consecuencias.vuelos_cancelados"],
-    [consecuencias?.vuelos_retrasados, t.ficha.vuelosRetrasados, "consecuencias.vuelos_retrasados"],
-    [consecuencias?.heridos, t.ficha.heridos, "consecuencias.heridos"],
-    [consecuencias?.fallecidos, t.ficha.fallecidos, "consecuencias.fallecidos"],
+  const vuelos: [RangoODesconocido | undefined, string][] = [
+    [consecuencias?.vuelos_desviados, t.ficha.vuelosDesviados],
+    [consecuencias?.vuelos_cancelados, t.ficha.vuelosCancelados],
+    [consecuencias?.vuelos_retrasados, t.ficha.vuelosRetrasados],
+    [consecuencias?.heridos, t.ficha.heridos],
+    [consecuencias?.fallecidos, t.ficha.fallecidos],
   ];
   const medidas = respuesta?.medidas ?? [];
   const de = (campos: readonly string[]) => afirmacionesDe(incidente, campos);
@@ -250,7 +243,7 @@ export function FichaIncidente({ t, idioma, incidente, actualizado = null }: Pro
   const cierre = leerCierre(incidente.tipo, consecuencias);
   const rangoCierre =
     cierre?.clase === "con_duracion"
-      ? rango(rangoDeFuentes(de(["consecuencias.cierre.minutos"]), cierre.minutos), idioma)
+      ? rango(cierre.minutos, idioma)
       : null;
   const textoCierre =
     cierre === null
@@ -453,12 +446,7 @@ export function FichaIncidente({ t, idioma, incidente, actualizado = null }: Pro
           </Fila>
         ))}
         <Fila nombre={t.ficha.drones}>
-          <Cifra
-            t={t}
-            idioma={idioma}
-            valor={drones?.numero}
-            afirmaciones={de(["drones.numero"])}
-          />
+          <Cifra t={t} idioma={idioma} valor={drones?.numero} />
           {modelo !== null && (
             <span className="block text-xs text-secundario">
               {t.ficha.modelo}: {modelo}
@@ -481,16 +469,10 @@ export function FichaIncidente({ t, idioma, incidente, actualizado = null }: Pro
             <ul>
               {textoCierre !== null && <li>{textoCierre}</li>}
               {vuelos.map(
-                ([valor, unidad, campo]) =>
+                ([valor, unidad]) =>
                   tieneCifra(valor) && (
                     <li key={unidad}>
-                      <Cifra
-                        t={t}
-                        idioma={idioma}
-                        valor={valor}
-                        unidad={unidad}
-                        afirmaciones={de([campo])}
-                      />
+                      <Cifra t={t} idioma={idioma} valor={valor} unidad={unidad} />
                     </li>
                   ),
               )}

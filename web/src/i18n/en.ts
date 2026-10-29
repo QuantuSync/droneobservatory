@@ -686,7 +686,6 @@ export const en: Textos = {
     motivoDesmentido: "Reason for the denial",
     desconocido: "No data",
     minutos: (n) => `${n} min`,
-    rangoDeFuentes: "range across sources rated A–C",
     queDiceCadaFuente: (n) => (n === 1 ? "What the source says" : `What each source says (${n})`),
     valorSegun: "according to",
     cierreDe: (minutos) => `Closed for ${minutos} min`,
@@ -1102,7 +1101,8 @@ export const en: Textos = {
           {
             parrafo: [
               "Sources rated E and F are not published. When sources give different " +
-                "figures, the record shows the range covered by sources rated A to C.",
+                "figures, the record shows the figure for the incident given in the data and, " +
+                "under “What each source says”, the figure from each one.",
             ],
           },
         ],

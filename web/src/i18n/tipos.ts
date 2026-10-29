@@ -495,7 +495,6 @@ export interface Textos {
     motivoDesmentido: string;
     desconocido: string;
     minutos: (n: string) => string;
-    rangoDeFuentes: string;
     queDiceCadaFuente: (n: number) => string;
     valorSegun: string;
     cierreDe: (minutos: string) => string;

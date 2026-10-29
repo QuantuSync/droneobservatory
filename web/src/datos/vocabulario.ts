@@ -25,8 +25,6 @@ export const PRECISIONES = ["minuto", "hora", "dia", "aproximada"] as const;
 export const FIABILIDADES = ["A", "B", "C", "D", "E", "F"] as const;
 /** E y F nunca se publican. */
 export const FIABILIDADES_PUBLICAS = ["A", "B", "C", "D"] as const;
-/** Fiabilidades cuyas cifras forman el rango que muestra la ficha. */
-export const FIABILIDADES_DEL_RANGO: readonly string[] = ["A", "B", "C"];
 export const SENTIDOS = ["RU_UA", "UA_RU"] as const;
 export const CATEGORIAS_OBJETIVO = [
   "aeropuerto",
