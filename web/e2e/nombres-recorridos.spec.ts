@@ -12,6 +12,8 @@ import { join } from "node:path";
 import { expect, test } from "./base.ts";
 import type { BrowserContext, CDPSession, Page } from "@playwright/test";
 
+import { destino, publicados } from "./publicados.ts";
+
 const MAPA = "[data-mapa-listo=true]";
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "nombres");
 const OTRO_ALFABETO = /[Ͱ-ϿЀ-ӿ]/;
@@ -223,8 +225,10 @@ test.describe("nombres de lugar y fichas, como una persona", () => {
       const t = idioma === "es"
         ? { lugar: "Lugar", zona: "Frontera o interior" }
         : { lugar: "Place", zona: "Border or interior" };
+      // La ficha que queda si el repaso unió alguna a otra (e2e/publicados.ts).
+      const datos = await publicados(pagina.request);
       for (const caso of CASOS) {
-        await pagina.goto(ruta(caso.id, idioma), { waitUntil: "domcontentloaded" });
+        await pagina.goto(ruta(destino(datos, caso.id) ?? caso.id, idioma), { waitUntil: "domcontentloaded" });
         await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
         await leerComoPersona(pagina, contexto, browserName === "chromium", tactil);
         const titulo = (await pagina.locator("[data-ficha] article h2").first().textContent())?.trim() ?? "";

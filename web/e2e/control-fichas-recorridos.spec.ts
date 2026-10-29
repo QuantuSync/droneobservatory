@@ -12,6 +12,8 @@
 // - Moldavia (28 de noviembre de 2025): una sola ficha, la más antigua (EODI-2025-00243); los
 //   enlaces de 00247, 00328 y 00046 llevan a ella.
 // - Fichas corregidas por el repaso (CORREGIDAS) se abren y responden.
+// - Adónde lleva cada identificador (su ficha, la que queda si se unió o 404 si se retiró) se lee de
+//   los datos publicados (e2e/publicados.ts): un repaso posterior puede volver a unir fichas.
 // - Sin errores de consola y con los enlaces internos de las fichas respondiendo.
 //
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit (playwright.config.ts).
@@ -20,6 +22,8 @@ import { join } from "node:path";
 
 import { expect, test } from "./base.ts";
 import type { BrowserContext, CDPSession, Locator, Page } from "@playwright/test";
+
+import { destino, publicados } from "./publicados.ts";
 
 const MAPA = "[data-mapa-listo=true]";
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "control-fichas");
@@ -119,6 +123,11 @@ async function tocar(pagina: Page, elemento: Locator, tactil: boolean) {
   else await pagina.mouse.click(caja.x + caja.width / 2, caja.y + caja.height / 2);
 }
 
+/** La ficha a la que lleva la dirección de un identificador, según los datos publicados. */
+async function queda(pagina: Page, id: string): Promise<string> {
+  return destino(await publicados(pagina.request), id) ?? id;
+}
+
 async function enlacesInternos(pagina: Page): Promise<string[]> {
   const hrefs = await pagina.locator("[data-ficha] article a[href]").evaluateAll((enlaces) =>
     enlaces.map((a) => (a as HTMLAnchorElement).href).filter((h) => h.startsWith(location.origin)),
@@ -131,8 +140,10 @@ async function enlacesInternos(pagina: Page): Promise<string[]> {
   return rotos;
 }
 
+/** Abre la ficha (o la que queda, si el repaso la unió a otra: e2e/publicados.ts). */
 async function abrir(pagina: Page, contexto: BrowserContext, id: string, idioma: "es" | "en", chromium: boolean, tactil: boolean) {
   await pagina.goto(ruta(id, idioma), { waitUntil: "domcontentloaded" });
+  await expect(pagina).toHaveURL(new RegExp(`${await queda(pagina, id)}$`), { timeout: 30_000 });
   await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
   await leerComoPersona(pagina, contexto, chromium, tactil);
   return pagina.locator("[data-ficha] article").first();
@@ -168,7 +179,7 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       await capturar(pagina, errores, join(CAPTURAS, `${NUREMBERG}-original-${idioma}-${info.project.name}.png`));
       // El enlace antiguo lleva a la ficha que queda.
       await pagina.goto(ruta(NUREMBERG_ANTIGUO, idioma), { waitUntil: "domcontentloaded" });
-      await expect(pagina).toHaveURL(new RegExp(`${NUREMBERG}$`), { timeout: 30_000 });
+      await expect(pagina).toHaveURL(new RegExp(`${await queda(pagina, NUREMBERG_ANTIGUO)}$`), { timeout: 30_000 });
       // Bulgaria: una ficha, y los enlaces antiguos llevan a ella.
       const bulgaria = await abrir(pagina, contexto, BULGARIA, idioma, chromium, tactil);
       await expect(bulgaria).toBeVisible();
@@ -176,11 +187,11 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       await capturar(pagina, errores, join(CAPTURAS, `${BULGARIA}-${idioma}-${info.project.name}.png`));
       for (const antiguo of BULGARIA_ANTIGUOS) {
         await pagina.goto(ruta(antiguo, idioma), { waitUntil: "domcontentloaded" });
-        await expect(pagina).toHaveURL(new RegExp(`${BULGARIA}$`), { timeout: 30_000 });
+        await expect(pagina).toHaveURL(new RegExp(`${await queda(pagina, antiguo)}$`), { timeout: 30_000 });
       }
       // El ataque del 6 de octubre sigue siendo otra ficha.
       await pagina.goto(ruta(BULGARIA_6_OCTUBRE, idioma), { waitUntil: "domcontentloaded" });
-      await expect(pagina).toHaveURL(new RegExp(`${BULGARIA_6_OCTUBRE}$`), { timeout: 30_000 });
+      await expect(pagina).toHaveURL(new RegExp(`${await queda(pagina, BULGARIA_6_OCTUBRE)}$`), { timeout: 30_000 });
       expect(errores).toEqual([]);
     });
 
@@ -196,7 +207,7 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       // Los enlaces de las fichas unidas llevan a la más antigua.
       for (const antiguo of MOLDAVIA_UNIDAS) {
         await pagina.goto(ruta(antiguo, idioma), { waitUntil: "domcontentloaded" });
-        await expect(pagina).toHaveURL(new RegExp(`${MOLDAVIA}$`), { timeout: 30_000 });
+        await expect(pagina).toHaveURL(new RegExp(`${await queda(pagina, antiguo)}$`), { timeout: 30_000 });
       }
       expect(errores).toEqual([]);
     });
@@ -206,7 +217,12 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       test.setTimeout(600_000);
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
+      const datos = await publicados(pagina.request);
       for (const id of CORREGIDAS) {
+        if (destino(datos, id) === null) {
+          expect((await pagina.request.get(ruta(id, idioma))).status(), `${id} retirada`).toBe(404);
+          continue;
+        }
         const ficha = await abrir(pagina, contexto, id, idioma, browserName === "chromium", tactil);
         await expect(ficha.locator("h2, h3").first()).toBeVisible();
         expect(await enlacesInternos(pagina), `${id} enlaces internos`).toEqual([]);
