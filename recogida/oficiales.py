@@ -94,7 +94,10 @@ PAUSA = timedelta(hours=6)
 # Una fuente que lleva este tiempo seguido en pausa se avisa al responsable, una sola vez.
 AVISO_PAUSA = timedelta(days=7)
 CURSOR_PAUSAS = "oficiales_pausas"
-_FORMATOS = {"minuto": "%Y-%m-%dT%H:%MZ", "dia": "%Y-%m-%d"}
+# El día va a las 00:00, como en el resto de las fichas: «2026-10-24» a secas no cumple el
+# esquema, y hasta el 29 de octubre de 2026 la ficha no se guardaba y la nota de una página con
+# solo el día (mapn, mil_lv, mod_lv) no se enlazaba nunca.
+_FORMATOS = {"minuto": "%Y-%m-%dT%H:%MZ", "dia": "%Y-%m-%dT00:00Z"}
 # Afirmación expresa de que había drones, sin reservas.
 _AFIRMA = re.compile(r"bekræft|bestätig|confirm|potwierdz|confirmă", re.IGNORECASE)
 _RESERVA = re.compile(
@@ -399,7 +402,8 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
     }
     try:
         almacen.guardar_incidente(incidente, ahora, modelos)
-    except DocumentoInvalido:
+    except DocumentoInvalido as error:
+        registro.warning("oficiales: la nota %s no cabe en %s: %s", nota.id, incidente["id"], error)
         return None
     return str(incidente["id"])
 
