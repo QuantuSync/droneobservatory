@@ -363,3 +363,18 @@ def test_la_nota_que_no_cuenta_un_suceso_no_crea_nada() -> None:
     assert (recuentos.relevantes, recuentos.enlazadas, recuentos.a_entrada) == (1, 0, 0)
     assert almacen.candidatos() == []
     assert almacen.cursor(oficiales.CURSOR_SIN_FICHA) is None
+
+
+def test_la_nota_con_solo_el_dia_se_guarda_en_su_ficha() -> None:
+    almacen = Almacen.abrir()
+    id_ = extraer_ejemplo(almacen)
+    (nota, _) = oficiales.leer_rss(RSS, FUENTE)
+    # Las páginas de mapn, mil_lv o mod_lv solo dan el día de la nota.
+    de_dia = oficiales.Nota(
+        nota.fuente, nota.id, nota.titulo, nota.enlace, datetime(2025, 9, 23, tzinfo=UTC),
+        nota.texto, "dia",
+    )  # fmt: skip
+    assert oficiales.enlazar(almacen, de_dia, AHORA, MODELOS) == id_
+    incidente = almacen.incidente(str(id_))
+    assert incidente is not None
+    assert incidente["fuentes"][-1]["fecha"] == {"valor": "2025-09-23T00:00Z", "precision": "dia"}
