@@ -501,7 +501,7 @@ con su cita.
   suceso con su instalación que la ficha anterior tenía con la frase de una fuente que la nueva
   sigue teniendo:
   - si la nueva no los da (fecha de publicación, «sin dato», cierre desconocido, un lugar menos
-    preciso), se conservan con su afirmación;
+    preciso sin frase que lo diga), se conservan con su afirmación;
   - si los da distintos con otra frase, también se conservan, y la contradicción queda en el
     control (`reextraccion:<id>`): la ficha se verifica en la misma recogida con sus fuentes
     aunque no hayan cambiado (`control_fichas.contradicha`), y la verificación decide. Nunca

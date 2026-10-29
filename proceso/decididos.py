@@ -145,16 +145,20 @@ def _nivel(incidente: Documento) -> int:
     return NIVELES_LUGAR.index(nivel) if nivel in NIVELES_LUGAR else 0
 
 
+_CAMPOS_LUGAR = ("lugar_suceso", "localidad", "objetivo_nombre")
+
+
 def _juicio_lugar(nuevo: Documento, anterior: Documento, fuentes: set[str]) -> str | None:
-    """Solo pierde el lugar la extracción que lo sabe peor (otro nombre del mismo sitio, al mismo
-    nivel, no es una pérdida)."""
+    """El lugar cambia por uno menos preciso (otro nombre del mismo sitio, al mismo nivel, no
+    cuenta). Si la nueva lo dice con su frase («Marea Neagră, la aproximativ 24 de kilometri de
+    Constanța» frente al puerto, EODI-2026-00669), es una contradicción que decide el control."""
     if _nivel(nuevo) >= _nivel(anterior):
         return None
     if (nuevo.get("lugar") or {}).get("pais") != (anterior.get("lugar") or {}).get("pais"):
         return None
-    if not _respaldada(anterior, ("lugar_suceso", "localidad", "objetivo_nombre"), fuentes):
+    if not _respaldada(anterior, _CAMPOS_LUGAR, fuentes):
         return None
-    return "pierde"
+    return "contradice" if _respaldada(nuevo, ("lugar_suceso",), fuentes) else "pierde"
 
 
 _JUICIOS = {

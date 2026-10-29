@@ -109,6 +109,10 @@ def test_el_lugar_no_pasa_a_uno_menos_preciso(almacen: Almacen) -> None:
     assert anterior["lugar"]["nivel"] == "instalacion"
     nuevo["lugar"] = {"pais": "DK", "nivel": "pais"}
     nuevo.pop("objetivo", None)
+    # La nueva lo dice con su frase: lo decide el control.
+    assert decididos.juicios(nuevo, anterior) == {"lugar": "contradice"}
+    # La nueva no lo da: se conserva.
+    nuevo["afirmaciones"] = [a for a in nuevo["afirmaciones"] if a["campo"] != "lugar_suceso"]
     conservacion = decididos.conservar(nuevo, anterior)
     assert conservacion.conservados == ["lugar"]
     assert conservacion.incidente["lugar"] == anterior["lugar"]
