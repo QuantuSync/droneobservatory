@@ -236,9 +236,11 @@ def patron(frase: str) -> str | None:
     return None
 
 
-# Hora local escrita en la frase: «20:00», «20h15», «4 h 30», «20.15 Uhr», «kl. 20.15», «um 21 Uhr».
+# Hora local escrita en la frase: «20:00», «20h15», «4 h 30», «20.15 Uhr», «kl. 20.15», «um 21 Uhr»,
+# «no plkst. 12.39» (las Fuerzas Armadas letonas, EODI-2026-00704).
 _CONTEXTO_HORA = (
-    r"(?<!\w)(?:kl\.?|klokken|klockan|um|godz\.?|ora|orei|ore|à|a las|at|around|ok\.|ca\.)"
+    r"(?<!\w)(?:kl\.?|klokken|klockan|um|godz\.?|plkst\.?|ora|orei|ore|à|a las|at|around|ok\.|"
+    r"ca\.)"
 )
 _FIN = r"(?![\d]|[.,:]\d)"
 _HORA = re.compile(

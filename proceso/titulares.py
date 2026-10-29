@@ -224,10 +224,24 @@ def concuerda(titulo: str, idioma: str) -> bool:
     return concordar(titulo, idioma) == titulo
 
 
+# «Drone» es la palabra inglesa e italiana; en español es «dron»: «Drone agricola bloquea el
+# aeropuerto de Cuneo-Levaldigi» (EODI-2026-00056) y «Drone interrumpe el tráfico en el aeropuerto
+# de Larnaca» (EODI-2025-00057) copiaban la de la fuente. Sin «dron», el titular tampoco se leía
+# como un dron y no llevaba el «posible» de su presencia, que sí llevaba el inglés.
+_DRONE_ES = re.compile(r"\bdrone\b", re.IGNORECASE)
+
+
+def en_castellano(titulo: str, idioma: str) -> str:
+    """El titular en español con «dron» y no «drone»."""
+    if idioma != "es":
+        return titulo
+    return _DRONE_ES.sub(lambda m: _mayuscula("dron", m.group(0)), titulo)
+
+
 def ajustar(titulo: str, presencia: str | None, idioma: str) -> str:
     """El titular coherente con la presencia (el mismo si ya lo es)."""
     titulo = _POSIBLE_REPETIDO.sub(lambda m: m.group(0).split()[0], titulo)
-    titulo = concordar(titulo, idioma)
+    titulo = concordar(en_castellano(titulo, idioma), idioma)
     if idioma not in _DRON:
         return titulo
     titulo = _sin_doble(titulo, idioma)

@@ -48,6 +48,7 @@ vuelve a extraerse con el experto (cursor `esperan_experto`, con `revision`).
 
 import contextlib
 import hashlib
+import json
 import logging
 import time
 from collections.abc import Callable
@@ -66,6 +67,7 @@ from proceso.control_fichas import sin_oficiales
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import activo, aplicar_reglas, construir, huella
 from proceso.noticias import (
+    DIRECTORIO,
     GKG,
     TIPO_APARENTE,
     Nomenclator,
@@ -546,10 +548,28 @@ def palabras_objetivo(id_lugar: str) -> frozenset[str]:
     )
 
 
+@cache
+def medios_oficiales() -> frozenset[str]:
+    """Los medios de las fuentes oficiales (configuracion/fuentes_oficiales.json)."""
+    datos = json.loads((DIRECTORIO / "fuentes_oficiales.json").read_text(encoding="utf-8"))
+    return frozenset(str(f["medio"]) for f in datos["fuentes"])
+
+
+def publicacion(articulo: Documento) -> datetime:
+    """La hora de publicación del artículo. La nota oficial que solo da el día entra a las 00:00
+    UTC de ese día (recogida/oficiales.py) y se publicó a cualquier hora de él: cuenta el día
+    entero. Si no, la hora del suceso que da su texto parecía posterior a la nota y se perdía
+    (no plkst. 12.39, la alerta de Letonia del 22 de octubre de 2026, EODI-2026-00704)."""
+    fecha = datetime.fromisoformat(articulo["fecha"])
+    if articulo.get("medio") in medios_oficiales() and (fecha.hour, fecha.minute) == (0, 0):
+        return fecha + timedelta(days=1)
+    return fecha
+
+
 def publicaciones(articulos: list[Documento], enviadas: list[str]) -> tuple[datetime, ...]:
     """La hora de publicación de cada fuente enviada, en su orden (la del primer artículo si
     una ya no está entre los del candidato)."""
-    por_url = {a["url"]: datetime.fromisoformat(a["fecha"]) for a in articulos}
+    por_url = {a["url"]: publicacion(a) for a in articulos}
     primera = min(por_url.values(), default=datetime.now(UTC))
     return tuple(por_url.get(url, primera) for url in enviadas)
 

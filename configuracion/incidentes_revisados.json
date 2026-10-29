@@ -4132,6 +4132,18 @@
         "fecha": "2026-10-28",
         "en": "https://web.archive.org/web/20250428004516/https://www.tu.no/nyhetsstudio/observerte-drone-i-over-400-meters-hoeyde-flesland-omdirigerte-flytrafikken/76744 (copia de archive.org del 28.04.2025; nota de NTB del 19.04.2025 a las 18:16 hora de Noruega, que cita al jefe de operaciones Tore-André Brakstad, del distrito policial del Oeste); el original y la fuente que tenía la ficha, https://tu.no/nyhetsstudio/bergen-lufthavn-flesland-stengte-paa-grunn-av-ulovlig-droneflyging/76744, dan 404"
       }
+    },
+    {
+      "incidente": "EODI-2026-00704",
+      "enlace": "https://www.mil.lv/lv/zinas/iespejams-apdraudejums-latvijas-gaisa-telpa-nosledzies",
+      "medio": "Nacionālie bruņotie spēki",
+      "fecha": "2026-10-22",
+      "idioma": "lv",
+      "frase": "Nacionālie bruņotie spēki informē, ka iespējamais gaisa telpas apdraudējums Krāslavas un Rēzeknes novadā ir noslēdzies plkst. 13.16.",
+      "comprobada": {
+        "fecha": "2026-10-29",
+        "en": "https://www.mil.lv/lv/zinas/iespejams-apdraudejums-latvijas-gaisa-telpa-nosledzies (nota de las Fuerzas Armadas de Letonia del 22.10.2026: el posible peligro en el espacio aéreo de Krāslava y Rēzekne terminó a las 13.16, hora de Letonia)"
+      }
     }
   ],
   "titulares": [
@@ -5211,6 +5223,65 @@
       "motivo": {
         "es": "Una portavoz de la Bundeswehr confirma que los soldados vieron el dron y que se derribó.",
         "en": "A Bundeswehr spokeswoman confirms the soldiers saw the drone and that it was shot down."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00704",
+      "inicio": {
+        "valor": "2026-10-22T09:39Z",
+        "precision": "minuto",
+        "cita": "Nacionālie bruņotie spēki informē, ka no plkst. 12.39 iespējams apdraudējums Latvijas gaisa telpā pašlaik ir izsludināts Krāslavas un Rēzeknes novadā.",
+        "motivo": "mil.lv y mod.gov.lv: alerta de posible peligro en el espacio aéreo de Krāslava y Rēzekne desde las 12.39 del jueves 22 de octubre de 2026 hasta las 13.16, hora de Letonia (UTC+3); la ficha tomaba la fecha de publicación de la nota",
+        "fin": "2026-10-22T10:16Z",
+        "fin_cita": "Nacionālie bruņotie spēki informē, ka iespējamais gaisa telpas apdraudējums Krāslavas un Rēzeknes novadā ir noslēdzies plkst. 13.16."
+      },
+      "motivo": {
+        "es": "Las Fuerzas Armadas de Letonia declararon el posible peligro en el espacio aéreo de Krāslava y Rēzekne desde las 12:39 hasta las 13:16 del jueves 22 de octubre de 2026, hora de Letonia (09:39-10:16 UTC).",
+        "en": "The Latvian Armed Forces declared the possible airspace threat in Krāslava and Rēzekne from 12:39 to 13:16 on Thursday 22 October 2026, Latvian time (09:39-10:16 UTC)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00056",
+      "titulo": {
+        "es": "Dron agrícola bloquea el aeropuerto de Cuneo-Levaldigi",
+        "en": "Agricultural drone blocks Cuneo-Levaldigi airport"
+      },
+      "motivo": {
+        "es": "El titular en español copiaba el italiano «drone agricolo» («Drone agricola bloquea…»).",
+        "en": "The Spanish headline copied the Italian «drone agricolo» («Drone agricola bloquea…»)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00054",
+      "titulo": {
+        "es": "Dron no autorizado en el espacio aéreo del aeropuerto de Alta",
+        "en": "Unauthorized drone in Alta Airport airspace"
+      },
+      "motivo": {
+        "es": "Los titulares dejaban sin traducir el noruego «Alta lufthavn» (el aeropuerto de Alta).",
+        "en": "The headlines left the Norwegian «Alta lufthavn» (Alta Airport) untranslated."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00136",
+      "titulo": {
+        "es": "Suspendidos los vuelos en el aeropuerto de Bruselas por un posible dron",
+        "en": "Flights suspended at Brussels Airport over possible drone sighting"
+      },
+      "motivo": {
+        "es": "El titular en español decía «Brussels Airport» en inglés.",
+        "en": "The Spanish headline said «Brussels Airport» in English."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00199",
+      "titulo": {
+        "es": "Tráfico aéreo detenido brevemente en el aeropuerto de Bruselas tras un aviso de posible dron",
+        "en": "Air traffic briefly halted at Brussels Airport after possible drone report"
+      },
+      "motivo": {
+        "es": "El titular en español decía «Brussels Airport» en inglés.",
+        "en": "The Spanish headline said «Brussels Airport» in English."
       }
     }
   ],
