@@ -717,6 +717,10 @@
       "conserva": "EODI-2025-00243",
       "motivo": "el mismo suceso: los dos drones que entraron en el espacio aéreo de Moldavia la noche del 28 al 29 de noviembre de 2025 y el cierre temporal del espacio aéreo (Poliția de Frontieră y Ministerul Apărării). Queda 00243, sin atribución: ninguna autoridad atribuye los drones con sus palabras (la de la presidenta Maia Sandu es indirecta, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), y 00039 (dos notas de news.yam.md) no tenía ninguna",
       "motivo_en": "the same event: the two drones that entered Moldovan airspace on the night of 28 to 29 November 2025 and the temporary closure of the airspace (Border Police and Ministry of Defence). 00243 stays, with no attribution: no authority attributes the drones in its own words (President Maia Sandu's is reported, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), and 00039 (two news.yam.md reports) had none"
+    },
+    {
+      "registros": ["EODI-2026-00541", "EODI-2026-00535"],
+      "motivo": "el mismo suceso: EODI-2026-00535 solo aporta la noticia de novinite.com del petrolero YARA J alcanzado frente a Sulina el 14 de octubre de 2026; el experto la vio como una declaración general del ministro, no como otro suceso (revisado el 29 de octubre de 2026)"
     }
   ],
   "reextraer": [

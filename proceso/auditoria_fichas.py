@@ -550,12 +550,15 @@ def _unidas_a_mano() -> list[frozenset[str]]:
 
 
 def uniones_marcadas(
-    documentos: list[Documento], del_experto: frozenset[frozenset[str]] = frozenset()
+    documentos: list[Documento],
+    del_experto: frozenset[frozenset[str]] = frozenset(),
+    a_mano: Iterable[frozenset[str]] = (),
 ) -> list[str]:
     """Las uniones vigentes (absorbido→destino) entre fichas que una revisión dio por distintas
     (separación con «distintos» o sección `distintos`) o que el experto dio por distintas en el
-    control, salvo las que una revisión unió a mano después (sección `unir`) (V)."""
-    a_mano = _unidas_a_mano()
+    control, salvo las que una revisión unió a mano (sección `unir`, o `a_mano`: las fusiones
+    revisadas a mano de `incidentes.uniones_a_mano`) (V)."""
+    a_mano = [*_unidas_a_mano(), *a_mano]
     por_id = {str(d["id"]): d for d in documentos}
     salida = []
     for documento in documentos:
@@ -621,11 +624,13 @@ def auditar(
     cambios: Iterable[Documento] = (),
     copias: dict[str, Documento] | None = None,
     del_experto: frozenset[frozenset[str]] = frozenset(),
+    a_mano: Iterable[frozenset[str]] = (),
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
     son los de las últimas 48 horas (`Almacen.cambios_desde`), para K; `copias`, las copias
     archivadas de los enlaces (`Almacen.copias_archivadas`), para Q; `del_experto`, los pares
-    que el experto dio por distintos (`incidentes.distintos_del_experto`), para V."""
+    que el experto dio por distintos (`incidentes.distintos_del_experto`) y las uniones hechas a
+    mano (`incidentes.uniones_a_mano`), para V."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
     for documento in vistos:
@@ -645,7 +650,7 @@ def auditar(
         resultado["Q"] = [str(d["id"]) for d in vistos
                           if incidentes.activo(d) and sin_fuente_legible(d, copias)]  # fmt: skip
     resultado["L"] = autoridad_perdida(vistos)
-    resultado["V"] = uniones_marcadas(vistos, del_experto)
+    resultado["V"] = uniones_marcadas(vistos, del_experto, a_mano)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
                       if i in vigentes]  # fmt: skip
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor

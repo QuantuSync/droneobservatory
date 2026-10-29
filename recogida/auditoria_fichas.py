@@ -39,6 +39,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ")),
             almacen.copias_archivadas(),
             incidentes.distintos_del_experto(almacen),
+            incidentes.uniones_a_mano(almacen),
         )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))
