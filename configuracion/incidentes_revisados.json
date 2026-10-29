@@ -7656,7 +7656,8 @@
   ],
   "reponer": [
     {"incidente": "EODI-2025-00312", "motivo": {"es": "La Policía de Moldavia dio la fecha: el dron se identificó el 29 de noviembre de 2025 (Moldpres).", "en": "Moldovan police gave the date: the drone was identified on 29 November 2025 (Moldpres)."}},
-    {"incidente": "EODI-2026-00056", "motivo": {"es": "La fecha la da punto-informatico.it: la tarde del 2 de mayo de 2026.", "en": "punto-informatico.it gives the date: the late afternoon of 2 May 2026."}}
+    {"incidente": "EODI-2026-00056", "motivo": {"es": "La fecha la da punto-informatico.it: la tarde del 2 de mayo de 2026.", "en": "punto-informatico.it gives the date: the late afternoon of 2 May 2026."}},
+    {"incidente": "EODI-2026-00181", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 28 de octubre de 2026 decía que no se sabía la fecha, pero el informe del UK Airprox Board que cita worcesternews.co.uk da el día: las 11:30 del 21 de mayo de 2026. La ficha además estaba revisada a mano.", "en": "Undone: entry review before PR 357, contradicts its source. The 28 October 2026 entry review withdrew it for an unknown date, but the UK Airprox Board report cited by worcesternews.co.uk gives the day: 11:30 on 21 May 2026. The record had also been reviewed by hand."}}
   ],
   "separar": [
     {
@@ -10295,6 +10296,7 @@
   "datos": [
     {"incidente": "EODI-2025-00312", "campo": "inicio", "valor": "2025-11-29", "cita": "According to the General Police Inspectorate, the drone was identified on 29 November.", "enlace": "https://www.moldpres.md/eng/society/prime-minister-on-drone-found-in-pepeni-we-take-this-case-seriously-it-must-be-investigated", "pais": "MD", "motivo": "el dron Gerbera del campo de Pepeni (Sîngerei) se identificó el 29 de noviembre de 2025, según la Inspección General de la Policía (Moldpres, 4 de diciembre de 2025); la ficha se había retirado por no saber la fecha"},
     {"incidente": "EODI-2026-00056", "campo": "inicio", "valor": "2026-05-02", "cita": "è stato individuato dagli addetti alla sicurezza dell’aeroporto nel tardo pomeriggio del 2 maggio.", "enlace": "https://punto-informatico.it/drone-agricolo-bloccato-aeroporto-cuneo", "pais": "IT", "motivo": "el dron agrícola se vio junto al aeropuerto de Cuneo-Levaldigi en la tarde del 2 de mayo de 2026 (punto-informatico.it, publicado el 4 de mayo); la ficha se había retirado por no saber la fecha"},
+    {"incidente": "EODI-2026-00181", "campo": "inicio", "valor": "2026-05-21", "cita": "the reported altitude and description of the object spotted at 11.30am on May 21 were sufficient to indicate it could have been a drone", "enlace": "https://worcesternews.co.uk/news/26584538.drone-forces-a400m-atlas-crew-abandon-hereford-military-exercise", "pais": "GB", "motivo": "deshecho: repaso anterior al PR 357, contradice a su fuente: el UK Airprox Board sitúa el dron junto al A400M Atlas a las 11:30 del 21 de mayo de 2026 (evaluado en su reunión del 21 de julio; noticia del 26 de septiembre); la ficha se había retirado por no saber la fecha"},
     {
       "incidente": "EODI-2026-00582",
       "campo": "lugar",
