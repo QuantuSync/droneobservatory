@@ -124,6 +124,8 @@ from proceso import (
     titulares,
 )
 from proceso.presencia import (
+    MOTIVO_PRUEBAS_PRENSA,
+    MOTIVO_SIN_BASE,
     atribuida_por_autoridad,
     documento_oficial_decide,
     presencias_revisadas,
@@ -641,6 +643,24 @@ def _tras_extraccion(fecha: str, extraidas: list[str]) -> bool:
     )
 
 
+def _motivo_al_guardar(motivo: str) -> bool:
+    """El motivo que anota el guardado de cualquier versión (proceso/decidir.motivo)."""
+    return motivo.startswith("un solo sitio decide") or motivo in (
+        MOTIVO_PRUEBAS_PRENSA, MOTIVO_SIN_BASE,
+    )  # fmt: skip
+
+
+def _guardados_con_motivo(cambios: list[Documento]) -> set[tuple[str, str]]:
+    """(incidente, fecha) de los guardados de otro paso que el de la extracción: el control, una
+    revisión, una separación o una unión anotan su motivo en el mismo instante."""
+    return {
+        (str(c["entidad_id"]), str(c.get("fecha")))
+        for c in cambios
+        if c.get("tabla") == "incidentes_motivos"
+        and not _motivo_al_guardar(str((c.get("nuevo") or {}).get("motivo") or ""))
+    }  # fmt: skip
+
+
 def perdidos_al_extraer(
     vigentes: dict[str, Documento],
     cambios: Iterable[Documento],
@@ -649,12 +669,17 @@ def perdidos_al_extraer(
     """W: «<id> <dato>» de las fichas vigentes que perdieron al volver a extraerse un dato decidido
     con la frase de una fuente que siguen teniendo (proceso/decididos.py) y aún no lo han
     recuperado. EODI-2026-00066 pasó del 13 de septiembre a la fecha de publicación de la noticia
-    al volver a extraerla el 29 de octubre de 2026."""
+    al volver a extraerla el 29 de octubre de 2026. Lo que quita otro paso en la misma recogida
+    (el control: «ninguna fuente da el número») deja su motivo y no cuenta."""
     from proceso import decididos
 
+    cambios = list(cambios)
+    de_otro_paso = _guardados_con_motivo(cambios)
     resultado: set[str] = set()
     for cambio in cambios:
         if cambio.get("tabla", "incidentes") != "incidentes" or not cambio.get("fecha"):
+            continue
+        if (str(cambio["entidad_id"]), str(cambio["fecha"])) in de_otro_paso:
             continue
         anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
         actual = vigentes.get(str(cambio["entidad_id"]))
