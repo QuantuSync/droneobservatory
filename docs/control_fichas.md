@@ -479,6 +479,39 @@ con su cita.
   lo escribe. El fin revisado a mano (`titulares`, `inicio.fin` con `fin_cita`) lleva su frase.
 - **Comprobación fija**: la O de la auditoría, sobre lo que publica la web.
 
+### Lo decidido no se pierde al volver a extraer (desde el 30 de octubre de 2026)
+
+- **El caso**: la recogida de las 20:17 UTC del 29 de octubre de 2026 volvió a extraer
+  EODI-2026-00066 (Shannon) con el experto. La extracción nueva no devolvió el día («on Sunday,
+  September 13th») y la ficha pasó a la fecha de publicación de la noticia (22/09). Antes, la
+  2025-00060 (Vilna) perdió así su dron («galimai pastebėto drono») el 23 de octubre.
+- **La causa**: una extracción nueva rehace la ficha desde cero (`proceso/extraccion._alta`).
+  Conservaba el alta, la unión, el episodio, el ataque, las fuentes oficiales y lo de los
+  registros de detalle; lo revisado a mano lo vuelve a poner `proceso/decidir.py` al guardar, lo
+  rectificado por una autoridad `proceso/rectificaciones.mantener`, las uniones del control y del
+  repaso `reaplicar_uniones` y las correcciones del control `aplicar_verificaciones`. Lo que la
+  extracción anterior había decidido con la frase de una fuente no lo conservaba nadie.
+- **Las vías**: toda extracción nueva de un candidato con ficha: fuentes nuevas, la espera del
+  experto, la revisión de las decisiones del base, la reextracción programada
+  (`revisados.reextraer`) y la de los retirados sin país, y las que siguen a una separación o a
+  una unión. `extraccion.reconstruir` (rehacer desde la ficha guardada, sin llamar al modelo) no
+  es volver a extraer: lo que quitan las reglas de ahora se va.
+- **La regla** (`proceso/decididos.py`, en `_alta` solo con una extracción nueva): el día y la
+  hora del inicio con su fin, el número de drones, el cierre con su duración y el lugar del
+  suceso con su instalación que la ficha anterior tenía con la frase de una fuente que la nueva
+  sigue teniendo:
+  - si la nueva no los da (fecha de publicación, «sin dato», cierre desconocido, un lugar menos
+    preciso), se conservan con su afirmación;
+  - si los da distintos con otra frase, también se conservan, y la contradicción queda en el
+    control (`reextraccion:<id>`): la ficha se verifica en la misma recogida con sus fuentes
+    aunque no hayan cambiado (`control_fichas.contradicha`), y la verificación decide. Nunca
+    cambia en silencio;
+  - tras una separación, la fuente que daba el dato ya no está en la ficha: el dato se va con su
+    suceso. La misma frase leída con las reglas de ahora tampoco es una contradicción.
+- **Comprobación fija**: la W de la auditoría, «dato decidido perdido en una reextracción»: un
+  cambio de las últimas 48 horas guardado tras una extracción de su candidato que quitó un dato
+  decidido y que la ficha no ha recuperado. Pruebas en `tests/test_decididos.py`.
+
 ## Filtro de entrada (desde el 28 de octubre de 2026)
 
 Ninguna ficha nueva se publica sin que el experto haya comprobado si repite un suceso que ya

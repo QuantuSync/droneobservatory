@@ -62,7 +62,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, modelos, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import declaraciones, detalle, escalado, no_es_suceso, presencia
+from proceso import decididos, declaraciones, detalle, escalado, no_es_suceso, presencia
 from proceso.control_fichas import sin_oficiales
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import activo, aplicar_reglas, construir, huella
@@ -735,7 +735,9 @@ def procesar_respuesta(
                     *conservar,
                 ]
         if validada.publicable and not conservar and descarte is None:
-            incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
+            incidente_id = _alta(
+                almacen, peticion, validada, ahora, modelos_base, documento, extraida=True
+            )
     if publicada is not None and (conservar or incidente_id is None):
         # Nada publicado se retira ni se rebaja sin el experto: la ficha publicada se queda como
         # estaba y el candidato se repite con él.
@@ -1146,6 +1148,35 @@ def sin_oficiales_del_filtro(almacen: Almacen, incidente: Documento) -> Document
     return sin_oficiales(incidente, fuera, instante_)[0]
 
 
+# La clave de la contradicción de una extracción nueva con lo decidido de la ficha: la verifica
+# el control de las fichas (recogida/control_fichas.py).
+PREFIJO_REEXTRACCION = "reextraccion:"
+
+
+def conservar_decididos(
+    almacen: Almacen, incidente: Documento, anterior: Documento, ahora: datetime
+) -> Documento:
+    """El incidente rehecho por una extracción nueva con lo decidido de la ficha anterior que la
+    nueva no da (el día de EODI-2026-00066 con «Sunday, September 13th» pasó a la fecha de
+    publicación al volver a extraerla el 29 de octubre de 2026) o contradice con otra frase: eso
+    no cambia en silencio, lo verifica el control."""
+    conservacion = decididos.conservar(incidente, anterior)
+    if conservacion.conservados:
+        registro.info("%s: se conserva lo decidido que la extracción nueva no da: %s",
+                      incidente["id"], ", ".join(conservacion.conservados))  # fmt: skip
+    if conservacion.contradichos:
+        registro.warning("%s: la extracción nueva contradice %s; lo verifica el control",
+                         incidente["id"],
+                         ", ".join(c["dato"] for c in conservacion.contradichos))  # fmt: skip
+        almacen.guardar_controles(
+            {PREFIJO_REEXTRACCION + incidente["id"]: {
+                "fecha": _fecha(ahora), "contradichos": conservacion.contradichos,
+            }},
+            _fecha(ahora),
+        )  # fmt: skip
+    return conservacion.incidente
+
+
 def _alta(
     almacen: Almacen,
     peticion: Peticion,
@@ -1155,9 +1186,12 @@ def _alta(
     documento: Documento,
     rehacer: bool = False,
     vinculos: dict[str, str] | None = None,
+    extraida: bool = False,
 ) -> str | None:
     """Da de alta o rehace el incidente del candidato. Con `rehacer`, el incidente no
-    conserva su fusión ni su episodio: se vuelven a calcular después."""
+    conserva su fusión ni su episodio: se vuelven a calcular después. Con `extraida` (una
+    extracción nueva, no la reconstrucción desde la guardada), lo decidido de la ficha anterior
+    que la nueva no da o contradice se conserva (proceso/decididos.py)."""
     _ampliar_modelos(almacen, validada)
     ubicacion = ubicar(validada, pistas(almacen, peticion), nomenclator())
     textos = tuple(
@@ -1209,6 +1243,8 @@ def _alta(
     if anterior is not None:
         incidente = conservar_oficiales(incidente, anterior)
         incidente = sin_oficiales_del_filtro(almacen, incidente)
+        if extraida:
+            incidente = conservar_decididos(almacen, incidente, anterior, ahora)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
         incidente = detalle.reaplicar(almacen, incidente)
     # Criterio de presencia: sin una autoridad que diga que fue un dron, no queda confirmada (un

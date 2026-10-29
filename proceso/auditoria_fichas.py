@@ -93,13 +93,19 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   configuracion/incidentes_revisados.json) o que el experto dio por distinta en el control, sin
   una unión a mano posterior (`unir`). EODI-2026-00538 (29 de octubre de 2026): la regla la unió
   en EODI-2026-00541 (docs/sucesos_mezclados.md).
+- **W, dato decidido perdido en una reextracción**: en las últimas 48 horas, una extracción nueva
+  de su candidato le quitó a la ficha un dato que tenía decidido con la frase de una fuente que
+  sigue teniendo (el día y la hora, el número de drones, el cierre o el lugar;
+  proceso/decididos.py) y la ficha no lo ha recuperado. EODI-2026-00066 (29 de octubre de 2026):
+  el 13 de septiembre («Sunday, September 13th») pasó a la fecha de publicación de la noticia.
+  Necesita las fechas de las extracciones (`Almacen.fechas_extraccion`); sin ellas no se mira.
 """
 
 import json
 import re
 from collections import Counter
 from collections.abc import Callable, Iterable
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from esquema import Documento
@@ -127,7 +133,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V",
+    "S", "T", "U", "V", "W",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -152,6 +158,7 @@ NOMBRES = {
     "T": "titular incoherente con la presencia",
     "U": "concordancia del dron",
     "V": "unión de fichas marcadas como relacionadas",
+    "W": "dato decidido perdido en una reextracción",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -619,20 +626,66 @@ def oscilan(cambios: Iterable[Documento]) -> dict[str, list[str]]:
     return resultado
 
 
+# Lo que tarda en guardarse la ficha tras su extracción (la tanda de la recogida).
+MARGEN_EXTRACCION = timedelta(minutes=30)
+
+
+def _instante_iso(texto: str) -> datetime:
+    return datetime.fromisoformat(texto.replace("Z", "+00:00"))
+
+
+def _tras_extraccion(fecha: str, extraidas: list[str]) -> bool:
+    cuando = _instante_iso(fecha)
+    return any(
+        timedelta(minutes=-1) <= cuando - _instante_iso(e) <= MARGEN_EXTRACCION for e in extraidas
+    )
+
+
+def perdidos_al_extraer(
+    vigentes: dict[str, Documento],
+    cambios: Iterable[Documento],
+    extracciones: dict[str, list[str]],
+) -> list[str]:
+    """W: «<id> <dato>» de las fichas vigentes que perdieron al volver a extraerse un dato decidido
+    con la frase de una fuente que siguen teniendo (proceso/decididos.py) y aún no lo han
+    recuperado. EODI-2026-00066 pasó del 13 de septiembre a la fecha de publicación de la noticia
+    al volver a extraerla el 29 de octubre de 2026."""
+    from proceso import decididos
+
+    resultado: set[str] = set()
+    for cambio in cambios:
+        if cambio.get("tabla", "incidentes") != "incidentes" or not cambio.get("fecha"):
+            continue
+        anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
+        actual = vigentes.get(str(cambio["entidad_id"]))
+        candidato = str((nuevo.get("control") or {}).get("candidato") or "")
+        if not anterior or actual is None or not candidato:
+            continue
+        if not _tras_extraccion(str(cambio["fecha"]), extracciones.get(candidato, [])):
+            continue
+        siguen = set(decididos.perdidos(actual, anterior))
+        resultado |= {f"{actual['id']} {d}" for d in decididos.perdidos(nuevo, anterior)
+                      if d in siguen}  # fmt: skip
+    return sorted(resultado)
+
+
 def auditar(
     documentos: Iterable[Documento],
     cambios: Iterable[Documento] = (),
     copias: dict[str, Documento] | None = None,
     del_experto: frozenset[frozenset[str]] = frozenset(),
     a_mano: Iterable[frozenset[str]] = (),
+    extracciones: dict[str, list[str]] | None = None,
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
-    son los de las últimas 48 horas (`Almacen.cambios_desde`), para K; `copias`, las copias
+    son los de las últimas 48 horas (`Almacen.cambios_desde`), para K y W; `copias`, las copias
     archivadas de los enlaces (`Almacen.copias_archivadas`), para Q; `del_experto`, los pares
     que el experto dio por distintos (`incidentes.distintos_del_experto`) y las uniones hechas a
-    mano (`incidentes.uniones_a_mano`), para V."""
+    mano (`incidentes.uniones_a_mano`), para V; `extracciones`, las fechas de las extracciones de
+    cada candidato en esas horas (`Almacen.fechas_extraccion`), para W."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
+    cambios = list(cambios)
     for documento in vistos:
         if not incidentes.activo(documento):
             continue
@@ -653,6 +706,10 @@ def auditar(
     resultado["V"] = uniones_marcadas(vistos, del_experto, a_mano)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
                       if i in vigentes]  # fmt: skip
+    if extracciones:
+        resultado["W"] = perdidos_al_extraer(
+            {str(d["id"]): d for d in vistos if incidentes.activo(d)}, cambios, extracciones
+        )
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor
     # comprobado contra sus fuentes en algo que no es una discrepancia conocida.
     from proceso import referencia
