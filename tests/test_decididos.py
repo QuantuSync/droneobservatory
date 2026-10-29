@@ -201,3 +201,23 @@ def test_auditoria_w_dato_decidido_perdido_en_una_reextraccion(almacen: Almacen)
     # Sin una extracción de su candidato, el cambio es de otro paso (el control, una regla).
     sin = {candidato: ["2026-10-29T18:20:01Z"]}
     assert auditoria_fichas.auditar([nuevo], [cambio], extracciones=sin)["W"] == []
+
+
+def test_auditoria_w_no_cuenta_lo_que_quita_el_control(almacen: Almacen) -> None:
+    """EODI-2026-00650: la extracción daba 2-10 drones y el control, en la misma recogida, «sin
+    dato: ninguna fuente da el número»; ese guardado deja su motivo."""
+    anterior, nuevo = _par(almacen)
+    nuevo["drones"]["numero"] = "desconocido"
+    candidato = anterior["control"]["candidato"]
+    fecha = "2026-10-23T02:30:13Z"
+    cambios = [
+        {"entidad_id": anterior["id"], "tabla": "incidentes", "anterior": anterior,
+         "nuevo": nuevo, "fecha": fecha},
+        {"entidad_id": anterior["id"], "tabla": "incidentes_motivos", "anterior": {},
+         "nuevo": {"motivo": "control de fichas: drones 2-10 -> sin dato"}, "fecha": fecha},
+    ]  # fmt: skip
+    extracciones = {candidato: ["2026-10-23T02:17:00Z"]}
+    assert auditoria_fichas.auditar([nuevo], cambios, extracciones=extracciones)["W"] == []
+    assert auditoria_fichas.auditar([nuevo], cambios[:1], extracciones=extracciones)["W"] == [
+        f"{anterior['id']} drones"
+    ]
