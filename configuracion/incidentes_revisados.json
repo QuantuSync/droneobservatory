@@ -5336,6 +5336,42 @@
         "es": "repaso de entrada con el experto: Suceso nuevo en la cárcel de Picassent; la ficha publicada afirma un dron «posible» no confirmado, pero la fuente 2 dice que los funcionarios lo interceptaron y recuperaron, lo que confirma su presencia.",
         "en": "entry review: New incident at Picassent prison; the record lists the drone as unconfirmed, but source 2 says prison staff intercepted and recovered it, which confirms its presence."
       }
+    },
+    {
+      "incidente": "EODI-2025-00276",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "ar fi survolat spațiul aerian din zona de nord a țării",
+        "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-shahed-ar-fi-survolat-spatiul-aerian-al-2469390.html"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso único de la noche anterior a la publicación (2-3 de septiembre), sin ficha previa. La presencia del dron no está confirmada: las fuentes dicen «ar fi» y no citan ninguna confirmación.",
+        "en": "entry review: Single event from the night before publication (2-3 September), with no earlier record. Drone presence is not confirmed: the sources say «ar fi» (allegedly) and cite no confirmation."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00390",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "drona găsită duminică în judeţul Argeş este un dispozitiv de mari dimensiuni",
+        "enlace": "https://hotnews.ro/sindicat-din-politie-despre-drona-gasita-intr-o-padure-din-arges-are-montat-un-dispozitiv-artizanal-cert-este-ca-nu-a-fost-folosita-de-militarii-din-baza-nato-din-zona-2135789"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Dron hallado el domingo 21 de diciembre en Argeș, sin ficha equivalente; la presencia solo la afirma un sindicato policial, pero se encontró el aparato.",
+        "en": "entry review: Drone found on Sunday 21 December in Argeș with no matching existing record; presence is only stated by a police union, though the device itself was found."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00519",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Dabei handelte es sich nach Angaben der Regierungen in Tallinn und Riga um fehlgeleitete ukrainische Flugobjekte",
+        "enlace": "https://kurier.at/politik/ausland/auvere-estland-kraftwerk-drohne-russland-lettland-ukraine/403144139"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo en Letonia el miércoles 25 de marzo. El tipo debe ser incursión, porque los gobiernos dicen que el dron entró desde Rusia, y la presencia está confirmada, porque el dron cayó.",
+        "en": "entry review: New event in Latvia on Wednesday 25 March. The type should be incursion, since governments say the drone entered from Russia, and presence is confirmed, since the drone crashed."
+      }
     }
   ],
   "titular_justificado": [],
@@ -11008,6 +11044,150 @@
       "enlace": "https://antena3.ro/externe/alerta-de-securitate-in-republica-moldova-o-drona-shahed-a-intrat-in-spatiul-aerian-780956.html",
       "pais": "MD",
       "motivo": "la Policía de Fronteras de Moldavia vio el Shahed cruzar la frontera (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
+    },
+    {
+      "incidente": "EODI-2026-00084",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Una dintre ele a intrat în spațiul aerian românesc, potrivit Ministerul Apărării Naționale.",
+      "enlace": "https://europafm.ro/alerta-tulcea-drona-ruseasca-spatiu-aerian-romania",
+      "pais": "RO",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo de la noche del 16 al 17 de abril; los datos son correctos salvo el número de drones, pues de dos objetivos solo uno entró en el espacio aéreo."
+    },
+    {
+      "incidente": "EODI-2026-00195",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "O dronă a intrat în spațiul aerian al României sâmbătă noapte, potrivit Ministerului Apărării Naționale (MApN)",
+      "enlace": "https://digi24.ro/stiri/actualitate/mapn-o-drona-a-intrat-in-spatiul-aerian-national-avioane-de-vanatoare-si-un-elicopter-militar-au-fost-ridicate-in-aer-3966197",
+      "pais": "RO",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 26 de septiembre por la noche, sin duplicado en la lista; el tipo correcto es incursión porque el MApN dice que el dron entró en el espacio aéreo nacional."
+    },
+    {
+      "incidente": "EODI-2026-00199",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "prima dronă a traversat frontiera de stat din Ucraina spre Republica Moldova la ora 03:56",
+      "enlace": "https://protv.md/actualitate/alarmant-cinci-drone-au-survolat-spatiul-aerian-al-republicii-moldova-chiar-de-ziua-independentei-detalii-de-la-ministerul-apararii---2765919.html",
+      "pais": "MD",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo de la noche del 27 de agosto, sin ficha previa. El tipo debe ser incursión, porque el Ministerio de Defensa dice que el dron cruzó la frontera desde Ucrania."
+    },
+    {
+      "incidente": "EODI-2026-00300",
+      "campo": "tipo",
+      "valor": "sobrevuelo",
+      "cita": "Dronele se aflau în derivă în zona exploatării Neptun Deep",
+      "enlace": "https://click.ro/actualitate/national/alerta-in-zona-neptun-deep-doua-drone-gerbera-au-2549208.html",
+      "pais": "RO",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 11 de agosto, no registrado. Dos drones destruidos por buzos militares, presencia confirmada. El tipo debería ser sobrevuelo: derivaban en el mar y nadie dice que entraran desde fuera."
+    },
+    {
+      "incidente": "EODI-2026-00307",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "au detectat pentru scurt timp pătrunderea unei drone în spațiul aerian românesc, în zona localității Chilia",
+      "enlace": "https://dailybusiness.ro/actualitate/alerta-la-granita-romaniei-o-drona-ruseasca-a-intrat-pentru-scurt-timp-in-spatiul-aerian-romanesc-in-zona-chilia-540425",
+      "pais": "RO",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 7 de mayo en Chilia, distinto del de 2 de mayo; el radar del ministerio detectó la entrada del dron, por lo que el tipo es incursión."
+    },
+    {
+      "incidente": "EODI-2026-00356",
+      "campo": "drones",
+      "valor": {
+        "min": 4,
+        "max": 4
+      },
+      "cita": "Επίσης, τέσσερα UAV έκαναν 5 παραβάσεις και μία παραβίαση.",
+      "enlace": "https://newsit.gr/ellada/nees-tourkikes-prokliseis-me-f-16-na-mpainoun-ston-ethniko-enaerio-xoro-drones-ekanan-paravaseis-kai-paraviaseis/4787136",
+      "pais": "GR",
+      "motivo": "repaso de entrada con el experto: Es un suceso nuevo del 30-09-2026 sobre el Egeo; el Estado Mayor griego confirma cuatro UAV, así que el número de drones es 4 y no 'sin dato'."
+    },
+    {
+      "incidente": "EODI-2026-00495",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "μη επανδρωμένα αεροσκάφη της Τουρκίας παραβίασαν σήμερα, Τετάρτη 7 Οκτωβρίου 2026, τον εθνικό εναέριο χώρο στο Αιγαίο",
+      "enlace": "https://newsit.gr/ellada/aigaio-tesseris-paraviaseis-apo-tria-tourkika-drones-ston-ethniko-enaerio-xoro/4793053",
+      "pais": "GR",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 7 de octubre en el Egeo, distinto de las fichas del 30 de septiembre y del 4 de octubre. El tipo debe ser incursión, porque el Estado Mayor griego habla de drones turcos que violan el espacio aéreo nacional."
+    },
+    {
+      "incidente": "EODI-2026-00519",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "In Estland und Lettland sind aus Russland in den Luftraum eingeflogene Drohnen abgestürzt.",
+      "enlace": "https://kurier.at/politik/ausland/auvere-estland-kraftwerk-drohne-russland-lettland-ukraine/403144139",
+      "pais": "LV",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo en Letonia el miércoles 25 de marzo. El tipo debe ser incursión, porque los gobiernos dicen que el dron entró desde Rusia, y la presencia está confirmada, porque el dron cayó."
+    },
+    {
+      "incidente": "EODI-2026-00523",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "al parecer varios de ellos se desviaron de su ruta y entraron inadvertidamente en el espacio aéreo estonio",
+      "enlace": "https://es.euronews.com/2026/03/31/varios-drones-desviados-de-ucrania-irrumpen-en-el-espacio-aereo-de-estonia",
+      "pais": "EE",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo sin ficha equivalente. El tipo debe ser incursión, porque los drones ucranianos desviados entraron desde fuera, según las Fuerzas de Defensa."
+    },
+    {
+      "incidente": "EODI-2026-00562",
+      "campo": "drones",
+      "valor": {
+        "min": 6,
+        "max": 6
+      },
+      "cita": "Στην περιοχή κινήθηκαν συνολικά έξι μεμονωμένα τουρκικά UAV",
+      "enlace": "https://voria.gr/article/aigaio-exi-toyrkika-drones-ekanan-tesseris-parabiaseis-ston-ethniko-enaerio-horo",
+      "pais": "GR",
+      "motivo": "repaso de entrada con el experto: Suceso del jueves 15 de octubre en el Egeo, distinto de las fichas anteriores; la ficha omite el número de drones (seis)."
+    },
+    {
+      "incidente": "EODI-2026-00626",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "two airports were shut down following a renewed Russian assault on western Ukraine",
+      "enlace": "https://liverpoolecho.co.uk/news/nato-warplanes-scrambled-airports-shut-34783838",
+      "pais": "PL",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 19 de octubre, sin ficha equivalente. El tipo debe ser interrupción aeroportuaria porque se cerraron dos aeropuertos, no sobrevuelo."
+    },
+    {
+      "incidente": "EODI-2026-00647",
+      "campo": "drones",
+      "valor": {
+        "min": 5,
+        "max": 5
+      },
+      "cita": "pet turskih bespilotnih letelica (UAV) i jedan izviđački avion CN-235 danas 14 puta povredili grčki vazdušni prostor",
+      "enlace": "https://blic.rs/vesti/svet/drama-medju-nato-saveznicama-turski-dronovi-i-izvidjacki-avion-upali-u-prostor-grcke/j86bvmy",
+      "pais": "GR",
+      "motivo": "repaso de entrada con el experto: Suceso del 20 de octubre, publicado el mismo día, sin ficha equivalente; falta el número de drones (cinco) que dice el Estado Mayor griego."
+    },
+    {
+      "incidente": "EODI-2026-00668",
+      "campo": "drones",
+      "valor": {
+        "min": 5,
+        "max": 5
+      },
+      "cita": "δύο μαχητικά F-16, ένα αεροσκάφος ATR-72 και πέντε μη επανδρωμένα UAV",
+      "enlace": "https://inewsgr.com/441/synechizoun-oi-tourkikes-voltes-sto-aigaio-machitika-kataskopeftiko-kai-drones-ston-elliniko-enaerio-choro.htm",
+      "pais": "GR",
+      "motivo": "repaso de entrada con el experto: Suceso propio del jueves 22 de octubre en el Egeo, no repetido en la lista; la ficha omite el número de drones, que la fuente da como cinco."
+    },
+    {
+      "incidente": "EODI-2026-00694",
+      "campo": "drones",
+      "valor": {
+        "min": 3,
+        "max": 3
+      },
+      "cita": "Three maritime drones struck a container ship off Bulgaria’s Black Sea coast Wednesday",
+      "enlace": "https://theyeshivaworld.com/news/general/2616219/black-sea-three-maritime-drones-strike-container-ship-off-nato-member-bulgaria.html",
+      "pais": "BG",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 28-10-2026 (miércoles), no registrado antes; la ficha no indica el número de drones, que las fuentes dan como tres."
     }
   ]
 }
