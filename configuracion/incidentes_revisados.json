@@ -938,13 +938,6 @@
       }
     },
     {
-      "incidente": "EODI-2026-00625",
-      "motivo": {
-        "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
-        "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model)."
-      }
-    },
-    {
       "incidente": "EODI-2026-00684",
       "motivo": {
         "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
