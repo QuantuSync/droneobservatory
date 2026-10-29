@@ -4526,6 +4526,7 @@
     },
     {
       "incidente": "EODI-2026-00166",
+      "presencia": {"valor": "confirmada", "cita": "a Légügyi Hatóság közigazgatási hatósági eljárást indított vele szemben – számolt be róla a rendőrség", "enlace": "https://blikk.hu/aktualis/belfold/dron-liszt-ferenc-repuloter-keszenleti-rendorseg-budapest/j4kky3r"},
       "titulo": {
         "es": "Dron volado sin autorización junto al aeropuerto de Budapest",
         "en": "Drone flown without authorisation next to Budapest airport"
@@ -5510,6 +5511,54 @@
       "motivo": {
         "es": "repaso de entrada con el experto: Suceso único del miércoles 17 de junio de 2026, coincide con la ficha. Sin fichas previas. La presencia del dron está confirmada porque los gendarmes detuvieron a los pilotos.",
         "en": "entry review: Single event on Wednesday 17 June 2026, matching the record. No prior records. Drone presence is confirmed because gendarmes arrested the pilots."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00340",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Le télépilote a été interpellé, puis placé en garde à vue avant d’être entendu dans le cadre d’une enquête",
+        "enlace": "https://bfmtv.com/police-justice/un-drone-survole-une-zone-interdite-pres-du-port-militaire-de-cherbourg-un-homme-interpelle_AN-202603240362.html"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso único del 18 de marzo en Cherbourg, sin fichas previas. La presencia del dron está confirmada: la gendarmería lo detectó e interpeló al piloto.",
+        "en": "entry review: Single incident on 18 March in Cherbourg, no earlier records. Drone presence is confirmed: the gendarmerie detected it and arrested the pilot."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00359",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Fragmente dintr-o dronă militară au fost găsite în curtea unui localnic din Vrancea. MApN confirmă informaţia",
+        "enlace": "https://ziuaveche.ro/top-secret/armata-2/drona-militara-gasite-in-curtea-unui-localnic-din-vrancea-343686.html"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo del 17-01-2026 en Tănăsoaia, sin ficha equivalente. Las fuentes citan al MApN, que confirma, y se hallaron fragmentos del dron, así que la presencia está confirmada.",
+        "en": "entry review: New event on 2026-01-17 in Tănăsoaia with no matching existing record. Sources cite the MApN confirming it and drone fragments were found, so presence is confirmed."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00496",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Informația a fost prezentată de Serviciul Operații Aeriene al Armatei Naționale",
+        "enlace": "https://news.yam.md/ro/story/73086183"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo de la tarde del 7 de octubre, distinto del de la mañana; la presencia del dron la confirma el servicio de operaciones aéreas del ejército.",
+        "en": "entry review: New event on the evening of 7 October, distinct from the morning one; the drone's presence is confirmed by the army's air operations service."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00693",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Le pilote de l’appareil a rapidement été localisé par la police",
+        "enlace": "https://20minutes.fr/arts-stars/insolite/4258314-20261028-match-opposant-arsenal-fleetwood-town-interrompu-cause-drone"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Un solo suceso, el martes 27 de octubre en Fleetwood, sin fichas previas. Se corrige la presencia a confirmada porque la policía localizó al piloto.",
+        "en": "entry review: A single event on Tuesday 27 October in Fleetwood, with no prior records. Presence is corrected to confirmed because police located the pilot."
       }
     }
   ],
@@ -11441,6 +11490,93 @@
       "enlace": "https://pcwplus.hu/pcwlite/dron-repuloter-lezaras-letartoztatas-magyar-allampolgar-horvatorszag-split-385993.html",
       "pais": "HR",
       "motivo": "repaso de entrada con el experto: Suceso del viernes 31-07-2026 en Split, sin ficha previa. El tipo debe ser interrupción aeroportuaria, porque se suspendió el tráfico aéreo unos diez minutos."
+    },
+    {
+      "incidente": "EODI-2026-00087",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Orlaivių kilimai ir tūpimai buvo sustabdyti nuo 12.30 iki 12.53 val.",
+      "enlace": "https://lrt.lt/naujienos/verslas/4/2867119/del-pakelto-megejisko-drono-sestadieni-vilniaus-oro-uoste-buvo-trumpam-stabdomi-skrydziai",
+      "pais": "LT",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del sábado 14 de marzo en Vilna, sin ficha equivalente. El tipo debería ser interrupción aeroportuaria, porque los vuelos se pararon de 12.30 a 12.53."
+    },
+    {
+      "incidente": "EODI-2026-00094",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Traffic at Brussels airport was disrupted for half an hour on the evening of Sept 11 after a drone was spotted",
+      "enlace": "https://straitstimes.com/world/europe/airport-traffic-disrupted-by-drone-sighting-in-brussels-on-sept-11",
+      "pais": "BE",
+      "motivo": "repaso de entrada con el experto: Suceso del 11 de septiembre de 2026 en el aeropuerto de Bruselas, sin ficha previa. El tipo debe ser interrupción aeroportuaria, no sobrevuelo, porque el tráfico se paró media hora."
+    },
+    {
+      "incidente": "EODI-2026-00105",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "a pătruns neautorizat în spațiul aerian al Republicii Moldova din direcția Ucrainei",
+      "enlace": "https://ziarulnational.md/ultima-ora-o-noua-drona-a-survolat-ilegal-r-moldova-spatiul-aerian-din-sudul-tarii-inchis",
+      "pais": "MD",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 8 de mayo de 2026 en Moldavia, distinto de las fichas rumanas; el tipo es incursión porque el dron entró desde Ucrania."
+    },
+    {
+      "incidente": "EODI-2026-00148",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "obiectul aerian a intrat în spațiul național la ora 11:16, din direcția localității Stepanivka, regiunea Odesa, Ucraina",
+      "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-20",
+      "pais": "MD",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 26 de septiembre en Moldavia, sin ficha equivalente; el tipo correcto es incursión porque el objeto entró desde Ucrania."
+    },
+    {
+      "incidente": "EODI-2026-00160",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "O altă dronă a fost observată în spațiul aerian al Republicii Moldova, în această dimineață, în zona localității Lunga",
+      "enlace": "https://protv.md/actualitate/alarmant-o-alta-drona-a-intrat-in-spatiul-aerian-al-tarii-zonele-de-nord-si-centru-au-fost-inchise---2768481.html",
+      "pais": "MD",
+      "motivo": "repaso de entrada con el experto: Es un suceso propio del 30-09 en Lunga, distinto del dron de Hirbovet. El número de drones es erróneo: el 3 es el total del día y en Lunga hubo uno."
+    },
+    {
+      "incidente": "EODI-2026-00200",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "fragmente dintr-o dronă militară au căzut într-o gospodărie din oraș",
+      "enlace": "https://stirileprotv.ro/stiri/actualitate/filmul-celui-mai-grav-incident-militar-provocat-de-rusi-in-romania-de-la-izbucnirea-razboiului-din-ucraina.html",
+      "pais": "RO",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo de la noche del viernes al sábado en Galați; no está en la lista. Las fuentes hablan de un solo dron caído, no de 2-10."
+    },
+    {
+      "incidente": "EODI-2026-00233",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "und bringt damit den Anflugverkehr am Düsseldorfer Flughafen für zehn Minuten zum Stillstand.",
+      "enlace": "https://n-tv.de/regionales/nordrhein-westfalen/Drohne-unterbricht-Flugverkehr-am-Duesseldorfer-Flughafen-id31356407.html",
+      "pais": "DE",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del sábado 26 de septiembre en Düsseldorf; el tráfico de aproximación se paró diez minutos, así que el tipo correcto es interrupción aeroportuaria."
+    },
+    {
+      "incidente": "EODI-2026-00293",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Le trafic a été interrompu à Brussels Airport : Skeyes a relevé un nouvel incident de drone",
+      "enlace": "https://lavenir.net/actu/belgique/2026/09/13/le-trafic-a-ete-interrompu-a-brussels-airport-skeyes-a-releve-un-nouvel-incident-de-drone-a-qui-ne-voit-aucun-signalement-6YF6IVPIQ5FKPGGZMSUILLDKNA",
+      "pais": "BE",
+      "motivo": "repaso de entrada con el experto: Suceso del sábado 12 de septiembre en Zaventem, distinto del del viernes. La fuente 6 habla de interrupción del tráfico, por lo que el tipo debería ser interrupción aeroportuaria."
+    },
+    {
+      "incidente": "EODI-2026-00325",
+      "campo": "tipo",
+      "valor": "incursion",
+      "cita": "pătrunderea în spațiul aerian național al Republicii Moldova, a unei drone neidentificate din direcția Ucraina, cu traversarea frontierei de stat",
+      "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-7",
+      "pais": "MD",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 24-08-2026 en Vulcănești, sin ficha equivalente. El tipo debe ser incursión: el ministerio dice que el dron entró desde Ucrania cruzando la frontera."
     }
   ]
 }
