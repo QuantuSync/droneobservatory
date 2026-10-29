@@ -616,6 +616,9 @@ referencia con la fecha imprecisa a propósito, se retiró así el 29 de octubre
 - quitar la interrupción de un aeropuerto: sale del cierre con su cita y se corrige ahí
   (EODI-2025-00094, Brønnøysund: el experto decía que ninguna fuente hablaba de cierre y una lo
   cuenta).
+- quitar una incursión: sale de la autoridad que dice que el dron entró desde fuera
+  (2026-00372, Moldavia: el experto bajaba a sobrevuelo los cinco drones que el ejército dice que
+  cruzaron su espacio aéreo).
 
 Las separaciones quedan siempre para revisar, en cualquier ficha: la de 2026-00292 (grupo c) era
 el balance de un ministro y la de 2025-00036 sacaba una parte que ya es la ficha 2025-00084

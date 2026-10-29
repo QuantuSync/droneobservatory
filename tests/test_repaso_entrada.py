@@ -517,3 +517,9 @@ def test_la_separacion_queda_para_revisar_y_la_interrupcion_no_se_quita() -> Non
     assert ajustada["cambios"] == [] and "cierre" in ajustada["errores_fuera"][0]["razon"]
     poner = {"frase_lugar": ["x", "y"], "errores": [_error("tipo", "interrupcion_aeroportuaria")]}
     assert repaso.ajustar(poner, ficha, None, nada)["cambios"] == [repaso.DATO]
+    # Tampoco la incursión (2026-00372, Moldavia: cinco drones que cruzaron su espacio aéreo).
+    incursion = {**ficha, "tipo": "incursion"}
+    ajustada = repaso.ajustar(quitar, incursion, None, nada)
+    assert (
+        ajustada["cambios"] == [] and "entró desde fuera" in ajustada["errores_fuera"][0]["razon"]
+    )
