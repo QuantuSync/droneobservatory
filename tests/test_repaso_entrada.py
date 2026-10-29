@@ -5,6 +5,7 @@ presupuesto aparte y que nunca aplica sin un muestreo aprobado."""
 
 import contextlib
 import copy
+import json
 from datetime import UTC, datetime
 from typing import Any
 
@@ -211,17 +212,19 @@ def test_una_union_imposible_no_vale() -> None:
 
 
 def test_solo_deja_de_ser_oficial_la_autoridad_de_otro_pais() -> None:
+    # Sin fichas protegidas: EODI-2025-00092 está revisada a mano.
+    nada = repaso.Protegidas(frozenset())
     ficha = _ficha("EODI-2025-00092", "BE", "2025-11-08T18:00Z", "hora", punto=(50.64, 5.44),
                    nivel="instalacion")  # fmt: skip
     sin_pais = {"frase_lugar": ["x", "y"], "autoridades_fuera": {
         "Skeyes": "ninguna frase la nombra con su país"}}  # fmt: skip
-    ajustada = repaso.ajustar(sin_pais, ficha, None)
+    ajustada = repaso.ajustar(sin_pais, ficha, None, nada)
     assert ajustada["autoridades_fuera"] == {} and repaso.AUTORIDAD not in ajustada["cambios"]
     assert ajustada["autoridades_sin_pais"] == sin_pais["autoridades_fuera"]
     de_otro = {"frase_lugar": ["x", "y"], "autoridades_fuera": {
         "Skeyes": "ninguna frase la nombra con su país",
         "Lettische Streitkräfte": "de otro país (LV) sin que la frase lo diga"}}  # fmt: skip
-    ajustada = repaso.ajustar(de_otro, ficha, None)
+    ajustada = repaso.ajustar(de_otro, ficha, None, nada)
     assert list(ajustada["autoridades_fuera"]) == ["Lettische Streitkräfte"]
     assert ajustada["cambios"] == [repaso.AUTORIDAD]
 
@@ -360,3 +363,112 @@ def test_la_union_del_repaso_recupera_las_fuentes_tras_volver_a_extraer() -> Non
     assert recuperado is not None
     assert "EODI-2026-00048-F1" in {f["id"] for f in recuperado["fuentes"]}
     assert control_fichas.reaplicar_uniones(almacen, {}, AHORA, VOCABULARIO_MODELOS) == 0
+
+
+def _protegidas(tmp_path: Any) -> tuple[Any, Any]:
+    referencia = tmp_path / "fichas.json"
+    referencia.write_text(json.dumps({"fichas": [{"id": "EODI-2026-00625", "valores": {
+        "presencia_dron": {"valor": "confirmada"}, "tipo": {"valor": "sobrevuelo"}}}]}),
+        encoding="utf-8")  # fmt: skip
+    revisados = tmp_path / "revisados.json"
+    revisados.write_text(json.dumps({
+        "descripcion": "EODI-2026-00999 en la descripción no cuenta",
+        "unir": [{"registros": ["EODI-2026-00800", "EODI-2026-00801"], "motivo": "m"}],
+        "citas": [{"incidente": "EODI-2026-00802", "frase": "como EODI-2026-00998"}],
+        "titulares": [{"incidente": "EODI-2026-00803", "presencia": {"valor": "confirmada"}}],
+    }), encoding="utf-8")  # fmt: skip
+    return revisados, referencia
+
+
+def test_una_ficha_de_la_referencia_o_revisada_a_mano_nunca_se_retira_ni_se_une(
+    tmp_path: Any,
+) -> None:
+    # EODI-2026-00625 (Ceuta), de la referencia con la fecha imprecisa a propósito, se retiró el
+    # 29 de octubre de 2026 y estuvo 25 minutos fuera de la web.
+    revisados, referencia = _protegidas(tmp_path)
+    protegidas = repaso.protegidas(revisados, referencia)
+    assert protegidas.ids == {"EODI-2026-00625", "EODI-2026-00800", "EODI-2026-00801",
+                          "EODI-2026-00802", "EODI-2026-00803"}  # fmt: skip
+    ceuta = _ficha("EODI-2026-00625", "ES", "2026-06-10T00:00Z", "aproximada")
+    sin_dia = {"fecha_desconocida": True, "frase_lugar": ["x", "y"]}
+    ajustada = repaso.ajustar(sin_dia, ceuta, None, protegidas)
+    assert ajustada["cambios"] == [] and ajustada["para_revisar"] == [repaso.RETIRAR]
+    # La misma decisión en una ficha sin proteger sí la retira.
+    otra = {**ceuta, "id": "EODI-2026-00700"}
+    assert repaso.ajustar(sin_dia, otra, None, protegidas)["cambios"] == [repaso.RETIRAR]
+    # Ni se une a otra, ni otra se une a ella; tampoco se separa ni cambia de día o de lugar.
+    union = {"mismo": "EODI-2026-00625", "frase_lugar": ["x", "y"]}
+    assert repaso.ajustar(union, otra, ceuta, protegidas)["para_revisar"] == [repaso.UNIR]
+    revisada = {**otra, "id": "EODI-2026-00802", "lugar": {**otra["lugar"], "nivel": "localidad"}}
+    for decision, paso in ((union | {"mismo": "EODI-2026-00700"}, repaso.UNIR),
+                           ({"otro_dia": {"dia": "2026-06-01"}}, repaso.DIA),
+                           ({"frase_lugar": None}, repaso.LUGAR)):  # fmt: skip
+        ajustada = repaso.ajustar(decision, revisada, otra, protegidas)
+        assert ajustada["cambios"] == [] and ajustada["para_revisar"] == [paso], paso
+    # Lo que queda para revisar no entra en el muestreo ni se aplica.
+    decisiones = {repaso.clave("EODI-2026-00625"): {**ajustada, "grupo": "b", "huella": "h"}}
+    assert repaso.con_cambios(decisiones, "b") == {}
+
+
+def test_la_presencia_que_decidio_una_autoridad_o_la_referencia_no_se_corrige(
+    tmp_path: Any,
+) -> None:
+    # Grupo d, 29 de octubre de 2026: el experto subía a confirmada la presencia no acreditada de
+    # Copenhague (EODI-2025-00154, la policía cerró la investigación sin probarlo), bajaba la de
+    # Loviisa (2026-00040, de la referencia) y proponía la que ya tenía la ficha (2024-00003).
+    revisados, referencia = _protegidas(tmp_path)
+    protegidas = repaso.protegidas(revisados, referencia)
+    ficha = {**_ficha("EODI-2026-00700", "DK", "2025-09-22T18:00Z", "hora"),
+             "presencia_dron": "no_acreditada"}  # fmt: skip
+    subir = {"frase_lugar": ["x", "y"], "errores": [_error("presencia", "confirmada")]}
+    ajustada = repaso.ajustar(subir, ficha, None, protegidas)
+    assert ajustada["cambios"] == [] and ajustada["errores"] == []
+    assert "rectificación" in ajustada["errores_fuera"][0]["razon"]
+    igual = {**ficha, "presencia_dron": "confirmada"}
+    assert repaso.ajustar(subir, igual, None, protegidas)["cambios"] == []
+    # La referencia manda sobre el experto en sus fichas; los demás datos siguen.
+    loviisa = {**igual, "id": "EODI-2026-00625"}
+    bajar = {
+        "frase_lugar": ["x", "y"],
+        "errores": [
+            _error("presencia", "no_confirmada"),
+            _error("tipo", "incursion"),
+            _error("drones", "2"),
+        ],
+    }
+    ajustada = repaso.ajustar(bajar, loviisa, None, protegidas)
+    assert [e["dato"] for e in ajustada["errores"]] == ["drones"]
+    assert ajustada["cambios"] == [repaso.DATO]
+    # Sin autoridad, ni referencia, ni rectificación, la corrección se propone.
+    suelta = {**igual, "presencia_dron": "no_confirmada"}
+    assert repaso.ajustar(subir, suelta, None, protegidas)["cambios"] == [repaso.DATO]
+    # Recalcular otra vez da lo mismo (lo quitado no se pierde ni se duplica).
+    assert repaso.ajustar(ajustada, loviisa, None, protegidas) == ajustada
+
+
+def test_el_grupo_se_muestrea_y_se_aplica_por_tandas() -> None:
+    fichas = [_ficha(f"EODI-2026-0091{n}", "RO", "2026-10-20T10:00Z", "aproximada")
+              for n in range(4)]  # fmt: skip
+    almacen = _base(*fichas)
+    decisiones = {
+        repaso.clave(f["id"]): {
+            "grupo": "d",
+            "huella": entrada.huella(f),
+            "cambios": [repaso.RETIRAR],
+            "fecha_desconocida": True,
+            "motivo_es": "recuerdo sin fecha",
+        }
+        for f in fichas
+    }
+    almacen.guardar_controles(decisiones, "2026-10-29T15:40:00Z")
+    tanda = [fichas[0]["id"], fichas[2]["id"]]
+    plantilla = repaso.plantilla(almacen.controles(repaso.PREFIJO), "d", 3, tanda)
+    assert plantilla["tanda"] == tanda
+    assert [r["id"] for r in plantilla["revisadas"]] == tanda
+    for r in plantilla["revisadas"]:
+        r["bien"] = True
+    hecho = repaso.aplicar_grupo(_base_de(almacen), "d", plantilla, VOCABULARIO_MODELOS,
+                                 reloj=lambda: FUERA, dormir=lambda s: None)  # fmt: skip
+    assert sorted(hecho.retiradas) == tanda
+    quedan = repaso.con_cambios(almacen.controles(repaso.PREFIJO), "d")
+    assert sorted(quedan) == [fichas[1]["id"], fichas[3]["id"]]
