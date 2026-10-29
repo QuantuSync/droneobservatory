@@ -687,7 +687,13 @@ def _guardar(
 def _retirar(
     almacen: Almacen, ahora: datetime, modelos: frozenset[str], hechos: Corregidos
 ) -> None:
+    # La ficha que vuelve por «reponer» sigue en «retirar» (para que no vuelva antes de saber su
+    # fecha): no se retira otra vez. Si no, la recogida siguiente a la que la repuso la retiraba
+    # (EODI-2025-00312 y EODI-2026-00056, 29 de octubre de 2026).
+    repuestas = {str(r["incidente"]) for r in cargar().get("reponer", [])}
     for revision in cargar().get("retirar", []):
+        if str(revision["incidente"]) in repuestas:
+            continue
         documento = almacen.incidente(revision["incidente"])
         if documento is None or not incidentes.activo(documento):
             continue
@@ -712,17 +718,31 @@ MOTIVO_REPONER = (
 )
 
 
+def _retirada_otra_vez(documento: Documento, hecho: Documento, revision: Documento | None) -> bool:
+    """La ficha ya repuesta la volvió a retirar «retirar» después de reponerla, con su motivo (la
+    recogida de las 13:17 del 29 de octubre de 2026, antes de que «retirar» respetara «reponer»).
+    Otra retirada, la del filtro de entrada o la del control, se queda."""
+    if revision is None:
+        return False
+    retirado = documento["retirado"]
+    motivo = revision["motivo"]["es"][: extraccion.MAX_LETRAS_MOTIVO]
+    posterior = str(retirado["fecha"]["valor"]) > str(hecho["fecha"])
+    return retirado.get("motivo") == motivo and posterior
+
+
 def _reponer(
     almacen: Almacen, ahora: datetime, modelos: frozenset[str], hechos: Corregidos
 ) -> None:
     from recogida import control_fichas
 
+    retirar = {str(r["incidente"]): r for r in cargar().get("retirar", [])}
     for revision in cargar().get("reponer", []):
         id_ = str(revision["incidente"])
-        if almacen.cursor(CURSOR_REPONER + id_) is not None:
-            continue
         documento = almacen.incidente(id_)
         if documento is None or "retirado" not in documento or "fusionado_en" in documento:
+            continue
+        hecho = almacen.cursor(CURSOR_REPONER + id_)
+        if hecho is not None and not _retirada_otra_vez(documento, hecho, retirar.get(id_)):
             continue
         nuevo = {k: v for k, v in documento.items() if k != "retirado"}
         if not _guardar(almacen, documento, nuevo, ahora, modelos, MOTIVO_REPONER, hechos):

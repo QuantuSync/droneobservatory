@@ -5283,6 +5283,19 @@
         "es": "El titular en español decía «Brussels Airport» en inglés.",
         "en": "The Spanish headline said «Brussels Airport» in English."
       }
+    },
+    {
+      "incidente": "EODI-2025-00043",
+      "inicio": {
+        "valor": "2025-10-21T11:20Z",
+        "precision": "minuto",
+        "cita": "Rīgas lidosta šodien plkst. 14.20 sniedza atbildīgajiem dienestiem informāciju par iespējamu bezpilota lidaparāta atrašanos.",
+        "motivo": "el aeropuerto de Riga avisó «šodien plkst. 14.20» del martes 21 de octubre de 2025, hora de Letonia (UTC+3); la ficha tomaba las 14:20 como UTC"
+      },
+      "motivo": {
+        "es": "El aeropuerto de Riga avisó a los servicios responsables de un posible dron a las 14:20 del martes 21 de octubre de 2025, hora de Letonia (11:20 UTC).",
+        "en": "Riga Airport alerted the responsible services to a possible drone at 14:20 on Tuesday 21 October 2025, Latvian time (11:20 UTC)."
+      }
     }
   ],
   "titular_justificado": [],
