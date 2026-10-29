@@ -611,6 +611,14 @@ referencia con la fecha imprecisa a propósito, se retiró así el 29 de octubre
 - bajar una presencia confirmada que una autoridad atribuye a drones, dice en su documento o
   confirma con pruebas físicas (`proceso/presencia.py`);
 - en una ficha de la referencia, un dato distinto de su valor comprobado.
+- un número de drones que ya cabe en el intervalo de la ficha («bis zu zehn Drohnen» con la ficha
+  en 2-10, EODI-2025-00192).
+
+La pregunta `repaso_entrada/3` pide además el número de drones de este suceso en este lugar, no el
+de otro suceso que cite la noticia (EODI-2025-00051, Eindhoven, tomaba los «unos diez drones» de
+Volkel), y que «hasta diez» es «1-10». `--accion decidir --tanda t.json` vuelve a preguntar esas
+fichas aunque ya estén decididas con su huella, si su decisión es de una pregunta anterior y no
+está aplicada.
 
 En el grupo d, de las 6 fichas de la referencia con algún cambio decidido, el experto contradecía
 la referencia en las 6 (la presencia no acreditada de Copenhague y Aalborg, la confirmada de

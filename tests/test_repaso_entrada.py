@@ -472,3 +472,30 @@ def test_el_grupo_se_muestrea_y_se_aplica_por_tandas() -> None:
     assert sorted(hecho.retiradas) == tanda
     quedan = repaso.con_cambios(almacen.controles(repaso.PREFIJO), "d")
     assert sorted(quedan) == [fichas[1]["id"], fichas[3]["id"]]
+
+
+def test_un_numero_de_drones_que_ya_cabe_en_la_ficha_no_es_un_error() -> None:
+    # EODI-2025-00192, 29 de octubre de 2026: «bis zu zehn Drohnen» propuesto como 10 exactos con
+    # la ficha en 2-10.
+    nada = repaso.Protegidas(frozenset())
+    ficha = {**_ficha("EODI-2025-00192", "DE", "2025-01-12T00:00Z"),
+             "drones": {"numero": {"min": 2, "max": 10}}}  # fmt: skip
+    hasta = {"frase_lugar": ["x", "y"], "errores": [_error("drones", "10")]}
+    ajustada = repaso.ajustar(hasta, ficha, None, nada)
+    assert ajustada["cambios"] == [] and "intervalo" in ajustada["errores_fuera"][0]["razon"]
+    fuera = {"frase_lugar": ["x", "y"], "errores": [_error("drones", "12")]}
+    assert repaso.ajustar(fuera, ficha, None, nada)["cambios"] == [repaso.DATO]
+    sin_numero = {**ficha, "drones": {"numero": "desconocido"}}
+    assert repaso.ajustar(hasta, sin_numero, None, nada)["cambios"] == [repaso.DATO]
+
+
+def test_las_fichas_dadas_se_vuelven_a_decidir_con_la_pregunta_de_ahora() -> None:
+    ficha = _ficha("EODI-2025-00051", "NL", "2025-11-22T00:00Z")
+    vieja = {"huella": entrada.huella(ficha), "version": "repaso_entrada/2"}
+    assert not repaso._por_decidir(vieja, ficha, None)
+    assert repaso._por_decidir(vieja, ficha, [ficha["id"]])
+    assert not repaso._por_decidir(vieja | {"aplicada": "2026-10-29T17:00:00Z"}, ficha,
+                                   [ficha["id"]])  # fmt: skip
+    nueva = vieja | {"version": peticiones.VERSION_REPASO}
+    assert not repaso._por_decidir(nueva, ficha, [ficha["id"]])
+    assert repaso._por_decidir({"huella": "otra"}, ficha, None)
