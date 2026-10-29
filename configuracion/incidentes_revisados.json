@@ -4359,6 +4359,7 @@
     },
     {
       "incidente": "EODI-2025-00059",
+      "presencia": {"valor": "confirmada", "cita": "Mannen erkjente å ha fløyet drone to ganger i løpet av søndagen.", "enlace": "https://nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598"},
       "titulo": {
         "es": "La policía para a un hombre que voló un dron en la zona prohibida del aeropuerto de Sandefjord Torp",
         "en": "Police stop man who flew a drone in the restricted zone of Sandefjord Torp airport"
@@ -5263,6 +5264,7 @@
     },
     {
       "incidente": "EODI-2026-00056",
+      "presencia": {"valor": "confirmada", "cita": "denunciato alla Procura di Cuneo per una serie di violazioni del Codice della Navigazione e dei regolamenti dell’ENAC", "enlace": "https://tech.everyeye.it/notizie/drone-agricolo-paralizza-aeroporto-cuneo-rischi-ignorati-volo-abusivo-875815.html"},
       "titulo": {
         "es": "Dron agrícola bloquea el aeropuerto de Cuneo-Levaldigi",
         "en": "Agricultural drone blocks Cuneo-Levaldigi airport"
@@ -5364,6 +5366,150 @@
       "motivo": {
         "es": "repaso de entrada con el experto: Suceso nuevo en Letonia el miércoles 25 de marzo. El tipo debe ser incursión, porque los gobiernos dicen que el dron entró desde Rusia, y la presencia está confirmada, porque el dron cayó.",
         "en": "entry review: New event in Latvia on Wednesday 25 March. The type should be incursion, since governments say the drone entered from Russia, and presence is confirmed, since the drone crashed."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00048",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Wie die Bundespolizei mitteilt, wurde sie auf den Drohnenflug aufmerksam, konnte den Piloten in der Nähe der Baustelle antreffen",
+        "enlace": "https://kreiszeitung.de/lokales/bremen/drohnenflug-blockiert-kurzzeitig-flughafenbetrieb-in-bremen-94055749.html"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso único del 25-11-2025 en Bremen, sin ficha previa. La presencia del dron está confirmada por la Bundespolizei, que halló al piloto, y era un solo dron.",
+        "en": "entry review: Single event on 2025-11-25 in Bremen, no earlier record. Drone presence is confirmed by the Bundespolizei, which found the pilot, and it was a single drone."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00068",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "От полицията потвърждават за този сигнал, като официалното становище е, че това е аварийно кацнал безпилотен летателен апарат",
+        "enlace": "https://focus-news.net/novini/regioni/Dron-e-padnal-v-blizost-do-letishteto-vuv-Varna-2619382"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso único del 3 de julio cerca del aeropuerto de Varna. La policía confirma un aparato aterrizado de emergencia, así que la presencia del dron está confirmada y no como figura en la ficha.",
+        "en": "entry review: Single event on 3 July near Varna airport. Police confirm an emergency-landed unmanned aircraft, so the drone's presence is confirmed, not unconfirmed as the record states."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00084",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Het onbekende object betrof een drone.",
+        "enlace": "https://blikopnieuws.nl/nieuws/308116/gevechtsvliegtuigen-vliegbasis-volkel-opgestegen-na-detectie-drone.html"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo del domingo 7 de diciembre en Volkel, distinto de las fichas anteriores. La presencia del dron figura como no confirmada, pero la Fuerza Aérea dice que era un dron.",
+        "en": "entry review: New incident on Sunday 7 December at Volkel, distinct from the earlier records. Drone presence is listed as unconfirmed, but the Air Force states the object was a drone."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00158",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Anchetatorii au identificat drona şi locaţia de unde a fost operată.",
+        "enlace": "https://ziare.com/drona/avion-echipaj-aeroport-otopeni-1965347"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo del 19 de septiembre de 2025 sin ficha equivalente; la presencia del dron debería ser confirmada porque los investigadores identificaron el dron y al operador.",
+        "en": "entry review: New event on 19 September 2025 with no matching record; drone presence should be confirmed because investigators identified the drone and its operating location."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00192",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Gegen 19 Uhr konnte die Polizei bis zu zehn Drohnen entdecken, die das Gelände überflogen.",
+        "enlace": "https://all-in.de/polizei/drohnen-ueber-bundeswehreinrichtungen-in-manching-und-neuburg-an-der-donau_arid-358964"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo del 12-01-2025 en Manching, distinto de Husum. La policía contó hasta diez drones, así que la presencia está confirmada y no 'no_confirmada'.",
+        "en": "entry review: New event of 2025-01-12 at Manching, distinct from Husum. Police counted up to ten drones, so presence is confirmed, not 'no_confirmada'."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00296",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "potrivit unui comunicat transmis de Ministerul Apărării Naționale (MApN)",
+        "enlace": "https://dailybusiness.ro/actualitate/drona-militara-cazuta-in-judetul-tulcea-la-5-kilometri-de-granita-cu-ucraina-armata-nu-a-putut-ridica-avioanele-din-cauza-vremii-523041"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso único de la noche del lunes 10 al martes 11 de noviembre en Grindu (Tulcea). No hay fichas previas. La presencia del dron figura como no confirmada, pero un comunicado del Ministerio de Defensa la confirma.",
+        "en": "entry review: Single event on the night of Monday 10 to Tuesday 11 November near Grindu (Tulcea). There are no earlier records. Drone presence is listed as unconfirmed, but a Ministry of Defence communiqué confirms it."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00314",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Dies bestätigte die Innenministerin des Bundeslandes, Sabine Sütterlin-Waack.",
+        "enlace": "https://tagesspiegel.de/politik/kraftwerk-klinikum-landtag-drohnen-uber-schleswig-holstein-spahten-offenbar-kritische-infrastruktur-aus-14433467.html"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso propio de la noche del jueves al viernes en Schleswig-Holstein, sin ficha duplicada; la presencia está confirmada por la ministra del Interior, no como figura en la ficha.",
+        "en": "entry review: Distinct event from the night of Thursday to Friday in Schleswig-Holstein, no duplicate in the list; drone presence is confirmed by the state interior minister, unlike the record states."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00019",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Nustatytas droną skraidinęs Lietuvos pilietis",
+        "enlace": "https://ve.lt/kriminalai/pilotui-brangiai-kainuos-drono-pakelimas-prie-palangos-oro-uosto"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Es un suceso nuevo: un dron volado en zona prohibida junto a Palanga el 18 de julio, sin relación con la ficha de Cracovia. La presencia del dron la confirma la autoridad.",
+        "en": "entry review: It is a new event: a drone flown in a restricted zone near Palanga on 18 July, unrelated to the Kraków record. The authority confirms the drone's presence."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00038",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "due to the detection of unauthorised unmanned aircraft systems (UAS) in the vicinity of and subsequently over the aerodrome",
+        "enlace": "https://freemalaysiatoday.com/category/world/2026/09/19/luxembourg-airport-briefly-halts-flights-due-to-drones"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Cierre del aeropuerto de Luxemburgo la noche del viernes al sábado (19-09-2026), sin fichas previas. La presencia debe ser confirmada porque el propio aeropuerto comunica la detección de drones no autorizados.",
+        "en": "entry review: Luxembourg Airport closure on the night of Friday to Saturday (2026-09-19), with no earlier records. Presence should be confirmed because the airport itself reports detecting unauthorised drones."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00045",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "treffen die Beamten auf einen 45-jährigen Deutschen, der dort mit seiner Drohne zugange ist.",
+        "enlace": "https://schwaebische.de/regional/allgaeu/memmingen/zwischenfall-am-flughafen-memmingen-flugbetrieb-eingestellt-4450354"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso nuevo: cierre breve del aeropuerto de Memmingen el viernes 20 de marzo de 2026. Pero la policía halló al piloto con su dron, así que la presencia está confirmada.",
+        "en": "entry review: New incident: brief closure of Memmingen airport on Friday 20 March 2026. However, police found the pilot with his drone, so the drone presence is confirmed."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00066",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "gardai seized drones from idiotic punters in Co Clare",
+        "enlace": "https://irishmirror.ie/news/irish-news/idiot-punters-sparked-security-alert-37686353"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso distinto de la ficha de Dublín; las fuentes sitúan los hechos en la visita de Trump a principios de mes sin dar un día concreto para Shannon, y la presencia del dron queda confirmada por la incautación de los drones por la policía.",
+        "en": "entry review: Different event from the Dublin Bay record; sources place it during Trump's visit earlier this month without a specific day for Shannon, and drone presence is confirmed by gardai seizing the drones."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00080",
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "qui ont été arrêtés et placés quelques heures en garde à vue par les gendarmes des transports aériens",
+        "enlace": "https://ladepeche.fr/2026/06/19/passion-ou-espionnage-un-drone-trop-curieux-repere-mercredi-au-dessus-des-usines-airbus-a-laeroport-de-toulouse-blagnac-13428022.php"
+      },
+      "motivo": {
+        "es": "repaso de entrada con el experto: Suceso único del miércoles 17 de junio de 2026, coincide con la ficha. Sin fichas previas. La presencia del dron está confirmada porque los gendarmes detuvieron a los pilotos.",
+        "en": "entry review: Single event on Wednesday 17 June 2026, matching the record. No prior records. Drone presence is confirmed because gendarmes arrested the pilots."
       }
     }
   ],
@@ -11181,6 +11327,120 @@
       "enlace": "https://theyeshivaworld.com/news/general/2616219/black-sea-three-maritime-drones-strike-container-ship-off-nato-member-bulgaria.html",
       "pais": "BG",
       "motivo": "repaso de entrada con el experto: Suceso nuevo del 28-10-2026 (miércoles), no registrado antes; la ficha no indica el número de drones, que las fuentes dan como tres."
+    },
+    {
+      "incidente": "EODI-2025-00048",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "ließ ein 39-jähriger Mann seine Drohne in etwa 35 Metern Höhe über einer Baustelle",
+      "enlace": "https://kreiszeitung.de/lokales/bremen/drohnenflug-blockiert-kurzzeitig-flughafenbetrieb-in-bremen-94055749.html",
+      "pais": "DE",
+      "motivo": "repaso de entrada con el experto: Suceso único del 25-11-2025 en Bremen, sin ficha previa. La presencia del dron está confirmada por la Bundespolizei, que halló al piloto, y era un solo dron."
+    },
+    {
+      "incidente": "EODI-2025-00062",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "die Lichter einer Drohne über dem Flughafen in Erfurt-Bindersleben entdeckt",
+      "enlace": "https://otz.de/article410283082/wegen-drohnensichtung-erfurter-flughafen-stellt-betrieb-ein.html",
+      "pais": "DE",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del aeropuerto de Erfurt en la noche del miércoles 22 de octubre; las fuentes hablan de un solo dron, y la ficha dice «sin dato»."
+    },
+    {
+      "incidente": "EODI-2025-00075",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "airport operations were halted for about 20 minutes until one of the drone operators was detained",
+      "enlace": "https://lrt.lt/en/news-in-english/19/2769293/two-detained-for-flying-drones-near-vilnius-airport-after-airspace-breach-halts-flights",
+      "pais": "LT",
+      "motivo": "repaso de entrada con el experto: Suceso del domingo 7 de diciembre, distinto del de noviembre en Vilna; el tipo debe ser interrupción aeroportuaria porque se pararon las operaciones unos 20 minutos."
+    },
+    {
+      "incidente": "EODI-2025-00088",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "los despegues se aplazaron hasta que el espacio aéreo fue declarado despejado y seguro para las operaciones",
+      "enlace": "https://europasur.es/gibraltar/drones-no-autorizados-retrasan-salida-vuelos-aeropuerto_0_2005055419.html",
+      "pais": "GB",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo en Gibraltar la noche del lunes 20 de octubre, distinto del de Edimburgo; los datos de la ficha concuerdan con la fuente."
+    },
+    {
+      "incidente": "EODI-2025-00176",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "lidosta uz aptuveni 30 minūtēm slēgta",
+      "enlace": "https://nra.lv/latvija/riga/479812-drosibas-risku-del-uz-citam-lidostam-parvirzitas-tris-uz-rigu-lidojusas-lidmasinas.htm",
+      "pais": "LV",
+      "motivo": "repaso de entrada con el experto: Suceso único del 13-01-2025 en el aeropuerto de Riga, sin ficha previa. El tipo debe ser interrupción aeroportuaria porque se cerró el aeropuerto unos 30 minutos."
+    },
+    {
+      "incidente": "EODI-2025-00219",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "la poudrerie de Bergerac a été lundi soir visitée par un drone. Au total, deux survols ont été dénombrés",
+      "enlace": "https://europe1.fr/societe/info-europe-1-la-poudrerie-de-bergerac-survolee-par-un-drone-870877",
+      "pais": "FR",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 10-11-2025 en Bergerac, sin ficha equivalente en la lista. El número de drones está mal: las fuentes hablan de un dron con dos sobrevuelos."
+    },
+    {
+      "incidente": "EODI-2025-00285",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "O dronă a survolat Republica Moldova în partea de sud-est.",
+      "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-a-survolat-republica-moldova-in-urma-2488172.html",
+      "pais": "MD",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo de la noche del 18 al 19 de noviembre en Ștefan Vodă; no coincide con ninguna ficha. El número de drones sobre Moldavia es 1, no 2."
+    },
+    {
+      "incidente": "EODI-2025-00304",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "en drone ble observert i over 400 meters høyde",
+      "enlace": "https://www.tu.no/nyhetsstudio/observerte-drone-i-over-400-meters-hoeyde-flesland-omdirigerte-flytrafikken/76744",
+      "pais": "NO",
+      "motivo": "repaso de entrada con el experto: Suceso único del sábado de Pascua (19 de abril de 2025) en Bergen; la fuente 1 habla de un solo dron, y la ficha no da número."
+    },
+    {
+      "incidente": "EODI-2025-00365",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "se suspendieron temporalmente todas las operaciones del aeropuerto entre las 07:00 y las 08:10 horas",
+      "enlace": "https://www.larazon.es/sociedad/dron-obliga-desviar-varios-vuelos-aeropuerto-fuerteventura_2025101468ee56520e3c6c5098398d06.html",
+      "pais": "ES",
+      "motivo": "repaso de entrada con el experto: Suceso nuevo del 14-10-2025, distinto del de septiembre; el tipo debe ser interrupción aeroportuaria porque se suspendieron las operaciones del aeropuerto."
+    },
+    {
+      "incidente": "EODI-2026-00056",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "ha costretto alla sospensione dei voli.",
+      "enlace": "https://punto-informatico.it/drone-agricolo-bloccato-aeroporto-cuneo",
+      "pais": "IT",
+      "motivo": "repaso de entrada con el experto: Suceso único sin ficha previa y sin día dado por las fuentes. El tipo debe ser interrupción aeroportuaria (voli sospesi) y el dron consta por la denuncia a la Procura."
+    },
+    {
+      "incidente": "EODI-2026-00083",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "ezért a hatóságok azonnal felfüggesztették a légiforgalmat",
+      "enlace": "https://pcwplus.hu/pcwlite/dron-repuloter-lezaras-letartoztatas-magyar-allampolgar-horvatorszag-split-385993.html",
+      "pais": "HR",
+      "motivo": "repaso de entrada con el experto: Suceso del viernes 31-07-2026 en Split, sin ficha previa. El tipo debe ser interrupción aeroportuaria, porque se suspendió el tráfico aéreo unos diez minutos."
     }
   ]
 }
