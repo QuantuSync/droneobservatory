@@ -232,7 +232,10 @@ def test_el_cierre_revisado_con_su_duracion() -> None:
     devuelve con su cita."""
     from proceso import decidir
 
-    incidente = {"id": "EODI-2025-00183", "consecuencias": {"cierre": {"valor": "si"}}}
+    incidente: dict[str, Any] = {
+        "id": "EODI-2025-00183",
+        "consecuencias": {"cierre": {"valor": "si"}},
+    }
     revision = {"valor": {"valor": "si", "minutos": {"min": 60, "max": 60}}, "motivo": "m"}
     decidir._con_revision(incidente, "cierre", revision)
     assert incidente["consecuencias"]["cierre"] == {
