@@ -11181,6 +11181,18 @@
       "motivo": "se suspendió la actividad del aeropuerto de Vilna (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
     },
     {
+      "incidente": "EODI-2025-00060",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Dėl galimai pastebėto drono buvo laikinai sustabdyta Vilniaus oro uosto veikla, praneša Lietuvos oro uostų atstovas Tadas Vasiliauskas.",
+      "enlace": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/del-galimai-pastebeto-drono-buvo-laikinai-sustabdyta-vilniaus-oro-uosto-veikla",
+      "pais": "LT",
+      "motivo": "un dron posiblemente avistado («galimai pastebėto drono», en singular); el número se perdió al volver a extraer la ficha el 23 de octubre de 2026"
+    },
+    {
       "incidente": "EODI-2025-00291",
       "campo": "cierre",
       "valor": "si",
