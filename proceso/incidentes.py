@@ -722,6 +722,18 @@ def distintos_del_experto(almacen: Almacen) -> frozenset[frozenset[str]]:
     )
 
 
+def uniones_a_mano(almacen: Almacen) -> frozenset[frozenset[str]]:
+    """Los pares de las fusiones vigentes revisadas a mano (recogida/revisados.py: `unir` y la
+    parte de una separación que coincide con otra ficha), no las del control de las fichas."""
+    return frozenset(
+        frozenset((f["absorbido"], f["destino"]))
+        for f in almacen.fusiones()
+        if not f["revertida"]
+        and f["motivo"].startswith(PREFIJO_REVISADA)
+        and not f["motivo"].startswith(PREFIJO_REVISADA + "control de fichas: ")
+    )
+
+
 def no_se_unen(a: Documento, b: Documento, del_experto: frozenset[frozenset[str]]) -> bool:
     """Una revisión o el experto los dio por sucesos distintos."""
     return separados_por_revision(a, b) or frozenset((a["id"], b["id"])) in del_experto

@@ -123,6 +123,7 @@ def test_la_auditoria_v_ve_la_union_sobre_un_distinto_del_experto() -> None:
         f"{NUEVO}→{VIEJO}"
     ]
     assert auditoria_fichas.uniones_marcadas([viejo, unido]) == []
+    assert auditoria_fichas.uniones_marcadas([viejo, unido], frozenset({PAR}), [PAR]) == []
     assert auditoria_fichas.auditar([viejo, unido], del_experto=frozenset({PAR}))["V"]
 
 
