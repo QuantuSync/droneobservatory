@@ -4,11 +4,22 @@ Cada fuente de `configuracion/fuentes_oficiales.json` se lee respetando su
 robots.txt y con la identificación del observatorio: las de tipo rss por su
 canal y las de tipo pagina por su página de noticias (`paginas_oficiales`).
 Una nota que habla de drones se enlaza al incidente que le
-corresponde con la regla de fusión (mismo sitio y misma ventana); si encaja con
-uno solo, entra como fuente de autoridad y el incidente pasa a confirmado: la
+corresponde: con la regla de fusión (mismo sitio y misma ventana) o, si la ficha
+solo tiene el país o la región (sin punto), o la nota no nombra un sitio que se
+sepa situar, con el mismo país, el mismo día (el de la nota o la víspera, o el
+día que la nota escribe) y un tipo de suceso compatible. Si encaja con uno
+solo, entra como fuente de autoridad y el incidente pasa a confirmado: la
 autoridad dice que ocurrió. presencia_dron solo cambia si la nota lo dice sin
-reservas («bekræfter», sin «mulige» ni «formodede»). Si no encaja con ninguno o
-encaja con varios, no se enlaza.
+reservas («bekræfter», sin «mulige» ni «formodede»).
+
+Una nota que cuenta un suceso (SUCESO) y no encaja con ninguna ficha, o con
+varias, no se pierde: entra una vez como artículo de su lugar en un candidato
+(como los artículos dirigidos), el extractor lo lleva delante de todos y la
+ficha que salga pasa por el filtro de entrada (recogida/entrada.py), donde el
+experto la compara con todo y decide si es nueva o la de una ficha existente.
+En la recogida siguiente la nota se enlaza a esa ficha como fuente de
+autoridad. Una nota que no cuenta un suceso (una cumbre, un informe anual, un
+ejercicio) no crea nada.
 
 Cada fuente tiene su propio tiempo (TOPE_FUENTE_S) dentro del tope de todas (TOPE_S): una
 fuente lenta o caída se corta, se apunta en el registro con su id y el motivo, y se pasa a la
@@ -45,10 +56,18 @@ from urllib.robotparser import RobotFileParser
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import incidentes
+from proceso import fechas, incidentes
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
-from proceso.noticias import filtro, lugar, lugar_del_suceso, nomenclator
+from proceso.noticias import (
+    filtro,
+    localidades_declinadas,
+    lugar,
+    lugar_del_suceso,
+    lugares_en,
+    nomenclator,
+    titular_normalizado,
+)
 from recogida import lector_delegado, navegador, paginas_oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 from recogida.plazo import Plazo, TiempoAgotado
@@ -82,6 +101,37 @@ _RESERVA = re.compile(
     r"\bmulig|formod|muligvis|mistanke|possibl|suspect|mutmaß|mögliche|podejrzan|posibil",
     re.IGNORECASE,
 )
+# Lo que dice que la nota cuenta un suceso concreto (un dron en el espacio aéreo, avistado,
+# derribado, caído o hallado, una alerta aérea, un cierre), en las lenguas de las fuentes. Sin
+# ello, la nota habla de drones sin un suceso (una cumbre, un informe anual, un ejercicio, la
+# compra de equipos: medido sobre las notas de los 30 días anteriores al 29 de octubre de 2026).
+SUCESO = re.compile(
+    r"airspace|shot down|crash|wreck|debris|sighted|sighting|spotted|\bfound\b|"
+    r"gaisa telp|apdraudēj|atrast|nokrit|ielid|"
+    r"spațiul aerian|spaţiul aerian|spatiul aerian|ținte aeriene|ţinte aeriene|ținta aeriană|"
+    r"ţinta aeriană|doborât|prăbuș|"
+    r"przestrze[nń] powietrzn|naruszeni|zestrzel|szczątk|"
+    r"luftraum|abgeschossen|gesichtet|trümmer|absturz|"
+    r"luftrum|observeret|observert|observerad|nedskudt|"
+    r"espacio aéreo|avistamiento|avistad|derribad|"
+    r"espace aérien|survol|abattu|débris|"
+    r"luchtruim|neergehaald|waargenomen|gespot|"
+    r"oro erdv|õhuruum|ilmatila",
+    re.IGNORECASE,
+)
+# Una nota de un aeropuerto es de una interrupción aeroportuaria: sin sitio común no se enlaza a
+# una incursión o un sobrevuelo del mismo día (ni al revés).
+_AEROPUERTO = re.compile(
+    r"airport|aeropuert|aéroport|aeroport|flughafen|lufthavn|lufthamn|lotnisk|lidost|luchthaven",
+    re.IGNORECASE,
+)
+INTERRUPCION = "interrupcion_aeroportuaria"
+# Notas de un suceso que no encajaron con una sola ficha y entraron como artículo.
+CURSOR_SIN_FICHA = "oficiales_sin_ficha"
+MOTIVO_SIN_FICHA = (
+    "nota oficial sin ficha: entra como artículo de su lugar para que el extractor y el filtro "
+    "de entrada decidan si es un suceso nuevo o el de una ficha existente"
+)
 
 
 @dataclass(frozen=True)
@@ -101,6 +151,8 @@ class Recuentos:
     relevantes: int = 0
     enlazadas: int = 0
     confirmadas: int = 0
+    # Notas de un suceso sin ficha que entraron como artículo para el filtro de entrada.
+    a_entrada: int = 0
     bloqueadas: int = 0
     # Fuentes que no dio tiempo a leer en esta ejecución (el tope de todas se agotó).
     sin_leer: int = 0
@@ -116,7 +168,8 @@ class Recuentos:
     def resumen(self) -> str:
         return (
             f"notas={self.notas} relevantes={self.relevantes} enlazadas={self.enlazadas} "
-            f"confirmadas={self.confirmadas} bloqueadas={self.bloqueadas} "
+            f"confirmadas={self.confirmadas} a_entrada={self.a_entrada} "
+            f"bloqueadas={self.bloqueadas} "
             f"sin_leer={self.sin_leer} en_pausa={len(self.en_pausa)}"
         )
 
@@ -244,24 +297,88 @@ def _punto(nota: Nota) -> Documento | None:
     }  # fmt: skip
 
 
+def suceso(nota: Nota) -> bool:
+    """La nota cuenta un suceso concreto (SUCESO), no solo habla de drones."""
+    return SUCESO.search(f"{nota.titulo}. {nota.texto}") is not None
+
+
+def tipo_compatible(incidente: Documento, nota: Nota) -> bool:
+    """Una nota de un aeropuerto, con una interrupción aeroportuaria; las demás, con una
+    incursión o un sobrevuelo."""
+    de_aeropuerto = _AEROPUERTO.search(f"{nota.titulo}. {nota.texto}") is not None
+    return bool(incidente["tipo"] == INTERRUPCION) == de_aeropuerto
+
+
+def mismo_dia(incidente: Documento, nota: Nota) -> bool:
+    """El suceso es del día de la nota o de la víspera (la regla de fusión con la fecha de
+    publicación), o la nota escribe su día («nokritis 18. oktobrī», publicada el 24)."""
+    de_la_nota: Documento = {
+        "id": nota.id,
+        "lugar": {"pais": nota.fuente["pais"], "radio_km": 0.0},
+        "tiempo": {"inicio": {"valor": nota.fecha.strftime("%Y-%m-%dT%H:%MZ"),
+                              "precision": "aproximada"}},
+        "fuentes": [],
+    }  # fmt: skip
+    primero, segundo = sorted(
+        (incidente, de_la_nota), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"])
+    )
+    with contextlib.suppress(KeyError, ValueError):
+        if incidentes.misma_ventana(primero, segundo):
+            return True
+    fecha = nota.fecha if nota.fecha.tzinfo else nota.fecha.replace(tzinfo=UTC)
+    return fechas.dia_escrito(
+        str(incidente["tiempo"]["inicio"]["valor"]), f"{nota.titulo}. {nota.texto}", fecha
+    )
+
+
+def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
+    """Las fichas activas del país de la nota que pueden ser su suceso: las que encajan con su
+    sitio por la regla de fusión y, del mismo día y un tipo compatible, las que no tienen punto
+    (solo el país o la región) y, si la nota no nombra un sitio que se sepa situar, todas."""
+    punto = _punto(nota)
+    resultado: list[Documento] = []
+    for incidente in almacen.incidentes():
+        if not incidentes.activo(incidente) or incidente["lugar"]["pais"] != nota.fuente["pais"]:
+            continue
+        por_sitio = punto is not None and incidentes.encajan(incidente, punto)
+        por_dia = (
+            (punto is None or not incidentes.con_punto(incidente))
+            and tipo_compatible(incidente, nota)
+            and mismo_dia(incidente, nota)
+        )
+        if por_sitio or por_dia:
+            resultado.append(incidente)
+    return resultado
+
+
+def elegida(nota: Nota, candidatas: list[Documento]) -> Documento | None:
+    """La ficha de la nota: la única posible o, si hay varias, la que ya la tiene entre sus
+    fuentes (la nota entró como artículo y el filtro de entrada decidió de qué ficha era)."""
+    if len(candidatas) == 1:
+        return candidatas[0]
+    con_ella = [
+        i for i in candidatas if any(f.get("enlace") == nota.enlace for f in i["fuentes"])
+    ]  # fmt: skip
+    return con_ella[0] if len(con_ella) == 1 else None
+
+
 def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[str]) -> str | None:
     """Añade la nota al único incidente que le corresponde. Devuelve su identificador."""
-    punto = _punto(nota)
-    if punto is None:
+    suya = elegida(nota, posibles(almacen, nota))
+    if suya is None:
         return None
-    encajan = [
-        i
-        for i in almacen.incidentes()
-        if incidentes.activo(i) and i["lugar"]["pais"] == nota.fuente["pais"]
-        and incidentes.encajan(i, punto)
-    ]  # fmt: skip
-    if len(encajan) != 1:
-        return None
-    incidente = copy.deepcopy(encajan[0])
+    incidente = copy.deepcopy(suya)
     if any(f["id"] == nota.id for f in incidente["fuentes"]):
         return str(incidente["id"])
     fuente = fuente_oficial(nota)
-    incidente["fuentes"] = [*incidente["fuentes"], fuente]
+    # Si entró antes como artículo (nota sin ficha), esa fuente pasa a ser la de la autoridad.
+    previa = next((f for f in incidente["fuentes"] if f.get("enlace") == nota.enlace), None)
+    if previa is not None and previa.get("campos_respaldados"):
+        fuente["campos_respaldados"] = sorted({*previa["campos_respaldados"], "estado"})
+    incidente["fuentes"] = [
+        *(f for f in incidente["fuentes"] if f.get("enlace") != nota.enlace),
+        fuente,
+    ]
     for otra in incidente["fuentes"]:
         otra["credibilidad"] = int(Credibilidad.CONFIRMADO)
     if incidente["estado"]["actual"] != Estado.CONFIRMADO:
@@ -371,7 +488,78 @@ def recoger(
             previo = next((i for i in antes if i["id"] == id_), None)
             if previo is not None and previo["estado"]["actual"] != Estado.CONFIRMADO:
                 recuentos.confirmadas += 1
+        elif suceso(nota) and a_entrada(almacen, nota, ahora):
+            recuentos.a_entrada += 1
     return None
+
+
+def candidatos(almacen: Almacen) -> set[str]:
+    """Los candidatos donde entraron notas oficiales sin ficha (el extractor los lleva delante)."""
+    cursor = almacen.cursor(CURSOR_SIN_FICHA) or {}
+    return {c for entrada in cursor.values() if isinstance(entrada, dict)
+            for c in entrada.get("candidatos", [])}  # fmt: skip
+
+
+@cache
+def _mayor_localidad(pais: str) -> str | None:
+    """La localidad de mayor radio del país (casi siempre, la capital)."""
+    del_pais = [
+        (sitio.radio_km, id_) for id_, sitio in nomenclator().lugares.items()
+        if sitio.pais == pais and sitio.tipo == "localidad"
+    ]  # fmt: skip
+    return max(del_pais)[1] if del_pais else None
+
+
+def lugar_de_candidato(nota: Nota) -> str | None:
+    """Dónde entra la nota sin ficha: el lugar del suceso; si nombra varios, el primero del país
+    de la fuente (la alerta letona «Krāslavas un Rēzeknes novadā»); si ninguno, la localidad
+    mayor del país. Ese lugar solo agrupa: el de la ficha lo saca el extractor de la nota."""
+    nom = nomenclator()
+    id_ = lugar_del_suceso(nota.titulo, nota.texto, nom)
+    if id_ is not None and id_ in nom.lugares:
+        return id_
+    for parte in (nota.titulo, f"{nota.titulo}. {nota.texto}"):
+        for hallados in (lugares_en(parte, nom), localidades_declinadas(parte, nom)):
+            pais = nota.fuente["pais"]
+            del_pais = [h for h in hallados if h in nom.lugares and nom.lugares[h].pais == pais]
+            if del_pais:
+                return del_pais[0]
+    return _mayor_localidad(str(nota.fuente["pais"]))
+
+
+def a_entrada(almacen: Almacen, nota: Nota, ahora: datetime) -> bool:
+    """La nota sin ficha entra, una sola vez, como artículo de su lugar en un candidato. True si
+    ha entrado ahora."""
+    from recogida.calidad import situar_en_candidatos
+
+    cursor: dict[str, Any] = dict(almacen.cursor(CURSOR_SIN_FICHA) or {})
+    if nota.enlace in cursor:
+        return False
+    sitio = lugar_de_candidato(nota)
+    if sitio is None:
+        registro.warning("oficiales: nota sin ficha y sin lugar: %s", nota.enlace)
+        return False
+    fecha = nota.fecha if nota.fecha.tzinfo else nota.fecha.replace(tzinfo=UTC)
+    documento: Documento = {
+        "url": nota.enlace, "medio": nota.fuente["medio"],
+        "fecha": fecha.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "idioma": nota.fuente["idioma"], "pais": nota.fuente["pais"], "titular": nota.titulo,
+        "titular_normalizado": titular_normalizado(nota.titulo), "temas": [], "lugares": [sitio],
+    }  # fmt: skip
+    if not almacen.guardar_articulo(documento):
+        existente = almacen.articulos_de([nota.enlace])
+        if existente:
+            documento = {**existente[0], "lugares": [sitio]}
+    tocados = situar_en_candidatos(almacen, [(documento, [sitio])], MOTIVO_SIN_FICHA)
+    cursor[nota.enlace] = {
+        "entrado": ahora.strftime("%Y-%m-%dT%H:%MZ"), "fuente": nota.fuente["id"],
+        "candidatos": tocados,
+    }  # fmt: skip
+    almacen.guardar_cursor(CURSOR_SIN_FICHA, cursor)
+    registro.info(
+        "oficiales: nota sin ficha a la entrada (%s): %s", ", ".join(tocados), nota.enlace
+    )
+    return True
 
 
 def _instante(texto: Any) -> datetime | None:
