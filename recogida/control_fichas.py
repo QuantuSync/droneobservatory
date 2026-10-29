@@ -946,6 +946,25 @@ def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True
         procesar_par(ctx, peticion, respuesta)
 
 
+def contradicha(ctx: Contexto, id_: str, previa: Documento | None) -> bool:
+    """Una extracción nueva contradijo lo decidido de la ficha después de su última verificación
+    («reextraccion:<id>», proceso/extraccion.conservar_decididos)."""
+    from proceso import extraccion
+
+    pendiente = ctx.decision(extraccion.PREFIJO_REEXTRACCION + id_)
+    if pendiente is None:
+        return False
+    return previa is None or str(previa.get("fecha") or "") < str(pendiente.get("fecha") or "")
+
+
+def contradichas(ctx: Contexto) -> set[str]:
+    """Las fichas vigentes con una contradicción de una extracción nueva aún sin verificar."""
+    return {
+        d["id"] for d in _activos(ctx.almacen)
+        if contradicha(ctx, d["id"], ctx.decision(reglas.clave_verificacion(d["id"])))
+    }  # fmt: skip
+
+
 def por_verificar(
     ctx: Contexto, foco: set[str], espera: timedelta | None = None, forzar: bool = False
 ) -> list[Documento]:
@@ -969,6 +988,11 @@ def por_verificar(
                 str(previa["espera_experto"]), _iso(ctx.ahora), previa.get("tope_experto")
             ):
                 resultado.append(incidente)
+            continue
+        if contradicha(ctx, incidente["id"], previa):
+            # Una extracción nueva contradice lo decidido (proceso/decididos.py): la ficha se
+            # queda como estaba y se verifica con sus fuentes aunque no hayan cambiado.
+            resultado.append(incidente)
             continue
         fallos = reglas.fallos_de_ficha(incidente)
         if fallos and (previa is None or previa.get("fallos") != fallos):
@@ -1638,6 +1662,8 @@ def ejecutar(
         # Lo que esperaba al experto vuelve en cuanto puede (venció su espera o subió su tope),
         # aunque sus fichas ya no estén entre las nuevas: no espera a la pasada de madrugada.
         foco = foco | esperas_vencidas(ctx)
+        # Lo que una extracción nueva contradice se verifica en la misma recogida.
+        foco = foco | contradichas(ctx)
     try:
         if alcance != "noche":
             comparar_pares(ctx, foco, revisar_decididos=not horaria)
@@ -2628,11 +2654,14 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
     from proceso import auditoria_fichas
 
     try:
-        desde = ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)
+        desde = (ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
         resultado = auditoria_fichas.auditar(
             almacen.incidentes(),
-            almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ")),
+            almacen.cambios_desde(desde),
             almacen.copias_archivadas(),
+            extracciones=almacen.fechas_extraccion(desde),
         )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])

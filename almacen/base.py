@@ -1506,6 +1506,16 @@ class Almacen:
         ).fetchall()
         return [str(f[0]) for f in filas]
 
+    def fechas_extraccion(self, desde: str) -> dict[str, list[str]]:
+        """Las fechas de las extracciones de cada candidato desde `desde` (ISO UTC): lo que lee la
+        comprobación W de la auditoría (proceso/auditoria_fichas.perdidos_al_extraer)."""
+        resultado: dict[str, list[str]] = {}
+        for candidato, fecha in self._conexion.execute(
+            "SELECT candidato, fecha FROM extracciones WHERE fecha >= ? ORDER BY id", (desde,)
+        ).fetchall():
+            resultado.setdefault(candidato, []).append(fecha)
+        return resultado
+
     def extracciones(self, candidato: str) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT fecha, version, huella, valida, documento FROM extracciones "
