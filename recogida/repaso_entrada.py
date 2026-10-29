@@ -282,6 +282,10 @@ def mismo_imposible(incidente: Documento, otra: Documento) -> str | None:
 # octubre de 2026 y estuvo 25 minutos fuera de la web.
 NO_EN_PROTEGIDAS = (UNIR, RETIRAR, SEPARAR, DIA, LUGAR, AUTORIDAD)
 REFERENCIA = referencia.DIRECTORIO / "fichas.json"
+# Lo que queda para revisar en cualquier ficha: una separación (la de EODI-2026-00292 del grupo c
+# era el balance de un ministro, y la de 2025-00036 del grupo d sacaba una parte que ya es la
+# ficha 2025-00084; propuesta_separar no sabe con qué ficha coincide cada parte).
+SIEMPRE_PARA_REVISAR = (SEPARAR,)
 
 
 @dataclass(frozen=True)
@@ -361,6 +365,16 @@ def drones_fuera(error: Documento, incidente: Documento) -> str | None:
     return None
 
 
+def tipo_fuera(error: Documento, incidente: Documento) -> str | None:
+    """Por qué una corrección del tipo no se propone, o None: quita la interrupción de un
+    aeropuerto, que sale del cierre con su cita y se corrige ahí (EODI-2025-00094, Brønnøysund:
+    «ninguna fuente habla de cierre», y una lo cuenta)."""
+    correcto = str(error.get("correcto") or "").strip()
+    if incidente.get("tipo") == "interrupcion_aeroportuaria" and correcto != incidente["tipo"]:
+        return "la interrupción sale del cierre del aeropuerto con su cita"
+    return None
+
+
 def _errores_ajustados(
     decision: Documento, incidente: Documento, valores: dict[str, Any]
 ) -> tuple[list[Documento], list[Documento]]:
@@ -372,6 +386,8 @@ def _errores_ajustados(
             razon = presencia_fuera(error, incidente)
         elif error.get("dato") == "drones":
             razon = drones_fuera(error, incidente)
+        elif error.get("dato") == "tipo":
+            razon = tipo_fuera(error, incidente)
         if razon is None:
             dato = str(error.get("dato"))
             bien = valores.get({"presencia": "presencia_dron"}.get(dato, dato))
@@ -418,9 +434,10 @@ def ajustar(decision: Documento, incidente: Documento, otra: Documento | None,
     if fuera:
         nueva["errores"], nueva["errores_fuera"] = quedan, fuera
     pasos = cambios(nueva, incidente)
-    if es_protegida and any(p in NO_EN_PROTEGIDAS for p in pasos):
-        nueva["para_revisar"] = [p for p in pasos if p in NO_EN_PROTEGIDAS]
-        pasos = [p for p in pasos if p not in NO_EN_PROTEGIDAS]
+    revisar = NO_EN_PROTEGIDAS if es_protegida else SIEMPRE_PARA_REVISAR
+    if any(p in revisar for p in pasos):
+        nueva["para_revisar"] = [p for p in pasos if p in revisar]
+        pasos = [p for p in pasos if p not in revisar]
     nueva["cambios"] = pasos
     return nueva
 
