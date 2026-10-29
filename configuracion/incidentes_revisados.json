@@ -1,5 +1,5 @@
 {
-  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados; con «distintos»: true, la regla de fusión no vuelve a juntar esas fichas y deshace la fusión que ya lo hizo.",
+  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados; con «distintos»: true, la regla de fusión no vuelve a juntar esas fichas y deshace la fusión que ya lo hizo. «distintos»: dos fichas que una revisión dio por sucesos distintos sin separar ninguna (docs/sucesos_mezclados.md); se enlazan como sucesos relacionados (con «separado_de» y el motivo), la unión que ya las juntó se deshace y ninguna unión automática (regla, control, filtro de entrada, repaso) las vuelve a juntar: queda como propuesta para revisar.",
   "unir": [
     {
       "registros": [
@@ -7289,6 +7289,17 @@
         }
       },
       "motivo": "El dron cayó junto a una vivienda del pueblo de Chiștelnița (Telenești), según el Ministerio de Defensa; la ficha solo tenía el país."
+    }
+  ],
+  "distintos": [
+    {
+      "incidentes": ["EODI-2026-00538", "EODI-2026-00541"],
+      "separado_de": "EODI-2026-00541",
+      "origen": "revisado",
+      "motivo": {
+        "es": "Dos sucesos distintos frente a Sulina el 14 de octubre de 2026: el blanco aéreo que el Ministerio de Defensa rumano siguió en el espacio aéreo nacional de 17:38 a 17:46 hora local, a unos 22 km al noreste de Sulina (antena3.ro), y el petrolero alcanzado hacia las 20:00 (novinite.com).",
+        "en": "Two different events off Sulina on 14 October 2026: the air target that the Romanian Ministry of Defence tracked in national airspace from 17:38 to 17:46 local time, about 22 km north-east of Sulina (antena3.ro), and the tanker hit around 20:00 (novinite.com)."
+      }
     }
   ],
   "separar": [

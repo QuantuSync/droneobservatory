@@ -1379,6 +1379,24 @@ def separar(
                         "separado_de": revision["incidente"],
                         "nota": nota,
                     }
+    for par in cargar().get("distintos", []):
+        # Dos fichas que una revisión dio por sucesos distintos: relacionadas entre sí, y así
+        # ninguna unión automática las junta (incidentes.separados_por_revision). Si una ya está
+        # unida en la otra, la unión se deshace: vuelve con sus fuentes.
+        for id_ in par["incidentes"]:
+            documento = almacen.incidente(id_)
+            if documento is not None and documento.get("fusionado_en") in par["incidentes"]:
+                incidentes.revertir(almacen, id_, ahora, modelos)
+        vivos = [d["id"] for d in (_vivo(almacen, i) for i in par["incidentes"]) if d is not None]
+        if len(set(vivos)) != len(par["incidentes"]):
+            continue
+        nota = {"es": par["motivo"]["es"], "en": par["motivo"]["en"]}
+        for uno in vivos:
+            for otro in vivos:
+                if otro != uno:
+                    relaciones.setdefault(uno, {})[otro] = {
+                        "id": otro, "separado_de": par["separado_de"], "nota": nota,
+                    }  # fmt: skip
     hechos.relacionados = _enlazar(almacen, relaciones, ahora, modelos)
     registro.info("sucesos mezclados: %s", hechos.texto())
     return hechos

@@ -493,7 +493,11 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
             otra = next(c for c in elegidas if c["id"] == decision["mismo"])
             conserva, une = reglas.mas_antiguo(otra, incidente)
             motivo = f"filtro de entrada: {decision.get('motivo_mismo') or decision['motivo_es']}"
-            control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora, ctx.modelos)
+            if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
+                                   ctx.modelos) is None:  # fmt: skip
+                motivo = f"el mismo que {otra['id']}, dados por distintos: propuesta"
+                return {**base, **decision, "decision": RETENER, "cambios": cambios,
+                        "motivo": motivo}  # fmt: skip
             ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
             return {**base, **decision, "decision": UNIDA, "conserva": conserva["id"],
                     "une": une["id"], "cambios": cambios}  # fmt: skip
@@ -639,7 +643,9 @@ def corregir_medida(
                 continue
             conserva, une = reglas.mas_antiguo(otra, incidente)
             motivo = "medida a las 24 horas: el mismo suceso"
-            control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora, ctx.modelos)
+            if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
+                                   ctx.modelos) is None:  # fmt: skip
+                continue
             ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
             hechos.append(f"unida {une['id']}→{conserva['id']}")
             return hechos

@@ -684,17 +684,47 @@ def separaciones_distintas(ruta: Path = REVISADOS) -> frozenset[str]:
     return frozenset(e["incidente"] for e in datos.get("separar", []) if e.get("distintos"))
 
 
+@cache
+def pares_distintos(ruta: Path = REVISADOS) -> frozenset[frozenset[str]]:
+    """Los pares que una revisión dio por sucesos distintos sin separar ninguna ficha (sección
+    `distintos`): se enlazan como sucesos relacionados y ninguna unión automática los junta. El
+    29 de octubre de 2026 la regla unió EODI-2026-00538 (un blanco aéreo a las 17:38) en
+    EODI-2026-00541 (el petrolero, hacia las 20:00), que una revisión había dado por distintos sin
+    dejarlo escrito."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return frozenset(frozenset(e["incidentes"]) for e in datos.get("distintos", []))
+
+
 def separados_por_revision(a: Documento, b: Documento) -> bool:
     """Uno lleva al otro entre sus sucesos relacionados por una separación marcada como de
-    sucesos distintos. El 19 de octubre de 2026 la regla juntó otra vez el desvío del
-    19/10/2025 en Fuerteventura (EODI-2025-00468), fechado por su publicación, con las esperas
-    de la víspera (EODI-2025-00397), de las que se separó."""
+    sucesos distintos, o una revisión los dio por distintos (`pares_distintos`). El 19 de
+    octubre de 2026 la regla juntó otra vez el desvío del 19/10/2025 en Fuerteventura
+    (EODI-2025-00468), fechado por su publicación, con las esperas de la víspera
+    (EODI-2025-00397), de las que se separó."""
+    if frozenset((a["id"], b["id"])) in pares_distintos():
+        return True
     distintas = separaciones_distintas()
     return any(
         r.get("id") == otro["id"] and r.get("separado_de") in distintas
         for uno, otro in ((a, b), (b, a))
         for r in uno.get("relacionados", [])
     )
+
+
+def distintos_del_experto(almacen: Almacen) -> frozenset[frozenset[str]]:
+    """Los pares que el experto dio por sucesos distintos en el control de las fichas (decisión
+    escalada, no la que da el plazo de un dudoso): ninguna unión automática los junta; si más
+    tarde alguien quiere unirlos, queda como propuesta para revisar."""
+    return frozenset(
+        frozenset(clave.split(":", 1)[1].split("|"))
+        for clave, d in almacen.controles("par:").items()
+        if d.get("decision") == "distinto" and d.get("escalado") and not d.get("plazo")
+    )
+
+
+def no_se_unen(a: Documento, b: Documento, del_experto: frozenset[frozenset[str]]) -> bool:
+    """Una revisión o el experto los dio por sucesos distintos."""
+    return separados_por_revision(a, b) or frozenset((a["id"], b["id"])) in del_experto
 
 
 def encajan(a: Documento, b: Documento) -> bool:
@@ -910,6 +940,7 @@ def fusionar(
         marca = _instante(ahora, "minuto")["valor"]
         publicados = frozenset(i["id"] for i in activos if i["control"]["alta"]["valor"] < marca)
     vivos = {i["id"]: i for i in activos}
+    del_experto = distintos_del_experto(almacen)
     hechas = 0
     for incidente in activos:
         if incidente["id"] not in vivos:
@@ -921,6 +952,7 @@ def fusionar(
             and (otro["tiempo"]["inicio"]["valor"], otro["id"])
             < (incidente["tiempo"]["inicio"]["valor"], incidente["id"])
             and encajan(otro, incidente)
+            and frozenset((otro["id"], incidente["id"])) not in del_experto
         ]
         # Dudosa si encaja con dos: no se hace. Una fecha de publicación no compite con una
         # escrita: entre los que encajan cuenta solo la mejor clase de fecha (hora, día,
@@ -937,6 +969,7 @@ def fusionar(
             anteriores = [
                 otro for otro in vivos.values()
                 if otro["id"] != incidente["id"] and mismo_suceso_posterior(otro, incidente)
+                and not no_se_unen(otro, incidente, del_experto)
             ]  # fmt: skip
             motivo = MOTIVO_NOTA_POSTERIOR
         if len(anteriores) != 1:

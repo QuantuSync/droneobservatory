@@ -751,7 +751,10 @@ def aplicar_una(ctx: control_fichas.Contexto, incidente: Documento, decision: Do
             return False
         conserva, une = reglas.mas_antiguo(otra, incidente)
         texto = f"repaso de entrada: {decision.get('motivo_mismo') or decision.get('motivo_es')}"
-        control_fichas.unir(ctx.almacen, conserva, une, texto[:300], ctx.ahora, ctx.modelos)
+        if control_fichas.unir(ctx.almacen, conserva, une, texto[:300], ctx.ahora,
+                               ctx.modelos) is None:  # fmt: skip
+            hecho.sin_aplicar.append(f"{incidente['id']}: dada por distinta de {otra['id']}")
+            return False
         hecho.unidas.append(f"{une['id']}→{conserva['id']}")
         return True
     if RETIRAR in pasos:

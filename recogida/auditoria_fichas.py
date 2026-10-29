@@ -13,7 +13,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from almacen.base import Almacen
-from proceso import auditoria_fichas
+from proceso import auditoria_fichas, incidentes
 
 
 def copia(origen: Path, destino: Path) -> Path:
@@ -38,6 +38,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             almacen.incidentes(),
             almacen.cambios_desde(desde.strftime("%Y-%m-%dT%H:%M:%SZ")),
             almacen.copias_archivadas(),
+            incidentes.distintos_del_experto(almacen),
         )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))
