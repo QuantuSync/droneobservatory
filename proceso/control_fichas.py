@@ -193,13 +193,15 @@ def _mismo_tipo_de_sitio(a: Documento, b: Documento) -> bool:
 
 
 def separados(a: Documento, b: Documento) -> bool:
-    """Una revisión los separó (sucesos relacionados) o son cierres de noches distintas."""
+    """Una revisión los separó o los dio por distintos (sucesos relacionados) o son cierres de
+    noches distintas."""
     relacionados = {r.get("id") for r in a.get("relacionados", [])} | {
         r.get("id") for r in b.get("relacionados", [])
     }
     return (
         a["id"] in relacionados
         or b["id"] in relacionados
+        or incidentes.separados_por_revision(a, b)
         or incidentes.cierres_de_noches_distintas(a, b)
     )
 

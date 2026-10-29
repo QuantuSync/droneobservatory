@@ -483,14 +483,39 @@ def senalar_no_suceso(
 # --- Uniones -------------------------------------------------------------------------------
 
 
+# Uniones que alguien pidió entre fichas que una revisión o el experto dio por distintas: no se
+# hacen; quedan aquí, por par, para revisarlas a mano.
+CURSOR_PROPUESTAS = "propuestas_union_distintos"
+
+
+def proponer(almacen: Almacen, conserva: Documento, une: Documento, motivo: str,
+             ahora: datetime) -> None:  # fmt: skip
+    """Anota la unión que no se hace como propuesta para revisar."""
+    propuestas = almacen.cursor(CURSOR_PROPUESTAS) or {}
+    propuestas[reglas.clave_par(conserva["id"], une["id"])] = {
+        "conserva": conserva["id"], "une": une["id"], "motivo": motivo[:300],
+        "fecha": ahora.strftime("%Y-%m-%dT%H:%MZ"),
+    }  # fmt: skip
+    almacen.guardar_cursor(CURSOR_PROPUESTAS, propuestas)
+    registro.warning(
+        "unión %s→%s sin hacer: dadas por sucesos distintos; propuesta para revisar (%s)",
+        une["id"], conserva["id"], motivo[:120],
+    )  # fmt: skip
+
+
 def unir(
     almacen: Almacen, conserva: Documento, une: Documento, motivo: str, ahora: datetime,
     modelos: frozenset[str],
-) -> Documento:  # fmt: skip
+) -> Documento | None:  # fmt: skip
     """Une `une` en `conserva` (su enlace lleva al que queda) con la fusión anotada como
-    revisada: `incidentes.revisar_fusiones` no la deshace."""
+    revisada: `incidentes.revisar_fusiones` no la deshace. Si una revisión o el experto las dio
+    por sucesos distintos, no las une: la unión queda como propuesta (`proponer`) y devuelve
+    None."""
     from recogida.revisados import completar
 
+    if incidentes.no_se_unen(conserva, une, incidentes.distintos_del_experto(almacen)):
+        proponer(almacen, conserva, une, motivo, ahora)
+        return None
     nuevo, aportadas = incidentes.absorber(conserva, une, ahora)
     nuevo = completar(nuevo, [une])
     fundido = {**copy.deepcopy(une), "fusionado_en": conserva["id"]}
@@ -533,8 +558,8 @@ def reaplicar_uniones(
         if "fusionado_en" not in une:
             if motivo is None or not incidentes.activo(une):
                 continue
-            unir(almacen, conserva, propio, motivo, ahora, modelos)
-            rehechas += 1
+            if unir(almacen, conserva, propio, motivo, ahora, modelos) is not None:
+                rehechas += 1
             continue
         if une["fusionado_en"] != conserva_id:
             continue
@@ -630,6 +655,18 @@ class Contexto:
     decisiones: dict[str, Documento] = field(default_factory=dict)
     nuevas: dict[str, Documento] = field(default_factory=dict)
 
+    @property
+    def del_experto(self) -> frozenset[frozenset[str]]:
+        """Los pares que el experto dio por distintos (incidentes.distintos_del_experto)."""
+        return frozenset(
+            frozenset(clave.split(":", 1)[1].split("|"))
+            for clave, d in self.decisiones.items()
+            if clave.startswith("par:")
+            and d.get("decision") == "distinto"
+            and d.get("escalado")
+            and not d.get("plazo")
+        )
+
     def decision(self, clave: str) -> Documento | None:
         return self.nuevas.get(clave) or self.decisiones.get(clave)
 
@@ -711,6 +748,7 @@ def pares_por_decidir(
     lleguen fuentes nuevas: lo hace la pasada de madrugada. Con `forzar` (el repaso con el
     experto), todos salvo los que ese repaso ya decidió con las mismas fuentes."""
     activos = _activos(ctx.almacen)
+    del_experto = ctx.del_experto
     resultado = []
     for a, b in reglas.pares_candidatos(activos, foco):
         clave = reglas.clave_par(a["id"], b["id"])
@@ -721,6 +759,10 @@ def pares_por_decidir(
                 resultado.append((a, b, huella))
             continue
         if previa is not None:
+            if frozenset((a["id"], b["id"])) in del_experto:
+                # El experto los dio por distintos: no se vuelven a comparar aunque lleguen
+                # fuentes nuevas (EODI-2026-00538 y 00541, 29 de octubre de 2026).
+                continue
             if previa["decision"] in {"mismo", "distinto"} and (
                 previa.get("huella") == huella or not revisar_decididos
             ):
@@ -867,14 +909,20 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
         conserva, une = reglas.mas_antiguo(a, b)
         decision.update(conserva=conserva["id"], une=une["id"])
         try:
-            unir(ctx.almacen, conserva, une, decision["motivo_es"], ctx.ahora, ctx.modelos)
+            hecha = unir(ctx.almacen, conserva, une, decision["motivo_es"], ctx.ahora, ctx.modelos)
         except DocumentoInvalido as error:
             ctx.resultado.errores.append(f"{clave}: unión sin guardar: {str(error)[:150]}")
             decision["decision"] = "dudoso"
             decision["desde"] = _iso(ctx.ahora)
             ctx.resultado.dudosos.append(clave)
         else:
-            ctx.resultado.unidos.append(f"{une['id']} -> {conserva['id']}")
+            if hecha is None:
+                # Dados por distintos antes (una revisión o el experto): la decisión anterior
+                # sigue y la unión queda como propuesta para revisar.
+                decision = {**(previa or {"decision": "distinto"}), "fecha": _iso(ctx.ahora),
+                            "propuesta_mismo": decision["motivo_es"]}  # fmt: skip
+            else:
+                ctx.resultado.unidos.append(f"{une['id']} -> {conserva['id']}")
     ctx.nuevas[clave] = decision
 
 
@@ -1442,9 +1490,11 @@ def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
             continue
         if decidida["decision"] == "mismo":
             conserva, une = reglas.mas_antiguo(por_id[decidida["conserva"]], incidente)
-            unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos)
-            ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
-            decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}
+            if unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos):
+                ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
+                decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}
+            else:
+                decidida = {**decidida, "propuesta": True}
         else:
             nuevo = reglas.con_fecha_retrospectiva(incidente, decidida)
             if nuevo is not incidente:

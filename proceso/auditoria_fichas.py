@@ -88,6 +88,11 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   petrolero» quedó sin «posible» mientras la ficha tenía el dron de otro suceso.
 - **U, concordancia del dron**: el titular en español escribe el dron en femenino («Una dron
   entra…», EODI-2026-00698; «Una posible dron…», EODI-2026-00322; proceso/titulares.concordar).
+- **V, unión de fichas marcadas como relacionadas**: una ficha unida en otra que una revisión dio
+  por suceso distinto (separación con «distintos» o sección `distintos` de
+  configuracion/incidentes_revisados.json) o que el experto dio por distinta en el control, sin
+  una unión a mano posterior (`unir`). EODI-2026-00538 (29 de octubre de 2026): la regla la unió
+  en EODI-2026-00541 (docs/sucesos_mezclados.md).
 """
 
 import json
@@ -122,7 +127,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U",
+    "S", "T", "U", "V",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -146,6 +151,7 @@ NOMBRES = {
     "S": "día publicado distinto del día local",
     "T": "titular incoherente con la presencia",
     "U": "concordancia del dron",
+    "V": "unión de fichas marcadas como relacionadas",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -538,6 +544,33 @@ def autoridad_perdida(documentos: list[Documento]) -> list[str]:
     return sorted(salida)
 
 
+def _unidas_a_mano() -> list[frozenset[str]]:
+    datos = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
+    return [frozenset(g["registros"]) for g in datos.get("unir", [])]
+
+
+def uniones_marcadas(
+    documentos: list[Documento], del_experto: frozenset[frozenset[str]] = frozenset()
+) -> list[str]:
+    """Las uniones vigentes (absorbido→destino) entre fichas que una revisión dio por distintas
+    (separación con «distintos» o sección `distintos`) o que el experto dio por distintas en el
+    control, salvo las que una revisión unió a mano después (sección `unir`) (V)."""
+    a_mano = _unidas_a_mano()
+    por_id = {str(d["id"]): d for d in documentos}
+    salida = []
+    for documento in documentos:
+        destino = por_id.get(str(documento.get("fusionado_en")))
+        if destino is None:
+            continue
+        propio = {k: v for k, v in documento.items() if k != "fusionado_en"}
+        par = frozenset((str(documento["id"]), str(destino["id"])))
+        if any(par <= grupo for grupo in a_mano):
+            continue
+        if incidentes.no_se_unen(propio, destino, del_experto):
+            salida.append(f"{documento['id']}→{destino['id']}")
+    return sorted(salida)
+
+
 HORAS_OSCILA = 48
 MIN_VUELTAS = 3
 # Lo que no es un dato de la ficha: lo del control, el motivo del cambio y lo que se calcula de
@@ -587,10 +620,12 @@ def auditar(
     documentos: Iterable[Documento],
     cambios: Iterable[Documento] = (),
     copias: dict[str, Documento] | None = None,
+    del_experto: frozenset[frozenset[str]] = frozenset(),
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
     son los de las últimas 48 horas (`Almacen.cambios_desde`), para K; `copias`, las copias
-    archivadas de los enlaces (`Almacen.copias_archivadas`), para Q."""
+    archivadas de los enlaces (`Almacen.copias_archivadas`), para Q; `del_experto`, los pares
+    que el experto dio por distintos (`incidentes.distintos_del_experto`), para V."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
     for documento in vistos:
@@ -610,6 +645,7 @@ def auditar(
         resultado["Q"] = [str(d["id"]) for d in vistos
                           if incidentes.activo(d) and sin_fuente_legible(d, copias)]  # fmt: skip
     resultado["L"] = autoridad_perdida(vistos)
+    resultado["V"] = uniones_marcadas(vistos, del_experto)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
                       if i in vigentes]  # fmt: skip
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor

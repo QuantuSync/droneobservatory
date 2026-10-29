@@ -75,6 +75,37 @@ aplica una vez, antes del extractor (`recogida/revisados.separar`, cursor
   (EODI-2025-00468), que la regla volvió a unir con las esperas de la víspera (EODI-2025-00397)
   porque solo tenía la fecha de publicación.
 
+### Dos fichas distintas sin nada que repartir (`distintos`)
+
+Cuando una revisión da dos fichas por sucesos distintos y cada una ya tiene sus fuentes (o la
+unión automática solo les juntó las fuentes de una), no hace falta repartir: basta la sección
+`distintos` de `configuracion/incidentes_revisados.json`, con los dos identificadores, el
+`separado_de` que enseña la web y el motivo en español y en inglés. En cada recogida
+(`recogida/revisados.separar`):
+
+- si una está unida en la otra, la unión se deshace (`incidentes.revertir`): vuelve con las
+  fuentes que aportó y la otra las pierde;
+- las dos se enlazan como sucesos relacionados;
+- ninguna unión automática las vuelve a juntar: la regla de fusión (`incidentes.encajan`,
+  `incidentes.pares_distintos`), el control de las fichas, la segunda lectura y el filtro de
+  entrada (`proceso/control_fichas.separados`), y toda unión hecha con
+  `recogida/control_fichas.unir` (control, filtro de entrada, medida a las 24 horas, repaso de
+  entrada, retrospectivas, uniones que se rehacen tras volver a extraer).
+
+Lo mismo vale para los pares que el **experto** dio por distintos en el control de las fichas
+(decisión escalada, `incidentes.distintos_del_experto`): no se vuelven a comparar aunque lleguen
+fuentes nuevas, la regla de fusión no los junta y `unir` no los une. No se enlazan en la web (el
+motivo del control habla de «ficha A» y «ficha B», no es un texto público). Si alguien pide unir
+un par así (el experto en el repaso, el filtro de entrada), la unión no se hace: queda como
+propuesta para revisar a mano en el cursor `propuestas_union_distintos` y en el registro
+(«unión … sin hacer: dadas por sucesos distintos»). La auditoría V
+(`recogida/auditoria_fichas`) avisa de toda unión vigente entre fichas así marcadas.
+
+Desde el 29 de octubre de 2026: la recogida de las 00:17 unió EODI-2026-00538 (el blanco aéreo
+que el Ministerio de Defensa rumano siguió de 17:38 a 17:46 hora local cerca de Sulina) en
+EODI-2026-00541 (el petrolero, hacia las 20:00), que una revisión había dado por distintos sin
+dejarlo escrito.
+
 Los sucesos separados son de semanas o meses atrás: los avisos de ntfy solo salen para sucesos
 de las últimas 72 horas (recogida/avisos.clasificar), así que no se avisan.
 
