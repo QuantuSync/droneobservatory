@@ -1,5 +1,6 @@
 """Fuentes oficiales sin red: RSS, robots.txt y enlace al incidente."""
 
+from collections import Counter
 from datetime import UTC, datetime, timedelta
 from unicodedata import normalize
 
@@ -247,3 +248,118 @@ def test_una_fuente_en_pausa_no_es_un_aviso_de_la_recogida(
     )
     assert recuentos.en_pausa == ["caida"]
     assert (recuentos.sin_leer, recuentos.bloqueadas) == (0, 0)
+
+
+# --- Notas de un suceso con ficha sin punto, con varias posibles o sin ficha ---------------
+NOTA_PAIS = """<rss version="2.0"><channel><title>Politi</title>
+<item><title>Politiet bekræfter droner over Københavns Lufthavn</title>
+<link>https://via.ejemplo/pressemeddelelse/3/droner?lang=da#sm-31</link>
+<description>Droner blev observeret over lufthavnen mandag aften.</description>
+<pubDate>Tue, 23 Sep 2025 06:00:00 GMT</pubDate></item>
+<item><title>Prezes w debacie otwarcia Drone Summit</title>
+<link>https://via.ejemplo/pressemeddelelse/4/summit?lang=da#sm-41</link>
+<description>Rozmowa o przyszłości dronów w lotnictwie.</description>
+<pubDate>Tue, 23 Sep 2025 07:00:00 GMT</pubDate></item>
+</channel></rss>"""
+# Solo la segunda nota: habla de drones, pero no cuenta un suceso.
+SOLO_CUMBRE = NOTA_PAIS[: NOTA_PAIS.index("<item>")] + NOTA_PAIS[NOTA_PAIS.index("</item>") + 7 :]
+
+
+def _sin_punto(almacen: Almacen, id_: str, nuevo: str | None = None) -> str:
+    """Una copia de la ficha con el lugar solo a nivel de país (como EODI-2026-00603)."""
+    incidente = almacen.incidente(id_)
+    assert incidente is not None
+    copia = {**incidente, "id": nuevo or id_}
+    copia["lugar"] = {"pais": "DK", "nivel": "pais"}
+    copia.pop("objetivo", None)
+    almacen.guardar_incidente(copia, AHORA, MODELOS)
+    return str(copia["id"])
+
+
+def test_la_nota_se_enlaza_a_la_ficha_que_solo_tiene_el_pais() -> None:
+    almacen = Almacen.abrir()
+    id_ = _sin_punto(almacen, str(extraer_ejemplo(almacen)))
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    # Mismo país, la víspera de la nota y un aeropuerto en las dos: es su ficha.
+    assert [i["id"] for i in oficiales.posibles(almacen, nota)] == [id_]
+    assert oficiales.enlazar(almacen, nota, AHORA, MODELOS) == id_
+    incidente = almacen.incidente(id_)
+    assert incidente is not None
+    assert incidente["fuentes"][-1]["es_autoridad"] is True
+    assert incidente["estado"]["actual"] == "confirmado"
+
+
+def test_la_nota_con_el_dia_escrito_casa_con_la_ficha_de_ese_dia() -> None:
+    almacen = Almacen.abrir()
+    incidente = almacen.incidente(_sin_punto(almacen, str(extraer_ejemplo(almacen))))
+    assert incidente is not None
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    # Publicada días después, pero escribe el día del suceso (Alūksne: el 24/10 sobre el 18).
+    tarde = datetime(2025, 9, 27, 6, tzinfo=UTC)
+    con_dia = oficiales.Nota(
+        nota.fuente, nota.id, nota.titulo, nota.enlace, tarde, "Droner den 22. september."
+    )
+    sin_dia = oficiales.Nota(nota.fuente, nota.id, nota.titulo, nota.enlace, tarde, "Droner.")
+    assert oficiales.mismo_dia(incidente, con_dia)
+    assert not oficiales.mismo_dia(incidente, sin_dia)
+
+
+def test_con_varias_fichas_posibles_entra_por_el_filtro_y_despues_se_enlaza() -> None:
+    almacen = Almacen.abrir()
+    id_ = _sin_punto(almacen, str(extraer_ejemplo(almacen)))
+    otra = _sin_punto(almacen, id_, "EODI-2025-00002")
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    assert {i["id"] for i in oficiales.posibles(almacen, nota)} == {id_, otra}
+    assert oficiales.enlazar(almacen, nota, AHORA, MODELOS) is None
+    # Entra como artículo para que el experto (filtro de entrada) diga de cuál es.
+    assert oficiales.a_entrada(almacen, nota, AHORA)
+    # Cuando el filtro la ha unido a una, esa la tiene entre sus fuentes y la nota se enlaza.
+    incidente = almacen.incidente(otra)
+    assert incidente is not None
+    articulo = {**incidente["fuentes"][0], "id": "gdelt-nota", "enlace": nota.enlace}
+    incidente["fuentes"] = [*incidente["fuentes"], articulo]
+    almacen.guardar_incidente(incidente, AHORA, MODELOS)
+    assert oficiales.enlazar(almacen, nota, AHORA, MODELOS) == otra
+    enlazada = almacen.incidente(otra)
+    assert enlazada is not None
+    # La fuente que entró como artículo es ahora la de la autoridad, sin repetirse.
+    de_la_nota = [f for f in enlazada["fuentes"] if f.get("enlace") == nota.enlace]
+    assert [(f["id"], f["es_autoridad"]) for f in de_la_nota] == [(nota.id, True)]
+
+
+def test_la_nota_sin_ficha_entra_una_vez_como_candidato_prioritario() -> None:
+    from recogida import extractor
+
+    almacen = Almacen.abrir()
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    assert oficiales.posibles(almacen, nota) == []
+    assert oficiales.suceso(nota)
+    assert oficiales.a_entrada(almacen, nota, AHORA)
+    assert not oficiales.a_entrada(almacen, nota, AHORA)
+    candidatos = oficiales.candidatos(almacen)
+    assert len(candidatos) == 1
+    (candidato,) = [c for c in almacen.candidatos() if c["id"] in candidatos]
+    assert nota.enlace in candidato["articulos"]
+    assert [a["medio"] for a in almacen.articulos_de([nota.enlace])] == ["Københavns Politi"]
+    # El extractor lo lleva por delante; su ficha pasará por el filtro de entrada.
+    assert [c["id"] for c in extractor.prioritarios(almacen)][:1] == [candidato["id"]]
+
+
+def test_la_nota_que_no_cuenta_un_suceso_no_crea_nada() -> None:
+    almacen = Almacen.abrir()
+
+    def servir(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        if url.endswith("/robots.txt"):
+            return 200, {}, b""
+        return 200, {}, SOLO_CUMBRE.encode()
+
+    recuentos = oficiales.Recuentos()
+    reloj = Reloj()
+    descargador = Descargador(servir, reloj.dormir, reloj, pausa_minima_s=0)
+    assert (
+        oficiales.recoger(almacen, descargador, FUENTE, AHORA, MODELOS, recuentos, Counter())
+        is None
+    )
+    assert (recuentos.relevantes, recuentos.enlazadas, recuentos.a_entrada) == (1, 0, 0)
+    assert almacen.candidatos() == []
+    assert almacen.cursor(oficiales.CURSOR_SIN_FICHA) is None

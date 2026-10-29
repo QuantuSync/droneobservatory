@@ -199,7 +199,7 @@ def prioritarios(almacen: Almacen) -> list[Documento]:
     tienen noticias de varios medios, de más medios a menos y, a la par, del más reciente al
     más antiguo."""
     nom = nomenclator()
-    from recogida import articulos_dirigidos
+    from recogida import articulos_dirigidos, oficiales
 
     dirigidos = {
         c for a in (almacen.cursor(BUSQUEDA) or {}).get("anomalias", {}).values()
@@ -207,6 +207,8 @@ def prioritarios(almacen: Almacen) -> list[Documento]:
     }  # fmt: skip
     # Y los de las fuentes apuntadas a mano (recogida/articulos_dirigidos.py).
     dirigidos |= articulos_dirigidos.candidatos(almacen)
+    # Y los de las notas oficiales que no encontraron ficha (recogida/oficiales.py).
+    dirigidos |= oficiales.candidatos(almacen)
     elegidos: list[tuple[int, str, Documento]] = []
     for candidato in almacen.candidatos():
         # Los que se separaron en dos sucesos (las dos partes) van delante de todos: la ficha
