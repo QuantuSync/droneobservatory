@@ -1363,6 +1363,7 @@ def separar(
             hechos.repartidos.append(revision["incidente"])
         candidatos = {c["id"]: c for c in almacen.candidatos()}
         vivos: list[str] = []
+        de_partes: list[list[str]] = []
         queda = conservada(revision)
         for n, (parte, entrada) in enumerate(zip(revision["partes"], hecho["partes"], strict=True)):
             if not parte.get("es_suceso", True):
@@ -1423,6 +1424,9 @@ def separar(
                     almacen, [*ids, parte["coincide_con"]], revision["motivo"]["es"], ahora,
                     modelos,
                 )  # fmt: skip
+            de_partes.append(ids)
+        _deshacer_entre_partes(almacen, de_partes, ahora, modelos)
+        for ids in de_partes:
             for propio in ids:
                 documento = _vivo(almacen, propio)
                 if documento is not None and documento["id"] not in vivos:
@@ -1457,6 +1461,32 @@ def separar(
     hechos.relacionados = _enlazar(almacen, relaciones, ahora, modelos)
     registro.info("sucesos mezclados: %s", hechos.texto())
     return hechos
+
+
+def _deshacer_entre_partes(
+    almacen: Almacen, de_partes: list[list[str]], ahora: datetime, modelos: frozenset[str]
+) -> None:
+    """Una regla que fundió el registro de una parte en el de otra parte de la misma separación
+    se deshace antes de enlazarlas: si no, las dos acaban en una sola ficha y no se enlaza nada
+    (EODI-2025-00472 en EODI-2025-00178, fusión 2438). Las uniones revisadas a mano, no."""
+    for n, ids in enumerate(de_partes):
+        otras = {
+            d["id"]
+            for m, suyos in enumerate(de_partes) if m != n
+            for d in (almacen.incidente(i) for i in suyos) if d is not None
+        }  # fmt: skip
+        for id_ in ids:
+            documento = almacen.incidente(id_)
+            if documento is None or documento.get("fusionado_en") not in otras:
+                continue
+            fusion = next(
+                (f for f in reversed(almacen.fusiones())
+                 if f["absorbido"] == id_ and not f["revertida"]),
+                None,
+            )  # fmt: skip
+            if fusion is not None and not fusion["motivo"].startswith(incidentes.PREFIJO_REVISADA):
+                incidentes.revertir(almacen, id_, ahora, modelos)
+                registro.info("separación: %s vuelve de %s", id_, documento["fusionado_en"])
 
 
 def _enlazar(

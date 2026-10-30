@@ -7644,6 +7644,15 @@
   ],
   "distintos": [
     {
+      "incidentes": ["EODI-2025-00178", "EODI-2025-00472"],
+      "separado_de": "EODI-2025-00178",
+      "origen": "revisado",
+      "motivo": {
+        "es": "Dos sucesos distintos junto al aeropuerto de Vilna: el dron que un joven hizo volar el sábado 25 de octubre de 2025 por la noche en la calle Servečės, retenido por la guardia de fronteras (kauno.diena.lt), y el dron detectado el miércoles 29 a las 12:05 sin afectar a los vuelos (lrt.lt, lrytas.lt). La regla «mismo sitio y misma ventana» los volvió a juntar el 30 de octubre de 2026 (fusión 2438).",
+        "en": "Two different events next to Vilnius airport: the drone a young man flew in Servečės street on the evening of Saturday 25 October 2025, held by the border guard (kauno.diena.lt), and the drone detected on Wednesday 29 at 12:05 without affecting flights (lrt.lt, lrytas.lt). The «same place and same window» rule merged them again on 30 October 2026 (merge 2438)."
+      }
+    },
+    {
       "incidentes": ["EODI-2026-00538", "EODI-2026-00541"],
       "separado_de": "EODI-2026-00541",
       "origen": "revisado",
@@ -10692,10 +10701,10 @@
     {
       "incidente": "EODI-2026-00268",
       "campo": "inicio",
-      "valor": "2026-03-01",
+      "valor": "2026-03-02",
       "cita": "A Shahed-type unmanned aerial vehicle reportedly struck the British base\u2019s runway a few minutes past midnight on March 2",
       "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri",
-      "motivo": "pocos minutos después de la medianoche del 2 de marzo en Chipre (UTC+2): 1 de marzo en UTC"
+      "motivo": "pocos minutos después de la medianoche del 2 de marzo en Chipre (UTC+2): el día local es el 2 (unos minutos después de las 22:00 UTC del 1; la fuente no da el minuto). Hasta el 30 de octubre de 2026 estaba el 1, el de UTC"
     },
     {
       "incidente": "EODI-2026-00091",
@@ -11686,6 +11695,15 @@
       "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-volkel-opnieuw-mogelijke-drones-gespot-bij-vliegbasis",
       "pais": "NL",
       "motivo": "«donderdagmiddag rond kwart voor vijf»: hacia las 16:45 hora de los Países Bajos (UTC+1) del jueves 4 de diciembre de 2025, las 15:45 UTC; la hora se perdía al volver a extraer la ficha (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00178",
+      "campo": "inicio",
+      "valor": "2025-10-25",
+      "cita": "Šeštadienio vakarą Vilniuje, Rasų seniūnijoje, netoli Vilniaus oro uosto paleistas bepilotis orlaivis",
+      "enlace": "https://kauno.diena.lt/naujienos/vilnius/nusikaltimai-ir-nelaimes/del-netoli-vilniaus-oro-uosto-paleisto-drono-aiskinosi-vst-karo-policija-ir-sostines-pareigunai-1726571",
+      "pais": "LT",
+      "motivo": "el sábado por la noche es el 25 de octubre de 2025 (kauno.diena.lt, publicada el miércoles 29); la ficha tenía el 29, el día del otro dron, EODI-2025-00472 (revisado el 30 de octubre de 2026)"
     },
     {
       "incidente": "EODI-2025-00380",
