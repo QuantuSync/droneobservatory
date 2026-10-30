@@ -739,7 +739,22 @@ def de_partes_separadas(a: Documento, b: Documento) -> bool:
     if not partes_a:
         return False
     partes_b = partes_de_separacion(b)
-    return any(ra == rb and na != nb for ra, na in partes_a for rb, nb in partes_b)
+    # Si comparten una parte de esa separación, cuentan al menos en parte el mismo suceso (dos
+    # registros de una parte, o una ficha que todavía junta varias): eso lo deciden las reglas.
+    return any(
+        {n for r, n in partes_a if r == revision}.isdisjoint(
+            {n for r, n in partes_b if r == revision}
+        )
+        for revision in {r for r, _ in partes_a} & {r for r, _ in partes_b}
+    )
+
+
+def sin_lo_aportado(destino: Documento, absorbido: Documento) -> Documento:
+    """El destino de una unión sin las fuentes que le aportó el absorbido: lo que era suyo, para
+    comparar los dos como antes de la unión."""
+    del_absorbido = {f.get("id") for f in absorbido.get("fuentes", [])}
+    return {**destino, "fuentes": [f for f in destino.get("fuentes", [])
+                                   if f.get("id") not in del_absorbido]}  # fmt: skip
 
 
 def separados_por_revision(a: Documento, b: Documento) -> bool:
@@ -1065,7 +1080,7 @@ def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str])
             continue
         propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
         if (
-            separados_por_revision(propio, destino)
+            separados_por_revision(propio, sin_lo_aportado(destino, propio))
             or cierres_de_noches_distintas(propio, destino)
             or repite_un_cierre_anterior(
                 *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))

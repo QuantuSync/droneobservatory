@@ -140,3 +140,15 @@ def test_la_configuracion_de_vilna() -> None:
     assert mapa["gdelt-8f443417cf9ade19"] == frozenset({("EODI-2025-00178", 0)})
     assert mapa["gdelt-16109fdf16777cbb"] == frozenset({("EODI-2025-00178", 1)})
     assert frozenset(("EODI-2025-00178", "EODI-2025-00472")) in incidentes.pares_distintos()
+
+
+def test_una_ficha_que_aun_junta_varias_partes_no_bloquea(separada: dict[str, Any]) -> None:
+    # Como las uniones del 4/10/2026 en EODI-2025-00154: el absorbido es de una parte y el
+    # destino lleva esa parte y otras; comparten la parte, así que no se deshace por esto.
+    mezclada = _alemana()
+    mezclada["fuentes"] = [*mezclada["fuentes"], *_nuremberg_griega()["fuentes"]]
+    registro = _nuremberg_griega()
+    registro["id"] = "EODI-2026-09517"
+    registro["fuentes"] = [{**_alemana()["fuentes"][0], "id": "gdelt-infranken-declaracion-1"}]
+    assert not incidentes.de_partes_separadas(mezclada, registro)
+    assert incidentes.de_partes_separadas(_alemana(), _nuremberg_griega())
