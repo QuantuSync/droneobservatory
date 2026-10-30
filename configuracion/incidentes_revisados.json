@@ -721,6 +721,23 @@
     {
       "registros": ["EODI-2026-00541", "EODI-2026-00535"],
       "motivo": "el mismo suceso: EODI-2026-00535 solo aporta la noticia de novinite.com del petrolero YARA J alcanzado frente a Sulina el 14 de octubre de 2026; el experto la vio como una declaración general del ministro, no como otro suceso (revisado el 29 de octubre de 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00134",
+        "EODI-2025-00194"
+      ],
+      "conserva": "EODI-2025-00134",
+      "motivo": "el mismo suceso: el cuasi choque del Airbus A320 recién despegado de Heathrow, a 9.000 pies, con un objeto de 2-3 m que «filled a good proportion of the windshield», en mayo de 2025, contado en agosto tras el informe del Airprox Board (mirror.co.uk del 20 de agosto; dailymail.co.uk del 22, fechada por su publicación) (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00228",
+        "EODI-2025-00002"
+      ],
+      "conserva": "EODI-2025-00228",
+      "antes_en": "EODI-2025-00238",
+      "motivo": "el mismo suceso: el cierre del aeropuerto de Aalborg de la noche del miércoles 24 de septiembre de 2025. EODI-2025-00002 trae 144 noticias publicadas el 24 por la noche y el 25 por el día sobre ese cierre; una regla la fundió el 22 de octubre de 2026 en la del cierre del jueves 25 por la noche (EODI-2025-00238), como a EODI-2025-00302 (revisado el 30 de octubre de 2026)"
     }
   ],
   "reextraer": [
@@ -3640,24 +3657,6 @@
         "autoridad": "Politiet",
         "pais": "NO",
         "categoria": "policia",
-        "afirma": "drones"
-      }
-    },
-    {
-      "incidente": "EODI-2025-00051",
-      "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-eindhoven-airport-drones-vliegveld-luchtruim-gesloten",
-      "medio": "hartvannederland.nl",
-      "fecha": "2025-11-22",
-      "idioma": "nl",
-      "frase": "Volgens Defensie ging het om zo'n tien drones die boven het terrein vlogen.",
-      "comprobada": {
-        "fecha": "2026-10-21",
-        "en": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-eindhoven-airport-drones-vliegveld-luchtruim-gesloten (original)"
-      },
-      "declaracion": {
-        "autoridad": "Defensie",
-        "pais": "NL",
-        "categoria": "fuerzas_armadas",
         "afirma": "drones"
       }
     },
@@ -10293,6 +10292,70 @@
           ]
         }
       ]
+    },
+    {
+      "incidente": "EODI-2025-00036",
+      "motivo": {
+        "es": "Juntaba los posibles drones sobre la base aérea de Volkel del jueves 4 de diciembre de 2025 (telegraaf.nl, omroepbrabant.nl, hartvannederland.nl) con el despegue de dos cazas de Volkel por un dron el domingo 7 (blikopnieuws.nl), que ya tiene su ficha (EODI-2025-00084).",
+        "en": "It merged the possible drones over Volkel air base on Thursday 4 December 2025 (telegraaf.nl, omroepbrabant.nl, hartvannederland.nl) with the two fighters scrambled from Volkel over a drone on Sunday 7 December (blikopnieuws.nl), which already has its own record (EODI-2025-00084)."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-12-04",
+          "pais": "NL",
+          "descripcion": "Dos posibles drones sobre la base aérea de Volkel el jueves 4 de diciembre de 2025 hacia las 16:45 hora local; la Fuerza Aérea y la Marechaussee los buscan sin hallarlos",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-315a366461421b90",
+            "gdelt-2347c2a1ec4b319d",
+            "gdelt-2347c2a1ec4b319d-declaracion-1",
+            "gdelt-e5a8c69e97cee822"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-12-07",
+          "pais": "NL",
+          "descripcion": "Dos cazas despegan de Volkel en alerta QRA el domingo 7 de diciembre de 2025 por un objeto desconocido que resultó ser un dron",
+          "coincide_con": "EODI-2025-00084",
+          "fuentes": [
+            "gdelt-8ed40c4df585b93e"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00178",
+      "motivo": {
+        "es": "Juntaba dos sucesos junto al aeropuerto de Vilna: el dron que un joven hizo volar el sábado 25 de octubre de 2025 por la noche en la calle Servečės, zona prohibida, retenido por la guardia de fronteras (kauno.diena.lt, ELTA), y el dron detectado el miércoles 29 a las 12:05 sin afectar a los vuelos (lrt.lt, lrytas.lt).",
+        "en": "It merged two events next to Vilnius airport: the drone a young man flew in Servečės street, a no-fly zone, on the evening of Saturday 25 October 2025, held by the border guard (kauno.diena.lt, ELTA), and the drone detected on Wednesday 29 at 12:05 without affecting flights (lrt.lt, lrytas.lt)."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-25",
+          "pais": "LT",
+          "descripcion": "Un joven hace volar un dron en la calle Servečės, zona prohibida junto al aeropuerto de Vilna, el sábado 25 de octubre de 2025 por la noche; la guardia de fronteras lo retiene",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-8f443417cf9ade19",
+            "gdelt-8f443417cf9ade19-declaracion-2"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-29",
+          "pais": "LT",
+          "descripcion": "Dron detectado junto al aeropuerto de Vilna el miércoles 29 de octubre de 2025 a las 12:05, sin afectar a despegues ni aterrizajes",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-16109fdf16777cbb",
+            "gdelt-16109fdf16777cbb-declaracion-1",
+            "gdelt-69d2ff1ccc4f3a23"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
@@ -10632,7 +10695,7 @@
       "valor": "2026-03-01",
       "cita": "A Shahed-type unmanned aerial vehicle reportedly struck the British base\u2019s runway a few minutes past midnight on March 2",
       "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri",
-      "motivo": "pocos minutos despu\u00e9s de la medianoche del 2 de marzo en Chipre (UTC+2): 1 de marzo en UTC"
+      "motivo": "pocos minutos después de la medianoche del 2 de marzo en Chipre (UTC+2): 1 de marzo en UTC"
     },
     {
       "incidente": "EODI-2026-00091",
@@ -11611,6 +11674,54 @@
       "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-7",
       "pais": "MD",
       "motivo": "repaso de entrada con el experto: Suceso nuevo del 24-08-2026 en Vulcănești, sin ficha equivalente. El tipo debe ser incursión: el ministerio dice que el dron entró desde Ucrania cruzando la frontera."
+    },
+    {
+      "incidente": "EODI-2025-00036",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2025-12-04T15:45Z",
+        "precision": "hora"
+      },
+      "cita": "Boven de militaire vliegbasis in Volkel zijn donderdagmiddag rond kwart voor vijf twee mogelijke drones gesignaleerd.",
+      "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-volkel-opnieuw-mogelijke-drones-gespot-bij-vliegbasis",
+      "pais": "NL",
+      "motivo": "«donderdagmiddag rond kwart voor vijf»: hacia las 16:45 hora de los Países Bajos (UTC+1) del jueves 4 de diciembre de 2025, las 15:45 UTC; la hora se perdía al volver a extraer la ficha (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00380",
+      "campo": "inicio",
+      "valor": "2025-09-25",
+      "cita": "Under torsdagskvällen larmades polisen om misstänkta drönare i Karlskrona.",
+      "enlace": "https://www.tv4.se/artikel/61uXTKKdXW7MPHvEtKLzaC/larm-om-droenare-oever-karlskrona-skaergard",
+      "pais": "SE",
+      "motivo": "el jueves por la noche es el 25 de septiembre de 2025 (tv4.se, publicada el viernes 26); la ficha tenía el 26, el día de la noticia (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00276",
+      "campo": "inicio",
+      "valor": "2026-09-14",
+      "cita": "Das Landeskriminalamt (LKA) teilt auf Anfrage mit, der Drohnenfund sei seit Montagnachmittag bekannt.",
+      "enlace": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html",
+      "pais": "DE",
+      "motivo": "el hallazgo se conoce desde la tarde del lunes 14 de septiembre de 2026; la ficha tenía el martes 15, el de la noticia (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00538",
+      "campo": "lugar",
+      "valor": {
+        "suceso": "Marea Neagră, la nord-est de Sulina",
+        "localidad": "Sulina",
+        "nivel": "localidad",
+        "punto": {
+          "lat": 45.15564,
+          "lon": 29.65403
+        },
+        "radio_km": 25.0
+      },
+      "cita": "la aproximativ 22 km nord-est de Sulina, deasupra apelor teritoriale naţionale",
+      "enlace": "https://antena3.ro/actualitate/doua-avioane-f-16-au-fost-ridicate-de-la-baza-borcea-dupa-ce-armata-a-detectat-o-drona-in-marea-neagra-ro-alert-trimis-in-tulcea-807247.html",
+      "pais": "RO",
+      "motivo": "el blanco aéreo entró en el espacio aéreo a unos 22 km al noreste de Sulina, sobre las aguas territoriales; Borcea es la base de la que despegaron los F-16, no el sitio del dron (revisado el 30 de octubre de 2026)"
     }
   ]
 }
