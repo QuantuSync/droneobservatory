@@ -971,6 +971,24 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2025-00051",
+      "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-eindhoven-airport-drones-vliegveld-luchtruim-gesloten",
+      "medio": "hartvannederland.nl",
+      "fecha": "2025-11-22",
+      "idioma": "nl",
+      "frase": "meerdere drones zijn gesignaleerd in het luchtruim rond het vliegveld. Dat meldt demissionair defensieminister Ruben Brekelmans.",
+      "comprobada": {
+        "fecha": "2026-10-30",
+        "en": "hartvannederland.nl, 22/11/2025 21:03; la declaración de Defensa que tenía la ficha («zo'n tien drones boven het terrein») era la de Volkel y sale de la ficha (quitar_fuentes)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerie van Defensie",
+        "pais": "NL",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
       "incidente": "EODI-2025-00095",
       "enlace": "https://tv2nord.dk/aalborg/aalborg-lufthavn-lukkede-luftrummet-i-otte-minutter-i-nat-pa-grund-af-mistanke-om-droner-5f778",
       "medio": "tv2nord.dk",
