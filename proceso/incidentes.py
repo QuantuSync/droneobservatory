@@ -695,13 +695,62 @@ def pares_distintos(ruta: Path = REVISADOS) -> frozenset[frozenset[str]]:
     return frozenset(frozenset(e["incidentes"]) for e in datos.get("distintos", []))
 
 
+def _articulo(fuente_id: str) -> str:
+    """El artículo de una fuente: una declaración citada en él («…-declaracion-2») es del mismo."""
+    return fuente_id.partition("-declaracion-")[0]
+
+
+@cache
+def partes_por_articulo(ruta: Path = REVISADOS) -> dict[str, frozenset[tuple[str, int]]]:
+    """Por artículo, la parte de una separación (sección `separar`, incidente y número de parte)
+    a la que pertenece. Solo cuentan las partes que son sucesos, y no los artículos que una
+    revisión puso en dos partes de la misma separación (cuentan los dos sucesos)."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    por_articulo: dict[str, set[tuple[str, int]]] = defaultdict(set)
+    for revision in datos.get("separar", []):
+        de_esta: dict[str, set[int]] = defaultdict(set)
+        for n, parte in enumerate(revision.get("partes", [])):
+            if parte.get("es_suceso", True):
+                for fuente in parte.get("fuentes", []):
+                    de_esta[_articulo(fuente)].add(n)
+        for articulo, partes in de_esta.items():
+            if len(partes) == 1:
+                por_articulo[articulo].add((revision["incidente"], next(iter(partes))))
+    return {a: frozenset(p) for a, p in por_articulo.items()}
+
+
+def partes_de_separacion(documento: Documento) -> frozenset[tuple[str, int]]:
+    """Las partes de separaciones revisadas de las que la ficha lleva algún artículo."""
+    mapa = partes_por_articulo()
+    return frozenset(
+        parte
+        for fuente in documento.get("fuentes", [])
+        for parte in mapa.get(_articulo(str(fuente.get("id", ""))), ())
+    )
+
+
+def de_partes_separadas(a: Documento, b: Documento) -> bool:
+    """Uno lleva un artículo de una parte de una separación revisada y el otro, uno de otra parte
+    de la misma: son sucesos distintos desde que nace la ficha de cada parte, con el identificador
+    que tenga y antes de que se enlacen como relacionados. El 30 de octubre de 2026 la parte del
+    29/10 de EODI-2025-00178 nació como EODI-2025-00472 y la regla la volvió a fundir en 00178 en
+    la misma recogida (fusión 2438), porque la separación no llevaba la marca «distintos»."""
+    partes_a = partes_de_separacion(a)
+    if not partes_a:
+        return False
+    partes_b = partes_de_separacion(b)
+    return any(ra == rb and na != nb for ra, na in partes_a for rb, nb in partes_b)
+
+
 def separados_por_revision(a: Documento, b: Documento) -> bool:
     """Uno lleva al otro entre sus sucesos relacionados por una separación marcada como de
-    sucesos distintos, o una revisión los dio por distintos (`pares_distintos`). El 19 de
-    octubre de 2026 la regla juntó otra vez el desvío del 19/10/2025 en Fuerteventura
-    (EODI-2025-00468), fechado por su publicación, con las esperas de la víspera
-    (EODI-2025-00397), de las que se separó."""
+    sucesos distintos, una revisión los dio por distintos (`pares_distintos`) o son de partes
+    distintas de una separación (`de_partes_separadas`). El 19 de octubre de 2026 la regla juntó
+    otra vez el desvío del 19/10/2025 en Fuerteventura (EODI-2025-00468), fechado por su
+    publicación, con las esperas de la víspera (EODI-2025-00397), de las que se separó."""
     if frozenset((a["id"], b["id"])) in pares_distintos():
+        return True
+    if de_partes_separadas(a, b):
         return True
     distintas = separaciones_distintas()
     return any(

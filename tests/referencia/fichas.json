@@ -1717,7 +1717,7 @@
   },
   {
    "id": "EODI-2026-00268",
-   "por_que": "Dron tipo Shahed que alcanz\u00f3 la pista de RAF Akrotiri (zona de soberan\u00eda brit\u00e1nica en Chipre) pasada la medianoche del 2 de marzo, m\u00e1s dos interceptados: d\u00eda UTC, categor\u00eda de la instalaci\u00f3n (base a\u00e9rea con OACI), lugar y n\u00famero.",
+   "por_que": "Dron tipo Shahed que alcanz\u00f3 la pista de RAF Akrotiri (zona de soberan\u00eda brit\u00e1nica en Chipre) pasada la medianoche del 2 de marzo, m\u00e1s dos interceptados: d\u00eda local (el 2 de marzo en Chipre, el 1 en UTC), categor\u00eda de la instalaci\u00f3n (base a\u00e9rea con OACI), lugar y n\u00famero.",
    "valores": {
     "estado": {
      "valor": "confirmado",
@@ -1756,7 +1756,7 @@
      "nota": "La localidad (pen\u00ednsula) de Akrotiri, no el nombre de la instalaci\u00f3n \u00abRAF Akrotiri\u00bb."
     },
     "inicio": {
-     "valor": "2026-03-01",
+     "valor": "2026-03-02",
      "cita": "A Shahed-type unmanned aerial vehicle reportedly struck the British base\u2019s runway a few minutes past midnight on March 2",
      "enlace": "https://defensenews.com/global/europe/2026/03/03/greece-deploys-warships-jets-to-cyprus-after-drone-strikes-on-uk-air-base-akrotiri"
     },
