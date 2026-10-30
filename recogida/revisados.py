@@ -286,6 +286,7 @@ class Corregidos:
     sin_guardar: list[str] = field(default_factory=list)
     contradicen_rectificacion: list[str] = field(default_factory=list)
     repuestos: list[str] = field(default_factory=list)
+    fuentes_quitadas: list[str] = field(default_factory=list)
 
     def texto(self) -> str:
         return (
@@ -294,7 +295,8 @@ class Corregidos:
             f"{self.lugares}, inicios revisados {self.inicios}, daños revisados {self.danos}, "
             f"cierres, drones, tipos y objetivos revisados {self.otros}, sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
-            f"{self.contradicen_rectificacion}, repuestos {self.repuestos}"
+            f"{self.contradicen_rectificacion}, repuestos {self.repuestos}, fuentes quitadas "
+            f"{self.fuentes_quitadas}"
         )
 
 
@@ -770,6 +772,20 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
             almacen, documento, nuevo, ahora, modelos, MOTIVO_CITA, hechos
         ):
             hechos.citas.append(id_)
+    for id_, entradas in _por_incidente(almacen, datos.get("quitar_fuentes", [])).items():
+        documento = almacen.incidente(id_)
+        assert documento is not None
+        # Una fuente que no es suya, por su identificador: la que añadió una cita revisada que ya
+        # salió de la configuración comparte enlace con la del artículo (EODI-2025-00051).
+        sin_ajenas = sin_fuentes(documento, set(), frozenset(e["fuente"] for e in entradas))
+        if (
+            sin_ajenas is not None
+            and sin_ajenas != documento
+            and _guardar(
+                almacen, documento, sin_ajenas, ahora, modelos, entradas[-1]["motivo"]["es"], hechos
+            )
+        ):
+            hechos.fuentes_quitadas.append(id_)
     for id_, revisiones in _por_incidente(almacen, datos.get("titulares", [])).items():
         documento = almacen.incidente(id_)
         assert documento is not None
@@ -1070,12 +1086,14 @@ def _sin_afirmar(resultado: Documento, quitadas: set[str]) -> None:
             pruebas["evidencia"] = []
 
 
-def sin_fuentes(documento: Documento, enlaces: set[str]) -> Documento | None:
-    """El incidente sin las fuentes de esos enlaces ni lo que solo ellas sostenían: sus
-    afirmaciones, los pasos del estado que dieron, la atribución y la investigación que citan y
-    la presencia del dron que afirmaban; con las reglas de siempre aplicadas de nuevo. None si
-    no le queda ninguna fuente."""
-    fuentes = [f for f in documento["fuentes"] if f["enlace"] not in enlaces]
+def sin_fuentes(
+    documento: Documento, enlaces: set[str], ids: frozenset[str] = frozenset()
+) -> Documento | None:
+    """El incidente sin las fuentes de esos enlaces (o con esos identificadores) ni lo que solo
+    ellas sostenían: sus afirmaciones, los pasos del estado que dieron, la atribución y la
+    investigación que citan y la presencia del dron que afirmaban; con las reglas de siempre
+    aplicadas de nuevo. None si no le queda ninguna fuente."""
+    fuentes = [f for f in documento["fuentes"] if f["enlace"] not in enlaces and f["id"] not in ids]
     if not fuentes:
         return None
     if len(fuentes) == len(documento["fuentes"]):
