@@ -202,6 +202,7 @@ def separados(a: Documento, b: Documento) -> bool:
         a["id"] in relacionados
         or b["id"] in relacionados
         or incidentes.separados_por_revision(a, b)
+        or incidentes.de_partes_separadas(a, b)
         or incidentes.cierres_de_noches_distintas(a, b)
     )
 
