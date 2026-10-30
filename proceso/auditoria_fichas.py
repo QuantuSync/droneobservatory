@@ -578,7 +578,7 @@ def uniones_marcadas(
         par = frozenset((str(documento["id"]), str(destino["id"])))
         if any(par <= grupo for grupo in a_mano):
             continue
-        if incidentes.no_se_unen(propio, incidentes.sin_lo_aportado(destino, propio), del_experto):
+        if incidentes.no_se_unen(propio, destino, del_experto):
             salida.append(f"{documento['id']}→{destino['id']}")
     return sorted(salida)
 

@@ -513,7 +513,7 @@ def unir(
     None."""
     from recogida.revisados import completar
 
-    if incidentes.no_se_unen(conserva, une, incidentes.distintos_del_experto(almacen)):
+    if incidentes.no_se_juntan(conserva, une, incidentes.distintos_del_experto(almacen)):
         proponer(almacen, conserva, une, motivo, ahora)
         return None
     nuevo, aportadas = incidentes.absorber(conserva, une, ahora)

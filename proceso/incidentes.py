@@ -749,23 +749,13 @@ def de_partes_separadas(a: Documento, b: Documento) -> bool:
     )
 
 
-def sin_lo_aportado(destino: Documento, absorbido: Documento) -> Documento:
-    """El destino de una unión sin las fuentes que le aportó el absorbido: lo que era suyo, para
-    comparar los dos como antes de la unión."""
-    del_absorbido = {f.get("id") for f in absorbido.get("fuentes", [])}
-    return {**destino, "fuentes": [f for f in destino.get("fuentes", [])
-                                   if f.get("id") not in del_absorbido]}  # fmt: skip
-
-
 def separados_por_revision(a: Documento, b: Documento) -> bool:
     """Uno lleva al otro entre sus sucesos relacionados por una separación marcada como de
-    sucesos distintos, una revisión los dio por distintos (`pares_distintos`) o son de partes
-    distintas de una separación (`de_partes_separadas`). El 19 de octubre de 2026 la regla juntó
-    otra vez el desvío del 19/10/2025 en Fuerteventura (EODI-2025-00468), fechado por su
-    publicación, con las esperas de la víspera (EODI-2025-00397), de las que se separó."""
+    sucesos distintos, o una revisión los dio por distintos (`pares_distintos`). El 19 de
+    octubre de 2026 la regla juntó otra vez el desvío del 19/10/2025 en Fuerteventura
+    (EODI-2025-00468), fechado por su publicación, con las esperas de la víspera
+    (EODI-2025-00397), de las que se separó."""
     if frozenset((a["id"], b["id"])) in pares_distintos():
-        return True
-    if de_partes_separadas(a, b):
         return True
     distintas = separaciones_distintas()
     return any(
@@ -803,10 +793,20 @@ def no_se_unen(a: Documento, b: Documento, del_experto: frozenset[frozenset[str]
     return separados_por_revision(a, b) or frozenset((a["id"], b["id"])) in del_experto
 
 
+def no_se_juntan(a: Documento, b: Documento, del_experto: frozenset[frozenset[str]]) -> bool:
+    """Para una unión nueva (la regla o el control): además de `no_se_unen`, las fichas de partes
+    distintas de una separación (`de_partes_separadas`). Las uniones ya hechas no se comparan así:
+    una ficha anterior a la separación puede llevar artículos de varias partes y estar bien unida
+    (EODI-2025-00172 en EODI-2025-00154, el cierre de Copenhague del 22/09/2025); esas las mira la
+    separación con sus propios registros (recogida/revisados._deshacer_entre_partes)."""
+    return no_se_unen(a, b, del_experto) or de_partes_separadas(a, b)
+
+
 def encajan(a: Documento, b: Documento) -> bool:
     primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
     return (
         not separados_por_revision(a, b)
+        and not de_partes_separadas(a, b)
         and mismo_sitio(a, b)
         and not cierres_de_noches_distintas(a, b)
         and not repite_un_cierre_anterior(primero, segundo)
@@ -1045,7 +1045,7 @@ def fusionar(
             anteriores = [
                 otro for otro in vivos.values()
                 if otro["id"] != incidente["id"] and mismo_suceso_posterior(otro, incidente)
-                and not no_se_unen(otro, incidente, del_experto)
+                and not no_se_juntan(otro, incidente, del_experto)
             ]  # fmt: skip
             motivo = MOTIVO_NOTA_POSTERIOR
         if len(anteriores) != 1:
@@ -1080,7 +1080,7 @@ def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str])
             continue
         propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
         if (
-            separados_por_revision(propio, sin_lo_aportado(destino, propio))
+            separados_por_revision(propio, destino)
             or cierres_de_noches_distintas(propio, destino)
             or repite_un_cierre_anterior(
                 *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))

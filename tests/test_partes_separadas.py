@@ -112,12 +112,24 @@ def test_un_articulo_de_las_dos_partes_no_separa(tmp_path: Path) -> None:
 
 
 def test_la_union_de_la_regla_la_ve_la_auditoria_y_se_deshace(separada: dict[str, Any]) -> None:
+    # La fusión 2438: la parte nueva (con su identificador, en el cursor de la separación)
+    # fundida por la regla en la que conserva el de la ficha separada.
     almacen = _base(_alemana(), _nuremberg_griega())
+    almacen.guardar_cursor(revisados.CURSOR_SEPARAR + VIEJO,
+                           {"partes": [{"vueltos": []}, {"vueltos": [NUEVO]}]})  # fmt: skip
+    assert revisados.pares_de_partes(almacen) == frozenset({frozenset((VIEJO, NUEVO))})
     _fundir(almacen)
-    assert auditoria_fichas.uniones_marcadas(almacen.incidentes()) == [f"{NUEVO}→{VIEJO}"]
-    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == [NUEVO]
-    assert "fusionado_en" not in (almacen.incidente(NUEVO) or {})
     assert auditoria_fichas.uniones_marcadas(almacen.incidentes()) == []
+    pares = revisados.pares_de_partes(almacen)
+    assert auditoria_fichas.uniones_marcadas(almacen.incidentes(), pares) == [f"{NUEVO}→{VIEJO}"]
+    revisados.separar(almacen, AHORA, VOCABULARIO_MODELOS)
+    viejo, nuevo = almacen.incidente(VIEJO), almacen.incidente(NUEVO)
+    assert viejo is not None and nuevo is not None and "fusionado_en" not in nuevo
+    assert [r["id"] for r in viejo["relacionados"]] == [NUEVO]
+    assert [r["id"] for r in nuevo["relacionados"]] == [VIEJO]
+    assert auditoria_fichas.uniones_marcadas(almacen.incidentes(), pares) == []
+    # Y la regla no las vuelve a juntar en la recogida siguiente.
+    assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 0
 
 
 def test_la_separacion_deshace_la_union_y_las_enlaza(separada: dict[str, Any]) -> None:
@@ -131,7 +143,6 @@ def test_la_union_revisada_a_mano_no_se_deshace(separada: dict[str, Any]) -> Non
     almacen = _base(_alemana(), _nuremberg_griega())
     _fundir(almacen, incidentes.PREFIJO_REVISADA + "el mismo suceso")
     revisados._deshacer_entre_partes(almacen, [[VIEJO], [NUEVO]], AHORA, VOCABULARIO_MODELOS)
-    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == []
     assert (almacen.incidente(NUEVO) or {}).get("fusionado_en") == VIEJO
 
 

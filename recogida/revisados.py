@@ -1463,6 +1463,34 @@ def separar(
     return hechos
 
 
+def registros_por_parte(almacen: Almacen, revision: Documento) -> list[list[str]] | None:
+    """Los registros de cada parte de una separación ya repartida (su cursor), sin seguir las
+    uniones; None si aún no se repartió. Las partes que no son sucesos quedan vacías."""
+    hecho = almacen.cursor(CURSOR_SEPARAR + revision["incidente"])
+    if hecho is None:
+        return None
+    queda = conservada(revision)
+    salida = []
+    for n, (parte, entrada) in enumerate(zip(revision["partes"], hecho["partes"], strict=True)):
+        ids = _incidentes_de(almacen, entrada) if parte.get("es_suceso", True) else []
+        if n == queda and parte.get("es_suceso", True) and revision["incidente"] not in ids:
+            ids.insert(0, revision["incidente"])
+        salida.append(ids)
+    return salida
+
+
+def pares_de_partes(almacen: Almacen) -> frozenset[frozenset[str]]:
+    """Los pares de registros de partes distintas de una misma separación: sucesos distintos que
+    ninguna regla junta (para la auditoría V, con `incidentes.distintos_del_experto`)."""
+    pares: set[frozenset[str]] = set()
+    for revision in cargar().get("separar", []):
+        partes = registros_por_parte(almacen, revision) or []
+        for n, ids in enumerate(partes):
+            for otros in partes[n + 1 :]:
+                pares.update(frozenset((a, b)) for a in ids for b in otros if a != b)
+    return frozenset(pares)
+
+
 def _deshacer_entre_partes(
     almacen: Almacen, de_partes: list[list[str]], ahora: datetime, modelos: frozenset[str]
 ) -> None:
