@@ -7669,6 +7669,16 @@
     {"incidente": "EODI-2026-00684", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 29 de octubre de 2026 decía que no se sabía la fecha, pero ANSA (24 de octubre de 2026) cuenta que el dron se derribó «ieri notte»: la noche del 23 de octubre. Es otro suceso que el del 2 de octubre en la misma cárcel.", "en": "Undone: entry review before PR 357, contradicts its source. The 29 October 2026 entry review withdrew it for an unknown date, but ANSA (24 October 2026) says the drone was brought down «ieri notte»: the night of 23 October. It is a different event from the one on 2 October at the same prison."}},
     {"incidente": "EODI-2026-00043", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 28 de octubre de 2026 decía que no se sabía la fecha, pero La Dépêche da el día: el 22 de febrero de 2026, hacia las 18:00.", "en": "Undone: entry review before PR 357, contradicts its source. The 28 October 2026 entry review withdrew it for an unknown date, but La Dépêche gives the day: 22 February 2026, around 18:00."}}
   ],
+  "quitar_fuentes": [
+    {
+      "incidente": "EODI-2025-00051",
+      "fuente": "revisada-534b7be4382f30fd-declaracion-1",
+      "motivo": {
+        "es": "La frase de Defensa («zo'n tien drones boven het terrein») habla de la base aérea de Volkel, no del aeropuerto de Eindhoven; su cita salió de la configuración el 30 de octubre de 2026 y la fuente que añadió se quedaba en la ficha.",
+        "en": "The Defence quote («zo'n tien drones boven het terrein») is about Volkel air base, not Eindhoven airport; its quote left the configuration on 30 October 2026 and the source it added stayed in the record."
+      }
+    }
+  ],
   "separar": [
     {
       "incidente": "EODI-2026-00077",
@@ -11695,6 +11705,15 @@
       "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-volkel-opnieuw-mogelijke-drones-gespot-bij-vliegbasis",
       "pais": "NL",
       "motivo": "«donderdagmiddag rond kwart voor vijf»: hacia las 16:45 hora de los Países Bajos (UTC+1) del jueves 4 de diciembre de 2025, las 15:45 UTC; la hora se perdía al volver a extraer la ficha (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00669",
+      "campo": "lugar",
+      "valor": {"suceso": "Marea Neagră, la est de Constanța", "localidad": "Constanța", "nivel": "localidad", "punto": {"lat": 44.16667, "lon": 28.63333}, "radio_km": 25.0},
+      "cita": "a fost lovită de drone în Marea Neagră, la aproximativ 25 de kilometri est de Constanța (13 mile marine)",
+      "enlace": "https://news.yam.md/ro/story/78038827",
+      "pais": "RO",
+      "motivo": "el buque fue alcanzado en el mar Negro a unos 25 km al este de Constanța (13 millas náuticas); la ficha lo dejaba en el mar Negro sin más, y antes en el puerto de Constanța, donde no fue (revisado el 30 de octubre de 2026)"
     },
     {
       "incidente": "EODI-2025-00178",
