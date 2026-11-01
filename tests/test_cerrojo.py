@@ -48,7 +48,10 @@ def ficha(id_: str = "EODI-2026-09600") -> Documento:
     """Una ficha publicada con sus datos decididos con la frase de una fuente."""
     d = _nuremberg_griega()
     d["id"] = id_
-    principal = _fuente("gdelt-base", ENLACE, "ejemplo.eu", "de", "Frase de la noticia.", "08:00")
+    principal = _fuente(
+        "gdelt-base", ENLACE, "ejemplo.eu", "de",
+        "Um 08:30 Uhr sah die Polizei eine Drohne und der Flughafen schloss 30 Minuten.", "08:00",
+    )  # fmt: skip
     oficial = _fuente(
         "gdelt-base-declaracion-1", ENLACE, "Polizei Nürnberg (declaración oficial citada en "
         "ejemplo.eu)", "de", "Die Polizei bestätigte die Drohne über dem Flughafen.", "08:00",
@@ -168,7 +171,7 @@ def retenido(error: Documento, monkeypatch: pytest.MonkeyPatch) -> bool:
     guardado = almacen.incidente(str(uno["id"]))
     assert guardado is not None
     mala = version_mala(guardado, dato)
-    if not protegido._revisado(mala, "inicio" if dato == "fin" else dato):
+    if not protegido._hay_revision(mala, "inicio" if dato == "fin" else dato):
         monkeypatch.setattr(decidir, "aplicar", lambda incidente, *_: incidente)
     guardar(almacen, mala)
     actual = almacen.incidente(str(uno["id"]))
@@ -180,6 +183,9 @@ def retenido(error: Documento, monkeypatch: pytest.MonkeyPatch) -> bool:
 def _esperado(error: Documento) -> bool:
     if error["dato"] in NO_PROTEGIDOS:
         return False
+    if error["dato"] == "titulo":
+        # Sin frase propia: solo si lo fija una revisión; si no, sigue a lo retenido.
+        return protegido._respaldado(ficha(str(error["ficha"])), "titulo")
     return not (
         error["dato"] in FUERA_DEL_NIVEL_CON_CITA
         and error["ficha"] not in protegido.fichas_manuales()
@@ -732,3 +738,215 @@ def test_la_vigilancia_solo_avisa_de_la_proteccion_en_aplicar() -> None:
     estado = {"cerrojo": {"modo": "observar", "fallos_24h": 2}}
     assert [p["id"] for p in vigilancia.problemas_del_cerrojo(estado)] == ["cerrojo_fallos"]
     assert vigilancia.problemas_del_cerrojo({}) == []
+
+
+# --- La regla ajustada ------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("dato", "frase", "dicho", "esperado"),
+    [
+        ("drones", "reports of multiple drones near Jersey Airport", {"min": 2, "max": 4}, False),
+        ("drones", "Două aparate de zbor fără pilot au survolat", {"min": 2, "max": 2}, True),
+        ("drones", "12 Drohnen über dem Hafen", {"min": 12, "max": 12}, True),
+        ("drones", "Dronas yra pakeltas Servečės gatvėje", {"min": 1, "max": 1}, True),
+        ("drones", "Dronas yra pakeltas", "desconocido", False),
+        ("inicio", "am Mittwochabend plötzlich gestoppt", {"precision": "hora"}, False),
+        ("inicio", "la ora 10:26, de către un aparat", {"precision": "minuto"}, True),
+        ("inicio", "gegen 22 Uhr über dem Flughafen", {"precision": "hora"}, True),
+        ("inicio", "am 11.03.2026 über dem Flughafen", {"precision": "hora"}, False),
+        ("inicio", "el 18 de septiembre", {"precision": "dia"}, True),
+        ("lugar", "", {}, False),
+    ],
+)
+def test_una_frase_respalda_el_dato_solo_si_lo_dice(
+    dato: str, frase: str, dicho: Any, esperado: bool
+) -> None:
+    assert protegido.dice_el_dato(dato, frase, dicho) is esperado
+
+
+def _sin_frase_que_lo_diga(documento: Documento) -> Documento:
+    documento = copy.deepcopy(documento)
+    documento["fuentes"][0]["frase_origen"] = "Es gab mehrere Drohnen am Flughafen."
+    documento["drones"] = {"numero": {"min": 2, "max": 4}}
+    for afirmacion in documento["afirmaciones"]:
+        if afirmacion["campo"] == "drones":
+            afirmacion["valor"] = {"min": 2, "max": 4}
+    return documento
+
+
+def test_lo_que_ninguna_frase_dice_se_puede_corregir() -> None:
+    # EODI-2026-00714 («multiple drones», 2 a 4) y EODI-2026-00013 (una hora que nadie da).
+    guardado = _sin_frase_que_lo_diga(ficha())
+    nuevo = copy.deepcopy(guardado)
+    nuevo["drones"] = {"numero": "desconocido"}
+    nuevo["tiempo"]["inicio"] = ejemplos.instante("2026-10-13T00:00Z", "dia")
+    nuevo["tiempo"]["origen_inicio"] = {"tipo": "publicacion", "motivo": "sin frase"}
+    assert protegido.candidatos(guardado, nuevo) == []
+
+
+def test_lo_que_una_frase_dice_sigue_protegido() -> None:
+    guardado = ficha()
+    guardado["drones"] = {"numero": {"min": 30, "max": 30}}
+    guardado["afirmaciones"] = [
+        {**a, "valor": {"min": 30, "max": 30}} if a["campo"] == "drones" else a
+        for a in guardado["afirmaciones"]
+    ]
+    nuevo = copy.deepcopy(guardado)
+    nuevo["drones"] = {"numero": "desconocido"}
+    assert [c.dato for c in protegido.candidatos(guardado, nuevo)] == ["drones"]
+
+
+def _presencia_mala(documento: Documento) -> Documento:
+    nuevo = copy.deepcopy(documento)
+    nuevo["presencia_dron"] = "no_confirmada"
+    nuevo["afirmaciones"] = [a for a in nuevo["afirmaciones"] if a["campo"] != "presencia_dron"]
+    nuevo["titulo"] = {"es": "Posible dron en Núremberg", "en": "Possible drone in Nuremberg"}
+    fecha = nuevo["estado"]["historial"][-1]["fecha"]
+    nuevo["estado"]["actual"] = "notificado"
+    nuevo["estado"]["historial"].append(
+        {"estado": "notificado", "fecha": fecha, "fuente_id": "gdelt-base"}
+    )
+    return nuevo
+
+
+def test_el_titular_y_el_estado_siguen_a_lo_retenido() -> None:
+    # EODI-2025-00178, 00472 y EODI-2026-00694: con la presencia retenida pasaba «Posible dron…».
+    guardado = ficha()
+    veredicto = protegido.juzgar(guardado, _presencia_mala(guardado), [], lambda _: "")
+    assert {c.dato for c in veredicto.retenidos} == {"presencia_dron", "estado", "titulo"}
+    assert veredicto.permitidos == []
+
+
+def test_lo_retenido_por_seguir_se_conserva() -> None:
+    guardado = ficha()
+    malo = _presencia_mala(guardado)
+    veredicto = protegido.juzgar(guardado, malo, [], lambda _: "")
+    resultado = protegido.conservar(malo, guardado, veredicto.retenidos)
+    assert resultado["titulo"] == guardado["titulo"]
+    assert resultado["estado"] == guardado["estado"]
+    assert resultado["presencia_dron"] == "confirmada"
+
+
+def test_sin_nada_retenido_el_titular_no_se_retiene() -> None:
+    guardado = ficha()
+    nuevo = copy.deepcopy(guardado)
+    nuevo["titulo"] = {"es": "Dron en Núremberg", "en": "Drone in Nuremberg"}
+    veredicto = protegido.juzgar(guardado, nuevo, [], lambda _: "")
+    assert veredicto.retenidos == []
+
+
+def _otra_fuente(documento: Documento, frase: str) -> Documento:
+    nuevo = copy.deepcopy(documento)
+    fuente = _fuente("gdelt-nueva", ENLACE_NUEVO, "otro.eu", "de", frase, "09:00")
+    nuevo["fuentes"].append(fuente)
+    return nuevo
+
+
+def test_la_fuente_nueva_tiene_que_decir_el_valor_nuevo() -> None:
+    # EODI-2026-00694: fuentes nuevas literales que no decían el valor al que cambiaba.
+    guardado = ficha()
+    frase = "Am Flughafen gab es mehrere Drohnen."
+    nuevo = _otra_fuente(guardado, frase)
+    nuevo["drones"] = {"numero": {"min": 30, "max": 30}}
+    nuevo["afirmaciones"] = [a for a in nuevo["afirmaciones"] if a["campo"] != "drones"]
+    nuevo["afirmaciones"].append(_afirmacion("drones", {"min": 30, "max": 30}, "gdelt-nueva"))
+    assert not protegido.fuente_nueva_con_frase("drones", guardado, nuevo, lambda _: frase)
+    bien = _otra_fuente(guardado, "Am Flughafen gab es 30 Drohnen.")
+    bien["drones"] = nuevo["drones"]
+    bien["afirmaciones"] = nuevo["afirmaciones"]
+    assert protegido.fuente_nueva_con_frase(
+        "drones", guardado, bien, lambda _: "Am Flughafen gab es 30 Drohnen."
+    )
+
+
+def test_la_fuente_nueva_de_la_presencia_tiene_que_afirmar_ese_valor() -> None:
+    guardado = ficha()
+    frase = "Die Polizei hat keine Drohne bestätigt."
+    nuevo = _otra_fuente(_presencia_mala(guardado), frase)
+    nuevo["afirmaciones"].append(_afirmacion("presencia_dron", "confirmada", "gdelt-nueva"))
+    assert not protegido.fuente_nueva_con_frase("presencia_dron", guardado, nuevo, lambda _: frase)
+    nuevo["afirmaciones"][-1]["valor"] = "no_confirmada"
+    assert protegido.fuente_nueva_con_frase("presencia_dron", guardado, nuevo, lambda _: frase)
+
+
+def test_un_sin_dato_no_lo_dice_ninguna_fuente_nueva() -> None:
+    guardado = ficha()
+    frase = "Am Flughafen gab es mehrere Drohnen."
+    nuevo = _otra_fuente(guardado, frase)
+    nuevo["drones"] = {"numero": "desconocido"}
+    nuevo["afirmaciones"].append(_afirmacion("drones", "desconocido", "gdelt-nueva"))
+    assert not protegido.fuente_nueva_con_frase("drones", guardado, nuevo, lambda _: frase)
+
+
+# --- rehacer ----------------------------------------------------------------------------------
+
+
+def _fundida_en_manual(monkeypatch: pytest.MonkeyPatch) -> tuple[Almacen, str, str]:
+    destino, fundida = ficha(MANUAL), ficha(OTRA)
+    fundida["fuentes"] = [{**f, "id": f"otra-{f['id']}", "enlace": ENLACE_NUEVO}
+                          for f in fundida["fuentes"]]  # fmt: skip
+    fundida["estado"]["historial"][0]["fuente_id"] = "otra-gdelt-base"
+    fundida["estado"]["historial"][1]["fuente_id"] = "otra-gdelt-base-declaracion-1"
+    fundida["tiempo"]["origen_inicio"]["fuente_id"] = "otra-gdelt-base"
+    for afirmacion in fundida["afirmaciones"]:
+        afirmacion["fuente_id"] = f"otra-{afirmacion['fuente_id']}"
+    almacen = base(destino, fundida)
+    monkeypatch.setattr(almacen, "enlaces_de_fusion", lambda: {})
+    guardado = almacen.incidente(OTRA)
+    assert guardado is not None
+    almacen.guardar_incidente({**guardado, "fusionado_en": MANUAL}, AHORA, VOCABULARIO_MODELOS)
+    almacen.registrar_fusion("2026-10-13T14:17Z", OTRA, MANUAL, "prueba", [])
+    return almacen, OTRA, MANUAL
+
+
+def test_rehacer_no_deja_filas_revertidas_con_fichas_fundidas(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from recogida import revision
+
+    almacen, fundida, destino = _fundida_en_manual(monkeypatch)
+    revision.abrir_fundidas(almacen, AHORA, VOCABULARIO_MODELOS)
+    # La reapertura se retiene: la ficha sigue fundida y su fila no se revierte.
+    actual = almacen.incidente(fundida)
+    assert actual is not None
+    assert actual["fusionado_en"] == destino
+    (fila,) = [f for f in almacen.fusiones() if f["absorbido"] == fundida]
+    assert fila["revertida"] is False
+    assert almacen.controles(f"retenido:{fundida}:reapertura:{destino}")
+
+
+def test_rehacer_en_observar_abre_y_revierte(monkeypatch: pytest.MonkeyPatch) -> None:
+    from recogida import revision
+
+    almacen, fundida, _ = _fundida_en_manual(monkeypatch)
+    revision.abrir_fundidas(almacen, AHORA, VOCABULARIO_MODELOS)
+    actual = almacen.incidente(fundida)
+    assert actual is not None
+    assert "fusionado_en" not in actual
+    (fila,) = [f for f in almacen.fusiones() if f["absorbido"] == fundida]
+    assert fila["revertida"] is True
+
+
+def test_un_cambio_contra_la_revision_no_cuenta_como_revision(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2025-00472: el control bajó la presencia que hoy fija una revisión a mano.
+    guardado = ficha()
+    monkeypatch.setattr(decidir, "presencias_revisadas",
+                        lambda: {guardado["id"]: "confirmada"})  # fmt: skip
+    malo = _presencia_mala(guardado)
+    assert protegido._hay_revision(malo, "presencia_dron")
+    assert not protegido._revisado(malo, "presencia_dron")
+    assert protegido._revisado(guardado, "presencia_dron")
+
+
+def test_un_sin_dato_de_la_referencia_esta_fijado(monkeypatch: pytest.MonkeyPatch) -> None:
+    # EODI-2026-00515: un dron que nadie encontró; ninguna frase dice «sin dato».
+    guardado = ficha()
+    guardado["drones"] = {"numero": "desconocido"}
+    monkeypatch.setattr(protegido, "valores_de_referencia",
+                        lambda: {guardado["id"]: {"drones": "desconocido"}})  # fmt: skip
+    assert protegido._fijado_en_referencia(guardado, "drones")
+    guardado["drones"] = {"numero": {"min": 1, "max": 1}}
+    assert not protegido._fijado_en_referencia(guardado, "drones")

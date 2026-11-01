@@ -23,6 +23,15 @@ sale de lo que ya existe; no añade ficheros de datos protegidos.
   cuelgan de la destinataria contra todas las que cuelgan de la absorbida, de modo que ninguna
   cadena las salte. Una unión hecha a mano manda sobre una marca anterior, y conservar el número más
   antiguo de un mismo grupo no es una unión nueva.
+- **Lo que una frase no dice no está protegido.** Una frase respalda un dato solo si lo dice: el
+  número en los drones y la hora en un inicio con hora (`dice_el_dato`). Un dato así que ninguna
+  frase dice ni fija una revisión se puede corregir. En una ficha del nivel manual, el titular y el
+  estado se guardan solo si los fija una revisión o el valor comprobado de la referencia.
+- **El titular y el estado siguen a lo retenido.** Si se retiene la presencia, los drones, el lugar
+  o el inicio, se quedan como estaban, salvo que los fije una revisión o una rectificación
+  (`SIGUEN_A`).
+- **La fuente nueva dice el valor nuevo.** No basta con que exista: su frase debe decir ese valor
+  (`dice_el_valor_nuevo`). Un sin dato o una hora de publicación no los dice ninguna fuente.
 - **Fichas del nivel manual que se funden.** Aunque no haya par prohibido, una ficha publicada del
   nivel manual solo la funde en otra una revisión a mano o una unión a mano anterior. Se mira la
   ficha que se funde, no la que queda: recibir un duplicado no le quita nada a la que queda, cuyos
