@@ -237,6 +237,22 @@ def test_el_cerrojo_apunta_quien_lo_intento(aplicar: None) -> None:
     assert clave.count(":") == 3
 
 
+def test_el_tipo_sigue_al_cierre_retenido(aplicar: None) -> None:
+    # Sobre la base real, 15 fichas: con el cierre conservado y el tipo que dejó `decidir`, lo
+    # retenido no validaba («hay interrupción de aeropuerto: manda ese tipo») y la escritura pasaba.
+    uno = ficha()
+    uno["tipo"] = "interrupcion_aeroportuaria"
+    almacen = base(uno)
+    guardado = almacen.incidente("EODI-2026-09600")
+    assert guardado is not None
+    tipo = guardado["tipo"]
+    guardar(almacen, version_mala(guardado, "cierre"))
+    actual = almacen.incidente("EODI-2026-09600")
+    assert actual is not None
+    assert actual["consecuencias"]["cierre"]["valor"] == "si" and actual["tipo"] == tipo
+    assert not almacen.controles(protegido.PREFIJO_FALLO)
+
+
 # --- Cambios legítimos ------------------------------------------------------------------------
 
 

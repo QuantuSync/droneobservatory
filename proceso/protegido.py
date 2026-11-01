@@ -361,6 +361,14 @@ def juzgar(
     return veredicto
 
 
+def _tipo_guardado(resultado: Documento, guardado: Documento) -> None:
+    resultado["tipo"] = guardado.get("tipo")
+    if "origen_demostrado_por" in guardado:
+        resultado["origen_demostrado_por"] = guardado["origen_demostrado_por"]
+    else:
+        resultado.pop("origen_demostrado_por", None)
+
+
 def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) -> Documento:
     """`nuevo` con el valor de `guardado` en cada dato retenido, con sus afirmaciones."""
     resultado = copy.deepcopy(nuevo)
@@ -368,6 +376,9 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
         dato = cambio.dato
         if dato in decididos.DATOS:
             decididos._poner(resultado, guardado, dato)
+            if dato == "cierre":
+                # El tipo sigue al cierre: con cierre, «interrupción» (proceso/incidentes.con_tipo).
+                _tipo_guardado(resultado, guardado)
         elif dato == "estado":
             resultado["estado"] = copy.deepcopy(guardado["estado"])
             control = resultado["control"]
@@ -382,11 +393,7 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
                   if a.get("campo") == dato),
             ]  # fmt: skip
         elif dato == "tipo":
-            resultado["tipo"] = guardado.get("tipo")
-            if "origen_demostrado_por" in guardado:
-                resultado["origen_demostrado_por"] = guardado["origen_demostrado_por"]
-            else:
-                resultado.pop("origen_demostrado_por", None)
+            _tipo_guardado(resultado, guardado)
         elif dato == "objetivo":
             if "objetivo" in guardado:
                 resultado["objetivo"] = copy.deepcopy(guardado["objetivo"])
