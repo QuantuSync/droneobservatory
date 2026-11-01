@@ -1,5 +1,5 @@
 {
-  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados; con «distintos»: true, la regla de fusión no vuelve a juntar esas fichas y deshace la fusión que ya lo hizo. «distintos»: dos fichas que una revisión dio por sucesos distintos sin separar ninguna (docs/sucesos_mezclados.md); se enlazan como sucesos relacionados (con «separado_de» y el motivo), la unión que ya las juntó se deshace y ninguna unión automática (regla, control, filtro de entrada, repaso) las vuelve a juntar: queda como propuesta para revisar. «reponer»: una ficha retirada porque no se sabía la fecha del suceso, cuya fecha da después otra fuente con una frase (en «datos», campo «inicio», con la cita): vuelve a publicarse una vez como nueva y pasa por el filtro de entrada.",
+  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados; con «distintos»: true, la regla de fusión no vuelve a juntar esas fichas y deshace la fusión que ya lo hizo. «distintos»: dos fichas que una revisión dio por sucesos distintos sin separar ninguna (docs/sucesos_mezclados.md); se enlazan como sucesos relacionados (con «separado_de» y el motivo), la unión que ya las juntó se deshace y ninguna unión automática (regla, control, filtro de entrada, repaso) las vuelve a juntar: queda como propuesta para revisar. «ubicaciones»: el lugar que da una autoridad; «otros_lugares» fija la lista entera, y vacía los quita. «reponer»: una ficha retirada porque no se sabía la fecha del suceso, cuya fecha da después otra fuente con una frase (en «datos», campo «inicio», con la cita): vuelve a publicarse una vez como nueva y pasa por el filtro de entrada.",
   "unir": [
     {
       "registros": [
@@ -4182,6 +4182,42 @@
         "fecha": "2026-10-29",
         "en": "https://www.mil.lv/lv/zinas/iespejams-apdraudejums-latvijas-gaisa-telpa-nosledzies (nota de las Fuerzas Armadas de Letonia del 22.10.2026: el posible peligro en el espacio aéreo de Krāslava y Rēzekne terminó a las 13.16, hora de Letonia)"
       }
+    },
+    {
+      "incidente": "EODI-2025-00472",
+      "enlace": "https://lrt.lt/naujienos/verslas/4/2729320/vilniaus-oro-uoste-buvo-fiksuotas-dronas",
+      "medio": "lrt.lt",
+      "fecha": "2025-10-29",
+      "idioma": "lt",
+      "frase": "Bendroje oro erdvės stebėsenos sistemoje buvo fiksuotas bepiločio orlaivio (drono) skrydis draudžiamoje zonoje prie Vilniaus oro uosto.",
+      "comprobada": {
+        "fecha": "2026-11-01",
+        "en": "https://lrt.lt/naujienos/verslas/4/2729320/vilniaus-oro-uoste-buvo-fiksuotas-dronas (original)"
+      },
+      "declaracion": {
+        "autoridad": "Viešojo saugumo tarnyba",
+        "pais": "LT",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00130",
+      "enlace": "https://veja.abril.com.br/mundo/caca-da-otan-derruba-drone-na-estonia-apos-ucrania-intensificar-ataques-a-russia",
+      "medio": "abril.com.br",
+      "fecha": "2026-05-19",
+      "idioma": "pt",
+      "frase": "O ministro da Defesa estoniano, Hanno Pevkur, afirmou que o drone foi derrubado por um caça F-16 da Força Aérea romena.",
+      "comprobada": {
+        "fecha": "2026-11-01",
+        "en": "https://veja.abril.com.br/mundo/caca-da-otan-derruba-drone-na-estonia-apos-ucrania-intensificar-ataques-a-russia (original)"
+      },
+      "declaracion": {
+        "autoridad": "Ministerio de Defensa de Estonia",
+        "pais": "EE",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [
@@ -5608,6 +5644,49 @@
         "es": "Tras la separación de los tres drones del 30 de septiembre de 2026 la ficha es solo el de Hîrbovăț, pero conservó el titular del conjunto. Jurnalul.ro, con el Ministerio de Defensa: «O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț».",
         "en": "After the three drones of 30 September 2026 were separated the record covers only the Hîrbovăț one, but it kept the headline of the whole. Jurnalul.ro, citing the Defence Ministry: «O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț»."
       }
+    },
+    {
+      "incidente": "EODI-2025-00472",
+      "titulo": {
+        "es": "Dron avistado cerca del aeropuerto de Vilna sin detener los vuelos",
+        "en": "Drone spotted near Vilnius airport without halting flights"
+      },
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Bendroje oro erdvės stebėsenos sistemoje buvo fiksuotas bepiločio orlaivio (drono) skrydis draudžiamoje zonoje prie Vilniaus oro uosto.",
+        "enlace": "https://lrt.lt/naujienos/verslas/4/2729320/vilniaus-oro-uoste-buvo-fiksuotas-dronas"
+      },
+      "motivo": {
+        "es": "El Servicio de Seguridad Pública de Lituania (VST) fijó el vuelo del dron y detuvo a quien lo manejaba: «Bendroje oro erdvės stebėsenos sistemoje buvo fiksuotas bepiločio orlaivio (drono) skrydis draudžiamoje zonoje prie Vilniaus oro uosto.» (lrt.lt) (revisado el 1 de noviembre de 2026)",
+        "en": "Lithuania's Public Security Service (VST) tracked the drone flight and detained its operator: «Bendroje oro erdvės stebėsenos sistemoje buvo fiksuotas bepiločio orlaivio (drono) skrydis draudžiamoje zonoje prie Vilniaus oro uosto.» (lrt.lt), reviewed on 1 November 2026"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00130",
+      "titulo": {
+        "es": "Un caza de la OTAN derriba un dron sobre Estonia",
+        "en": "NATO jet shoots down drone over Estonia"
+      },
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "O ministro da Defesa estoniano, Hanno Pevkur, afirmou que o drone foi derrubado por um caça F-16 da Força Aérea romena.",
+        "enlace": "https://veja.abril.com.br/mundo/caca-da-otan-derruba-drone-na-estonia-apos-ucrania-intensificar-ataques-a-russia"
+      },
+      "motivo": {
+        "es": "El ministro de Defensa de Estonia y las Fuerzas de Defensa dicen que era un dron: «O ministro da Defesa estoniano, Hanno Pevkur, afirmou que o drone foi derrubado por um caça F-16 da Força Aérea romena.» (veja.abril.com.br); «In Estonia, the drone entered the country's airspace at around noon local time on Tuesday, coming from Russia and into the southeastern part of the country, the Estonian military said in a statement.» (yasstribune.com.au) (revisado el 1 de noviembre de 2026)",
+        "en": "Estonia's defence minister and Defence Forces say it was a drone: «O ministro da Defesa estoniano, Hanno Pevkur, afirmou que o drone foi derrubado por um caça F-16 da Força Aérea romena.» (veja.abril.com.br); «In Estonia, the drone entered the country's airspace at around noon local time on Tuesday, coming from Russia and into the southeastern part of the country, the Estonian military said in a statement.» (yasstribune.com.au), reviewed on 1 November 2026"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00636",
+      "titulo": {
+        "es": "Un dron Geran explota junto a Brănești, en Moldavia",
+        "en": "Geran drone explodes near Brănești, Moldova"
+      },
+      "motivo": {
+        "es": "Tras la separación de los tres drones del 30 de septiembre de 2026 la ficha es solo el de Brănești, pero conservó el titular del conjunto (revisado el 1 de noviembre de 2026)",
+        "en": "After the three drones of 30 September 2026 were separated this record is only the one at Brănești, but it kept the headline of the group (reviewed on 1 November 2026)"
+      }
     }
   ],
   "titular_justificado": [],
@@ -6944,7 +7023,9 @@
           "afirma": "incidente"
         }
       },
-      "motivo": "El Ministerio de Defensa nombra Hîrbov\u0103\u021b (Anenii Noi) como el lugar donde cayó y explotó uno de los tres drones del miércoles 30 de septiembre."
+      "motivo": "El Ministerio de Defensa nombra Hîrbov\u0103\u021b (Anenii Noi) como el lugar donde cayó y explotó uno de los tres drones del miércoles 30 de septiembre.",
+      "otros_lugares": [],
+      "motivo_otros_lugares": "Brănești y Lunga son de otros dos drones; separación del 30 de septiembre de 2026: «el que se detectó a las 10:26 en Lunga (Dubăsari) y salió por Arionești con el cierre del espacio aéreo del norte y el centro (EODI-2026-00160) y el Geran que explotó por la noche junto a Brănești (Orhei) (EODI-2026-00262)» (revisado el 1 de noviembre de 2026)"
     },
     {
       "incidente": "EODI-2026-00268",
@@ -11869,6 +11950,54 @@
       "enlace": "https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas",
       "pais": "LV",
       "motivo": "la nota de las Fuerzas Armadas de Letonia da el jueves 7 de mayo de 2026; fecha que ya tenía la ficha, con su cita al reponerla (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00728",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Cea de-a doua dronă care a pătruns neautorizat în spațiul aerian al Republicii Moldova, sâmbătă, 31 octombrie, a părăsit teritoriul aerian al țării",
+      "enlace": "https://timpul.md/articol/cea-de-a-doua-drona-care-a-survolat-r-moldova-a-parasit-spatiul-aerian-al-tarii.html",
+      "pais": "MD",
+      "motivo": "la ficha es el segundo dron del 31 de octubre, uno; el 2 venía de una frase de click.ro sobre Rumanía, y el primero está en EODI-2026-00716 (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00636",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "lângă localitatea Brănești, unde o dronă de tip „Geran”, cu motor turboreactiv, a lovit copacii și a explodat în imediata apropiere a unei șosele.",
+      "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
+      "pais": "MD",
+      "motivo": "tras la separación la ficha es solo el dron de Brănești; el 3 era el total del día, y los otros dos tienen su ficha (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00261",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Una dintre cele cinci drone a căzut pe acoperișul unei case în Satul Cuhureștii de Jos, raionul Florești, precizează autoritățile.",
+      "enlace": "https://hotnews.ro/o-drona-a-cazut-peste-o-casa-in-republica-moldova-foto-2115742",
+      "pais": "MD",
+      "motivo": "la ficha es el dron caído en Cuhureștii de Jos; el 6 era el total de drones de la mañana en Moldavia (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00541",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "A Comoros-flagged tanker, YARA J , was reportedly hit by a drone in Romanian territorial waters near the Black Sea port of Sulina",
+      "enlace": "https://novinite.com/articles/241067/BREAKING:+Russia+Has+Struck+NATO+Territory+After+Drone+Hits+Tanker+Off+Romania",
+      "pais": "RO",
+      "motivo": "la ficha es el petrolero YARA J, alcanzado por un dron; el 2 a 10 no lo da ninguna fuente y mezcla los blancos del radar de esa tarde (revisado el 1 de noviembre de 2026)"
     }
   ]
 }

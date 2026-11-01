@@ -591,7 +591,8 @@ def con_lugar(incidente: Documento, revision: Documento, instante: Documento) ->
     fuente que lo explica si la revisión la da. None si el punto no cae en su país, si su frase
     habla de la respuesta defensiva y no del dron, o si el incidente ya tiene otro punto y la
     revisión no trae el cambio con su motivo. Con el cambio, el punto anterior queda en
-    lugar.historial con el motivo en español y en inglés."""
+    lugar.historial con el motivo en español y en inglés. «otros_lugares» fija la lista entera:
+    vacía, los quita; sin esa clave, se quedan los que tuviera la ficha."""
     lugar = revision["lugar"]
     cita = revision["fuente"]
     if not dentro_del_pais(incidente["lugar"]["pais"], float(lugar["lat"]), float(lugar["lon"])):
@@ -643,6 +644,10 @@ def con_lugar(incidente: Documento, revision: Documento, instante: Documento) ->
         otros.append(entrada)
     if otros:
         nuevo["otros_lugares"] = otros
+    elif "otros_lugares" in revision:
+        # Vacío a propósito: tras separar un suceso, los lugares de los otros ya no son de este
+        # (EODI-2026-00263 conservaba Brănești y Lunga, de otros dos drones).
+        nuevo.pop("otros_lugares", None)
     if historial:
         nuevo["historial"] = historial
     resultado["lugar"] = nuevo
@@ -808,7 +813,11 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
         assert documento is not None
         revision = revisiones[-1]
         con_punto = con_lugar(documento, revision, _instante(ahora))
-        motivo = revision["cambio"]["motivo"]["es"] if "cambio" in revision else MOTIVO_UBICACION
+        motivo = (
+            revision["cambio"]["motivo"]["es"]
+            if "cambio" in revision
+            else revision.get("motivo_otros_lugares", MOTIVO_UBICACION)
+        )
         if (
             con_punto is not None
             and con_punto != documento
