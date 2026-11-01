@@ -11847,10 +11847,28 @@
         "min": 1,
         "max": 1
       },
-      "cita": "O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț, raionul Anenii Noi, unde a explodat, informează Ministerul Apărării de la Chișinău.",
+      "cita": "O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț, raionul Anenii Noi, unde a explodat",
       "enlace": "https://jurnalul.ro/stiri/externe/alerta-republica-moldova-drona-survolat-bender-explodat-hirbovat-1045526.html",
       "pais": "MD",
       "motivo": "tras la separación la ficha es solo el dron de Hîrbovăț; el 3 era el total del día, y los otros dos tienen su ficha (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00130",
+      "campo": "inicio",
+      "valor": "2026-05-19",
+      "cita": "In Estonia, the drone entered the country's airspace at around noon local time on Tuesday",
+      "enlace": "https://yasstribune.com.au/story/9250029/ukraine-drone-shot-down-by-nato-jet-over-estonia",
+      "pais": "EE",
+      "motivo": "el martes es el 19 de mayo de 2026 (AAP, actualizada el 20); fecha que ya tenía la ficha, con su cita al reponerla (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00302",
+      "campo": "inicio",
+      "valor": "2026-05-07",
+      "cita": "Ceturtdien, 7. maijā, Nacionālie bruņotie spēki konstatēja iespējamu gaisa apdraudējumu Balvu un Ludzas novados",
+      "enlace": "https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas",
+      "pais": "LV",
+      "motivo": "la nota de las Fuerzas Armadas de Letonia da el jueves 7 de mayo de 2026; fecha que ya tenía la ficha, con su cita al reponerla (revisado el 1 de noviembre de 2026)"
     }
   ]
 }
