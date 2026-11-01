@@ -70,6 +70,8 @@ Problemas (cada uno con su frase):
   automática tenía que haberlo despachado a las 6): la revisión de la barrera está fallando;
 - **cerrojo_fallos**: el cerrojo de lo decidido (proceso/protegido.py) ha fallado en las últimas 24
   horas y esas escrituras han pasado sin comprobar;
+- **guardado_fallido_repetido**: una ficha publicada no se ha podido guardar 3 veces seguidas
+  (proceso/extraccion.conservar_publicada): sigue publicada con su versión anterior.
 - **cerrojo_proteccion**: con el cerrojo en «aplicar», una ficha sale en una comprobación de
   protección de la auditoría (R, V, W, P, X);
 - **guardian**: el guardián del sistema (recogida/guardian.py) no ha podido arreglar algo (un
@@ -335,6 +337,12 @@ def problemas_del_cerrojo(estado: dict[str, Any]) -> list[dict[str, str]]:
             "id": "cerrojo_fallos",
             "frase": f"El cerrojo de las fichas ha fallado {fallos} veces en 24 horas: esas "
             "escrituras han pasado sin comprobar.",
+        })  # fmt: skip
+    if repetidos := cerrojo.get("fallos_repetidos") or []:
+        problemas.append({
+            "id": "guardado_fallido_repetido",
+            "frase": f"{len(repetidos)} fichas publicadas no se han podido guardar 3 veces "
+            "seguidas: siguen publicadas con su versión anterior (control.json).",
         })  # fmt: skip
     proteccion = cerrojo.get("proteccion") or {}
     if cerrojo.get("modo") == "aplicar" and proteccion:

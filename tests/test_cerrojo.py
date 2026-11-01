@@ -718,7 +718,8 @@ def test_el_resumen_lleva_los_cambios_retenidos() -> None:
     assert lineas[0] == "  Cambios retenidos: 1 (en observación)"
     assert lineas[1] == "  - EODI-2026-09600 drones"
     assert visitas.lineas_cerrojo({"modo": "aplicar", "retenidos": []}) == [
-        "  Cambios retenidos: 0"
+        "  Cambios retenidos: 0",
+        "  Guardados fallidos de fichas publicadas: 0",
     ]
     assert visitas.lineas_cerrojo(None) == []
 

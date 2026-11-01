@@ -10,6 +10,8 @@ configuración propio: se calcula de lo que ya existe.
 - **Nivel con cita**: en cualquier ficha publicada, los datos decididos con la frase de una fuente
   (proceso/decididos.py) y el estado y la presencia que decide una autoridad. Solo cambian si una
   fuente de un artículo que la ficha no tenía trae una frase literal (`fuente_nueva_con_frase`).
+- **Nivel publicada**: la retirada de cualquier ficha publicada. Solo pasa si viene de una decisión
+  explícita (`por_decision`): nunca de un fallo al guardar o rehacer (docs/cerrojo.md).
 - **Uniones prohibidas**: los pares que no se unen (`distintos`, partes de una separación, los
   distintos del experto, los relacionados). Se miran entre grupos enteros: todas las fichas que
   cuelgan de la destinataria contra todas las de la absorbida, así que ni una cadena de uniones ni
@@ -51,9 +53,21 @@ FICHAS_REFERENCIA = RAIZ / "tests" / "referencia" / "fichas.json"
 
 OBSERVAR, APLICAR = "observar", "aplicar"
 PASO_RENUMERAR = "recogida.control_fichas.conservar_la_mas_antigua"
-MANUAL, CON_CITA = "manual", "con_cita"
+MANUAL, CON_CITA, PUBLICADA = "manual", "con_cita", "publicada"
 PREFIJO_RETENIDO, PREFIJO_PERMITIDO = "retenido:", "permitido:"
 PREFIJO_FALLO = "cerrojo_fallo:"
+# Una versión nueva de una ficha publicada que no se pudo guardar (proceso/extraccion.py): la clave
+# lleva la ficha y la fecha; se quedó la versión publicada.
+PREFIJO_GUARDADO_FALLIDO = "guardado_fallido:"
+# Veces seguidas que falla la misma ficha para abrir una incidencia (recogida/vigilancia.py).
+FALLOS_SEGUIDOS = 3
+# Quién puede retirar una ficha publicada: las decisiones explícitas. La barrera de titulares a las
+# 6 horas, el repaso de entrada con decisión, una revisión a mano y el veredicto de que no es un
+# suceso. Un fallo al guardar o rehacer no retira nunca (proceso/extraccion.conservar_publicada).
+DECISIONES_RETIRADA = (
+    "recogida.barrera.", "recogida.repaso_entrada.", "recogida.revisados.",
+    "proceso.extraccion.retirar_por_veredicto",
+)  # fmt: skip
 # Las comprobaciones de la auditoría que miran lo protegido (proceso/auditoria_fichas.py).
 AUDITORIA = ("P", "R", "V", "W", "X")
 
@@ -224,11 +238,12 @@ def candidatos(guardado: Documento, nuevo: Documento) -> list[Cambio]:
         antes, despues = valor(guardado, dato), valor(nuevo, dato)
         if dato not in cambios and antes != despues and _decidido_por_autoridad(guardado, dato):
             cambios[dato] = Cambio(dato, CON_CITA, antes, despues)
-    if "retirado" in nuevo and "retirado" not in cambios and any(
-        declaraciones.de_autoridad(f) for f in guardado.get("fuentes", [])
-    ):  # fmt: skip
-        # El repaso retiró fichas que contaba una autoridad (EODI-2026-00181, 29/10/2026).
-        cambios["retirado"] = Cambio("retirado", CON_CITA, False, True)
+    if "retirado" in nuevo and "retirado" not in cambios:
+        # El repaso retiró fichas que contaba una autoridad (EODI-2026-00181, 29/10/2026): esas no
+        # las retira ni una decisión automática. Las demás, solo una decisión explícita: un fallo
+        # técnico retiró EODI-2026-00130 y EODI-2026-00302 (1/11/2026).
+        autoridad = any(declaraciones.de_autoridad(f) for f in guardado.get("fuentes", []))
+        cambios["retirado"] = Cambio("retirado", CON_CITA if autoridad else PUBLICADA, False, True)
     return list(cambios.values())
 
 
@@ -323,6 +338,11 @@ def por_revision(pasos: Iterable[str]) -> bool:
     return False
 
 
+def por_decision(pasos: Iterable[str]) -> bool:
+    """La retirada sale de una decisión explícita (`DECISIONES_RETIRADA`)."""
+    return any(paso.startswith(DECISIONES_RETIRADA) for paso in pasos)
+
+
 def juzgar(
     guardado: Documento, nuevo: Documento, pasos: list[str],
     texto_de: Callable[[Documento], str],
@@ -345,6 +365,8 @@ def juzgar(
             return "revision"
         if rectificada and cambio.dato in ("presencia_dron", "titulo"):
             return "rectificacion"
+        if cambio.nivel == PUBLICADA and por_decision(pasos):
+            return "decision"
         if cambio.dato == "titulo" and justificados & set(TITULO_SIGUE_A):
             return "sigue_a_lo_justificado"
         if cambio.nivel == CON_CITA and fuente_nueva_con_frase(
@@ -373,8 +395,13 @@ def _tipo_guardado(resultado: Documento, guardado: Documento) -> None:
 
 
 def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) -> Documento:
-    """`nuevo` con el valor de `guardado` en cada dato retenido, con sus afirmaciones."""
+    """`nuevo` con el valor de `guardado` en cada dato retenido, con sus afirmaciones. Una retirada
+    retenida deja la versión publicada entera."""
+    cambios = list(cambios)
+    if any(cambio.dato == "retirado" for cambio in cambios):
+        return copy.deepcopy(guardado)
     resultado = copy.deepcopy(nuevo)
+    fuentes = {f.get("id") for f in resultado.get("fuentes", [])}
     for cambio in cambios:
         dato = cambio.dato
         if dato in decididos.DATOS:
@@ -393,7 +420,7 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
             resultado["afirmaciones"] = [
                 *(a for a in resultado.get("afirmaciones", []) if a.get("campo") != dato),
                 *(copy.deepcopy(a) for a in guardado.get("afirmaciones", [])
-                  if a.get("campo") == dato),
+                  if a.get("campo") == dato and a.get("fuente_id") in fuentes),
             ]  # fmt: skip
         elif dato == "tipo":
             _tipo_guardado(resultado, guardado)
@@ -404,8 +431,6 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
                 resultado.pop("objetivo", None)
         elif dato == "titulo":
             resultado["titulo"] = copy.deepcopy(guardado["titulo"])
-        elif dato == "retirado":
-            resultado.pop("retirado", None)
     return resultado
 
 
@@ -551,6 +576,17 @@ def cambios_sin_permiso(
             if clave not in permitidos:
                 salida.add(f"{anterior['id']} {propuesto.dato}")
     return sorted(salida)
+
+
+def fallos_seguidos(controles: dict[str, Documento]) -> dict[str, int]:
+    """{ficha: fallos seguidos}, de las claves `guardado_fallido:<ficha>:<fecha>`: cuenta desde el
+    último guardado bueno de esa ficha, apuntado con `resuelto`."""
+    seguidos: dict[str, int] = {}
+    orden = sorted(controles.items(), key=lambda c: (str(c[1].get("fecha")), c[0]))
+    for clave, apunte in orden:
+        ficha = clave.split(":")[1]
+        seguidos[ficha] = 0 if apunte.get("resuelto") else seguidos.get(ficha, 0) + 1
+    return {ficha: cuenta for ficha, cuenta in seguidos.items() if cuenta}
 
 
 def permitidos(controles: dict[str, Documento]) -> frozenset[tuple[str, str, str]]:

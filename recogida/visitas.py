@@ -697,6 +697,8 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "cerrojo": {
             "modo": (datos.get("cerrojo") or {}).get("modo"),
             "retenidos": ((datos.get("cerrojo") or {}).get("dias") or {}).get(dia.isoformat(), []),
+            "guardados_fallidos": ((datos.get("cerrojo") or {}).get("guardados_fallidos")
+                                   or {}).get(dia.isoformat(), []),
         },
         "entrada": (datos.get("entrada") or {}).get(dia.isoformat()),
     }  # fmt: skip
@@ -774,6 +776,9 @@ def lineas_cerrojo(cerrojo: Documento | None) -> list[str]:
     nota = " (en observación)" if cerrojo["modo"] == "observar" else ""
     lineas = [f"  Cambios retenidos: {len(retenidos)}{nota}"]
     lineas += [f"  - {r}" for r in retenidos[:LIMITE]]
+    fallidos = list(cerrojo.get("guardados_fallidos") or [])
+    lineas.append(f"  Guardados fallidos de fichas publicadas: {len(fallidos)}")
+    lineas += [f"  - {f}" for f in fallidos[:LIMITE]]
     return lineas
 
 

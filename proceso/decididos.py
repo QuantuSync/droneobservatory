@@ -207,11 +207,19 @@ _CAMPOS_AFIRMACION = {
 
 
 def _con_afirmaciones(resultado: Documento, anterior: Documento, dato: str) -> None:
-    """Las afirmaciones del dato conservado son las de la anterior (su fuente y su valor)."""
+    """Las afirmaciones del dato conservado son las de la anterior (su fuente y su valor), solo las
+    de fuentes que siguen en la ficha nueva: una ficha con fuentes unidas se vuelve a extraer con
+    las de su candidato, y citar las otras la hacía inválida (EODI-2026-00130 y EODI-2026-00302,
+    1 de noviembre de 2026)."""
     campos = _CAMPOS_AFIRMACION[dato]
+    fuentes = _fuentes(resultado)
     resultado["afirmaciones"] = [
         *(a for a in resultado.get("afirmaciones", []) if a.get("campo") not in campos),
-        *(copy.deepcopy(a) for a in anterior.get("afirmaciones", []) if a.get("campo") in campos),
+        *(
+            copy.deepcopy(a)
+            for a in anterior.get("afirmaciones", [])
+            if a.get("campo") in campos and str(a.get("fuente_id")) in fuentes
+        ),
     ]
 
 
