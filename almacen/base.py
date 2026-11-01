@@ -598,8 +598,8 @@ class Almacen:
             resultado = documento
             if aplica and veredicto.retenidos:
                 resultado = protegido.conservar(documento, guardado, veredicto.retenidos)
-                if validar_incidente(resultado, ahora, vocabulario_modelos):
-                    raise ValueError("lo retenido no valida")
+                if errores := validar_incidente(resultado, ahora, vocabulario_modelos):
+                    raise ValueError(f"lo retenido no valida: {errores[:3]}")
             return self._cerrojo_union(resultado, guardado, pasos, aplica, ahora)
         except Exception as error:
             self._fallo_del_cerrojo(documento, error, ahora)
