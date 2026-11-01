@@ -25,6 +25,18 @@ a tiempo: la ventana se mide desde su alta en la base, no desde ahora. Su texto 
 nota «Aviso con retraso por un fallo de publicación» en los dos idiomas. Las demás reglas no
 cambian (una sola vez por incidente, fuente oficial, prioridad).
 
+El aviso solo sale cuando la web ya sirve la ficha. Las páginas de las fichas y los datos que pinta
+el navegador salen de la reconstrucción de la web, que acaba minutos después de subir los datos: el
+1 de noviembre de 2026 un aviso llegó seis minutos antes que su despliegue y el enlace daba «no
+existe». Antes de enviar se pide la dirección del enlace del aviso (`comprobador`): vale un 200
+directo con el identificador en la página. Una redirección, un 404 o un fallo de red son «todavía
+no». Se pregunta cada minuto mientras dure la espera de esta ejecución (`--espera`, la acota
+servidor/recogida.sh para no pisar la recogida siguiente) y lo que no llegue queda pendiente en
+avisos.sqlite con su hora original: la recogida siguiente lo reintenta y la ventana de 72 horas se
+sigue midiendo desde esa hora, no desde el reintento. Lo que tarda la web queda en la tabla
+`esperas` (de la subida a la primera comprobación correcta) y sale en el resumen de las 08:00; la
+vigilancia abre una incidencia si un aviso lleva más de 30 minutos pendiente.
+
 Si un envío falla, se reintenta en la recogida siguiente: lo que salió bien queda anotado por
 tema y no se repite. El resultado de cada pasada queda en $SECRETOS/avisos.json, que lee la
 vigilancia (dos recogidas seguidas con fallo de envío, problema «avisos»).
@@ -38,10 +50,11 @@ import logging
 import os
 import sqlite3
 import sys
+import time
 import urllib.error
 import urllib.request
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -60,9 +73,15 @@ ESTADO = "avisos.json"
 FICHEROS_PUBLICADOS = ("incidentes.geojson", "incidentes_sin_ubicacion.json")
 TIEMPO_ESPERA_S = 15
 FALLOS_PARA_PROBLEMA = 2
+# Cada cuánto se vuelve a preguntar a la web, y a partir de cuándo un pendiente es un problema.
+PAUSA_WEB_S = 60
+PENDIENTE_PROBLEMA_MIN = 30
+AGENTE_WEB = "EODI-web (+https://droneobservatory.eu)"
+MAX_PAGINA_B = 2_000_000
 
 Documento = dict[str, Any]
 Enviar = Callable[[Documento], None]
+Comprobar = Callable[[str], bool]
 
 FRASE_ES = {
     # (clase, estado) -> título en español; el género sigue al sustantivo.
@@ -351,6 +370,50 @@ def enviador(servidor: str, token: str) -> Enviar:
     return enviar
 
 
+# --- Si la web ya sirve la ficha --------------------------------------------------------------
+class _SinRedirigir(urllib.request.HTTPRedirectHandler):
+    """Una redirección es una ficha unida a otra, no la ficha del aviso."""
+
+    def redirect_request(self, *argumentos: Any, **opciones: Any) -> None:
+        return None
+
+
+def comprobador(sitio: str) -> Comprobar:
+    """Si la web pública sirve ya la ficha, pidiendo la dirección del enlace del aviso. Es una
+    página del despliegue, y la del mismo despliegue que los datos que pinta el navegador: mirar
+    el almacén no vale, porque tiene los datos antes de que la web los sirva. Un fallo de red o de
+    la respuesta no se distingue de «todavía no»: nunca hace enviar."""
+    abridor = urllib.request.build_opener(_SinRedirigir)
+
+    def servida(id_: str) -> bool:
+        peticion = urllib.request.Request(
+            f"{sitio.rstrip('/')}/{id_}",
+            headers={"User-Agent": AGENTE_WEB, "Cache-Control": "no-cache"},
+        )
+        try:
+            with abridor.open(peticion, timeout=TIEMPO_ESPERA_S) as respuesta:
+                pagina = respuesta.read(MAX_PAGINA_B)
+                return respuesta.status == 200 and id_.encode("utf-8") in pagina
+        except (urllib.error.URLError, OSError, ValueError) as error:
+            registro.info("la web aún no sirve %s: %s", id_, str(error)[:120])
+            return False
+
+    return servida
+
+
+@dataclass(frozen=True)
+class Espera:
+    """Cómo se espera a la web en una pasada. Con `tope_s` 0, una sola pregunta."""
+
+    servida: Comprobar
+    tope_s: float = 0
+    pausa_s: float = PAUSA_WEB_S
+    dormir: Callable[[float], None] = time.sleep
+    reloj: Callable[[], float] = time.monotonic
+    # Lo pendiente, en cuanto se sabe: una ejecución cortada no se lo calla a la vigilancia.
+    anotar: Callable[[dict[str, str]], None] | None = None
+
+
 # --- Lo publicado y lo enviado -----------------------------------------------------------------
 def ids_publicados(carpeta: Path) -> set[str]:
     """Los incidentes que están en la web (con punto y sin ubicación)."""
@@ -452,6 +515,11 @@ class Enviados:
             " id TEXT NOT NULL, tema TEXT NOT NULL, momento TEXT NOT NULL,"
             " inicial INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (id, tema));"
             "CREATE TABLE IF NOT EXISTS activacion (momento TEXT NOT NULL);"
+            "CREATE TABLE IF NOT EXISTS pendientes ("
+            " id TEXT PRIMARY KEY, desde TEXT NOT NULL, servida TEXT);"
+            "CREATE TABLE IF NOT EXISTS esperas ("
+            " id TEXT PRIMARY KEY, desde TEXT NOT NULL, servida TEXT NOT NULL,"
+            " segundos REAL NOT NULL);"
         )
         self._conexion.commit()
 
@@ -492,6 +560,38 @@ class Enviados:
         )
         self._conexion.commit()
 
+    def pendientes(self) -> dict[str, str]:
+        """Los avisos que esperan a la web: identificador y hora original."""
+        filas = self._conexion.execute("SELECT id, desde FROM pendientes").fetchall()
+        return {str(i): str(d) for i, d in filas}
+
+    def dejar_pendiente(self, id_: str, desde: datetime) -> None:
+        self._conexion.execute(
+            "INSERT OR IGNORE INTO pendientes (id, desde) VALUES (?, ?)", (id_, _texto(desde))
+        )
+        self._conexion.commit()
+
+    def marcar_servida(self, id_: str, momento: datetime) -> None:
+        """La primera comprobación correcta: lo que ha tardado la web, una sola vez."""
+        fila = self._conexion.execute(
+            "SELECT desde, servida FROM pendientes WHERE id = ?", (id_,)
+        ).fetchone()
+        if fila is None or fila[1] is not None:
+            return
+        desde = _instante(str(fila[0])) or momento
+        with self._conexion:
+            self._conexion.execute(
+                "UPDATE pendientes SET servida = ? WHERE id = ?", (_texto(momento), id_)
+            )
+            self._conexion.execute(
+                "INSERT OR IGNORE INTO esperas (id, desde, servida, segundos) VALUES (?, ?, ?, ?)",
+                (id_, str(fila[0]), _texto(momento), (momento - desde).total_seconds()),
+            )
+
+    def quitar_pendiente(self, id_: str) -> None:
+        self._conexion.execute("DELETE FROM pendientes WHERE id = ?", (id_,))
+        self._conexion.commit()
+
 
 @dataclass
 class Pasada:
@@ -499,35 +599,36 @@ class Pasada:
     fallidos: int = 0
     marcados: int = 0
     error: str | None = None
+    pendientes: dict[str, str] = field(default_factory=dict)
 
 
-def pasar(
+@dataclass(frozen=True)
+class _Envio:
+    id: str
+    aviso: Aviso
+    incidente: Documento
+    temas: tuple[str, ...]
+
+
+def _por_enviar(
     publicados: set[str],
     internos: dict[str, Documento],
     enviados: Enviados,
     config: Documento,
     ahora: datetime,
-    enviar: Enviar | None,
-    unidos: dict[str, set[str]] | None = None,
-) -> Pasada:
-    """Una pasada: anota los existentes la primera vez; si no, envía los avisos que faltan.
-    Con `enviar` None, ensayo: dice lo que enviaría sin enviar ni anotar. Lo avisado con el
-    número de un registro que se unió después a otro cuenta como avisado para el que queda
-    (`unidos`): el mismo suceso no se avisa dos veces."""
-    pasada = Pasada()
-    if enviados.nueva:
-        pasada.marcados = len(publicados)
-        if enviar is not None:
-            enviados.activar(publicados, ahora)
-        registro.info("primera pasada: %d incidentes anotados como ya avisados", pasada.marcados)
-        return pasada
+    unidos: dict[str, set[str]] | None,
+) -> list[_Envio]:
+    """Los avisos que faltan. Un pendiente se mide desde su hora original: esperar a la web no le
+    quita ventana."""
     ya = enviados.iniciales()
+    pendientes = enviados.pendientes()
     general = config["general"]["tema"]
+    lista: list[_Envio] = []
     for id_ in sorted(publicados - ya):
         incidente = internos.get(id_)
         if incidente is None:
             continue
-        aviso = clasificar(incidente, config, ahora)
+        aviso = clasificar(incidente, config, _instante(pendientes.get(id_)) or ahora)
         if aviso is None:
             continue
         hechos = enviados.temas(id_)
@@ -538,40 +639,141 @@ def pasar(
             continue
         # Un solo aviso por incidente: si ya salió a un país, no sale a otro aunque cambie.
         pais_hecho = bool(hechos - {general})
-        for tema in (general, config["paises"][aviso.pais]["tema"]):
-            if tema in hechos or (tema != general and pais_hecho):
-                continue
-            cuerpo = mensaje(aviso, incidente, config, tema)
-            if enviar is None:
+        temas = tuple(
+            tema
+            for tema in (general, config["paises"][aviso.pais]["tema"])
+            if tema not in hechos and not (tema != general and pais_hecho)
+        )
+        if temas:
+            lista.append(_Envio(id_, aviso, incidente, temas))
+    return lista
+
+
+def _enviar_uno(
+    envio: _Envio,
+    enviados: Enviados,
+    config: Documento,
+    momento: datetime,
+    enviar: Enviar,
+    pasada: Pasada,
+) -> bool:
+    """Envía el aviso a sus temas y anota cada uno. True si salió a todos."""
+    completo = True
+    for tema in envio.temas:
+        cuerpo = mensaje(envio.aviso, envio.incidente, config, tema)
+        try:
+            enviar(cuerpo)
+        except (urllib.error.URLError, OSError, ValueError) as error:
+            pasada.fallidos += 1
+            pasada.error = f"{type(error).__name__}: {error}"[:200]
+            registro.warning("aviso de %s a %s sin enviar: %s", envio.id, tema, pasada.error)
+            completo = False
+            continue
+        enviados.anotar(envio.id, tema, momento)
+        pasada.enviados += 1
+        registro.info(
+            "aviso de %s enviado a %s (prioridad %d%s)",
+            envio.id,
+            tema,
+            envio.aviso.prioridad,
+            ", con retraso" if envio.aviso.retraso else "",
+        )
+    return completo
+
+
+def pasar(
+    publicados: set[str],
+    internos: dict[str, Documento],
+    enviados: Enviados,
+    config: Documento,
+    ahora: datetime,
+    enviar: Enviar | None,
+    unidos: dict[str, set[str]] | None = None,
+    espera: Espera | None = None,
+    desde: datetime | None = None,
+) -> Pasada:
+    """Una pasada: anota los existentes la primera vez; si no, envía los avisos que faltan.
+    Con `enviar` None, ensayo: dice lo que enviaría sin enviar ni anotar. Lo avisado con el
+    número de un registro que se unió después a otro cuenta como avisado para el que queda
+    (`unidos`): el mismo suceso no se avisa dos veces. Con `espera`, cada aviso sale solo cuando
+    la web sirve su ficha (recogida/avisos.py, arriba); `desde` es la hora de la subida."""
+    pasada = Pasada()
+    if enviados.nueva:
+        pasada.marcados = len(publicados)
+        if enviar is not None:
+            enviados.activar(publicados, ahora)
+        registro.info("primera pasada: %d incidentes anotados como ya avisados", pasada.marcados)
+        return pasada
+    lista = _por_enviar(publicados, internos, enviados, config, ahora, unidos)
+    if enviar is None:
+        for envio in lista:
+            for tema in envio.temas:
+                cuerpo = mensaje(envio.aviso, envio.incidente, config, tema)
                 registro.info(
                     "ensayo: %s a %s: %s%s",
-                    id_,
+                    envio.id,
                     tema,
                     cuerpo["title"],
-                    " (con retraso)" if aviso.retraso else "",
+                    " (con retraso)" if envio.aviso.retraso else "",
                 )
                 pasada.enviados += 1
+        return pasada
+    # Lo pendiente que ya no toca (retirado, unido, enviado): no sigue esperando.
+    vigentes = {envio.id for envio in lista}
+    for id_ in set(enviados.pendientes()) - vigentes:
+        enviados.quitar_pendiente(id_)
+    if espera is None:
+        for envio in lista:
+            if _enviar_uno(envio, enviados, config, ahora, enviar, pasada):
+                enviados.quitar_pendiente(envio.id)
+        pasada.pendientes = enviados.pendientes()
+        return pasada
+    inicio = espera.reloj()
+    restantes = lista
+    while restantes:
+        momento = ahora + timedelta(seconds=espera.reloj() - inicio)
+        siguen: list[_Envio] = []
+        for envio in restantes:
+            enviados.dejar_pendiente(envio.id, desde or ahora)
+            if not espera.servida(envio.id):
+                siguen.append(envio)
                 continue
-            try:
-                enviar(cuerpo)
-            except (urllib.error.URLError, OSError, ValueError) as error:
-                pasada.fallidos += 1
-                pasada.error = f"{type(error).__name__}: {error}"[:200]
-                registro.warning("aviso de %s a %s sin enviar: %s", id_, tema, pasada.error)
-                continue
-            enviados.anotar(id_, tema, ahora)
-            pasada.enviados += 1
-            registro.info(
-                "aviso de %s enviado a %s (prioridad %d%s)",
-                id_,
-                tema,
-                aviso.prioridad,
-                ", con retraso" if aviso.retraso else "",
-            )
+            enviados.marcar_servida(envio.id, momento)
+            if _enviar_uno(envio, enviados, config, momento, enviar, pasada):
+                enviados.quitar_pendiente(envio.id)
+        restantes = siguen
+        if espera.anotar is not None:
+            espera.anotar(enviados.pendientes())
+        if not restantes or espera.reloj() - inicio + espera.pausa_s > espera.tope_s:
+            break
+        espera.dormir(espera.pausa_s)
+    pasada.pendientes = enviados.pendientes()
     return pasada
 
 
 # --- Estado para la vigilancia ---------------------------------------------------------------
+def _texto(momento: datetime) -> str:
+    return momento.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def guardar_pendientes(ruta: Path, pendientes: dict[str, str]) -> None:
+    """Lo que espera a la web, en avisos.json, sin tocar el resto del estado."""
+    estado: Documento = {}
+    if ruta.exists():
+        try:
+            estado = json.loads(ruta.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            estado = {}
+    _escribir_estado(ruta, {**estado, "pendientes": pendientes})
+
+
+def _escribir_estado(ruta: Path, estado: Documento) -> None:
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    temporal = ruta.with_name(ruta.name + ".tmp")
+    temporal.write_text(json.dumps(estado, ensure_ascii=False) + "\n", encoding="utf-8")
+    os.replace(temporal, ruta)
+
+
 def guardar_estado(ruta: Path, pasada: Pasada, ahora: datetime) -> Documento:
     anterior: Documento = {}
     if ruta.exists():
@@ -591,11 +793,9 @@ def guardar_estado(ruta: Path, pasada: Pasada, ahora: datetime) -> Documento:
             if pasada.enviados
             else anterior.get("ultimo_envio")
         ),
+        "pendientes": pasada.pendientes,
     }
-    ruta.parent.mkdir(parents=True, exist_ok=True)
-    temporal = ruta.with_name(ruta.name + ".tmp")
-    temporal.write_text(json.dumps(estado, ensure_ascii=False) + "\n", encoding="utf-8")
-    os.replace(temporal, ruta)
+    _escribir_estado(ruta, estado)
     return estado
 
 
@@ -611,6 +811,52 @@ def problema_para_vigilancia(estado: Documento) -> str | None:
     )
 
 
+def pendiente_para_vigilancia(estado: Documento, ahora: datetime) -> str | None:
+    """La frase del problema si un aviso lleva más de 30 minutos esperando a la web."""
+    pendientes = estado.get("pendientes") or {}
+    tarde = sorted(
+        id_
+        for id_, desde in pendientes.items()
+        if (instante := _instante(str(desde))) is not None
+        and ahora - instante > timedelta(minutes=PENDIENTE_PROBLEMA_MIN)
+    )
+    if not tarde:
+        return None
+    return (
+        f"Avisos pendientes más de {PENDIENTE_PROBLEMA_MIN} minutos porque la web no sirve su "
+        f"ficha: {', '.join(tarde)}."
+    )
+
+
+def espera_del_dia(ruta: Path, inicio: datetime, fin: datetime) -> float | None:
+    """La espera media de la web, en minutos, de los avisos de ese día; None si no hay medidas."""
+    if not ruta.exists():
+        return None
+    conexion = sqlite3.connect(f"{ruta.resolve().as_uri()}?mode=ro", uri=True)
+    try:
+        fila = conexion.execute(
+            "SELECT AVG(segundos) FROM esperas WHERE servida >= ? AND servida < ?",
+            (_texto(inicio), _texto(fin)),
+        ).fetchone()
+    except sqlite3.Error:
+        return None
+    finally:
+        conexion.close()
+    return None if fila[0] is None else float(fila[0]) / 60
+
+
+def hora_de_subida(registro_publicacion: Path | None, ahora: datetime) -> datetime:
+    """Cuándo se subieron los datos (`subido`, recogida/publicacion.py); si no consta, ahora."""
+    if registro_publicacion is None or not registro_publicacion.exists():
+        return ahora
+    try:
+        subido = json.loads(registro_publicacion.read_text(encoding="utf-8")).get("subido")
+    except (OSError, ValueError, AttributeError):
+        return ahora
+    instante = _instante(str(subido)) if subido else None
+    return instante if instante is not None and instante <= ahora else ahora
+
+
 # --- Órdenes ---------------------------------------------------------------------------------
 def principal(argumentos: list[str] | None = None, ahora: datetime | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -623,6 +869,10 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
         orden.add_argument("--datos", type=Path, required=True, help="carpeta de avisos.sqlite")
         orden.add_argument("--estado", type=Path, help="avisos.json para la vigilancia")
         orden.add_argument("--token", type=Path, help="fichero con el token de observatorio")
+        orden.add_argument("--espera", type=float, default=0, help="segundos de espera a la web")
+        orden.add_argument("--registro", type=Path, help="publicacion.json, con la hora de subida")
+    comprobar = sub.add_parser("comprobar", help="dice si la web sirve ya esas fichas, sin enviar")
+    comprobar.add_argument("--id", action="append", required=True)
     ejemplo = sub.add_parser("ejemplo", help="envía un incidente a un tema de pruebas, sin anotar")
     ejemplo.add_argument("--base", type=Path, required=True)
     ejemplo.add_argument("--publicacion", type=Path, help="para las autoridades traducidas")
@@ -634,6 +884,12 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
     args = analizador.parse_args(argumentos)
     ahora = ahora or datetime.now(UTC)
     config = configuracion()
+
+    if args.orden == "comprobar":
+        servida = comprobador(config["sitio"])
+        vistas = {id_: servida(id_) for id_ in args.id}
+        print(json.dumps(vistas, ensure_ascii=False))
+        return 0 if all(vistas.values()) else 1
 
     if args.orden == "ejemplo":
         if args.tema in temas_publicos(config) or args.tema in config.get("temas_anteriores", {}):
@@ -691,13 +947,24 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
                 ahora,
                 enviador(config["servidor"], token),
                 unidos_en(args.base),
+                Espera(
+                    comprobador(config["sitio"]),
+                    tope_s=args.espera,
+                    anotar=(
+                        (lambda lista: guardar_pendientes(args.estado, lista))
+                        if args.estado is not None
+                        else None
+                    ),
+                ),
+                hora_de_subida(args.registro, ahora),
             )
     finally:
         enviados.cerrar()
     if args.estado is not None:
         guardar_estado(args.estado, pasada, ahora)
     print(
-        f"avisos: {pasada.enviados} enviados, {pasada.fallidos} sin enviar"
+        f"avisos: {pasada.enviados} enviados, {pasada.fallidos} sin enviar, "
+        f"{len(pasada.pendientes)} esperando a la web"
         + (f", {pasada.marcados} anotados como ya avisados" if pasada.marcados else "")
     )
     return 1 if pasada.fallidos else 0
