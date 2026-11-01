@@ -35,7 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen import copias
-from almacen.sitio import casa
+from almacen.casa import casa
 
 registro = logging.getLogger("reserva")
 

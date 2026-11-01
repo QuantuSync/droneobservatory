@@ -37,6 +37,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from esquema import Documento
 from proceso import buques
 
@@ -118,7 +119,7 @@ def _leer(ruta: Path) -> Documento:
 
 
 def ruta_cache() -> Path:
-    return Path(os.environ.get(VARIABLE_CACHE) or Path.home() / ".eodi" / "nombres_lugar.json")
+    return Path(os.environ.get(VARIABLE_CACHE) or casa() / ".eodi" / "nombres_lugar.json")
 
 
 def clave_cache(pais: str, nombre: str) -> str:

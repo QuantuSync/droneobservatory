@@ -113,7 +113,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen import reserva
-from almacen.sitio import casa
+from almacen.casa import casa
 from recogida import almacen_publico, versiones, visitas
 from recogida import avisos as avisos_ntfy
 

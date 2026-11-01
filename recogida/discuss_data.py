@@ -38,7 +38,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen import copias, exportaciones
-from almacen.sitio import casa
+from almacen.casa import casa
 from exportacion import discuss_data as paquete
 from recogida import versiones
 from recogida.almacen_publico import ALGORITMO, SERVICIO

@@ -32,8 +32,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
+
 VARIABLES = ("EODI_SECUNDARIO_URL", "EODI_SECUNDARIO_CLAVE", "EODI_SECUNDARIO_MODELO")
-RUTA_LOCAL = Path.home() / ".eodi" / "extractor.env"
+RUTA_LOCAL = casa() / ".eodi" / "extractor.env"
 HTTP_OK = 200
 HTTP_PETICION_INVALIDA = 400
 HTTP_ERROR_SERVIDOR = 500

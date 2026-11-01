@@ -43,6 +43,7 @@ from typing import Any
 from urllib.parse import urljoin
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from proceso import catalogo_vivo as cv
 from proceso.deduccion import catalogo as catalogo_
 from proceso.noticias import filtro as filtro_noticias
@@ -52,7 +53,7 @@ from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 registro = logging.getLogger("recogida.catalogo_vivo")
 
 VARIABLE_DATOS = "EODI_CATALOGO_DATOS"
-DATOS = Path.home() / "datos" / "catalogo"
+DATOS = casa() / "datos" / "catalogo"
 CONFIGURACION = catalogo_.CONFIGURACION / "barrido_catalogo.json"
 NOVEDADES, CATALOGO, HISTORIAL = "novedades.jsonl", "catalogo_vivo.json", "historial.jsonl"
 TACTICAS, APARICIONES = "tacticas.json", "apariciones.json"

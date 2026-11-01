@@ -27,12 +27,13 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
 
+from almacen.casa import casa
 from recogida.descarga import AGENTE_EODI, Descargador
 from recogida.plazo import Plazo
 
 URL = "https://historical-forecast-api.open-meteo.com/v1/forecast"
 VARIABLE_DATOS = "EODI_METEO_DATOS"
-DATOS = Path.home() / "datos" / "meteo"
+DATOS = casa() / "datos" / "meteo"
 NIVELES = (1000, 925, 850, 700)
 SUPERFICIE = (
     "temperature_2m",

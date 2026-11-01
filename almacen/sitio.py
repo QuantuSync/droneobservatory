@@ -39,6 +39,7 @@ from tempfile import TemporaryDirectory
 
 from almacen import cifrado, remoto
 from almacen.base import Almacen
+from almacen.casa import casa
 
 registro = logging.getLogger("base")
 
@@ -46,16 +47,6 @@ GITHUB, DOBLE, DISCO = "github", "doble", "disco"
 MODOS = (GITHUB, DOBLE, DISCO)
 VARIABLE_MODO = "EODI_BASE_MODO"
 VARIABLE_DIRECTORIO = "EODI_BASE_DIRECTORIO"
-
-
-def casa() -> Path:
-    """La carpeta del usuario que ejecuta, de la base de usuarios del sistema y no de HOME:
-    con `sudo -u <usuario>` HOME puede seguir siendo la de quien administra."""
-    if sys.platform != "win32":
-        import pwd
-
-        return Path(pwd.getpwuid(os.getuid()).pw_dir)
-    return Path.home()
 
 
 FICHERO_MODO = casa() / ".eodi" / "base_modo"

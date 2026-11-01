@@ -57,6 +57,7 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from proceso import directo, metar, trafico, vuelos
 from recogida import almacen_publico, gnss_publico, referencia, reintentos
 from recogida import metar as metar_iem
@@ -66,8 +67,8 @@ from recogida.descarga import AGENTE_EODI
 registro = logging.getLogger("recogida.directo")
 
 VARIABLE_DATOS = "EODI_DIRECTO_DATOS"
-DATOS = Path.home() / "datos" / "directo"
-REGISTRO = Path.home() / ".eodi" / "directo.json"
+DATOS = casa() / "datos" / "directo"
+REGISTRO = casa() / ".eodi" / "directo.json"
 ESTADO = "estado.json"
 AVISOS = "avisos.json"
 HISTORIAL = "avisos_historial.jsonl"
@@ -785,7 +786,7 @@ def servir(args: argparse.Namespace) -> int:
     if subir is None and not args.sin_subir:
         registro.warning("sin credenciales del almacén: directo.json no se publica")
     cerrojo_busqueda = Path(
-        os.environ.get("EODI_CERROJO_BUSQUEDA", Path.home() / ".eodi" / "busqueda.lock")
+        os.environ.get("EODI_CERROJO_BUSQUEDA", casa() / ".eodi" / "busqueda.lock")
     )
     parada = threading.Event()
 

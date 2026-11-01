@@ -431,6 +431,8 @@ def test_el_resumen_cuenta_las_fuentes_oficiales_en_pausa(
 def test_el_aviso_privado_va_al_tema_del_resumen(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("EODI_CASA_AISLADA")
+    monkeypatch.delenv("EODI_SIN_AVISOS")
     assert visitas.avisador_privado("t", tmp_path) is None
     (tmp_path / "ntfy_observatorio").write_text("token\n", encoding="utf-8")
     enviados: list[dict[str, object]] = []

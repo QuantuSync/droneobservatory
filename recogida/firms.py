@@ -40,6 +40,7 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from proceso.focos_termicos import Caja, Foco
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 from recogida.plazo import Plazo, TiempoAgotado
@@ -51,8 +52,8 @@ API = "https://firms.modaps.eosdis.nasa.gov/api"
 VARIABLE_CLAVE = "EODI_FIRMS_MAP_KEY"
 VARIABLE_DATOS = "EODI_FIRMS_DATOS"
 # Solo en local y fuera de cualquier repositorio.
-RUTA_CLAVE_LOCAL = Path.home() / ".eodi" / "firms_map_key.txt"
-DATOS = Path.home() / "datos" / "firms"
+RUTA_CLAVE_LOCAL = casa() / ".eodi" / "firms_map_key.txt"
+DATOS = casa() / "datos" / "firms"
 CONTROL = "control.json"
 
 # Oeste, sur, este, norte. De 22° E (frontera occidental de Ucrania) a 60° E (los Urales,

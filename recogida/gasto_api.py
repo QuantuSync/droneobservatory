@@ -23,12 +23,13 @@ from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from modelo import cliente, coste
 
 registro = logging.getLogger(__name__)
 
 VARIABLE_ESTADO = "EODI_GASTO_API_ESTADO"
-RUTA_ESTADO = Path.home() / ".eodi" / "gasto_api.json"
+RUTA_ESTADO = casa() / ".eodi" / "gasto_api.json"
 TITULO_SALDO = "Saldo de la API agotado: recargar"
 TITULO_80 = "Gasto de la API al 80 % del tope del mes"
 TITULO_100 = "Gasto de la API: tope del mes alcanzado"

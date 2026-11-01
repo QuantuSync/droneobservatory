@@ -58,6 +58,7 @@ from typing import TYPE_CHECKING, Any, Protocol
 
 import numpy as np
 
+from almacen.casa import casa
 from esquema import Documento
 from proceso import luces
 from proceso.focos_termicos import distancia_km
@@ -74,8 +75,8 @@ VALIDACION = RAIZ / "configuracion" / "validacion_luces.json"
 PUBLICACION = RAIZ / "publicacion" / "ucrania.json"
 CANALES = RAIZ / "configuracion" / "canales_guerra.json"
 VARIABLE_DATOS = "EODI_LUCES_DATOS"
-DATOS = Path.home() / "datos" / "luces"
-GUERRA = Path.home() / "datos" / "guerra" / "canales"
+DATOS = casa() / "datos" / "luces"
+GUERRA = casa() / "datos" / "guerra" / "canales"
 VARIABLE_GUERRA = "EODI_GUERRA_DATOS"
 CONTROL = "control.json"
 RESULTADOS = "resultados.json"

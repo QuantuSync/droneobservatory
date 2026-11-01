@@ -58,7 +58,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from almacen.sitio import casa
+from almacen.casa import casa, envio_desactivado
 from proceso import autoridades
 from recogida import avisos as avisos_ntfy
 
@@ -1404,7 +1404,9 @@ def _enviador(secretos: Path) -> Enviar:
 
 def avisador_privado(titulo: str, secretos: Path | None = None) -> Callable[[str], None] | None:
     """Un aviso al responsable por su tema privado (el del resumen diario). None si este equipo
-    no tiene el token de ntfy (fuera del servidor)."""
+    no tiene el token de ntfy (fuera del servidor) o la ejecución está aislada."""
+    if envio_desactivado():
+        return None
     secretos = secretos or rutas_del_entorno().secretos
     if not (secretos / "ntfy_observatorio").exists():
         return None

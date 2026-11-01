@@ -44,7 +44,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
-from almacen.sitio import casa
+from almacen.casa import casa
 from esquema import Documento
 from modelo import control as peticiones
 from modelo import coste, secundario

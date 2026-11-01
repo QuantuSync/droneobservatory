@@ -43,7 +43,7 @@ from typing import Any
 import pyrage
 
 from almacen import buckets, copias
-from almacen.sitio import casa
+from almacen.casa import casa
 from recogida import almacen_publico
 
 registro = logging.getLogger("replica")

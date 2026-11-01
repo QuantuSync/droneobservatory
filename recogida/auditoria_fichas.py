@@ -13,6 +13,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from proceso import auditoria_fichas, incidentes, protegido
 from recogida import revisados
 
@@ -29,7 +30,7 @@ def copia(origen: Path, destino: Path) -> Path:
 
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
-    opciones.add_argument("--base", type=Path, default=Path.home() / "base" / "eodi.sqlite")
+    opciones.add_argument("--base", type=Path, default=casa() / "base" / "eodi.sqlite")
     opciones.add_argument("--json", action="store_true", help="los identificadores en JSON")
     args = opciones.parse_args(argumentos)
     with TemporaryDirectory() as temporal:
