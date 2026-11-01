@@ -28,6 +28,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from exportacion.proyeccion import escribir_atomico
 from proceso.rutas import noches
 from recogida import seguimiento
@@ -37,7 +38,7 @@ VARIABLE_DATOS = "EODI_RUTAS_DATOS"
 VARIABLE_SEGUIMIENTO = "EODI_SEGUIMIENTO_DATOS"
 
 
-DATOS = Path.home() / "datos" / "rutas"
+DATOS = casa() / "datos" / "rutas"
 
 
 def datos_rutas() -> Path:

@@ -47,6 +47,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from almacen.casa import envio_desactivado
 from proceso import autoridades, nombres_lugar
 
 registro = logging.getLogger("avisos")
@@ -320,10 +321,17 @@ def mensaje(aviso: Aviso, incidente: Documento, config: Documento, tema: str) ->
 
 
 # --- Envío -----------------------------------------------------------------------------------
+class EnvioDesactivado(OSError):
+    """Una prueba, un ensayo o una simulación ha llegado al envío: no sale y no cuenta como
+    enviado (almacen/casa.py)."""
+
+
 def enviador(servidor: str, token: str) -> Enviar:
     """Publica un mensaje en ntfy (POST en JSON a la raíz del servidor) con el token."""
 
     def enviar(cuerpo: Documento) -> None:
+        if envio_desactivado():
+            raise EnvioDesactivado("envío desactivado: ejecución aislada")
         peticion = urllib.request.Request(
             servidor.rstrip("/") + "/",
             data=json.dumps(cuerpo, ensure_ascii=False).encode("utf-8"),

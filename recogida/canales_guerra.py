@@ -49,6 +49,7 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida, PaginaBloqueada
 from recogida.plazo import Plazo, TiempoAgotado
 from recogida.reintentos import siguiente_intento
@@ -59,7 +60,7 @@ registro = logging.getLogger("recogida.canales_guerra")
 RAIZ = Path(__file__).resolve().parent.parent
 CONFIGURACION = RAIZ / "configuracion" / "canales_guerra.json"
 VARIABLE_DATOS = "EODI_GUERRA_DATOS"
-DATOS_POR_DEFECTO = Path.home() / "datos" / "guerra"
+DATOS_POR_DEFECTO = casa() / "datos" / "guerra"
 CONTROL = "control.json"
 # Cada lectura vuelve a mirar las últimas 12 horas: las administraciones corrigen cifras y
 # añaden daños a lo largo de la mañana. Bastan 1 o 2 páginas por canal.

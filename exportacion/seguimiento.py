@@ -38,6 +38,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from esquema import Documento
 
 VARIABLE_PUBLICACION = "EODI_PUBLICACION_DATOS"
@@ -63,7 +64,7 @@ ATRIBUCION_ALERTAS_EXCLUIDA = {
 
 
 def datos_publicacion() -> Path:
-    return Path(os.environ.get(VARIABLE_PUBLICACION) or Path.home() / "datos" / "publicacion")
+    return Path(os.environ.get(VARIABLE_PUBLICACION) or casa() / "datos" / "publicacion")
 
 
 def _noches(rutas: Path) -> Iterator[dict[str, Any]]:

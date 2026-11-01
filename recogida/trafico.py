@@ -52,13 +52,14 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from proceso import aeronaves, gnss, trafico, vuelos
 from recogida import adsb, metar
 
 registro = logging.getLogger("recogida.trafico")
 
 VARIABLE_DATOS = "EODI_TRAFICO_DATOS"
-DATOS = Path.home() / "datos" / "trafico"
+DATOS = casa() / "datos" / "trafico"
 CONTROL = "control.json"
 ZONAS = "zonas.json"
 RESUMEN = "resumen.json"

@@ -43,7 +43,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen import copias
-from almacen.sitio import casa
+from almacen.casa import casa
 from recogida import almacen_publico, licencia
 from recogida.descarga import AGENTE_EODI
 

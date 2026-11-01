@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from modelo import cliente
 from proceso import escalado, extraccion
 from recogida.gasto_api import Avisador
@@ -42,7 +43,7 @@ from recogida.gasto_api import Avisador
 registro = logging.getLogger(__name__)
 
 VARIABLE_ESTADO = "EODI_SILENCIO_ESTADO"
-RUTA_ESTADO = Path.home() / ".eodi" / "silencio.json"
+RUTA_ESTADO = casa() / ".eodi" / "silencio.json"
 SIN_INCIDENTES = timedelta(hours=24)
 ESPERA_LARGA = timedelta(hours=6)
 SIN_LLAMADAS = timedelta(hours=3)

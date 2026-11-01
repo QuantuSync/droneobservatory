@@ -59,6 +59,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from almacen.base import Almacen, DocumentoInvalido
+from almacen.casa import casa
 from esquema import Documento
 from modelo import control as peticiones
 from modelo import coste, ficha, paginas
@@ -122,7 +123,7 @@ CURSOR_LOTES = "control_fichas:lotes"
 # Un lote termina casi siempre en minutos y como mucho en 24 horas; pasado ese tiempo se olvida y
 # sus citas vuelven a quedar pendientes.
 CADUCIDAD_LOTE = timedelta(hours=25)
-RUTA_ESTADO_DEFECTO = Path.home() / ".eodi" / "control.json"
+RUTA_ESTADO_DEFECTO = casa() / ".eodi" / "control.json"
 IDIOMAS_WEB = ("es", "en")
 
 

@@ -7,24 +7,17 @@ VARIABLE=nombre por bucket. Los públicos llevan el nombre en claro (bucket).
 """
 
 import os
-import sys
 from pathlib import Path
 from typing import Any
+
+from almacen.casa import casa
 
 VARIABLE_SECRETOS = "EODI_SECRETOS"
 FICHERO = "buckets.env"
 
 
-def _casa() -> Path:
-    if sys.platform != "win32":
-        import pwd
-
-        return Path(pwd.getpwuid(os.getuid()).pw_dir)
-    return Path.home()
-
-
 def variables() -> dict[str, str]:
-    ruta = Path(os.environ.get(VARIABLE_SECRETOS) or _casa() / ".eodi") / FICHERO
+    ruta = Path(os.environ.get(VARIABLE_SECRETOS) or casa() / ".eodi") / FICHERO
     try:
         lineas = ruta.read_text(encoding="utf-8").splitlines()
     except OSError:

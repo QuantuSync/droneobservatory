@@ -34,6 +34,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from almacen.casa import casa
 from modelo import coste, modelos
 
 VARIABLES = (
@@ -52,10 +53,10 @@ OBLIGATORIAS = (
     "EODI_EXTRACTOR_URL_LOTES",
     "EODI_EXTRACTOR_CABECERAS",
 )
-RUTA_LOCAL = Path.home() / ".eodi" / "extractor.env"
+RUTA_LOCAL = casa() / ".eodi" / "extractor.env"
 # Dónde queda anotado el saldo agotado; EODI_SALDO_ESTADO la cambia (pruebas).
 VARIABLE_SALDO = "EODI_SALDO_ESTADO"
-RUTA_SALDO = Path.home() / ".eodi" / "saldo_api.json"
+RUTA_SALDO = casa() / ".eodi" / "saldo_api.json"
 # El servicio contesta 402 con el saldo agotado; algunos, 400 con el tipo billing_error o un
 # mensaje sobre el saldo.
 HTTP_PAGO = 402

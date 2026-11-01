@@ -34,7 +34,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from almacen import buckets
-from almacen.sitio import casa
+from almacen.casa import casa
 from recogida.almacen_publico import firmar
 
 registro = logging.getLogger("copias")

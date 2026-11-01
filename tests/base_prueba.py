@@ -28,6 +28,7 @@ from tempfile import TemporaryDirectory
 import pyrage
 
 from almacen.base import Almacen
+from almacen.casa import exigir_aislamiento
 from almacen.cifrado import VARIABLE_CLAVE, guardar_cifrada
 from esquema import Documento
 from proceso import cruces, luces, periodos, presencia, rectificaciones, zona
@@ -260,6 +261,7 @@ def ensayo(salida: Path) -> int:
 
 
 if __name__ == "__main__":
+    exigir_aislamiento()
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--salida", type=Path, required=True, help="carpeta de la versión")
     sys.exit(ensayo(opciones.parse_args().salida))

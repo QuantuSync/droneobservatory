@@ -58,6 +58,7 @@ from PIL import Image
 
 from almacen import cifrado, remoto, sitio
 from almacen.base import Almacen
+from almacen.casa import casa
 from esquema import Documento
 from proceso import cambio
 from proceso.focos_termicos import distancia_km
@@ -71,7 +72,7 @@ STAC = "https://earth-search.aws.element84.com/v1/search"
 COLECCION = "sentinel-2-l2a"
 ATRIBUCION = "Contains modified Copernicus Sentinel data {anios}"
 VARIABLE_DATOS = "EODI_SATELITE_DATOS"
-DATOS = Path.home() / "datos" / "satelite"
+DATOS = casa() / "datos" / "satelite"
 CONTROL = "control.json"
 PREFIJO = "satelite"
 INDICE = f"{PREFIJO}/parejas.json"

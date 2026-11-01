@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen import copias, replica, sitio
+from almacen.casa import casa
 
 registro = logging.getLogger("solo_disco")
 
@@ -81,7 +82,7 @@ def principal(
     opciones.add_argument("--ensayo", action="store_true", help="comprueba sin cambiar nada")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
-    secretos = Path(os.environ.get("EODI_SECRETOS") or sitio.casa() / ".eodi")
+    secretos = Path(os.environ.get("EODI_SECRETOS") or casa() / ".eodi")
     momento = ahora()
     if sitio.copia_secundaria() == sitio.SIN_SECUNDARIA and not args.ensayo:
         registro.info("la base ya está solo en disco: nada que hacer")

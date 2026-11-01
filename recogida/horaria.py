@@ -45,6 +45,7 @@ Uso: python -m recogida.horaria --correo <correo del autor> [--repositorio <url>
 
 import argparse
 import logging
+import os
 import sys
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
@@ -54,6 +55,7 @@ from typing import Any, TypeVar
 
 from almacen import remoto, sitio
 from almacen.base import Almacen
+from almacen.casa import VARIABLE_SIN_AVISOS, exigir_aislamiento
 from almacen.cifrado import abrir_cifrada
 from exportacion.publicar import DIRECTORIO, modelos, publicar
 from proceso import (
@@ -343,6 +345,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--ensayo", type=Path, help="carpeta donde publicar, sin subir la base")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+    if args.ensayo is not None:
+        # Un ensayo no ve el estado de verdad ni puede avisar (docs/pruebas_aisladas.md).
+        exigir_aislamiento()
+        os.environ[VARIABLE_SIN_AVISOS] = "1"
     ahora = datetime.now(UTC)
     salida = 0
     with TemporaryDirectory() as temporal:

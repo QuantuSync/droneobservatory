@@ -47,6 +47,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from esquema import Documento
 from proceso.noticias import (
     Articulo,
@@ -67,7 +68,7 @@ FUENTE_ID = "busqueda_dirigida"
 ANOMALIAS = "anomalias.json"
 DIAS = "dias"
 HALLADOS = "hallados"
-DIRECTORIO_POR_DEFECTO = Path("~/datos/busqueda").expanduser()
+DIRECTORIO_POR_DEFECTO = casa() / "datos" / "busqueda"
 VARIABLE_DATOS = "EODI_BUSQUEDA_DATOS"
 VERSION = "1.0.0"
 # Solo las anomalías de un aeropuerto con cobertura alta: con media, un hueco puede ser de los
@@ -235,7 +236,7 @@ def buscar(
 
 # --- Avisos de la detección en directo ------------------------------------------------------
 
-DIRECTO_DATOS_POR_DEFECTO = Path("~/datos/directo").expanduser()
+DIRECTO_DATOS_POR_DEFECTO = casa() / "datos" / "directo"
 VARIABLE_DIRECTO = "EODI_DIRECTO_DATOS"
 DIRECTO = "directo"
 # Desde una hora antes del comienzo del hueco hasta 36 horas después, por franjas de GDELT a

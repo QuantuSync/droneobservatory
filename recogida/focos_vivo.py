@@ -45,6 +45,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
+from almacen.casa import casa
 from esquema import Documento
 from proceso import fronteras, impactos_guerra
 from proceso.focos_termicos import (
@@ -70,7 +71,7 @@ REGIONES = (
     RAIZ / "web" / "public" / "mapa" / "rusia-regiones.geojson",
 )
 VARIABLE_DATOS = "EODI_FOCOS_VIVO_DATOS"
-DATOS = Path.home() / "datos" / "focos_vivo"
+DATOS = casa() / "datos" / "focos_vivo"
 OBJETO = "focos/ultimas24h.json"
 CACHE = "public, max-age=300"
 HORAS = 24

@@ -13,9 +13,11 @@ from pathlib import Path
 
 import pyrage
 
+from almacen.casa import casa
+
 VARIABLE_CLAVE = "EODI_CLAVE_AGE"
 # Solo en local y fuera de cualquier repositorio.
-RUTA_CLAVE_LOCAL = Path.home() / ".eodi" / "clave_age.txt"
+RUTA_CLAVE_LOCAL = casa() / ".eodi" / "clave_age.txt"
 
 
 # La base se comprime antes de cifrar: con el histórico de noticias pasaba de los 100 MB

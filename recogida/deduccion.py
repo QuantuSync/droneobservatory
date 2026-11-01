@@ -42,6 +42,7 @@ from tempfile import TemporaryDirectory
 from typing import Any
 
 from almacen.base import Almacen
+from almacen.casa import casa
 from exportacion import mejor_origen, procedencia, semanal
 from proceso import condiciones as meteo_lugar
 from proceso import fechas, impactos_guerra
@@ -54,7 +55,7 @@ from recogida.descarga import AGENTE_EODI
 registro = logging.getLogger("recogida.deduccion")
 
 VARIABLE_DATOS = "EODI_DEDUCCION_DATOS"
-DATOS = Path.home() / "datos" / "deduccion"
+DATOS = casa() / "datos" / "deduccion"
 RESULTADOS = "resultados.jsonl.gz"
 # Cursor de la base con el resumen de la validación (lo lee la exportación).
 CURSOR = "deduccion"
