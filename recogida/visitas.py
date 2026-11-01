@@ -920,6 +920,8 @@ class Datos:
     # Las fuentes oficiales que fallaron en recogidas seguidas o estuvieron en pausa ese día, con
     # cuántas seguidas (oficiales_en_pausa_del_dia).
     oficiales_en_pausa: dict[str, int] = field(default_factory=dict)
+    # La espera media de la web antes de avisar, en minutos (avisos_ntfy.espera_del_dia).
+    espera_web: float | None = None
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -999,8 +1001,12 @@ def texto_resumen(d: Datos) -> str:
         else:
             lineas.append("  Con notificaciones en el navegador: ninguno")
     mensajes, incidentes = d.avisos
+    espera_web = (
+        "sin medidas" if d.espera_web is None else f"{d.espera_web:.1f} min".replace(".", ",")
+    )
     lineas += [
         f"  Avisos enviados: {numero(mensajes)} mensajes de {numero(incidentes)} incidentes",
+        f"  Avisos: {numero(incidentes)} enviados; espera media de la web {espera_web}",
         "",
         f"INCIDENTES NUEVOS PUBLICADOS: {len(d.nuevos)}",
     ]
@@ -1112,6 +1118,7 @@ def reunir(
     except sqlite3.Error as error:
         registro.warning("avisos enviados sin leer: %s", error)
         enviados = (0, 0)
+    espera_web = avisos_ntfy.espera_del_dia(avisos, *limites_del_dia(dia))
     diario = diario_del_dia(dia, ejecutar)
     return Datos(
         dia=dia,
@@ -1121,6 +1128,7 @@ def reunir(
         suscriptores=suscriptores_del_dia(muestras(datos), dia),
         nuevos=nuevos_del_dia(anotados, dia),
         avisos=enviados,
+        espera_web=espera_web,
         recogidas=recogidas_del_dia(dia, ejecutar),
         problemas=salud(),
         reintentos=reintentos_del_dia(dia, ejecutar),

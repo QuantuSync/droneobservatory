@@ -50,6 +50,7 @@ Problemas (cada uno con su frase):
   /v1/health (dos intentos), en el servidor que los tiene (con el token de «observatorio»);
 - **avisos**: el envío de los avisos de ntfy (recogida/avisos.py) ha fallado dos recogidas
   seguidas;
+- **avisos pendientes**: un aviso lleva más de 30 minutos esperando a que la web sirva su ficha;
 - **certificados**: el certificado de https://ntfy.droneobservatory.eu o de
   https://stats.droneobservatory.eu caduca en menos de 14 días (Caddy los renueva solo a los 30:
   si llega a 14, la renovación está fallando), en el servidor que los tiene;
@@ -640,6 +641,11 @@ def componer(
         )
         if frase_avisos is not None:
             problemas.append({"id": "avisos", "frase": frase_avisos})
+        frase_pendientes = avisos_ntfy.pendiente_para_vigilancia(
+            _leer_json(secretos / avisos_ntfy.ESTADO), ahora
+        )
+        if frase_pendientes is not None:
+            problemas.append({"id": "avisos_pendientes", "frase": frase_pendientes})
         # Contador de visitas y resumen diario (recogida/visitas.py), en el mismo servidor.
         if not salud_goatcounter():
             problemas.append({
