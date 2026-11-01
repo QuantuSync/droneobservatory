@@ -838,10 +838,21 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
         ("cierre", "consecuencias", MOTIVO_DATO_REVISADO.format("cierre"), hechos.otros),
         ("cierre", "tipo", MOTIVO_DATO_REVISADO.format("cierre"), hechos.otros),
         ("drones", "drones", MOTIVO_DATO_REVISADO.format("número de drones"), hechos.otros),
+        ("drones", "afirmaciones", MOTIVO_DATO_REVISADO.format("número de drones"), hechos.otros),
+        ("modelo", "drones", MOTIVO_DATO_REVISADO.format("modelo de dron"), hechos.otros),
+        ("modelo", "afirmaciones", MOTIVO_DATO_REVISADO.format("modelo de dron"), hechos.otros),
         ("tipo", "tipo", MOTIVO_DATO_REVISADO.format("tipo"), hechos.otros),
         ("objetivo", "objetivo", MOTIVO_DATO_REVISADO.format("objetivo"), hechos.otros),
     ):
         revisadas = [e for e in datos.get("datos", []) if e.get("campo") == campo]
+        if campo == "modelo":
+            # La validación de la ficha solo acepta modelos del vocabulario.
+            nombres = {str(r["valor"]) for r in revisadas if r["valor"] is not None}
+            for nombre in nombres:
+                almacen.ampliar_vocabulario(
+                    extraccion.VOCABULARIO_MODELOS, nombre, {"nombre": nombre}
+                )
+            modelos = modelos | nombres
         for id_ in _por_incidente(almacen, revisadas):
             documento = almacen.incidente(id_)
             assert documento is not None

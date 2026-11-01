@@ -371,3 +371,47 @@ def test_prioridad_de_lo_que_marca_la_capa() -> None:
     tipos = [x["tipo"] for x in orden]
     assert tipos[:2] == [busqueda.RESCATE, busqueda.DECLARACION]
     assert tipos[2] == "campos" and tipos[3] == "duplicado" and tipos[-1] == "campos"
+
+
+def _con_declaracion_revisada(incidente: dict[str, Any]) -> dict[str, Any]:
+    fuente = {
+        **ejemplos.fuente("revisada-4d8cd915f5f5d4b0-declaracion-1", "A"),
+        "enlace": "https://melilla.example/nota",
+        "fecha": ejemplos.instante("2026-09-19T00:00Z"),
+    }
+    return {**incidente, "fuentes": [*incidente.get("fuentes", []), fuente]}
+
+
+def test_una_declaracion_revisada_a_mano_no_vuelve_a_la_busqueda() -> None:
+    """EODI-2026-00622: confirmada a mano con la Delegación del Gobierno y presencia sin confirmar,
+    la búsqueda la marcaba, la extracción leía solo sus artículos y deshacía estado e inicio."""
+    incidente = {
+        "estado": {"actual": "confirmado"},
+        "presencia_dron": "no_confirmada",
+        "tiempo": {"inicio": {"valor": "2026-09-18T00:00Z", "precision": "dia"}},
+        "fuentes": [],
+    }
+    momento = datetime(2026, 11, 1, 13, 0)
+    assert busqueda.toca(busqueda.DECLARACION, incidente, momento, 48)
+    revisada = _con_declaracion_revisada(incidente)
+    assert not busqueda.toca(busqueda.DECLARACION, revisada, momento, 48)
+    # La atribución no depende de eso.
+    assert busqueda.toca(busqueda.ATRIBUCION, revisada, momento, 48)
+
+
+def test_lo_ya_marcado_de_una_ficha_revisada_no_va_a_la_extraccion(tmp_path: Path) -> None:
+    candidato = {"id": "CAND-MELILLA", "articulos": [NOTICIA], "lugar": "GEML",
+                 "ultimo": "2026-09-23T08:00:00Z"}  # fmt: skip
+    otra = _articulo("https://gaceta.es/melilla", "La Delegación reconoce los drones de Melilla")
+    ruta = _base(tmp_path, _con_declaracion_revisada(_melilla()), articulos=(otra,),
+                 candidatos=(candidato,))  # fmt: skip
+    almacen = Almacen.abrir(ruta)
+    marcado = {"clave": "declaracion:EODI-2026-00146:x", "tipo": busqueda.DECLARACION,
+               "incidente": "EODI-2026-00146", "datos": {
+                   "url": otra["url"], "frase": DELEGACION, "autoridad": "Delegación del Gobierno",
+                   "afirma": "confirma"}}  # fmt: skip
+    assert buscar.entregar(almacen, AHORA, marcado) == {"resultado": "revisada_a_mano"}
+    (actual,) = [c for c in almacen.candidatos() if c["id"] == "CAND-MELILLA"]
+    assert otra["url"] not in actual["articulos"]
+    assert "CAND-MELILLA" not in extraccion.esperan_experto(almacen)
+    almacen.cerrar()

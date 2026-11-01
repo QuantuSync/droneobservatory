@@ -11998,6 +11998,27 @@
       "enlace": "https://novinite.com/articles/241067/BREAKING:+Russia+Has+Struck+NATO+Territory+After+Drone+Hits+Tanker+Off+Romania",
       "pais": "RO",
       "motivo": "la ficha es el petrolero YARA J, alcanzado por un dron; el 2 a 10 no lo da ninguna fuente y mezcla los blancos del radar de esa tarde (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00261",
+      "campo": "modelo",
+      "valor": "Gerbera",
+      "cita": "drona care a căzut pe acoperișul unei case din nordul țării este de origine rusească, fiind de tip Gerbera.",
+      "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/autoritatile-din-republica-moldova-anunta-ca-o-2489552.html",
+      "pais": "MD",
+      "motivo": "la Policía identificó el dron caído en Cuhureștii de Jos como Gerbera; el Shahed era el otro dron de esa mañana, en EODI-2025-00453"
+    },
+    {
+      "incidente": "EODI-2026-00160",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "survolarea spațiului aerian național, astăzi, 30 septembrie, la ora 10:26, de către un aparat de zbor fără pilot, loc.Lunga, Dubăsari",
+      "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-22",
+      "pais": "MD",
+      "motivo": "la ficha es el dron detectado sobre Lunga; los «trei drone» del Ministerio de Exteriores son el total del 30 de septiembre, con EODI-2026-00527 y EODI-2026-00262"
     }
   ]
 }

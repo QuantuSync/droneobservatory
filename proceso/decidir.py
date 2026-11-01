@@ -31,7 +31,7 @@ from proceso.noticias import normalizar
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 # Los datos que una revisión a mano puede fijar, con su cita («datos»).
 CAMPOS_REVISABLES = (
-    "objetivo", "lugar", "inicio", "drones", "cierre", "danos", "titulo", "zona", "tipo",
+    "objetivo", "lugar", "inicio", "drones", "modelo", "cierre", "danos", "titulo", "zona", "tipo",
 )  # fmt: skip
 # Los tipos que fija una revisión del tipo: la interrupción sale del cierre revisado («cierre»).
 TIPOS_REVISABLES = ("incursion", "sobrevuelo")
@@ -340,15 +340,35 @@ def decidir_drones(incidente: Documento) -> Any:
     return copy.deepcopy(numero)
 
 
+def _sin_afirmaciones_contrarias(incidente: Documento, campo: str, valor: Any) -> Documento:
+    """Sin las afirmaciones de `campo` que dicen otra cosa que la revisión a mano: la ficha pública
+    las enseña (EODI-2026-00160, un dron con la afirmación de los «trei drone» de todo el día)."""
+    afirmaciones = incidente.get("afirmaciones", [])
+    quedan = [a for a in afirmaciones if a.get("campo") != campo or a.get("valor") == valor]
+    return incidente if len(quedan) == len(afirmaciones) else {**incidente, "afirmaciones": quedan}
+
+
 def _con_drones(incidente: Documento) -> Documento:
     """El incidente con el número de drones que decide `decidir_drones` (sin cambios si ya lo
-    tenía)."""
-    if "drones" not in incidente and not _revisiones(incidente).get("drones"):
+    tenía) y el modelo de la revisión a mano («modelo»: su valor, o null para quitarlo)."""
+    revisiones = _revisiones(incidente)
+    if "drones" not in incidente and not revisiones.get("drones"):
         return incidente
+    resultado = incidente
     numero = decidir_drones(incidente)
-    if (incidente.get("drones") or {}).get("numero") == numero:
-        return incidente
-    return {**incidente, "drones": {**incidente.get("drones", {}), "numero": numero}}
+    if (incidente.get("drones") or {}).get("numero") != numero:
+        resultado = {**resultado, "drones": {**resultado.get("drones", {}), "numero": numero}}
+    if "drones" in revisiones:
+        resultado = _sin_afirmaciones_contrarias(resultado, "drones", numero)
+    if "modelo" in revisiones:
+        modelo = revisiones["modelo"]["valor"]
+        drones = {k: v for k, v in resultado.get("drones", {}).items() if k != "modelo"}
+        if modelo is not None:
+            drones["modelo"] = str(modelo)
+        if drones != resultado.get("drones"):
+            resultado = {**resultado, "drones": drones}
+        resultado = _sin_afirmaciones_contrarias(resultado, "modelo_dron", modelo)
+    return resultado
 
 
 def _con_revision(resultado: Documento, campo: str, revision: Documento) -> None:
