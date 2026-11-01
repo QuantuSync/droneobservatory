@@ -432,7 +432,7 @@ def test_una_union_retenida_no_deja_la_destinataria_a_medias(aplicar: None) -> N
     assert almacen.fusiones() == []
 
 
-def test_renumerar_no_abre_un_duplicado(aplicar: None) -> None:
+def test_renumerar_no_abre_un_duplicado(aplicar: None, monkeypatch: pytest.MonkeyPatch) -> None:
     # recogida/control_fichas.conservar_la_mas_antigua: la más antigua colgaba de la más nueva y
     # pasa a quedarse; la más nueva se marca fundida en ella y las demás cuelgan de la antigua.
     viejo, nuevo, otro = "EODI-2026-09600", "EODI-2026-09601", "EODI-2026-09602"
@@ -444,10 +444,145 @@ def test_renumerar_no_abre_un_duplicado(aplicar: None) -> None:
     conserva = almacen.incidente(nuevo)
     assert conserva is not None
     queda = {**copy.deepcopy(conserva), "id": viejo}
+    monkeypatch.setattr(protegido, "pila", lambda: [protegido.PASO_RENUMERAR])
     guardar(almacen, queda)
     guardar(almacen, {**conserva, "fusionado_en": viejo})
     assert (almacen.incidente(nuevo) or {}).get("fusionado_en") == viejo
     assert "fusionado_en" not in (almacen.incidente(viejo) or {})
+
+
+MANUAL, OTRA = "EODI-2026-09600", "EODI-2026-09601"
+
+
+def _manual(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(protegido, "fichas_manuales", lambda: frozenset({MANUAL}))
+
+
+def _unir_por_regla(almacen: Almacen, absorbida: str, queda: str) -> None:
+    """Como incidentes.fusionar: la que queda recibe las fuentes y luego se marca la absorbida."""
+    conserva, une = almacen.incidente(queda), almacen.incidente(absorbida)
+    assert conserva is not None and une is not None
+    nuevo, aportadas = incidentes.absorber(conserva, une, AHORA)
+    guardar(almacen, nuevo)
+    guardar(almacen, {**une, "fusionado_en": queda})
+    almacen.registrar_fusion("2026-10-13T14:17Z", absorbida, queda, "regla", aportadas)
+
+
+def _dos_fichas() -> Almacen:
+    otra = _nuremberg_griega()
+    otra["id"] = OTRA
+    return base(ficha(MANUAL), otra)
+
+
+def test_una_regla_no_funde_una_ficha_manual(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _manual(monkeypatch)
+    almacen = _dos_fichas()
+    antes = almacen.incidente(OTRA)
+    _unir_por_regla(almacen, MANUAL, OTRA)
+    assert "fusionado_en" not in (almacen.incidente(MANUAL) or {})
+    assert almacen.incidente(OTRA) == antes
+    assert almacen.fusiones() == []
+    apunte = almacen.controles(f"retenido:{MANUAL}:fusionado_en:{OTRA}")
+    assert [d["motivo"] for d in apunte.values()] == ["manual"]
+
+
+def test_en_observar_la_union_de_una_manual_se_apunta_y_no_cambia_nada(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _manual(monkeypatch)
+    almacen = _dos_fichas()
+    _unir_por_regla(almacen, MANUAL, OTRA)
+    assert (almacen.incidente(MANUAL) or {}).get("fusionado_en") == OTRA
+    assert len(almacen.fusiones()) == 1
+    assert almacen.controles(f"retenido:{MANUAL}:fusionado_en:{OTRA}")
+
+
+def test_una_revision_a_mano_si_funde_una_ficha_manual(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _manual(monkeypatch)
+    monkeypatch.setattr(protegido, "pila", lambda: ["recogida.revisados.unir"])
+    almacen = _dos_fichas()
+    _unir_por_regla(almacen, MANUAL, OTRA)
+    assert (almacen.incidente(MANUAL) or {}).get("fusionado_en") == OTRA
+    assert not almacen.controles("retenido:")
+
+
+def test_una_union_a_mano_anterior_manda_en_la_ficha_manual(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _manual(monkeypatch)
+    almacen = _dos_fichas()
+    almacen.registrar_fusion("2026-10-20T10:17Z", MANUAL, OTRA, "revisión: el mismo", [])
+    _unir_por_regla(almacen, MANUAL, OTRA)
+    assert (almacen.incidente(MANUAL) or {}).get("fusionado_en") == OTRA
+
+
+def test_la_ficha_manual_si_recibe_un_duplicado(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _manual(monkeypatch)
+    almacen = _dos_fichas()
+    _unir_por_regla(almacen, OTRA, MANUAL)
+    assert (almacen.incidente(OTRA) or {}).get("fusionado_en") == MANUAL
+    assert not almacen.controles(f"retenido:{OTRA}:fusionado_en:")
+
+
+def _fundida() -> Almacen:
+    almacen = _dos_fichas()
+    _unir_por_regla(almacen, OTRA, MANUAL)
+    return almacen
+
+
+def test_una_regla_no_reabre_una_ficha_fundida(aplicar: None) -> None:
+    almacen = _fundida()
+    destino = almacen.incidente(MANUAL)
+    incidentes.revertir(almacen, OTRA, AHORA, VOCABULARIO_MODELOS)
+    assert (almacen.incidente(OTRA) or {}).get("fusionado_en") == MANUAL
+    assert almacen.incidente(MANUAL) == destino
+    assert [f["revertida"] for f in almacen.fusiones()] == [False]
+    apunte = almacen.controles(f"retenido:{OTRA}:reapertura:{MANUAL}")
+    assert [d["dato"] for d in apunte.values()] == ["reapertura"]
+
+
+def test_en_observar_la_reapertura_se_apunta_y_no_cambia_nada() -> None:
+    almacen = _fundida()
+    incidentes.revertir(almacen, OTRA, AHORA, VOCABULARIO_MODELOS)
+    assert "fusionado_en" not in (almacen.incidente(OTRA) or {})
+    assert [f["revertida"] for f in almacen.fusiones()] == [True]
+    assert almacen.controles(f"retenido:{OTRA}:reapertura:{MANUAL}")
+
+
+def test_una_revision_a_mano_si_reabre(aplicar: None, monkeypatch: pytest.MonkeyPatch) -> None:
+    almacen = _fundida()
+    monkeypatch.setattr(protegido, "pila", lambda: ["recogida.revisados.separar"])
+    incidentes.revertir(almacen, OTRA, AHORA, VOCABULARIO_MODELOS)
+    assert "fusionado_en" not in (almacen.incidente(OTRA) or {})
+    assert not almacen.controles("retenido:")
+
+
+def test_una_extraccion_lanzada_desde_una_revision_no_reabre(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    almacen = _fundida()
+    monkeypatch.setattr(
+        protegido, "pila", lambda: ["proceso.extraccion._alta", "recogida.revisados.separar"]
+    )
+    fundida = almacen.incidente(OTRA)
+    assert fundida is not None
+    guardar(almacen, {k: v for k, v in fundida.items() if k != "fusionado_en"})
+    assert (almacen.incidente(OTRA) or {}).get("fusionado_en") == MANUAL
+
+
+def test_una_separacion_si_reabre(aplicar: None) -> None:
+    # incidentes.revisar_fusiones deshace una unión de un par que no se une.
+    almacen = _fundida()
+    distinto_del_experto(almacen, MANUAL, OTRA)
+    incidentes.revertir(almacen, OTRA, AHORA, VOCABULARIO_MODELOS)
+    assert "fusionado_en" not in (almacen.incidente(OTRA) or {})
+    assert not almacen.controles(f"retenido:{OTRA}:reapertura:")
 
 
 def test_cadenas_y_renumeraciones_al_azar_nunca_juntan_un_par_prohibido(aplicar: None) -> None:

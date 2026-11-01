@@ -461,6 +461,7 @@ class Almacen:
         # venía detrás no se hace, y las uniones retenidas que ya no se anotan.
         self._ultimo_guardado: tuple[str, Documento | None] | None = None
         self._uniones_retenidas: set[tuple[str, str]] = set()
+        self._reaperturas_retenidas: set[str] = set()
         # recursive_triggers hace que INSERT OR REPLACE dispare los triggers de DELETE.
         conexion.execute("PRAGMA recursive_triggers = ON")
         conexion.execute("PRAGMA foreign_keys = ON")
@@ -600,7 +601,8 @@ class Almacen:
                 resultado = protegido.conservar(documento, guardado, veredicto.retenidos)
                 if errores := validar_incidente(resultado, ahora, vocabulario_modelos):
                     raise ValueError(f"lo retenido no valida: {errores[:3]}")
-            return self._cerrojo_union(resultado, guardado, pasos, aplica, ahora)
+            resultado = self._cerrojo_union(resultado, guardado, pasos, aplica, ahora)
+            return self._cerrojo_reapertura(resultado, guardado, pasos, aplica, ahora)
         except Exception as error:
             self._fallo_del_cerrojo(documento, error, ahora)
             return documento
@@ -623,8 +625,12 @@ class Almacen:
         renumerada = (
             ultimo is not None and ultimo[0] == destino and ultimo[1] is not None
             and ultimo[1].get("fusionado_en") == documento["id"]
+            # Si su reapertura se retuvo, sigue colgando: no se ha renumerado nada.
+            and "fusionado_en" not in (self.incidente(str(destino)) or {})
         )  # fmt: skip
-        prohibida = protegido.union_prohibida(self, documento, str(destino), renumerada)
+        prohibida = protegido.union_prohibida(
+            self, documento, str(destino), renumerada
+        ) or protegido.union_de_manual(self, guardado, str(destino), renumerada)
         if prohibida is None:
             return documento
         self._apuntar_control(
@@ -644,6 +650,37 @@ class Almacen:
         if "fusionado_en" in guardado:
             resultado["fusionado_en"] = guardado["fusionado_en"]
         return resultado
+
+    def _cerrojo_reapertura(
+        self, documento: Documento, guardado: Documento, pasos: list[str], aplica: bool,
+        ahora: datetime,
+    ) -> Documento:  # fmt: skip
+        """Una ficha fundida que deja de estarlo sin una revisión a mano ni una separación. Con el
+        cerrojo en «aplicar» sigue fundida, la destinataria recién guardada vuelve a lo que era y
+        la fusión no se da por revertida."""
+        from proceso import protegido
+
+        destino = guardado.get("fusionado_en")
+        if not destino or "fusionado_en" in documento:
+            return documento
+        if protegido.por_revision(pasos) or protegido.por_renumeracion(pasos):
+            return documento
+        if protegido.es_separacion(self, documento, str(destino)):
+            return documento
+        self._apuntar_control(
+            f"{protegido.PREFIJO_RETENIDO}{documento['id']}:reapertura:{destino}",
+            {"ficha": documento["id"], "dato": "reapertura", "nivel": "reapertura",
+             "antes": destino, "despues": None, "modo": protegido.modo(),
+             "quien": pasos[0] if pasos else "", "pila": pasos, "fecha": _ahora_iso(ahora)},
+            ahora,
+        )  # fmt: skip
+        if not aplica:
+            return documento
+        self._reaperturas_retenidas.add(str(documento["id"]))
+        ultimo = self._ultimo_guardado
+        if ultimo is not None and ultimo[0] == destino and ultimo[1] is not None:
+            self._escribir_incidente(ultimo[1])
+        return {**documento, "fusionado_en": destino}
 
     def _apuntar_control(self, clave: str, documento: Documento, ahora: datetime) -> None:
         """Una anotación del cerrojo: cada clave, una vez (la tabla solo crece)."""
@@ -1714,6 +1751,10 @@ class Almacen:
             )
 
     def revertir_fusion(self, absorbido: str) -> None:
+        """Da la fusión por revertida (salvo si el cerrojo acaba de retener la reapertura)."""
+        if absorbido in self._reaperturas_retenidas:
+            self._reaperturas_retenidas.discard(absorbido)
+            return
         with self._conexion:
             self._conexion.execute(
                 "UPDATE fusiones SET revertida = 1 WHERE absorbido = ? AND revertida = 0",

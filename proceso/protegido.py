@@ -14,6 +14,8 @@ configuración propio: se calcula de lo que ya existe.
   distintos del experto, los relacionados). Se miran entre grupos enteros: todas las fichas que
   cuelgan de la destinataria contra todas las de la absorbida, así que ni una cadena de uniones ni
   una renumeración las saltan.
+- **Fichas del nivel manual que se funden**: sin par prohibido, solo las une una revisión a mano.
+- **Reaperturas**: una ficha fundida deja de estarlo solo por una revisión a mano o una separación.
 
 El texto completo de los artículos no se guarda (recogida/control_fichas.paginas_de: solo en
 memoria). La comprobación literal es la de `control_fichas.frase_valida`, la misma del filtro de
@@ -48,6 +50,7 @@ CONFIGURACION = RAIZ / "configuracion" / "cerrojo.json"
 FICHAS_REFERENCIA = RAIZ / "tests" / "referencia" / "fichas.json"
 
 OBSERVAR, APLICAR = "observar", "aplicar"
+PASO_RENUMERAR = "recogida.control_fichas.conservar_la_mas_antigua"
 MANUAL, CON_CITA = "manual", "con_cita"
 PREFIJO_RETENIDO, PREFIJO_PERMITIDO = "retenido:", "permitido:"
 PREFIJO_FALLO = "cerrojo_fallo:"
@@ -493,6 +496,41 @@ def union_prohibida(
             if motivo is not None:
                 return {"uno": uno, "otro": otro, "motivo": motivo}
     return None
+
+
+def union_de_manual(
+    almacen: Any, guardado: Documento, destino: str, renumerada: bool = False
+) -> Documento | None:
+    """La unión que haría desaparecer una ficha publicada del nivel manual sin par prohibido (la
+    simulación del 1 de noviembre de 2026 unió así EODI-2025-00043 en EODI-2026-00048), o None.
+    Mira la ficha que se funde: la que queda, si es manual, conserva dato a dato lo decidido, y
+    recibir un duplicado no le quita nada. Una unión a mano anterior manda, como en los pares."""
+    id_ = str(guardado["id"])
+    if renumerada or id_ not in fichas_manuales() or not incidentes.activo(guardado):
+        return None
+    par = frozenset((id_, destino))
+    if any(par <= grupo for grupo in pares_a_mano(almacen)):
+        return None
+    return {"uno": id_, "otro": destino, "motivo": "manual"}
+
+
+def por_renumeracion(pasos: Iterable[str]) -> bool:
+    """La ficha más antigua de un grupo vuelve a ser la que queda: el mismo grupo con otro número
+    (recogida/control_fichas.conservar_la_mas_antigua), no una reapertura."""
+    return PASO_RENUMERAR in pasos
+
+
+def es_separacion(almacen: Any, documento: Documento, destino: str) -> bool:
+    """Deshacer la unión de `documento` con `destino` separa un par que no se une: revisión,
+    partes de una separación, distintos del experto o relacionados. Aquí no cuenta una unión a
+    mano: que dos fichas se unieran es justo lo que esa separación deshace."""
+    otro = almacen.incidente(destino)
+    if otro is None:
+        return False
+    from recogida import revisados
+
+    prohibidos = incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen)
+    return par_prohibido(documento, otro, prohibidos, ()) is not None
 
 
 def cambios_sin_permiso(
