@@ -5327,6 +5327,15 @@
     },
     {
       "incidente": "EODI-2025-00043",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Valsts policija, kas devās uz iespējamo bezpilota lidaparāta atrašanās vietu, tā klātbūtni nekonstatēja",
+        "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme"
+      },
+      "titulo": {
+        "es": "Posible dron cerca del aeropuerto de Riga interrumpe el tráfico aéreo",
+        "en": "Possible drone near Riga airport disrupts air traffic"
+      },
       "inicio": {
         "valor": "2025-10-21T11:20Z",
         "precision": "minuto",
@@ -5576,6 +5585,17 @@
       "motivo": {
         "es": "repaso de entrada con el experto: Un solo suceso, el martes 27 de octubre en Fleetwood, sin fichas previas. Se corrige la presencia a confirmada porque la policía localizó al piloto.",
         "en": "entry review: A single event on Tuesday 27 October in Fleetwood, with no prior records. Presence is corrected to confirmed because police located the pilot."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00648",
+      "titulo": {
+        "es": "Cae un dron militar polaco en una propiedad de Józefów, cerca de Varsovia",
+        "en": "Polish military drone crashes onto property in Józefów near Warsaw"
+      },
+      "motivo": {
+        "es": "La nota de gazeta.pl: «Dron spadł na posesję w Józefowie pod Warszawą. To maszyna polskiego wojskowego instytutu»; una extracción nueva del mismo artículo (31 de octubre de 2026) cambió el titular sin ninguna fuente nueva.",
+        "en": "The gazeta.pl report: «Dron spadł na posesję w Józefowie pod Warszawą. To maszyna polskiego wojskowego instytutu»; a new extraction of the same article (31 October 2026) changed the headline without any new source."
       }
     }
   ],
@@ -11777,6 +11797,14 @@
       "enlace": "https://antena3.ro/actualitate/doua-avioane-f-16-au-fost-ridicate-de-la-baza-borcea-dupa-ce-armata-a-detectat-o-drona-in-marea-neagra-ro-alert-trimis-in-tulcea-807247.html",
       "pais": "RO",
       "motivo": "el blanco aéreo entró en el espacio aéreo a unos 22 km al noreste de Sulina, sobre las aguas territoriales; Borcea es la base de la que despegaron los F-16, no el sitio del dron (revisado el 30 de octubre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00043",
+      "campo": "drones",
+      "valor": "desconocido",
+      "cita": "par iespējamu bezpilota lidaparāta atrašanos lidojumu ierobežojumu zonā",
+      "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
+      "motivo": "el aeropuerto solo habla de un posible dron y la policía no lo encontró: ninguna fuente da un número; una extracción nueva de los mismos artículos (1 de noviembre de 2026) puso 1 sin ninguna fuente nueva"
     }
   ]
 }

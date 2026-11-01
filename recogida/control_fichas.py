@@ -2661,7 +2661,9 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
             almacen.incidentes(),
             almacen.cambios_desde(desde),
             almacen.copias_archivadas(),
-            extracciones=almacen.fechas_extraccion(desde),
+            incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
+            incidentes.uniones_a_mano(almacen),
+            almacen.fechas_extraccion(desde),
         )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])
