@@ -386,6 +386,9 @@ def entregar(almacen: Almacen, ahora: datetime, candidato: Documento,
         destino = _candidato_de(almacen, candidato["incidente"])
         if incidente is None or destino is None:
             return {"resultado": "sin_ficha"}
+        if tipo == busqueda.DECLARACION and busqueda.declaracion_revisada(incidente):
+            # Lo marcado antes de la revisión, o por un barrido: no vuelve a la extracción.
+            return {"resultado": "revisada_a_mano"}
         if url and url not in destino["articulos"] and almacen.articulos_de([url]):
             destino = {**destino, "articulos": [*destino["articulos"], url]}
             almacen.corregir_candidatos([destino], f"{MOTIVO}: {tipo}")

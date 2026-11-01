@@ -362,6 +362,60 @@ def test_los_drones_y_el_tipo_revisados_se_guardan_sin_esperar_a_otro_guardado(
     assert revisados.corregir(almacen, AHORA, MODELOS).otros == []
 
 
+def _revision_de_drones(
+    monkeypatch: pytest.MonkeyPatch, modelo: str | None, numero: dict[str, int] | None = None
+) -> tuple[Almacen, str]:
+    from proceso import decidir
+
+    almacen = Almacen.abrir()
+    id_ = "EODI-2026-00392"
+    registro = _registro(id_, "2026-08-03T22:00Z", "explicita", [("a1", "2026-08-05T09:30Z")])
+    registro["drones"] = {"numero": {"min": 3, "max": 3}, "modelo": "Shahed-136"}
+    registro["afirmaciones"] = [
+        {"campo": "modelo_dron", "valor": "Shahed-136", "fuente_id": "a1",
+         "confianza_extraccion": 0.9},
+        {"campo": "drones", "valor": {"min": 3, "max": 3}, "fuente_id": "a1",
+         "confianza_extraccion": 0.9},
+    ]  # fmt: skip
+    almacen.guardar_incidente(registro, AHORA, frozenset({"Shahed-136"}))
+    comun = {"incidente": id_, "cita": "de tip Gerbera", "enlace": "https://ejemplo.de/a1",
+             "motivo": "prueba"}  # fmt: skip
+    revisiones = {"modelo": {**comun, "campo": "modelo", "valor": modelo}}
+    if numero:
+        revisiones["drones"] = {**comun, "campo": "drones", "valor": numero}
+    monkeypatch.setattr(revisados, "cargar", lambda: {"datos": list(revisiones.values())})
+    monkeypatch.setattr(decidir, "_revisiones_de_datos", lambda: {id_: revisiones})
+    return almacen, id_
+
+
+def test_la_revision_fija_el_modelo_y_quita_la_afirmacion_contraria(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2025-00261: publicada con «Shahed» cuando la Policía identificó un Gerbera, y el modelo
+    # no se podía revisar. «Gerbera-X» no está en el vocabulario: la revisión lo añade.
+    almacen, id_ = _revision_de_drones(monkeypatch, "Gerbera-X", {"min": 1, "max": 1})
+    hechos = revisados.corregir(almacen, AHORA, MODELOS)
+    guardado = almacen.incidente(id_)
+    assert guardado is not None
+    assert guardado["drones"]["modelo"] == "Gerbera-X"
+    assert guardado["drones"]["numero"] == {"min": 1, "max": 1}
+    # EODI-2026-00160: la ficha no enseña ya el total del día ni el modelo descartado.
+    assert [a for a in guardado["afirmaciones"] if a["campo"] in ("modelo_dron", "drones")] == []
+    assert id_ in hechos.otros
+    assert "Gerbera-X" in almacen.vocabulario("modelo_dron")
+    assert revisados.corregir(almacen, AHORA, MODELOS).otros == []
+
+
+def test_la_revision_quita_el_modelo_con_valor_nulo(monkeypatch: pytest.MonkeyPatch) -> None:
+    almacen, id_ = _revision_de_drones(monkeypatch, None)
+    revisados.corregir(almacen, AHORA, MODELOS)
+    guardado = almacen.incidente(id_)
+    assert guardado is not None
+    assert "modelo" not in guardado["drones"]
+    assert guardado["drones"]["numero"] == {"min": 3, "max": 3}
+    assert [a["campo"] for a in guardado["afirmaciones"]] == ["drones"]
+
+
 def _con_otros_lugares(monkeypatch: pytest.MonkeyPatch, revision: dict[str, Any]) -> dict[str, Any]:
     monkeypatch.setattr(revisados, "dentro_del_pais", lambda *_: True)
     monkeypatch.setattr(revisados, "con_citas", lambda incidente, _: copy.deepcopy(incidente))

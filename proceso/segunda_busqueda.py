@@ -285,12 +285,24 @@ def datos_de(incidente: Documento) -> dict[str, str]:
     return datos
 
 
+def declaracion_revisada(incidente: Documento) -> bool:
+    """La ficha ya trae una declaración citada en una revisión a mano. Buscar otra solo la devolvía
+    a la extracción, que lee los artículos del candidato y no las fuentes `revisada-`, y que
+    deshacía lo revisado en cada vuelta (EODI-2026-00622, cuatro veces entre el 22/10 y el 1/11)."""
+    return any(
+        id_.startswith("revisada-") and "-declaracion-" in id_
+        for id_ in (str(fuente.get("id", "")) for fuente in incidente.get("fuentes", []))
+    )
+
+
 def toca(busqueda: str, incidente: Documento, ahora: datetime, horas_minimas: float) -> bool:
     """El incidente entra en la búsqueda (sin el filtro de antigüedad si horas_minimas es 0)."""
     if ahora.replace(tzinfo=None) - _inicio(incidente) < timedelta(hours=horas_minimas):
         return False
     estado = incidente["estado"]["actual"]
     if busqueda == DECLARACION:
+        if declaracion_revisada(incidente):
+            return False
         return estado == "notificado" or incidente.get("presencia_dron") == "no_confirmada"
     if busqueda == ATRIBUCION:
         return estado == "confirmado" and not incidente.get("atribucion")
