@@ -360,3 +360,37 @@ def test_los_drones_y_el_tipo_revisados_se_guardan_sin_esperar_a_otro_guardado(
     assert guardado["origen_demostrado_por"] == ["autoridad"]
     assert id_ in hechos.otros
     assert revisados.corregir(almacen, AHORA, MODELOS).otros == []
+
+
+def _con_otros_lugares(monkeypatch: pytest.MonkeyPatch, revision: dict[str, Any]) -> dict[str, Any]:
+    monkeypatch.setattr(revisados, "dentro_del_pais", lambda *_: True)
+    monkeypatch.setattr(revisados, "con_citas", lambda incidente, _: copy.deepcopy(incidente))
+    monkeypatch.setattr(revisados, "fuente_de_cita", lambda *_: {"id": "f"})
+    monkeypatch.setattr("recogida.revisados.decidir.revision_de", lambda *_: None)
+    punto = {"lat": 46.84106, "lon": 29.3592}
+    otros = [{"nombre": "Brănești (raionul Orhei), segundo dron", "punto": punto}]
+    incidente = {
+        "id": "EODI-2026-00263",
+        "lugar": {"pais": "MD", "punto": punto, "radio_km": 4.0, "otros_lugares": otros},
+    }
+    base = {
+        "lugar": {"nombre": "Hîrbovăț", "nivel": "localidad", **punto, "radio_km": 4},
+        "fuente": {"frase": "o dronă a căzut în extravilanul satului Hîrbovăț"},
+    }
+    instante = {"valor": "2026-11-01T17:00Z", "precision": "exacta"}
+    resultado = revisados.con_lugar(incidente, {**base, **revision}, instante)
+    assert resultado is not None
+    return resultado["lugar"]  # type: ignore[no-any-return]
+
+
+def test_otros_lugares_vacio_los_quita(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert "otros_lugares" not in _con_otros_lugares(monkeypatch, {"otros_lugares": []})
+
+
+def test_sin_otros_lugares_en_la_revision_se_quedan(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert len(_con_otros_lugares(monkeypatch, {})["otros_lugares"]) == 1
+
+
+def test_otros_lugares_fija_la_lista_entera(monkeypatch: pytest.MonkeyPatch) -> None:
+    lugar = _con_otros_lugares(monkeypatch, {"otros_lugares": [{"nombre": "Lunga"}]})
+    assert lugar["otros_lugares"] == [{"nombre": "Lunga"}]
