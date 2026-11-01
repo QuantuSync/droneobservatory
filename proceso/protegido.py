@@ -5,11 +5,14 @@ Toda escritura de una ficha pasa por `Almacen.guardar_incidente`, que llama aqu�
 configuración propio: se calcula de lo que ya existe.
 
 - **Nivel manual**: las fichas revisadas a mano (configuracion/incidentes_revisados.json) y las del
-  conjunto de referencia (tests/referencia/fichas.json). Sus datos publicados solo cambian por una
-  revisión a mano o por una rectificación oficial nueva.
+  conjunto de referencia (tests/referencia/fichas.json). Solo cambian por una revisión a mano o
+  por una rectificación oficial nueva. El titular y el estado se guardan si los fija una revisión;
+  la presencia, el lugar, los drones, el inicio y el cierre, además, si los dice una frase
+  (`DE_FRASE`); el tipo, el objetivo y la retirada, siempre.
 - **Nivel con cita**: en cualquier ficha publicada, los datos decididos con la frase de una fuente
   (proceso/decididos.py) y el estado y la presencia que decide una autoridad. Solo cambian si una
-  fuente de un artículo que la ficha no tenía trae una frase literal (`fuente_nueva_con_frase`).
+  fuente de un artículo que la ficha no tenía trae una frase literal que dice el valor nuevo
+  (`fuente_nueva_con_frase`).
 - **Nivel publicada**: la retirada de cualquier ficha publicada. Solo pasa si viene de una decisión
   explícita (`por_decision`): nunca de un fallo al guardar o rehacer (docs/cerrojo.md).
 - **Uniones prohibidas**: los pares que no se unen (`distintos`, partes de una separación, los
@@ -18,6 +21,10 @@ configuración propio: se calcula de lo que ya existe.
   una renumeración las saltan.
 - **Fichas del nivel manual que se funden**: sin par prohibido, solo las une una revisión a mano.
 - **Reaperturas**: una ficha fundida deja de estarlo solo por una revisión a mano o una separación.
+
+Una frase respalda un dato solo si lo dice (`dice_el_dato`): el número en los drones, la hora en un
+inicio con hora. Lo que no dice ninguna frase se puede corregir. El titular y el estado siguen a la
+presencia, los drones, el lugar y el inicio: si se retiene uno de ellos, también (`SIGUEN_A`).
 
 El texto completo de los artículos no se guarda (recogida/control_fichas.paginas_de: solo en
 memoria). La comprobación literal es la de `control_fichas.frase_valida`, la misma del filtro de
@@ -36,6 +43,7 @@ recogida (docs/cerrojo.md).
 import copy
 import hashlib
 import json
+import re
 import sys
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
@@ -45,7 +53,7 @@ from typing import Any
 
 from esquema import Documento
 from proceso import control_fichas as reglas
-from proceso import decididos, decidir, declaraciones, incidentes, rectificaciones
+from proceso import decididos, decidir, declaraciones, incidentes, rectificaciones, textos_dron
 
 RAIZ = Path(__file__).resolve().parent.parent
 CONFIGURACION = RAIZ / "configuracion" / "cerrojo.json"
@@ -86,6 +94,25 @@ CAMPOS_AFIRMACION = {
 }
 # Lo que deja el titular tal como está decidido: si lo justificado cambia, el titular lo sigue.
 TITULO_SIGUE_A = ("presencia_dron", "drones", "lugar", "objetivo", "tipo")
+# Si se retiene uno de estos, el titular y el estado se quedan como estaban: son su resumen
+# (con la presencia retenida pasaría «Posible dron…» en EODI-2025-00178, 00472 y EODI-2026-00694).
+SIGUEN_A = ("presencia_dron", "drones", "lugar", "inicio")
+SEGUIDORES = ("titulo", "estado")
+# Los datos con un valor que se puede buscar en la frase: una frase que no lo dice no los respalda.
+DE_FRASE = ("drones", "inicio", "presencia_dron", "lugar", "cierre")
+RESPALDO_FIRME = ("revision", "rectificacion")
+# Una hora escrita: 10:26, 22.30, 7h15, 22 Uhr, klokken 14. No una fecha (11.03.2026).
+_HORA = re.compile(
+    r"(?<![\d.:])(?:[01]?\d|2[0-3])[.:h][0-5]\d(?![.\d])"
+    r"|(?<!\d)\d{1,2}\s?(?:uhr|val\b|pm\b|am\b|h\b|hours?\b|godz)"
+    r"|(?:klokken|kl\.|ora|godz\.?)\s?\d",
+    re.IGNORECASE,
+)
+_PALABRAS_NUMERO = {
+    palabra.casefold(): numero
+    for tabla in textos_dron.NUMEROS.values()
+    for palabra, numero in tabla.items()
+}
 
 
 @dataclass(frozen=True)
@@ -193,6 +220,27 @@ def _ids_de(entrada: Any) -> set[str]:
 
 
 @cache
+def valores_de_referencia() -> dict[str, dict[str, Any]]:
+    """{ficha: {dato: valor}} del conjunto de referencia, comprobado contra sus fuentes."""
+    referencia = json.loads(FICHAS_REFERENCIA.read_text(encoding="utf-8"))
+    return {
+        str(f["id"]): {dato: v.get("valor") for dato, v in f["valores"].items()}
+        for f in referencia["fichas"]
+    }
+
+
+def _fijado_en_referencia(guardado: Documento, dato: str) -> bool:
+    """La ficha tiene ese valor del dato en el conjunto de referencia: también un «sin dato», que
+    ninguna frase dice (EODI-2026-00515, un dron que nadie encontró)."""
+    if dato not in ("estado", "presencia_dron", "drones"):
+        return False
+    esperado = valores_de_referencia().get(str(guardado["id"]), {}).get(dato)
+    if isinstance(esperado, int):
+        esperado = {"min": esperado, "max": esperado}
+    return esperado is not None and esperado == valor(guardado, dato)
+
+
+@cache
 def fichas_manuales() -> frozenset[str]:
     """Las fichas revisadas a mano y las del conjunto de referencia."""
     revisadas = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
@@ -201,8 +249,7 @@ def fichas_manuales() -> frozenset[str]:
         if isinstance(seccion, list):
             for entrada in seccion:
                 ids |= _ids_de(entrada)
-    referencia = json.loads(FICHAS_REFERENCIA.read_text(encoding="utf-8"))
-    return frozenset(ids | {str(f["id"]) for f in referencia["fichas"]})
+    return frozenset(ids) | frozenset(valores_de_referencia())
 
 
 def _autoridad(documento: Documento, fuente_id: str | None) -> bool:
@@ -220,6 +267,72 @@ def _decidido_por_autoridad(guardado: Documento, dato: str) -> bool:
     return decision.regla == "rectificacion" or _autoridad(guardado, decision.fuente_id)
 
 
+def _numeros_de(frase: str) -> set[int]:
+    """Los números que dice una frase, en cifras o con palabras (hasta doce: textos_dron)."""
+    numeros = {int(n) for n in re.findall(r"(?<![\d.,:])\d{1,4}(?![\d:])", frase)}
+    palabras = re.findall(r"[^\W\d_]+", frase.casefold())
+    return numeros | {_PALABRAS_NUMERO[p] for p in palabras if p in _PALABRAS_NUMERO}
+
+
+def dice_el_dato(dato: str, frase: str, dicho: Any) -> bool:
+    """La frase dice ese valor del dato: una frase sin número no respalda un número, ni una sin hora
+    una hora (EODI-2026-00714, «multiple drones»; EODI-2026-00013, una hora que ninguna fuente da).
+    Un dron no se puede exigir con palabras: en la frase, en singular, no hay número que buscar."""
+    if not frase:
+        return False
+    if dato == "drones":
+        if not isinstance(dicho, dict):
+            return False
+        extremos = {dicho.get("min"), dicho.get("max")}
+        return extremos == {1} or bool(extremos & _numeros_de(frase))
+    if dato == "inicio" and dicho.get("precision") != "dia":
+        return bool(_HORA.search(frase))
+    return True
+
+
+def _frase_de(documento: Documento, fuente_id: Any) -> str:
+    return next(
+        (str(f.get("frase_origen") or "") for f in documento.get("fuentes", [])
+         if f.get("id") == fuente_id), "",
+    )  # fmt: skip
+
+
+def _lo_dice_una_frase(guardado: Documento, dato: str) -> bool:
+    """Una fuente de la ficha afirma ese valor del dato con una frase que lo dice. El inicio lo da
+    también la fuente de `origen_inicio`."""
+    if dato not in DE_FRASE:
+        return True
+    campos = CAMPOS_AFIRMACION.get(dato, ())
+    afirmaciones = guardado.get("afirmaciones", [])
+    fuentes = [
+        a.get("fuente_id")
+        for a in afirmaciones
+        if a.get("campo") in campos
+        and (dato != "presencia_dron" or a.get("valor") == valor(guardado, dato))
+    ]
+    if dato == "inicio":
+        origen = (guardado.get("tiempo") or {}).get("origen_inicio") or {}
+        fuentes.append(origen.get("fuente_id"))
+    dicho = valor(guardado, dato)
+    return any(dice_el_dato(dato, _frase_de(guardado, f), dicho) for f in fuentes)
+
+
+def _fijado_a_mano(guardado: Documento, dato: str) -> bool:
+    """Una revisión a mano fija ese dato en la ficha (cualquier sección de las revisiones)."""
+    if dato == "inicio" and str(guardado["id"]) in decidir._inicios_revisados():
+        return True
+    return _hay_revision(guardado, dato)
+
+
+def _respaldado(guardado: Documento, dato: str) -> bool:
+    """El dato de una ficha manual que el cerrojo guarda: lo que fija una revisión y lo que dice una
+    frase. El titular y el estado no tienen frase propia: sin revisión siguen a lo retenido
+    (`SIGUEN_A`)."""
+    if _fijado_a_mano(guardado, dato) or _fijado_en_referencia(guardado, dato):
+        return True
+    return dato not in SEGUIDORES and _lo_dice_una_frase(guardado, dato)
+
+
 def candidatos(guardado: Documento, nuevo: Documento) -> list[Cambio]:
     """Los cambios de `nuevo` a lo protegido de `guardado`, antes de mirar si tienen
     justificación. Solo de una ficha publicada: el alta y lo ya retirado o fundido no entran."""
@@ -229,10 +342,10 @@ def candidatos(guardado: Documento, nuevo: Documento) -> list[Cambio]:
     cambios: dict[str, Cambio] = {}
     for dato in DATOS_MANUAL if manual else ():
         antes, despues = valor(guardado, dato), valor(nuevo, dato)
-        if _distinto(dato, antes, despues):
+        if _distinto(dato, antes, despues) and _respaldado(guardado, dato):
             cambios[dato] = Cambio(dato, MANUAL, antes, despues)
     for dato in decididos.juicios(nuevo, guardado):
-        if dato not in cambios:
+        if dato not in cambios and _lo_dice_una_frase(guardado, dato):
             cambios[dato] = Cambio(dato, CON_CITA, valor(guardado, dato), valor(nuevo, dato))
     for dato in ("estado", "presencia_dron"):
         antes, despues = valor(guardado, dato), valor(nuevo, dato)
@@ -251,9 +364,25 @@ def candidatos(guardado: Documento, nuevo: Documento) -> list[Cambio]:
 
 
 def _revisado(nuevo: Documento, dato: str) -> bool:
-    """Una revisión a mano fija ese dato y `decidir.aplicar` ya ha puesto su valor. El inicio de
-    «titulares» y el objetivo revisado no los pone `decidir` en todos los caminos: el primero solo
-    pasa por la revisión (aquí no cuenta) y el segundo, si trae el valor revisado."""
+    """Una revisión a mano fija ese dato y `nuevo` trae su valor: un cambio a otro valor va contra
+    la revisión, no sale de ella (EODI-2025-00472, EODI-2026-00728)."""
+    if not _hay_revision(nuevo, dato):
+        return False
+    id_ = str(nuevo["id"])
+    if dato == "presencia_dron":
+        return decidir.presencias_revisadas()[id_] == nuevo.get("presencia_dron")
+    if dato == "titulo" and id_ in decidir._titulos_revisados():
+        revisado = decidir._titulos_revisados()[id_]
+        return all(valor(nuevo, dato).get(c) == revisado.get(c) for c in ("es", "en"))
+    if dato == "drones":
+        return bool(decidir.revisiones(nuevo)["drones"].get("valor") == valor(nuevo, dato))
+    return True
+
+
+def _hay_revision(nuevo: Documento, dato: str) -> bool:
+    """Una revisión a mano fija ese dato. El inicio de «titulares» y el objetivo revisado no los
+    pone `decidir` en todos los caminos: el primero solo pasa por la revisión (aquí no cuenta) y el
+    segundo, si trae el valor revisado."""
     id_ = str(nuevo["id"])
     if dato == "presencia_dron":
         return id_ in decidir.presencias_revisadas()
@@ -297,19 +426,42 @@ def fuentes_nuevas(guardado: Documento, nuevo: Documento) -> list[Documento]:
     ]
 
 
+def dice_el_valor_nuevo(dato: str, fuente: Documento, nuevo: Documento) -> bool:
+    """La fuente nueva dice el valor al que cambia el dato, no solo algo de ese dato: una fuente
+    nueva de EODI-2026-00694 no daba hora y la presencia y el inicio cambiaban a peor. Lo que no
+    tiene valor que leer en la frase (un sin dato, una hora de publicación) no lo dice nadie."""
+    if dato == "retirado":
+        return True
+    campos = CAMPOS_AFIRMACION.get(dato, ())
+    suyas = [
+        a
+        for a in nuevo.get("afirmaciones", [])
+        if a.get("campo") in campos and a.get("fuente_id") == fuente.get("id")
+    ]
+    dicho = valor(nuevo, dato)
+    if dato in ("estado", "presencia_dron", "tipo"):
+        return any(a.get("valor") == dicho for a in suyas)
+    if not suyas and not set(campos) & set(fuente.get("campos_respaldados", [])):
+        return False
+    if dato == "cierre" and dicho.get("minutos"):
+        return dicho["minutos"] in _numeros_de(str(fuente.get("frase_origen") or ""))
+    if dato == "inicio" and dicho.get("precision") == decididos.PRECISIONES[0]:
+        return False
+    return dice_el_dato(dato, str(fuente.get("frase_origen") or ""), dicho)
+
+
 def fuente_nueva_con_frase(
     dato: str, guardado: Documento, nuevo: Documento, texto_de: Callable[[Documento], str],
 ) -> bool:  # fmt: skip
-    """Una fuente de un artículo nuevo respalda el dato con una frase literal en lo guardado de
-    ese artículo (`texto_de`: titular y frases de su extracción)."""
-    campos = CAMPOS_AFIRMACION.get(dato, ())
+    """Una fuente de un artículo nuevo dice el valor nuevo del dato con una frase literal en lo
+    guardado de ese artículo (`texto_de`: titular y frases de su extracción)."""
     for fuente in fuentes_nuevas(guardado, nuevo):
-        dice = dato == "retirado" or set(campos) & set(fuente.get("campos_respaldados", [])) or any(
-            a.get("campo") in campos and a.get("fuente_id") == fuente.get("id")
-            for a in nuevo.get("afirmaciones", [])
-        )  # fmt: skip
         frase = str(fuente.get("frase_origen") or "")
-        if dice and frase and reglas.frase_valida(frase, texto_de(fuente)):
+        if (
+            frase
+            and dice_el_valor_nuevo(dato, fuente, nuevo)
+            and reglas.frase_valida(frase, texto_de(fuente))
+        ):
             return True
     return False
 
@@ -375,14 +527,24 @@ def juzgar(
             return "fuente_nueva"
         return None
 
-    # El titular, el último: sigue a los datos que cambian con justificación.
-    for cambio in sorted(pendientes, key=lambda c: c.dato == "titulo"):
+    # El titular y el estado, los últimos: siguen a lo que se retiene o a lo que cambia justificado.
+    for cambio in sorted(pendientes, key=lambda c: (c.dato in SEGUIDORES, c.dato == "titulo")):
         motivo = razon(cambio)
-        if motivo is None:
+        arrastrado = cambio.dato in SEGUIDORES and motivo not in RESPALDO_FIRME and any(
+            r.dato in SIGUEN_A for r in veredicto.retenidos
+        )  # fmt: skip
+        if motivo is None or arrastrado:
             veredicto.retenidos.append(cambio)
         else:
             justificados.add(cambio.dato)
             veredicto.permitidos.append((cambio, motivo))
+    # Sin revisión ni frase no son candidatos, pero tampoco cambian solos si su dato se queda.
+    if any(r.dato in SIGUEN_A for r in veredicto.retenidos):
+        vistos = {c.dato for c in pendientes}
+        for dato in SEGUIDORES:
+            antes, despues = valor(guardado, dato), valor(nuevo, dato)
+            if dato not in vistos and antes != despues and incidentes.activo(guardado):
+                veredicto.retenidos.append(Cambio(dato, CON_CITA, antes, despues))
     return veredicto
 
 

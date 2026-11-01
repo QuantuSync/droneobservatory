@@ -118,20 +118,28 @@ def estimar(
 # --- Rehacer -------------------------------------------------------------------------
 
 
-def rehacer(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> dict[str, int]:
-    """Todos los incidentes con las reglas actuales; fusiones y episodios, de nuevo. En una
-    fusión queda el incidente que ya estaba publicado: su enlace sigue valiendo."""
-    publicados = frozenset(i["id"] for i in almacen.incidentes() if incidentes.activo(i))
-    for fusion in almacen.fusiones():
-        if not fusion["revertida"]:
-            almacen.revertir_fusion(fusion["absorbido"])
-    rehechos = extraccion.reconstruir(almacen, ahora, modelos_base, rehacer=True)
-    vocabulario = extraccion.modelos_validos(almacen, modelos_base)
-    retiradas = incursiones.retirar(almacen, ahora, vocabulario)
+def abrir_fundidas(almacen: Almacen, ahora: datetime, vocabulario: frozenset[str]) -> None:
+    """Deshace las fusiones: primero se abre la ficha y solo si se abre se da por revertida su
+    fila, porque el cerrojo puede retener la reapertura y dejar la ficha fundida
+    (`Almacen.revertir_fusion` no revierte esas). Al revés quedaba la fila revertida con la ficha
+    aún fundida, y la fusión no se podía volver a deshacer ni la contaba X."""
     for incidente in almacen.incidentes():
         if "fusionado_en" in incidente:
             documento = {k: v for k, v in incidente.items() if k != "fusionado_en"}
             almacen.guardar_incidente(documento, ahora, vocabulario)
+    for fusion in almacen.fusiones():
+        if not fusion["revertida"]:
+            almacen.revertir_fusion(fusion["absorbido"])
+
+
+def rehacer(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> dict[str, int]:
+    """Todos los incidentes con las reglas actuales; fusiones y episodios, de nuevo. En una
+    fusión queda el incidente que ya estaba publicado: su enlace sigue valiendo."""
+    publicados = frozenset(i["id"] for i in almacen.incidentes() if incidentes.activo(i))
+    rehechos = extraccion.reconstruir(almacen, ahora, modelos_base, rehacer=True)
+    vocabulario = extraccion.modelos_validos(almacen, modelos_base)
+    retiradas = incursiones.retirar(almacen, ahora, vocabulario)
+    abrir_fundidas(almacen, ahora, vocabulario)
     resultado = {
         "rehechos": rehechos,
         "incursiones_retiradas": retiradas,
