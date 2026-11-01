@@ -308,8 +308,10 @@ def comparar(
     carpeta: Path,
     almacen: almacen_publico.Almacen | None = None,
     leer: Callable[[str], bytes] = leer_publico,
+    ahora: datetime | None = None,
 ) -> list[str]:
-    """Los ficheros que no son idénticos entre la carpeta y el almacén (vacía si todo igual)."""
+    """Los ficheros que no son idénticos entre la carpeta y el almacén (vacía si todo igual), con
+    la licencia de la versión de `ahora`, que es la del mes."""
     almacen = almacen or almacen_publico.cargar()
     distintos = []
     for nombre in FICHEROS:
@@ -321,7 +323,7 @@ def comparar(
         except (OSError, ValueError) as error:
             distintos.append(f"{nombre} (no se lee: {type(error).__name__})")
             continue
-        if remoto != publicable(carpeta, nombre, datetime.now(UTC)):
+        if remoto != publicable(carpeta, nombre, ahora or datetime.now(UTC)):
             distintos.append(nombre)
     return distintos
 
