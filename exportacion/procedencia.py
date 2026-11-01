@@ -239,6 +239,7 @@ REVISADOS_A_RUTA = {
     "consecuencias.cierre.valor": "cierre", "consecuencias.cierre.minutos": "cierre",
     "tiempo.inicio": "inicio", "lugar.localidad": "lugar", "lugar.suceso": "lugar",
     "drones.numero": "drones",
+    "drones.modelo": "modelo",
     "objetivo.categoria": "objetivo", "objetivo.nombre": "objetivo", "objetivo.oaci": "objetivo",
     "consecuencias.danos": "danos",
 }  # fmt: skip

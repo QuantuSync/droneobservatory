@@ -230,3 +230,21 @@ def test_la_duracion_del_cierre_revisada_a_mano_sale_de_su_fuente(
     monkeypatch.setattr(decidir, "revisiones", lambda _incidente: {"cierre": sin_duracion})
     with pytest.raises(origenes.SinOrigen, match=r"consecuencias\.cierre\.minutos"):
         exportar(documento)
+
+
+def test_el_modelo_revisado_a_mano_sale_de_su_fuente(monkeypatch: pytest.MonkeyPatch) -> None:
+    """EODI-2025-00261: el modelo revisado con su cita no tenía origen y la exportación semanal no
+    validaba (ensayo del 1 de noviembre de 2026)."""
+    from proceso import decidir
+
+    documento = de_prensa()
+    modelo = "gerbera_senuelos"
+    documento["drones"] = {"numero": {"min": 1, "max": 1}, "modelo": modelo}
+    revision = {"valor": modelo, "enlace": "https://ejemplo.org/otra", "motivo": "la Policía"}
+    monkeypatch.setattr(
+        decidir, "revisiones", lambda _incidente: {"modelo": revision, "drones": revision}
+    )
+    exportado = exportar(documento)
+    assert exportado["drones"]["modelo"] == modelo
+    marca = exportado["procedencia"]["drones.modelo"]
+    assert (marca["origen"], marca["metodo"], marca["fuentes"]) == ("prensa", "regla", ["gdelt-1"])
