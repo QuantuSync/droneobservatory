@@ -724,7 +724,8 @@ describe("aplicación con el diseño nuevo", () => {
     // mapa, dos botones pequeños de 44 px.
     await waitFor(() =>
       expect(within(barra).getAllByRole("button").map((b) => b.textContent)).toEqual([
-        expect.stringMatching(/hace/),
+        // «hace 26 min», o la fecha de los datos de la prueba si ya tienen más de un mes.
+        expect.stringMatching(/hace|^el \d/),
         "Avisos",
         es.cabecera.menu,
       ]),
