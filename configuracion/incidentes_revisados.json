@@ -5597,6 +5597,17 @@
         "es": "La nota de gazeta.pl: «Dron spadł na posesję w Józefowie pod Warszawą. To maszyna polskiego wojskowego instytutu»; una extracción nueva del mismo artículo (31 de octubre de 2026) cambió el titular sin ninguna fuente nueva.",
         "en": "The gazeta.pl report: «Dron spadł na posesję w Józefowie pod Warszawą. To maszyna polskiego wojskowego instytutu»; a new extraction of the same article (31 October 2026) changed the headline without any new source."
       }
+    },
+    {
+      "incidente": "EODI-2026-00263",
+      "titulo": {
+        "es": "Un dron cae y explota junto a Hîrbovăț, en Moldavia",
+        "en": "Drone crashes and explodes near Hîrbovăț, Moldova"
+      },
+      "motivo": {
+        "es": "Tras la separación de los tres drones del 30 de septiembre de 2026 la ficha es solo el de Hîrbovăț, pero conservó el titular del conjunto. Jurnalul.ro, con el Ministerio de Defensa: «O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț».",
+        "en": "After the three drones of 30 September 2026 were separated the record covers only the Hîrbovăț one, but it kept the headline of the whole. Jurnalul.ro, citing the Defence Ministry: «O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț»."
+      }
     }
   ],
   "titular_justificado": [],
@@ -7705,7 +7716,21 @@
     {"incidente": "EODI-2026-00056", "motivo": {"es": "La fecha la da punto-informatico.it: la tarde del 2 de mayo de 2026.", "en": "punto-informatico.it gives the date: the late afternoon of 2 May 2026."}},
     {"incidente": "EODI-2026-00181", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 28 de octubre de 2026 decía que no se sabía la fecha, pero el informe del UK Airprox Board que cita worcesternews.co.uk da el día: las 11:30 del 21 de mayo de 2026. La ficha además estaba revisada a mano.", "en": "Undone: entry review before PR 357, contradicts its source. The 28 October 2026 entry review withdrew it for an unknown date, but the UK Airprox Board report cited by worcesternews.co.uk gives the day: 11:30 on 21 May 2026. The record had also been reviewed by hand."}},
     {"incidente": "EODI-2026-00684", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 29 de octubre de 2026 decía que no se sabía la fecha, pero ANSA (24 de octubre de 2026) cuenta que el dron se derribó «ieri notte»: la noche del 23 de octubre. Es otro suceso que el del 2 de octubre en la misma cárcel.", "en": "Undone: entry review before PR 357, contradicts its source. The 29 October 2026 entry review withdrew it for an unknown date, but ANSA (24 October 2026) says the drone was brought down «ieri notte»: the night of 23 October. It is a different event from the one on 2 October at the same prison."}},
-    {"incidente": "EODI-2026-00043", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 28 de octubre de 2026 decía que no se sabía la fecha, pero La Dépêche da el día: el 22 de febrero de 2026, hacia las 18:00.", "en": "Undone: entry review before PR 357, contradicts its source. The 28 October 2026 entry review withdrew it for an unknown date, but La Dépêche gives the day: 22 February 2026, around 18:00."}}
+    {"incidente": "EODI-2026-00043", "motivo": {"es": "Deshecho: repaso anterior al PR 357, contradice a su fuente. La retirada del repaso de entrada del 28 de octubre de 2026 decía que no se sabía la fecha, pero La Dépêche da el día: el 22 de febrero de 2026, hacia las 18:00.", "en": "Undone: entry review before PR 357, contradicts its source. The 28 October 2026 entry review withdrew it for an unknown date, but La Dépêche gives the day: 22 February 2026, around 18:00."}},
+    {
+      "incidente": "EODI-2026-00130",
+      "motivo": {
+        "es": "Deshecho: la retirada del 1 de noviembre de 2026 fue un fallo técnico al guardar una extracción nueva, no una decisión sobre el suceso. AAP (yasstribune.com.au, https://yasstribune.com.au/story/9250029/ukraine-drone-shot-down-by-nato-jet-over-estonia): «NATO confirmed a Romanian jet had shot down a drone over Estonian airspace and said an investigation was ongoing.»",
+        "en": "Undone: the 1 November 2026 withdrawal was a technical failure while saving a new extraction, not a decision about the event. AAP (yasstribune.com.au, https://yasstribune.com.au/story/9250029/ukraine-drone-shot-down-by-nato-jet-over-estonia): «NATO confirmed a Romanian jet had shot down a drone over Estonian airspace and said an investigation was ongoing.»"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00302",
+      "motivo": {
+        "es": "Deshecho: la retirada del 1 de noviembre de 2026 fue un fallo técnico al guardar una extracción nueva, no una decisión sobre el suceso. Fuerzas Armadas de Letonia (https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas): «Incidenta laikā divi ārvalstu droni nogāzās Latvijas teritorijā, savukārt trešais šķērsoja valsts gaisa telpu un vēlāk to pameta.»",
+        "en": "Undone: the 1 November 2026 withdrawal was a technical failure while saving a new extraction, not a decision about the event. Latvian armed forces (https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas): «Incidenta laikā divi ārvalstu droni nogāzās Latvijas teritorijā, savukārt trešais šķērsoja valsts gaisa telpu un vēlāk to pameta.»"
+      }
+    }
   ],
   "quitar_fuentes": [
     {
@@ -11805,6 +11830,27 @@
       "cita": "par iespējamu bezpilota lidaparāta atrašanos lidojumu ierobežojumu zonā",
       "enlace": "https://la.lv/drona-del-arkartas-situacija-rigas-lidosta-sodien-aptureta-lidmasinu-satiksme",
       "motivo": "el aeropuerto solo habla de un posible dron y la policía no lo encontró: ninguna fuente da un número; una extracción nueva de los mismos artículos (1 de noviembre de 2026) puso 1 sin ninguna fuente nueva"
+    },
+    {
+      "incidente": "EODI-2026-00263",
+      "campo": "inicio",
+      "valor": "2026-09-30T02:43Z",
+      "cita": "Potrivit instituției, incidentul a avut loc în jurul orei 5.43, în contextul atacurilor masive ale Federației Ruse asupra Ucrainei.",
+      "enlace": "https://jurnalul.ro/stiri/externe/alerta-republica-moldova-drona-survolat-bender-explodat-hirbovat-1045526.html",
+      "pais": "MD",
+      "motivo": "el dron de Hîrbovăț cayó hacia las 05:43 del miércoles 30 de septiembre de 2026, hora de Moldavia (02:43 UTC); la ficha conservó el 1 de octubre, de la nota del día siguiente, al separarse los tres drones (revisado el 1 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00263",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "O dronă a survolat miercuri dimineața spațiul aerian al Republicii Moldova și s-a prăbușit în extravilanul satului Hîrbovăț, raionul Anenii Noi, unde a explodat, informează Ministerul Apărării de la Chișinău.",
+      "enlace": "https://jurnalul.ro/stiri/externe/alerta-republica-moldova-drona-survolat-bender-explodat-hirbovat-1045526.html",
+      "pais": "MD",
+      "motivo": "tras la separación la ficha es solo el dron de Hîrbovăț; el 3 era el total del día, y los otros dos tienen su ficha (revisado el 1 de noviembre de 2026)"
     }
   ]
 }
