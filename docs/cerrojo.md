@@ -23,6 +23,13 @@ sale de lo que ya existe; no añade ficheros de datos protegidos.
   cuelgan de la destinataria contra todas las que cuelgan de la absorbida, de modo que ninguna
   cadena las salte. Una unión hecha a mano manda sobre una marca anterior, y conservar el número más
   antiguo de un mismo grupo no es una unión nueva.
+- **Fichas del nivel manual que se funden.** Aunque no haya par prohibido, una ficha publicada del
+  nivel manual solo la funde en otra una revisión a mano o una unión a mano anterior. Se mira la
+  ficha que se funde, no la que queda: recibir un duplicado no le quita nada a la que queda, cuyos
+  datos siguen protegidos uno a uno.
+- **Reaperturas.** Una ficha fundida solo deja de estarlo por una revisión a mano o por una
+  separación, es decir, si el par es de los que no se unen. La renumeración que conserva el número
+  más antiguo de un grupo no es una reapertura.
 
 El alta de una ficha nueva no está protegida: de eso se ocupa el filtro de entrada. Tampoco lo está
 la lista de fuentes de una ficha: la fuente ajena se quita con `quitar_fuentes` y la vigila la
@@ -40,6 +47,8 @@ Después de `rectificaciones.mantener` y de `decidir.aplicar`, y antes de valida
   conserva el valor guardado con su afirmación, dato a dato, y el resto de la versión nueva pasa;
 - una ficha que se iba a marcar como fundida en otra con una unión prohibida se apunta y, en modo
   `aplicar`, no se marca, la destinataria vuelve a su versión anterior y la fusión no se anota;
+- una reapertura sin justificación se apunta y, en modo `aplicar`, la ficha sigue fundida, la
+  destinataria vuelve a su versión anterior y la fusión no se da por revertida;
 - cada caso queda en `control_fichas` con el prefijo `retenido:`: ficha, dato, antes, después,
   módulo y función que lo intentó, y fecha. Lo que pasa con justificación queda con `permitido:`;
 - si el propio cerrojo falla, la escritura pasa como antes y el fallo se apunta con
