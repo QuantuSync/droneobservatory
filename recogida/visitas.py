@@ -694,6 +694,10 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "api": (datos.get("api") or {}).get(dia.isoformat()),
         "criticos_esperando": list(datos.get("criticos_esperando") or []),
         "auditoria": (datos.get("auditoria") or {}).get("dias") or {},
+        "cerrojo": {
+            "modo": (datos.get("cerrojo") or {}).get("modo"),
+            "retenidos": ((datos.get("cerrojo") or {}).get("dias") or {}).get(dia.isoformat(), []),
+        },
         "entrada": (datos.get("entrada") or {}).get(dia.isoformat()),
     }  # fmt: skip
 
@@ -719,6 +723,7 @@ def lineas_control(control: Documento | None) -> list[str]:
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
     lineas += lineas_auditoria(control.get("auditoria") or {})
+    lineas += lineas_cerrojo(control.get("cerrojo"))
     lineas += lineas_entrada(control.get("entrada"))
     return (
         lineas
@@ -759,6 +764,17 @@ def lineas_auditoria(dias: Documento) -> list[str]:
         return f" ({diferencia:+d})" if diferencia else ""
 
     return ["  Auditoría de fichas: " + ", ".join(f"{c} {hoy[c]}{cambio(c)}" for c in sorted(hoy))]
+
+
+def lineas_cerrojo(cerrojo: Documento | None) -> list[str]:
+    """Lo que el cerrojo de lo decidido retuvo ese día, o habría retenido (proceso/protegido.py)."""
+    if not cerrojo or not cerrojo.get("modo"):
+        return []
+    retenidos = list(cerrojo.get("retenidos") or [])
+    nota = " (en observación)" if cerrojo["modo"] == "observar" else ""
+    lineas = [f"  Cambios retenidos: {len(retenidos)}{nota}"]
+    lineas += [f"  - {r}" for r in retenidos[:LIMITE]]
+    return lineas
 
 
 def lineas_api(api: Documento | None) -> list[str]:

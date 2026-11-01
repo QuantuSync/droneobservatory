@@ -13,7 +13,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from almacen.base import Almacen
-from proceso import auditoria_fichas, incidentes
+from proceso import auditoria_fichas, incidentes, protegido
 from recogida import revisados
 
 
@@ -44,6 +44,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
             incidentes.uniones_a_mano(almacen),
             almacen.fechas_extraccion(desde),
+            protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
         )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))
