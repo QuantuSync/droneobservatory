@@ -104,4 +104,6 @@ def test_volver_a_extraer_conserva_el_ataque_de_su_noche() -> None:
 
     from proceso import extraccion
 
-    assert '("fusionado_en", "episodio", "ataque")' in inspect.getsource(extraccion._alta)
+    assert '("fusionado_en", "episodio", "ataque")' in inspect.getsource(
+        extraccion._guardar_version
+    )

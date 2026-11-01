@@ -2692,11 +2692,24 @@ def cerrojo_del_dia(almacen: Almacen, ahora: datetime, auditoria: Documento) -> 
     hace_un_dia = _iso(ahora - timedelta(hours=24))
     fallos = [c for c, d in almacen.controles(protegido.PREFIJO_FALLO).items()
               if str(d.get("fecha", "")) >= hace_un_dia]  # fmt: skip
+    fallidos: dict[str, list[str]] = {}
+    apuntes = almacen.controles(protegido.PREFIJO_GUARDADO_FALLIDO)
+    for clave, apunte in sorted(apuntes.items()):
+        fecha = datetime.fromisoformat(str(apunte["fecha"]).replace("Z", "+00:00"))
+        ficha = clave.split(":")[1]
+        dia = coste.dia(fecha)
+        if dia >= desde and not apunte.get("resuelto") and ficha not in fallidos.get(dia, []):
+            fallidos.setdefault(dia, []).append(ficha)
+    seguidos = protegido.fallos_seguidos(apuntes)
     ids = auditoria.get("ids") or {}
     return {
         "modo": protegido.modo(),
         "dias": dias,
         "fallos_24h": len(fallos),
+        "guardados_fallidos": fallidos,
+        "fallos_repetidos": sorted(
+            f for f, n in seguidos.items() if n >= protegido.FALLOS_SEGUIDOS
+        ),
         "proteccion": {c: ids[c] for c in protegido.AUDITORIA if ids.get(c)},
     }
 

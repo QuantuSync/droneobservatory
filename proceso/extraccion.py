@@ -13,8 +13,10 @@ del titular. Vocabularios que crecen con el uso: un lugar nuevo que propone la
 ficha, validado y usado como lugar del suceso, amplía el vocabulario. Igual con
 los modelos de dron.
 
-Una ficha nueva que ya no es publicable, o cuyo lugar no vale, retira el
-incidente que tuviera el candidato: deja de publicarse, sin borrarse.
+Una ficha publicada solo se retira por una decisión explícita (el experto dice que no es un
+suceso, o las fuentes no cuentan un suceso: `retirar_por_veredicto`), sin borrarse. Si la versión
+nueva no se puede guardar o no es publicable, se queda la publicada y el fallo se apunta en el
+control (`conservar_publicada`).
 
 Cada llamada anota sus tokens y su coste; los límites de gasto son duros.
 
@@ -62,7 +64,15 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, modelos, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import decididos, declaraciones, detalle, escalado, no_es_suceso, presencia
+from proceso import (
+    decididos,
+    declaraciones,
+    detalle,
+    escalado,
+    no_es_suceso,
+    presencia,
+    protegido,
+)
 from proceso.control_fichas import sin_oficiales
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import activo, aplicar_reglas, construir, huella
@@ -736,8 +746,9 @@ def procesar_respuesta(
                 ]
         if validada.publicable and not conservar and descarte is None:
             incidente_id = _alta(
-                almacen, peticion, validada, ahora, modelos_base, documento, extraida=True
-            )
+                almacen, peticion, validada, ahora, modelos_base, documento, extraida=True,
+                repite_con_experto=publicada is not None,
+            )  # fmt: skip
     if publicada is not None and (conservar or incidente_id is None):
         # Nada publicado se retira ni se rebaja sin el experto: la ficha publicada se queda como
         # estaba y el candidato se repite con él.
@@ -752,19 +763,35 @@ def procesar_respuesta(
         anotar_espera(almacen, peticion.candidato["id"], conservar, ahora, False, True, True)
         registro.warning("candidato %s: %s; se repite con el experto", peticion.candidato["id"],
                          "; ".join(conservar))  # fmt: skip
-    if incidente_id is None and veredicto is not None:
-        # Lo que no es un suceso se retira con su motivo en los dos idiomas.
-        retirar_del_candidato(almacen, peticion.candidato["id"], veredicto.motivo(), ahora,
-                              modelos_base, motivo_en=veredicto.motivo_en())  # fmt: skip
-    elif incidente_id is None:
-        motivo = "; ".join(documento["motivos"]) or "no es un incidente"
-        retirar_del_candidato(almacen, peticion.candidato["id"], motivo, ahora, modelos_base)
+    if incidente_id is None:
+        incidente_id = _sin_ficha(almacen, peticion, documento, veredicto, ahora, modelos_base)
     documento["incidente"] = incidente_id
     almacen.guardar_extraccion(
         peticion.candidato["id"], _fecha(ahora), ficha.VERSION, peticion.huella,
         incidente_id is not None, documento,
     )  # fmt: skip
     return incidente_id
+
+
+def _sin_ficha(
+    almacen: Almacen, peticion: Peticion, documento: Documento,
+    veredicto: no_es_suceso.Veredicto | None, ahora: datetime, modelos_base: frozenset[str],
+) -> str | None:  # fmt: skip
+    """La respuesta que vale no deja ficha. Lo que el experto o las fuentes dicen que no es un
+    suceso se retira, con su motivo en los dos idiomas si lo tiene; cualquier otra cosa es un fallo
+    y no retira nada: la ficha publicada se queda (devuelve su identificador) y se apunta."""
+    candidato = peticion.candidato["id"]
+    dicho = ((documento.get("ficha") or {}).get("es_incidente") or {}).get("valor")
+    if veredicto is not None and (veredicto.segura or dicho is False):
+        retirar_por_veredicto(almacen, candidato, veredicto.motivo(), ahora, modelos_base,
+                              motivo_en=veredicto.motivo_en())  # fmt: skip
+        return None
+    motivo = "; ".join(documento["motivos"])
+    if dicho is False:
+        retirar_por_veredicto(almacen, candidato, motivo or "no es un incidente", ahora,
+                              modelos_base)  # fmt: skip
+        return None
+    return conservar_publicada(almacen, candidato, "extraccion", motivo or "sin ficha", ahora)
 
 
 def anotar_llamada(
@@ -1104,6 +1131,55 @@ def retirar_del_candidato(
     return id_ is not None and retirar(almacen, id_, motivo, ahora, modelos_base, motivo_en)
 
 
+def retirar_por_veredicto(
+    almacen: Almacen, candidato_id: str, motivo: str, ahora: datetime,
+    modelos_base: frozenset[str], motivo_en: str = "",
+) -> bool:  # fmt: skip
+    """La decisión explícita de que no es un suceso: el único camino de la extracción que retira
+    una ficha publicada. El cerrojo la reconoce por este nombre (protegido.DECISIONES_RETIRADA)."""
+    return retirar_del_candidato(
+        almacen, candidato_id, motivo, ahora, modelos_base, motivo_en=motivo_en
+    )
+
+
+def apuntar_guardado_fallido(
+    almacen: Almacen, id_: str, camino: str, error: str, ahora: datetime
+) -> None:
+    """Deja en el control la ficha, el camino y el error (resumen de las 08:00 y vigilancia)."""
+    registro.warning("%s: no se guarda la versión nueva (%s): %s; se queda la publicada", id_,
+                     camino, error[:300])  # fmt: skip
+    fecha = _fecha(ahora)
+    almacen.guardar_controles(
+        {f"{protegido.PREFIJO_GUARDADO_FALLIDO}{id_}:{fecha}": {
+            "ficha": id_, "camino": camino, "error": error[:500], "fecha": fecha,
+        }},
+        fecha,
+    )  # fmt: skip
+
+
+def conservar_publicada(
+    almacen: Almacen, candidato_id: str, camino: str, error: str, ahora: datetime,
+    vinculos: dict[str, str] | None = None,
+) -> str | None:  # fmt: skip
+    """Un fallo nunca retira una ficha publicada: se queda como está y el fallo se apunta. Devuelve
+    la ficha, o None si el candidato no tiene ninguna publicada."""
+    id_ = incidente_del_candidato(almacen, candidato_id, vinculos)
+    incidente = almacen.incidente(id_) if id_ else None
+    if incidente is None or not activo(incidente):
+        return None
+    apuntar_guardado_fallido(almacen, incidente["id"], camino, error, ahora)
+    return str(incidente["id"])
+
+
+def _resolver_fallos(almacen: Almacen, id_: str, ahora: datetime) -> None:
+    """La ficha se ha vuelto a guardar bien: sus fallos dejan de ir seguidos."""
+    prefijo = f"{protegido.PREFIJO_GUARDADO_FALLIDO}{id_}:"
+    if id_ in protegido.fallos_seguidos(almacen.controles(prefijo)):
+        fecha = _fecha(ahora)
+        almacen.guardar_controles({f"{prefijo}{fecha}": {"ficha": id_, "resuelto": True,
+                                                        "fecha": fecha}}, fecha)  # fmt: skip
+
+
 def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:
     """El incidente rehecho con las fuentes oficiales que confirmaban el anterior."""
     ids = {f["id"] for f in incidente["fuentes"]}
@@ -1187,11 +1263,53 @@ def _alta(
     rehacer: bool = False,
     vinculos: dict[str, str] | None = None,
     extraida: bool = False,
+    repite_con_experto: bool = False,
 ) -> str | None:
-    """Da de alta o rehace el incidente del candidato. Con `rehacer`, el incidente no
-    conserva su fusión ni su episodio: se vuelven a calcular después. Con `extraida` (una
-    extracción nueva, no la reconstrucción desde la guardada), lo decidido de la ficha anterior
-    que la nueva no da o contradice se conserva (proceso/decididos.py)."""
+    """Da de alta o rehace el incidente del candidato (`_guardar_version`). Si es una ficha
+    publicada y la versión nueva no se puede guardar, por el motivo que sea, se queda la publicada
+    y el fallo se apunta: devuelve su identificador y nunca la deja sin publicar. Con
+    `repite_con_experto` (la respuesta del base, que no decide sobre lo publicado), devuelve None:
+    el candidato se repite con el experto."""
+    candidato = peticion.candidato["id"]
+    existente = incidente_del_candidato(almacen, candidato, vinculos)
+    previa = almacen.incidente(existente) if existente else None
+    publicada = previa is not None and activo(previa)
+    try:
+        id_ = _guardar_version(
+            almacen, peticion, validada, ahora, modelos_base, documento, rehacer, vinculos, extraida
+        )
+    except Exception as error:
+        if not publicada:
+            raise
+        documento["motivos"] = [*documento["motivos"], f"versión no guardada: {error}"]
+        id_ = None
+    if not publicada:
+        return id_
+    if id_ is None and repite_con_experto:
+        return None
+    if id_ is None:
+        camino = "extraccion" if extraida else "reconstruccion"
+        motivo = "; ".join(documento["motivos"])
+        return conservar_publicada(almacen, candidato, camino, motivo, ahora, vinculos)
+    _resolver_fallos(almacen, id_, ahora)
+    return id_
+
+
+def _guardar_version(
+    almacen: Almacen,
+    peticion: Peticion,
+    validada: Validada,
+    ahora: datetime,
+    modelos_base: frozenset[str],
+    documento: Documento,
+    rehacer: bool = False,
+    vinculos: dict[str, str] | None = None,
+    extraida: bool = False,
+) -> str | None:
+    """Construye y guarda la versión nueva. Con `rehacer`, el incidente no conserva su fusión ni su
+    episodio: se vuelven a calcular después. Con `extraida` (una extracción nueva, no la
+    reconstrucción desde la guardada), lo decidido de la ficha anterior que la nueva no da o
+    contradice se conserva (proceso/decididos.py). None si no vale."""
     _ampliar_modelos(almacen, validada)
     ubicacion = ubicar(validada, pistas(almacen, peticion), nomenclator())
     textos = tuple(
@@ -1270,7 +1388,8 @@ def reconstruir(
     Sirve cuando cambian los candidatos (por ejemplo, al ampliar el nomenclátor y volver
     a incorporar las noticias) o las reglas: cada candidato con una ficha publicable
     recupera su incidente, con el mismo identificador si ya lo tenía; el de un candidato
-    cuya última ficha ya no es publicable se retira. Las comprobaciones que solo necesitan
+    cuya última ficha ya no es publicable no se retira si está publicado: se queda como está y
+    el fallo se apunta. Las comprobaciones que solo necesitan
     la frase (el cierre, el lugar del suceso) se repiten con las reglas de ahora. Con
     `rehacer`, fusiones y episodios se vuelven a calcular después. Devuelve cuántos rehace.
     """
@@ -1329,17 +1448,20 @@ def reconstruir(
                 "valor": False,
             }  # fmt: skip
         if not validada.publicable:
-            retirar_del_candidato(
-                almacen, candidato["id"], "ficha no publicable con las reglas actuales", ahora,
-                modelos_base, vinculos,
-            )  # fmt: skip
+            motivo = "ficha no publicable con las reglas actuales"
+            if conservar_publicada(
+                almacen, candidato["id"], "reconstruccion", motivo, ahora, vinculos
+            ) is None:  # fmt: skip
+                retirar_del_candidato(
+                    almacen, candidato["id"], motivo, ahora, modelos_base, vinculos
+                )
             continue
         peticion = replace(peticion, enviadas=list(enviadas))
         guardadas = {"motivos": [], "declaraciones": ultima.get("declaraciones", [])}
         if ultima.get("modelo"):
             guardadas["modelo"] = ultima["modelo"]
         if _alta(almacen, peticion, validada, ahora, modelos_base, guardadas, rehacer, vinculos):
-            rehechos += 1
+            rehechos += 0 if guardadas["motivos"] else 1
         else:
             retirar_del_candidato(
                 almacen, candidato["id"], "; ".join(guardadas["motivos"]), ahora, modelos_base,

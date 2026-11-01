@@ -27,6 +27,11 @@ sale de lo que ya existe; no añade ficheros de datos protegidos.
   nivel manual solo la funde en otra una revisión a mano o una unión a mano anterior. Se mira la
   ficha que se funde, no la que queda: recibir un duplicado no le quita nada a la que queda, cuyos
   datos siguen protegidos uno a uno.
+- **Retirada de una ficha publicada.** Solo pasa si sale de una decisión explícita: la barrera de
+  titulares a las 6 horas, el repaso de entrada con decisión, una revisión a mano o el veredicto de
+  que no es un suceso (`protegido.DECISIONES_RETIRADA`). Una retirada de una ficha del nivel manual o
+  que cuenta una autoridad sigue pidiendo lo que pedía: una revisión a mano o una fuente nueva con
+  su frase. Lo demás se apunta como `retenido:`; en `aplicar`, se queda la versión publicada entera.
 - **Reaperturas.** Una ficha fundida solo deja de estarlo por una revisión a mano o por una
   separación, es decir, si el par es de los que no se unen. La renumeración que conserva el número
   más antiguo de un grupo no es una reapertura.
@@ -57,6 +62,15 @@ Después de `rectificaciones.mantener` y de `decidir.aplicar`, y antes de valida
 El modo está en `configuracion/cerrojo.json`: `observar` solo apunta y no cambia nada de lo que se
 guarda; `aplicar` retiene. Un modo desconocido o el fichero ausente equivalen a `observar`.
 
+## Un fallo no retira
+
+Si la versión nueva de una ficha publicada no se puede guardar (cualquier excepción o documento
+inválido, un lugar que no vale, una respuesta ilegible del experto, una ficha que ya no es
+publicable), la ficha se queda como está: `proceso/extraccion.conservar_publicada` apunta en el
+control `guardado_fallido:<ficha>:<fecha>` con la ficha, el camino y el error, y un guardado bueno
+posterior corta la cuenta. Antes, ese fallo acababa en una retirada: así salieron de la web
+EODI-2026-00130 y EODI-2026-00302 el 1 de noviembre de 2026.
+
 ## Cómo se vigila
 
 - **Auditoría X** (`proceso/auditoria_fichas.py`): cambios a algo protegido guardados sin
@@ -65,11 +79,14 @@ guarda; `aplicar` retiene. Un modo desconocido o el fichero ausente equivalen a 
 - **Vigilancia** (`recogida/vigilancia.py`): avisa si el cerrojo falla y, en `aplicar`, si una ficha
   aparece en una comprobación de protección de la auditoría (P, R, V, W, X).
 - **Resumen diario** (`recogida/visitas.py`): la línea «Cambios retenidos: N (en observación)» con
-  las fichas y los datos.
+  las fichas y los datos, y «Guardados fallidos de fichas publicadas: N» con las fichas.
+- **Vigilancia**, también: incidencia si una misma ficha no se puede guardar 3 veces seguidas.
 
 ## Pruebas
 
 `tests/test_cerrojo.py` intenta guardar por `guardar_incidente`, en `aplicar`, cada error real desde
 el 20 de octubre de 2026 (`tests/cerrojo/errores_reales.json`), además de cadenas de uniones y
 renumeraciones al azar con semilla fija, los cambios legítimos, que en `observar` la base queda como
-sin cerrojo y que un fallo del cerrojo no para la escritura.
+sin cerrojo y que un fallo del cerrojo no para la escritura. `tests/test_retiradas_por_fallo.py`
+reproduce el camino de EODI-2026-00130 y EODI-2026-00302, cada camino de fallo y la retirada en los
+dos modos.
