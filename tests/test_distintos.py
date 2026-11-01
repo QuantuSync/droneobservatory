@@ -127,6 +127,18 @@ def test_la_auditoria_v_ve_la_union_sobre_un_distinto_del_experto() -> None:
     assert auditoria_fichas.auditar([viejo, unido], del_experto=frozenset({PAR}))["V"]
 
 
+def test_la_auditoria_del_control_mira_las_uniones_como_la_manual(
+    revisados_distintos: None,
+) -> None:
+    # EODI-2026-00527→00263: la unió a mano una separación (`coincide_con`); la auditoría del
+    # control, sin las uniones a mano, la contaba en la V y la manual, no.
+    viejo, nuevo = _nuremberg_alemana(), _nuremberg_griega()
+    almacen = _base(viejo, {**nuevo, "fusionado_en": VIEJO})
+    assert control_fichas.auditoria_del_dia(almacen, AHORA, {})["ids"]["V"] == [f"{NUEVO}→{VIEJO}"]
+    almacen.registrar_fusion("2026-10-20T10:17Z", NUEVO, VIEJO, "revisión: el mismo suceso", [])
+    assert control_fichas.auditoria_del_dia(almacen, AHORA, {})["ids"]["V"] == []
+
+
 def test_la_configuracion_de_sulina() -> None:
     assert frozenset(("EODI-2026-00538", "EODI-2026-00541")) in incidentes.pares_distintos()
     for par in revisados.cargar()["distintos"]:
