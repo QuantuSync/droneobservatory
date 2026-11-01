@@ -380,7 +380,9 @@ def _revision_de_drones(
     almacen.guardar_incidente(registro, AHORA, frozenset({"Shahed-136"}))
     comun = {"incidente": id_, "cita": "de tip Gerbera", "enlace": "https://ejemplo.de/a1",
              "motivo": "prueba"}  # fmt: skip
-    revisiones = {"modelo": {**comun, "campo": "modelo", "valor": modelo}}
+    revisiones: dict[str, dict[str, Any]] = {
+        "modelo": {**comun, "campo": "modelo", "valor": modelo}
+    }
     if numero:
         revisiones["drones"] = {**comun, "campo": "drones", "valor": numero}
     monkeypatch.setattr(revisados, "cargar", lambda: {"datos": list(revisiones.values())})
