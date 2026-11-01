@@ -2612,6 +2612,7 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
             "errores": resultado.errores[:5], "escaladas": resultado.escaladas,
             "esperan_experto": resultado.esperan_experto[:20],
         })  # fmt: skip
+    auditoria = auditoria_del_dia(almacen, ahora, anterior.get("auditoria") or {})
     datos = {
         "generado": _iso(ahora),
         "dia": dia,
@@ -2625,7 +2626,8 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "experto": gasto_experto(almacen, ahora, anterior.get("experto") or {}),
         "api": gasto_api(almacen, ahora, anterior.get("api") or {}),
         "criticos_esperando": criticos_esperando(almacen),
-        "auditoria": auditoria_del_dia(almacen, ahora, anterior.get("auditoria") or {}),
+        "auditoria": auditoria,
+        "cerrojo": cerrojo_del_dia(almacen, ahora, auditoria),
         "entrada": _estado_entrada(almacen, ahora, anterior.get("entrada") or {}),
     }
     if segunda is not None:
@@ -2651,7 +2653,7 @@ DIAS_AUDITORIA = 3
 def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
     """Los recuentos de la auditoría de las fichas vigentes, por día (el último de cada día) y los
     identificadores de ahora. Un fallo de la auditoría no para el control: queda lo de antes."""
-    from proceso import auditoria_fichas
+    from proceso import auditoria_fichas, protegido
 
     try:
         desde = (ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)).strftime(
@@ -2664,6 +2666,7 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
             incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
             incidentes.uniones_a_mano(almacen),
             almacen.fechas_extraccion(desde),
+            protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
         )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])
@@ -2672,6 +2675,30 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
             if d >= coste.dia(ahora - timedelta(days=DIAS_AUDITORIA))}  # fmt: skip
     dias[coste.dia(ahora)] = auditoria_fichas.recuentos(resultado)
     return {"fecha": _iso(ahora), "dias": dict(sorted(dias.items())), "ids": resultado}
+
+
+def cerrojo_del_dia(almacen: Almacen, ahora: datetime, auditoria: Documento) -> Documento:
+    """Lo que apuntó el cerrojo (proceso/protegido.py), para el resumen de las 08:00 y la
+    vigilancia: los cambios retenidos de cada día («ficha dato»), los fallos del cerrojo en 24 horas
+    y las fichas de las comprobaciones de protección de la auditoría."""
+    from proceso import protegido
+
+    desde = coste.dia(ahora - timedelta(days=DIAS_AUDITORIA))
+    dias: dict[str, list[str]] = {}
+    for clave, apunte in sorted(almacen.controles(protegido.PREFIJO_RETENIDO).items()):
+        fecha = datetime.fromisoformat(str(apunte["fecha"]).replace("Z", "+00:00"))
+        if (dia := coste.dia(fecha)) >= desde:
+            dias.setdefault(dia, []).append(f"{clave.split(':')[1]} {clave.split(':')[2]}")
+    hace_un_dia = _iso(ahora - timedelta(hours=24))
+    fallos = [c for c, d in almacen.controles(protegido.PREFIJO_FALLO).items()
+              if str(d.get("fecha", "")) >= hace_un_dia]  # fmt: skip
+    ids = auditoria.get("ids") or {}
+    return {
+        "modo": protegido.modo(),
+        "dias": dias,
+        "fallos_24h": len(fallos),
+        "proteccion": {c: ids[c] for c in protegido.AUDITORIA if ids.get(c)},
+    }
 
 
 # Días (de Madrid) que se guardan del gasto por modelo.

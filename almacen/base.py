@@ -1,6 +1,7 @@
 """Base de datos SQLite. Nada se borra: los triggers impiden DELETE y registran cada cambio."""
 
 import json
+import logging
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -418,6 +419,13 @@ class DocumentoInvalido(ValueError):
         self.errores = errores
 
 
+registro = logging.getLogger(__name__)
+
+
+def _ahora_iso(ahora: datetime) -> str:
+    return ahora.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _sin_hora(evaluacion: Documento, sin_huella: bool = False) -> Documento:
     fuera = {"evaluado", "huella"} if sin_huella else {"evaluado"}
     return {k: v for k, v in evaluacion.items() if k not in fuera}
@@ -449,6 +457,10 @@ def sin_afirmaciones_repetidas(documento: Documento) -> Documento:
 class Almacen:
     def __init__(self, conexion: sqlite3.Connection) -> None:
         self._conexion = conexion
+        # El cerrojo (proceso/protegido.py): el último guardado, para deshacerlo si la unión que
+        # venía detrás no se hace, y las uniones retenidas que ya no se anotan.
+        self._ultimo_guardado: tuple[str, Documento | None] | None = None
+        self._uniones_retenidas: set[tuple[str, str]] = set()
         # recursive_triggers hace que INSERT OR REPLACE dispare los triggers de DELETE.
         conexion.execute("PRAGMA recursive_triggers = ON")
         conexion.execute("PRAGMA foreign_keys = ON")
@@ -514,21 +526,12 @@ class Almacen:
         confirmada = guardado is not None and guardado.get("presencia_dron") == "confirmada"
         documento = decidir.aplicar(entrada, negadas, confirmada)
         documento = sin_afirmaciones_repetidas(documento)
+        documento = self._cerrojo(documento, guardado, ahora, vocabulario_modelos)
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:
             raise DocumentoInvalido(errores)
-        with self._conexion:
-            self._guardar_fuentes(documento["fuentes"])
-            self._upsert(
-                "incidentes",
-                {
-                    "id": documento["id"],
-                    "tipo": documento["tipo"],
-                    "estado": documento["estado"]["actual"],
-                    "documento": _json(documento),
-                },
-            )
-            self._guardar_afirmaciones(documento["id"], documento.get("afirmaciones", []))
+        self._escribir_incidente(documento)
+        self._ultimo_guardado = (documento["id"], guardado)
         # Lo que cambió la decisión queda en el historial con la regla que lo decide, solo si
         # cambia lo guardado (o, en el alta, lo que proponía el documento): un paso que vuelve a
         # proponer lo mismo no engorda el historial.
@@ -543,6 +546,158 @@ class Almacen:
             from proceso import presencia
 
             presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas, confirmada))
+
+    def _escribir_incidente(self, documento: Documento) -> None:
+        with self._conexion:
+            self._guardar_fuentes(documento["fuentes"])
+            self._upsert(
+                "incidentes",
+                {
+                    "id": documento["id"],
+                    "tipo": documento["tipo"],
+                    "estado": documento["estado"]["actual"],
+                    "documento": _json(documento),
+                },
+            )
+            self._guardar_afirmaciones(documento["id"], documento.get("afirmaciones", []))
+
+    def _cerrojo(
+        self, documento: Documento, guardado: Documento | None, ahora: datetime,
+        vocabulario_modelos: frozenset[str],
+    ) -> Documento:  # fmt: skip
+        """Lo protegido (proceso/protegido.py) frente a la versión guardada. Devuelve lo que se
+        escribe: el mismo documento en «observar» o sin nada que retener. Nunca para la recogida:
+        si falla, lo apunta y la escritura pasa como siempre."""
+        from proceso import protegido
+
+        if guardado is None or guardado == documento:
+            return documento
+        try:
+            modo = protegido.modo()
+            aplica = modo == protegido.APLICAR
+            pasos = protegido.pila()
+            veredicto = protegido.juzgar(guardado, documento, pasos, self.texto_guardado)
+            for cambio, motivo in veredicto.permitidos:
+                self._apuntar_control(
+                    f"{protegido.PREFIJO_PERMITIDO}{documento['id']}:{cambio.dato}:"
+                    f"{protegido.huella(cambio.dato, documento)}",
+                    {"motivo": motivo, "antes": cambio.antes, "despues": cambio.despues,
+                     "nivel": cambio.nivel, "pila": pasos, "fecha": _ahora_iso(ahora)},
+                    ahora,
+                )  # fmt: skip
+            for cambio in veredicto.retenidos:
+                self._apuntar_control(
+                    f"{protegido.PREFIJO_RETENIDO}{documento['id']}:{cambio.dato}:"
+                    f"{protegido.huella(cambio.dato, documento)}",
+                    {"ficha": documento["id"], "dato": cambio.dato, "nivel": cambio.nivel,
+                     "antes": cambio.antes, "despues": cambio.despues, "modo": modo,
+                     "quien": pasos[0] if pasos else "", "pila": pasos,
+                     "fecha": _ahora_iso(ahora)},
+                    ahora,
+                )  # fmt: skip
+            resultado = documento
+            if aplica and veredicto.retenidos:
+                resultado = protegido.conservar(documento, guardado, veredicto.retenidos)
+                if validar_incidente(resultado, ahora, vocabulario_modelos):
+                    raise ValueError("lo retenido no valida")
+            return self._cerrojo_union(resultado, guardado, pasos, aplica, ahora)
+        except Exception as error:
+            self._fallo_del_cerrojo(documento, error, ahora)
+            return documento
+
+    def _cerrojo_union(
+        self, documento: Documento, guardado: Documento, pasos: list[str], aplica: bool,
+        ahora: datetime,
+    ) -> Documento:  # fmt: skip
+        """Una ficha que se iba a marcar como fundida en otra con la que hay una unión prohibida,
+        por grupos, no se marca; con el cerrojo en «aplicar», la destinataria recién guardada
+        vuelve a lo que era y la fusión no se anota."""
+        from proceso import protegido
+
+        destino = documento.get("fusionado_en")
+        if not destino or destino == guardado.get("fusionado_en"):
+            return documento
+        if protegido.por_revision(pasos):
+            return documento
+        ultimo = self._ultimo_guardado
+        renumerada = (
+            ultimo is not None and ultimo[0] == destino and ultimo[1] is not None
+            and ultimo[1].get("fusionado_en") == documento["id"]
+        )  # fmt: skip
+        prohibida = protegido.union_prohibida(self, documento, str(destino), renumerada)
+        if prohibida is None:
+            return documento
+        self._apuntar_control(
+            f"{protegido.PREFIJO_RETENIDO}{documento['id']}:fusionado_en:{destino}",
+            {"ficha": documento["id"], "dato": "fusionado_en", "nivel": "union",
+             "antes": guardado.get("fusionado_en"), "despues": destino, **prohibida,
+             "modo": protegido.modo(), "quien": pasos[0] if pasos else "", "pila": pasos,
+             "fecha": _ahora_iso(ahora)},
+            ahora,
+        )  # fmt: skip
+        if not aplica:
+            return documento
+        self._uniones_retenidas.add((str(documento["id"]), str(destino)))
+        if ultimo is not None and ultimo[0] == destino and ultimo[1] is not None:
+            self._escribir_incidente(ultimo[1])
+        resultado = {k: v for k, v in documento.items() if k != "fusionado_en"}
+        if "fusionado_en" in guardado:
+            resultado["fusionado_en"] = guardado["fusionado_en"]
+        return resultado
+
+    def _apuntar_control(self, clave: str, documento: Documento, ahora: datetime) -> None:
+        """Una anotación del cerrojo: cada clave, una vez (la tabla solo crece)."""
+        ya = self._conexion.execute(
+            "SELECT 1 FROM control_fichas WHERE clave = ? LIMIT 1", (clave,)
+        ).fetchone()
+        if ya is None:
+            with self._conexion:
+                self._conexion.execute(
+                    "INSERT INTO control_fichas (clave, fecha, documento) VALUES (?, ?, ?)",
+                    (clave, _ahora_iso(ahora), _json(documento)),
+                )
+
+    def _fallo_del_cerrojo(self, documento: Documento, error: Exception, ahora: datetime) -> None:
+        """Lo cuenta para la vigilancia; si ni eso se puede, queda en el registro."""
+        from proceso import protegido
+
+        registro.exception("cerrojo de %s: %s", documento.get("id"), str(error)[:200])
+        try:
+            self._apuntar_control(
+                f"{protegido.PREFIJO_FALLO}{documento.get('id')}:{_ahora_iso(ahora)}",
+                {"ficha": documento.get("id"), "error": str(error)[:300],
+                 "fecha": _ahora_iso(ahora)},
+                ahora,
+            )  # fmt: skip
+        except Exception:
+            registro.exception("el fallo del cerrojo no se pudo apuntar")
+
+    def enlaces_de_fusion(self) -> dict[str, str]:
+        """{ficha: en la que está fundida}, sin leer los documentos enteros."""
+        filas = self._conexion.execute(
+            "SELECT id, json_extract(documento, '$.fusionado_en') FROM incidentes "
+            "WHERE json_extract(documento, '$.fusionado_en') IS NOT NULL"
+        ).fetchall()
+        return {str(id_): str(destino) for id_, destino in filas}
+
+    def texto_guardado(self, fuente: Documento) -> str:
+        """Lo que queda guardado del artículo de una fuente (su texto completo no se guarda): su
+        titular y las frases de la última extracción de su candidato, literales en el texto desde
+        `proceso/validacion_ficha.py`."""
+        fila = self._conexion.execute(
+            "SELECT titular, candidato FROM articulos WHERE url = ? LIMIT 1",
+            (fuente.get("enlace"),),
+        ).fetchone()
+        if fila is None:
+            return ""
+        titular, candidato = fila
+        extraida = self._conexion.execute(
+            "SELECT documento FROM extracciones WHERE candidato = ? ORDER BY id DESC LIMIT 1",
+            (candidato,),
+        ).fetchone()
+        campos = (json.loads(extraida[0]).get("campos") or {}) if extraida else {}
+        frases = [str(c.get("frase") or "") for c in campos.values() if isinstance(c, dict)]
+        return " ".join([str(titular or ""), *frases])
 
     def _negadas_por_el_control(self, id_: str) -> set[str]:
         """Las fuentes del incidente en que la verificación vigente del control de las fichas lee
@@ -1546,7 +1701,11 @@ class Almacen:
     def registrar_fusion(
         self, fecha: str, absorbido: str, destino: str, motivo: str, fuentes: list[str]
     ) -> None:
-        """Anota una fusión con las fuentes que el absorbido aportó al destino."""
+        """Anota una fusión con las fuentes que el absorbido aportó al destino (salvo la que el
+        cerrojo acaba de retener: esa no se ha hecho)."""
+        if (absorbido, destino) in self._uniones_retenidas:
+            self._uniones_retenidas.discard((absorbido, destino))
+            return
         with self._conexion:
             self._conexion.execute(
                 "INSERT INTO fusiones (fecha, absorbido, destino, motivo, fuentes) "

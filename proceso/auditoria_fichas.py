@@ -99,6 +99,10 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   proceso/decididos.py) y la ficha no lo ha recuperado. EODI-2026-00066 (29 de octubre de 2026):
   el 13 de septiembre («Sunday, September 13th») pasó a la fecha de publicación de la noticia.
   Necesita las fechas de las extracciones (`Almacen.fechas_extraccion`); sin ellas no se mira.
+- **X, cambio a algo protegido sin justificación**: en las últimas 48 horas se guardó un cambio a
+  un dato protegido (proceso/protegido.py) sin el apunte `permitido:` que deja el cerrojo cuando
+  lo deja pasar. Con el cerrojo en «aplicar» debe valer 0: cualquier otro valor es un agujero. En
+  «observar» cuenta lo que se habría retenido y aun así se guardó (docs/cerrojo.md).
 """
 
 import json
@@ -135,7 +139,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W",
+    "S", "T", "U", "V", "W", "X",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -161,6 +165,7 @@ NOMBRES = {
     "U": "concordancia del dron",
     "V": "unión de fichas marcadas como relacionadas",
     "W": "dato decidido perdido en una reextracción",
+    "X": "cambio a algo protegido sin justificación",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -701,13 +706,15 @@ def auditar(
     del_experto: frozenset[frozenset[str]] = frozenset(),
     a_mano: Iterable[frozenset[str]] = (),
     extracciones: dict[str, list[str]] | None = None,
+    permitidos: frozenset[tuple[str, str, str]] | None = None,
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
     son los de las últimas 48 horas (`Almacen.cambios_desde`), para K y W; `copias`, las copias
     archivadas de los enlaces (`Almacen.copias_archivadas`), para Q; `del_experto`, los pares
     que el experto dio por distintos (`incidentes.distintos_del_experto`) y las uniones hechas a
     mano (`incidentes.uniones_a_mano`), para V; `extracciones`, las fechas de las extracciones de
-    cada candidato en esas horas (`Almacen.fechas_extraccion`), para W."""
+    cada candidato en esas horas (`Almacen.fechas_extraccion`), para W; `permitidos`, los cambios
+    que dejó pasar el cerrojo (`protegido.permitidos`), para X."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
     cambios = list(cambios)
@@ -735,6 +742,10 @@ def auditar(
         resultado["W"] = perdidos_al_extraer(
             {str(d["id"]): d for d in vistos if incidentes.activo(d)}, cambios, extracciones
         )
+    if permitidos is not None:
+        from proceso import protegido
+
+        resultado["X"] = protegido.cambios_sin_permiso(cambios, permitidos)
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor
     # comprobado contra sus fuentes en algo que no es una discrepancia conocida.
     from proceso import referencia

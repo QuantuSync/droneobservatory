@@ -1,0 +1,3522 @@
+[
+{
+"n": 1,
+"ficha": "EODI-2026-00066",
+"fecha": "2026-10-29",
+"categoria": "reextraccion",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 2,
+"ficha": "EODI-2025-00060",
+"fecha": "2026-10-23",
+"categoria": "reextraccion",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 3,
+"ficha": "EODI-2025-00183",
+"fecha": "2026-10-29",
+"categoria": "reextraccion",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 4,
+"ficha": "EODI-2025-00036",
+"fecha": "2026-10-29",
+"categoria": "reextraccion",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 5,
+"ficha": "EODI-2025-00036",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "fuentes",
+"malo": null,
+"pareja": "EODI-2025-00084",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 6,
+"ficha": "EODI-2026-00582",
+"fecha": "2026-10-23",
+"categoria": "reextraccion",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 7,
+"ficha": "EODI-2026-00278",
+"fecha": "2026-10-24",
+"categoria": "reextraccion",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 8,
+"ficha": "EODI-2025-00043",
+"fecha": "2026-11-01",
+"categoria": "reextraccion",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 9,
+"ficha": "EODI-2025-00043",
+"fecha": "2026-11-01",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 10,
+"ficha": "EODI-2026-00648",
+"fecha": "2026-10-31",
+"categoria": "reextraccion",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 11,
+"ficha": "EODI-2026-00648",
+"fecha": "2026-10-22",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 12,
+"ficha": "EODI-2026-00648",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 13,
+"ficha": "EODI-2026-00541",
+"fecha": "2026-10-28",
+"categoria": "reextraccion",
+"dato": "titulo",
+"malo": null,
+"pareja": "EODI-2026-00698",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 14,
+"ficha": "EODI-2026-00048",
+"fecha": "2026-10-28",
+"categoria": "reextraccion",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00038",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 15,
+"ficha": "EODI-2026-00694",
+"fecha": "2026-10-28",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 16,
+"ficha": "EODI-2026-00515",
+"fecha": "2026-10-20",
+"categoria": "reextraccion",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 17,
+"ficha": "EODI-2025-00001",
+"fecha": "2026-10-22",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 18,
+"ficha": "EODI-2026-00322",
+"fecha": "2026-10-22",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 19,
+"ficha": "EODI-2025-00404",
+"fecha": "2026-10-23",
+"categoria": "otro",
+"dato": "objetivo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 20,
+"ficha": "EODI-2026-00134",
+"fecha": "2026-10-23",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 21,
+"ficha": "EODI-2025-00463",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 22,
+"ficha": "EODI-2026-00108",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": "EODI-2026-00333",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 23,
+"ficha": "EODI-2026-00108",
+"fecha": "2026-10-21",
+"categoria": "union",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 24,
+"ficha": "EODI-2026-00108",
+"fecha": "2026-10-21",
+"categoria": "union",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 25,
+"ficha": "EODI-2026-00108",
+"fecha": "2026-10-21",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 26,
+"ficha": "EODI-2026-00108",
+"fecha": "2026-10-25",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 27,
+"ficha": "EODI-2025-00001",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 28,
+"ficha": "EODI-2025-00005",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 29,
+"ficha": "EODI-2025-00027",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 30,
+"ficha": "EODI-2025-00032",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 31,
+"ficha": "EODI-2025-00049",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 32,
+"ficha": "EODI-2025-00054",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 33,
+"ficha": "EODI-2025-00062",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 34,
+"ficha": "EODI-2025-00064",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 35,
+"ficha": "EODI-2025-00071",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 36,
+"ficha": "EODI-2025-00075",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 37,
+"ficha": "EODI-2025-00088",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 38,
+"ficha": "EODI-2025-00095",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 39,
+"ficha": "EODI-2025-00098",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 40,
+"ficha": "EODI-2025-00132",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 41,
+"ficha": "EODI-2025-00174",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 42,
+"ficha": "EODI-2025-00260",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 43,
+"ficha": "EODI-2025-00348",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 44,
+"ficha": "EODI-2026-00022",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 45,
+"ficha": "EODI-2026-00035",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 46,
+"ficha": "EODI-2026-00087",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 47,
+"ficha": "EODI-2026-00090",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 48,
+"ficha": "EODI-2026-00116",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 49,
+"ficha": "EODI-2026-00169",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 50,
+"ficha": "EODI-2026-00205",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 51,
+"ficha": "EODI-2026-00221",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 52,
+"ficha": "EODI-2026-00238",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 53,
+"ficha": "EODI-2026-00261",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 54,
+"ficha": "EODI-2026-00307",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 55,
+"ficha": "EODI-2026-00418",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 56,
+"ficha": "EODI-2025-00066",
+"fecha": "2026-10-20",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 57,
+"ficha": "EODI-2026-00488",
+"fecha": "2026-10-20",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 58,
+"ficha": "EODI-2026-00160",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 59,
+"ficha": "EODI-2026-00357",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 60,
+"ficha": "EODI-2025-00228",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 61,
+"ficha": "EODI-2025-00352",
+"fecha": "2026-10-27",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 62,
+"ficha": "EODI-2025-00390",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 63,
+"ficha": "EODI-2026-00538",
+"fecha": "2026-10-29",
+"categoria": "union",
+"dato": "fusionado_en",
+"malo": "EODI-2026-00541",
+"pareja": "EODI-2026-00541",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 64,
+"ficha": "EODI-2025-00472",
+"fecha": "2026-10-30",
+"categoria": "union",
+"dato": "fusionado_en",
+"malo": "EODI-2025-00178",
+"pareja": "EODI-2025-00178",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 65,
+"ficha": "EODI-2026-00357",
+"fecha": "2026-10-21",
+"categoria": "union",
+"dato": "fusionado_en",
+"malo": "EODI-2026-00064",
+"pareja": "EODI-2026-00064",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 66,
+"ficha": "EODI-2025-00002",
+"fecha": "2026-10-22",
+"categoria": "union",
+"dato": "fusionado_en",
+"malo": "EODI-2025-00238",
+"pareja": "EODI-2025-00228",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 67,
+"ficha": "EODI-2025-00302",
+"fecha": "2026-10-23",
+"categoria": "union",
+"dato": "fusionado_en",
+"malo": "EODI-2025-00238",
+"pareja": "EODI-2025-00228",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 68,
+"ficha": "EODI-2025-00199",
+"fecha": "2026-10-25",
+"categoria": "union",
+"dato": "fusionado_en",
+"malo": "EODI-2026-00094",
+"pareja": "EODI-2026-00094",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 69,
+"ficha": "EODI-2025-00199",
+"fecha": "2026-10-25",
+"categoria": "union",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 70,
+"ficha": "EODI-2026-00263",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": "EODI-2026-00527",
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 71,
+"ficha": "EODI-2026-00263",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 72,
+"ficha": "EODI-2026-00263",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "fuentes",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 73,
+"ficha": "EODI-2026-00181",
+"fecha": "2026-10-28",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 74,
+"ficha": "EODI-2026-00043",
+"fecha": "2026-10-28",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 75,
+"ficha": "EODI-2026-00684",
+"fecha": "2026-10-29",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 76,
+"ficha": "EODI-2025-00312",
+"fecha": "2026-10-28",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 77,
+"ficha": "EODI-2026-00056",
+"fecha": "2026-10-28",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 78,
+"ficha": "EODI-2026-00625",
+"fecha": "2026-10-29",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 79,
+"ficha": "EODI-2025-00299",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 80,
+"ficha": "EODI-2025-00212",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 81,
+"ficha": "EODI-2026-00208",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 82,
+"ficha": "EODI-2025-00380",
+"fecha": "2026-10-21",
+"categoria": "lugar",
+"dato": "objetivo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 83,
+"ficha": "EODI-2025-00233",
+"fecha": "2026-10-21",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 84,
+"ficha": "EODI-2026-00277",
+"fecha": "2026-10-21",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 85,
+"ficha": "EODI-2026-00650",
+"fecha": "2026-10-22",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 86,
+"ficha": "EODI-2026-00222",
+"fecha": "2026-10-22",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 87,
+"ficha": "EODI-2026-00668",
+"fecha": "2026-10-22",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 88,
+"ficha": "EODI-2025-00378",
+"fecha": "2026-10-22",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 89,
+"ficha": "EODI-2026-00689",
+"fecha": "2026-10-27",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00512",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 90,
+"ficha": "EODI-2026-00692",
+"fecha": "2026-10-27",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00582",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 91,
+"ficha": "EODI-2026-00620",
+"fecha": "2026-10-27",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00582",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 92,
+"ficha": "EODI-2026-00549",
+"fecha": "2026-10-27",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00512",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 93,
+"ficha": "EODI-2026-00660",
+"fecha": "2026-10-27",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00649",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 94,
+"ficha": "EODI-2026-00653",
+"fecha": "2026-10-22",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00649",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 95,
+"ficha": "EODI-2026-00664",
+"fecha": "2026-10-26",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00649",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 96,
+"ficha": "EODI-2026-00656",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00649",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 97,
+"ficha": "EODI-2026-00559",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00512",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 98,
+"ficha": "EODI-2026-00578",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00577",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 99,
+"ficha": "EODI-2026-00594",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00593",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 100,
+"ficha": "EODI-2025-00039",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00243",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 101,
+"ficha": "EODI-2026-00033",
+"fecha": "2026-10-25",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00094",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 102,
+"ficha": "EODI-2026-00676",
+"fecha": "2026-10-25",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00672",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 103,
+"ficha": "EODI-2026-00682",
+"fecha": "2026-10-25",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00672",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 104,
+"ficha": "EODI-2026-00688",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00672",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 105,
+"ficha": "EODI-2025-00097",
+"fecha": "2026-10-21",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00154",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 106,
+"ficha": "EODI-2026-00223",
+"fecha": "2026-10-21",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00112",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 107,
+"ficha": "EODI-2026-00354",
+"fecha": "2026-10-21",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00112",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 108,
+"ficha": "EODI-2025-00174",
+"fecha": "2026-10-22",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00007",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 109,
+"ficha": "EODI-2025-00451",
+"fecha": "2026-10-22",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00228",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 110,
+"ficha": "EODI-2025-00124",
+"fecha": "2026-10-22",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00157",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 111,
+"ficha": "EODI-2025-00157",
+"fecha": "2026-10-23",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00127",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 112,
+"ficha": "EODI-2025-00194",
+"fecha": "2026-10-30",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00134",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 113,
+"ficha": "EODI-2026-00370",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00261",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 114,
+"ficha": "EODI-2025-00340",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00055",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 115,
+"ficha": "EODI-2025-00271",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00176",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 116,
+"ficha": "EODI-2026-00187",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00121",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 117,
+"ficha": "EODI-2026-00201",
+"fecha": "2026-10-28",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00140",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 118,
+"ficha": "EODI-2026-00639",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00512",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 119,
+"ficha": "EODI-2026-00639",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 120,
+"ficha": "EODI-2026-00639",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 121,
+"ficha": "EODI-2026-00639",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 122,
+"ficha": "EODI-2026-00642",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00512",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 123,
+"ficha": "EODI-2026-00643",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00642",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 124,
+"ficha": "EODI-2026-00644",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00642",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 125,
+"ficha": "EODI-2026-00646",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00642",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 126,
+"ficha": "EODI-2026-00645",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00532",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 127,
+"ficha": "EODI-2026-00632",
+"fecha": "2026-10-20",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00515",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 128,
+"ficha": "EODI-2026-00515",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 129,
+"ficha": "EODI-2026-00637",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 130,
+"ficha": "EODI-2026-00637",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 131,
+"ficha": "EODI-2026-00557",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 132,
+"ficha": "EODI-2026-00553",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 133,
+"ficha": "EODI-2025-00058",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 134,
+"ficha": "EODI-2025-00058",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00203",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 135,
+"ficha": "EODI-2025-00261",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 136,
+"ficha": "EODI-2025-00464",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 137,
+"ficha": "EODI-2026-00272",
+"fecha": "2026-10-20",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 138,
+"ficha": "EODI-2026-00249",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 139,
+"ficha": "EODI-2025-00398",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 140,
+"ficha": "EODI-2026-00629",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 141,
+"ficha": "EODI-2025-00105",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 142,
+"ficha": "EODI-2025-00299",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 143,
+"ficha": "EODI-2025-00390",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 144,
+"ficha": "EODI-2025-00296",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 145,
+"ficha": "EODI-2026-00311",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 146,
+"ficha": "EODI-2025-00306",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 147,
+"ficha": "EODI-2025-00295",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 148,
+"ficha": "EODI-2026-00359",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 149,
+"ficha": "EODI-2025-00009",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 150,
+"ficha": "EODI-2025-00229",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 151,
+"ficha": "EODI-2026-00132",
+"fecha": "2026-10-20",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 152,
+"ficha": "EODI-2026-00050",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 153,
+"ficha": "EODI-2026-00055",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 154,
+"ficha": "EODI-2026-00207",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 155,
+"ficha": "EODI-2026-00556",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 156,
+"ficha": "EODI-2026-00357",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 157,
+"ficha": "EODI-2026-00116",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 158,
+"ficha": "EODI-2026-00403",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 159,
+"ficha": "EODI-2025-00012",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 160,
+"ficha": "EODI-2025-00013",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 161,
+"ficha": "EODI-2025-00027",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 162,
+"ficha": "EODI-2025-00037",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 163,
+"ficha": "EODI-2025-00039",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 164,
+"ficha": "EODI-2025-00048",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 165,
+"ficha": "EODI-2025-00064",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 166,
+"ficha": "EODI-2025-00071",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 167,
+"ficha": "EODI-2025-00088",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 168,
+"ficha": "EODI-2025-00119",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 169,
+"ficha": "EODI-2025-00136",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 170,
+"ficha": "EODI-2025-00166",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 171,
+"ficha": "EODI-2025-00174",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 172,
+"ficha": "EODI-2025-00184",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 173,
+"ficha": "EODI-2025-00192",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 174,
+"ficha": "EODI-2025-00211",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 175,
+"ficha": "EODI-2025-00238",
+"fecha": "2026-10-20",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 176,
+"ficha": "EODI-2025-00238",
+"fecha": "2026-10-21",
+"categoria": "fuente_ajena",
+"dato": "fuentes",
+"malo": null,
+"pareja": "EODI-2025-00228",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 177,
+"ficha": "EODI-2025-00293",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 178,
+"ficha": "EODI-2025-00317",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 179,
+"ficha": "EODI-2025-00352",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 180,
+"ficha": "EODI-2025-00380",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 181,
+"ficha": "EODI-2025-00382",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 182,
+"ficha": "EODI-2025-00388",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 183,
+"ficha": "EODI-2026-00002",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 184,
+"ficha": "EODI-2026-00014",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 185,
+"ficha": "EODI-2026-00359",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 186,
+"ficha": "EODI-2026-00005",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 187,
+"ficha": "EODI-2026-00005",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 188,
+"ficha": "EODI-2026-00045",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 189,
+"ficha": "EODI-2026-00054",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 190,
+"ficha": "EODI-2026-00098",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 191,
+"ficha": "EODI-2026-00163",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 192,
+"ficha": "EODI-2026-00194",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 193,
+"ficha": "EODI-2026-00208",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 194,
+"ficha": "EODI-2026-00244",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 195,
+"ficha": "EODI-2026-00302",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 196,
+"ficha": "EODI-2026-00322",
+"fecha": "2026-10-20",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 197,
+"ficha": "EODI-2026-00322",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 198,
+"ficha": "EODI-2026-00339",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 199,
+"ficha": "EODI-2026-00357",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 200,
+"ficha": "EODI-2026-00488",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 201,
+"ficha": "EODI-2026-00495",
+"fecha": "2026-10-20",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 202,
+"ficha": "EODI-2026-00511",
+"fecha": "2026-10-20",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 203,
+"ficha": "EODI-2026-00557",
+"fecha": "2026-10-20",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 204,
+"ficha": "EODI-2026-00083",
+"fecha": "2026-10-21",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 205,
+"ficha": "EODI-2026-00091",
+"fecha": "2026-10-21",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "cambio_retenible"
+},
+{
+"n": 206,
+"ficha": "EODI-2026-00131",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 207,
+"ficha": "EODI-2026-00304",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00140",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 208,
+"ficha": "EODI-2025-00323",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00221",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 209,
+"ficha": "EODI-2026-00411",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00403",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 210,
+"ficha": "EODI-2026-00415",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00392",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 211,
+"ficha": "EODI-2026-00401",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00394",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 212,
+"ficha": "EODI-2026-00361",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 213,
+"ficha": "EODI-2026-00403",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 214,
+"ficha": "EODI-2026-00207",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 215,
+"ficha": "EODI-2026-00392",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 216,
+"ficha": "EODI-2026-00394",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 217,
+"ficha": "EODI-2026-00405",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 218,
+"ficha": "EODI-2026-00406",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 219,
+"ficha": "EODI-2026-00485",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 220,
+"ficha": "EODI-2026-00407",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 221,
+"ficha": "EODI-2026-00395",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 222,
+"ficha": "EODI-2026-00397",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 223,
+"ficha": "EODI-2026-00409",
+"fecha": "2026-10-21",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00152",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 224,
+"ficha": "EODI-2025-00288",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00015",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 225,
+"ficha": "EODI-2025-00465",
+"fecha": "2026-10-20",
+"categoria": "duplicado",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00466",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 226,
+"ficha": "EODI-2025-00098",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 227,
+"ficha": "EODI-2025-00106",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 228,
+"ficha": "EODI-2025-00158",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 229,
+"ficha": "EODI-2026-00163",
+"fecha": "2026-10-20",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 230,
+"ficha": "EODI-2026-00663",
+"fecha": "2026-10-22",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00134",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 231,
+"ficha": "EODI-2026-00499",
+"fecha": "2026-10-08",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00134",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 232,
+"ficha": "EODI-2026-00666",
+"fecha": "2026-10-22",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00276",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 233,
+"ficha": "EODI-2026-00006",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00164",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 234,
+"ficha": "EODI-2026-00343",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2026-00121",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 235,
+"ficha": "EODI-2025-00091",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "fusionado_en",
+"malo": null,
+"pareja": "EODI-2025-00131",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 236,
+"ficha": "EODI-2025-00346",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 237,
+"ficha": "EODI-2025-00388",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 238,
+"ficha": "EODI-2025-00189",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 239,
+"ficha": "EODI-2026-00400",
+"fecha": "2026-10-25",
+"categoria": "retrospectiva",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 240,
+"ficha": "EODI-2026-00235",
+"fecha": "2026-10-26",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 241,
+"ficha": "EODI-2026-00260",
+"fecha": "2026-10-26",
+"categoria": "retirada",
+"dato": "retirado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 242,
+"ficha": "EODI-2026-00649",
+"fecha": "2026-10-26",
+"categoria": "retrospectiva",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 243,
+"ficha": "EODI-2025-00380",
+"fecha": "2026-10-26",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 244,
+"ficha": "EODI-2026-00276",
+"fecha": "2026-10-26",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 245,
+"ficha": "EODI-2026-00130",
+"fecha": "2026-10-26",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 246,
+"ficha": "EODI-2025-00281",
+"fecha": "2026-10-28",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 247,
+"ficha": "EODI-2026-00704",
+"fecha": "2026-10-29",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 248,
+"ficha": "EODI-2025-00153",
+"fecha": "2026-10-21",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 249,
+"ficha": "EODI-2025-00109",
+"fecha": "2026-10-21",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 250,
+"ficha": "EODI-2025-00304",
+"fecha": "2026-10-28",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 251,
+"ficha": "EODI-2026-00512",
+"fecha": "2026-10-27",
+"categoria": "autoridad_ajena",
+"dato": "fuentes",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 252,
+"ficha": "EODI-2026-00230",
+"fecha": "2026-10-28",
+"categoria": "autoridad_ajena",
+"dato": "fuentes",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 253,
+"ficha": "EODI-2026-00230",
+"fecha": "2026-10-28",
+"categoria": "autoridad_ajena",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 254,
+"ficha": "EODI-2025-00051",
+"fecha": "2026-10-30",
+"categoria": "fuente_ajena",
+"dato": "fuentes",
+"malo": null,
+"pareja": "EODI-2025-00066",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 255,
+"ficha": "EODI-2026-00669",
+"fecha": "2026-10-23",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 256,
+"ficha": "EODI-2026-00077",
+"fecha": "2026-10-22",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 257,
+"ficha": "EODI-2026-00077",
+"fecha": "2026-10-26",
+"categoria": "fuente_ajena",
+"dato": "fuentes",
+"malo": null,
+"pareja": "EODI-2026-00064",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 258,
+"ficha": "EODI-2025-00157",
+"fecha": "2026-10-22",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 259,
+"ficha": "EODI-2026-00064",
+"fecha": "2026-10-22",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 260,
+"ficha": "EODI-2026-00064",
+"fecha": "2026-10-22",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 261,
+"ficha": "EODI-2025-00174",
+"fecha": "2026-10-22",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 262,
+"ficha": "EODI-2025-00451",
+"fecha": "2026-10-22",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 263,
+"ficha": "EODI-2026-00649",
+"fecha": "2026-10-22",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 264,
+"ficha": "EODI-2026-00238",
+"fecha": "2026-10-25",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 265,
+"ficha": "EODI-2026-00186",
+"fecha": "2026-10-26",
+"categoria": "lugar",
+"dato": "objetivo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 266,
+"ficha": "EODI-2025-00317",
+"fecha": "2026-10-26",
+"categoria": "lugar",
+"dato": "objetivo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 267,
+"ficha": "EODI-2026-00245",
+"fecha": "2026-10-23",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 268,
+"ficha": "EODI-2026-00538",
+"fecha": "2026-10-28",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 269,
+"ficha": "EODI-2026-00538",
+"fecha": "2026-10-28",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 270,
+"ficha": "EODI-2026-00199",
+"fecha": "2026-10-30",
+"categoria": "lugar",
+"dato": "lugar",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 271,
+"ficha": "EODI-2026-00268",
+"fecha": "2026-10-30",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 272,
+"ficha": "EODI-2026-00488",
+"fecha": "2026-10-28",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 273,
+"ficha": "EODI-2026-00512",
+"fecha": "2026-10-21",
+"categoria": "fecha",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 274,
+"ficha": "EODI-2025-00228",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 275,
+"ficha": "EODI-2025-00095",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 276,
+"ficha": "EODI-2025-00183",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 277,
+"ficha": "EODI-2025-00043",
+"fecha": "2026-10-29",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 278,
+"ficha": "EODI-2025-00199",
+"fecha": "2026-10-25",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 279,
+"ficha": "EODI-2025-00007",
+"fecha": "2026-10-22",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 280,
+"ficha": "EODI-2025-00062",
+"fecha": "2026-10-22",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 281,
+"ficha": "EODI-2025-00154",
+"fecha": "2026-10-22",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 282,
+"ficha": "EODI-2026-00112",
+"fecha": "2026-10-22",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 283,
+"ficha": "EODI-2026-00136",
+"fecha": "2026-10-22",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 284,
+"ficha": "EODI-2026-00205",
+"fecha": "2026-10-22",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 285,
+"ficha": "EODI-2025-00032",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 286,
+"ficha": "EODI-2025-00066",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 287,
+"ficha": "EODI-2025-00092",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 288,
+"ficha": "EODI-2025-00099",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 289,
+"ficha": "EODI-2025-00101",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 290,
+"ficha": "EODI-2025-00104",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 291,
+"ficha": "EODI-2025-00178",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 292,
+"ficha": "EODI-2025-00221",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 293,
+"ficha": "EODI-2025-00222",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 294,
+"ficha": "EODI-2025-00335",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 295,
+"ficha": "EODI-2026-00037",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 296,
+"ficha": "EODI-2026-00113",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 297,
+"ficha": "EODI-2026-00305",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 298,
+"ficha": "EODI-2026-00489",
+"fecha": "2026-10-27",
+"categoria": "hora",
+"dato": "inicio",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 299,
+"ficha": "EODI-2025-00154",
+"fecha": "2026-10-26",
+"categoria": "hora",
+"dato": "fin",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 300,
+"ficha": "EODI-2026-00112",
+"fecha": "2026-10-26",
+"categoria": "hora",
+"dato": "fin",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 301,
+"ficha": "EODI-2025-00055",
+"fecha": "2026-10-28",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": "EODI-2025-00340",
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 302,
+"ficha": "EODI-2026-00698",
+"fecha": "2026-10-28",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 303,
+"ficha": "EODI-2026-00322",
+"fecha": "2026-10-28",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 304,
+"ficha": "EODI-2025-00136",
+"fecha": "2026-10-25",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 305,
+"ficha": "EODI-2026-00300",
+"fecha": "2026-10-28",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 306,
+"ficha": "EODI-2026-00087",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 307,
+"ficha": "EODI-2026-00094",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 308,
+"ficha": "EODI-2026-00233",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 309,
+"ficha": "EODI-2026-00293",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 310,
+"ficha": "EODI-2025-00075",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 311,
+"ficha": "EODI-2025-00088",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 312,
+"ficha": "EODI-2025-00176",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 313,
+"ficha": "EODI-2025-00365",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 314,
+"ficha": "EODI-2026-00056",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 315,
+"ficha": "EODI-2026-00083",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "cierre",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 316,
+"ficha": "EODI-2026-00105",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 317,
+"ficha": "EODI-2026-00148",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 318,
+"ficha": "EODI-2026-00325",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 319,
+"ficha": "EODI-2026-00200",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 320,
+"ficha": "EODI-2025-00048",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 321,
+"ficha": "EODI-2025-00062",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 322,
+"ficha": "EODI-2025-00219",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 323,
+"ficha": "EODI-2025-00285",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 324,
+"ficha": "EODI-2025-00304",
+"fecha": "2026-10-29",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 325,
+"ficha": "EODI-2026-00166",
+"fecha": "2026-10-29",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 326,
+"ficha": "EODI-2026-00340",
+"fecha": "2026-10-29",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 327,
+"ficha": "EODI-2026-00359",
+"fecha": "2026-10-29",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 328,
+"ficha": "EODI-2026-00496",
+"fecha": "2026-10-29",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 329,
+"ficha": "EODI-2026-00693",
+"fecha": "2026-10-29",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 330,
+"ficha": "EODI-2026-00629",
+"fecha": "2026-10-29",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 331,
+"ficha": "EODI-2025-00203",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 332,
+"ficha": "EODI-2025-00112",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 333,
+"ficha": "EODI-2025-00164",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 334,
+"ficha": "EODI-2025-00043",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 335,
+"ficha": "EODI-2026-00131",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 336,
+"ficha": "EODI-2026-00488",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 337,
+"ficha": "EODI-2026-00007",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 338,
+"ficha": "EODI-2025-00357",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 339,
+"ficha": "EODI-2026-00152",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 340,
+"ficha": "EODI-2026-00140",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 341,
+"ficha": "EODI-2026-00238",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 342,
+"ficha": "EODI-2025-00233",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "estado",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 343,
+"ficha": "EODI-2025-00001",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 344,
+"ficha": "EODI-2026-00322",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 345,
+"ficha": "EODI-2026-00357",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 346,
+"ficha": "EODI-2025-00043",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 347,
+"ficha": "EODI-2025-00080",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "tipo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 348,
+"ficha": "EODI-2025-00295",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 349,
+"ficha": "EODI-2025-00042",
+"fecha": "2026-10-21",
+"categoria": "otro",
+"dato": "drones",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 350,
+"ficha": "EODI-2026-00334",
+"fecha": "2026-10-21",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 351,
+"ficha": "EODI-2025-00233",
+"fecha": "2026-10-21",
+"categoria": "presencia",
+"dato": "presencia_dron",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+},
+{
+"n": 352,
+"ficha": "EODI-2025-00233",
+"fecha": "2026-10-21",
+"categoria": "titulo",
+"dato": "titulo",
+"malo": null,
+"pareja": null,
+"cerrojo": "alta_o_fuente"
+}
+]

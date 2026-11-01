@@ -852,6 +852,10 @@ Con ellos se decide el valor correcto de la referencia (y el que debe dar la fic
   está a 147. Solo cuando la regla no puede, una revisión de `datos` con el campo `zona` y la cita
   de una fuente de la ficha.
 
+## El cerrojo de lo decidido (desde el 1 de noviembre de 2026)
+
+Lo decidido en una ficha se comprueba en un solo sitio, al guardarla: [`docs/cerrojo.md`](cerrojo.md).
+
 ## Correcciones a mano
 
 Siguen en `configuracion/incidentes_revisados.json` y mandan sobre el control: una presencia

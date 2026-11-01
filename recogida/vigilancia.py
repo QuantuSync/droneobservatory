@@ -68,6 +68,10 @@ Problemas (cada uno con su frase):
   extractor elige mal las citas. Cada resolución por separado no es un problema;
 - **barrera_atascada**: un incidente sigue retenido por la barrera más de 8 horas (la resolución
   automática tenía que haberlo despachado a las 6): la revisión de la barrera está fallando;
+- **cerrojo_fallos**: el cerrojo de lo decidido (proceso/protegido.py) ha fallado en las últimas 24
+  horas y esas escrituras han pasado sin comprobar;
+- **cerrojo_proteccion**: con el cerrojo en «aplicar», una ficha sale en una comprobación de
+  protección de la auditoría (R, V, W, P, X);
 - **guardian**: el guardián del sistema (recogida/guardian.py) no ha podido arreglar algo (un
   dispositivo de /dev, /tmp, sshd, el disco por encima del 90 % tras limpiar, o dos recogidas
   seguidas que fallan por el sistema con el reinicio de último recurso ya gastado en 6 horas);
@@ -320,6 +324,29 @@ def problemas_del_control(estado: dict[str, Any]) -> list[dict[str, str]]:
     }]  # fmt: skip
 
 
+def problemas_del_cerrojo(estado: dict[str, Any]) -> list[dict[str, str]]:
+    """El cerrojo de lo decidido (proceso/protegido.py) ha fallado, o, con el cerrojo en «aplicar»,
+    una ficha sale en una comprobación de protección de la auditoría: lo publicado no es lo
+    decidido. En «observar» eso solo se apunta. Sin identificadores: el fichero es público."""
+    cerrojo = (estado or {}).get("cerrojo") or {}
+    problemas = []
+    if fallos := int(cerrojo.get("fallos_24h") or 0):
+        problemas.append({
+            "id": "cerrojo_fallos",
+            "frase": f"El cerrojo de las fichas ha fallado {fallos} veces en 24 horas: esas "
+            "escrituras han pasado sin comprobar.",
+        })  # fmt: skip
+    proteccion = cerrojo.get("proteccion") or {}
+    if cerrojo.get("modo") == "aplicar" and proteccion:
+        recuento = ", ".join(f"{c} {len(v)}" for c, v in sorted(proteccion.items()))
+        problemas.append({
+            "id": "cerrojo_proteccion",
+            "frase": f"Hay fichas en las comprobaciones de protección de la auditoría ({recuento}) "
+            "con el cerrojo aplicado: algo protegido no está como se decidió.",
+        })  # fmt: skip
+    return problemas
+
+
 def problemas_del_experto(estado: dict[str, Any], ahora: datetime) -> list[dict[str, str]]:
     """Casos críticos que llevan más de 6 horas esperando al experto (control.json), sin
     identificadores (salud.json es público)."""
@@ -518,6 +545,7 @@ def componer(
     estado_control = _leer_json(secretos / CONTROL)
     problemas += problemas_del_control(estado_control)
     problemas += problemas_del_experto(estado_control, ahora)
+    problemas += problemas_del_cerrojo(estado_control)
 
     # Captura del seguimiento.
     seguimiento = _leer_json(secretos / "seguimiento.json")
