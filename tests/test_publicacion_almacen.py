@@ -73,7 +73,7 @@ def test_sube_lo_cambiado_el_manifiesto_al_final_y_la_instantanea_del_dia(tmp_pa
     assert "publicacion/historial/2026-10-07/ucrania.json.gz" in almacen.objetos
     assert registro["historial"] == "2026-10-07"
     # Lo que sirve el almacén es idéntico a la carpeta.
-    assert publicacion.comparar(carpeta, almacen_publico.cargar(), almacen.leer) == []
+    assert publicacion.comparar(carpeta, almacen_publico.cargar(), almacen.leer, AHORA) == []
     # Sin cambios, no se sube nada ni se pide reconstruir la web.
     almacen.objetos.clear()
     correcto, registro2, cambiado = publicacion.subir(
@@ -159,7 +159,9 @@ def test_comparar_detecta_una_diferencia(tmp_path: Path) -> None:
     almacen = AlmacenPublico()
     publicacion.subir(carpeta, AHORA, "id", "s", {}, almacen_publico.cargar(), almacen)
     (carpeta / "ucrania.json").write_text('{"otro": 1}', encoding="utf-8")
-    assert publicacion.comparar(carpeta, almacen_publico.cargar(), almacen.leer) == ["ucrania.json"]
+    assert publicacion.comparar(carpeta, almacen_publico.cargar(), almacen.leer, AHORA) == [
+        "ucrania.json"
+    ]
 
 
 # --- Exportación semanal en el almacén privado ------------------------------------------------
