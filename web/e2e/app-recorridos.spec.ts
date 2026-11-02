@@ -47,6 +47,14 @@ async function abrirConApp(pagina: Page, ruta: string): Promise<void> {
   await expect.poll(() => pagina.evaluate(() => navigator.serviceWorker.controller !== null), { timeout: 20_000 }).toBe(true);
 }
 
+// Límite de Playwright con WebKit (iPhone y Safari de escritorio): con context.setOffline, recargar o
+// abrir una dirección da «WebKit encountered an internal error» en vez de cargar la página, también
+// sin el service worker (lo comprueba la última prueba de este fichero). En WebKit, las pruebas sin
+// conexión comprueban sin navegar: la barra «Sin conexión» al cortarse la red, y los datos y la ficha
+// que salen del service worker. Abrir la página sin conexión se comprueba en Chromium (Android y
+// escritorio).
+const SIN_NAVEGAR_SIN_RED = "WebKit + setOffline: Playwright no navega sin red (error interno, también sin service worker)";
+
 // Con el service worker (lo de siempre en Playwright, escrito por si cambia el valor por defecto).
 test.use({ serviceWorkers: "allow" });
 
@@ -71,13 +79,18 @@ test.describe("la app instalable", () => {
     });
   }
 
-  test("sin conexión: abre con los últimos datos y la barra «Sin conexión · datos de las …»", async ({ page: pagina, context: contexto }) => {
+  test("sin conexión: abre con los últimos datos y la barra «Sin conexión · datos de las …»", async ({
+    page: pagina,
+    context: contexto,
+    browserName,
+  }) => {
     await abrirConApp(pagina, "/");
     await expect.poll(() => guardada(pagina, CACHE_DATOS, "/datos/resumen.json"), { timeout: 30_000 }).toBe(true);
     await expect.poll(() => guardada(pagina, CACHE_PAGINAS, "/"), { timeout: 30_000 }).toBe(true);
     await contexto.setOffline(true);
     try {
-      await pagina.reload();
+      if (browserName === "webkit") test.info().annotations.push({ type: "sin recargar", description: SIN_NAVEGAR_SIN_RED });
+      else await pagina.reload();
       await expect(pagina.locator("[data-sin-conexion]:visible").first()).toContainText(/Sin conexión · datos (de las|del)/, {
         timeout: 30_000,
       });
@@ -96,7 +109,7 @@ test.describe("la app instalable", () => {
     await expect(pagina.locator("[data-sin-conexion]")).toHaveCount(0, { timeout: 30_000 });
   });
 
-  test("una ficha ya visitada se abre sin conexión", async ({ page: pagina, context: contexto, request: peticiones }) => {
+  test("una ficha ya visitada se abre sin conexión", async ({ page: pagina, context: contexto, request: peticiones, browserName }) => {
     const datos = await publicados(peticiones);
     const id = elegir(datos, "", (f) => datos.puntos.has(f.id));
     expect(id).not.toBeNull();
@@ -107,6 +120,15 @@ test.describe("la app instalable", () => {
     await expect.poll(() => guardada(pagina, CACHE_DATOS, `/datos/incidentes/${id ?? ""}.json`), { timeout: 30_000 }).toBe(true);
     await contexto.setOffline(true);
     try {
+      if (browserName === "webkit") {
+        // Sin navegar (SIN_NAVEGAR_SIN_RED): los datos de la ficha salen del service worker y la barra
+        // dice «Offline».
+        test.info().annotations.push({ type: "sin navegar", description: SIN_NAVEGAR_SIN_RED });
+        const ficha = await pagina.evaluate(async (r) => (await fetch(r)).ok, `/datos/incidentes/${id ?? ""}.json`);
+        expect(ficha).toBe(true);
+        await expect(pagina.locator("[data-sin-conexion]:visible").first()).toContainText(/Offline · data from/);
+        return;
+      }
       await pagina.goto("about:blank");
       await pagina.goto(ruta);
       await expect(pagina.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
@@ -144,5 +166,27 @@ test.describe("la app instalable", () => {
     // Y el service worker se comprueba contra el servidor en cada carga (sin la caché HTTP).
     const actualiza = await pagina.evaluate(async () => (await navigator.serviceWorker.getRegistration())?.updateViaCache ?? "");
     expect(actualiza).toBe("none");
+  });
+});
+
+// El límite de WebKit, comprobado sin el service worker: recargar sin red falla también (lo que diga
+// Playwright queda en el registro de la prueba), así que no es cosa de public/sw.js.
+test.describe("sin service worker", () => {
+  test.use({ serviceWorkers: "block" });
+
+  test("recargar sin red falla en el navegador, sin el service worker", async ({ page: pagina, context: contexto, browserName }) => {
+    await pagina.goto("/");
+    await contexto.setOffline(true);
+    let error = "";
+    try {
+      await pagina.reload({ timeout: 30_000 });
+    } catch (e) {
+      error = e instanceof Error ? (e.message.split(/\r?\n/)[0] ?? "") : String(e);
+    } finally {
+      await contexto.setOffline(false);
+    }
+    console.log(`[${browserName}] recargar sin red y sin service worker: ${error}`);
+    test.info().annotations.push({ type: "error sin red", description: error });
+    expect(error).not.toBe("");
   });
 });

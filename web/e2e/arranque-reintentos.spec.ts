@@ -90,8 +90,13 @@ for (const tamano of TAMANOS) {
       let caido = true;
       let cargas = 0;
       // Las peticiones de la página, no sus «load»: una recarga puede llegar antes de que termine.
+      // Sin los saltos de una redirección: en las vistas previas, la cabecera
+      // x-vercel-set-bypass-cookie hace que Vercel conteste a la primera con un 307 a la misma
+      // dirección (deja la cookie de acceso), que Playwright cuenta como otra petición de la página.
       page.on("request", (peticion) => {
-        if (peticion.isNavigationRequest() && peticion.frame() === page.mainFrame()) cargas += 1;
+        if (peticion.isNavigationRequest() && peticion.frame() === page.mainFrame() && peticion.redirectedFrom() === null) {
+          cargas += 1;
+        }
       });
       await page.route(CODIGO, async (ruta: Route) => {
         if (caido) await ruta.fulfill({ status: 404, body: "" });
