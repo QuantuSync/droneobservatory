@@ -23,10 +23,8 @@ type Regla = "pagina" | "huella" | "datos" | "estatico" | null;
 interface Manejador {
   responder(peticion: PeticionSw, esperar?: (p: Promise<unknown>) => void, cliente?: string | null): Promise<Response> | null;
   guardarLista(direcciones: string[]): Promise<number>;
-  guardarDespues(peticion: PeticionSw): Promise<number> | null;
   limpiarViejas(): Promise<void>;
   borrarTodo(): Promise<void>;
-  listo: Promise<void>;
 }
 
 interface ApiSw {
@@ -40,7 +38,6 @@ interface ApiSw {
     origen: string;
     avisar: (cliente: string | null, mensaje: unknown) => Promise<void>;
     esperaMs?: number;
-    guardarMs?: number;
   }): Manejador;
   CACHES_EN_USO: string[];
   PREFIJO: string;
@@ -180,61 +177,16 @@ describe("respuestas", () => {
 
   it("el código con huella se pide una vez y después sale de la caché, también sin red", async () => {
     let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta("codigo"));
-    const { responder, pedidas, manejador } = preparar((url) => red(url));
-    // Recién arrancado (índice sin leer), no se toca.
-    expect(responder("/assets/a-1.js")).toBeNull();
-    await manejador.listo;
-    expect(await manejador.guardarLista(["/assets/a-1.js"])).toBe(1);
+    const { responder, pedidas } = preparar((url) => red(url));
+    expect(await (await responder("/assets/a-1.js"))?.text()).toBe("codigo");
     red = sinRed;
     expect(await (await responder("/assets/a-1.js"))?.text()).toBe("codigo");
     expect(pedidas).toHaveLength(1);
   });
 
-  it("lo guardado antes de arrancar está en el índice", async () => {
-    const cajas = new CajasFalsas();
-    await (await cajas.open("eodi-huella-v1")).put(`${ORIGEN}/assets/c-3.js`, respuesta("c"));
-    const manejador = sw.crearManejador({ cajas, origen: ORIGEN, pedir: sinRed, avisar: async () => undefined });
-    await manejador.listo;
-    const r = manejador.responder({ url: `${ORIGEN}/assets/c-3.js`, method: "GET", mode: "cors", headers: new Headers() });
-    expect(await (await r)?.text()).toBe("c");
-  });
-
-  it("sin copia, el código, los datos y lo estático van a la red sin el service worker (Safari corta)", async () => {
-    let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta("x"));
-    const { responder, manejador } = preparar((url) => red(url));
-    await manejador.listo;
-    expect(responder("/assets/b-2.js")).toBeNull();
-    expect(responder("/datos/resumen.json")).toBeNull();
-    expect(responder("/mapa/tierra.geojson")).toBeNull();
-    expect(responder("/datos/incidentes/EODI-nunca-vista.json")).toBeNull();
-    // La página siempre: sin red y sin copia, la portada de su idioma.
-    expect(responder("/", "navigate")).not.toBeNull();
-    // Guardado (la lista que manda la página), ya pasa por el service worker, también sin red.
-    expect(await manejador.guardarLista(["/assets/b-2.js", "/datos/resumen.json"])).toBe(2);
-    red = sinRed;
-    expect(await (await responder("/assets/b-2.js"))?.text()).toBe("x");
-    expect(await (await responder("/datos/resumen.json"))?.text()).toBe("x");
-    // Lo que va a la red sin copia se guarda después, desde la caché HTTP.
-    red = () => Promise.resolve(respuesta("y"));
-    const cajas2 = new CajasFalsas();
-    const otro = sw.crearManejador({ cajas: cajas2, origen: ORIGEN, guardarMs: 5, pedir: (p) => red(p.url), avisar: async () => undefined });
-    await otro.listo;
-    const pet = { url: `${ORIGEN}/assets/d-4.js?x=1`, method: "GET", mode: "cors", headers: new Headers() };
-    expect(otro.responder(pet)).toBeNull();
-    expect(await otro.guardarDespues(pet)).toBe(1);
-    red = sinRed;
-    expect(await (await otro.responder(pet))?.text()).toBe("y");
-    expect(otro.guardarDespues({ ...pet, url: `${ORIGEN}/`, mode: "navigate" })).toBeNull();
-    // «Borrar mi última visita»: sin copias, otra vez a la red directa.
-    await manejador.borrarTodo();
-    expect(responder("/assets/b-2.js")).toBeNull();
-  });
-
   it("los datos, de la red; sin red o con un 5xx, la última copia; un 404 pasa tal cual", async () => {
     let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta('{"v":1}'));
-    const { responder, manejador } = preparar((url) => red(url));
-    await manejador.listo;
-    await manejador.guardarLista(["/datos/resumen.json"]);
+    const { responder } = preparar((url) => red(url));
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe('{"v":1}');
     red = () => Promise.resolve(respuesta('{"v":2}'));
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe('{"v":2}');
@@ -244,6 +196,8 @@ describe("respuestas", () => {
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe('{"v":2}');
     red = () => Promise.resolve(respuesta("no", 404));
     expect((await responder("/datos/resumen.json"))?.status).toBe(404);
+    red = sinRed;
+    await expect(responder("/datos/incidentes/EODI-nunca-vista.json")).rejects.toThrow();
   });
 
   it("una ficha visitada se abre sin conexión; una no visitada, con la portada de su idioma", async () => {
@@ -286,6 +240,33 @@ describe("respuestas", () => {
     expect(sw.codigoDe('<link href="/assets/b.css"><script src="/assets/a.js"></script><script src="/assets/a.js">')).toBe(
       "/assets/a.js /assets/b.css",
     );
+  });
+});
+
+describe("peticiones aparte (Safari corta las de la página que se va)", () => {
+  it("el código, los datos y lo estático se piden con una petición nueva, sin la señal de la página", async () => {
+    const vistas: (PeticionSw | Request)[] = [];
+    const manejador = sw.crearManejador({
+      cajas: new CajasFalsas(),
+      origen: ORIGEN,
+      pedir: (p) => {
+        vistas.push(p);
+        return Promise.resolve(respuesta("x"));
+      },
+      avisar: async () => undefined,
+    });
+    const corte = new AbortController();
+    corte.abort();
+    for (const ruta of ["/assets/a-1.js", "/datos/resumen.json", "/mapa/tierra.geojson"]) {
+      const peticion = new Request(`${ORIGEN}${ruta}`, { signal: corte.signal });
+      expect(await (await manejador.responder(peticion))?.text()).toBe("x");
+    }
+    expect(vistas).toHaveLength(3);
+    for (const vista of vistas) {
+      expect(vista).toBeInstanceOf(Request);
+      expect((vista as Request).signal.aborted).toBe(false);
+      expect((vista as Request).credentials).toBe("same-origin");
+    }
   });
 });
 
