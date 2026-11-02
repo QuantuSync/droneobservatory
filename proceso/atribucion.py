@@ -146,6 +146,60 @@ def menciona(texto: str, pais: str, *, solo_gentilicio: bool = False) -> bool:
     return not solo_gentilicio and bool(patrones["estado"].search(normal))
 
 
+# Países de donde vienen los drones de la guerra: nombrarlos no saca la frase de la ficha.
+PAISES_DE_ORIGEN = frozenset({"RU", "BY", "UA", "IR"})
+# Palabras de procedencia antes del país, con hasta dos palabras en medio («venite dinspre
+# Republica Moldova», «from the Republic of Moldova», «aus Polen»): un país así nombrado es de
+# donde viene el dron, no donde ocurre lo que cuenta la frase. Texto normalizado.
+_PROCEDENCIA = re.compile(
+    r"(?<!\w)(?:din|dinspre|from|aus|von|depuis|desde|dalla|dall|dal|z|ze|od|iz|из|со|з|із|zo)"
+    r"(?:\s+\w+){0,2}\s+$"
+)
+
+
+# Un gentilicio solo dice dónde ocurre algo junto al espacio aéreo («Romanian airspace»,
+# «polskiej przestrzeni»): «wojsk norweskich», «pavilion maltez» o «F-18 españoles» dicen de quién
+# es algo, no dónde pasa. Texto normalizado.
+_ESPACIO_AEREO = re.compile(
+    r"(?<!\w)(?:airspace|luftraum|luchtruim|przestrzen\w*|espace aerien|espacio aereo|"
+    r"spazio aereo|vzdusn\w*|ilmatila\w*|luftrum\w*|воздушн\w*|повітрян\w*)(?!\w)"
+)
+# Mónaco no se comprueba: «Monaco di Baviera» es Múnich en italiano (EODI-2025-00055).
+_NO_SE_COMPRUEBAN = frozenset({"MC"})
+
+
+def nombrado_como_lugar(texto: str, pais: str) -> bool:
+    """Si el texto nombra al país como lugar de lo que cuenta: por su nombre o su capital, no
+    como procedencia («două drone venite dinspre Republica Moldova au pătruns în spațiul aerian
+    al României» no nombra Moldavia como lugar), o por su gentilicio junto al espacio aéreo."""
+    patrones = _tabla().get(pais)
+    if patrones is None:
+        return False
+    normal = normalizar(texto)
+    for encontrado in patrones["estado"].finditer(normal):
+        if not _PROCEDENCIA.search(normal[: encontrado.start()]):
+            return True
+    for encontrado in patrones["gentilicio"].finditer(normal):
+        cerca = normal[max(0, encontrado.start() - 30) : encontrado.end() + 40]
+        if _ESPACIO_AEREO.search(cerca):
+            return True
+    return False
+
+
+def de_otro_pais(frase: str, pais: str | None) -> str | None:
+    """El país del que habla una frase cuando no es el de la ficha: nombra otro país de la lista
+    como lugar (no como procedencia, ni uno de donde vienen los drones de la guerra) y no nombra
+    el de la ficha. Una frase así no fija ningún dato de la ficha. EODI-2026-00728 (Moldavia, 2
+    de noviembre de 2026): «Două drone au pătruns în spațiul aerian al României» le puso dos
+    drones, los del suceso de Iași. None si la frase es de la ficha o no nombra país."""
+    if not frase or not pais or nombrado_como_lugar(frase, pais):
+        return None
+    for otro in sorted(paises() - PAISES_DE_ORIGEN - _NO_SE_COMPRUEBAN - {pais}):
+        if nombrado_como_lugar(frase, otro):
+            return otro
+    return None
+
+
 def estado_nombrado(autor: str) -> str | None:
     """El Estado que nombra el autor («Rusia», «Kremlin», «las autoridades rusas»), o None.
     Si nombra varios, el del término más largo."""

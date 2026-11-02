@@ -31,7 +31,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-from proceso import fechas
+from proceso import atribucion, fechas
 from proceso.fronteras import dentro_del_pais, nombres_del_pais, paises
 from proceso.noticias import normalizar
 from proceso.territorios import pais_padre
@@ -391,6 +391,7 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         resultado.campos.pop("lugar_nuevo")
         resultado.motivos.append("lugar_nuevo: país distinto del del incidente")
     _pais_nombrado(resultado, ficha, contexto.textos)
+    _sin_otro_pais(resultado)
     # Sin país solo cuenta si la ficha da un incidente: una noticia que no lo es (o cuya frase de
     # «es incidente» no vale) no tiene suceso que situar, y el motivo confundía (Picassent, Brians).
     if (
@@ -402,6 +403,26 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
     if not resultado.titulo_es or not resultado.titulo_en:
         resultado.motivos.append("sin título")
     return resultado
+
+
+# Los datos del suceso que una frase de otro país no puede fijar (el país, si es incidente o si
+# el objetivo es el conocido se deciden con todas las fuentes).
+DATOS_DEL_SUCESO = frozenset({
+    "drones", "inicio", "inicio_precision", "fin", "presencia_dron", "cierre", "cierre_minutos",
+    "localidad", "lugar_suceso", "lugar_nuevo", "evidencia", "medidas",
+})  # fmt: skip
+
+
+def _sin_otro_pais(resultado: Validada) -> None:
+    """Un dato cuya frase nombra otro país y no el del suceso no vale (proceso/atribucion.
+    de_otro_pais): «Două drone au pătruns în spațiul aerian al României» no dice cuántos drones
+    hubo en Moldavia (EODI-2026-00728, 2 de noviembre de 2026)."""
+    pais = resultado.pais
+    for nombre in sorted(set(resultado.campos) & DATOS_DEL_SUCESO):
+        otro = atribucion.de_otro_pais(str(resultado.campos[nombre].get("frase") or ""), pais)
+        if otro is not None:
+            resultado.campos.pop(nombre)
+            resultado.motivos.append(f"{nombre}: la frase habla de otro país ({otro})")
 
 
 def pais_nombrado(pais: str, textos: tuple[str, ...]) -> bool:

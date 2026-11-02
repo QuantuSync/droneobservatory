@@ -46,6 +46,10 @@ def principal(argumentos: list[str] | None = None) -> int:
             incidentes.uniones_a_mano(almacen),
             almacen.fechas_extraccion(desde),
             protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
+            {
+                c.removeprefix("verificacion:"): v
+                for c, v in almacen.controles("verificacion:").items()
+            },
         )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))

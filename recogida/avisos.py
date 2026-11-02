@@ -45,6 +45,7 @@ vigilancia (dos recogidas seguidas con fallo de envío, problema «avisos»).
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import logging
 import os
@@ -303,6 +304,8 @@ def _cuando(incidente: Documento, zona: str) -> tuple[str, str]:
 
 def mensaje(aviso: Aviso, incidente: Documento, config: Documento, tema: str) -> Documento:
     """El mensaje de ntfy (publicación en JSON) para un tema."""
+    # Las autoridades que se escriben igual en varios países, con el suyo, como en la web.
+    incidente = autoridades.con_pais(copy.deepcopy(incidente))
     pais = config["paises"][aviso.pais]
     clave = (aviso.clase, aviso.estado)
     titulo_es = f"{pais['es'].upper()} · {FRASE_ES[clave]}"

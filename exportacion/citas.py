@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from esquema import Documento
-from proceso import autoridades, nombres_lugar
+from proceso import atribucion, autoridades, nombres_lugar
 
 # Dato de la verificación -> campo público de «Qué dice la fuente».
 CAMPO_PUBLICO = {
@@ -114,7 +114,11 @@ def con_respaldos(publico: Documento, verificacion: Documento | None) -> None:
         return
     fuentes = {f["id"]: f for f in publico.get("fuentes", [])}
     afirmaciones: list[Documento] = list(publico.get("afirmaciones_publicas", []))
+    pais = (publico.get("lugar") or {}).get("pais")
     for dato, (valor, fuente_id, frase) in sorted(verificacion.get("datos", {}).items()):
+        if atribucion.de_otro_pais(str(frase), pais) is not None:
+            # Una frase de otro país no respalda un dato de la ficha (docs/nombres_lugar.md).
+            continue
         campo = CAMPO_PUBLICO.get(dato)
         fuente = fuentes.get(fuente_id)
         publicado = _valor_publicado(publico, dato)
@@ -144,6 +148,9 @@ def con_traducciones(
     """La traducción de cada cita del incidente, del ataque o del impacto, si la hay; las que
     faltan, en `faltan`."""
     faltan = {} if faltan is None else faltan
+    # Antes de nada, las autoridades de varios países con el suyo (proceso/autoridades.con_pais):
+    # así se traducen y se publican; sin país, el nombre suelto, que no nombra ninguno.
+    autoridades.con_pais(publico)
     idiomas = {f["id"]: str(f.get("idioma") or "") for f in publico.get("fuentes", [])}
     for fuente in publico.get("fuentes", []):
         _traducir(fuente, "frase_origen", "traduccion", idiomas[fuente["id"]], traducciones, faltan)

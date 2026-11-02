@@ -29,7 +29,15 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from esquema import Documento
-from proceso import autoridades, buques, declaraciones, fechas, incidentes, rectificaciones
+from proceso import (
+    atribucion,
+    autoridades,
+    buques,
+    declaraciones,
+    fechas,
+    incidentes,
+    rectificaciones,
+)
 from proceso.estados import RETIRADAS, Estado
 from proceso.fronteras import dentro_del_pais
 from proceso.noticias import (
@@ -241,7 +249,7 @@ def pares_candidatos(
 # --- Lo que ve el control de una ficha ----------------------------------------------------
 
 
-def _rango_texto(valor: Any) -> str:
+def rango_texto(valor: Any) -> str:
     if isinstance(valor, dict) and "min" in valor:
         return (
             str(valor["min"]) if valor["min"] == valor["max"] else f"{valor['min']}-{valor['max']}"
@@ -261,9 +269,9 @@ def vista(incidente: Documento) -> dict[str, Any]:
         "titular": (incidente.get("titulo") or {}).get("es", ""),
         "tipo": incidente.get("tipo"),
         "presencia_dron": incidente.get("presencia_dron"),
-        "drones": _rango_texto((incidente.get("drones") or {}).get("numero")),
+        "drones": rango_texto((incidente.get("drones") or {}).get("numero")),
         "cierre": cierre.get("valor", "desconocido"),
-        "duracion_min": _rango_texto(cierre.get("minutos")),
+        "duracion_min": rango_texto(cierre.get("minutos")),
         "inicio": f"{inicio['valor']} ({inicio['precision']})",
         "lugar": f"{sitio} ({lugar.get('nivel', '?')}), {lugar['pais']}".strip(),
     }
@@ -292,6 +300,15 @@ class Verificada:
     def valor(self, campo: str) -> Any:
         dato = self.datos.get(campo)
         return dato[0] if dato else None
+
+
+def sin_otro_pais(
+    datos: dict[str, tuple[Any, str, str]], pais: str | None
+) -> dict[str, tuple[Any, str, str]]:
+    """Los datos comprobados cuya frase habla del país de la ficha: una frase que nombra otro
+    país y no el de la ficha no fija nada (proceso/atribucion.de_otro_pais). EODI-2026-00728
+    (Moldavia): «Două drone au pătruns în spațiul aerian al României» le daba dos drones."""
+    return {c: d for c, d in datos.items() if atribucion.de_otro_pais(str(d[2]), pais) is None}
 
 
 def comprobar(respuesta: dict[str, Any], fuentes: list[tuple[str, str]]) -> Verificada:
@@ -434,13 +451,13 @@ def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
             afirmaciones = [*_sin_afirmaciones(d, "drones"), _afirmacion("drones", valor, fuente)]
             c.incidente = {**d, "drones": {**(d.get("drones") or {}), "numero": valor},
                            "afirmaciones": afirmaciones}  # fmt: skip
-            c.cambios.append(f"drones {_rango_texto(actual)} -> {_rango_texto(valor)}: «{frase}»")
+            c.cambios.append(f"drones {rango_texto(actual)} -> {rango_texto(valor)}: «{frase}»")
         return
     # Un dron (1) es la lectura de una fuente que habla de «el dron» en singular: no se quita.
     if isinstance(actual, dict) and actual != {"min": 1, "max": 1} and "drones" not in conservar:
         c.incidente = {**d, "drones": {**(d.get("drones") or {}), "numero": "desconocido"},
                        "afirmaciones": _sin_afirmaciones(d, "drones")}  # fmt: skip
-        c.cambios.append(f"drones {_rango_texto(actual)} -> sin dato: ninguna fuente da el número")
+        c.cambios.append(f"drones {rango_texto(actual)} -> sin dato: ninguna fuente da el número")
 
 
 def _cierre(
@@ -470,7 +487,7 @@ def _cierre(
             and ("duracion_min" not in conservar or "minutos" not in cierre)
         ):
             cierre["minutos"] = valor
-            c.cambios.append(f"duración del cierre {_rango_texto(valor)} min: «{frase}»")
+            c.cambios.append(f"duración del cierre {rango_texto(valor)} min: «{frase}»")
     elif isinstance(cierre.get("minutos"), dict) and "duracion_min" not in conservar:
         cierre.pop("minutos")
         c.cambios.append("duración del cierre -> sin dato: ninguna fuente la da")
