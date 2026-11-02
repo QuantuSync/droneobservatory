@@ -431,7 +431,11 @@ def test_se_publican_tres_ficheros(almacen: Almacen, tmp_path: Path) -> None:
     publicar.publicar(almacen, AHORA, tmp_path)
     sin_punto = json.loads((tmp_path / publicar.SIN_UBICACION).read_text(encoding="utf-8"))
     (publicado,) = sin_punto["incidentes"]
-    assert publicado["lugar"] == {"pais": "BE", "nivel": "region", "region": "Limburg"}
+    # Con el centro de su región de Natural Earth para el marcador aproximado.
+    assert publicado["lugar"] == {
+        "pais": "BE", "nivel": "region", "region": "Limburg",
+        "centro_region": {"lon": 5.413, "lat": 50.995},
+    }  # fmt: skip
     mapa = json.loads((tmp_path / publicar.INCIDENTES).read_text(encoding="utf-8"))
     assert mapa["features"] == []
 
