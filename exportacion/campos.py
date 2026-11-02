@@ -299,6 +299,10 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
 CAMPOS_PUBLICOS_SIN_UBICACION: frozenset[str] = (CAMPOS_PUBLICOS_INCIDENTE - {"lugar.radio_km"}) | {
     "lugar.region",
     "lugar.nivel",
+    # El centro de la región, para el marcador aproximado (proceso/regiones_aproximadas.py).
+    "lugar.centro_region",
+    "lugar.centro_region.lon",
+    "lugar.centro_region.lat",
 }
 
 # Capa de Ucrania: un ataque con sus regiones identificadas por código ISO 3166-2.

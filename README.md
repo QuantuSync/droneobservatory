@@ -134,7 +134,8 @@ privados, correo de contacto) se leen de variables de entorno: `EODI_BUCKET_*`
   OpenStreetMap (Nominatim), bajo licencia ODbL.
 - `configuracion/instalaciones_europa.json` contiene datos © colaboradores de
   OpenStreetMap, bajo licencia ODbL.
-- `configuracion/fronteras_europa.json` sale de
+- `configuracion/fronteras_europa.json` y `configuracion/regiones_aproximadas.json` (el centro
+  de cada región para el lugar aproximado) salen de
   [Natural Earth](https://www.naturalearthdata.com), de dominio público.
 - `configuracion/localidades_pequenas.json.gz` contiene datos de
   [GeoNames](https://www.geonames.org), bajo licencia

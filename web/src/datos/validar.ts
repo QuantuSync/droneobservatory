@@ -309,10 +309,18 @@ const CAMPOS_INCIDENTE_OBLIGATORIOS: Record<string, Comprobacion> = {
   control,
 };
 
-/** Lugar de un incidente sin punto: el país y hasta dónde se conoce, sin radio. */
+/**
+ * Lugar de un incidente sin punto: el país y hasta dónde se conoce, sin radio; con el centro de
+ * su región (proceso/regiones_aproximadas.py) si se conoce, para el marcador aproximado.
+ */
 const lugarSinUbicacion = objeto(
   { pais: cadena(v.PATRON_PAIS), nivel: enumerado(v.NIVELES_UBICACION) },
-  { region: cadena(), localidad: cadena(), ...CAMPOS_LUGAR_OPCIONALES },
+  {
+    region: cadena(),
+    localidad: cadena(),
+    centro_region: objeto({ lon: longitud, lat: latitud }),
+    ...CAMPOS_LUGAR_OPCIONALES,
+  },
 );
 
 const afirmacionPublica = objeto(

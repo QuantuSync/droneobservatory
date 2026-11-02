@@ -2,7 +2,8 @@
 // fuente nombra el país, una región o un mar, pero no un sitio que se pueda situar. El mapa lo
 // pinta con un marcador propio en el centro de esa zona: el país (el punto de etiqueta de
 // Natural Earth, el mismo con que se rotula el país en el mapa), la región que nombra la fuente
-// (tabla de abajo) o el mar frente a la costa si el suceso es en el mar. La ficha dice el nivel y
+// (su centro de Natural Earth llega en los datos; la tabla de abajo, para lo que Natural Earth
+// no tiene) o el mar frente a la costa si el suceso es en el mar. La ficha dice el nivel y
 // de dónde sale. No es un dato de la fuente: el punto solo sirve para que el incidente se vea.
 
 import { pais } from "../i18n/index.ts";
@@ -50,48 +51,37 @@ interface Zona {
 }
 
 /**
- * Regiones y mares que nombran las fuentes de los incidentes sin punto, con su centro
- * aproximado. Una región que no está aquí deja el marcador en el país.
+ * Lo que no sale de las regiones de Natural Earth (el centro de la región llega en los datos,
+ * `lugar.centro_region`, proceso/regiones_aproximadas.py): los mares, el mar frente a las
+ * regiones de costa y las zonas que las fuentes nombran y Natural Earth no tiene (regiones
+ * históricas o de los puntos cardinales, municipios y condados nuevos). Una región que no está
+ * aquí ni trae su centro deja el marcador en el país.
  */
 const ZONAS: readonly Zona[] = [
-  { pais: "BE", nombres: ["antwerpen", "anvers", "antwerp"], punto: [4.6, 51.2] },
   { pais: "BE", nombres: ["mechelen", "malines"], punto: [4.48, 51.03] },
   { pais: "BG", nombres: ["dobrich", "добрич"], punto: [27.85, 43.6], mar: [28.75, 43.4] },
   { pais: "BG", nombres: ["varna", "варна"], punto: [27.65, 43.2], mar: [28.2, 43.15] },
   { pais: "BG", nombres: ["burgas", "бургас"], punto: [27.2, 42.55], mar: [27.85, 42.5] },
-  { pais: "DE", nombres: ["sachsen-anhalt", "saxony-anhalt"], punto: [11.7, 52.0] },
-  { pais: "DK", nombres: ["nordjylland", "north jutland"], punto: [9.95, 57.05] },
-  { pais: "EE", nombres: ["ida-viru", "ida-virumaa"], punto: [27.4, 59.2] },
-  { pais: "FI", nombres: ["kymenlaakso"], punto: [26.9, 60.75] },
   { pais: "FI", nombres: ["southeast", "southeastern finland", "kaakkois-suomi"], punto: [27.6, 61.2] },
-  { pais: "FR", nombres: ["haut-rhin"], punto: [7.3, 47.85] },
-  { pais: "GB", nombres: ["bedfordshire"], punto: [-0.45, 52.1] },
   { pais: "GR", nombres: ["evros", "έβρος"], punto: [26.1, 41.1] },
-  { pais: "GR", nombres: ["αιγαιο", "aegean", "egeo", "aigaio"], punto: [25.0, 38.5], esMar: true },
+  { pais: "GR", nombres: ["αιγαιο", "aegean", "egeo", "aigaio", "egejsko more"], punto: [25.0, 38.5], esMar: true },
   {
     pais: "GR",
     nombres: ["βορειοανατολικο και κεντρικο αιγαιο", "north-east and central aegean"],
     punto: [25.6, 39.1],
     esMar: true,
   },
-  { pais: "HR", nombres: ["splitsko-dalmatinska", "split-dalmatia"], punto: [16.6, 43.45] },
   { pais: "IE", nombres: ["dublin bay"], punto: [-6.1, 53.33], esMar: true },
-  { pais: "LT", nombres: ["kaunas"], punto: [23.9, 54.9] },
   { pais: "LT", nombres: ["kaisiadorys", "kaišiadorys"], punto: [24.45, 54.86] },
   { pais: "LT", nombres: ["southeastern lithuania", "pietryciu lietuva"], punto: [25.3, 54.4] },
   { pais: "LV", nombres: ["balvi"], punto: [27.4, 57.1] },
-  { pais: "LV", nombres: ["latgale", "latgalia"], punto: [27.0, 56.3] },
   { pais: "LV", nombres: ["eastern latvia"], punto: [27.0, 56.6] },
-  { pais: "LV", nombres: ["northern latvia", "vidzeme"], punto: [25.3, 57.5] },
-  { pais: "MD", nombres: ["gagauzia", "găgăuzia"], punto: [28.65, 46.3] },
-  { pais: "MD", nombres: ["stefan voda", "ștefan vodă"], punto: [29.66, 46.52] },
+  { pais: "LV", nombres: ["northern latvia"], punto: [25.3, 57.5] },
+  { pais: "LV", nombres: ["kraslavas un rezeknes novada", "kraslavas un rezeknes novads"], punto: [27.4, 56.25] },
   { pais: "MD", nombres: ["nord", "north", "northern moldova"], punto: [27.8, 47.9] },
-  { pais: "NL", nombres: ["limburg"], punto: [5.9, 51.2] },
-  { pais: "NO", nombres: ["nordland"], punto: [14.4, 66.8] },
   { pais: "NO", nombres: ["vestland"], punto: [6.4, 60.9] },
-  { pais: "NO", nombres: ["troms og finnmark", "troms", "finnmark"], punto: [22.0, 69.8] },
+  { pais: "NO", nombres: ["troms og finnmark"], punto: [22.0, 69.8] },
   { pais: "PL", nombres: ["ostpolen", "eastern poland", "wschodnia polska"], punto: [23.0, 51.5] },
-  { pais: "RO", nombres: ["arges", "argeș"], punto: [24.9, 45.1] },
   { pais: "RO", nombres: ["tulcea"], punto: [28.85, 45.0], mar: [29.75, 44.85] },
   { pais: "RO", nombres: ["constanta", "constanța", "constanza"], punto: [28.35, 44.2], mar: [29.0, 44.1] },
   { pais: "RO", nombres: ["romanian coast", "litoralul romanesc"], punto: [28.7, 44.4], mar: [29.2, 44.35] },
@@ -128,12 +118,12 @@ export function enElMar(titulo: { es: string; en: string }): boolean {
 }
 
 /**
- * El lugar aproximado de un incidente sin punto: la región que nombra la fuente (o el mar
- * frente a ella, si el suceso es en el mar), el mar del país o, si no, el país. null solo si el
- * país no está en la tabla.
+ * El lugar aproximado de un incidente sin punto: la zona de la tabla que nombra la fuente (o el
+ * mar frente a ella, si el suceso es en el mar), el mar del país, el centro de la región que
+ * traen los datos o, si no, el país. null solo si el país no está en la tabla.
  */
 export function lugarAproximado(
-  lugar: { pais: string; region?: string | undefined },
+  lugar: { pais: string; region?: string | undefined; centro_region?: { lon: number; lat: number } | undefined },
   titulo: { es: string; en: string },
 ): LugarAproximado | null {
   const mar = enElMar(titulo);
@@ -149,6 +139,11 @@ export function lugarAproximado(
   }
   const delMar = mar ? MAR_DE_PAIS[lugar.pais] : undefined;
   if (delMar !== undefined) return { lon: delMar.punto[0], lat: delMar.punto[1], nivel: "mar", nombre: null };
+  // El centro de la región que nombra la fuente (Natural Earth): Iași, Suceava, un raion moldavo.
+  const centro = lugar.centro_region;
+  if (lugar.region !== undefined && centro !== undefined) {
+    return { lon: centro.lon, lat: centro.lat, nivel: "region", nombre: lugar.region };
+  }
   const punto = PUNTO_PAIS[lugar.pais];
   if (punto === undefined) return null;
   return { lon: punto[0], lat: punto[1], nivel: "pais", nombre: null };

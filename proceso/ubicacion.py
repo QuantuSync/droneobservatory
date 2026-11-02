@@ -373,6 +373,100 @@ def lugar_del_homonimo(incidente: dict[str, Any], nom: Nomenclator) -> dict[str,
     }
 
 
+# Lo que separa varias localidades en el lugar del suceso: «Frătăuți și Horodnic».
+_VARIAS = re.compile(
+    r"\s*(?:,|/|;|\s(?:și|şi|si|and|y|e|et|und|en|i|ir|un|ja|och|og|és|a|и|і|та|й|ve|και)\s)\s*",
+    re.IGNORECASE,
+)
+# Lo que puede añadir la flexión a la primera palabra del nombre que da la fuente: «Frătăuți» es
+# el nombre corriente de Frătăuții Noi y Frătăuții Vechi.
+LETRAS_FLEXION = 2
+# Las localidades de un mismo suceso, como mucho a esto unas de otras; las que lleva un mismo
+# nombre, a esto.
+KM_ENTRE_LOCALIDADES = 25.0
+KM_MISMA_LOCALIDAD = 8.0
+MIN_LETRAS_RAIZ = 5
+
+
+def _region_de(sitio: Objetivo) -> str | None:
+    filas = localidades_pequenas()[1]
+    if sitio.id in filas:
+        return str(filas[sitio.id][4])
+    codigo = regiones()["localidades"].get(sitio.id)
+    return None if codigo is None else str(codigo)
+
+
+def _de_la_region(nombre: str, pais: str, codigos: set[str], nom: Nomenclator) -> list[Objetivo]:
+    """Las localidades de esas regiones que se llaman así o, si ninguna, las pequeñas cuya
+    primera palabra es la del nombre con la flexión (y lo que la siga: «Noi», «de Jos»)."""
+    exactas = [s for s in _con_ese_nombre(nombre, pais, nom) if _region_de(s) in codigos]
+    if exactas:
+        return exactas
+    normal = normalizar(nombre)
+    if " " in normal or len(normal) < MIN_LETRAS_RAIZ:
+        return []
+
+    def flexion(clave: str) -> bool:
+        return clave.startswith(normal) and (
+            len(clave.split(" ", 1)[0]) - len(normal) <= LETRAS_FLEXION
+        )
+
+    salida: dict[str, Objetivo] = {}
+    for clave, ids in nom.localidades.items():
+        if flexion(clave):
+            for i in ids:
+                sitio = Objetivo.de_lugar(nom.lugares[i])
+                if sitio.pais == pais and _region_de(sitio) in codigos:
+                    salida[i] = sitio
+    indice, filas = localidades_pequenas()
+    for clave, ids in indice.items():
+        if flexion(clave):
+            for i in ids:
+                if filas[i][1] == pais and str(filas[i][4]) in codigos:
+                    salida[i] = Objetivo(
+                        i, "otra", filas[i][0], pais, filas[i][2], filas[i][3], RADIO_PEQUENA_KM
+                    )
+    return list(salida.values())
+
+
+def lugar_de_las_localidades(incidente: dict[str, Any], nom: Nomenclator) -> dict[str, Any] | None:
+    """El lugar de una ficha sin punto cuya fuente nombra localidades de la región que da
+    («Drone semnalate în zonele Frătăuți și Horodnic», județul Suceava: EODI-2026-00725), con el
+    punto en medio de ellas y el radio que las cubre. Solo si cada nombre lleva a localidades de
+    esa región y todas están juntas; si no, None y la ficha sigue sin punto."""
+    lugar = incidente.get("lugar") or {}
+    nombre, pais, region = lugar.get("suceso"), lugar.get("pais"), lugar.get("region")
+    if lugar.get("punto") or lugar.get("nivel") != "localidad" or not nombre or not region:
+        return None
+    codigos = regiones_con_nombre(str(pais), str(region))
+    if not codigos:
+        return None
+    partes = [p for p in _VARIAS.split(str(nombre)) if p.strip()]
+    sitios: list[Objetivo] = []
+    for parte in partes:
+        hallados = _de_la_region(parte, str(pais), codigos, nom)
+        # Homónimos separados (dos Gaižiūnai a 24 km en Kaunas, EODI-2025-00246): no se sabe
+        # cuál es. Las partes de una misma localidad (Frătăuții Noi y Vechi) están juntas.
+        if not hallados or any(_km(a, b) > KM_MISMA_LOCALIDAD for a in hallados for b in hallados):
+            return None
+        sitios += hallados
+    if any(_km(a, b) > KM_ENTRE_LOCALIDADES for a in sitios for b in sitios):
+        return None
+    centro = Objetivo(
+        "", "otra", str(nombre), str(pais),
+        sum(s.lat for s in sitios) / len(sitios), sum(s.lon for s in sitios) / len(sitios), 0,
+    )  # fmt: skip
+    if not dentro_del_pais(str(pais), centro.lat, centro.lon):
+        return None
+    radio = max(_km(centro, s) for s in sitios) + RADIO_PEQUENA_KM
+    return {
+        **lugar,
+        "punto": {"lat": round(centro.lat, DECIMALES), "lon": round(centro.lon, DECIMALES)},
+        "radio_km": round(min(radio, RADIO_MAX_KM), 1),
+        "geocodificacion": "localidad",
+    }
+
+
 def otra_region(sitio: Objetivo, region: str | None) -> bool:
     """La ficha dice en qué región ocurrió y la localidad hallada es de otra."""
     if not region:

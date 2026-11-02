@@ -271,6 +271,7 @@ MOTIVO_LUGAR_REVISADO = "lugar revisado a mano (configuracion/incidentes_revisad
 MOTIVO_INICIO_REVISADO = "inicio revisado a mano (configuracion/incidentes_revisados.json, datos)"
 MOTIVO_DANOS_REVISADOS = "daños revisados a mano (configuracion/incidentes_revisados.json, datos)"
 MOTIVO_DATO_REVISADO = "{} revisado a mano (configuracion/incidentes_revisados.json, datos)"
+MOTIVO_FRASES = "las localidades o la hora que dicen sus fuentes (proceso/decidir.py)"
 
 
 @dataclass
@@ -287,6 +288,7 @@ class Corregidos:
     contradicen_rectificacion: list[str] = field(default_factory=list)
     repuestos: list[str] = field(default_factory=list)
     fuentes_quitadas: list[str] = field(default_factory=list)
+    de_las_frases: list[str] = field(default_factory=list)
 
     def texto(self) -> str:
         return (
@@ -296,7 +298,7 @@ class Corregidos:
             f"cierres, drones, tipos y objetivos revisados {self.otros}, sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
             f"{self.contradicen_rectificacion}, repuestos {self.repuestos}, fuentes quitadas "
-            f"{self.fuentes_quitadas}"
+            f"{self.fuentes_quitadas}, con el sitio o la hora de sus frases {self.de_las_frases}"
         )
 
 
@@ -861,6 +863,18 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
                 almacen, documento, decidido, ahora, modelos, motivo, hechos
             ):
                 lista.append(id_)
+    # Las localidades y la hora que dicen las frases (desde el 2 de noviembre de 2026) se deciden
+    # al guardar la ficha; una ficha que nada vuelve a guardar se quedaba sin ellas: EODI-2026-00719
+    # sin la hora de «la ora 17:04», EODI-2026-00725 sin el punto de Frătăuți y Horodnic.
+    for documento in almacen.incidentes():
+        if not incidentes.activo(documento):
+            continue
+        if decidir.con_lo_que_dicen_las_frases(documento) is documento:
+            continue
+        if _guardar(
+            almacen, documento, decidir.aplicar(documento), ahora, modelos, MOTIVO_FRASES, hechos
+        ):
+            hechos.de_las_frases.append(documento["id"])
     registro.info("revisión del contenido: %s", hechos.texto())
     return hechos
 
