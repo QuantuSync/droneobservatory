@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { instalar, useInstalacion } from "../app/instalar.ts";
 import type { Textos } from "../i18n/index.ts";
@@ -36,6 +36,12 @@ export function InstalarApp({ t, grande = false }: Props) {
   const modo = useInstalacion();
   const [pasos, setPasos] = useState(false);
   const idPasos = useId();
+  const cajaPasos = useRef<HTMLDivElement>(null);
+  // Al abrirse, los pasos se desplazan a la vista dentro del menú: en el teléfono quedaban bajo el
+  // pie fijo de «Aplicar». Solo se desplaza el menú, nunca el mapa.
+  useEffect(() => {
+    if (pasos) cajaPasos.current?.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
+  }, [pasos]);
   if (modo === null) return null;
   const clase = grande
     ? "control w-full justify-start text-sm text-texto"
@@ -62,7 +68,8 @@ export function InstalarApp({ t, grande = false }: Props) {
       {pasos && (
         <div
           id={idPasos}
-          className={grande ? "px-1" : "flotante absolute right-0 top-full z-40 mt-1 w-72 p-3"}
+          ref={cajaPasos}
+          className={grande ? "scroll-mb-20 px-1" : "flotante absolute right-0 top-full z-40 mt-1 w-72 p-3"}
           data-pasos-instalar=""
         >
           <p className="mb-2 text-xs text-secundario">{t.app.pasosIphone}</p>
