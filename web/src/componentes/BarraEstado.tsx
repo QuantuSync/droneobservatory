@@ -220,15 +220,27 @@ export function BarraEstado({
   }, [abierta]);
   const referencia = referenciaDeFrescura(sistema, actualizado);
   if (sinConexion) {
+    const texto = textoSinConexion(t, actualizado, ahora);
+    // En la barra del teléfono, en dos líneas cortas («Sin conexión» / «datos de las 12:17 UTC»):
+    // en una sola se metería bajo «Avisos».
+    const [primera, ...resto] = texto.split(" · ");
     return (
       <p
-        className={`flex items-center gap-2 whitespace-nowrap px-1.5 text-xs text-secundario ${corta ? "min-h-11" : "min-h-7"}`}
+        className={`flex items-center gap-2 px-1.5 text-xs text-secundario ${corta ? "min-h-11 leading-tight" : "min-h-7 whitespace-nowrap"}`}
         role="status"
         data-sin-conexion=""
         data-frescura="sin_conexion"
       >
         <Punto color="bg-linea" />
-        {textoSinConexion(t, actualizado, ahora)}
+        {corta ? (
+          <span className="flex flex-col">
+            <span>{primera}</span>
+            <span className="sr-only"> · </span>
+            <span className="whitespace-nowrap">{resto.join(" · ")}</span>
+          </span>
+        ) : (
+          texto
+        )}
       </p>
     );
   }

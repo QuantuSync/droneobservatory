@@ -188,3 +188,13 @@ describe("capturas del diálogo de instalación", () => {
     }
   });
 });
+
+describe("sin conexión en la barra del teléfono", () => {
+  it("en dos líneas cortas, con el mismo texto para el lector de pantalla", () => {
+    const html = renderToString(
+      <BarraEstado t={textos("es")} actualizado="2026-11-02T12:17:00Z" sistema={null} ahora={new Date("2026-11-02T12:40:00Z")} sinConexion corta />,
+    );
+    expect(html).toContain("<span>Sin conexión</span>");
+    expect(html).toContain("datos de las 12:17 UTC");
+  });
+});
