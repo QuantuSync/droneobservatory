@@ -20,7 +20,7 @@ from exportacion.proyeccion import (
     proyectar,
     solo_fuentes_publicas,
 )
-from proceso import cita_titular, coherencia, fechas, nombres_lugar
+from proceso import cita_titular, coherencia, fechas, nombres_lugar, regiones_aproximadas
 from proceso.estados import Capa
 from proceso.focos_termicos import solo_detectado
 from proceso.mediciones import solo_publico
@@ -127,6 +127,8 @@ def sin_ubicacion(incidente: Documento) -> Documento | None:
         return None
     documento["lugar"].setdefault("nivel", "pais")
     documento = con_nombres(coherencia.coherente(documento))
+    # El centro de la región que nombra la fuente, para el marcador aproximado de la web.
+    documento["lugar"] = regiones_aproximadas.con_centro(documento["lugar"])
     proyectado: Documento = proyectar(documento, CAMPOS_PUBLICOS_SIN_UBICACION)
     return proyectado
 

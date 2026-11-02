@@ -60,8 +60,12 @@ describe("lugar aproximado", () => {
   it("país, región y mar frente a la costa", () => {
     const titulo = { es: "Dron sobre el país", en: "Drone over the country" };
     expect(lugarAproximado({ pais: "MD" }, titulo)).toMatchObject({ nivel: "pais", nombre: null });
-    expect(lugarAproximado({ pais: "LV", region: "Latgale" }, titulo)).toMatchObject({ nivel: "region", nombre: "Latgale" });
-    // Una región que no está en la tabla deja el marcador en el país.
+    expect(lugarAproximado({ pais: "LV", region: "Eastern Latvia" }, titulo)).toMatchObject({ nivel: "region", nombre: "Eastern Latvia" });
+    // El centro de la región que traen los datos (Natural Earth): EODI-2026-00725, en Suceava y
+    // no en el centro de Rumanía.
+    const suceava = lugarAproximado({ pais: "RO", region: "Suceava", centro_region: { lon: 25.809, lat: 47.214 } }, titulo);
+    expect(suceava).toEqual({ lon: 25.809, lat: 47.214, nivel: "region", nombre: "Suceava" });
+    // Una región que no está en la tabla ni trae su centro deja el marcador en el país.
     expect(lugarAproximado({ pais: "RO", region: "Nowhere" }, titulo)).toMatchObject({ nivel: "pais" });
     const barcos = {
       es: "Drones atacan dos barcos en la zona económica exclusiva de Bulgaria",

@@ -355,6 +355,93 @@ def hora_en_utc(valor: datetime, precision: str | None, frase: str,
     return None
 
 
+# Lo más que pueden separarse las horas del inicio que dicen las frases de una ficha.
+MAX_DESACUERDO = timedelta(minutes=10)
+
+
+@dataclass(frozen=True)
+class HoraDicha:
+    """La hora del inicio que dice la frase de una fuente, ya en UTC."""
+
+    valor: datetime
+    fuente_id: str
+    local: str
+    zona: str
+
+
+def hora_de_las_frases(incidente: dict[str, Any]) -> HoraDicha | None:
+    """La hora del inicio de una ficha que solo tiene el día, si la dice la frase de una de sus
+    fuentes: la de una afirmación del inicio con hora cuya fuente escribe esa hora en su frase
+    (`frase_origen`), en UTC con hora_en_utc si el extractor copió la hora local o le sumó el
+    desfase del otro horario, y del mismo día local que la ficha. Con varias, la más temprana si
+    no se separan más de MAX_DESACUERDO; si no, ninguna.
+    EODI-2026-00719: «Primul mesaj RO-Alert a fost emis în județul Iași, la ora 17:04» (hotnews.ro,
+    15:04 UTC) llegó al unir otra ficha y la de Iași se quedó con el día de su primera nota."""
+    from proceso.textos_dron import hora_local
+
+    tiempo = incidente.get("tiempo") or {}
+    inicio = tiempo.get("inicio") or {}
+    if inicio.get("precision") != "dia":
+        return None
+    dia = str(inicio.get("valor", ""))[:10]
+    lugar = incidente.get("lugar") or {}
+    punto = lugar.get("punto") or {}
+    zona_suceso = zona(lugar.get("pais"), punto.get("lat"), punto.get("lon"))
+    if zona_suceso is None:
+        return None
+    fuentes = {str(f.get("id")): f for f in incidente.get("fuentes", [])}
+    frases = {i: str(f.get("frase_origen") or "") for i, f in fuentes.items()}
+    halladas: list[HoraDicha] = []
+    todas: list[HoraDicha] = []
+    for afirmacion in incidente.get("afirmaciones", []) or []:
+        valor = str(afirmacion.get("valor") or "")
+        frase = frases.get(str(afirmacion.get("fuente_id")), "")
+        if afirmacion.get("campo") != "inicio" or "T" not in valor or not frase:
+            continue
+        escrita = hora_local(frase, con_dron=False)
+        if escrita is None:
+            continue
+        try:
+            leido = _momento(valor if valor.endswith("Z") else valor + "Z")
+        except ValueError:
+            continue
+        en_utc = hora_en_utc(leido, "minuto", frase, zona_suceso)
+        if en_utc is None:
+            if not misma_hora(leido.astimezone(zona_suceso), escrita, "minuto"):
+                continue
+            en_utc = leido
+        local = en_utc.astimezone(zona_suceso)
+        if local.date().isoformat() != dia:
+            continue
+        fin = tiempo.get("fin")
+        if fin and _momento(str(fin["valor"])) < en_utc:
+            continue
+        hallada = HoraDicha(en_utc, str(afirmacion["fuente_id"]), local.strftime("%H:%M"),
+                            zona_suceso.key)  # fmt: skip
+        todas.append(hallada)
+        medio = _zona_del_dominio(str(fuentes[str(afirmacion["fuente_id"])].get("enlace") or ""))
+        if medio is None or medio.utcoffset(en_utc) == zona_suceso.utcoffset(en_utc):
+            # Un medio de otro huso puede dar la hora en la suya («gegen 17.43 Uhr» en heute.at
+            # para un suceso de Rumanía, EODI-2026-00582): esa no se toma.
+            halladas.append(hallada)
+    if not halladas or max(h.valor for h in todas) - min(h.valor for h in todas) > MAX_DESACUERDO:
+        # Las frases dan horas distintas («gegen 17.43 Uhr» y «în jurul orei 18:00» en
+        # EODI-2026-00582): no se sabe cuál es la del inicio.
+        return None
+    return min(halladas, key=lambda h: (h.valor, h.fuente_id))
+
+
+def _zona_del_dominio(enlace: str) -> ZoneInfo | None:
+    """La hora local del país del dominio de un enlace con dominio de país («heute.at»: Austria),
+    o None con un dominio genérico («.com», «.eu») o de un país sin zona conocida."""
+    from urllib.parse import urlparse
+
+    dominio = (urlparse(enlace).hostname or "").rsplit(".", 1)[-1].upper()
+    if len(dominio) != 2 or not dominio.isalpha():
+        return None
+    return zona({"UK": "GB"}.get(dominio, dominio))
+
+
 def misma_hora(momento: datetime, escrita: tuple[int, int], precision: str | None,
                margen: timedelta = timedelta(0)) -> bool:  # fmt: skip
     """La hora del reloj de `momento` es la escrita, con `margen` a cada lado (también pasada la

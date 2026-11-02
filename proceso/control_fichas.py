@@ -524,6 +524,12 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
     if inicio["precision"] in incidentes.PRECISIONES_HORA and hora is None:
         # El día local del lugar, no el de UTC (proceso/fechas.dia_local).
         valor = fechas.dia_local(inicio, d) + "T00:00Z"
+        solo_dia = {**d, "tiempo": {**tiempo, "inicio": {"valor": valor, "precision": "dia"}}}
+        dicha = fechas.hora_de_las_frases(solo_dia)
+        if dicha is not None and dicha.valor == incidentes._leer_instante(inicio):
+            # La hora la dice la frase de una fuente (proceso/decidir.py la vuelve a poner): no
+            # se quita aunque la verificación no la lea.
+            return
         nuevo = {**tiempo, "inicio": {"valor": valor, "precision": "dia"}}
         nuevo.pop("fin", None)
         nuevo.pop("duracion_min", None)

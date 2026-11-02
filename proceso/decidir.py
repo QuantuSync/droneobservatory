@@ -452,6 +452,56 @@ def en_la_localidad_revisada(lugar: Documento) -> Documento:
     return nuevo
 
 
+# Los inicios que no da una noticia y que ninguna frase de noticia corrige.
+ORIGENES_SIN_HORA_DE_FRASE = frozenset({"oficial", "parte", "medido"})
+
+
+def _con_hora_de_la_frase(resultado: Documento) -> None:
+    """Un inicio con solo el día gana la hora que dice la frase de una de sus fuentes
+    (proceso/fechas.hora_de_las_frases), en UTC: EODI-2026-00719, «la ora 17:04» en Iași, 15:04
+    UTC. El origen del día no cambia; el motivo dice de dónde sale la hora."""
+    from proceso import fechas
+
+    tiempo = resultado.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if origen.get("tipo") in ORIGENES_SIN_HORA_DE_FRASE:
+        return
+    hora = fechas.hora_de_las_frases(resultado)
+    if hora is None:
+        return
+    motivo = (
+        f"{origen.get('motivo', '')}; la hora la dice la frase de {hora.fuente_id} ({hora.local}, "
+        f"hora local, {hora.zona}): en UTC, {hora.valor.strftime('%H:%M')}"
+    ).lstrip("; ")
+    resultado["tiempo"] = {
+        **tiempo,
+        "inicio": {"valor": hora.valor.strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"},
+        "origen_inicio": {**origen, "motivo": motivo[:300]},
+    }
+
+
+def _con_lo_que_dicen_las_frases(resultado: Documento, revisiones: Documento) -> None:
+    """Sin punto, las localidades de su región que nombra la fuente («Frătăuți și Horodnic»,
+    EODI-2026-00725); con solo el día, la hora que dice una frase (EODI-2026-00719)."""
+    from proceso import noticias, ubicacion
+
+    if "lugar" not in revisiones:
+        nombradas = ubicacion.lugar_de_las_localidades(resultado, noticias.nomenclator())
+        if nombradas is not None:
+            resultado["lugar"] = nombradas
+    if "inicio" not in revisiones and not inicio_revisado(resultado):
+        _con_hora_de_la_frase(resultado)
+
+
+def con_lo_que_dicen_las_frases(incidente: Documento) -> Documento:
+    """El incidente con solo esas dos reglas aplicadas; el mismo objeto si no cambia nada. Lo usa
+    recogida/revisados.py para volver a guardar las fichas guardadas antes de las reglas, que nada
+    más vuelve a guardar."""
+    resultado = copy.deepcopy(incidente)
+    _con_lo_que_dicen_las_frases(resultado, _revisiones(incidente))
+    return incidente if resultado == incidente else resultado
+
+
 def decidir_datos(incidente: Documento) -> Documento:
     """El incidente con el objetivo, el lugar, el inicio, el cierre y los daños que deciden sus
     fuentes y sus revisiones a mano (el titular, al final de `aplicar`). Sin cambios si ya los
@@ -468,6 +518,7 @@ def decidir_datos(incidente: Documento) -> Documento:
         homonimo = ubicacion.lugar_del_homonimo(resultado, noticias.nomenclator())
         if homonimo is not None:
             resultado["lugar"] = {"localidad": homonimo.get("suceso"), **homonimo}
+    _con_lo_que_dicen_las_frases(resultado, revisiones)
     objetivo = decidir_objetivo(resultado)
     if objetivo:
         resultado["objetivo"] = objetivo

@@ -367,7 +367,14 @@ export interface ColeccionIncidentes {
  * mismas propiedades que una feature, salvo el lugar: sin radio ni punto.
  */
 export interface PropiedadesSinUbicacion extends Omit<PropiedadesIncidente, "lugar"> {
-  lugar: { pais: string; nivel: NivelUbicacion; region?: string; localidad?: string } & LugarAmpliado;
+  lugar: {
+    pais: string;
+    nivel: NivelUbicacion;
+    region?: string;
+    localidad?: string;
+    /** El centro de la región (Natural Earth, proceso/regiones_aproximadas.py), si se conoce. */
+    centro_region?: { lon: number; lat: number };
+  } & LugarAmpliado;
 }
 
 export interface PublicacionSinUbicacion {
