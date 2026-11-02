@@ -6,8 +6,8 @@
 // desde la caché HTTP del navegador sin volver a pedirlo. Así la primera visita ya deja la app lista
 // para abrirse sin conexión, sin peticiones de más. Después, lo que se va descargando (el código que
 // se carga aparte, como el del mapa o el de la ficha, y los datos de cada ficha abierta) se manda en
-// tandas, con un PerformanceObserver: el service worker no guarda al vuelo lo que no tiene copia
-// (public/sw.js), y la lista de performance se llena a las 250 entradas.
+// tandas, con un PerformanceObserver: lo que se cargó antes de que el service worker controlara la
+// página no pasó por él, y la lista de performance se llena a las 250 entradas.
 
 /** El evento con el que la web enseña «Hay una versión nueva · Actualizar» (componentes/AvisoVersion.tsx). */
 export const EVENTO_VERSION_NUEVA = "eodi:version-nueva";
