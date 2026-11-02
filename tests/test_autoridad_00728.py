@@ -1,6 +1,6 @@
-"""EODI-2026-00728 (Viișoara, Moldavia, 31 de octubre de 2026): la unión conservó las dos autoridades,
-la medida a las 24 horas dudó de una y quitó las dos, y el control bajó el estado a «notificado»
-porque miraba solo la fuente del paso del historial."""
+"""EODI-2026-00728 (Viișoara, Moldavia, 31 de octubre de 2026): la unión conservó las dos
+autoridades, la medida a las 24 horas dudó de una y quitó las dos, y el control bajó el estado a
+«notificado» porque miraba solo la fuente del paso del historial."""
 
 import copy
 from typing import Any
@@ -49,8 +49,8 @@ def _ficha(id_: str, noticia: str, autoridad: str, medio: str, frase: str) -> di
 
 
 def _unida() -> dict[str, Any]:
-    destino = _ficha("EODI-2026-00728", "gdelt-moldpres", CENTRO, "moldpres.md",
-                     "la ora 18:12, drona a părăsit spațiul aerian al Republicii Moldova")  # fmt: skip
+    frase = "la ora 18:12, drona a părăsit spațiul aerian al Republicii Moldova"
+    destino = _ficha("EODI-2026-00728", "gdelt-moldpres", CENTRO, "moldpres.md", frase)
     absorbido = _ficha("EODI-2026-00736", "gdelt-timpul", MINISTERIO, "timpul.md", FRASE_MINISTERIO)
     return incidentes.absorber(destino, absorbido, ejemplos.AHORA)[0]
 
