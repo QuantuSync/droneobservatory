@@ -41,7 +41,7 @@ const MS_ENTRE_ACCIONES = 1000;
 const ACCESO: Record<string, string> =
   process.env.VERCEL_BYPASS === undefined
     ? {}
-    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS };
+    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS, "x-vercel-set-bypass-cookie": "true" };
 
 interface Metricas {
   LCP?: number;

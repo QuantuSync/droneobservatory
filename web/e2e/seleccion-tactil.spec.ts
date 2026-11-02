@@ -58,7 +58,7 @@ for (const tamano of TAMANOS) {
       hasTouch: true,
       isMobile: true,
       ...(baseURL === undefined ? {} : { baseURL }),
-      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
+      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } }),
     });
     if (baseURL?.includes("localhost") === true) {
       await contexto.route(/your-objectstorage\.com/, async (ruta) => {

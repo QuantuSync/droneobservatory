@@ -33,7 +33,7 @@ async function abrirPagina(browser: Browser, baseURL: string | undefined, width:
     hasTouch: true,
     isMobile: width < 768,
     ...(baseURL === undefined ? {} : { baseURL }),
-    ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
+    ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } }),
   });
   const pagina = await contexto.newPage();
   await pagina.goto(ruta, { waitUntil: "domcontentloaded" });
