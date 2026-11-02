@@ -22,8 +22,9 @@
 // («FetchEvent.respondWith received an error: TypeError: Load failed», «Importing a module script
 // failed»). Para saber sin esperar si hay copia, el manejador lleva un índice en memoria de lo
 // guardado; se lee de las cachés al arrancar (unos milisegundos) y, mientras tanto, solo pasan por el
-// service worker las páginas. Lo que se carga sin pasar por él se guarda con la lista que manda la
-// página (src/app/registro.ts).
+// service worker las páginas. Lo que se deja ir a la red se guarda después (GUARDAR_DESPUES_MS),
+// desde la caché HTTP del navegador, cuando la página ya lo tiene; y también con la lista que manda
+// la página (src/app/registro.ts).
 //
 // Nada se guarda por adelantado por ficha: la página manda al terminar de cargar la lista de lo que
 // ya ha descargado (mensaje «guardar») y se guarda desde la caché HTTP, sin volver a pedirlo.
@@ -53,6 +54,8 @@ const CACHE_DE_REGLA = {
 };
 const ESPERA_PAGINA_MS = 4000;
 const MAXIMO_A_GUARDAR = 300;
+/** Cuánto se espera para guardar lo que se ha dejado ir a la red (ya está en la caché HTTP). */
+const GUARDAR_DESPUES_MS = 2000;
 
 const NUNCA = ["/almacen/", "/api/", "/datos/versiones/"];
 const ESTATICOS = ["/mapa/", "/iconos/", "/banderas/", "/marca/", "/capturas/"];
@@ -126,7 +129,7 @@ async function recortar(cajas, nombre) {
 }
 
 function crearManejador(entorno) {
-  const { cajas, pedir, origen, avisar, esperaMs = ESPERA_PAGINA_MS } = entorno;
+  const { cajas, pedir, origen, avisar, esperaMs = ESPERA_PAGINA_MS, guardarMs = GUARDAR_DESPUES_MS } = entorno;
 
   // Índice en memoria de lo guardado: nombre de la caché → claves. Lo que se guarda mientras se lee
   // también se apunta (se suma, no se sustituye).
@@ -303,7 +306,18 @@ function crearManejador(entorno) {
     for (const claves of indice.values()) claves.clear();
   }
 
-  return { responder, guardarLista, limpiarViejas, borrarTodo, listo };
+  /**
+   * Lo que responder() deja ir a la red (sin copia) se guarda un poco después, desde la caché HTTP
+   * («force-cache»), sin otra petición a la red. null si no se guarda (páginas y lo que no se toca).
+   */
+  function guardarDespues(peticion) {
+    const regla = reglaDe(peticion, origen);
+    if (regla === null || regla === "pagina") return null;
+    const ruta = new URL(peticion.url).pathname;
+    return new Promise((hecho) => setTimeout(hecho, guardarMs)).then(() => guardarLista([ruta]));
+  }
+
+  return { responder, guardarLista, guardarDespues, limpiarViejas, borrarTodo, listo };
 }
 
 // En el navegador (en las pruebas, `self` es un objeto de mentira sin addEventListener).
@@ -333,7 +347,12 @@ if (typeof self !== "undefined" && typeof self.addEventListener === "function" &
       (promesa) => evento.waitUntil(promesa),
       evento.resultingClientId || evento.clientId,
     );
-    if (respuesta !== null) evento.respondWith(respuesta);
+    if (respuesta !== null) {
+      evento.respondWith(respuesta);
+      return;
+    }
+    const despues = manejador.guardarDespues(evento.request);
+    if (despues !== null) evento.waitUntil(despues.catch(() => undefined));
   });
 
   self.addEventListener("message", (evento) => {

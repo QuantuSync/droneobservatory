@@ -98,6 +98,12 @@ export function registrarApp(): void {
   if (registrado || typeof window === "undefined" || !("serviceWorker" in navigator)) return;
   if (!sitioConApp(window.location.hostname)) return;
   registrado = true;
+  try {
+    // La lista de performance se llena a las 250 entradas (el mapa pide muchas): más sitio.
+    performance.setResourceTimingBufferSize(1000);
+  } catch {
+    // Sin performance no hay lista: el service worker guarda igual lo que ve pasar.
+  }
   const contenedor = navigator.serviceWorker;
   let habiaControlador = contenedor.controller !== null;
   contenedor.addEventListener("controllerchange", () => {
