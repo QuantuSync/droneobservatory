@@ -103,6 +103,8 @@ export const es: Textos = {
     sinUltimoDato: "sin datos todavía",
     nuncaCorrecta: "Ninguna recogida correcta",
     siguienteEn: (minutos) => (minutos <= 0 ? "en curso" : `dentro de ${minutos} min`),
+    sinConexion: (hora) => `Sin conexión · datos de las ${hora} UTC`,
+    sinConexionDia: (fechaHora) => `Sin conexión · datos del ${fechaHora}`,
   },
   avisos: {
     cargando: "Cargando los datos…",
@@ -1925,6 +1927,16 @@ export const es: Textos = {
       todas: "Todas las versiones",
     },
     sobre: "Sobre el observatorio",
+  },
+  app: {
+    instalar: "Instalar la app",
+    pasosIphone: "Para instalarla en el iPhone o el iPad, en Safari:",
+    pasoCompartir: "Pulsa «Compartir»",
+    notaCompartir: "El cuadrado con la flecha hacia arriba, en la barra de Safari.",
+    pasoAnadir: "Elige «Añadir a pantalla de inicio»",
+    notaAnadir: "Baja en la lista si no se ve. La app se abre desde su icono, sin la barra del navegador.",
+    versionNueva: "Hay una versión nueva",
+    actualizar: "Actualizar",
   },
   compartir: {
     titulo: `${NOMBRE} · Incidentes con drones en Europa`,

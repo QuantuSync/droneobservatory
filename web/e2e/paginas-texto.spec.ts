@@ -6,6 +6,11 @@ import { expect, test } from "./base.ts";
 import { ORIGEN_ALMACEN } from "../src/almacenPublico.ts";
 import { NOMBRE } from "../src/sitio.ts";
 
+// Sin el service worker de la app (public/sw.js): esta prueba no prueba la app e intercepta peticiones
+// con page.route, que no ve las que responde el service worker (límite de Playwright). La app se
+// prueba en e2e/app-recorridos.spec.ts.
+test.use({ serviceWorkers: "block" });
+
 const MAPA_LISTO = "[data-mapa-listo=true]";
 const TEXTO = ".texto-pagina";
 

@@ -28,7 +28,11 @@ export default defineConfig({
     baseURL: BASE,
     screenshot: "off",
     trace: "off",
-    ...(CLAVE === undefined || CLAVE === "" ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE } }),
+    // Con la clave, Vercel deja además una cookie de acceso: las peticiones que hace el service worker
+    // de la app (public/sw.js), que no llevan las cabeceras de Playwright, también pasan.
+    ...(CLAVE === undefined || CLAVE === ""
+      ? {}
+      : { extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE, "x-vercel-set-bypass-cookie": "true" } }),
   },
   projects: [
     {

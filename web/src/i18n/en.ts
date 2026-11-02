@@ -103,6 +103,8 @@ export const en: Textos = {
     sinUltimoDato: "no data yet",
     nuncaCorrecta: "No successful collection",
     siguienteEn: (minutos) => (minutos <= 0 ? "running now" : `in ${minutos} min`),
+    sinConexion: (hora) => `Offline · data from ${hora} UTC`,
+    sinConexionDia: (fechaHora) => `Offline · data from ${fechaHora}`,
   },
   avisos: {
     cargando: "Loading data…",
@@ -1910,6 +1912,16 @@ export const en: Textos = {
       todas: "All versions",
     },
     sobre: "About the observatory",
+  },
+  app: {
+    instalar: "Install the app",
+    pasosIphone: "To install it on an iPhone or iPad, in Safari:",
+    pasoCompartir: "Tap “Share”",
+    notaCompartir: "The square with the arrow pointing up, in the Safari bar.",
+    pasoAnadir: "Choose “Add to Home Screen”",
+    notaAnadir: "Scroll down the list if you cannot see it. The app opens from its icon, without the browser bar.",
+    versionNueva: "There is a new version",
+    actualizar: "Update",
   },
   compartir: {
     titulo: `${NOMBRE} · Drone incidents in Europe`,

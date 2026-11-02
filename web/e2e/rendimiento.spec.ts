@@ -9,6 +9,11 @@ import { fileURLToPath } from "node:url";
 
 import { expect, test } from "./base.ts";
 
+// Sin el service worker de la app (public/sw.js): esta prueba no prueba la app e intercepta peticiones
+// con page.route, que no ve las que responde el service worker (límite de Playwright). La app se
+// prueba en e2e/app-recorridos.spec.ts.
+test.use({ serviceWorkers: "block" });
+
 // El paquete no exporta su versión para el navegador; se toma del directorio del paquete.
 const WEB_VITALS = join(
   dirname(fileURLToPath(import.meta.resolve("web-vitals"))),

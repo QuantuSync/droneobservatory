@@ -1,6 +1,6 @@
 // Cómo vuelve a pedir datos una pestaña abierta: cada cierto tiempo solo mientras está a la vista,
 // nada con la pestaña oculta y una petición al volver a ella (si la última es de hace más de un
-// minuto). Los datos cambian una vez por hora (la recogida publica en el minuto 17): pedirlos con
+// minuto), y al volver la conexión. Los datos cambian una vez por hora (la recogida publica en el minuto 17): pedirlos con
 // la pestaña de fondo solo gasta peticiones. Las peticiones van con «no-cache»: el navegador
 // pregunta con If-None-Match y, si nada ha cambiado, la respuesta es un 304 sin cuerpo.
 
@@ -46,10 +46,14 @@ export function refrescarAlaVista(
   // El intervalo deja un margen de un segundo: un temporizador que llega un poco antes no se salta.
   const temporizador = reloj.cada(() => siSeVe(ms - 1000), ms);
   const alCambiar = () => siSeVe(MS_MINIMO_AL_VOLVER);
+  // Al volver la conexión (la app abierta sin red), se pide ya.
+  const alVolverLaRed = () => siSeVe(0);
   documento.addEventListener("visibilitychange", alCambiar);
+  globalThis.addEventListener?.("online", alVolverLaRed);
   siSeVe(0);
   return () => {
     reloj.parar(temporizador);
     documento.removeEventListener("visibilitychange", alCambiar);
+    globalThis.removeEventListener?.("online", alVolverLaRed);
   };
 }

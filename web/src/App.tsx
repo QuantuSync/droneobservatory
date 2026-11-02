@@ -4,6 +4,9 @@ import type { RefObject } from "react";
 import { LineaNovedades, RecorridoNovedades } from "./componentes/Novedades.tsx";
 import { Ayuda, NotaMapa } from "./componentes/Ayuda.tsx";
 import { BarraEstado } from "./componentes/BarraEstado.tsx";
+import { AvisoVersion } from "./componentes/AvisoVersion.tsx";
+import { InstalarApp } from "./componentes/InstalarApp.tsx";
+import { useEnLinea } from "./app/conexion.ts";
 import { Avisos, BotonAvisos } from "./componentes/Avisos.tsx";
 import { BotonAhora, BotonFiltros, BotonPrevision, Desplegable } from "./componentes/BotonesMapa.tsx";
 import { Prevision } from "./componentes/Prevision.tsx";
@@ -457,6 +460,21 @@ export function App() {
     });
     return () => control.abort();
   }, [intentoDatos]);
+
+  // Sin conexión, la barra de estado lo dice; al volver, se piden otra vez los datos generales (el
+  // estado, el directo y los focos se piden solos: tiempo/refresco.ts).
+  const enLinea = useEnLinea();
+  const sinConexionAntes = useRef(false);
+  useEffect(() => {
+    if (!enLinea) {
+      sinConexionAntes.current = true;
+      return;
+    }
+    if (sinConexionAntes.current) {
+      sinConexionAntes.current = false;
+      setIntentoDatos((n) => n + 1);
+    }
+  }, [enLinea]);
 
   // La previsión no entra en la primera carga: se pide al abrir «Previsión» o la ficha de un país.
   // Se vuelve a pedir con «Reintentar» o al abrirla otra vez si es de hace más de un rato; si la
@@ -1809,6 +1827,7 @@ export function App() {
       ahora={ahora}
       corta={corta}
       alinear={corta ? "derecha" : "izquierda"}
+      sinConexion={!enLinea}
     />
   );
   const filtrosDeLaPantalla = (
@@ -2246,6 +2265,7 @@ export function App() {
                   >
                     {t.firma.metodologia}
                   </button>
+                  <InstalarApp t={t} />
                   <SelectorDeIdioma t={t} idioma={idioma} rutaOtroIdioma={rutaOtroIdioma} />
                 </>
               }
@@ -2554,6 +2574,7 @@ export function App() {
             >
               {t.firma.metodologia}
             </button>
+            <InstalarApp t={t} grande />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.idioma}>
             <SelectorDeIdioma t={t} idioma={idioma} rutaOtroIdioma={rutaOtroIdioma} grande />
@@ -2561,6 +2582,7 @@ export function App() {
         </MenuMovil>
       )}
 
+      <AvisoVersion t={t} />
       <Metodologia
         t={t}
         idioma={idioma}

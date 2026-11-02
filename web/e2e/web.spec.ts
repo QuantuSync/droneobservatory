@@ -10,6 +10,11 @@ import { RUTA_SECURITY_TXT } from "../src/seguridad/securityTxt.ts";
 import { CONTACTO_SEGURIDAD, DESCARGAS, NOMBRE } from "../src/sitio.ts";
 import { directo, indiceGnss } from "../tests/ejemplos-europa.ts";
 
+// Sin el service worker de la app (public/sw.js): esta prueba no prueba la app e intercepta peticiones
+// con page.route, que no ve las que responde el service worker (límite de Playwright). La app se
+// prueba en e2e/app-recorridos.spec.ts.
+test.use({ serviceWorkers: "block" });
+
 /** Las capturas quedan fuera de git, en data/capturas. */
 const CAPTURAS = join(import.meta.dirname, "..", "..", "data", "capturas");
 const MAPA_LISTO = "[data-mapa-listo=true]";

@@ -9,6 +9,11 @@ import type { Locator, Page } from "@playwright/test";
 
 import { aviso, directo, ficheroGnss, indiceGnss } from "../tests/ejemplos-europa.ts";
 
+// Sin el service worker de la app (public/sw.js): esta prueba no prueba la app e intercepta peticiones
+// con page.route, que no ve las que responde el service worker (límite de Playwright). La app se
+// prueba en e2e/app-recorridos.spec.ts.
+test.use({ serviceWorkers: "block" });
+
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "data", "capturas");
 const MAPA_LISTO = "[data-mapa-listo=true]";
 const MS_DE_ASENTAMIENTO = 2500;

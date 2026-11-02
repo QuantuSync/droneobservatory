@@ -72,6 +72,12 @@ function direccion(pagina: Pagina, idioma: Idioma): string {
 
 const LOCALES: Record<Idioma, string> = { es: "es_ES", en: "en_GB" };
 
+/** El manifiesto de la app instalable de cada idioma: su nombre, su descripción y su portada. */
+export const MANIFIESTOS: Record<Idioma, string> = {
+  es: "/manifest.webmanifest",
+  en: "/manifest-en.webmanifest",
+};
+
 export function etiquetasDeCabecera(pagina: Pagina): string {
   const t = textos(pagina.idioma);
   const titulo = escaparHtml(pagina.titulo);
@@ -93,6 +99,8 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
   );
   return [
     `<title>${titulo}</title>`,
+    // La app instalable, con el nombre y la portada del idioma de la página (public/manifest*.webmanifest).
+    `<link rel="manifest" href="${MANIFIESTOS[pagina.idioma]}">`,
     `<meta name="description" content="${descripcion}">`,
     `<link rel="canonical" href="${url}">`,
     ...alternativas,

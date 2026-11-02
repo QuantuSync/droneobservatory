@@ -11,6 +11,10 @@
 // - Excluir un navegador: abrir https://droneobservatory.eu/#toggle-goatcounter (el mecanismo de
 //   GoatCounter: guarda «skipgc» = «t» en el almacenamiento local y deja de contar; otra vez, vuelve).
 // - Si el contador no responde, la web no se entera: el envío no se espera y los errores se callan.
+// - Sin conexión no se cuenta nada (la app abierta sin red no guarda visitas para después).
+// - La app instalada (abierta desde su icono: display-mode standalone, o navigator.standalone en el
+//   iPhone) se distingue con la campaña «utm_source=app» en la primera página de cada apertura: en
+//   GoatCounter sale como procedencia «app». No es un dato nuevo de la persona ni una cookie.
 (() => {
   const CONTADOR = "https://stats.droneobservatory.eu/count";
   const PRODUCCION = ["droneobservatory.eu", "www.droneobservatory.eu"];
@@ -55,8 +59,17 @@
     return 0;
   };
 
+  const comoApp = () => {
+    try {
+      return navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+    } catch {
+      return false;
+    }
+  };
+
   const sePuede = () => {
     if (leer(EXCLUIR) === "t") return false;
+    if (navigator.onLine === false) return false;
     if (document.visibilityState === "prerender") return false;
     if (window.top !== window.self) return false;
     return PRODUCCION.includes(window.location.hostname) || leer(PRUEBA) === "1";
@@ -69,6 +82,7 @@
     for (const [clave, valor] of parametros) {
       if (clave.startsWith("utm_") || clave === "ref") quedan.append(clave, valor);
     }
+    if (comoApp() && !quedan.has("utm_source")) quedan.append("utm_source", "app");
     const texto = quedan.toString();
     return texto ? `?${texto}` : "";
   };
