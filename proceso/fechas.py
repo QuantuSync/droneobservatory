@@ -357,6 +357,13 @@ def hora_en_utc(valor: datetime, precision: str | None, frase: str,
 
 # Lo más que pueden separarse las horas del inicio que dicen las frases de una ficha.
 MAX_DESACUERDO = timedelta(minutes=10)
+# La hora de un aterrizaje no es la del inicio del suceso (EODI-2025-00158: «Aeronava a aterizat în
+# siguranță la ora 15:45», el avión que vio el dron al aproximarse a Otopeni).
+_ATERRIZAJE = re.compile(
+    r"\b(aterizat|aterizeaz|aterizare|landed|landing|gelandet|landete|atterri|aterriz|atterr"
+    r"|wylądowa|ląduj|přistál|přistan|landade|landet)\w*",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -399,7 +406,7 @@ def hora_de_las_frases(incidente: dict[str, Any]) -> HoraDicha | None:
         if afirmacion.get("campo") != "inicio" or "T" not in valor or not frase:
             continue
         escrita = hora_local(frase, con_dron=False)
-        if escrita is None:
+        if escrita is None or _ATERRIZAJE.search(frase):
             continue
         try:
             leido = _momento(valor if valor.endswith("Z") else valor + "Z")
