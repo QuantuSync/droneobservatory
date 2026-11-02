@@ -415,3 +415,34 @@ def test_la_linea_del_resumen_diario() -> None:
         "  Fichas nuevas de ayer: 3; con error a las 24 h: 1 (B); medidas 2 de 3"
     ]
     assert visitas.lineas_entrada(None) == ["  Fichas nuevas de ayer: 0; con error a las 24 h: 0"]
+
+
+def test_las_fichas_sin_punto_ni_hora_del_mismo_dia_entran_en_el_conjunto() -> None:
+    """RO-Alert en Iași el 31 de octubre de 2026: EODI-2026-00719 solo tenía la región y el día
+    (iba en el fichero sin ubicación) y EODI-2026-00727 (Bacău, hora aproximada) se comparó con ella
+    y con 00725: el filtro la retuvo por dudosa y la medida de 00719 la unió. Las otras cuatro
+    (00739-00742) las unió el control en la misma recogida antes de publicarse. El conjunto no mira
+    el punto, la hora ni la distancia: todo el país, de 30 días antes a 3 después."""
+    iasi = _ficha("EODI-2026-00719", "RO", "2026-10-31T00:00Z",
+                  frase="RO-Alert în județul Iași")  # fmt: skip
+    iasi["lugar"] = {"pais": "RO", "nivel": "region", "region": "Iași", "suceso": "Iași"}
+    bacau = _ficha(
+        "EODI-2026-00727",
+        "RO",
+        "2026-10-31T17:45Z",
+        "aproximada",
+        frase="Locuitorii județului Bacău au primit un mesaj de avertizare RO-Alert",
+    )
+    bacau["lugar"] = {"pais": "RO", "nivel": "region", "region": "Bacău", "suceso": "Bacău"}
+    otra_region = _ficha("EODI-2026-00741", "RO", "2026-10-31T00:00Z", frase="nord-estul țării")
+    otra_region["lugar"] = {"pais": "RO", "nivel": "region", "region": "nord-estul țării",
+                            "suceso": "nord-estul țării"}  # fmt: skip
+    lejos = _ficha("EODI-2026-00100", "RO", "2026-08-01T00:00Z", frase="Tulcea")
+    assert "punto" not in iasi["lugar"]
+    ids = {o["id"] for o in entrada.conjunto(bacau, [iasi, otra_region, lejos, bacau])}
+    assert ids == {"EODI-2026-00719", "EODI-2026-00741"}
+    # Y al revés: la de Iași ve a las otras dos del mismo día.
+    assert {o["id"] for o in entrada.conjunto(iasi, [iasi, bacau, otra_region])} == {
+        "EODI-2026-00727",
+        "EODI-2026-00741",
+    }

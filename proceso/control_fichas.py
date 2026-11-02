@@ -773,6 +773,14 @@ def sin_oficiales(
     """La ficha con las declaraciones de esas autoridades como no oficiales y el estado que daban
     de vuelta a notificado. Devuelve la ficha y los cambios (vacío si no cambia)."""
     ids = {i for nombre in nombres for i in declaraciones_de(incidente).get(nombre, [])}
+    return declaraciones_no_oficiales(incidente, ids, instante_)
+
+
+def declaraciones_no_oficiales(
+    incidente: Documento, ids: Iterable[str], instante_: Documento
+) -> tuple[Documento, list[str]]:
+    """Como `sin_oficiales`, con los identificadores de las declaraciones."""
+    ids = set(ids)
     if not ids:
         return incidente, []
     nuevo = copy.deepcopy(incidente)

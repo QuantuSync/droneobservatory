@@ -683,7 +683,23 @@ def oscilan(cambios: Iterable[Documento]) -> dict[str, list[str]]:
     dejados: dict[tuple[str, str], set[str]] = {}
     vueltas: Counter[tuple[str, str]] = Counter()
     apuntados: set[tuple[str, str, str, str, str]] = set()
+    cambios = list(cambios)
+    # Los guardados de la ficha: en ese instante, el cambio de verdad es el de la ficha (de lo
+    # guardado antes a lo guardado después), no los pasos intermedios que anotan sus reglas.
+    # EODI-2025-00043, 1 de noviembre de 2026 a las 11:30:27: el titular volvió una vez a lo
+    # revisado, y los motivos de decidir y de la atribución, con titulares que nunca se
+    # guardaron, contaban otras dos vueltas (auditoría K).
+    guardados = {
+        (str(c["entidad_id"]), str(c["fecha"]))
+        for c in cambios
+        if c.get("tabla", "incidentes") == "incidentes" and c.get("fecha")
+    }  # fmt: skip
     for cambio in cambios:
+        if (
+            cambio.get("tabla") == "incidentes_motivos"
+            and (str(cambio["entidad_id"]), str(cambio.get("fecha"))) in guardados
+        ):
+            continue
         anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
         claves = (
             set(nuevo)

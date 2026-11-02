@@ -66,3 +66,10 @@ systemd-run --user --scope -p MemoryMax=4G \
 
 `python -m recogida.auditoria_fichas` necesita leer la configuración de los buckets que le toque y
 una base copiada: se le pasa con `--base`, y no escribe.
+
+La caché de nombres de lugar de Wikidata (`EODI_NOMBRES_CACHE`, `proceso/nombres_lugar.ruta_cache`)
+no es secreta, pero sin ella la auditoría no traduce los nombres que no están en las tablas y da
+fallos falsos: el 1 y el 2 de noviembre de 2026 la auditoría aislada daba R 1 en EODI-2025-00357
+(«Limburg» frente a «Limburgo») y el ensayo, que leía la caché de verdad, R 0. Desde entonces
+`aislado.sh` copia la caché en la casa aislada y el ensayo trabaja con su propia copia, así que los
+dos miden lo mismo y ninguno escribe en la de verdad.

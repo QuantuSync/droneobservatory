@@ -49,10 +49,12 @@ vuelve a extraerse con el experto (cursor `esperan_experto`, con `revision`).
 """
 
 import contextlib
+import copy
 import hashlib
 import json
 import logging
 import time
+import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
@@ -73,7 +75,7 @@ from proceso import (
     presencia,
     protegido,
 )
-from proceso.control_fichas import sin_oficiales
+from proceso.control_fichas import declaraciones_de, declaraciones_no_oficiales
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import activo, aplicar_reglas, construir, huella
 from proceso.noticias import (
@@ -1180,16 +1182,61 @@ def _resolver_fallos(almacen: Almacen, id_: str, ahora: datetime) -> None:
                                                         "fecha": fecha}}, fecha)  # fmt: skip
 
 
+MARCA_DECLARACION = "-declaracion-"
+
+
+def _articulo(fuente_id: str) -> str:
+    """El artículo de una fuente: una declaración citada en él («…-declaracion-2») es del mismo."""
+    return fuente_id.partition(MARCA_DECLARACION)[0]
+
+
+def _frase_normal(texto: Any) -> str:
+    return " ".join(unicodedata.normalize("NFC", str(texto or "")).casefold().split())
+
+
+def declaraciones_que_siguen(incidente: Documento, anterior: Documento) -> list[Documento]:
+    """Las declaraciones oficiales citadas que tenía la ficha anterior y la extracción nueva no
+    trae, aunque sigue teniendo el artículo que las cita. Una extracción nueva de los mismos
+    artículos no siempre vuelve a leer todas las declaraciones: la presencia de EODI-2026-00356
+    (los «τέσσερα μη επανδρωμένα αεροσκάφη» del ΓΕΕΘΑ en inewsgr.com) iba y volvía desde octubre
+    según la extracción encontrara o no esa declaración (auditoría X, 2 de noviembre de 2026).
+    Las de una revisión a mano las vuelve a poner proceso/revisados; una no oficial (la quitó el
+    filtro de entrada o la medida a las 24 horas) no se conserva como oficial."""
+    ids = {str(f["id"]) for f in incidente["fuentes"]}
+    articulos = {_articulo(i) for i in ids if MARCA_DECLARACION not in i}
+    frases = {
+        (_articulo(str(f["id"])), _frase_normal(f.get("frase_origen")))
+        for f in incidente["fuentes"]
+        if MARCA_DECLARACION in str(f["id"])
+    }
+    return [
+        f for f in anterior["fuentes"]
+        if MARCA_DECLARACION in str(f["id"])
+        and not str(f["id"]).startswith(decididos.REVISADA)
+        and f.get("es_autoridad")
+        and f.get("publica", True)
+        and f["fiabilidad"] == declaraciones.FIABILIDAD
+        and str(f["id"]) not in ids
+        and _articulo(str(f["id"])) in articulos
+        and (_articulo(str(f["id"])), _frase_normal(f.get("frase_origen"))) not in frases
+    ]  # fmt: skip
+
+
 def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:
-    """El incidente rehecho con las fuentes oficiales que confirmaban el anterior."""
+    """El incidente rehecho con las fuentes oficiales que confirmaban el anterior y con las
+    declaraciones citadas en los artículos que sigue teniendo (`declaraciones_que_siguen`)."""
     ids = {f["id"] for f in incidente["fuentes"]}
     oficiales = [
         f for f in anterior["fuentes"]
         if f["fiabilidad"] == FIABILIDAD_OFICIAL and f.get("es_autoridad") and f["id"] not in ids
     ]  # fmt: skip
-    if not oficiales:
+    citadas = [copy.deepcopy(f) for f in declaraciones_que_siguen(incidente, anterior)]
+    if not oficiales and not citadas:
         return incidente
-    resultado = {**incidente, "fuentes": [*incidente["fuentes"], *oficiales]}
+    if citadas:
+        registro.info("%s: se conservan las declaraciones que la extracción nueva no trae: %s",
+                      incidente["id"], ", ".join(f["id"] for f in citadas))  # fmt: skip
+    resultado = {**incidente, "fuentes": [*incidente["fuentes"], *oficiales, *citadas]}
     for fuente in oficiales:
         if resultado["estado"]["actual"] == Estado.CONFIRMADO:
             break
@@ -1206,22 +1253,84 @@ def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:
 PREFIJO_ENTRADA = "entrada:"
 
 
-def sin_oficiales_del_filtro(almacen: Almacen, incidente: Documento) -> Documento:
+# La clave de la medida a las 24 horas de una ficha (recogida/entrada.clave_medida) y cómo apunta
+# lo que dejó de ser oficial (recogida/entrada.corregir_medida, control_fichas.sin_oficiales).
+PREFIJO_MEDIDA = "medida:"
+NO_OFICIAL = "declaración no oficial: "
+
+
+def _fuente_nueva(fuente: Documento, medida: Documento) -> bool:
+    """Una fuente que la ficha no tenía cuando se midió: su artículo no estaba en la medida (desde
+    el 2 de noviembre de 2026 la medida apunta sus artículos) o, en una medida anterior, se
+    publicó después."""
+    articulos = medida.get("articulos")
+    if isinstance(articulos, list):
+        return _articulo(str(fuente["id"])) not in set(articulos)
+    publicada = str((fuente.get("fecha") or {}).get("valor") or "")[:16]
+    return bool(publicada) and publicada > str(medida.get("fecha") or "")[:16]
+
+
+def fuera_por_la_medida(
+    medida: Documento | None, incidente: Documento, anterior: Documento | None = None
+) -> set[str]:
+    """Las declaraciones del incidente que la medida a las 24 horas dejó como no oficiales: las
+    mismas que quitó y las de la autoridad que nombra o de la que quitó, salvo las de una fuente
+    nueva, que traen su propia frase. Lo revisado a mano no se toca."""
+    if not medida:
+        return set()
+    quitadas = {
+        str(h).removeprefix(NO_OFICIAL) for h in medida.get("corregido") or []
+        if str(h).startswith(NO_OFICIAL)
+    }  # fmt: skip
+    nombradas = {
+        _frase_normal(e.get("autoridad")) for e in medida.get("errores") or []
+        if isinstance(e, dict) and e.get("dato") == "autoridad"
+    }  # fmt: skip
+    for nombre, ids in declaraciones_de(anterior or {}).items():
+        if quitadas & set(ids):
+            nombradas.add(_frase_normal(nombre))
+    for fuente in (anterior or {}).get("fuentes", []):
+        # Una declaración que ya no se publica no sale en declaraciones_de: su nombre, del medio.
+        if str(fuente.get("id")) in quitadas:
+            nombradas.add(_frase_normal(str(fuente.get("medio") or "").split(" (declaración")[0]))
+    nombradas.discard("")
+    if not quitadas and not nombradas:
+        return set()
+    fuentes = {str(f["id"]): f for f in incidente.get("fuentes", [])}
+    fuera = set()
+    for nombre, ids in declaraciones_de(incidente).items():
+        for id_ in ids:
+            if id_.startswith(decididos.REVISADA):
+                continue
+            if id_ in quitadas or (
+                _frase_normal(nombre) in nombradas and not _fuente_nueva(fuentes[id_], medida)
+            ):
+                fuera.add(id_)
+    return fuera
+
+
+def sin_oficiales_del_filtro(
+    almacen: Almacen, incidente: Documento, anterior: Documento | None = None
+) -> Documento:
     """El incidente rehecho sin publicar como oficiales las declaraciones que el filtro de entrada
     dejó como no oficiales (su decisión guardada). Sin esto, cada nueva extracción las volvía a
     hacer oficiales y el filtro las quitaba en la misma recogida: la presencia de
     EODI-2026-00694 (el ministro de Defensa búlgaro citado sin su país) cambió cuatro veces el
-    28 de octubre de 2026 (auditoría K)."""
-    decision = almacen.controles(PREFIJO_ENTRADA + incidente["id"]).get(
-        PREFIJO_ENTRADA + incidente["id"]
-    )
+    28 de octubre de 2026 (auditoría K). Lo mismo con lo que quitó la medida a las 24 horas, que
+    corre una sola vez: sin esto, una extracción nueva de los mismos artículos lo devolvía
+    (`fuera_por_la_medida`)."""
+    entrada_ = PREFIJO_ENTRADA + incidente["id"]
+    decision = almacen.controles(entrada_).get(entrada_)
     fuera = (decision or {}).get("autoridades_fuera") or {}
-    if not fuera:
+    ids = {i for nombre in fuera for i in declaraciones_de(incidente).get(nombre, [])}
+    medida_ = PREFIJO_MEDIDA + incidente["id"]
+    ids |= fuera_por_la_medida(almacen.controles(medida_).get(medida_), incidente, anterior)
+    if not ids:
         return incidente
     instante_ = dict(
         incidente["control"].get("ultima_actualizacion") or incidente["control"]["alta"]
     )
-    return sin_oficiales(incidente, fuera, instante_)[0]
+    return declaraciones_no_oficiales(incidente, ids, instante_)[0]
 
 
 # La clave de la contradicción de una extracción nueva con lo decidido de la ficha: la verifica
@@ -1360,7 +1469,7 @@ def _guardar_version(
     )
     if anterior is not None:
         incidente = conservar_oficiales(incidente, anterior)
-        incidente = sin_oficiales_del_filtro(almacen, incidente)
+        incidente = sin_oficiales_del_filtro(almacen, incidente, anterior)
         if extraida:
             incidente = conservar_decididos(almacen, incidente, anterior, ahora)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
