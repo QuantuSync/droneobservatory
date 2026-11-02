@@ -12,6 +12,11 @@ import { join } from "node:path";
 import { expect, test } from "./base.ts";
 import type { BrowserContext, Page } from "@playwright/test";
 
+// Sin el service worker de la app (public/sw.js): esta prueba no prueba la app e intercepta peticiones
+// con page.route, que no ve las que responde el service worker (límite de Playwright). La app se
+// prueba en e2e/app-recorridos.spec.ts.
+test.use({ serviceWorkers: "block" });
+
 const CAPTURAS =
   process.env.CAPTURAS ??
   join(import.meta.dirname, "..", "..", "docs", "capturas");

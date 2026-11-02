@@ -7,7 +7,7 @@ import type {
   EstadoSistema,
   ResultadoRecogida,
 } from "../datos/tipos.ts";
-import { fechaHora } from "../i18n/index.ts";
+import { fechaHora, hora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { frescura, referenciaDeFrescura } from "../tiempo/frescura.ts";
 import type { EstadoFrescura } from "../tiempo/frescura.ts";
@@ -27,6 +27,8 @@ interface Props {
   corta?: boolean;
   /** Hacia dónde se abre el detalle, bajo el botón. */
   alinear?: "izquierda" | "derecha";
+  /** Sin conexión (app/conexion.ts): «Sin conexión · datos de las 12:17 UTC», nunca el punto verde. */
+  sinConexion?: boolean;
 }
 
 const COLOR_PUNTO: Record<EstadoFrescura, string> = {
@@ -66,6 +68,14 @@ function Punto({ color }: { color: string }) {
 /** Minutos que faltan para la siguiente recogida (redondeando hacia arriba). */
 export function minutosHasta(siguiente: string, ahora: Date): number {
   return Math.ceil((new Date(siguiente).getTime() - ahora.getTime()) / MS_POR_MINUTO);
+}
+
+/** «Sin conexión · datos de las 12:17 UTC»; con datos de otro día, también la fecha. */
+export function textoSinConexion(t: Textos, actualizado: string | null, ahora: Date | null): string {
+  if (actualizado === null) return t.estadoDatos.sinConexion("—");
+  const datos = new Date(actualizado);
+  const mismoDia = ahora !== null && datos.toISOString().slice(0, 10) === ahora.toISOString().slice(0, 10);
+  return mismoDia ? t.estadoDatos.sinConexion(hora(datos)) : t.estadoDatos.sinConexionDia(fechaHora(actualizado));
 }
 
 /** Una fila del detalle: el rótulo en texto y la hora, sola, en la cifra monoespaciada. */
@@ -185,6 +195,7 @@ export function BarraEstado({
   ahora,
   corta = false,
   alinear = "izquierda",
+  sinConexion = false,
 }: Props) {
   const [abierta, setAbierta] = useState(false);
   const idDetalle = useId();
@@ -208,6 +219,19 @@ export function BarraEstado({
     };
   }, [abierta]);
   const referencia = referenciaDeFrescura(sistema, actualizado);
+  if (sinConexion) {
+    return (
+      <p
+        className={`flex items-center gap-2 whitespace-nowrap px-1.5 text-xs text-secundario ${corta ? "min-h-11" : "min-h-7"}`}
+        role="status"
+        data-sin-conexion=""
+        data-frescura="sin_conexion"
+      >
+        <Punto color="bg-linea" />
+        {textoSinConexion(t, actualizado, ahora)}
+      </p>
+    );
+  }
   if (referencia === null) {
     return (
       <p className="flex items-center gap-2 text-xs text-secundario">

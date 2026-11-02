@@ -8,7 +8,12 @@
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.webmanifest">
+    <!-- Abierta desde el icono de la pantalla de inicio: sin la barra del navegador. El manifiesto de
+         cada idioma va en la cabecera de cada página (src/cabecera.ts). -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EODI">
     <script src="/arranque.js"></script>
     <script src="/visitas.js" defer></script>
     <!--cabecera-->

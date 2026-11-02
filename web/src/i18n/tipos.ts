@@ -103,6 +103,9 @@ export interface Textos {
     sinUltimoDato: string;
     nuncaCorrecta: string;
     siguienteEn: (minutos: number) => string;
+    /** Sin conexión: «Sin conexión · datos de las 12:17 UTC» (o del día, si no es hoy). */
+    sinConexion: (hora: string) => string;
+    sinConexionDia: (fechaHora: string) => string;
   };
   avisos: {
     cargando: string;
@@ -663,6 +666,18 @@ export interface Textos {
     };
     /** Enlaces a las páginas de servicio público (aviso legal, privacidad…). */
     sobre: string;
+  };
+  /** La app instalable (src/app/). */
+  app: {
+    instalar: string;
+    /** Los dos pasos de Safari en el iPhone y el iPad. */
+    pasosIphone: string;
+    pasoCompartir: string;
+    notaCompartir: string;
+    pasoAnadir: string;
+    notaAnadir: string;
+    versionNueva: string;
+    actualizar: string;
   };
   compartir: {
     titulo: string;

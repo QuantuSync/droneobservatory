@@ -46,13 +46,13 @@ export interface TextoBorrarVisita {
 export const BORRAR_VISITA: Record<Idioma, TextoBorrarVisita> = {
   es: {
     boton: "Borrar mi última visita",
-    hecho: "Hecho: se han borrado de este navegador la fecha de tu última visita y el canal de avisos elegido.",
+    hecho: "Hecho: se han borrado de este navegador la fecha de tu última visita, el canal de avisos elegido y las copias guardadas de la web.",
     fallo: "Este navegador no deja borrar el dato desde la página: bórralo en la configuración del navegador (datos del sitio).",
     sinCodigo: "Para borrarla sin el botón, borra los datos de droneobservatory.eu en la configuración de tu navegador.",
   },
   en: {
     boton: "Delete my last visit",
-    hecho: "Done: the date of your last visit and the chosen alerts channel have been deleted from this browser.",
+    hecho: "Done: the date of your last visit, the chosen alerts channel and the saved copies of the site have been deleted from this browser.",
     fallo: "This browser does not let the page delete it: delete it in your browser settings (site data).",
     sinCodigo: "To delete it without the button, clear the data for droneobservatory.eu in your browser settings.",
   },
@@ -152,6 +152,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
             parrafo: [
               "Un dato, en el almacenamiento local de tu navegador, con la clave «eodi.ultima-visita»: la fecha y la hora de tu última visita al mapa.",
               " Si eliges un canal en «Avisos», también se guarda allí, con la clave «eodi.avisos.canal», el último canal elegido, para que aparezca ya seleccionado al volver; el botón de abajo también lo borra.",
+              " Para abrirse rápido y sin conexión, la web (y la app, si la instalas) guarda en la caché del navegador una copia de sus páginas, de su código, de los datos generales del mapa y de las fichas que abras: son los mismos ficheros públicos que se descargan al visitarla, no dicen nada de ti y el botón de abajo también los borra.",
             ],
           },
           {
@@ -404,6 +405,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
             parrafo: [
               "One item, in your browser’s local storage, under the key “eodi.ultima-visita”: the date and time of your last visit to the map.",
               " If you choose a channel in “Alerts”, the last channel chosen is also stored there, under the key “eodi.avisos.canal”, so that it is already selected when you come back; the button below deletes it too.",
+              " To open quickly and offline, the site (and the app, if you install it) keeps in the browser cache a copy of its pages, its code, the general map data and the records you open: they are the same public files downloaded when you visit it, they say nothing about you and the button below deletes them too.",
             ],
           },
           {
