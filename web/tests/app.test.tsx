@@ -195,6 +195,7 @@ describe("sin conexión en la barra del teléfono", () => {
       <BarraEstado t={textos("es")} actualizado="2026-11-02T12:17:00Z" sistema={null} ahora={new Date("2026-11-02T12:40:00Z")} sinConexion corta />,
     );
     expect(html).toContain("<span>Sin conexión</span>");
-    expect(html).toContain("datos de las 12:17 UTC");
+    expect(html).toContain(">12:17 UTC</span>");
+    expect(html).toContain('<span class="sr-only">Sin conexión · datos de las 12:17 UTC</span>');
   });
 });

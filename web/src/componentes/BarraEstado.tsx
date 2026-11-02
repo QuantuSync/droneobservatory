@@ -73,9 +73,19 @@ export function minutosHasta(siguiente: string, ahora: Date): number {
 /** «Sin conexión · datos de las 12:17 UTC»; con datos de otro día, también la fecha. */
 export function textoSinConexion(t: Textos, actualizado: string | null, ahora: Date | null): string {
   if (actualizado === null) return t.estadoDatos.sinConexion("—");
-  const datos = new Date(actualizado);
-  const mismoDia = ahora !== null && datos.toISOString().slice(0, 10) === ahora.toISOString().slice(0, 10);
-  return mismoDia ? t.estadoDatos.sinConexion(hora(datos)) : t.estadoDatos.sinConexionDia(fechaHora(actualizado));
+  return mismoDia(actualizado, ahora)
+    ? t.estadoDatos.sinConexion(hora(new Date(actualizado)))
+    : t.estadoDatos.sinConexionDia(fechaHora(actualizado));
+}
+
+function mismoDia(actualizado: string, ahora: Date | null): boolean {
+  return ahora !== null && new Date(actualizado).toISOString().slice(0, 10) === ahora.toISOString().slice(0, 10);
+}
+
+/** Solo la hora de los datos («13:17 UTC», o con la fecha si no es de hoy): la línea corta del teléfono. */
+export function horaSinConexion(actualizado: string | null, ahora: Date | null): string {
+  if (actualizado === null) return "—";
+  return mismoDia(actualizado, ahora) ? `${hora(new Date(actualizado))} UTC` : fechaHora(actualizado);
 }
 
 /** Una fila del detalle: el rótulo en texto y la hora, sola, en la cifra monoespaciada. */
@@ -221,9 +231,9 @@ export function BarraEstado({
   const referencia = referenciaDeFrescura(sistema, actualizado);
   if (sinConexion) {
     const texto = textoSinConexion(t, actualizado, ahora);
-    // En la barra del teléfono, en dos líneas cortas («Sin conexión» / «datos de las 12:17 UTC»):
-    // en una sola se metería bajo «Avisos».
-    const [primera, ...resto] = texto.split(" · ");
+    // En la barra del teléfono, en dos líneas cortas («Sin conexión» / «13:17 UTC»): más largo se
+    // metería bajo «Avisos» a 360 px. El texto entero, para el lector de pantalla.
+    const primera = texto.split(" · ")[0];
     return (
       <p
         className={`flex items-center gap-2 px-1.5 text-xs text-secundario ${corta ? "min-h-11 leading-tight" : "min-h-7 whitespace-nowrap"}`}
@@ -233,11 +243,13 @@ export function BarraEstado({
       >
         <Punto color="bg-linea" />
         {corta ? (
-          <span className="flex flex-col">
-            <span>{primera}</span>
-            <span className="sr-only"> · </span>
-            <span className="whitespace-nowrap">{resto.join(" · ")}</span>
-          </span>
+          <>
+            <span className="sr-only">{texto}</span>
+            <span aria-hidden="true" className="flex flex-col whitespace-nowrap">
+              <span>{primera}</span>
+              <span className="mono">{horaSinConexion(actualizado, ahora)}</span>
+            </span>
+          </>
         ) : (
           texto
         )}
