@@ -179,6 +179,12 @@ def test_sin_hora_en_la_frase_de_otro_dia_o_de_otro_huso_no_se_pone() -> None:
     distintas["afirmaciones"].append({"campo": "inicio", "fuente_id": "otra",
                                       "valor": "2026-10-31T15:40"})  # fmt: skip
     assert fechas.hora_de_las_frases(distintas) is None
+    # La hora del aterrizaje no es la del suceso (EODI-2025-00158, jurnalul.ro).
+    aterrizaje = ficha_iasi()
+    aterrizaje["fuentes"][1]["frase_origen"] = (
+        "Aeronava a aterizat în siguranță la ora 17:04, iar incidentul a fost raportat imediat."
+    )
+    assert fechas.hora_de_las_frases(aterrizaje) is None
     oficial = ficha_iasi()
     oficial["tiempo"]["origen_inicio"]["tipo"] = "oficial"
     decidir._con_hora_de_la_frase(oficial)
