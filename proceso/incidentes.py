@@ -924,8 +924,9 @@ RANGO_ESTADO = {"notificado": 0, "confirmado": 1, "atribuido": 2}
 def estado_con_el_absorbido(destino: Documento, absorbido: Documento) -> Documento:
     """El estado del destino con los pasos a confirmado o atribuido del absorbido que el destino
     no tenía, si su fuente pasa al destino: al conservar el registro más antiguo
-    (recogida/control_fichas.py), la confirmación oficial del otro no se pierde. Un desmentido
-    no se toca."""
+    (recogida/control_fichas.py), la confirmación oficial del otro no se pierde, aunque sea anterior
+    al «notificado» del destino. Un desmentido no se toca, ni una rebaja con motivo posterior al
+    paso del absorbido."""
     estado: Documento = destino["estado"]
     actual = estado["actual"]
     if actual not in RANGO_ESTADO or absorbido["estado"]["actual"] not in RANGO_ESTADO:
@@ -933,6 +934,7 @@ def estado_con_el_absorbido(destino: Documento, absorbido: Documento) -> Documen
     fuentes = {f["id"] for f in destino["fuentes"]}
     nivel = RANGO_ESTADO[actual]
     ultimo = estado["historial"][-1]["fecha"]["valor"]
+    rebajado = "motivo" in estado["historial"][-1]
     nuevos = []
     for paso in absorbido["estado"]["historial"]:
         rango = RANGO_ESTADO.get(paso["estado"], -1)
@@ -940,11 +942,10 @@ def estado_con_el_absorbido(destino: Documento, absorbido: Documento) -> Documen
             rango > nivel
             and paso.get("fuente_id") in fuentes
             and "motivo" not in paso
-            and paso["fecha"]["valor"] >= ultimo
+            and (paso["fecha"]["valor"] >= ultimo or not rebajado)
         ):
             nuevos.append(copy.deepcopy(paso))
             nivel = rango
-            ultimo = paso["fecha"]["valor"]
     if not nuevos:
         return estado
     historial = [*estado["historial"], *nuevos]

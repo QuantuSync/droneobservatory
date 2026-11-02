@@ -690,8 +690,21 @@ def oficial(fuente: Documento) -> bool:
     return bool(fuente.get("es_autoridad")) or fuente.get("fiabilidad") in {"A", "B"}
 
 
+def sostiene_la_confirmacion(fuente: Documento) -> bool:
+    """Una declaración vigente de una autoridad que atribuye el suceso a un dron: sostiene el estado
+    «confirmado» aunque no sea la del paso del historial."""
+    return (
+        fuente.get("publica", True) is not False
+        and declaraciones.de_autoridad(fuente)
+        and declaraciones.atribuye_dron(str(fuente.get("frase_origen") or ""))
+    )
+
+
 def estado_sin_respaldo(incidente: Documento) -> str | None:
-    """El paso de estado más alto sin una fuente oficial que lo dé, o None si está bien."""
+    """El paso de estado más alto sin una fuente oficial que lo dé, o None si está bien. El
+    historial guarda solo la fuente del primer paso a confirmado: si esa deja de ser oficial, otra
+    autoridad de la ficha que afirma lo mismo lo sigue sosteniendo (EODI-2026-00728, el Ministerio
+    de Defensa de Moldavia, sin paso propio porque la ficha ya estaba confirmada al unirse)."""
     actual = Estado(incidente["estado"]["actual"])
     if actual not in {Estado.CONFIRMADO, Estado.ATRIBUIDO}:
         return None
@@ -701,6 +714,8 @@ def estado_sin_respaldo(incidente: Documento) -> str | None:
             fuente = fuentes.get(paso.get("fuente_id", ""))
             if fuente is not None and oficial(fuente):
                 return None
+    if actual == Estado.CONFIRMADO and any(sostiene_la_confirmacion(f) for f in fuentes.values()):
+        return None
     return actual.value
 
 
