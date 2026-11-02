@@ -13,10 +13,34 @@ interface Autoridad {
   en: string;
   /** Una institución: lleva su nombre original entre paréntesis. */
   original?: boolean;
+  /** El nombre sin país de una autoridad escrita con el suyo («Ministerul Apărării (MD)»). */
+  nombre?: string;
+}
+
+/**
+ * Los nombres que se escriben igual en más de un país («Ministerul Apărării», de Moldavia y, en
+ * la prensa rumana, de Rumanía): los datos publicados los traen con el país de la ficha o de la
+ * declaración, «Ministerul Apărării (MD)» (proceso/autoridades.con_pais), y cada uno tiene aquí
+ * su entrada. Desde el 2 de noviembre de 2026: antes, las fichas de Moldavia decían «el
+ * Ministerio de Defensa Nacional de Rumanía» (EODI-2026-00728).
+ */
+function conSuPais(
+  porPais: Readonly<Record<string, Readonly<Record<string, Autoridad>>>>,
+): Record<string, Autoridad> {
+  const salida: Record<string, Autoridad> = {};
+  for (const [nombre, paises] of Object.entries(porPais)) {
+    for (const [pais, entrada] of Object.entries(paises)) {
+      salida[`${nombre} (${pais})`] = { es: entrada.es, en: entrada.en, nombre, ...(entrada.original === true ? { original: true } : {}) };
+    }
+  }
+  return salida;
 }
 
 // La tabla, revisada a mano, está en configuracion/autoridades.json (la usan también los avisos).
-export const AUTORIDADES: Readonly<Record<string, Autoridad>> = tabla.autoridades;
+export const AUTORIDADES: Readonly<Record<string, Autoridad>> = {
+  ...tabla.autoridades,
+  ...conSuPais(tabla.por_pais),
+};
 
 const SIN_NOMBRE = { es: "una autoridad", en: "an authority" } as const;
 
@@ -46,7 +70,7 @@ export function autoridadEscrita(original: string, idioma: Idioma): string {
   const nombre = original.normalize("NFC");
   const conocida = AUTORIDADES[nombre];
   if (conocida !== undefined) {
-    return conocida.original === true ? `${conocida[idioma]} (${original})` : conocida[idioma];
+    return conocida.original === true ? `${conocida[idioma]} (${conocida.nombre ?? original})` : conocida[idioma];
   }
   const traducida = TRADUCIDAS.get(nombre)?.[idioma];
   return traducida === undefined ? SIN_NOMBRE[idioma] : sinArticuloMayusculo(traducida);

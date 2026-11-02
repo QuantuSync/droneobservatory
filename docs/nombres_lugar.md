@@ -155,6 +155,49 @@ traducción que viaja con la ficha publicada (los avisos la leen de los ficheros
 se reenvían. El fichero va en ASCII con escapes: el gancho del repositorio vería
 sílabas sueltas en los nombres rumanos con letras con signo.
 
+### Nombres de varios países (desde el 2 de noviembre de 2026)
+
+Algunos nombres se escriben igual en más de un país: «Ministerul Apărării» es el Ministerio de
+Defensa de Moldavia y, en la prensa rumana, también el de Rumanía; «Bundesregierung» es el Gobierno
+alemán y el austriaco; «Defensie», el neerlandés y el belga; «Forsvaret», el noruego y el danés. La
+tabla los tenía con un solo país y la ficha EODI-2026-00728 (Viișoara, Moldavia) decía «Lo declaró
+el Ministerio de Defensa Nacional de Rumanía». Ahora:
+
+- `por_pais` en `configuracion/autoridades.json` da la entrada de cada país de esos nombres (16:
+  los rumanos de ministerios, policía y fuerza aérea; Bundespolizei, Bundesregierung,
+  Verteidigungsministerium, Bundesinnenministerium, Bundesanwaltschaft; Defensie, Ministerie van
+  Defensie; Forsvaret; Luftfartsvæsnet; Innenriksdepartementet).
+- La publicación, la exportación de las citas y los avisos los escriben con su país, «Ministerul
+  Apărării (MD)» (`proceso/autoridades.con_pais`): el que dice la propia declaración (sus
+  `senales`, como «Apărării Naționale» o «MApN» para el rumano), si no el del medio oficial que la
+  da o la cita (`configuracion/fuentes_oficiales.json`: «Forsvaret» es el danés), si no el de la
+  ficha. La web enseña el nombre original sin el país entre paréntesis.
+- Sin país de la lista, la entrada suelta: la del país de siempre en los alemanes, neerlandeses y
+  nórdicos, y una que no nombra país en los rumanos («el Ministerio de Defensa (Ministerul
+  Apărării)»).
+- Cada entrada lleva su país (`pais`), y la auditoría cuenta en la letra Y las autoridades de un
+  país distinto al de la ficha sin una frase de sus fuentes que nombre ese país. Al estrenarla
+  señaló cuatro errores de la tabla: Thorkild Fogde es el jefe de la Policía danesa (no sueca),
+  «Luftfartsvæsnet» en una ficha sueca es la LFV, «Innenriksdepartementet» en una finlandesa es el
+  Ministerio del Interior de Finlandia y la Policía de Gibraltar va con el Reino Unido.
+
+Pruebas: `tests/test_autoridades_pais.py` (00728 de Moldavia y 2025-00241, rumana, con
+«Ministerul Apărării Naționale») y `web/tests/autoridades-pais.test.ts`.
+
+### Datos de otro país (desde el 2 de noviembre de 2026)
+
+Una frase que nombra otro país como lugar y no el de la ficha no fija ningún dato de la ficha
+(`proceso/atribucion.de_otro_pais`): ni en la extracción (`proceso/validacion_ficha`, número de
+drones, hora, fin, presencia, cierre, localidad, lugar, pruebas y medidas) ni en el control
+(`recogida/control_fichas._verificada_vigente`, también con las verificaciones ya guardadas). El
+control le había dado a EODI-2026-00728 dos drones con «Două drone au pătruns în spațiul aerian al
+României», que son los del suceso de Iași (EODI-2026-00719). No cuentan como otro país el de donde
+viene el dron («venite dinspre Republica Moldova», «din Ucraina») ni los de la guerra (Rusia,
+Bielorrusia, Ucrania, Irán); un gentilicio solo cuenta junto al espacio aéreo («Romanian
+airspace»), no cuando dice de quién es algo («wojsk norweskich», «pavilion maltez»). La auditoría Y
+cuenta también los datos de la última verificación con una frase así que la ficha sigue teniendo.
+No se comprueba todavía que la frase hable del mismo lugar dentro del país.
+
 ## Capa de guerra
 
 La ficha de un impacto ya no lleva el nombre en cirílico: la ciudad con su nombre español o inglés

@@ -349,7 +349,9 @@ hora UTC de la ficha es la hora local que escribe una de sus fuentes y ninguna e
 toca en la zona del suceso; desde el 27/10/2026 también con el desfase del otro horario del año y
 con 10 minutos de margen); P, presencia rebajada sin cierre (desde el 27/10/2026: «no acreditada»
 o «descartada» sin un paso del historial que diga qué autoridad la rebajó y cuándo; se completa con
-su rectificación oficial, docs/rectificaciones.md). Los recuentos del día y los
+su rectificación oficial, docs/rectificaciones.md); Y, autoridad o dato de otro país sin frase
+(desde el 2/11/2026: una autoridad de un país distinto al de la ficha sin frase que lo nombre, o un
+dato de la última verificación cuya frase habla de otro país: docs/nombres_lugar.md). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la

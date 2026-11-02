@@ -67,15 +67,15 @@ describe("autoridades en el idioma de la página", () => {
     // Un medio con dominio sigue siendo su nombre.
     expect(medioEscrito("news.az", "es", es.ficha.declaracionCitada)).toBe("news.az");
     // Dentro de una frase («según…», «Cifras de…»), también traducida y sin la mayúscula.
-    expect(medioEnFrase("Ministerul Apărării", "es", es.ficha.declaracionCitada)).toBe(
-      "el Ministerio de Defensa Nacional de Rumanía",
+    expect(medioEnFrase("Ministerul Apărării (RO)", "es", es.ficha.declaracionCitada)).toBe(
+      "el Ministerio de Defensa Nacional de Rumanía (Ministerul Apărării)",
     );
-    expect(medioEnFrase("Ministerul Apărării (declaración oficial citada en moldpres.md)", "en", en.ficha.declaracionCitada)).toBe(
-      "statement by the Romanian Ministry of National Defence, quoted in moldpres.md",
+    expect(medioEnFrase("Ministerul Apărării (RO) (declaración oficial citada en moldpres.md)", "en", en.ficha.declaracionCitada)).toBe(
+      "statement by the Romanian Ministry of National Defence (Ministerul Apărării), quoted in moldpres.md",
     );
     expect(medioEnFrase("news.az", "es", es.ficha.declaracionCitada)).toBe("news.az");
-    expect(es.region.fuenteCifras(medioEnFrase("Ministerul Apărării", "es", es.ficha.declaracionCitada))).toBe(
-      "Cifras del Ministerio de Defensa Nacional de Rumanía",
+    expect(es.region.fuenteCifras(medioEnFrase("Ministerul Apărării (RO)", "es", es.ficha.declaracionCitada))).toBe(
+      "Cifras del Ministerio de Defensa Nacional de Rumanía (Ministerul Apărării)",
     );
   });
 

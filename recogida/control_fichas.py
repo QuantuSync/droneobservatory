@@ -1173,7 +1173,9 @@ def _verificada_vigente(decision: Documento, incidente: Documento) -> reglas.Ver
     comprobó (hasta la próxima verificación)."""
     tiene = {f["id"] for f in incidente.get("fuentes", [])}
     datos = {k: tuple(v) for k, v in decision.get("datos", {}).items() if v[1] in tiene}
-    return reglas.Verificada(datos)
+    return reglas.Verificada(
+        reglas.sin_otro_pais(datos, (incidente.get("lugar") or {}).get("pais"))
+    )
 
 
 def aplicar_verificaciones(ctx: Contexto) -> None:
@@ -2668,6 +2670,10 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
             incidentes.uniones_a_mano(almacen),
             almacen.fechas_extraccion(desde),
             protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
+            {
+                c.removeprefix("verificacion:"): v
+                for c, v in almacen.controles("verificacion:").items()
+            },
         )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])

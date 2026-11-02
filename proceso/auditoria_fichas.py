@@ -104,6 +104,11 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   un dato protegido (proceso/protegido.py) sin el apunte `permitido:` que deja el cerrojo cuando
   lo deja pasar. Con el cerrojo en «aplicar» debe valer 0: cualquier otro valor es un agujero. En
   «observar» cuenta lo que se habría retenido y aun así se guardó (docs/cerrojo.md).
+- **Y, autoridad de otro país sin frase**: una autoridad de la ficha, escrita como en la web (con
+  su país si su nombre es de varios: proceso/autoridades.con_pais), es de un país distinto al de
+  la ficha (`pais` de configuracion/autoridades.json) y ninguna frase de sus fuentes nombra ese
+  país. EODI-2026-00728 (2 de noviembre de 2026): «Ministerul Apărării» de Moldavia salía como «el
+  Ministerio de Defensa Nacional de Rumanía».
 """
 
 import json
@@ -111,10 +116,13 @@ import re
 from collections import Counter
 from collections.abc import Callable, Iterable
 from datetime import date, datetime, timedelta
+from typing import Any
 from zoneinfo import ZoneInfo
 
 from esquema import Documento
 from proceso import (
+    atribucion,
+    autoridades,
     buques,
     cita_titular,
     coherencia,
@@ -128,6 +136,7 @@ from proceso import (
     textos_dron,
     titulares,
 )
+from proceso import control_fichas as reglas_control
 from proceso.presencia import (
     MOTIVO_PRUEBAS_PRENSA,
     MOTIVO_SIN_BASE,
@@ -140,7 +149,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X",
+    "S", "T", "U", "V", "W", "X", "Y",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -167,6 +176,7 @@ NOMBRES = {
     "V": "unión de fichas marcadas como relacionadas",
     "W": "dato decidido perdido en una reextracción",
     "X": "cambio a algo protegido sin justificación",
+    "Y": "autoridad de otro país sin frase",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -524,6 +534,74 @@ def _u(incidente: Documento) -> bool:
     return not titulares.concuerda(str((incidente.get("titulo") or {}).get("es") or ""), "es")
 
 
+def autoridades_de_otro_pais(incidente: Documento) -> list[str]:
+    """Las autoridades de la ficha, escritas como en la web (proceso/autoridades.con_pais), de un
+    país distinto al de la ficha sin una frase que nombre ese país: la de sus fuentes (la
+    declaración, el medio o la fuente de quien atribuye o investiga) o, si no tiene ninguna
+    propia, la de cualquier fuente de la ficha."""
+    pais_ficha = (incidente.get("lugar") or {}).get("pais")
+    if not pais_ficha:
+        return []
+    documento = autoridades.con_pais(json.loads(json.dumps(
+        {c: incidente.get(c) for c in ("lugar", "fuentes", "atribucion", "investigacion")}
+    )))  # fmt: skip
+    fuentes = [f for f in documento.get("fuentes") or [] if isinstance(f, dict)]
+    frases = {str(f.get("id")): str(f.get("frase_origen") or "") for f in fuentes}
+    propias: dict[str, list[str]] = {}
+    for fuente in fuentes:
+        medio = str(fuente.get("medio") or "")
+        citada = autoridades.DECLARACION_CITADA.match(medio)
+        propias.setdefault(citada.group(1) if citada else medio, []).append(str(fuente.get("id")))
+    for entrada in [documento.get("atribucion") or {}, *(documento.get("investigacion") or [])]:
+        if isinstance(entrada, dict) and entrada.get("autoridad"):
+            propias.setdefault(str(entrada["autoridad"]), []).append(str(entrada.get("fuente_id")))
+    malas = []
+    for nombre, _ in autoridades.nombres(documento):
+        pais = autoridades.pais_escrito(nombre)
+        if pais is None or pais == pais_ficha:
+            continue
+        suyas = [frases.get(i, "") for i in propias.get(nombre, [])] or list(frases.values())
+        if not any(atribucion.menciona(frase, pais) for frase in suyas if frase):
+            malas.append(nombre)
+    return malas
+
+
+def _en_la_ficha(campo: str, valor: Any, vista: Documento) -> bool:
+    """Si la ficha tiene ese dato de la verificación (como lo lee la web: reglas.vista)."""
+    if campo in ("drones", "duracion_min"):
+        return bool(reglas_control.rango_texto(valor) == vista.get(campo))
+    if campo == "presencia":
+        return bool(valor == vista.get("presencia_dron"))
+    if campo == "cierre":
+        return bool(valor == vista.get("cierre"))
+    if campo == "lugar" and isinstance(valor, dict):
+        return str(vista.get("lugar") or "").startswith(f"{valor.get('nombre')} (")
+    return False
+
+
+def datos_de_otro_pais(incidente: Documento, verificacion: Documento | None) -> list[str]:
+    """Los datos de la ficha que dio su última verificación con una frase de otro país
+    (proceso/atribucion.de_otro_pais) y que la ficha sigue teniendo (EODI-2026-00728: dos
+    drones por «Două drone au pătruns în spațiul aerian al României»)."""
+    pais = (incidente.get("lugar") or {}).get("pais")
+    if not verificacion or not pais:
+        return []
+    vista = reglas_control.vista(incidente)
+    return sorted(
+        campo for campo, dato in (verificacion.get("datos") or {}).items()
+        if isinstance(dato, list) and len(dato) == 3
+        and atribucion.de_otro_pais(str(dato[2]), str(pais)) is not None
+        and _en_la_ficha(campo, dato[0], vista)
+    )  # fmt: skip
+
+
+def de_otro_pais(incidente: Documento, verificacion: Documento | None = None) -> list[str]:
+    """Y: lo de otro país en la ficha, «autoridad <nombre>» o el dato."""
+    return [f"autoridad {n}" for n in autoridades_de_otro_pais(incidente)] + datos_de_otro_pais(
+        incidente, verificacion
+    )
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
@@ -708,6 +786,7 @@ def auditar(
     a_mano: Iterable[frozenset[str]] = (),
     extracciones: dict[str, list[str]] | None = None,
     permitidos: frozenset[tuple[str, str, str]] | None = None,
+    verificaciones: dict[str, Documento] | None = None,
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
     son los de las últimas 48 horas (`Almacen.cambios_desde`), para K y W; `copias`, las copias
@@ -715,7 +794,9 @@ def auditar(
     que el experto dio por distintos (`incidentes.distintos_del_experto`) y las uniones hechas a
     mano (`incidentes.uniones_a_mano`), para V; `extracciones`, las fechas de las extracciones de
     cada candidato en esas horas (`Almacen.fechas_extraccion`), para W; `permitidos`, los cambios
-    que dejó pasar el cerrojo (`protegido.permitidos`), para X."""
+    que dejó pasar el cerrojo (`protegido.permitidos`), para X; `verificaciones`, la última
+    verificación de cada ficha (`Almacen.controles("verificacion:")`, por identificador), para
+    los datos de Y."""
     resultado: dict[str, list[str]] = {c: [] for c in COMPROBACIONES}
     vistos = list(documentos)
     cambios = list(cambios)
@@ -732,6 +813,14 @@ def auditar(
             if fallo:
                 resultado[clave].append(str(documento["id"]))
     vigentes = {str(d["id"]) for d in vistos if incidentes.activo(d)}
+    for documento in vistos:
+        if not incidentes.activo(documento):
+            continue
+        try:
+            otros = de_otro_pais(documento, (verificaciones or {}).get(str(documento["id"])))
+        except (KeyError, TypeError, ValueError):
+            otros = []
+        resultado["Y"].extend(f"{documento['id']} {o}" for o in otros)
     if copias:
         resultado["Q"] = [str(d["id"]) for d in vistos
                           if incidentes.activo(d) and sin_fuente_legible(d, copias)]  # fmt: skip

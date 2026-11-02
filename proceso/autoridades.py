@@ -19,9 +19,120 @@ DECLARACION = re.compile(r"^(.+) \(declaración oficial citada en .+\)$")
 MIN_LETRAS_EN_TEXTO = 6
 
 
+FUENTES_OFICIALES = TABLA.parent / "fuentes_oficiales.json"
+DECLARACION_CITADA = re.compile(r"^(.+) \(declaración oficial citada en (.+)\)$")
+
+
+@cache
+def _datos() -> dict[str, Any]:
+    return dict(json.loads(TABLA.read_text(encoding="utf-8")))
+
+
 @cache
 def tabla() -> dict[str, Any]:
-    return dict(json.loads(TABLA.read_text(encoding="utf-8"))["autoridades"])
+    """La tabla con los nombres de varios países escritos con el suyo: «Ministerul Apărării
+    (MD)», con el nombre sin país (`nombre`) para el paréntesis."""
+    salida = dict(_datos()["autoridades"])
+    for nombre, paises in por_pais().items():
+        for pais, entrada in paises.items():
+            salida[f"{nombre} ({pais})"] = {**entrada, "nombre": nombre, "pais": pais}
+    return salida
+
+
+@cache
+def por_pais() -> dict[str, dict[str, Any]]:
+    """Los nombres que se escriben igual en más de un país, con la entrada de cada uno."""
+    return {unicodedata.normalize("NFC", n): dict(p) for n, p in
+            (_datos().get("por_pais") or {}).items()}  # fmt: skip
+
+
+@cache
+def _paises_oficiales() -> dict[str, str]:
+    """El país de cada medio oficial (configuracion/fuentes_oficiales.json): «Forsvaret» es el
+    danés."""
+    fuentes = json.loads(FUENTES_OFICIALES.read_text(encoding="utf-8"))["fuentes"]
+    return {unicodedata.normalize("NFC", str(f["medio"])): str(f["pais"]) for f in fuentes
+            if f.get("medio") and f.get("pais")}  # fmt: skip
+
+
+def sin_tildes(texto: str) -> str:
+    descompuesto = unicodedata.normalize("NFKD", texto.casefold())
+    return "".join(c for c in descompuesto if not unicodedata.combining(c))
+
+
+def _dice_su_pais(frase: str, candidatos: dict[str, Any]) -> str | None:
+    """El país que dice la propia declaración («Ministerul Apărării Naționale», «… al Republicii
+    Moldova»): el único de la lista cuyas señales salen en la frase."""
+    texto = sin_tildes(frase)
+    dichos = [pais for pais, entrada in candidatos.items()
+              if any(re.search(rf"(?<!\w){re.escape(s)}(?!\w)", texto)
+                     for s in entrada.get("senales") or [])]  # fmt: skip
+    return dichos[0] if len(dichos) == 1 else None
+
+
+def pais_de(nombre: str, frase: str, medio: str, pais_ficha: str | None) -> str | None:
+    """El país de una autoridad que se escribe igual en varios: el que dice la propia
+    declaración; si no, el del medio oficial que la da o la cita; si no, el de la ficha. None si
+    el nombre no es de varios países o ninguno de esos es de su lista."""
+    candidatos = por_pais().get(unicodedata.normalize("NFC", nombre))
+    if not candidatos:
+        return None
+    dicho = _dice_su_pais(frase, candidatos)
+    if dicho is not None:
+        return dicho
+    oficial = _paises_oficiales().get(unicodedata.normalize("NFC", medio))
+    if oficial in candidatos:
+        return oficial
+    return pais_ficha if pais_ficha in candidatos else None
+
+
+def _con_su_pais(nombre: str, frase: str, medio: str, pais_ficha: str | None) -> str:
+    pais = pais_de(nombre, frase, medio, pais_ficha)
+    return nombre if pais is None else f"{nombre} ({pais})"
+
+
+def con_pais(documento: dict[str, Any]) -> dict[str, Any]:
+    """El documento (in situ) con cada autoridad que se escribe igual en varios países escrita
+    con el suyo (pais_de): en el medio de las fuentes, en quien atribuye y en quien investiga.
+    Lo usan la exportación (exportacion/citas.py) y los avisos, para que la web y el aviso
+    escriban el ministerio de Moldavia en una ficha de Moldavia, no el de Rumanía."""
+    if not por_pais():
+        return documento
+    pais_ficha = (documento.get("lugar") or {}).get("pais")
+    pais_ficha = str(pais_ficha) if pais_ficha else None
+    fuentes = [f for f in documento.get("fuentes", []) or [] if isinstance(f, dict)]
+    contexto: dict[str, tuple[str, str]] = {}
+    for fuente in fuentes:
+        medio = str(fuente.get("medio") or "")
+        frase = str(fuente.get("frase_origen") or "")
+        citada = DECLARACION_CITADA.match(medio)
+        da = citada.group(2) if citada else medio
+        if citada:
+            fuente["medio"] = (f"{_con_su_pais(citada.group(1), frase, da, pais_ficha)} "
+                               f"(declaración oficial citada en {da})")  # fmt: skip
+        elif medio:
+            fuente["medio"] = _con_su_pais(medio, frase, medio, pais_ficha)
+        contexto[str(fuente.get("id"))] = (frase, da)
+    atribucion = documento.get("atribucion")
+    if isinstance(atribucion, dict) and atribucion.get("autoridad"):
+        frase, medio = contexto.get(str(atribucion.get("fuente_id")), ("", ""))
+        atribucion["autoridad"] = _con_su_pais(str(atribucion["autoridad"]),
+                                               frase, medio, pais_ficha)  # fmt: skip
+    for entrada in documento.get("investigacion", []) or []:
+        if isinstance(entrada, dict) and entrada.get("autoridad"):
+            frase, medio = contexto.get(str(entrada.get("fuente_id")), ("", ""))
+            frase = frase or str(entrada.get("cita") or "")
+            entrada["autoridad"] = _con_su_pais(str(entrada["autoridad"]), frase, medio,
+                                                pais_ficha)  # fmt: skip
+    return documento
+
+
+def pais_escrito(nombre: str) -> str | None:
+    """El país de una autoridad de la tabla (`pais`), o None si no lo tiene."""
+    nfc = unicodedata.normalize("NFC", nombre)
+    entrada = next((v for k, v in tabla().items() if unicodedata.normalize("NFC", k) == nfc),
+                   None)  # fmt: skip
+    return None if entrada is None else entrada.get("pais")
 
 
 Traducidas = dict[str, Any]
@@ -46,7 +157,8 @@ def _de_tabla(original: str, idioma: str) -> str | None:
     if conocida is None:
         return None
     texto = str(conocida[idioma])
-    return f"{texto} ({original})" if conocida.get("original") else texto
+    # Con su país («Ministerul Apărării (MD)»), el paréntesis lleva el nombre sin él.
+    return f"{texto} ({conocida.get('nombre') or original})" if conocida.get("original") else texto
 
 
 def conocida(original: str, traducidas: Traducidas | None = None) -> bool:
