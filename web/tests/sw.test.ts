@@ -178,12 +178,23 @@ describe("respuestas", () => {
 
   it("el código con huella se pide una vez y después sale de la caché, también sin red", async () => {
     let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta("codigo"));
-    const { responder, pedidas } = preparar((url) => red(url));
-    // Recién arrancado (índice sin leer), se responde como siempre y se guarda.
-    expect(await (await responder("/assets/a-1.js"))?.text()).toBe("codigo");
+    const { responder, pedidas, manejador } = preparar((url) => red(url));
+    // Recién arrancado (índice sin leer), no se toca.
+    expect(responder("/assets/a-1.js")).toBeNull();
+    await manejador.listo;
+    expect(await manejador.guardarLista(["/assets/a-1.js"])).toBe(1);
     red = sinRed;
     expect(await (await responder("/assets/a-1.js"))?.text()).toBe("codigo");
     expect(pedidas).toHaveLength(1);
+  });
+
+  it("lo guardado antes de arrancar está en el índice", async () => {
+    const cajas = new CajasFalsas();
+    await (await cajas.open("eodi-huella-v1")).put(`${ORIGEN}/assets/c-3.js`, respuesta("c"));
+    const manejador = sw.crearManejador({ cajas, origen: ORIGEN, pedir: sinRed, avisar: async () => undefined });
+    await manejador.listo;
+    const r = manejador.responder({ url: `${ORIGEN}/assets/c-3.js`, method: "GET", mode: "cors", headers: new Headers() });
+    expect(await (await r)?.text()).toBe("c");
   });
 
   it("sin copia, el código, los datos y lo estático van a la red sin el service worker (Safari corta)", async () => {
@@ -208,7 +219,9 @@ describe("respuestas", () => {
 
   it("los datos, de la red; sin red o con un 5xx, la última copia; un 404 pasa tal cual", async () => {
     let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta('{"v":1}'));
-    const { responder } = preparar((url) => red(url));
+    const { responder, manejador } = preparar((url) => red(url));
+    await manejador.listo;
+    await manejador.guardarLista(["/datos/resumen.json"]);
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe('{"v":1}');
     red = () => Promise.resolve(respuesta('{"v":2}'));
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe('{"v":2}');

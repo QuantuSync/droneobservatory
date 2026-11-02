@@ -4,7 +4,10 @@
 // Al terminar de cargar, la página manda al service worker la lista de lo que ya ha descargado de la
 // web (código, contornos del mapa, datos generales y, si se ha abierto, la ficha), para que lo guarde
 // desde la caché HTTP del navegador sin volver a pedirlo. Así la primera visita ya deja la app lista
-// para abrirse sin conexión, sin peticiones de más.
+// para abrirse sin conexión, sin peticiones de más. Después, lo que se va descargando (el código que
+// se carga aparte, como el del mapa o el de la ficha, y los datos de cada ficha abierta) se manda en
+// tandas, con un PerformanceObserver: el service worker no guarda al vuelo lo que no tiene copia
+// (public/sw.js), y la lista de performance se llena a las 250 entradas.
 
 /** El evento con el que la web enseña «Hay una versión nueva · Actualizar» (componentes/AvisoVersion.tsx). */
 export const EVENTO_VERSION_NUEVA = "eodi:version-nueva";
@@ -19,7 +22,9 @@ export function sitioConApp(nombre: string): boolean {
 }
 
 /** Prefijos de lo que se manda guardar: lo mismo que acepta public/sw.js (reglaDe). */
-const GUARDABLES = ["/assets/", "/datos/", "/mapa/", "/iconos/", "/banderas/", "/marca/"];
+const GUARDABLES = ["/assets/", "/datos/", "/mapa/", "/iconos/", "/banderas/", "/marca/", "/arranque.js"];
+/** Cuánto se espera para mandar juntas las descargas nuevas. */
+const TANDA_MS = 1500;
 
 /**
  * Lo que la página manda guardar: las direcciones de este sitio ya descargadas que el service worker
@@ -42,16 +47,47 @@ export function direccionesAGuardar(recursos: readonly string[], origen: string,
   return [...lista];
 }
 
-function mandarLista(trabajador: ServiceWorker | null): void {
+function mandar(trabajador: ServiceWorker | null, recursos: readonly string[]): void {
   if (trabajador === null) return;
   try {
-    const recursos = performance.getEntriesByType("resource").map((entrada) => entrada.name);
     trabajador.postMessage({
       tipo: "guardar",
       direcciones: direccionesAGuardar(recursos, window.location.origin, window.location.pathname),
     });
   } catch {
-    // Sin la lista no pasa nada: lo que se pida con el service worker activo se guarda igual.
+    // Sin la lista, se guardará la próxima vez.
+  }
+}
+
+function mandarLista(trabajador: ServiceWorker | null): void {
+  try {
+    mandar(
+      trabajador,
+      performance.getEntriesByType("resource").map((entrada) => entrada.name),
+    );
+  } catch {
+    // Sin performance no hay lista.
+  }
+}
+
+/** Manda en tandas lo que la página va descargando (también lo que no cabe en la lista de performance). */
+function vigilarDescargas(trabajador: () => ServiceWorker | null): void {
+  if (typeof PerformanceObserver === "undefined") return;
+  const pendientes = new Set<string>();
+  let temporizador: number | undefined;
+  try {
+    new PerformanceObserver((lista) => {
+      for (const entrada of lista.getEntries()) pendientes.add(entrada.name);
+      if (temporizador !== undefined) return;
+      temporizador = window.setTimeout(() => {
+        temporizador = undefined;
+        const recursos = [...pendientes];
+        pendientes.clear();
+        mandar(trabajador(), recursos);
+      }, TANDA_MS);
+    }).observe({ type: "resource", buffered: true });
+  } catch {
+    // Sin observador queda la lista del principio y la de al dejar la pestaña.
   }
 }
 
@@ -84,6 +120,7 @@ export function registrarApp(): void {
         const trabajador = () => listo.active ?? registro.active;
         // Lo descargado al cargar, y otra vez al dejar la pestaña (el mapa y las fichas abiertas).
         window.setTimeout(() => mandarLista(trabajador()), 3000);
+        vigilarDescargas(trabajador);
         document.addEventListener("visibilitychange", () => {
           if (document.visibilityState === "hidden") mandarLista(trabajador());
         });
