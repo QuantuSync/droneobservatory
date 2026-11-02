@@ -74,7 +74,7 @@ for (const tamano of TAMANOS) {
       hasTouch: tamano.tactil,
       bypassCSP: true,
       ...(baseURL === undefined ? {} : { baseURL }),
-      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
+      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } }),
     });
     await preparar(contexto, baseURL);
     const pagina = await contexto.newPage();

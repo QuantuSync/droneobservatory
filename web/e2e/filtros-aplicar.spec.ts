@@ -72,7 +72,7 @@ for (const tamano of TAMANOS) {
       hasTouch: tamano.tactil,
       ...(baseURL === undefined ? {} : { baseURL }),
       // Vista previa protegida: la clave de acceso de Vercel en BYPASS.
-      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
+      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } }),
     });
     await preparar(contexto, baseURL);
     const pagina = await contexto.newPage();

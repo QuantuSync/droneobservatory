@@ -16,7 +16,7 @@ const ESPERADO = {
 };
 
 if (process.env.BYPASS !== undefined) {
-  test.use({ extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } });
+  test.use({ extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } });
 }
 
 for (const idioma of ["es", "en"] as const) {

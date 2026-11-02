@@ -210,7 +210,7 @@ function ntfy(canal: string, nombre: string): string {
 const GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=io.heckel.ntfy";
 const APP_STORE = "https://apps.apple.com/app/ntfy/id1625396347";
 
-if (CLAVE !== undefined) test.use({ extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE } });
+if (CLAVE !== undefined) test.use({ extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE, "x-vercel-set-bypass-cookie": "true" } });
 
 const TELEFONOS = ["android", "iphone"];
 

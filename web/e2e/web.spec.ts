@@ -43,7 +43,7 @@ function numero(n: number): string {
 const ACCESO: Record<string, string> =
   process.env.VERCEL_BYPASS === undefined
     ? {}
-    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS };
+    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS, "x-vercel-set-bypass-cookie": "true" };
 
 test.beforeEach(async ({ page, baseURL }) => {
   // En local, el almacén público no admite el origen (su CORS es el del sitio publicado): sus

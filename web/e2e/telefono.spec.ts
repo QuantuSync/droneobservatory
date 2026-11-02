@@ -35,7 +35,7 @@ const TAMANOS = [
 const ACCESO: Record<string, string> =
   process.env.VERCEL_BYPASS === undefined
     ? {}
-    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS };
+    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS, "x-vercel-set-bypass-cookie": "true" };
 
 async function capturar(pagina: Page, nombre: string) {
   await pagina.waitForTimeout(MS_DE_ASENTAMIENTO);

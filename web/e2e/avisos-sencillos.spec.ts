@@ -47,7 +47,7 @@ for (const caso of CASOS) {
       isMobile: caso.equipo !== "ordenador",
       userAgent: `${AGENTES[caso.equipo]}${SUFIJO_AGENTE}`,
       ...(baseURL === undefined ? {} : { baseURL }),
-      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
+      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } }),
     });
     const pagina = await contexto.newPage();
     await pagina.goto("/", { waitUntil: "domcontentloaded" });
@@ -118,7 +118,7 @@ for (const tamano of [
     const contexto = await browser.newContext({
       viewport: { width: tamano.width, height: tamano.height },
       ...(baseURL === undefined ? {} : { baseURL }),
-      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
+      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS, "x-vercel-set-bypass-cookie": "true" } }),
     });
     const pagina = await contexto.newPage();
     for (const ruta of ["/avisos", "/en/alerts"]) {
