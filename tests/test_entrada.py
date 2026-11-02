@@ -386,6 +386,29 @@ def test_la_medida_a_las_24_horas_une_el_duplicado_y_lo_cuenta() -> None:
     }  # fmt: skip
 
 
+def test_la_medida_quita_solo_la_autoridad_que_nombra() -> None:
+    """EODI-2026-00728: la medida dudó del centro de operaciones y quitó también al ministerio."""
+    centro, ministerio = "Centrul Operatii Aeriene", "Ministerul Apararii"
+    drones = f"{ministerio}: o drona a survolat spatiul aerian"
+    ficha = _con_declaracion(BUQUE_689, centro, f"{centro}: o drona a survolat spatiul aerian")
+    otra = {**_con_declaracion(BUQUE_689, ministerio, drones)["fuentes"][-1],
+            "id": "EODI-2026-00689-F2-declaracion-1"}  # fmt: skip
+    ficha["fuentes"].append(otra)
+
+    def errores(nombre: str) -> list[dict[str, Any]]:
+        return [{"dato": "autoridad", "autoridad": nombre, "correcto": ""}]
+
+    almacen = _base(ficha)
+    ctx = _contexto(almacen, None)
+    assert entrada.corregir_medida(ctx, ficha, errores(""), []) == []
+    assert entrada.corregir_medida(ctx, ficha, errores("otra autoridad"), []) == []
+    hechos = entrada.corregir_medida(ctx, ficha, errores(centro.upper()), [])
+    assert hechos == ["declaración no oficial: EODI-2026-00689-F1-declaracion-1"]
+    queda = almacen.incidente("EODI-2026-00689")
+    assert queda is not None and queda["estado"]["actual"] == "confirmado"
+    assert list(reglas.declaraciones_de(queda)) == [ministerio]
+
+
 def test_la_linea_del_resumen_diario() -> None:
     dia = {"nuevas": ["A", "B", "C"], "medidas": ["A", "B"], "con_error": ["B"]}
     assert visitas.lineas_entrada(dia) == [
