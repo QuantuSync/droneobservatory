@@ -25,6 +25,7 @@ interface Manejador {
   guardarLista(direcciones: string[]): Promise<number>;
   limpiarViejas(): Promise<void>;
   borrarTodo(): Promise<void>;
+  listo: Promise<void>;
 }
 
 interface ApiSw {
@@ -140,7 +141,7 @@ describe("reglas de caché", () => {
     expect(regla(`${ORIGEN}/arranque.js`)).toBe("datos");
     expect(regla(`${ORIGEN}/mapa/tierra.geojson`)).toBe("estatico");
     expect(regla(`${ORIGEN}/mapa/fuentes/Noto/0-255.pbf`)).toBe("estatico");
-    expect(regla(`${ORIGEN}/manifest-en.webmanifest`)).toBe("estatico");
+    expect(regla(`${ORIGEN}/apple-touch-icon.png`)).toBe("estatico");
   });
 
   it("nunca el mapa de fondo, /api/, las versiones, otros sitios, Range ni lo que no es GET", () => {
@@ -154,6 +155,9 @@ describe("reglas de caché", () => {
     expect(regla(`${ORIGEN}/datos/resumen.json`, { method: "POST" })).toBeNull();
     expect(regla(`${ORIGEN}/sw.js`)).toBeNull();
     expect(regla(`${ORIGEN}/rutas.json`)).toBeNull();
+    // Los manifiestos los pide el navegador por su cuenta: Safari los corta al dejar la página.
+    expect(regla(`${ORIGEN}/manifest.webmanifest`)).toBeNull();
+    expect(regla(`${ORIGEN}/manifest-en.webmanifest`)).toBeNull();
   });
 
   it("la portada de cada idioma y la clave sin búsqueda", () => {
@@ -175,10 +179,31 @@ describe("respuestas", () => {
   it("el código con huella se pide una vez y después sale de la caché, también sin red", async () => {
     let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta("codigo"));
     const { responder, pedidas } = preparar((url) => red(url));
+    // Recién arrancado (índice sin leer), se responde como siempre y se guarda.
     expect(await (await responder("/assets/a-1.js"))?.text()).toBe("codigo");
     red = sinRed;
     expect(await (await responder("/assets/a-1.js"))?.text()).toBe("codigo");
     expect(pedidas).toHaveLength(1);
+  });
+
+  it("sin copia, el código, los datos y lo estático van a la red sin el service worker (Safari corta)", async () => {
+    let red: (url: string) => Promise<Response> = () => Promise.resolve(respuesta("x"));
+    const { responder, manejador } = preparar((url) => red(url));
+    await manejador.listo;
+    expect(responder("/assets/b-2.js")).toBeNull();
+    expect(responder("/datos/resumen.json")).toBeNull();
+    expect(responder("/mapa/tierra.geojson")).toBeNull();
+    expect(responder("/datos/incidentes/EODI-nunca-vista.json")).toBeNull();
+    // La página siempre: sin red y sin copia, la portada de su idioma.
+    expect(responder("/", "navigate")).not.toBeNull();
+    // Guardado (la lista que manda la página), ya pasa por el service worker, también sin red.
+    expect(await manejador.guardarLista(["/assets/b-2.js", "/datos/resumen.json"])).toBe(2);
+    red = sinRed;
+    expect(await (await responder("/assets/b-2.js"))?.text()).toBe("x");
+    expect(await (await responder("/datos/resumen.json"))?.text()).toBe("x");
+    // «Borrar mi última visita»: sin copias, otra vez a la red directa.
+    await manejador.borrarTodo();
+    expect(responder("/assets/b-2.js")).toBeNull();
   });
 
   it("los datos, de la red; sin red o con un 5xx, la última copia; un 404 pasa tal cual", async () => {
@@ -193,8 +218,6 @@ describe("respuestas", () => {
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe('{"v":2}');
     red = () => Promise.resolve(respuesta("no", 404));
     expect((await responder("/datos/resumen.json"))?.status).toBe(404);
-    red = sinRed;
-    await expect(responder("/datos/incidentes/EODI-nunca-vista.json")).rejects.toThrow();
   });
 
   it("una ficha visitada se abre sin conexión; una no visitada, con la portada de su idioma", async () => {

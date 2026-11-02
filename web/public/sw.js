@@ -12,8 +12,16 @@
 //   caché HTTP está debajo); sin red o con un fallo del servidor, la última copia guardada.
 // - «estatico»: contornos y fuentes del mapa, iconos y banderas: la copia guardada y, detrás, se
 //   pide de nuevo (la caché HTTP del navegador responde casi siempre sin ir a la red).
-// - Nunca: /almacen/ (el mapa de fondo, por trozos), /api/, /datos/versiones/, otros sitios (el
-//   contador de visitas, la reserva de Helsinki), peticiones con Range y todo lo que no sea GET.
+// - Nunca: /almacen/ (el mapa de fondo, por trozos), /api/, /datos/versiones/, los manifiestos (los
+//   pide el navegador por su cuenta), otros sitios (el contador de visitas, la reserva de Helsinki),
+//   peticiones con Range y todo lo que no sea GET.
+//
+// «huella», «datos» y «estatico» sin copia guardada no pasan por el service worker: van a la red
+// como sin él (no se llama a respondWith). Safari corta las peticiones de una página que se deja a
+// mitad de carga; si las lleva el service worker, el corte llega a la página como un error
+// («FetchEvent.respondWith received an error: TypeError: Load failed», «Importing a module script
+// failed»). Para saber sin esperar si hay copia, el manejador lleva un índice en memoria de lo
+// guardado (se lee de las cachés al arrancar; mientras tanto, se responde como siempre).
 //
 // Nada se guarda por adelantado por ficha: la página manda al terminar de cargar la lista de lo que
 // ya ha descargado (mensaje «guardar») y se guarda desde la caché HTTP, sin volver a pedirlo.
@@ -50,8 +58,6 @@ const ESTATICOS_SUELTOS = [
   "/favicon.ico",
   "/favicon.svg",
   "/apple-touch-icon.png",
-  "/manifest.webmanifest",
-  "/manifest-en.webmanifest",
 ];
 /** Scripts sin huella de public/: primero de la red, como los datos. */
 const SCRIPTS_SIN_HUELLA = ["/arranque.js", "/visitas.js", "/borrar-visita.js"];
@@ -102,26 +108,57 @@ function guardable(respuesta) {
   return respuesta !== undefined && respuesta !== null && respuesta.status === 200 && respuesta.type === "basic";
 }
 
-/** Quita las entradas más antiguas de una caché por encima de su tope. */
+/** Quita las entradas más antiguas de una caché por encima de su tope; devuelve sus claves. */
 async function recortar(cajas, nombre) {
   const tope = TOPES[nombre];
-  if (tope === undefined) return;
+  if (tope === undefined) return [];
   const caja = await cajas.open(nombre);
   const claves = await caja.keys();
   const sobran = claves.length - tope;
-  for (let i = 0; i < sobran; i += 1) await caja.delete(claves[i]);
-}
-
-/** Guarda una copia (la entrada se mueve al final: es la más reciente). */
-async function guardar(cajas, nombre, clave, respuesta) {
-  const caja = await cajas.open(nombre);
-  await caja.delete(clave);
-  await caja.put(clave, respuesta);
-  await recortar(cajas, nombre);
+  const quitadas = [];
+  for (let i = 0; i < sobran; i += 1) {
+    await caja.delete(claves[i]);
+    quitadas.push(claveDe(claves[i].url));
+  }
+  return quitadas;
 }
 
 function crearManejador(entorno) {
   const { cajas, pedir, origen, avisar, esperaMs = ESPERA_PAGINA_MS } = entorno;
+
+  // Índice en memoria de lo guardado: nombre de la caché → claves. null mientras se lee.
+  let indice = null;
+  const listo = (async () => {
+    try {
+      const leido = new Map();
+      for (const nombre of CACHES_EN_USO) {
+        const claves = await (await cajas.open(nombre)).keys();
+        leido.set(nombre, new Set(claves.map((c) => claveDe(c.url))));
+      }
+      indice = leido;
+    } catch {
+      // Sin índice se responde como siempre.
+    }
+  })();
+
+  /** true solo si se sabe que no hay copia (con el índice ya leído). */
+  function sinCopia(nombre, clave) {
+    return indice !== null && !(indice.get(nombre)?.has(clave) ?? false);
+  }
+
+  /** Guarda una copia (la entrada se mueve al final: es la más reciente) y la apunta en el índice. */
+  async function guardar(nombre, clave, respuesta) {
+    const caja = await cajas.open(nombre);
+    await caja.delete(clave);
+    await caja.put(clave, respuesta);
+    const quitadas = await recortar(cajas, nombre);
+    if (indice !== null) {
+      if (!indice.has(nombre)) indice.set(nombre, new Set());
+      const claves = indice.get(nombre);
+      claves.add(clave);
+      for (const quitada of quitadas) claves.delete(quitada);
+    }
+  }
 
   async function copia(nombre, clave) {
     const caja = await cajas.open(nombre);
@@ -133,7 +170,7 @@ function crearManejador(entorno) {
     const guardada = await copia(CACHE_HUELLA, clave);
     if (guardada !== null) return guardada;
     const respuesta = await pedir(peticion);
-    if (guardable(respuesta)) await guardar(cajas, CACHE_HUELLA, clave, respuesta.clone());
+    if (guardable(respuesta)) await guardar(CACHE_HUELLA, clave, respuesta.clone());
     return respuesta;
   }
 
@@ -142,7 +179,7 @@ function crearManejador(entorno) {
     try {
       const respuesta = await pedir(peticion);
       if (guardable(respuesta)) {
-        await guardar(cajas, CACHE_DATOS, clave, respuesta.clone());
+        await guardar(CACHE_DATOS, clave, respuesta.clone());
         return respuesta;
       }
       if (respuesta.status >= 500) return (await copia(CACHE_DATOS, clave)) ?? respuesta;
@@ -158,7 +195,7 @@ function crearManejador(entorno) {
     const clave = claveDe(peticion.url);
     const guardada = await copia(CACHE_ESTATICO, clave);
     const nueva = pedir(peticion).then(async (respuesta) => {
-      if (guardable(respuesta)) await guardar(cajas, CACHE_ESTATICO, clave, respuesta.clone());
+      if (guardable(respuesta)) await guardar(CACHE_ESTATICO, clave, respuesta.clone());
       return respuesta;
     });
     if (guardada !== null) {
@@ -172,7 +209,7 @@ function crearManejador(entorno) {
     const clave = claveDe(peticion.url);
     const guardada = await copia(CACHE_PAGINAS, clave);
     const nueva = pedir(peticion).then(async (respuesta) => {
-      if (guardable(respuesta)) await guardar(cajas, CACHE_PAGINAS, clave, respuesta.clone());
+      if (guardable(respuesta)) await guardar(CACHE_PAGINAS, clave, respuesta.clone());
       return respuesta;
     });
     const red = nueva.then(
@@ -214,6 +251,7 @@ function crearManejador(entorno) {
   /** La respuesta a una petición, o null si no se toca (va a la red como sin service worker). */
   function responder(peticion, esperar = () => undefined, cliente = null) {
     const regla = reglaDe(peticion, origen);
+    if (regla !== null && regla !== "pagina" && sinCopia(CACHE_DE_REGLA[regla], claveDe(peticion.url))) return null;
     if (regla === "huella") return huella(peticion);
     if (regla === "datos") return datos(peticion);
     if (regla === "estatico") return estatico(peticion, esperar);
@@ -243,7 +281,7 @@ function crearManejador(entorno) {
       try {
         const respuesta = await pedir(new Request(clave, { cache: "force-cache", credentials: "same-origin" }));
         if (guardable(respuesta)) {
-          await guardar(cajas, nombre, clave, respuesta);
+          await guardar(nombre, clave, respuesta);
           guardadas += 1;
         }
       } catch {
@@ -265,9 +303,10 @@ function crearManejador(entorno) {
   async function borrarTodo() {
     const nombres = await cajas.keys();
     await Promise.all(nombres.filter((n) => n.startsWith(PREFIJO)).map((n) => cajas.delete(n)));
+    if (indice !== null) indice = new Map();
   }
 
-  return { responder, guardarLista, limpiarViejas, borrarTodo };
+  return { responder, guardarLista, limpiarViejas, borrarTodo, listo };
 }
 
 // En el navegador (en las pruebas, `self` es un objeto de mentira sin addEventListener).
