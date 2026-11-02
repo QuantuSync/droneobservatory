@@ -4218,6 +4218,24 @@
         "categoria": "ministerio",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2026-00728",
+      "enlace": "https://timpul.md/articol/cea-de-a-doua-drona-care-a-survolat-r-moldova-a-parasit-spatiul-aerian-al-tarii.html",
+      "medio": "timpul.md",
+      "fecha": "2026-10-31",
+      "idioma": "ro",
+      "frase": "Ministerul Apărării a anunțat că drona a părăsit spațiul aerian al Republicii Moldova la ora 18:12, în proximitatea localității Viișoara, raionul Edineț",
+      "comprobada": {
+        "fecha": "2026-11-02",
+        "en": "https://timpul.md/articol/cea-de-a-doua-drona-care-a-survolat-r-moldova-a-parasit-spatiul-aerian-al-tarii.html (original); la medida a las 24 horas había quitado las dos autoridades de la ficha por dudar de una sola"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării",
+        "pais": "MD",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [

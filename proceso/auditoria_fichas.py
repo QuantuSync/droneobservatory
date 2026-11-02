@@ -47,7 +47,8 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
 - **L, autoridad perdida al unir**: la ficha que queda de una unión no tiene ninguna fuente de
   autoridad y alguna de las fichas unidas en ella sí la tenía (EODI-2026-00108, Auvere: la
   declaración de la KAPO se quedó en la unida EODI-2026-00333 y la ficha pasó a «posible dron»;
-  recogida/declaraciones_oficiales.con_declaraciones_del_unido).
+  recogida/declaraciones_oficiales.con_declaraciones_del_unido). También sale si la unión la
+  conservó y otra regla se la quitó después (EODI-2026-00728, la medida a las 24 horas).
 - **M, lugar revisado**: el lugar de una ficha con una revisión a mano del lugar no es el que fija
   la revisión: otro nivel u otro punto que el revisado, o, si la revisión da solo la localidad,
   un punto lejos de ella (EODI-2026-00278, Dublín; proceso/decidir.en_la_localidad_revisada).

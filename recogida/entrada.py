@@ -622,6 +622,8 @@ def comprobar_medida(
         if con_frase is None and not sin_ninguna:
             continue
         entrada = {"dato": dato, "correcto": str(error.get("correcto") or "")[:80]}
+        if dato == "autoridad":
+            entrada["autoridad"] = str(error.get("autoridad") or "").strip()
         if con_frase:
             entrada.update(fuente_id=con_frase[0], frase=con_frase[1])
         errores.append(entrada)
@@ -634,7 +636,11 @@ def corregir_medida(
 ) -> list[str]:  # fmt: skip
     """Lo que la medida encontró, corregido por el camino normal: el duplicado se une; el día que
     da una frase se toma; el lugar o la autoridad sin respaldo dejan de publicarse. El número de
-    drones queda anotado para la verificación del control."""
+    drones queda anotado para la verificación del control.
+
+    Una autoridad deja de ser oficial solo si la medida la nombra: un error sin nombre no quita
+    ninguna. EODI-2026-00728 perdió el 1 de noviembre de 2026 las dos que citaba, y con ellas el
+    estado y la presencia, porque la medida dudó de una sola."""
     hechos: list[str] = []
     for error in errores:
         if error["dato"] == "duplicado":
@@ -658,12 +664,11 @@ def corregir_medida(
             if control_fichas._guardar(ctx, actual, nuevo, "medida a las 24 horas: día"):
                 hechos.append(f"día {error['correcto']}")
                 actual = ctx.almacen.incidente(actual["id"]) or nuevo
+    nombradas = {_normal(e.get("autoridad", "")) for e in errores if e["dato"] == "autoridad"}
     sin = {
         "frase_lugar": None if any(e["dato"] == "lugar" for e in errores) else ["", ""],
         "autoridades_fuera": {
-            n: "medida a las 24 horas"
-            for n in autoridades_de(actual)
-            if any(e["dato"] == "autoridad" for e in errores)
+            n: "medida a las 24 horas" for n in autoridades_de(actual) if _normal(n) in nombradas
         },
     }
     nuevo, propios = corregida(actual, sin)

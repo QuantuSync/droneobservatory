@@ -17,7 +17,7 @@ from typing import Any
 from modelo.control import MAX_FUENTES, FuenteControl, _cuerpo, resumen_ficha
 
 VERSION_ENTRADA = "entrada/1"
-VERSION_MEDIDA = "medida/1"
+VERSION_MEDIDA = "medida/2"
 # Decidir si una ficha es un suceso ya registrado es lo más difícil del control.
 ESFUERZO_ENTRADA = "high"
 MAX_SALIDA_ENTRADA = 1500
@@ -161,9 +161,10 @@ ESQUEMA_MEDIDA: dict[str, Any] = {
             "items": {
                 "type": "object",
                 "additionalProperties": False,
-                "required": ["dato", "correcto", "duplicado_de", "fuente", "frase"],
+                "required": ["dato", "autoridad", "correcto", "duplicado_de", "fuente", "frase"],
                 "properties": {
                     "dato": {"enum": list(DATOS_MEDIDA)},
+                    "autoridad": {"type": "string"},
                     "correcto": {"type": "string"},
                     "duplicado_de": {"type": "string"},
                     "fuente": _FUENTE,
@@ -186,8 +187,9 @@ después). Busca errores, sin dar por buena la ficha:
 publicación de un recuerdo); correcto: el día AAAA-MM-DD.
 - lugar: el sitio de la ficha no es el que dicen las fuentes; correcto: el sitio.
 - drones: el número de drones no es el que dicen las fuentes; correcto: el número.
-- autoridad: una autoridad citada es de otro país o no la nombra ninguna frase; correcto: su \
-país (ISO de dos letras) o vacío.
+- autoridad: una autoridad citada es de otro país o no la nombra ninguna frase; autoridad: su \
+nombre exacto, tal como viene en la lista de autoridades citadas (un error por cada una, nunca \
+las que sí están bien; en los demás datos, vacío); correcto: su país (ISO de dos letras) o vacío.
 - duplicado: la ficha cuenta el mismo hecho físico que una de la lista; duplicado_de: su \
 identificador exacto.
 
