@@ -21,7 +21,9 @@
 // mitad de carga; si las lleva el service worker, el corte llega a la página como un error
 // («FetchEvent.respondWith received an error: TypeError: Load failed», «Importing a module script
 // failed»). Para saber sin esperar si hay copia, el manejador lleva un índice en memoria de lo
-// guardado (se lee de las cachés al arrancar; mientras tanto, se responde como siempre).
+// guardado; se lee de las cachés al arrancar (unos milisegundos) y, mientras tanto, solo pasan por el
+// service worker las páginas. Lo que se carga sin pasar por él se guarda con la lista que manda la
+// página (src/app/registro.ts).
 //
 // Nada se guarda por adelantado por ficha: la página manda al terminar de cargar la lista de lo que
 // ya ha descargado (mensaje «guardar») y se guarda desde la caché HTTP, sin volver a pedirlo.
@@ -126,24 +128,21 @@ async function recortar(cajas, nombre) {
 function crearManejador(entorno) {
   const { cajas, pedir, origen, avisar, esperaMs = ESPERA_PAGINA_MS } = entorno;
 
-  // Índice en memoria de lo guardado: nombre de la caché → claves. null mientras se lee.
-  let indice = null;
+  // Índice en memoria de lo guardado: nombre de la caché → claves. Lo que se guarda mientras se lee
+  // también se apunta (se suma, no se sustituye).
+  const indice = new Map(CACHES_EN_USO.map((nombre) => [nombre, new Set()]));
+  let indiceLeido = false;
   const listo = (async () => {
-    try {
-      const leido = new Map();
-      for (const nombre of CACHES_EN_USO) {
-        const claves = await (await cajas.open(nombre)).keys();
-        leido.set(nombre, new Set(claves.map((c) => claveDe(c.url))));
-      }
-      indice = leido;
-    } catch {
-      // Sin índice se responde como siempre.
+    for (const nombre of CACHES_EN_USO) {
+      const claves = await (await cajas.open(nombre)).keys();
+      for (const c of claves) indice.get(nombre).add(claveDe(c.url));
     }
-  })();
+    indiceLeido = true;
+  })().catch(() => undefined);
 
-  /** true solo si se sabe que no hay copia (con el índice ya leído). */
-  function sinCopia(nombre, clave) {
-    return indice !== null && !(indice.get(nombre)?.has(clave) ?? false);
+  /** Si hay copia (o puede haberla): sin el índice leído, no se sabe y no se toca. */
+  function conCopia(nombre, clave) {
+    return indiceLeido && indice.get(nombre).has(clave);
   }
 
   /** Guarda una copia (la entrada se mueve al final: es la más reciente) y la apunta en el índice. */
@@ -151,13 +150,8 @@ function crearManejador(entorno) {
     const caja = await cajas.open(nombre);
     await caja.delete(clave);
     await caja.put(clave, respuesta);
-    const quitadas = await recortar(cajas, nombre);
-    if (indice !== null) {
-      if (!indice.has(nombre)) indice.set(nombre, new Set());
-      const claves = indice.get(nombre);
-      claves.add(clave);
-      for (const quitada of quitadas) claves.delete(quitada);
-    }
+    indice.get(nombre).add(clave);
+    for (const quitada of await recortar(cajas, nombre)) indice.get(nombre).delete(quitada);
   }
 
   async function copia(nombre, clave) {
@@ -251,7 +245,7 @@ function crearManejador(entorno) {
   /** La respuesta a una petición, o null si no se toca (va a la red como sin service worker). */
   function responder(peticion, esperar = () => undefined, cliente = null) {
     const regla = reglaDe(peticion, origen);
-    if (regla !== null && regla !== "pagina" && sinCopia(CACHE_DE_REGLA[regla], claveDe(peticion.url))) return null;
+    if (regla !== null && regla !== "pagina" && !conCopia(CACHE_DE_REGLA[regla], claveDe(peticion.url))) return null;
     if (regla === "huella") return huella(peticion);
     if (regla === "datos") return datos(peticion);
     if (regla === "estatico") return estatico(peticion, esperar);
@@ -277,7 +271,10 @@ function crearManejador(entorno) {
       if (regla === null) continue;
       const nombre = CACHE_DE_REGLA[regla];
       const clave = claveDe(url.href);
-      if ((await copia(nombre, clave)) !== null) continue;
+      if ((await copia(nombre, clave)) !== null) {
+        indice.get(nombre).add(clave);
+        continue;
+      }
       try {
         const respuesta = await pedir(new Request(clave, { cache: "force-cache", credentials: "same-origin" }));
         if (guardable(respuesta)) {
@@ -303,7 +300,7 @@ function crearManejador(entorno) {
   async function borrarTodo() {
     const nombres = await cajas.keys();
     await Promise.all(nombres.filter((n) => n.startsWith(PREFIJO)).map((n) => cajas.delete(n)));
-    if (indice !== null) indice = new Map();
+    for (const claves of indice.values()) claves.clear();
   }
 
   return { responder, guardarLista, limpiarViejas, borrarTodo, listo };
