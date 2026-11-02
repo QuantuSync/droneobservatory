@@ -710,6 +710,10 @@ def medir(ctx: control_fichas.Contexto, publicadas: dict[str, str],
         ctx.nuevas[clave_medida(id_)] = {
             "version": peticiones.VERSION_MEDIDA, "fecha": _iso(ctx.ahora), "publicada": cuando,
             "errores": errores, "corregido": hechos, "motivo_es": leida.get("motivo_es", ""),
+            # Los artículos que tenía al medirla: lo que quitó no vuelve con una extracción nueva
+            # de ellos, solo con una fuente nueva (proceso/extraccion.fuera_por_la_medida).
+            "articulos": sorted({str(f["id"]).partition("-declaracion-")[0]
+                                 for f in incidente.get("fuentes", [])}),
         }  # fmt: skip
         medidas += 1
         registro.info("medida a las 24 horas %s: %d errores%s", id_, len(errores),

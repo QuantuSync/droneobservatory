@@ -191,6 +191,33 @@ def test_k_no_cuenta_dos_veces_el_mismo_cambio_del_mismo_instante() -> None:
     assert auditoria_fichas.oscilan([*cambios, *otra]) == {"EODI-2026-00312": ["zona"]}
 
 
+def test_k_no_cuenta_los_titulares_intermedios_de_un_guardado() -> None:
+    # EODI-2025-00043, 1 de noviembre de 2026: a las 05:27 una extracción nueva puso el titular sin
+    # «Posible» y a las 11:30:27 la revisión lo devolvió. En ese mismo segundo, decidir y la
+    # atribución anotaron titulares intermedios que nunca se guardaron: contaban otras dos vueltas.
+    from proceso import auditoria_fichas
+
+    posible, breve, sin = ({"es": "Posible dron cerca del aeropuerto de Riga"},
+                           {"es": "Dron cerca del aeropuerto de Riga detiene los vuelos"},
+                           {"es": "Dron cerca del aeropuerto de Riga"})  # fmt: skip
+    id_ = "EODI-2025-00043"
+    cambios = [
+        {"entidad_id": id_, "tabla": tabla, "fecha": fecha, "anterior": {"titulo": a},
+         "nuevo": {"titulo": b, **({"motivo": "regla"} if tabla != "incidentes" else {})}}
+        for tabla, fecha, a, b in [
+            ("incidentes", "2026-11-01T05:27:20Z", posible, breve),
+            ("incidentes_motivos", "2026-11-01T05:27:20Z", posible, breve),
+            ("incidentes", "2026-11-01T11:30:27Z", breve, posible),
+            ("incidentes_motivos", "2026-11-01T11:30:27Z", sin, posible),
+            ("incidentes_motivos", "2026-11-01T11:30:27Z", breve, sin),
+        ]
+    ]  # fmt: skip
+    assert auditoria_fichas.oscilan(cambios) == {}
+    # Un dato que de verdad va y vuelve en los guardados sigue contando.
+    vueltas = [{**cambios[i % 2 * 2], "fecha": f"2026-11-01T{12 + i}:00:00Z"} for i in range(4)]
+    assert auditoria_fichas.oscilan([*cambios, *vueltas]) == {id_: ["titulo"]}
+
+
 # --- Los otros datos que oscilaban cada hora (22-23 de octubre de 2026) ----------------------
 
 

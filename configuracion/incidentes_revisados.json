@@ -1133,6 +1133,24 @@
       }
     },
     {
+      "incidente": "EODI-2026-00356",
+      "enlace": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm",
+      "medio": "inewsgr.com",
+      "fecha": "2026-09-30",
+      "idioma": "el",
+      "frase": "Σύμφωνα με τα στοιχεία του ΓΕΕΘΑ, στην περιοχή κινήθηκαν ένας σχηματισμός δύο F-16 και πέντε μεμονωμένα αεροσκάφη. Ένα ATR-72 και τέσσερα μη επανδρωμένα αεροσκάφη (UAV).",
+      "comprobada": {
+        "fecha": "2026-11-02",
+        "en": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm (original, leído el 2 de noviembre de 2026): según los datos del Estado Mayor (ΓΕΕΘΑ), de los cinco aparatos sueltos uno era un ATR-72 y cuatro, drones; la extracción del 2 de noviembre a las 05:23 no volvió a leer esa declaración y la presencia bajó a no confirmada"
+      },
+      "declaracion": {
+        "autoridad": "ΓΕΕΘΑ",
+        "pais": "GR",
+        "categoria": "fuerzas_armadas",
+        "afirma": "drones"
+      }
+    },
+    {
       "incidente": "EODI-2025-00228",
       "enlace": "https://politi.dk/nordjyllands-politi/nyhedsliste/250925-pm1/2025/09/25",
       "medio": "politi.dk",
