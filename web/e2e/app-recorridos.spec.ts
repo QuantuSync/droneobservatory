@@ -56,6 +56,34 @@ async function abrirConApp(pagina: Page, ruta: string): Promise<void> {
 const SIN_RED_EN_WEBKIT =
   "WebKit + setOffline: Playwright no navega sin red («WebKit encountered an internal error», también sin service worker)";
 
+/**
+ * Diagnóstico de las pruebas sin conexión: las peticiones que fallan, los errores de la página y lo
+ * que hay en cada caché de la app. Se escribe en el registro de la prueba al terminar.
+ */
+function diagnosticar(pagina: Page): () => Promise<void> {
+  const fallos: string[] = [];
+  pagina.on("requestfailed", (p) => fallos.push(`petición: ${p.url()} ${p.failure()?.errorText ?? ""}`));
+  pagina.on("console", (m) => {
+    if (m.type() === "error") fallos.push(`consola: ${m.text()}`);
+  });
+  pagina.on("pageerror", (e) => fallos.push(`excepción: ${e.message}`));
+  return async () => {
+    const cajas = await pagina
+      .evaluate(async () => {
+        const nombres = await caches.keys();
+        const partes: string[] = [];
+        for (const nombre of nombres) {
+          const claves = (await (await caches.open(nombre)).keys()).map((c) => new URL(c.url).pathname);
+          partes.push(`${nombre}: ${claves.length} (${claves.filter((c) => c.startsWith("/assets/")).slice(0, 40).join(" ")})`);
+        }
+        return partes.join(" | ");
+      })
+      .catch((e: unknown) => `sin cachés: ${String(e)}`);
+    console.log(`[diagnóstico sin conexión] cachés: ${cajas}`);
+    console.log(`[diagnóstico sin conexión] fallos: ${fallos.slice(0, 40).join(" | ")}`);
+  };
+}
+
 // Con el service worker (lo de siempre en Playwright, escrito por si cambia el valor por defecto).
 test.use({ serviceWorkers: "allow" });
 
@@ -89,6 +117,7 @@ test.describe("la app instalable", () => {
     await abrirConApp(pagina, "/");
     await expect.poll(() => guardada(pagina, CACHE_DATOS, "/datos/resumen.json"), { timeout: 30_000 }).toBe(true);
     await expect.poll(() => guardada(pagina, CACHE_PAGINAS, "/"), { timeout: 30_000 }).toBe(true);
+    const informar = diagnosticar(pagina);
     await contexto.setOffline(true);
     try {
       await pagina.reload();
@@ -104,6 +133,7 @@ test.describe("la app instalable", () => {
       });
       expect(datos).not.toBeNull();
     } finally {
+      await informar();
       await contexto.setOffline(false);
     }
     // Al volver la conexión, la barra vuelve sola al estado de los datos.
@@ -120,6 +150,7 @@ test.describe("la app instalable", () => {
     await expect(pagina.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
     await expect.poll(() => guardada(pagina, CACHE_PAGINAS, ruta), { timeout: 30_000 }).toBe(true);
     await expect.poll(() => guardada(pagina, CACHE_DATOS, `/datos/incidentes/${id ?? ""}.json`), { timeout: 30_000 }).toBe(true);
+    const informar = diagnosticar(pagina);
     await contexto.setOffline(true);
     try {
       await pagina.goto("about:blank");
@@ -127,6 +158,7 @@ test.describe("la app instalable", () => {
       await expect(pagina.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
       await expect(pagina.locator("[data-sin-conexion]:visible").first()).toContainText(/Offline · data from/);
     } finally {
+      await informar();
       await contexto.setOffline(false);
     }
   });
