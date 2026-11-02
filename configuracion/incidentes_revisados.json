@@ -12037,6 +12037,24 @@
       "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-22",
       "pais": "MD",
       "motivo": "la ficha es el dron detectado sobre Lunga; los «trei drone» del Ministerio de Exteriores son el total del 30 de septiembre, con EODI-2026-00527 y EODI-2026-00262"
+    },
+    {
+      "incidente": "EODI-2026-00075",
+      "campo": "lugar",
+      "valor": {
+        "localidad": "Roman",
+        "region": "Neamț",
+        "nivel": "localidad",
+        "punto": {
+          "lat": 46.9236,
+          "lon": 26.9204
+        },
+        "radio_km": 20.0
+      },
+      "cita": "w odległości 18 km na północ od miejscowości Roman we wschodniej Rumunii",
+      "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
+      "pais": "RO",
+      "motivo": "el dron se detectó en Rumanía a 18 km al norte de Roman (bankier.pl, con la agencia PAP y el Ministerio de Defensa rumano); Mihailenii Vechi (Rîșcani), donde cayó, está en Moldavia y no es el lugar de la ficha rumana (revisado el 2 de noviembre de 2026)"
     }
   ]
 }
