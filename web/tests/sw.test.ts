@@ -23,6 +23,7 @@ type Regla = "pagina" | "huella" | "datos" | "estatico" | null;
 interface Manejador {
   responder(peticion: PeticionSw, esperar?: (p: Promise<unknown>) => void, cliente?: string | null): Promise<Response> | null;
   guardarLista(direcciones: string[]): Promise<number>;
+  guardarDespues(peticion: PeticionSw): Promise<number> | null;
   limpiarViejas(): Promise<void>;
   borrarTodo(): Promise<void>;
   listo: Promise<void>;
@@ -39,6 +40,7 @@ interface ApiSw {
     origen: string;
     avisar: (cliente: string | null, mensaje: unknown) => Promise<void>;
     esperaMs?: number;
+    guardarMs?: number;
   }): Manejador;
   CACHES_EN_USO: string[];
   PREFIJO: string;
@@ -212,6 +214,17 @@ describe("respuestas", () => {
     red = sinRed;
     expect(await (await responder("/assets/b-2.js"))?.text()).toBe("x");
     expect(await (await responder("/datos/resumen.json"))?.text()).toBe("x");
+    // Lo que va a la red sin copia se guarda después, desde la caché HTTP.
+    red = () => Promise.resolve(respuesta("y"));
+    const cajas2 = new CajasFalsas();
+    const otro = sw.crearManejador({ cajas: cajas2, origen: ORIGEN, guardarMs: 5, pedir: (p) => red(p.url), avisar: async () => undefined });
+    await otro.listo;
+    const pet = { url: `${ORIGEN}/assets/d-4.js?x=1`, method: "GET", mode: "cors", headers: new Headers() };
+    expect(otro.responder(pet)).toBeNull();
+    expect(await otro.guardarDespues(pet)).toBe(1);
+    red = sinRed;
+    expect(await (await otro.responder(pet))?.text()).toBe("y");
+    expect(otro.guardarDespues({ ...pet, url: `${ORIGEN}/`, mode: "navigate" })).toBeNull();
     // «Borrar mi última visita»: sin copias, otra vez a la red directa.
     await manejador.borrarTodo();
     expect(responder("/assets/b-2.js")).toBeNull();
