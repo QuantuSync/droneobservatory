@@ -68,7 +68,7 @@ import { paginaAvisos } from "./avisos.ts";
 import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
 import { citaRecomendadaConDoi, seccionArchivadas } from "./archivadas.ts";
-import { urlDeDoi, VERSIONES_ARCHIVADAS } from "../datos/versionesArchivadas.ts";
+import { ULTIMA_ARCHIVADA, urlDeDoi, VERSIONES_ARCHIVADAS } from "../datos/versionesArchivadas.ts";
 import type { VersionArchivada } from "../datos/versionesArchivadas.ts";
 import type { PaginaServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
@@ -370,6 +370,16 @@ function portada(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("li", null, enlace(RUTAS.metodologia[idioma], tp.metodologia.titulo)),
       e("li", null, enlace(RUTAS.ayuda[idioma], tp.ayuda.titulo)),
       e("li", null, enlace(`${RUTAS.metodologia[idioma]}#datos-abiertos`, tp.portada.descargas)),
+      ULTIMA_ARCHIVADA !== undefined &&
+        e(
+          "li",
+          { "data-doi-portada": ULTIMA_ARCHIVADA.doi },
+          `${tp.archivadosConDoi}: `,
+          e("a", { href: urlDeDoi(ULTIMA_ARCHIVADA.doi), rel: "noopener", hreflang: null }, `doi:${ULTIMA_ARCHIVADA.doi}`),
+          " (",
+          enlace(`${RUTAS.metodologia[idioma]}#citar`, tp.metodologia.citarConDoi),
+          ")",
+        ),
     ),
   );
   return {
@@ -1158,18 +1168,20 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   ];
   const cuerpo = html(
     e("h1", null, tp.metodologia.titulo),
-    e("nav", { "aria-label": tp.metodologia.indice }, e("ul", { class: "texto-enlaces" }, seccionesDeMetodologia(t).map((s) => e("li", null, enlace(`#${s.id}`, s.titulo))), e("li", null, enlace("#datos-abiertos", d.titulo)), e("li", null, enlace("#sobre", t.metodologia.sobre)))),
+    e("nav", { "aria-label": tp.metodologia.indice }, e("ul", { class: "texto-enlaces" }, seccionesDeMetodologia(t).map((s) => e("li", null, enlace(`#${s.id}`, s.titulo))), e("li", null, enlace("#datos-abiertos", d.titulo)), ULTIMA_ARCHIVADA !== undefined && e("li", { "data-citar-doi": "" }, enlace("#citar", tp.metodologia.citarConDoi)), e("li", null, enlace("#sobre", t.metodologia.sobre)))),
     seccionesDeMetodologia(t).map((s) => e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque))),
     e(
       "section",
       { id: "datos-abiertos" },
       e("h2", null, d.titulo),
+      citaRecomendadaConDoi(idioma, "h3"),
       e("p", null, d.intro),
       e("ul", null, descargas.map(([nombre, ruta, formato]) => e("li", null, nombre, ": ", e("a", { href: ruta, download: true }, formato)))),
       e("p", { class: "mono" }, d.version(version)),
       e("p", null, d.licencia, ": ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS)),
       e("p", { "data-licencia-texto": "" }, d.licenciaTexto),
-      autoriaYCita(idioma, "h3"),
+      e("h3", null, d.autoriaTitulo),
+      e("p", { "data-autoria": "" }, lineaAutoria(idioma)),
       seccionArchivadas(VERSIONES_ARCHIVADAS, idioma),
     ),
     e(
@@ -1503,7 +1515,16 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
       { class: "texto-pie" },
       e("p", { "data-nombre-completo": "" }, idioma === "es" ? `${NOMBRE} (${NOMBRE_ES}) · ${SIGLAS} · droneobservatory.eu` : `${NOMBRE} · ${SIGLAS} · droneobservatory.eu`),
       e("p", { class: "mono", "data-datos-de": "" }, tp.datosDe(fechaHora(actualizado))),
-      e("p", null, tp.licencia, " ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS), " · ", tp.codigo),
+      e(
+        "p",
+        null,
+        tp.licencia,
+        " ",
+        externo(LICENCIA_DATOS_URL, LICENCIA_DATOS),
+        ULTIMA_ARCHIVADA !== undefined && html(" · ", e("a", { href: urlDeDoi(ULTIMA_ARCHIVADA.doi), rel: "noopener", hreflang: null, "data-doi-pie": ULTIMA_ARCHIVADA.doi }, tp.archivadosConDoi)),
+        " · ",
+        tp.codigo,
+      ),
       e("p", { "data-autoria-pie": "" }, lineaAutoria(idioma)),
       e(
         "nav",

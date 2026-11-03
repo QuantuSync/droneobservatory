@@ -99,6 +99,9 @@ export const VERSIONES_ARCHIVADAS: readonly VersionArchivada[] = leer();
 /** La versión archivada más reciente: la única que se cita (la primera de la lista). */
 export const ULTIMA_ARCHIVADA: VersionArchivada | undefined = VERSIONES_ARCHIVADAS[0];
 
+/** El apartado del DOI en la metodología (la cita recomendada), en cada idioma. */
+export const RUTA_CITAR = { es: "/metodologia#citar", en: "/en/methodology#citar" } as const;
+
 /** La cita de una versión partida alrededor de la dirección de su DOI, para enlazarla. */
 export function partesDeCita(version: VersionArchivada): { antes: string; doi: string; despues: string } {
   const doi = urlDeDoi(version.doi);

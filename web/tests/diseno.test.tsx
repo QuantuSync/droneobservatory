@@ -592,6 +592,10 @@ describe("aplicación con el diseño nuevo", () => {
     for (const nombre of [es.guerra.reproducir, es.controles.feed, es.controles.ayuda, es.firma.metodologia]) {
       expect(within(cabecera).getByRole("button", { name: nombre })).toBeTruthy();
     }
+    // La cita con DOI: un enlace al apartado de la metodología, nada fijo sobre el mapa.
+    const doi = within(cabecera).getByRole("link", { name: es.firma.citarDoi });
+    expect(doi.getAttribute("href")).toBe("/metodologia#citar");
+    expect(doi.textContent).toBe("DOI");
     expect(within(cabecera).getByRole("navigation", { name: es.controles.idioma })).toBeTruthy();
     expect(cabecera.textContent).not.toMatch(/[▾▴»]/);
     // La monoespaciada va solo en cifras y horas, nunca con palabras.
@@ -747,6 +751,10 @@ describe("aplicación con el diseño nuevo", () => {
       es.controles.paneles,
       es.controles.idioma,
     ]);
+    // Junto a «Metodología y datos abiertos», la entrada que lleva al apartado del DOI.
+    const doi = within(menu).getByRole("link", { name: es.firma.citarDoi, hidden: true });
+    expect(doi.getAttribute("href")).toBe("/metodologia#citar");
+    expect(doi.textContent).toBe(es.firma.citarDoi);
     await usuario.click(within(menu).getByRole("button", { name: es.controles.feed, hidden: true }));
     expect(await screen.findByRole("complementary", { name: es.feed.titulo })).toBeTruthy();
     // Una sola hoja a la vez: «Europa ahora» sustituye al panel en directo.

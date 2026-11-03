@@ -162,6 +162,7 @@ import type { Idioma } from "./sitio.ts";
 import { diaDeInstante, enPeriodo, incidenteEnPeriodo } from "./tiempo/dias.ts";
 import type { Periodo } from "./tiempo/dias.ts";
 import { refrescarAlaVista } from "./tiempo/refresco.ts";
+import { RUTA_CITAR, ULTIMA_ARCHIVADA } from "./datos/versionesArchivadas.ts";
 
 const Mapa = lazy(() => importarOAvisar(() => import("./mapa/Mapa.tsx")));
 
@@ -2265,6 +2266,18 @@ export function App() {
                   >
                     {t.firma.metodologia}
                   </button>
+                  {ULTIMA_ARCHIVADA !== undefined && (
+                    // En la barra, corto: el nombre completo va en la etiqueta (y en el menú del teléfono).
+                    <a
+                      className="control min-h-7 px-1.5 text-xs"
+                      href={RUTA_CITAR[idioma]}
+                      aria-label={t.firma.citarDoi}
+                      title={t.firma.citarDoi}
+                      data-citar-doi=""
+                    >
+                      DOI
+                    </a>
+                  )}
                   <InstalarApp t={t} />
                   <SelectorDeIdioma t={t} idioma={idioma} rutaOtroIdioma={rutaOtroIdioma} />
                 </>
@@ -2574,6 +2587,11 @@ export function App() {
             >
               {t.firma.metodologia}
             </button>
+            {ULTIMA_ARCHIVADA !== undefined && (
+              <a className="control w-full justify-start text-sm text-texto" href={RUTA_CITAR[idioma]} data-citar-doi="">
+                {t.firma.citarDoi}
+              </a>
+            )}
             <InstalarApp t={t} grande />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.idioma}>

@@ -59,7 +59,12 @@ export interface Textos {
     atribuidos: string;
     paises: string;
   };
-  firma: { metodologia: string; atribuciones: string };
+  firma: {
+    /** En el menú: lleva al apartado del DOI de la metodología (la única forma de citar los datos). */
+    citarDoi: string;
+    metodologia: string;
+    atribuciones: string;
+  };
   cabecera: { etiqueta: string; menu: string; cerrarMenu: string };
   hoja: { altura: (altura: string) => string; alturas: Record<"asomada" | "media" | "completa", string> };
   controles: {
