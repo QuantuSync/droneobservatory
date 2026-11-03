@@ -94,8 +94,11 @@ describe("licencia de los datos abiertos", () => {
     const resumen: Resumen = { actualizado: ACTUALIZADO, incidentes: [], episodios: [], eventos: [] };
     const texto = llmsTxt(resumen);
     expect(texto).toContain(LICENCIA_DATOS_URL);
-    expect(texto).toContain("How to cite: Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Version 2026-10.");
-    expect(texto).toContain("Cómo citar: Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión 2026-10.");
+    // La única cita: la de la versión archivada más reciente, con su DOI.
+    expect(texto).toContain("How to cite (DOI): Lucas Alaniz Pintos (2026): European Observatory of Drone Incidents (EODI)");
+    expect(texto).toContain("Cómo citar (DOI): Lucas Alaniz Pintos (2026): European Observatory of Drone Incidents (EODI)");
+    expect(texto).toContain("https://doi.org/10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F");
+    expect(texto).not.toContain("Version 2026-10");
     expect(texto).toContain("Author: Lucas Alaniz Pintos, PhD (ORCID https://orcid.org/0009-0008-5179-2534)");
     expect(texto).toContain("Autor: Dr. Lucas Alaniz Pintos (ORCID https://orcid.org/0009-0008-5179-2534)");
     for (const p of PAGINAS_SERVICIO) {
