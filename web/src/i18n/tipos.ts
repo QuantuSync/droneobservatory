@@ -664,6 +664,21 @@ export interface Textos {
       comoComprobar: string;
       todas: string;
     };
+    /** Versiones depositadas con DOI en un repositorio de datos (datos/versionesArchivadas.ts). */
+    archivadas: {
+      titulo: string;
+      /** Qué las distingue de los datos vivos (cada hora) y de las versiones mensuales. */
+      intro: string;
+      /** Una versión: su número, el día del depósito, cuántos incidentes y en cuántos países. */
+      linea: (version: string, fecha: string, incidentes: string, paises: string) => string;
+      corte: (fechaHora: string) => string;
+      repositorio: string;
+      copias: (archivos: string) => string;
+      licencia: string;
+      trafico: string;
+      pagina: string;
+      citaTitulo: string;
+    };
     /** Enlaces a las páginas de servicio público (aviso legal, privacidad…). */
     sobre: string;
   };

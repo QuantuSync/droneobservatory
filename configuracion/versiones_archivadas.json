@@ -1,0 +1,24 @@
+{
+  "_descripcion": "Versiones de los datos abiertos depositadas en un repositorio de datos de investigación, con su DOI (una cada trimestre: enero, abril, julio y octubre). Una versión depositada no cambia: se añade la nueva al principio de la lista y no se toca ninguna de las anteriores. La web las lista en «Metodología y datos abiertos» y en sus datos estructurados (web/src/datos/versionesArchivadas.ts); docs/discuss_data.md dice cómo se prepara el paquete.",
+  "versiones": [
+    {
+      "version": "1.0",
+      "fecha": "2026-11-02",
+      "corte_datos": "2026-11-02T10:17:00Z",
+      "incidentes": 383,
+      "paises": 26,
+      "doi": "10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F",
+      "pagina": "https://discuss-data.net/dataset/f2ca4ae9-b2d3-4b0f-8f58-6cfbde30d39f/",
+      "repositorio": "Discuss Data",
+      "institucion": {
+        "es": "Centro de Investigación de Estudios de Europa del Este (Forschungsstelle Osteuropa), Universidad de Bremen",
+        "en": "Research Centre for East European Studies, University of Bremen"
+      },
+      "copias": ["Zenodo", "DARIAH"],
+      "titulo": "European Observatory of Drone Incidents (EODI): drone incidents in Europe – Open register of drone incidents with sources, literal quotations and official status",
+      "licencia": { "nombre": "CC BY 4.0", "url": "https://creativecommons.org/licenses/by/4.0/" },
+      "licencia_trafico": { "nombre": "ODbL 1.0", "url": "https://opendatacommons.org/licenses/odbl/1-0/" },
+      "cita": "Lucas Alaniz Pintos (2026): European Observatory of Drone Incidents (EODI): drone incidents in Europe – Open register of drone incidents with sources, literal quotations and official status, version 2026-11-02, v. 1.0, Discuss Data, https://doi.org/10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F"
+    }
+  ]
+}

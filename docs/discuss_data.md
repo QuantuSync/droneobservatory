@@ -6,6 +6,33 @@ Este de la Universidad de Bremen y la Biblioteca Estatal y Universitaria de Goti
 admite versiones. Se deposita **una versión fechada cada tres meses** (enero, abril, julio y
 octubre); la subida al repositorio la hace a mano el autor.
 
+## Versiones depositadas
+
+| Versión | Depositada | Datos hasta | Incidentes | DOI |
+| --- | --- | --- | --- | --- |
+| 1.0 | 2 de noviembre de 2026 (paquete `eodi-incidentes-2026-11-02.zip`) | 2026-11-02 10:17 UTC | 383 en 26 países | [10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F](https://doi.org/10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F) |
+
+Página de la 1.0: <https://discuss-data.net/dataset/f2ca4ae9-b2d3-4b0f-8f58-6cfbde30d39f/> (con
+copia en Zenodo y DARIAH). Licencia CC BY 4.0; el tráfico aéreo medido, ODbL 1.0. Cita que da
+Discuss Data:
+
+> Lucas Alaniz Pintos (2026): European Observatory of Drone Incidents (EODI): drone incidents in
+> Europe – Open register of drone incidents with sources, literal quotations and official status,
+> version 2026-11-02, v. 1.0, Discuss Data, https://doi.org/10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F
+
+Cada versión depositada se apunta en
+[`configuracion/versiones_archivadas.json`](../configuracion/versiones_archivadas.json) (la nueva,
+al principio de la lista; las anteriores no se tocan): de ahí salen el apartado «Versión archivada
+con DOI» de la metodología y el DOI de los datos estructurados de la web. El DOI de la última
+versión va también en `identifiers` y `preferred-citation` de [`CITATION.cff`](../CITATION.cff).
+
+**La siguiente versión** (enero de 2027) se genera frente a la 1.0, para que su `CHANGELOG.md`
+diga lo que cambió desde el depósito:
+
+```
+python -m recogida.discuss_data generar --salida <carpeta> --anterior eodi-incidentes-2026-11-02.zip
+```
+
 Código: [`exportacion/discuss_data.py`](../exportacion/discuss_data.py) (el paquete, funciones
 puras) y [`recogida/discuss_data.py`](../recogida/discuss_data.py) (bajar los datos, guardar el
 paquete y avisar). Pruebas: [`tests/test_discuss_data.py`](../tests/test_discuss_data.py).

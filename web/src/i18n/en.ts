@@ -1878,8 +1878,8 @@ export const en: Textos = {
     descargas: {
       titulo: "Open data",
       intro:
-        "The data can be downloaded and reused with attribution. It is rebuilt with " +
-        "every update.",
+        "The data can be downloaded and reused with attribution. It is the live data of the " +
+        "website: it is rebuilt every hour, with every update.",
       incidentes: "Incidents",
       ucrania: "Attacks in the Ukraine layer",
       sinUbicacion: "Incidents with an approximate location",
@@ -1910,6 +1910,19 @@ export const en: Textos = {
       huella: "SHA-256",
       comoComprobar: "To check a file: sha256sum <file> (Linux), shasum -a 256 <file> (macOS) or certutil -hashfile <file> SHA256 (Windows).",
       todas: "All versions",
+    },
+    archivadas: {
+      titulo: "Archived version with DOI",
+      intro:
+        "Besides the live data on this website, which is rebuilt every hour and can change when an authority confirms, corrects or rules something out, every quarter (January, April, July and October) a dated version is deposited in a research data repository. Each archived version has its own DOI and never changes: it is the one to cite in academic work.",
+      linea: (version, fecha, incidentes, paises) => `Version ${version}, deposited on ${fecha}: ${incidentes} incidents in ${paises} countries`,
+      corte: (fechaHora) => `Data published up to ${fechaHora} (UTC).`,
+      repositorio: "Repository",
+      copias: (archivos) => `Also archived in ${archivos}.`,
+      licencia: "Licence",
+      trafico: "the measured air traffic",
+      pagina: "Version page",
+      citaTitulo: "Recommended citation",
     },
     sobre: "About the observatory",
   },
