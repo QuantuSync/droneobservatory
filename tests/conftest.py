@@ -113,3 +113,18 @@ os.environ["EODI_CORREO_AUTOR"] = CORREO_PRUEBA
 def buckets_de_prueba(monkeypatch: pytest.MonkeyPatch) -> None:
     for variable, nombre in BUCKETS_PRUEBA.items():
         monkeypatch.setenv(variable, nombre)
+
+
+@pytest.fixture(autouse=True)
+def cerrojo_en_observar(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Las pruebas no dependen del modo del cerrojo de configuracion/cerrojo.json: van en
+    «observar» salvo las que piden «aplicar» (docs/cerrojo.md). Pasar a «aplicar» es un cambio de
+    una línea en ese fichero y no cambia ninguna prueba. Leer otro fichero sigue igual."""
+    from proceso import protegido
+
+    leer = protegido.modo
+
+    def modo(ruta: Path | None = None) -> str:
+        return protegido.OBSERVAR if ruta is None else leer(ruta)
+
+    monkeypatch.setattr(protegido, "modo", modo)
