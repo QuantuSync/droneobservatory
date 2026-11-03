@@ -375,9 +375,12 @@ def test_en_observar_la_base_queda_como_sin_cerrojo(monkeypatch: pytest.MonkeyPa
     assert not sin.controles(protegido.PREFIJO_RETENIDO)
 
 
-def test_la_configuracion_se_fusiona_en_observar() -> None:
+def test_la_configuracion_tiene_un_modo_valido() -> None:
+    # Las pruebas van en «observar» (tests/conftest.py); el fichero dice el modo de verdad.
     assert protegido.modo() == protegido.OBSERVAR
-    assert json.loads(protegido.CONFIGURACION.read_text(encoding="utf-8"))["modo"] == "observar"
+    modo = json.loads(protegido.CONFIGURACION.read_text(encoding="utf-8"))["modo"]
+    assert modo in (protegido.OBSERVAR, protegido.APLICAR)
+    assert protegido.modo(protegido.CONFIGURACION) == modo
 
 
 def test_un_modo_desconocido_es_observar(tmp_path: Path) -> None:
