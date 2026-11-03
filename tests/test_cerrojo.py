@@ -950,3 +950,157 @@ def test_un_sin_dato_de_la_referencia_esta_fijado(monkeypatch: pytest.MonkeyPatc
     assert protegido._fijado_en_referencia(guardado, "drones")
     guardado["drones"] = {"numero": {"min": 1, "max": 1}}
     assert not protegido._fijado_en_referencia(guardado, "drones")
+
+
+# --- 3 de noviembre de 2026: intervalos, modelo, cierre, fuentes anteriores y retiradas -------
+
+
+@pytest.mark.parametrize(
+    ("frase", "dicho", "esperado"),
+    [
+        # EODI-2026-00744/00745: «19 încălcări» no dice un intervalo de 9 a 19 drones.
+        ("în octombrie au fost înregistrate 19 încălcări ale spațiului aerian",
+         {"min": 9, "max": 19}, False),
+        ("între 9 și 19 drone au survolat", {"min": 9, "max": 19}, True),
+    ],
+)  # fmt: skip
+def test_un_intervalo_de_drones_lo_dicen_sus_dos_extremos(
+    frase: str, dicho: Any, esperado: bool
+) -> None:
+    assert protegido.dice_el_dato("drones", frase, dicho) is esperado
+
+
+def _con_modelo(documento: Documento, modelo: str, frase: str) -> Documento:
+    documento = copy.deepcopy(documento)
+    documento["fuentes"][0]["frase_origen"] = frase
+    documento["drones"] = {**documento["drones"], "modelo": modelo}
+    documento["afirmaciones"].append(_afirmacion("modelo_dron", modelo, "gdelt-base"))
+    return documento
+
+
+def test_el_modelo_que_dice_la_frase_esta_protegido() -> None:
+    # EODI-2025-00261 volvía a Shahed tras su revisión (1/11/2026).
+    guardado = _con_modelo(ficha(), "Gerbera", "Ein Gerbera-Drohne flog über den Flughafen.")
+    assert protegido.dice_el_dato("modelo", "Ein Gerbera-Drohne", "Gerbera")
+    nuevo = copy.deepcopy(guardado)
+    nuevo["drones"]["modelo"] = "Shahed-136"
+    veredicto = protegido.juzgar(guardado, nuevo, [], lambda _: "")
+    assert "modelo" in {c.dato for c in veredicto.retenidos}
+    resultado = protegido.conservar(nuevo, guardado, veredicto.retenidos)
+    assert resultado["drones"]["modelo"] == "Gerbera"
+
+
+def test_otra_redaccion_del_mismo_modelo_no_es_un_cambio() -> None:
+    # EODI-2025-00068: «витлов самолет» y «безпилотен летателен апарат тип "витлов самолет"».
+    guardado = _con_modelo(ficha(), "витлов самолет", "Това е витлов самолет.")
+    nuevo = copy.deepcopy(guardado)
+    nuevo["drones"]["modelo"] = 'безпилотен летателен апарат тип "витлов самолет"'
+    assert "modelo" not in {c.dato for c in protegido.candidatos(guardado, nuevo)}
+
+
+def _cierre_nuevo(frase: str) -> tuple[Documento, Documento]:
+    guardado = ficha()
+    guardado["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    guardado["afirmaciones"] = [
+        a for a in guardado["afirmaciones"] if not a["campo"].startswith("cierre")
+    ]
+    nuevo = _otra_fuente(guardado, frase)
+    nuevo["consecuencias"] = {"cierre": {"valor": "si"}}
+    nuevo["afirmaciones"].append(_afirmacion("cierre", "si", "gdelt-nueva"))
+    return guardado, nuevo
+
+
+def test_un_cierre_que_ninguna_frase_nombra_se_retiene() -> None:
+    # EODI-2026-00725: en Suceava solo hubo una alerta RO-Alert; el cierre fue en Iași.
+    guardado, nuevo = _cierre_nuevo(
+        "O avertizare RO-Alert a fost transmisă pentru județul Suceava."
+    )
+    assert "cierre" in {c.dato for c in protegido.candidatos(guardado, nuevo)}
+    guardado, nuevo = _cierre_nuevo("Der Flughafen wurde für 20 Minuten gesperrt.")
+    assert "cierre" not in {c.dato for c in protegido.candidatos(guardado, nuevo)}
+
+
+def _con_nota_anterior(documento: Documento) -> Documento:
+    nuevo = _otra_fuente(documento, "Keine Landungen nach Drohnensichtung möglich")
+    nuevo["fuentes"][-1]["fecha"] = ejemplos.instante("2026-02-17T11:00Z", "aproximada")
+    return nuevo
+
+
+def test_una_fuente_anterior_al_suceso_junta_dos_sucesos() -> None:
+    # EODI-2026-00079: la nota del 17 de febrero de 2026 en la ficha del 11 de agosto.
+    guardado = ficha()
+    assert protegido.fuentes_anteriores(guardado) == []
+    nuevo = _con_nota_anterior(guardado)
+    assert protegido.fuentes_anteriores(nuevo) == ["gdelt-nueva"]
+    veredicto = protegido.juzgar(guardado, nuevo, [], lambda _: "")
+    assert protegido.COHERENCIA in {c.dato for c in veredicto.retenidos}
+    assert protegido.conservar(nuevo, guardado, veredicto.retenidos) == guardado
+    # Una revisión a mano sí la deja; un día antes (zona horaria) no cuenta.
+    revisado = protegido.juzgar(guardado, nuevo, ["recogida.revisados._guardar"], lambda _: "")
+    assert revisado.retenidos == []
+    cerca = _otra_fuente(guardado, "Drohne am Flughafen")
+    cerca["fuentes"][-1]["fecha"] = ejemplos.instante("2026-10-12T20:00Z", "aproximada")
+    assert protegido.fuentes_anteriores(cerca) == []
+
+
+def test_la_auditoria_z_ve_la_fuente_anterior() -> None:
+    assert "Z" in auditoria_fichas.COMPROBACIONES
+    resultado = auditoria_fichas.auditar([_con_nota_anterior(ficha())])
+    assert resultado["Z"] == ["EODI-2026-09600"]
+
+
+@pytest.mark.parametrize(
+    ("pasos", "esperado"),
+    [
+        (["proceso.extraccion.retirar", "proceso.incursiones.retirar"], True),
+        (["proceso.extraccion.retirar", "proceso.extraccion_oficial.revalidar_altas"], True),
+        (["proceso.extraccion.retirar", "proceso.extraccion.reconstruir"], True),
+        # Un fallo dentro de una reconstrucción no es la decisión de retirar.
+        (["proceso.extraccion.retirar", "proceso.extraccion.guardar",
+          "proceso.extraccion.reconstruir"], False),
+        (["recogida.control_fichas._guardar", "recogida.control_fichas.resolver_sin_fecha"], True),
+        (["proceso.extraccion.conservar_publicada"], False),
+    ],
+)  # fmt: skip
+def test_los_caminos_de_retirada(pasos: list[str], esperado: bool) -> None:
+    assert protegido.por_decision(pasos) is esperado
+
+
+def _retirada(documento: Documento) -> Documento:
+    nuevo = copy.deepcopy(documento)
+    nuevo["retirado"] = {"fecha": ejemplos.instante("2026-10-13T14:17Z", "minuto"),
+                         "motivo": "regla", "motivo_en": "rule"}  # fmt: skip
+    return nuevo
+
+
+def test_una_regla_explicita_no_retira_lo_que_cuenta_una_autoridad() -> None:
+    # EODI-2024-00002: la alta oficial cuyo día no estaba en su frase.
+    pasos = ["proceso.extraccion.retirar", "proceso.extraccion_oficial.revalidar_altas"]
+    con_autoridad = ficha()
+    veredicto = protegido.juzgar(con_autoridad, _retirada(con_autoridad), pasos, lambda _: "")
+    assert "retirado" in {c.dato for c in veredicto.retenidos}
+    sin_autoridad = ficha()
+    sin_autoridad["fuentes"] = sin_autoridad["fuentes"][:1]
+    veredicto = protegido.juzgar(sin_autoridad, _retirada(sin_autoridad), pasos, lambda _: "")
+    assert "retirado" not in {c.dato for c in veredicto.retenidos}
+    revision = protegido.juzgar(con_autoridad, _retirada(con_autoridad),
+                                ["recogida.revisados._guardar"], lambda _: "")  # fmt: skip
+    assert revision.retenidos == []
+
+
+@pytest.mark.parametrize(
+    ("frase", "esperado"),
+    [
+        ("Oficialii Aeroportului Iași anunță că, în urma mesajului RO-Alert referitor la posibilă "
+         "incursiune a unei drone, spațiul aerian a fost închis", True),
+        ("Nach einer Warnung der Behörden wurde der Flughafen geschlossen", True),
+        ("Eine Drohne flog über den Flughafen Hannover", False),
+    ],
+)  # fmt: skip
+def test_el_aeropuerto_que_reacciona_a_una_alerta_no_es_el_lugar(
+    frase: str, esperado: bool
+) -> None:
+    # EODI-2026-00719: la alerta era para el distrito de Iași; el aeropuerto solo cerró.
+    from proceso import control_fichas as reglas
+
+    assert reglas.reacciona_a_una_alerta(frase) is esperado

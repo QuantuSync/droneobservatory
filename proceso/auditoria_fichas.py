@@ -109,6 +109,10 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   la ficha (`pais` de configuracion/autoridades.json) y ninguna frase de sus fuentes nombra ese
   país. EODI-2026-00728 (2 de noviembre de 2026): «Ministerul Apărării» de Moldavia salía como «el
   Ministerio de Defensa Nacional de Rumanía».
+- **Z, fuente anterior al suceso**: una fuente de la ficha se publicó más de dos días antes del
+  día del suceso (proceso/protegido.fuentes_anteriores): una nota no cuenta lo que aún no ha pasado,
+  así que la ficha junta dos sucesos. EODI-2026-00079 (2 de noviembre de 2026): las notas del 17 de
+  febrero de 2026 acabaron en la ficha del 11 de agosto.
 """
 
 import json
@@ -149,7 +153,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y",
+    "S", "T", "U", "V", "W", "X", "Y", "Z",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -177,6 +181,7 @@ NOMBRES = {
     "W": "dato decidido perdido en una reextracción",
     "X": "cambio a algo protegido sin justificación",
     "Y": "autoridad de otro país sin frase",
+    "Z": "fuente anterior al suceso",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -840,6 +845,10 @@ def auditar(
     if copias:
         resultado["Q"] = [str(d["id"]) for d in vistos
                           if incidentes.activo(d) and sin_fuente_legible(d, copias)]  # fmt: skip
+    from proceso import protegido as _protegido
+
+    resultado["Z"] = [str(d["id"]) for d in vistos
+                      if incidentes.activo(d) and _protegido.fuentes_anteriores(d)]  # fmt: skip
     resultado["L"] = autoridad_perdida(vistos)
     resultado["V"] = uniones_marcadas(vistos, del_experto, a_mano)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()

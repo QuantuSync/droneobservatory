@@ -7826,6 +7826,15 @@
         "es": "Dos sucesos distintos frente a Sulina el 14 de octubre de 2026: el blanco aéreo que el Ministerio de Defensa rumano siguió en el espacio aéreo nacional de 17:38 a 17:46 hora local, a unos 22 km al noreste de Sulina (antena3.ro), y el petrolero alcanzado hacia las 20:00 (novinite.com).",
         "en": "Two different events off Sulina on 14 October 2026: the air target that the Romanian Ministry of Defence tracked in national airspace from 17:38 to 17:46 local time, about 22 km north-east of Sulina (antena3.ro), and the tanker hit around 20:00 (novinite.com)."
       }
+    },
+    {
+      "incidentes": ["EODI-2026-00022", "EODI-2026-00079"],
+      "separado_de": "EODI-2026-00022",
+      "origen": "revisado",
+      "motivo": {
+        "es": "Dos sucesos distintos en el aeropuerto de Hannover-Langenhagen: el piloto que avisó de un dron el 17 de febrero de 2026 y los aviones que tuvieron que desviarse (neuepresse.de y haz.de, publicadas ese día), y el dron de la noche del 10 al 11 de agosto de 2026 que cerró las pistas (sueddeutsche.de). La segunda búsqueda del 2 de noviembre de 2026 llevó la nota de agosto a la ficha de febrero y la regla de fusión las juntó.",
+        "en": "Two different events at Hannover-Langenhagen airport: the pilot who reported a drone on 17 February 2026 and the aircraft that had to turn away (neuepresse.de and haz.de, published that day), and the drone of the night of 10 to 11 August 2026 that closed the runways (sueddeutsche.de). The second search of 2 November 2026 took the August article to the February record and the merge rule joined them."
+      }
     }
   ],
   "reponer": [
@@ -7855,9 +7864,12 @@
       "fuente": "revisada-534b7be4382f30fd-declaracion-1",
       "motivo": {
         "es": "La frase de Defensa («zo'n tien drones boven het terrein») habla de la base aérea de Volkel, no del aeropuerto de Eindhoven; su cita salió de la configuración el 30 de octubre de 2026 y la fuente que añadió se quedaba en la ficha.",
-        "en": "The Defence quote («zo'n tien drones boven het terrein») is about Volkel air base, not Eindhoven airport; its quote left the configuration on 30 October 2026 and the source it added stayed in the record."
+        "en": "The Defence quote («zo'n tien drones boven het terrein») is about Volkel air base, not Eindhoven airport;its quote left the configuration on 30 October 2026 and the source it added stayed in the record."
       }
-    }
+    },
+    {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}},
+    {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f-declaracion-1", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}},
+    {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f-declaracion-2", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}}
   ],
   "separar": [
     {
@@ -12073,6 +12085,42 @@
       "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
       "pais": "RO",
       "motivo": "el dron se detectó en Rumanía a 18 km al norte de Roman (bankier.pl, con la agencia PAP y el Ministerio de Defensa rumano); Mihailenii Vechi (Rîșcani), donde cayó, está en Moldavia y no es el lugar de la ficha rumana (revisado el 2 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00079",
+      "campo": "inicio",
+      "valor": "2026-02-17",
+      "cita": "Flughafen Hannover-Langenhagen: Keine Landungen nach Drohnensichtung möglich",
+      "enlace": "https://neuepresse.de/lokales/hannover/flughafen-hannover-langenhagen-keine-landungen-nach-drohnensichtung-moeglich-QIKYZT2R65HU7LLTZ32TRDJRVE.html",
+      "pais": "DE",
+      "motivo": "la nota de la Neue Presse cuenta en presente el aeropuerto sin aterrizajes y su copia en Internet Archive es de las 10:54 UTC del 17 de febrero de 2026; el 11 de agosto es de la nota de agosto que la segunda búsqueda llevó a la ficha (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00022",
+      "campo": "inicio",
+      "valor": {"valor": "2026-08-11T02:00Z", "precision": "aproximada"},
+      "cita": "Zwischen kurz vor 4.00 Uhr und etwa 5.20 Uhr seien Start- und Landebahnen immer wieder vorübergehend gesperrt worden.",
+      "enlace": "https://finanzen.net/nachricht/aktien/drohne-am-flughafen-hannover-betrieb-zeitweise-eingestellt-15865648",
+      "pais": "DE",
+      "motivo": "las pistas se cerraron a ratos desde poco antes de las 4:00 hora de Alemania del 11 de agosto de 2026 (hacia las 02:00 UTC); la ficha perdió esa hora al juntarse con EODI-2026-00079 el 2 de noviembre de 2026 (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00719",
+      "campo": "lugar",
+      "valor": {"nivel": "region", "region": "Iași", "suceso": "județul Iași", "punto": {"lat": 47.2, "lon": 27.4}, "radio_km": 50.0},
+      "cita": "alertei transmise de Ministerul Apărării Naționale (MApN) privind prezența unei drone la nivelul județului Iași",
+      "enlace": "https://ziare.com/spatiu-aerian/aeroport-drona-cursa-redirectionata-2044991",
+      "pais": "RO",
+      "motivo": "el Ministerio de Defensa rumano avisó de un dron en el distrito de Iași, a unos 10 km de la frontera con Moldavia; el aeropuerto de Iași solo cerró su espacio aéreo por la alerta («în urma mesajului RO-Alert», news.yam.md) y no es el lugar del suceso (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00719",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "Oficialii Aeroportului Iaşi au anunţat că, în urma mesajului RO-Alert referitor la posibila incursiune a unei drone, spaţiul aerian a fost închis temporar",
+      "enlace": "https://news.yam.md/ro/story/80717321",
+      "pais": "RO",
+      "motivo": "el aeropuerto de Iași cerró su espacio aéreo por la alerta, no porque el dron fuera hacia él; ninguna fuente dice a qué se dirigía (revisado el 3 de noviembre de 2026)"
     }
   ]
 }
