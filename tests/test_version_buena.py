@@ -107,6 +107,7 @@ def test_cada_comprobacion_marca_la_ficha_publicada(
     resultado: dict[str, list[str]] = {c: [] for c in auditoria_fichas.COMPROBACIONES}
     resultado[comprobacion] = [entrada]
     monkeypatch.setattr(auditoria_fichas, "auditar", lambda *_a, **_k: resultado)
+    monkeypatch.setattr(version_buena, "x_vigentes", lambda *_: resultado["X"])
     assert version_buena.marcadas(Almacen.abrir(), AHORA) == {ID: [comprobacion]}
 
 
@@ -118,6 +119,9 @@ def test_la_auditoria_real_marca_un_cambio_sin_permiso() -> None:
     assert documento is not None
     almacen.guardar_incidente(version_mala(documento, "drones"), AHORA, VOCABULARIO_MODELOS)
     assert "X" in version_buena.marcadas(almacen, datetime.now(UTC)).get(ID, [])
+    # Deshecho el cambio (una revisión, el control), ya no deja la ficha en su versión anterior.
+    almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    assert "X" not in version_buena.marcadas(almacen, datetime.now(UTC)).get(ID, [])
 
 
 def _entrada(titulo: dict[str, str]) -> Documento:
