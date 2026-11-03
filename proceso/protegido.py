@@ -860,23 +860,73 @@ def es_separacion(almacen: Any, documento: Documento, destino: str) -> bool:
     return par_prohibido(documento, otro, prohibidos, ()) is not None
 
 
+# Los datos que se deducen de otros: el tipo sale del cierre, el lugar y el objetivo
+# (incidentes.con_tipo); el titular, de lo que resume (decidir_titulo).
+DEDUCIDOS_DE = {"tipo": ("cierre", "lugar", "objetivo"), "titulo": TITULO_SIGUE_A}
+
+
+def fijado_por_revision(actual: Documento, dato: str) -> bool:
+    """El valor que tiene ahora la ficha en `dato` lo fija una revisión a mano o una rectificación
+    oficial, o sale, por las reglas, de datos que fija una revisión: lo que cambió antes ya no es
+    lo que se publica (EODI-2026-00079, 3/11/2026: el cierre «si» revisado con la cita de la Neue
+    Presse coincidía con el de un cambio malo del 2/11 y X la dejaba fuera de la publicación)."""
+    try:
+        if _revisado(actual, dato):
+            return True
+        if dato in ("presencia_dron", "titulo") and rectificaciones.rectificado(actual):
+            return True
+        bases = DEDUCIDOS_DE.get(dato, ())
+        if not any(_hay_revision(actual, b) for b in bases):
+            return False
+        if dato == "tipo":
+            return bool(
+                incidentes.con_tipo(copy.deepcopy(actual)).get("tipo") == actual.get("tipo")
+            )
+        return bool(decidir.decidir_titulo(actual) == actual.get("titulo"))
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
 def cambios_sin_permiso(
-    cambios: Iterable[Documento], permitidos: frozenset[tuple[str, str, str]]
+    cambios: Iterable[Documento],
+    permitidos: frozenset[tuple[str, str, str]],
+    actuales: dict[str, Documento] | None = None,
 ) -> list[str]:
     """X: «<id> <dato>» de los cambios guardados a algo protegido sin justificación apuntada
     (`permitidos`: (ficha, dato, huella) de las claves `permitido:`). Con el cerrojo en «aplicar»
-    debe ser una lista vacía; cualquier otra cosa es un agujero."""
+    debe ser una lista vacía; cualquier otra cosa es un agujero.
+
+    Con `actuales` ({ficha: documento de ahora}), solo cuenta lo que la ficha aún tiene: no un
+    cambio que otro posterior ya deshizo (una revisión, el control: EODI-2026-00719 y 00022, 3/11),
+    ni uno que vuelve al valor de antes de la ventana, ni un dato cuyo valor actual fija una
+    revisión o una rectificación (`fijado_por_revision`), ni los datos de una ficha que ya no se
+    publica (retirada o fundida), salvo la retirada misma."""
+    lista = list(cambios)
     salida: set[str] = set()
-    for cambio in cambios:
+    al_empezar: dict[tuple[str, str], str] = {}
+    for cambio in lista:
         if cambio.get("tabla", "incidentes") != "incidentes":
             continue
         anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
         if not anterior or not nuevo or "id" not in anterior:
             continue
+        id_ = str(anterior["id"])
         for propuesto in candidatos(anterior, nuevo):
-            clave = (str(anterior["id"]), propuesto.dato, huella(propuesto.dato, nuevo))
-            if clave not in permitidos:
-                salida.add(f"{anterior['id']} {propuesto.dato}")
+            marca = huella(propuesto.dato, nuevo)
+            al_empezar.setdefault((id_, propuesto.dato), huella(propuesto.dato, anterior))
+            if (id_, propuesto.dato, marca) in permitidos:
+                continue
+            if actuales is not None:
+                actual = actuales.get(id_)
+                if actual is None or huella(propuesto.dato, actual) != marca:
+                    continue
+                if marca == al_empezar[(id_, propuesto.dato)]:
+                    continue
+                if not incidentes.activo(actual) and propuesto.dato != "retirado":
+                    continue
+                if fijado_por_revision(actual, propuesto.dato):
+                    continue
+            salida.add(f"{id_} {propuesto.dato}")
     return sorted(salida)
 
 

@@ -83,28 +83,13 @@ def x_vigentes(
     permitidos: frozenset[tuple[str, str, str]],
     vigentes: dict[str, Documento],
 ) -> list[str]:
-    """X (proceso/protegido.cambios_sin_permiso) de lo que la ficha aún tiene: un cambio sin
-    permiso que ya se deshizo (una revisión, el control) no la deja en su versión anterior, que
-    taparía la corrección hasta que el cambio salga de las 48 horas."""
+    """X (proceso/protegido.cambios_sin_permiso) de lo que la ficha aún tiene, la misma que la
+    auditoría: un cambio sin permiso que ya se deshizo (una revisión, el control) o un dato que
+    ahora fija una revisión no la dejan en su versión anterior, que taparía la corrección hasta
+    que el cambio salga de las 48 horas."""
     from proceso import protegido
 
-    salida: set[str] = set()
-    for cambio in cambios:
-        if cambio.get("tabla", "incidentes") != "incidentes":
-            continue
-        anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
-        if not anterior or not nuevo or "id" not in anterior:
-            continue
-        actual = vigentes.get(str(anterior["id"]))
-        if actual is None:
-            continue
-        for propuesto in protegido.candidatos(anterior, nuevo):
-            marca = protegido.huella(propuesto.dato, nuevo)
-            if (str(anterior["id"]), propuesto.dato, marca) in permitidos:
-                continue
-            if protegido.huella(propuesto.dato, actual) == marca:
-                salida.add(f"{anterior['id']} {propuesto.dato}")
-    return sorted(salida)
+    return protegido.cambios_sin_permiso(cambios, permitidos, vigentes)
 
 
 def _id(entrada: Documento) -> str:
@@ -226,11 +211,19 @@ def aplicar(
         registro.exception("red de la publicación sin aplicar: se publica lo de la base")
         return generados
     for s in sustituidas:
-        registro.warning(
-            "%s publicada en su versión %s (%s): %s", s["id"], s["origen"],
-            ", ".join(s["comprobaciones"]), ", ".join(s["diferencias"]) or "sin diferencias",
-        )  # fmt: skip
+        registro.warning("%s (%s): %s", *linea(s))
     return salida
+
+
+def linea(sustituida: Documento) -> tuple[str, str, str]:
+    """Lo que dice el registro de una ficha sustituida: «publicada en su versión buena»,
+    «publicada en su versión anterior» o «no publicada» (nunca salió en la web)."""
+    if sustituida["origen"] == NINGUNA:
+        que = f"{sustituida['id']} no publicada"
+    else:
+        que = f"{sustituida['id']} publicada en su versión {sustituida['origen']}"
+    diferencias = ", ".join(sustituida["diferencias"]) or "sin diferencias"
+    return que, ", ".join(sustituida["comprobaciones"]), diferencias
 
 
 def anotar(almacen: Almacen, ahora: datetime, sustituidas: list[Documento]) -> None:

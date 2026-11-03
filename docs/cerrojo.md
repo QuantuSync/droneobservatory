@@ -117,8 +117,9 @@ como sin cerrojo.
 
 `exportacion/version_buena.py`, desde el 3 de noviembre de 2026. Antes de escribir
 `incidentes.geojson` e `incidentes_sin_ubicacion.json`, la publicación pasa la auditoría de
-protección: P, R, V, W y X. En X solo cuenta lo que la ficha aún tiene; un cambio que ya se
-deshizo no cuenta.
+protección: P, R, V, W y X. En X solo cuenta lo que la ficha aún tiene (ver «Cómo se vigila»).
+El registro dice «publicada en su versión buena», «publicada en su versión anterior» o «no
+publicada».
 
 Cada ficha marcada sale:
 - en su última versión buena, la última que se publicó sin marca (`versiones_buenas.json`, en una
@@ -152,7 +153,14 @@ EODI-2026-00130 y EODI-2026-00302 el 1 de noviembre de 2026.
 
 - **Auditoría X** (`proceso/auditoria_fichas.py`): cambios a algo protegido guardados sin
   justificación. Con el cerrojo en `aplicar` vale 0; cualquier otro valor es un agujero. En
-  `observar` cuenta lo mismo que se habría retenido.
+  `observar` cuenta lo mismo que se habría retenido. Desde el 3 de noviembre de 2026, la misma
+  cuenta que la red de la publicación (`protegido.cambios_sin_permiso` con las fichas de ahora):
+  solo lo que la ficha aún tiene. No cuenta un cambio que otro posterior ya deshizo (una
+  revisión, el control), ni uno que vuelve al valor de antes de las 48 horas, ni un dato cuyo
+  valor actual fija una revisión a mano o una rectificación oficial (también el tipo y el titular
+  que salen de datos revisados), ni los datos de una ficha retirada o fundida, salvo la retirada.
+  Ejemplo: EODI-2026-00079, cuyo cierre revisado coincidía con el de un cambio malo del 2/11 y
+  quedaba fuera de la web.
 - **Auditoría Z**: fichas publicadas con una fuente anterior al suceso, sin cambio de por medio.
 - **Vigilancia** (`recogida/vigilancia.py`): avisa si el cerrojo falla y, en `aplicar`, si una ficha
   aparece en una comprobación de protección de la auditoría (P, R, V, W, X).
