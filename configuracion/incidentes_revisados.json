@@ -12096,6 +12096,15 @@
       "motivo": "la nota de la Neue Presse cuenta en presente el aeropuerto sin aterrizajes y su copia en Internet Archive es de las 10:54 UTC del 17 de febrero de 2026; el 11 de agosto es de la nota de agosto que la segunda búsqueda llevó a la ficha (revisado el 3 de noviembre de 2026)"
     },
     {
+      "incidente": "EODI-2026-00079",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Flughafen Hannover-Langenhagen: Keine Landungen nach Drohnensichtung möglich",
+      "enlace": "https://neuepresse.de/lokales/hannover/flughafen-hannover-langenhagen-keine-landungen-nach-drohnensichtung-moeglich-QIKYZT2R65HU7LLTZ32TRDJRVE.html",
+      "pais": "DE",
+      "motivo": "tras el aviso del piloto no se pudo aterrizar en el aeropuerto (Neue Presse) y los aviones tuvieron que desviarse («Maschinen müssen abdrehen», haz.de); la ficha lo perdió al quitarle la nota de agosto (revisado el 3 de noviembre de 2026)"
+    },
+    {
       "incidente": "EODI-2026-00022",
       "campo": "inicio",
       "valor": {"valor": "2026-08-11T02:00Z", "precision": "aproximada"},
