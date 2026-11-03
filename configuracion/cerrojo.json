@@ -1,4 +1,4 @@
 {
   "descripcion": "Modo del cerrojo de lo decidido (proceso/protegido.py, docs/cerrojo.md). «observar»: apunta en el control de las fichas lo que habría retenido y guarda todo como siempre. «aplicar»: conserva el valor anterior de cada dato protegido sin justificación.",
-  "modo": "observar"
+  "modo": "aplicar"
 }
