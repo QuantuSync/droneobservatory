@@ -103,20 +103,17 @@ privados, correo de contacto) se leen de variables de entorno: `EODI_BUCKET_*`
 - ORCID: [0009-0008-5179-2534](https://orcid.org/0009-0008-5179-2534).
 - Contacto / Contact: en el [aviso legal](https://droneobservatory.eu/aviso-legal) de la web /
   in the [legal notice](https://droneobservatory.eu/en/legal-notice).
-- Cita recomendada (AAAA-MM: la versión de los datos usados):
-  «Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión AAAA-MM.
-  https://droneobservatory.eu. Licencia CC BY 4.0.»
-- Recommended citation (YYYY-MM: the version of the data used):
-  “Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Version YYYY-MM.
-  https://droneobservatory.eu. Licence CC BY 4.0.”
-- Versión vigente / Current version: 2026-10 ([`CITATION.cff`](CITATION.cff)). Las versiones
-  mensuales citables están en <https://droneobservatory.eu/metodologia#versiones>.
-- Cada trimestre se deposita una versión fechada en Discuss Data (Universidad de Bremen), con DOI:
-  ver [`docs/discuss_data.md`](docs/discuss_data.md). A dated version is deposited every quarter
-  in Discuss Data.
+- Cita recomendada / Recommended citation: la versión archivada con DOI más reciente / the most
+  recent archived version with DOI (Discuss Data, Universidad de Bremen / University of Bremen):
+  «Lucas Alaniz Pintos (2026): European Observatory of Drone Incidents (EODI): drone incidents in
+  Europe – Open register of drone incidents with sources, literal quotations and official status,
+  version 2026-11-02, v. 1.0, Discuss Data, https://doi.org/10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F»
+  ([`CITATION.cff`](CITATION.cff), <https://droneobservatory.eu/metodologia#citar>).
+- Cada trimestre se deposita una versión nueva, con su propio DOI: ver
+  [`docs/discuss_data.md`](docs/discuss_data.md) y `configuracion/versiones_archivadas.json`. A new
+  version, with its own DOI, is deposited every quarter.
 - Los mismos créditos (autor, ORCID, licencia, cita y dirección) van dentro de cada fichero de
-  datos publicado (miembro `licencia`), en el `metadatos.json` de cada versión mensual desde la
-  2026-11 y en el manifiesto de la exportación semanal (`creditos`, formato 1.8.0); la fuente es
+  datos publicado (miembro `licencia`) y en el manifiesto de la exportación semanal (`creditos`, formato 1.8.0); la fuente es
   `configuracion/licencia_datos.json`. The same credits travel inside every published data file.
 
 ## Licencia

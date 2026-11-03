@@ -96,6 +96,17 @@ function leer(): readonly VersionArchivada[] {
 /** Las versiones archivadas, de la más nueva a la más vieja. */
 export const VERSIONES_ARCHIVADAS: readonly VersionArchivada[] = leer();
 
+/** La versión archivada más reciente: la única que se cita (la primera de la lista). */
+export const ULTIMA_ARCHIVADA: VersionArchivada | undefined = VERSIONES_ARCHIVADAS[0];
+
+/** La cita de una versión partida alrededor de la dirección de su DOI, para enlazarla. */
+export function partesDeCita(version: VersionArchivada): { antes: string; doi: string; despues: string } {
+  const doi = urlDeDoi(version.doi);
+  const i = version.cita.indexOf(doi);
+  if (i < 0) return { antes: `${version.cita} `, doi, despues: "" };
+  return { antes: version.cita.slice(0, i), doi, despues: version.cita.slice(i + doi.length) };
+}
+
 /** La dirección del DOI (la que se enlaza y se cita). */
 export function urlDeDoi(doi: string): string {
   return `https://doi.org/${doi}`;

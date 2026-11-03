@@ -27,7 +27,7 @@ export const ORIGENES = [
 export const OBJETO_TESELAS = "europa-z14.pmtiles";
 /** Lo que se puede pedir: los objetos que usa la web, nada más (no es un proxy abierto). */
 const PERMITIDO =
-  /^(?:estado\.json|directo\.json|salud\.json|europa-z14\.pmtiles|(?:gnss|focos|luces|satelite|rutas|publicacion|versiones)\/[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*)$/;
+  /^(?:estado\.json|directo\.json|salud\.json|europa-z14\.pmtiles|(?:gnss|focos|luces|satelite|rutas|publicacion)\/[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*)$/;
 const NUMERO = /^\d{1,12}$/;
 /** El trozo más grande del mapa de fondo que se sirve (los directorios y teselas son mucho menores). */
 export const LARGO_MAXIMO = 8 * 1024 * 1024;
@@ -45,7 +45,6 @@ const SIN_ERROR = "stale-if-error=604800";
 /** Cuánto guarda la caché de Vercel cada objeto, en segundos (lo que cambia más, menos). */
 export function segundosEnCache(objeto: string): number {
   if (objeto === OBJETO_TESELAS) return 31_536_000;
-  if (objeto.startsWith("versiones/")) return 86_400;
   if (objeto === "directo.json" || objeto === "estado.json" || objeto === "salud.json") return 30;
   if (objeto.startsWith("publicacion/")) return 60;
   return 300;

@@ -61,9 +61,6 @@ Problemas (cada uno con su frase):
 - **copia_visitas**: la última copia de la base de visitas tiene más de 3 horas;
 - **visitas_privadas**: el panel de visitas, su API o el tema privado del resumen responden sin
   usuario;
-- **versiones**: la versión citable del mes de los datos abiertos no se ha generado el día 1
-  (pasadas las 06:00 UTC), una versión publicada ha cambiado o falta, o no se comprueban desde
-  hace 2 días (recogida/versiones.py);
 - **barrera_resoluciones**: la barrera de titulares ha resuelto sola (a nivel de país o descartado
   como no verificable, recogida/barrera.py) más de 3 incidentes en 24 horas: señal de que el
   extractor elige mal las citas. Cada resolución por separado no es un problema;
@@ -119,7 +116,7 @@ from typing import Any
 
 from almacen import reserva
 from almacen.casa import casa
-from recogida import almacen_publico, versiones, visitas
+from recogida import almacen_publico, visitas
 from recogida import avisos as avisos_ntfy
 
 registro = logging.getLogger("vigilancia")
@@ -143,7 +140,7 @@ GRACIA = timedelta(minutes=30)
 # Los que no se arreglan solos esperando, o que ya llevan su propia espera (publicación, recogida).
 SIN_GRACIA = frozenset({
     "publicacion", "recogida", "visitas_privadas", "prueba_restauracion", "base_solo_disco",
-    "versiones", "barrera_resoluciones", "barrera_atascada", "mapa_parado", "control_fichas",
+    "barrera_resoluciones", "barrera_atascada", "mapa_parado", "control_fichas",
     "version_anterior",
 })  # fmt: skip
 DIAS_RESUELTOS = timedelta(days=8)
@@ -703,11 +700,6 @@ def componer(
             "frase": f"La prueba de restauración de la base del {prueba.get('fecha')} "
             + ("falló" if not prueba.get("correcto") else "tiene más de 8 días") + ".",
         })  # fmt: skip
-    # Versiones citables de los datos abiertos (recogida/versiones.py).
-    for frase in versiones.problemas_para_vigilancia(
-        _leer_json(secretos / "versiones.json"), ahora
-    ):
-        problemas.append({"id": "versiones", "frase": frase})
     solo_disco = _leer_json(secretos / "base_solo_disco.json")
     if solo_disco and not solo_disco.get("correcto"):
         motivos = solo_disco.get("comprobaciones") or ["sin comprobaciones"]

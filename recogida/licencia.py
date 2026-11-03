@@ -4,9 +4,9 @@ cita y su dirección.
 
 La llevan dentro los ficheros públicos del almacén (recogida/publicacion.py: miembro `licencia`
 al principio del JSON, como los que se descargan de la web, y `x-amz-meta-licencia`,
-`x-amz-meta-autor` y `x-amz-meta-orcid` en el objeto), las versiones citables
-(recogida/versiones.py) y la exportación semanal (exportacion/semanal.py). Así los créditos viajan
-con los datos cuando alguien los integra en otro sistema.
+`x-amz-meta-autor` y `x-amz-meta-orcid` en el objeto) y la exportación semanal
+(exportacion/semanal.py). Así los créditos viajan con los datos cuando alguien los integra en otro
+sistema.
 """
 
 import json
@@ -60,12 +60,6 @@ def miembro(version: str | None = None) -> dict[str, Any]:
         "alcance": datos["alcance"],
         "cita": cita(version or version_actual()),
     }
-
-
-def de_version() -> dict[str, Any]:
-    """La licencia del metadatos.json de una versión citable."""
-    datos = cargar()
-    return {c: datos[c] for c in ("nombre", "url", "titular", "alcance")}
 
 
 def creditos(version: str) -> dict[str, Any]:

@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "../src/App.tsx";
+import { VERSIONES_ARCHIVADAS } from "../src/datos/versionesArchivadas.ts";
 import { BarraEstado } from "../src/componentes/BarraEstado.tsx";
 import { EnlaceExterno } from "../src/componentes/EnlaceExterno.tsx";
 import { FichaAtaque } from "../src/componentes/FichaAtaque.tsx";
@@ -477,10 +478,12 @@ describe("metodología", () => {
       DESCARGAS.ucraniaCsv,
     ]);
     expect(container.textContent).toContain("Versión del 30/09/2026 · 12:42 UTC");
-    expect(container.textContent).toContain(
-      "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión 2026-09. " +
-        "https://droneobservatory.eu. Licencia CC BY 4.0.",
-    );
+    // La cita recomendada es la de la versión archivada más reciente, con el DOI enlazado.
+    const cita = container.querySelector("[data-cita-recomendada]");
+    const [antes = "", doi = ""] = (VERSIONES_ARCHIVADAS[0]?.cita ?? "").split(/(?=https:\/\/doi\.org\/)/);
+    expect(cita?.textContent).toContain(antes);
+    expect(cita?.textContent).toContain(doi);
+    expect(cita?.querySelector("a")?.getAttribute("href")).toBe(`https://doi.org/${VERSIONES_ARCHIVADAS[0]?.doi ?? ""}`);
     // Los créditos del autor, con su ORCID enlazado y el correo de contacto.
     expect(container.querySelector("[data-autor]")?.textContent).toBe("Autor: Dr. Lucas Alaniz Pintos");
     const orcid = [...container.querySelectorAll("a")].find((a) => a.textContent?.includes("0009-0008-5179-2534"));

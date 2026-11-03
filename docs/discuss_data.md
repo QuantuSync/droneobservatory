@@ -54,7 +54,7 @@ Un `.zip` fechado, `eodi-incidentes-AAAA-MM-DD.zip`, con una carpeta del mismo n
 | `CHANGELOG.md` | Cambios respecto al paquete anterior: incidentes nuevos, unidos o retirados, cambios de estado y de presencia del dron («First version» en el primero) |
 
 Los ficheros de datos salen de la web en una sola versión de los datos (el `resumen.json` antes y
-después tiene que dar la misma hora, como en las versiones citables mensuales). Sin el bloque
+después tiene que dar la misma hora, recogida/datos_web.py). Sin el bloque
 `trafico_aereo`, cada JSON es el de la web byte a byte. El `.zip` es determinista: los mismos datos
 y la misma fecha dan el mismo fichero.
 
