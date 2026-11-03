@@ -2688,6 +2688,7 @@ def cerrojo_del_dia(almacen: Almacen, ahora: datetime, auditoria: Documento) -> 
     """Lo que apuntó el cerrojo (proceso/protegido.py), para el resumen de las 08:00 y la
     vigilancia: los cambios retenidos de cada día («ficha dato»), los fallos del cerrojo en 24 horas
     y las fichas de las comprobaciones de protección de la auditoría."""
+    from exportacion import version_buena
     from proceso import protegido
 
     desde = coste.dia(ahora - timedelta(days=DIAS_AUDITORIA))
@@ -2718,6 +2719,10 @@ def cerrojo_del_dia(almacen: Almacen, ahora: datetime, auditoria: Documento) -> 
             f for f, n in seguidos.items() if n >= protegido.FALLOS_SEGUIDOS
         ),
         "proteccion": {c: ids[c] for c in protegido.AUDITORIA if ids.get(c)},
+        # La red de la publicación (exportacion/version_buena.py): lo que salió en su versión
+        # anterior en la última publicación y, por día, las fichas.
+        "version_anterior": (almacen.cursor(version_buena.CURSOR) or {}).get("sustituidas") or [],
+        "version_anterior_dias": (almacen.cursor(version_buena.CURSOR) or {}).get("dias") or {},
     }
 
 
