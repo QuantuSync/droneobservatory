@@ -70,7 +70,9 @@ import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
 import { rutaDeFicheroDeVersion, rutasDeVersion } from "../datos/versiones.ts";
 import type { VersionDatos } from "../datos/versiones.ts";
-import { cuerpoVersion, seccionVersiones } from "./versiones.ts";
+import { cuerpoVersion, seccionArchivadas, seccionVersiones } from "./versiones.ts";
+import { urlDeDoi, VERSIONES_ARCHIVADAS } from "../datos/versionesArchivadas.ts";
+import type { VersionArchivada } from "../datos/versionesArchivadas.ts";
 import type { PaginaServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 import type { TextosPagina } from "./textos.ts";
@@ -1174,6 +1176,7 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("p", null, d.licencia, ": ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS)),
       e("p", { "data-licencia-texto": "" }, d.licenciaTexto),
       autoriaYCita(idioma, datos.resumen.actualizado, "h3"),
+      seccionArchivadas(VERSIONES_ARCHIVADAS, idioma),
       seccionVersiones(datos.versiones ?? [], idioma),
     ),
     e(
@@ -1190,14 +1193,43 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
     titulo: `${tp.metodologia.titulo} · ${NOMBRE}`,
     descripcion,
     cuerpo,
-    estructurados: [conjuntoDeDatos(datos, idioma)],
+    estructurados: [conjuntoDeDatos(datos.resumen.actualizado, idioma)],
     conMapa: false,
     modificada: datos.resumen.actualizado,
   };
 }
 
-/** El conjunto de datos abierto, con su licencia y sus descargas. */
-function conjuntoDeDatos(datos: DatosPaginas, idioma: Idioma): unknown {
+/**
+ * Una versión depositada con DOI como Dataset de schema.org: el DOI como identifier (lo que pide
+ * Google Dataset Search), la página del repositorio como url y el DOI también como sameAs.
+ */
+function versionArchivadaEstructurada(v: VersionArchivada, idioma: Idioma): Record<string, unknown> {
+  const a = textos(idioma).metodologia.archivadas;
+  const doi = urlDeDoi(v.doi);
+  return {
+    "@type": "Dataset",
+    "@id": doi,
+    name: v.titulo,
+    description: `${a.linea(v.version, fecha(new Date(`${v.fecha}T12:00:00Z`)), numero(v.incidentes, idioma), numero(v.paises, idioma))}. ${v.repositorio}.`,
+    identifier: [doi, { "@type": "PropertyValue", propertyID: "DOI", value: v.doi, url: doi }],
+    sameAs: [doi],
+    url: v.pagina,
+    version: v.version,
+    datePublished: v.fecha,
+    license: v.licencia.url,
+    isAccessibleForFree: true,
+    creator: autorEstructurado(),
+    publisher: { "@type": "Organization", name: v.repositorio, parentOrganization: { "@type": "Organization", name: v.institucion.en } },
+    citation: v.cita,
+    spatialCoverage: { "@type": "Place", name: "Europe" },
+  };
+}
+
+/**
+ * El conjunto de datos abierto, con su licencia y sus descargas. Lleva el DOI de la última
+ * versión archivada como identifier y cada versión archivada como parte (hasPart) con su DOI.
+ */
+export function conjuntoDeDatos(actualizado: string, idioma: Idioma, archivadas: readonly VersionArchivada[] = VERSIONES_ARCHIVADAS): Record<string, unknown> {
   const tp = textosPagina(idioma);
   const formatos: [string, string][] = [
     [DESCARGAS.incidentesGeojson, "application/geo+json"],
@@ -1206,6 +1238,7 @@ function conjuntoDeDatos(datos: DatosPaginas, idioma: Idioma): unknown {
     [DESCARGAS.ucraniaJson, "application/json"],
     [DESCARGAS.ucraniaCsv, "text/csv"],
   ];
+  const ultima = archivadas[0];
   return {
     "@context": "https://schema.org",
     "@type": "Dataset",
@@ -1218,10 +1251,16 @@ function conjuntoDeDatos(datos: DatosPaginas, idioma: Idioma): unknown {
     creator: autorEstructurado(),
     author: autorEstructurado(),
     copyrightHolder: autorEstructurado(),
-    citation: textos(idioma).metodologia.descargas.cita(versionDeDatos(datos.resumen.actualizado)),
-    dateModified: datos.resumen.actualizado,
+    citation: [textos(idioma).metodologia.descargas.cita(versionDeDatos(actualizado)), ...archivadas.map((v) => v.cita)],
+    dateModified: actualizado,
     spatialCoverage: { "@type": "Place", name: "Europe" },
     distribution: formatos.map(([ruta, tipo]) => ({ "@type": "DataDownload", contentUrl: ORIGEN + ruta, encodingFormat: tipo })),
+    ...(ultima === undefined
+      ? {}
+      : {
+          identifier: [urlDeDoi(ultima.doi), { "@type": "PropertyValue", propertyID: "DOI", value: ultima.doi, url: urlDeDoi(ultima.doi) }],
+          hasPart: archivadas.map((v) => versionArchivadaEstructurada(v, idioma)),
+        }),
   };
 }
 

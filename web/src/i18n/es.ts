@@ -1893,8 +1893,8 @@ export const es: Textos = {
     descargas: {
       titulo: "Datos abiertos",
       intro:
-        "Los datos se pueden descargar y reutilizar citando la fuente. Se regeneran con cada " +
-        "actualización.",
+        "Los datos se pueden descargar y reutilizar citando la fuente. Son los datos vivos de la " +
+        "web: se regeneran cada hora, con cada actualización.",
       incidentes: "Incidentes",
       ucrania: "Ataques de la capa de Ucrania",
       sinUbicacion: "Incidentes con lugar aproximado",
@@ -1925,6 +1925,19 @@ export const es: Textos = {
       huella: "SHA-256",
       comoComprobar: "Para comprobar un fichero: sha256sum <fichero> (Linux), shasum -a 256 <fichero> (macOS) o certutil -hashfile <fichero> SHA256 (Windows).",
       todas: "Todas las versiones",
+    },
+    archivadas: {
+      titulo: "Versión archivada con DOI",
+      intro:
+        "Además de los datos vivos de esta web, que se rehacen cada hora y pueden cambiar cuando una autoridad confirma, corrige o descarta algo, cada trimestre (enero, abril, julio y octubre) se deposita una versión fechada en un repositorio de datos de investigación. Cada versión archivada tiene su propio DOI y no cambia nunca: es la que conviene citar en un trabajo académico.",
+      linea: (version, fecha, incidentes, paises) => `Versión ${version}, depositada el ${fecha}: ${incidentes} incidentes en ${paises} países`,
+      corte: (fechaHora) => `Datos publicados hasta el ${fechaHora} (UTC).`,
+      repositorio: "Repositorio",
+      copias: (archivos) => `Con copia en ${archivos}.`,
+      licencia: "Licencia",
+      trafico: "el tráfico aéreo medido",
+      pagina: "Página de la versión",
+      citaTitulo: "Cita recomendada",
     },
     sobre: "Sobre el observatorio",
   },
