@@ -12148,6 +12148,33 @@
       "enlace": "https://expansion.com/economia/politica/2026/11/03/dos-cazas-espanoles-otan-intervienen-alerta-dron-limite-rumania-ucrania.html",
       "pais": "RO",
       "motivo": "los dos de la nota son los cazas espa\u00f1oles, no los drones, de los que la nota no da el n\u00famero (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00747",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "region",
+        "region": "Tulcea",
+        "suceso": "norte del distrito de Tulcea, frente a Ismail y Chilia",
+        "punto": {
+          "lat": 45.33,
+          "lon": 28.95
+        },
+        "radio_km": 40.0
+      },
+      "cita": "instituirea măsurilor de alertare a populației din nordul județului Tulcea",
+      "enlace": "https://www.mapn.ro/cpresa/19465_informa%C8%9Bie-de-presa",
+      "pais": "RO",
+      "motivo": "el Ministerio de Defensa rumano detectó dos blancos aéreos junto a la frontera, frente a Ismail y Chilia, en territorio de Ucrania, y avisó a la población del norte del distrito de Tulcea; la Base Aérea 57 Mihail Kogălniceanu es de donde despegaron los cazas españoles, no el lugar del suceso (comunicado nº 356 del 3 de noviembre de 2026; revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00747",
+      "campo": "objetivo",
+      "valor": null,
+      "cita": "Două aeronave F-18 ale Forțelor Aeriene Spaniole, aflate în serviciul de luptă Poliție Aeriană, au decolat de la Baza 57 Aeriană Mihail Kogălniceanu.",
+      "enlace": "https://www.mapn.ro/cpresa/19465_informa%C8%9Bie-de-presa",
+      "pais": "RO",
+      "motivo": "la base aérea es de donde despegaron los cazas, no a donde iban los drones; ninguna fuente dice a qué se dirigían (revisado el 3 de noviembre de 2026)"
     }
   ]
 }
