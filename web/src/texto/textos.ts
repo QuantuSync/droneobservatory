@@ -24,6 +24,8 @@ export interface TextosPagina {
   sobre: string;
   datosDe: (fecha: string) => string;
   licencia: string;
+  /** En el pie, junto a la licencia: enlace al DOI de la versión archivada más reciente. */
+  archivadosConDoi: string;
   codigo: string;
   portada: {
     titulo: string;
@@ -121,7 +123,7 @@ export interface TextosPagina {
     metodologiaSatelite: string;
     periodo: (desde: string, hasta: string) => string;
   };
-  metodologia: { titulo: string; descripcion: string; indice: string };
+  metodologia: { titulo: string; descripcion: string; indice: string; citarConDoi: string };
   ayuda: { titulo: string; descripcion: string; atajos: string; tecla: string; accion: string };
   noEncontrada: { titulo: string; texto: string; volver: string };
 }
@@ -150,6 +152,7 @@ const ES: TextosPagina = {
   sobre: "Sobre el observatorio",
   datosDe: (fecha) => `Datos publicados a ${fecha}`,
   licencia: "Datos con licencia",
+  archivadosConDoi: "Datos archivados con DOI",
   codigo: "Código abierto (Apache-2.0)",
   portada: {
     titulo: `${NOMBRE} (${SIGLAS}) · ${NOMBRE_ES}`,
@@ -282,6 +285,7 @@ const ES: TextosPagina = {
       "Qué registra el observatorio, cómo se clasifican y se confirman los incidentes, de dónde " +
       "salen los datos y cómo descargarlos.",
     indice: "Contenido",
+    citarConDoi: "Citar con DOI",
   },
   ayuda: {
     titulo: "Cómo leer el mapa",
@@ -321,6 +325,7 @@ const EN: TextosPagina = {
   sobre: "About the observatory",
   datosDe: (fecha) => `Data published at ${fecha}`,
   licencia: "Data licence",
+  archivadosConDoi: "Data archived with DOI",
   codigo: "Open source (Apache-2.0)",
   portada: {
     titulo: `${NOMBRE} (${SIGLAS}) · Drone incidents in Europe`,
@@ -452,6 +457,7 @@ const EN: TextosPagina = {
       "What the observatory records, how incidents are classified and confirmed, where the data " +
       "come from and how to download them.",
     indice: "Contents",
+    citarConDoi: "Cite with DOI",
   },
   ayuda: {
     titulo: "How to read the map",

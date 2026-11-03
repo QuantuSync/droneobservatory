@@ -38,7 +38,7 @@ export const es: Textos = {
     atribuidos: "atribuidos",
     paises: "países",
   },
-  firma: { metodologia: "Metodología y datos abiertos", atribuciones: "Atribuciones del mapa" },
+  firma: { citarDoi: "Citar los datos (DOI)", metodologia: "Metodología y datos abiertos", atribuciones: "Atribuciones del mapa" },
   cabecera: { etiqueta: "Cabecera", menu: "Menú", cerrarMenu: "Cerrar el menú" },
   hoja: {
     altura: (altura) => `Hoja ${altura}: pulsa o arrastra para cambiar su altura`,

@@ -38,7 +38,7 @@ export const en: Textos = {
     atribuidos: "attributed",
     paises: "countries",
   },
-  firma: { metodologia: "Methodology and open data", atribuciones: "Map attributions" },
+  firma: { citarDoi: "Cite the data (DOI)", metodologia: "Methodology and open data", atribuciones: "Map attributions" },
   cabecera: { etiqueta: "Header", menu: "Menu", cerrarMenu: "Close the menu" },
   hoja: {
     altura: (altura) => `Sheet ${altura}: tap or drag to change its height`,
