@@ -63,13 +63,16 @@ def _leer_json(ruta: Path) -> dict[str, Any]:
 
 
 def entradas() -> dict[str, Any]:
-    """Lo que el paquete toma del repositorio: licencia, avisos, nombres de país y la cita."""
+    """Lo que el paquete toma del repositorio: licencia, avisos, nombres de país, la cita y las
+    versiones archivadas."""
     avisos = _leer_json(RAIZ / "configuracion" / "avisos.json")
     return {
         "licencia": _leer_json(RAIZ / "configuracion" / "licencia_datos.json"),
         "avisos": avisos,
         "nombres_pais": {c: v["en"] for c, v in avisos["paises"].items()},
         "repositorio_cff": (RAIZ / "CITATION.cff").read_text(encoding="utf-8"),
+        # Las versiones depositadas con DOI: el paquete cita la suya y menciona la anterior.
+        "archivadas": _leer_json(RAIZ / "configuracion" / "versiones_archivadas.json")["versiones"],
     }
 
 

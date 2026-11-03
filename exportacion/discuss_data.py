@@ -435,9 +435,11 @@ def readme(
     licencia: dict[str, Any],
     avisos: dict[str, Any],
     nombres_pais: dict[str, str],
+    archivadas: Iterable[dict[str, Any]] = (),
 ) -> str:
     autor = licencia["autor"]
-    cita = licencia["cita"]["en"].format(anio=fecha.year, version=fecha.isoformat())
+    version = version_del_paquete(fecha, archivadas)
+    cita = cita_del_paquete(fecha, licencia, version)
     paises = ", ".join(f"{nombres_pais.get(c, c)} ({n})" for c, n in numeros.paises.items())
     lineas = [
         f"# {licencia['titular']} (EODI): incidents, version {fecha.isoformat()}",
@@ -568,8 +570,21 @@ def readme(
         "",
         cita,
         "",
-        "Please cite the DOI of this version when available. The code of the observatory is "
-        "open source under Apache-2.0.",
+        *(
+            []
+            if version.propia
+            else ["Please cite the DOI of this version once it is deposited (Discuss Data).", ""]
+        ),
+        *(
+            [
+                f"Previous version: v. {version.anterior['version']} "
+                f"({version.anterior['fecha']}), {DOI}{version.anterior['doi']}",
+                "",
+            ]
+            if version.anterior and version.anterior.get("doi")
+            else []
+        ),
+        "The code of the observatory is open source under Apache-2.0.",
         "",
     ]
     return "\n".join(lineas)
@@ -608,9 +623,101 @@ def licencia_md(licencia: dict[str, Any]) -> str:
     )
 
 
-def citation_cff(fecha: date, licencia: dict[str, Any], repositorio_cff: str) -> str:
-    """El CITATION.cff del paquete: el del repositorio con la versión y la fecha del paquete."""
-    cita = licencia["cita"]["en"].format(anio=fecha.year, version=fecha.isoformat())
+# --- La versión del paquete y cómo se cita ------------------------------------------------------
+
+DOI = "https://doi.org/"
+# Lo que el CITATION.cff del repositorio dice de la versión archivada vigente y no se copia: el
+# paquete cita su propia versión (configuracion/versiones_archivadas.json).
+BLOQUES_DEL_REPOSITORIO = ("identifiers:", "preferred-citation:", "references:", "doi:")
+
+
+@dataclass(frozen=True)
+class VersionPaquete:
+    """El número del paquete; la versión archivada que es él (con su DOI), si ya está depositado; y
+    la archivada anterior, la más reciente de antes de su fecha."""
+
+    numero: str
+    propia: dict[str, Any] | None
+    anterior: dict[str, Any] | None
+
+
+def version_del_paquete(fecha: date, archivadas: Iterable[dict[str, Any]]) -> VersionPaquete:
+    """Si hay una versión archivada con la fecha del paquete, es esa (su número y su DOI); si no,
+    la siguiente a la anterior (1.0 → 1.1), todavía sin DOI; sin ninguna anterior, la 1.0."""
+    dia = fecha.isoformat()
+    ordenadas = sorted(archivadas, key=lambda v: str(v["fecha"]), reverse=True)
+    propia = next((v for v in ordenadas if v["fecha"] == dia), None)
+    anterior = next((v for v in ordenadas if str(v["fecha"]) < dia), None)
+    if propia is not None:
+        numero = str(propia["version"])
+    elif anterior is not None:
+        mayor, _, menor = str(anterior["version"]).partition(".")
+        numero = f"{mayor}.{int(menor or 0) + 1}"
+    else:
+        numero = "1.0"
+    return VersionPaquete(numero, propia, anterior)
+
+
+def _titulo(version: VersionPaquete, licencia: dict[str, Any]) -> str:
+    deposito = version.propia or version.anterior or {}
+    return str(deposito.get("titulo") or licencia["titular"])
+
+
+def cita_del_paquete(fecha: date, licencia: dict[str, Any], version: VersionPaquete) -> str:
+    """La cita de esta versión, como la da Discuss Data; con su DOI solo si ya lo tiene."""
+    cita = (
+        f"{licencia['autor']['nombre']} ({fecha.year}): {_titulo(version, licencia)}, "
+        f"version {fecha.isoformat()}, v. {version.numero}, Discuss Data"
+    )
+    return f"{cita}, {DOI}{version.propia['doi']}" if version.propia else cita
+
+
+def _autores(repositorio_cff: str, sangria: str) -> list[str]:
+    """El bloque «authors» del CITATION.cff del repositorio, con otra sangría."""
+    lineas = repositorio_cff.splitlines()
+    inicio = next((i for i, linea in enumerate(lineas) if linea.startswith("authors:")), None)
+    if inicio is None:
+        return []
+    bloque = []
+    for linea in lineas[inicio + 1 :]:
+        if not linea.startswith(" "):
+            break
+        bloque.append(sangria + linea)
+    return bloque
+
+
+def _cita_cff(
+    datos: dict[str, Any], numero: str, titulo: str, autores: list[str], sangria: str
+) -> list[str]:
+    """Una versión archivada (o el paquete) como entrada CFF de tipo «data»."""
+    lineas = [
+        f"{sangria}type: data",
+        f"{sangria}title: {json.dumps(titulo, ensure_ascii=False)}",
+        f"{sangria}authors:",
+        *autores,
+        f'{sangria}version: "{numero}"',
+        f'{sangria}date-released: "{datos["fecha"]}"',
+        f"{sangria}year: {int(str(datos['fecha'])[:4])}",
+        f"{sangria}publisher:",
+        f"{sangria}  name: Discuss Data",
+        f"{sangria}license: CC-BY-4.0",
+    ]
+    if datos.get("doi"):
+        lineas += [f"{sangria}doi: {datos['doi']}", f'{sangria}url: "{DOI}{datos["doi"]}"']
+    return lineas
+
+
+def citation_cff(
+    fecha: date,
+    licencia: dict[str, Any],
+    repositorio_cff: str,
+    archivadas: Iterable[dict[str, Any]] = (),
+) -> str:
+    """El CITATION.cff del paquete: el del repositorio con la versión, la fecha y la cita del
+    paquete. Cita su propia versión (con su DOI solo si ya está depositada) y menciona la versión
+    archivada anterior como versión previa («references»), nunca como la suya."""
+    version = version_del_paquete(fecha, archivadas)
+    cita = cita_del_paquete(fecha, licencia, version)
     salida: list[str] = []
     saltar = False
     for linea in repositorio_cff.splitlines():
@@ -619,13 +726,15 @@ def citation_cff(fecha: date, licencia: dict[str, Any], repositorio_cff: str) ->
         saltar = False
         if linea.startswith("#"):
             continue
-        if linea.startswith("message:"):
-            salida += ["message: >-", f"  If you use this data, please cite it as: {cita}"]
+        if linea.startswith(BLOQUES_DEL_REPOSITORIO):
+            saltar = True
+        elif linea.startswith("message:"):
+            salida += ["message: >-", f"  If you use this data, please cite this version: {cita}"]
             saltar = True
         elif linea.startswith("title:"):
             salida.append(f'title: "{licencia["titular"]}: incidents (Discuss Data package)"')
         elif linea.startswith("version:"):
-            salida.append(f'version: "{fecha.isoformat()}"')
+            salida.append(f'version: "{version.numero}"')
         elif linea.startswith("date-released:"):
             salida.append(f'date-released: "{fecha.isoformat()}"')
         elif linea.startswith("repository-artifact:"):
@@ -641,6 +750,27 @@ def citation_cff(fecha: date, licencia: dict[str, Any], repositorio_cff: str) ->
             saltar = True
         else:
             salida.append(linea)
+    titulo = _titulo(version, licencia)
+    if version.propia:
+        salida += [f"doi: {version.propia['doi']}"]
+    if version.anterior:
+        anterior = version.anterior
+        salida += [
+            "references:",
+            *_cita_cff(anterior, str(anterior["version"]), str(anterior.get("titulo") or titulo),
+                       _autores(repositorio_cff, "    "), "    "),
+            f'    notes: "Previous version of this dataset (v. {anterior["version"]}, '
+            f'{anterior["fecha"]}); not this version."',
+        ]  # fmt: skip
+        primera = salida.index("references:") + 1
+        salida[primera] = "  - " + salida[primera].lstrip()
+    propia = {"fecha": fecha.isoformat(), "doi": (version.propia or {}).get("doi")}
+    salida += [
+        "preferred-citation:",
+        *_cita_cff(propia, version.numero, titulo, _autores(repositorio_cff, "  "), "  "),
+        f'  notes: "Version {fecha.isoformat()}, v. {version.numero}. The measured air traffic '
+        'file is under ODbL 1.0."',
+    ]
     return "\n".join(salida) + "\n"
 
 
@@ -656,8 +786,10 @@ def construir(
     nombres_pais: dict[str, str],
     repositorio_cff: str,
     anterior: tuple[date, Incidentes] | None = None,
+    archivadas: Iterable[dict[str, Any]] = (),
 ) -> tuple[bytes, dict[str, Any]]:
     """El .zip y su resumen (incidentes, países, ficheros con su huella)."""
+    archivadas = list(archivadas)
     for nombre in [*FICHEROS, RESUMEN]:
         if not ficheros.get(nombre):
             raise PaqueteInvalido(f"falta {nombre}")
@@ -673,10 +805,12 @@ def construir(
     trafico = separar_trafico([*incidentes.mapa["features"], *incidentes.aproximados["incidentes"]])
     numeros = cifras(incidentes, len(trafico))
     contenido: dict[str, bytes] = {
-        "README.md": readme(fecha, corte, numeros, licencia, avisos, nombres_pais).encode(),
+        "README.md": readme(
+            fecha, corte, numeros, licencia, avisos, nombres_pais, archivadas
+        ).encode(),
         "METHODOLOGY.md": metodologia_markdown(pagina_metodologia).encode(),
         "LICENSE.md": licencia_md(licencia).encode(),
-        "CITATION.cff": citation_cff(fecha, licencia, repositorio_cff).encode(),
+        "CITATION.cff": citation_cff(fecha, licencia, repositorio_cff, archivadas).encode(),
         "CHANGELOG.md": registro_de_cambios(fecha, incidentes, anterior).encode(),
         FICHEROS["incidentes.csv"]: ficheros["incidentes.csv"],
         FICHEROS["incidentes.geojson"]: _json(incidentes.mapa),

@@ -115,11 +115,12 @@ def test_el_readme_dice_corte_cifras_estados_avisos_licencias_y_cita() -> None:
         "notificado (reported)", "no_acreditada (not substantiated)", "descartada (ruled out)",
         "only with an official statement", "https://droneobservatory.eu/en/methodology",
         "drones-europe", "`drones-spain`", "`drones-moldova`", "/en/alerts", "ODbL 1.0",
-        "OpenStreetMap", "Version 2026-10-19",
+        "OpenStreetMap", "version 2026-10-19, v. 1.0, Discuss Data",
     ):  # fmt: skip
         assert frase in readme, frase
     assert "CC-BY-4.0" in contenido["CITATION.cff"].decode()
-    assert 'version: "2026-10-19"' in contenido["CITATION.cff"].decode()
+    assert 'version: "1.0"' in contenido["CITATION.cff"].decode()
+    assert 'date-released: "2026-10-19"' in contenido["CITATION.cff"].decode()
     assert "First version" in contenido["CHANGELOG.md"].decode()
     metodologia = contenido["METHODOLOGY.md"].decode()
     assert metodologia.splitlines()[2] == "# Methodology and open data"
@@ -236,3 +237,75 @@ def test_trimestral_nunca_falla_hacia_fuera(
     monkeypatch.setenv("EODI_ALMACEN_CREDENCIALES", str(tmp_path / "no-existe.env"))
     monkeypatch.delenv("ALMACEN_ID", raising=False)
     assert discuss_data.principal(["trimestral"]) == 0
+
+
+# --- La cita del paquete: su propia versión, y la anterior como versión previa ----------------
+
+DOI_10 = "10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F"
+
+
+def _cff(fecha: date) -> str:
+    entradas = discuss_data.entradas()
+    return paquete.citation_cff(
+        fecha, entradas["licencia"], entradas["repositorio_cff"], entradas["archivadas"]
+    )
+
+
+def _bloques(cff: str) -> dict[str, str]:
+    """Cada bloque de primer nivel del CFF, por su clave."""
+    bloques: dict[str, str] = {}
+    clave = ""
+    for linea in cff.splitlines():
+        if linea and not linea.startswith((" ", "#")):
+            clave = linea.split(":", 1)[0]
+        bloques[clave] = bloques.get(clave, "") + linea + "\n"
+    return bloques
+
+
+def test_el_paquete_de_enero_cita_su_version_y_menciona_la_anterior() -> None:
+    fecha = date(2027, 1, 4)
+    assert paquete.version_del_paquete(fecha, discuss_data.entradas()["archivadas"]).numero == "1.1"
+    cff = _cff(fecha)
+    bloques = _bloques(cff)
+    assert bloques["version"] == 'version: "1.1"\n'
+    assert bloques["date-released"] == 'date-released: "2027-01-04"\n'
+    # El DOI de la 1.0 solo como versión previa: ni identificador, ni DOI, ni cita preferida suyos.
+    assert DOI_10 in bloques["references"] and 'version: "1.0"' in bloques["references"]
+    assert "Previous version of this dataset" in bloques["references"]
+    for clave in ("identifiers", "doi"):
+        assert clave not in bloques
+    preferida = bloques["preferred-citation"]
+    assert 'version: "1.1"' in preferida and 'date-released: "2027-01-04"' in preferida
+    assert DOI_10 not in preferida and "doi:" not in preferida
+    assert DOI_10 not in bloques["message"]
+    assert "version 2027-01-04, v. 1.1, Discuss Data" in bloques["message"]
+    assert cff.count(DOI_10) == 2  # doi y url de «references»
+
+
+def test_el_paquete_ya_depositado_es_esa_version_con_su_doi() -> None:
+    bloques = _bloques(_cff(date(2026, 11, 2)))
+    assert bloques["version"] == 'version: "1.0"\n'
+    assert bloques["doi"] == f"doi: {DOI_10}\n"
+    assert "references" not in bloques
+    assert f"doi: {DOI_10}" in bloques["preferred-citation"]
+    assert f"https://doi.org/{DOI_10}" in bloques["message"]
+
+
+def test_el_readme_del_paquete_cita_su_version_y_la_anterior() -> None:
+    paquete_enero = _contenido(_construir(_ficheros(), fecha=date(2027, 1, 4))[0])
+    readme = paquete_enero["README.md"].decode()
+    citar = readme[readme.index("## How to cite") :]
+    assert "version 2027-01-04, v. 1.1, Discuss Data" in citar
+    assert f"Previous version: v. 1.0 (2026-11-02), https://doi.org/{DOI_10}" in citar
+    assert citar.count(DOI_10) == 1
+
+
+def test_numeracion_de_las_versiones() -> None:
+    def archivada(version: str, fecha: str) -> dict[str, Any]:
+        return {"version": version, "fecha": fecha, "doi": f"10.1/{version}"}
+
+    lista = [archivada("1.1", "2027-01-04"), archivada("1.0", "2026-11-02")]
+    assert paquete.version_del_paquete(date(2026, 10, 1), []).numero == "1.0"
+    assert paquete.version_del_paquete(date(2027, 4, 1), lista).numero == "1.2"
+    enero = paquete.version_del_paquete(date(2027, 1, 4), lista)
+    assert (enero.numero, enero.propia, enero.anterior) == ("1.1", lista[0], lista[1])
