@@ -54,15 +54,20 @@ def marcadas(almacen: Almacen, ahora: datetime) -> dict[str, list[str]]:
     from recogida import revisados
 
     desde = (ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    documentos = almacen.incidentes()
+    cambios = almacen.cambios_desde(desde)
+    permitidos = protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO))
     resultado = auditoria_fichas.auditar(
-        almacen.incidentes(),
-        almacen.cambios_desde(desde),
+        documentos,
+        cambios,
         None,
         incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
         incidentes.uniones_a_mano(almacen),
         almacen.fechas_extraccion(desde),
-        protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
+        permitidos,
     )
+    # X mira 48 horas de historial: aquí solo cuenta lo que la ficha aún tiene.
+    resultado["X"] = x_vigentes(cambios, permitidos, {str(d["id"]): d for d in documentos})
     salida: dict[str, list[str]] = {}
     for comprobacion in protegido.AUDITORIA:
         for entrada in resultado.get(comprobacion, []):
@@ -71,6 +76,35 @@ def marcadas(almacen: Almacen, ahora: datetime) -> dict[str, list[str]]:
             if id_.startswith("EODI-") and comprobacion not in salida.get(id_, []):
                 salida.setdefault(id_, []).append(comprobacion)
     return salida
+
+
+def x_vigentes(
+    cambios: list[Documento],
+    permitidos: frozenset[tuple[str, str, str]],
+    vigentes: dict[str, Documento],
+) -> list[str]:
+    """X (proceso/protegido.cambios_sin_permiso) de lo que la ficha aún tiene: un cambio sin
+    permiso que ya se deshizo (una revisión, el control) no la deja en su versión anterior, que
+    taparía la corrección hasta que el cambio salga de las 48 horas."""
+    from proceso import protegido
+
+    salida: set[str] = set()
+    for cambio in cambios:
+        if cambio.get("tabla", "incidentes") != "incidentes":
+            continue
+        anterior, nuevo = cambio.get("anterior") or {}, cambio.get("nuevo") or {}
+        if not anterior or not nuevo or "id" not in anterior:
+            continue
+        actual = vigentes.get(str(anterior["id"]))
+        if actual is None:
+            continue
+        for propuesto in protegido.candidatos(anterior, nuevo):
+            marca = protegido.huella(propuesto.dato, nuevo)
+            if (str(anterior["id"]), propuesto.dato, marca) in permitidos:
+                continue
+            if protegido.huella(propuesto.dato, actual) == marca:
+                salida.add(f"{anterior['id']} {propuesto.dato}")
+    return sorted(salida)
 
 
 def _id(entrada: Documento) -> str:
