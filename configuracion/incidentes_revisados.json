@@ -12130,6 +12130,24 @@
       "enlace": "https://news.yam.md/ro/story/80717321",
       "pais": "RO",
       "motivo": "el aeropuerto de I\u0061\u0219i cerró su espacio aéreo por la alerta, no porque el dron fuera hacia él; ninguna fuente dice a qué se dirigía (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00725",
+      "campo": "cierre",
+      "valor": "desconocido",
+      "cita": "O avertizare RO-Alert a fost transmis\u0103 s\u00e2mb\u0103t\u0103 seara pentru jude\u021bul Suceava, \u00een urma notific\u0103rii transmise de c\u0103tre Statul Major al Fortelor Aeriene / MApN",
+      "enlace": "https://monitorulsv.ro/alerta-de-drone-in-judetul-suceava-drone-semnalate-in-zonele-fratauti-si-horodnic-doua-avioane-survoleaza-zona_923d20",
+      "pais": "RO",
+      "motivo": "en el distrito de Suceava solo hubo una alerta RO-Alert a la poblaci\u00f3n; el \u00fanico cierre que da la nota es el del espacio a\u00e9reo de Ia\u0219i (\u00abspa\u021biul aerian a fost \u00eenchis la Ia\u0219i\u00bb) y el vuelo desviado fue al aeropuerto de Suceava, que sigui\u00f3 abierto: el cierre \u00absi\u00bb del 2/11 no lo dice ninguna frase (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00747",
+      "campo": "drones",
+      "valor": "desconocido",
+      "cita": "Dos cazas espa\u00f1oles del despliegue de la OTAN en Ruman\u00eda despegaron en la noche del lunes al martes ante la presencia de drones cerca del",
+      "enlace": "https://expansion.com/economia/politica/2026/11/03/dos-cazas-espanoles-otan-intervienen-alerta-dron-limite-rumania-ucrania.html",
+      "pais": "RO",
+      "motivo": "los dos de la nota son los cazas espa\u00f1oles, no los drones, de los que la nota no da el n\u00famero (revisado el 3 de noviembre de 2026)"
     }
   ]
 }

@@ -124,6 +124,90 @@ def test_la_auditoria_real_marca_un_cambio_sin_permiso() -> None:
     assert "X" not in version_buena.marcadas(almacen, datetime.now(UTC)).get(ID, [])
 
 
+def _revision(monkeypatch: pytest.MonkeyPatch, dato: str, valor: Any) -> None:
+    """Una revisión a mano de `dato` de la ficha (incidentes_revisados.json, «datos»)."""
+    from proceso import decidir
+
+    revision = {
+        "incidente": ID,
+        "campo": dato,
+        "valor": valor,
+        "cita": "la frase",
+        "enlace": ficha()["fuentes"][0]["enlace"],
+        "pais": "DE",
+        "motivo": "revisado",
+    }
+    monkeypatch.setattr(decidir, "_revisiones_de_datos", lambda: {ID: {dato: revision}})
+
+
+def _x(almacen: Almacen) -> tuple[list[str], list[str]]:
+    """La X de la auditoría y la de la red, con lo que tiene ahora la base."""
+    cambios = almacen.cambios_desde("2000-01-01")
+    permitidos = protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO))
+    auditoria = auditoria_fichas.auditar(almacen.incidentes(), cambios, permitidos=permitidos)
+    actuales = {str(d["id"]): d for d in almacen.incidentes()}
+    return auditoria["X"], version_buena.x_vigentes(cambios, permitidos, actuales)
+
+
+def test_x_no_cuenta_un_cambio_malo_que_una_revision_ya_deshizo(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2026-00719 y 00022, 3/11/2026: el cambio malo del 2/11 (el inicio sin su hora) lo
+    # deshizo una revisión con cita; X lo seguía contando 48 horas y la red dejaba la ficha en su
+    # versión anterior, tapando la corrección.
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(ficha(ID), AHORA, VOCABULARIO_MODELOS)
+    bueno = almacen.incidente(ID)
+    assert bueno is not None
+    almacen.guardar_incidente(version_mala(bueno, "inicio"), AHORA, VOCABULARIO_MODELOS)
+    assert _x(almacen) == ([f"{ID} inicio"], [f"{ID} inicio"])
+    _revision(monkeypatch, "inicio", bueno["tiempo"]["inicio"])
+    almacen.guardar_incidente(bueno, AHORA, VOCABULARIO_MODELOS)
+    assert _x(almacen) == ([], [])
+    # Sin lo que tiene ahora la ficha, la cuenta de siempre (la de los cambios guardados).
+    cambios = almacen.cambios_desde("2000-01-01")
+    assert protegido.cambios_sin_permiso(cambios, frozenset()) == [f"{ID} inicio"]
+    assert "X" not in version_buena.marcadas(almacen, datetime.now(UTC)).get(ID, [])
+
+
+def test_x_no_cuenta_el_valor_que_fija_una_revision_aunque_sea_el_del_cambio_malo(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2026-00079, 3/11/2026: el cambio malo del 2/11 le puso el cierre «si» de la nota de
+    # agosto; la revisión le dejó el cierre «si» con la cita de la Neue Presse del 17/2. El valor
+    # actual es el correcto y coincide con el del cambio malo: la red no la publicaba hasta el 4/11.
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(ficha(ID), AHORA, VOCABULARIO_MODELOS)
+    bueno = almacen.incidente(ID)
+    assert bueno is not None
+    almacen.guardar_incidente(version_mala(bueno, "drones"), AHORA, VOCABULARIO_MODELOS)
+    assert _x(almacen) == ([f"{ID} drones"], [f"{ID} drones"])
+    _revision(monkeypatch, "drones", "desconocido")
+    assert _x(almacen) == ([], [])
+    assert version_buena.marcadas(almacen, datetime.now(UTC)).get(ID) is None
+
+
+def test_x_no_cuenta_lo_que_vuelve_al_valor_de_antes() -> None:
+    # EODI-2026-00322, 1/11/2026: el control deshizo el lugar malo con otro guardado sin permiso;
+    # la ficha acabó como empezó y ese guardado no es un cambio.
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(ficha(ID), AHORA, VOCABULARIO_MODELOS)
+    bueno = almacen.incidente(ID)
+    assert bueno is not None
+    almacen.guardar_incidente(version_mala(bueno, "drones"), AHORA, VOCABULARIO_MODELOS)
+    malo = almacen.incidente(ID)
+    assert malo is not None
+    almacen.guardar_incidente({**malo, "drones": bueno["drones"]}, AHORA, VOCABULARIO_MODELOS)
+    assert _x(almacen) == ([], [])
+
+
+def test_el_registro_dice_no_publicada() -> None:
+    nunca = {"id": ID, "comprobaciones": ["X"], "origen": version_buena.NINGUNA, "diferencias": {}}
+    assert version_buena.linea(nunca) == (f"{ID} no publicada", "X", "sin diferencias")
+    antes = {**nunca, "origen": version_buena.ANTERIOR, "diferencias": {"titulo": ["a", "b"]}}
+    assert version_buena.linea(antes) == (f"{ID} publicada en su versión anterior", "X", "titulo")
+
+
 def _entrada(titulo: dict[str, str]) -> Documento:
     return {"type": "Feature", "id": ID, "geometry": None, "properties": {"id": ID,
             "titulo": titulo}}  # fmt: skip

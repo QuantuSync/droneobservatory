@@ -860,7 +860,9 @@ def auditar(
     if permitidos is not None:
         from proceso import protegido
 
-        resultado["X"] = protegido.cambios_sin_permiso(cambios, permitidos)
+        # Solo lo que la ficha aún tiene (lo deshecho o fijado por una revisión no cuenta).
+        actuales = {str(d["id"]): d for d in vistos}
+        resultado["X"] = protegido.cambios_sin_permiso(cambios, permitidos, actuales)
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor
     # comprobado contra sus fuentes en algo que no es una discrepancia conocida.
     from proceso import referencia
