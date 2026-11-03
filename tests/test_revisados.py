@@ -212,6 +212,10 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             "EODI-2025-00199",
             # Sulina: el petrolero YARA J del 14/10/2026 y el dron de las 01:34 del 15 (28/10).
             "EODI-2026-00541",
+            # Eindhoven: el dron del 18/12/2025 y la nota del 28/11 sobre la noche del 22/11, y los
+            # restos de Robeasca del 21/10/2026 y dos notas de julio (Z, 3/11/2026).
+            "EODI-2025-00200",
+            "EODI-2026-00655",
         }
     )
     # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.

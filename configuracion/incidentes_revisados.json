@@ -5723,6 +5723,17 @@
         "es": "Tras la separación de los tres drones del 30 de septiembre de 2026 la ficha es solo el de Brănești, pero conservó el titular del conjunto (revisado el 1 de noviembre de 2026)",
         "en": "After the three drones of 30 September 2026 were separated this record is only the one at Brănești, but it kept the headline of the group (reviewed on 1 November 2026)"
       }
+    },
+    {
+      "incidente": "EODI-2026-00079",
+      "titulo": {
+        "es": "Un piloto avisa de un posible dron sobre el aeropuerto de Hannover-Langenhagen y se suspenden los aterrizajes",
+        "en": "A pilot reports a possible drone over Hannover-Langenhagen airport and landings are suspended"
+      },
+      "motivo": {
+        "es": "El titular decía «Posibles drones», en plural: el aviso fue el de un piloto que vio un dron («Pilot meldet Drohnensichtung am Flughafen Hannover», haz.de; «Keine Landungen nach Drohnensichtung möglich», Neue Presse, 17 de febrero de 2026), sin número de drones en las fuentes (revisado el 3 de noviembre de 2026).",
+        "en": "The headline said «Possible drones», in the plural: the report was a pilot who saw a drone («Pilot meldet Drohnensichtung am Flughafen Hannover», haz.de; «Keine Landungen nach Drohnensichtung möglich», Neue Presse, 17 February 2026), with no number of drones in the sources (reviewed on 3 November 2026)."
+      }
     }
   ],
   "titular_justificado": [],
@@ -10564,6 +10575,83 @@
             "gdelt-16109fdf16777cbb",
             "gdelt-16109fdf16777cbb-declaracion-1",
             "gdelt-69d2ff1ccc4f3a23"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00200",
+      "distintos": true,
+      "motivo": {
+        "es": "Juntaba con el dron del 18 de diciembre de 2025 sobre el aeropuerto de Eindhoven (un vuelo de Alicante desviado a Ámsterdam y otro retrasado, Omroep Brabant y drimble.nl de ese día) una nota de Omroep Brabant del 28 de noviembre de 2025 sobre los viajeros que pasaron la noche en el aeropuerto «vorige week zaterdag», la noche de drones del 22 de noviembre que ya cuenta EODI-2025-00051.",
+        "en": "It merged the drone of 18 December 2025 over Eindhoven Airport (a flight from Alicante diverted to Amsterdam and another delayed, Omroep Brabant and drimble.nl that day) with an Omroep Brabant article of 28 November 2025 about the travellers who spent the night at the airport «vorige week zaterdag», the night of drones of 22 November already in EODI-2025-00051."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-12-18",
+          "pais": "NL",
+          "descripcion": "Un posible dron sobre el aeropuerto de Eindhoven impide aterrizar a un vuelo de Alicante, que se desvía a Ámsterdam, y retrasa otro, el 18 de diciembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-74cbbf676ce6cc10",
+            "gdelt-f2eaf971a0d4630a",
+            "gdelt-f2eaf971a0d4630a-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-28",
+          "pais": "NL",
+          "descripcion": "No es un suceso de esta ficha: la nota del 28 de noviembre de 2025 cuenta la noche del sábado 22 de noviembre («vorige week zaterdag»), con el aeropuerto de Eindhoven cerrado por drones, que ya cuenta EODI-2025-00051",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-b77749d283e86370"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00655",
+      "distintos": true,
+      "motivo": {
+        "es": "Juntaba con los restos de dron hallados el miércoles 21 de octubre de 2026 en un campo de Moșești (Robeasca, Buzău) dos notas del 27 de julio de 2026: la de ziarulnational.md sobre un objeto luminoso visto caer en Buzău mientras el ejército derribaba drones en julio, y un análisis de digi24.ro sobre cómo responder a las incursiones de drones.",
+        "en": "It merged the drone debris found on Wednesday 21 October 2026 in a field in Moșești (Robeasca, Buzău) with two articles of 27 July 2026: the ziarulnational.md one about a luminous object seen falling in Buzău while the army was shooting down drones in July, and a digi24.ro analysis of how to respond to drone incursions."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-10-21",
+          "pais": "RO",
+          "descripcion": "Un vecino halla los restos de un dron en un campo de Moșești (Robeasca, Buzău) el miércoles 21 de octubre de 2026; los revisan especialistas del Ministerio de Defensa y del SRI",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-6ac5b7a32d19b908",
+            "gdelt-c2ee4fe330162a5d",
+            "gdelt-c2ee4fe330162a5d-declaracion-2",
+            "gdelt-131393b52c2ba19e",
+            "gdelt-131393b52c2ba19e-declaracion-1",
+            "gdelt-d481f08540f724fc"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-07-27",
+          "pais": "RO",
+          "descripcion": "No es un suceso de esta ficha: la nota del 27 de julio de 2026 cuenta un objeto luminoso visto caer en Buzău mientras el ejército derribaba drones en julio (los derribos de julio están en EODI-2026-00089 y EODI-2026-00085)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-5a23c45d253451b7"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-07-27",
+          "pais": "RO",
+          "descripcion": "No es un suceso: análisis del general en la reserva Bălăceanu (digi24.ro, 27 de julio de 2026) sobre cómo puede Rumanía responder a las incursiones de drones",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-28bafbb63ce6d430"
           ]
         }
       ]
