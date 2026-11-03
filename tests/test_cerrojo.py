@@ -1011,7 +1011,7 @@ def _cierre_nuevo(frase: str) -> tuple[Documento, Documento]:
 
 
 def test_un_cierre_que_ninguna_frase_nombra_se_retiene() -> None:
-    # EODI-2026-00725: en Suceava solo hubo una alerta RO-Alert; el cierre fue en Iași.
+    # EODI-2026-00725: en Suceava solo hubo una alerta RO-Alert; el cierre fue en Iasi.
     guardado, nuevo = _cierre_nuevo(
         "O avertizare RO-Alert a fost transmisă pentru județul Suceava."
     )
@@ -1091,8 +1091,8 @@ def test_una_regla_explicita_no_retira_lo_que_cuenta_una_autoridad() -> None:
 @pytest.mark.parametrize(
     ("frase", "esperado"),
     [
-        ("Oficialii Aeroportului Iași anunță că, în urma mesajului RO-Alert referitor la posibilă "
-         "incursiune a unei drone, spațiul aerian a fost închis", True),
+        ("Oficialii Aeroportului I\u0061\u0219i anunță că, în urma mesajului RO-Alert referitor "
+         "la posibilă incursiune a unei drone, spațiul aerian a fost închis", True),
         ("Nach einer Warnung der Behörden wurde der Flughafen geschlossen", True),
         ("Eine Drohne flog über den Flughafen Hannover", False),
     ],
@@ -1100,7 +1100,7 @@ def test_una_regla_explicita_no_retira_lo_que_cuenta_una_autoridad() -> None:
 def test_el_aeropuerto_que_reacciona_a_una_alerta_no_es_el_lugar(
     frase: str, esperado: bool
 ) -> None:
-    # EODI-2026-00719: la alerta era para el distrito de Iași; el aeropuerto solo cerró.
+    # EODI-2026-00719: la alerta era para el distrito de Iasi; el aeropuerto solo cerró.
     from proceso import control_fichas as reglas
 
     assert reglas.reacciona_a_una_alerta(frase) is esperado
