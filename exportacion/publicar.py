@@ -12,6 +12,9 @@ El control de las fichas (recogida/control_fichas.py) deja fuera las fichas nuev
 (como mucho 6 horas) y añade a lo publicado la traducción de cada cita y la frase que respalda
 cada dato verificado (exportacion/citas.py).
 
+Una ficha que la auditoría marca en una comprobación de protección (P, R, V, W o X) sale en su
+última versión buena (exportacion/version_buena.py): la red de seguridad del cerrojo.
+
 Cada fichero se genera por separado: si uno falla, queda el que ya había, los demás se publican
 y el fallo queda en el registro (y en `fallidos`, si se pasa). Solo si no se puede generar ninguno
 sale el error."""
@@ -24,6 +27,7 @@ from pathlib import Path
 
 from almacen.base import Almacen
 from esquema import Documento
+from exportacion import version_buena
 from exportacion.citas import Pendientes, con_traducciones, enriquecer_incidentes
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
@@ -168,14 +172,28 @@ def publicar(
     }
     cambiados = []
     errores: list[str] = []
+    generados: dict[str, Documento] = {}
     for nombre, generar in documentos.items():
-        ruta = directorio / nombre
-        anterior = ruta.read_bytes() if ruta.exists() else None
         try:
-            escribir(generar(), ruta)
+            generados[nombre] = generar()
         except Exception as error:
             # Queda el fichero que ya había (escribir lo sustituye de una vez): los demás siguen.
             registro.exception("%s sin generar: queda el anterior", nombre)
+            errores.append(f"{nombre}: {error!r}")
+    # La red de seguridad: una ficha marcada en una comprobación de protección de la auditoría
+    # sale en su última versión buena (exportacion/version_buena.py). Nunca para lo demás.
+    con_red = version_buena.aplicar(
+        almacen, ahora, {n: d for n, d in generados.items() if n in version_buena.LISTAS},
+        directorio,
+    )  # fmt: skip
+    generados.update(con_red)
+    for nombre, documento in generados.items():
+        ruta = directorio / nombre
+        anterior = ruta.read_bytes() if ruta.exists() else None
+        try:
+            escribir(documento, ruta)
+        except Exception as error:
+            registro.exception("%s sin escribir: queda el anterior", nombre)
             errores.append(f"{nombre}: {error!r}")
             continue
         if ruta.read_bytes() != anterior:

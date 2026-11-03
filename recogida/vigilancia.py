@@ -75,6 +75,10 @@ Problemas (cada uno con su frase):
   (proceso/extraccion.conservar_publicada): sigue publicada con su versión anterior.
 - **cerrojo_proteccion**: con el cerrojo en «aplicar», una ficha sale en una comprobación de
   protección de la auditoría (R, V, W, P, X);
+- **version_anterior**: la red de la publicación (exportacion/version_buena.py) ha sacado una
+  ficha marcada en P, R, V, W o X en su última versión buena (o como en la publicación anterior,
+  o la ha dejado fuera si nunca se publicó): la frase lleva la ficha, la comprobación y lo que
+  cambia, datos de fichas ya publicadas;
 - **guardian**: el guardián del sistema (recogida/guardian.py) no ha podido arreglar algo (un
   dispositivo de /dev, /tmp, sshd, el disco por encima del 90 % tras limpiar, o dos recogidas
   seguidas que fallan por el sistema con el reinicio de último recurso ya gastado en 6 horas);
@@ -140,8 +144,11 @@ GRACIA = timedelta(minutes=30)
 SIN_GRACIA = frozenset({
     "publicacion", "recogida", "visitas_privadas", "prueba_restauracion", "base_solo_disco",
     "versiones", "barrera_resoluciones", "barrera_atascada", "mapa_parado", "control_fichas",
+    "version_anterior",
 })  # fmt: skip
 DIAS_RESUELTOS = timedelta(days=8)
+# Las fichas en versión anterior que cuenta la frase de la incidencia.
+MAX_VERSION_ANTERIOR = 5
 MAX_SIN_RECIBIR = timedelta(minutes=10)
 # Las activas se consultan cada minuto: 15 minutos sin respuesta correcta son 15 consultas.
 MAX_SIN_ALERTAS = timedelta(minutes=15)
@@ -330,7 +337,9 @@ def problemas_del_control(estado: dict[str, Any]) -> list[dict[str, str]]:
 def problemas_del_cerrojo(estado: dict[str, Any]) -> list[dict[str, str]]:
     """El cerrojo de lo decidido (proceso/protegido.py) ha fallado, o, con el cerrojo en «aplicar»,
     una ficha sale en una comprobación de protección de la auditoría: lo publicado no es lo
-    decidido. En «observar» eso solo se apunta. Sin identificadores: el fichero es público."""
+    decidido. En «observar» eso solo se apunta. Sin nada del servidor: el fichero es público. La
+    ficha que sale en su versión anterior (exportacion/version_buena.py) va con su identificador,
+    la comprobación y lo que cambia: son datos de fichas publicadas."""
     cerrojo = (estado or {}).get("cerrojo") or {}
     problemas = []
     if fallos := int(cerrojo.get("fallos_24h") or 0):
@@ -344,6 +353,25 @@ def problemas_del_cerrojo(estado: dict[str, Any]) -> list[dict[str, str]]:
             "id": "guardado_fallido_repetido",
             "frase": f"{len(repetidos)} fichas publicadas no se han podido guardar 3 veces "
             "seguidas: siguen publicadas con su versión anterior (control.json).",
+        })  # fmt: skip
+    if sustituidas := cerrojo.get("version_anterior") or []:
+        # La red de la publicación (exportacion/version_buena.py): la ficha, la comprobación y lo
+        # que cambia. Son fichas publicadas, sin nada del servidor.
+        partes = []
+        for s in sustituidas[:MAX_VERSION_ANTERIOR]:
+            cambios = "; ".join(
+                f"{campo}: {antes} → {despues}"
+                for campo, (antes, despues) in sorted((s.get("diferencias") or {}).items())
+            )  # fmt: skip
+            como = {"buena": "su última versión buena", "anterior": "la publicación anterior"}.get(
+                str(s.get("origen")), "sin publicar: nunca se publicó"
+            )
+            partes.append(f"{s.get('id')} ({', '.join(s.get('comprobaciones') or [])}; "
+                          f"{como}): {cambios or 'sin diferencias'}")  # fmt: skip
+        problemas.append({
+            "id": "version_anterior",
+            "frase": f"{len(sustituidas)} fichas marcadas por la auditoría salen en su versión "
+            "anterior: " + " | ".join(partes),
         })  # fmt: skip
     proteccion = cerrojo.get("proteccion") or {}
     if cerrojo.get("modo") == "aplicar" and proteccion:

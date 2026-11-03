@@ -729,6 +729,7 @@ def test_el_resumen_lleva_los_cambios_retenidos() -> None:
     assert visitas.lineas_cerrojo({"modo": "aplicar", "retenidos": []}) == [
         "  Cambios retenidos: 0",
         "  Guardados fallidos de fichas publicadas: 0",
+        "  Fichas publicadas en su versión anterior: 0",
     ]
     assert visitas.lineas_cerrojo(None) == []
 

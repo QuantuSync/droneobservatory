@@ -699,6 +699,8 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
             "retenidos": ((datos.get("cerrojo") or {}).get("dias") or {}).get(dia.isoformat(), []),
             "guardados_fallidos": ((datos.get("cerrojo") or {}).get("guardados_fallidos")
                                    or {}).get(dia.isoformat(), []),
+            "version_anterior": ((datos.get("cerrojo") or {}).get("version_anterior_dias")
+                                 or {}).get(dia.isoformat(), []),
         },
         "entrada": (datos.get("entrada") or {}).get(dia.isoformat()),
     }  # fmt: skip
@@ -779,6 +781,10 @@ def lineas_cerrojo(cerrojo: Documento | None) -> list[str]:
     fallidos = list(cerrojo.get("guardados_fallidos") or [])
     lineas.append(f"  Guardados fallidos de fichas publicadas: {len(fallidos)}")
     lineas += [f"  - {f}" for f in fallidos[:LIMITE]]
+    # La red de la publicación (exportacion/version_buena.py).
+    anteriores = list(cerrojo.get("version_anterior") or [])
+    lineas.append(f"  Fichas publicadas en su versión anterior: {len(anteriores)}")
+    lineas += [f"  - {f}" for f in anteriores[:LIMITE]]
     return lineas
 
 
