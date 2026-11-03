@@ -1,6 +1,6 @@
 import { rutasEs } from "./rutas.ts";
 import { tipoDronEs } from "./tipoDron.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, citaRecomendada } from "../sitio.ts";
+import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
@@ -1903,28 +1903,8 @@ export const es: Textos = {
       licenciaTexto:
         `La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia ${LICENCIA_DATOS}: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente como se indica abajo. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0. Los lugares: el punto de algunos incidentes sale de nomenclátores hechos con OpenStreetMap (© colaboradores de OpenStreetMap, ODbL 1.0, https://www.openstreetmap.org/copyright), de GeoNames (CC BY 4.0) y de OurAirports (dominio público).`,
       citaTitulo: "Cita recomendada",
-      cita: (version) => citaRecomendada(version, "es"),
       autoriaTitulo: "Autoría",
       contacto: "Contacto",
-    },
-    versiones: {
-      titulo: "Versiones citables",
-      intro:
-        "El día 1 de cada mes se congela una versión de los datos abiertos: los mismos ficheros, con su fecha y su huella, en una dirección que no cambia. Una versión publicada nunca se modifica ni se borra: sirve para citar exactamente los datos que se usaron.",
-      ninguna: "La primera versión citable se publica en cuanto se genere.",
-      linea: (version, fecha, incidentes) => `Versión ${version}, congelada el ${fecha}, con ${incidentes} incidentes`,
-      citaTitulo: "Cómo citar esta versión",
-      copiar: "Copiar la cita",
-      copiada: "Cita copiada",
-      tituloVersion: (version) => `Datos abiertos, versión ${version}`,
-      descripcionVersion: (version) => `Versión ${version} de los datos abiertos del ${NOMBRE}: ficheros congelados con su huella SHA-256, su licencia y cómo citarla.`,
-      congelada: (fecha, datos, incidentes) => `Congelada el ${fecha} con los datos publicados el ${datos}: ${incidentes} incidentes.`,
-      fija: "Esta versión no cambia ni se borra. Cada fichero lleva su huella SHA-256: si el fichero que tienes da la misma huella, es exactamente el de esta versión.",
-      fichero: "Fichero",
-      bytes: "Bytes",
-      huella: "SHA-256",
-      comoComprobar: "Para comprobar un fichero: sha256sum <fichero> (Linux), shasum -a 256 <fichero> (macOS) o certutil -hashfile <fichero> SHA256 (Windows).",
-      todas: "Todas las versiones",
     },
     archivadas: {
       titulo: "Versión archivada con DOI",

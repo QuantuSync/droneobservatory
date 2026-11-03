@@ -44,7 +44,6 @@ import {
   SIGLAS,
   rutaDeFicha,
   rutaDeIdioma,
-  versionDeDatos,
 } from "../sitio.ts";
 import { textoAproximado } from "../datos/lugarAproximado.ts";
 import { nombreDeLugar } from "../i18n/nombresLugar.ts";
@@ -68,9 +67,7 @@ import type { Hijo, Html } from "./html.ts";
 import { paginaAvisos } from "./avisos.ts";
 import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
-import { rutaDeFicheroDeVersion, rutasDeVersion } from "../datos/versiones.ts";
-import type { VersionDatos } from "../datos/versiones.ts";
-import { cuerpoVersion, seccionArchivadas, seccionVersiones } from "./versiones.ts";
+import { citaRecomendadaConDoi, seccionArchivadas } from "./archivadas.ts";
 import { urlDeDoi, VERSIONES_ARCHIVADAS } from "../datos/versionesArchivadas.ts";
 import type { VersionArchivada } from "../datos/versionesArchivadas.ts";
 import type { PaginaServicio } from "./servicio.ts";
@@ -86,8 +83,6 @@ export interface DatosPaginas {
   ucrania: ResumenUcrania;
   /** La previsión publicada; null si aún no hay. */
   prevision?: Prevision | null;
-  /** Las versiones citables de los datos abiertos, de la más nueva a la más vieja. */
-  versiones?: readonly VersionDatos[];
 }
 
 /** Una página: su dirección en cada idioma, sus metadatos y su contenido. */
@@ -192,14 +187,13 @@ export function lineaAutoria(idioma: Idioma): Html {
   );
 }
 
-/** Autoría y cita recomendada de los datos de `actualizado` (metodología y ayuda). */
-function autoriaYCita(idioma: Idioma, actualizado: string, nivel: "h2" | "h3"): Html {
+/** Autoría y cita recomendada de los datos, la del DOI (metodología y ayuda). */
+function autoriaYCita(idioma: Idioma, nivel: "h2" | "h3"): Html {
   const d = textos(idioma).metodologia.descargas;
   return html(
     e(nivel, null, d.autoriaTitulo),
     e("p", { "data-autoria": "" }, lineaAutoria(idioma)),
-    e(nivel, null, d.citaTitulo),
-    e("blockquote", { "data-cita-recomendada": "" }, d.cita(versionDeDatos(actualizado))),
+    citaRecomendadaConDoi(idioma, nivel),
   );
 }
 
@@ -1175,9 +1169,8 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("p", { class: "mono" }, d.version(version)),
       e("p", null, d.licencia, ": ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS)),
       e("p", { "data-licencia-texto": "" }, d.licenciaTexto),
-      autoriaYCita(idioma, datos.resumen.actualizado, "h3"),
+      autoriaYCita(idioma, "h3"),
       seccionArchivadas(VERSIONES_ARCHIVADAS, idioma),
-      seccionVersiones(datos.versiones ?? [], idioma),
     ),
     e(
       "section",
@@ -1251,7 +1244,7 @@ export function conjuntoDeDatos(actualizado: string, idioma: Idioma, archivadas:
     creator: autorEstructurado(),
     author: autorEstructurado(),
     copyrightHolder: autorEstructurado(),
-    citation: [textos(idioma).metodologia.descargas.cita(versionDeDatos(actualizado)), ...archivadas.map((v) => v.cita)],
+    citation: archivadas.map((v) => v.cita),
     dateModified: actualizado,
     spatialCoverage: { "@type": "Place", name: "Europe" },
     distribution: formatos.map(([ruta, tipo]) => ({ "@type": "DataDownload", contentUrl: ORIGEN + ruta, encodingFormat: tipo })),
@@ -1280,7 +1273,7 @@ function ayuda(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("p", null, enlace(RUTAS_AVISOS[idioma], TEXTO_AVISOS[idioma].titulo), ": ", TEXTO_AVISOS[idioma].descripcion),
       e("h2", null, a.atajos),
       e("ul", null, Object.values(a.acciones).map((accion) => e("li", null, accion))),
-      autoriaYCita(idioma, datos.resumen.actualizado, "h2"),
+      autoriaYCita(idioma, "h2"),
     ),
     estructurados: [],
     conMapa: false,
@@ -1330,7 +1323,6 @@ function todasLasPaginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(ayuda(datos, idioma));
     resultado.push({ ...paginaAvisos(idioma), estructurados: [], conMapa: false });
     for (const pagina of PAGINAS_SERVICIO) resultado.push(paginaServicio(pagina, idioma));
-    for (const v of datos.versiones ?? []) resultado.push(paginaVersion(v, idioma));
   }
   return resultado;
 }
@@ -1376,45 +1368,6 @@ export function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTe
     conMapa: false,
     modificada: REVISION_SERVICIO,
     ...(conBoton ? { scripts: [SCRIPT_BORRAR_VISITA] } : {}),
-  };
-}
-
-/** La versión citable como conjunto de datos (schema.org Dataset), con sus ficheros congelados. */
-function versionEstructurada(version: VersionDatos, idioma: Idioma): unknown {
-  const v = textos(idioma).metodologia.versiones;
-  return {
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    name: `${NOMBRE} · ${version.version}`,
-    description: v.descripcionVersion(version.version),
-    url: direccionCompleta(rutasDeVersion(version.version)[idioma]),
-    version: version.version,
-    inLanguage: idioma,
-    license: version.licencia.url,
-    isAccessibleForFree: true,
-    creator: autorEstructurado(),
-    datePublished: version.fecha,
-    citation: version.cita[idioma],
-    isPartOf: { "@type": "Dataset", name: NOMBRE, url: direccionCompleta(RUTAS.metodologia[idioma]) },
-    spatialCoverage: { "@type": "Place", name: "Europe" },
-    distribution: Object.keys(version.ficheros)
-      .sort()
-      .map((fichero) => ({ "@type": "DataDownload", name: fichero, contentUrl: ORIGEN + rutaDeFicheroDeVersion(version.version, fichero) })),
-  };
-}
-
-/** Una versión citable de los datos abiertos (src/texto/versiones.ts). No cambia nunca. */
-export function paginaVersion(version: VersionDatos, idioma: Idioma): PaginaTexto {
-  const v = textos(idioma).metodologia.versiones;
-  return {
-    idioma,
-    rutas: rutasDeVersion(version.version),
-    titulo: `${v.tituloVersion(version.version)} · ${NOMBRE}`,
-    descripcion: v.descripcionVersion(version.version),
-    cuerpo: cuerpoVersion(version, idioma, RUTAS.metodologia[idioma]),
-    estructurados: [versionEstructurada(version, idioma)],
-    conMapa: false,
-    modificada: version.fecha,
   };
 }
 

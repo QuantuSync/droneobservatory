@@ -1,6 +1,6 @@
 import { rutasEn } from "./rutas.ts";
 import { tipoDronEn } from "./tipoDron.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, citaRecomendada } from "../sitio.ts";
+import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
@@ -1888,28 +1888,8 @@ export const en: Textos = {
       licenciaTexto:
         `The observatory’s compilation (the incidents, their statuses, their classifications and their figures) is published under the ${LICENCIA_DATOS} licence: it can be copied, transformed and reused, also for commercial purposes, citing the source as shown below. Quoted sentences remain their authors’ and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) derives from the adsb.lol archive and is offered under its licence, ODbL 1.0. Places: the point of some incidents comes from gazetteers built from OpenStreetMap (© OpenStreetMap contributors, ODbL 1.0, https://www.openstreetmap.org/copyright), GeoNames (CC BY 4.0) and OurAirports (public domain).`,
       citaTitulo: "Recommended citation",
-      cita: (version) => citaRecomendada(version, "en"),
       autoriaTitulo: "Authorship",
       contacto: "Contact",
-    },
-    versiones: {
-      titulo: "Citable versions",
-      intro:
-        "On the 1st of every month a version of the open data is frozen: the same files, with their date and fingerprint, at an address that does not change. A published version is never modified or deleted: it is there to cite exactly the data that was used.",
-      ninguna: "The first citable version will be published as soon as it is generated.",
-      linea: (version, fecha, incidentes) => `Version ${version}, frozen on ${fecha}, with ${incidentes} incidents`,
-      citaTitulo: "How to cite this version",
-      copiar: "Copy the citation",
-      copiada: "Citation copied",
-      tituloVersion: (version) => `Open data, version ${version}`,
-      descripcionVersion: (version) => `Version ${version} of the open data of the ${NOMBRE}: frozen files with their SHA-256 fingerprint, their licence and how to cite it.`,
-      congelada: (fecha, datos, incidentes) => `Frozen on ${fecha} with the data published on ${datos}: ${incidentes} incidents.`,
-      fija: "This version does not change and is not deleted. Each file carries its SHA-256 fingerprint: if the file you have gives the same fingerprint, it is exactly the one in this version.",
-      fichero: "File",
-      bytes: "Bytes",
-      huella: "SHA-256",
-      comoComprobar: "To check a file: sha256sum <file> (Linux), shasum -a 256 <file> (macOS) or certutil -hashfile <file> SHA256 (Windows).",
-      todas: "All versions",
     },
     archivadas: {
       titulo: "Archived version with DOI",

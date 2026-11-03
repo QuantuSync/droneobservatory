@@ -2,11 +2,8 @@
 # de datos publicado (configuracion/licencia_datos.json). / How to cite the observatory.
 cff-version: 1.2.0
 message: >-
-  Si usas estos datos, cítalos así / If you use this data, please cite it as below:
-  Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión / Version 2026-10.
-  https://droneobservatory.eu. Licencia / Licence CC BY 4.0.
-  Para un trabajo académico, cita la versión archivada con DOI / For academic work, cite the
-  archived version with DOI (Discuss Data, one every quarter): see preferred-citation.
+  Si usas estos datos, cita la versión archivada con DOI / If you use this data, please cite the
+  archived version with DOI (Discuss Data, a new version every quarter): see preferred-citation.
 type: dataset
 title: European Observatory of Drone Incidents
 authors:
@@ -14,17 +11,17 @@ authors:
     given-names: Lucas
     name-suffix: PhD
     orcid: "https://orcid.org/0009-0008-5179-2534"
-version: "2026-10"
-date-released: "2026-10-01"
+version: "1.0"
+date-released: "2026-11-02"
+doi: 10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F
 license: CC-BY-4.0
 url: "https://droneobservatory.eu"
 repository-code: "https://github.com/QuantuSync/droneobservatory"
-repository-artifact: "https://droneobservatory.eu/datos/versiones/2026-10"
 abstract: >-
   Public register of drone incidents in Europe, each with its sources and its level of
   confirmation, and of drone attacks on Ukraine according to official reports. The data
   (incidents, statuses, classifications and figures) are published under CC BY 4.0; the code is
-  under Apache-2.0. Monthly citable versions: https://droneobservatory.eu/metodologia#versiones.
+  under Apache-2.0. Archived versions with DOI: https://droneobservatory.eu/metodologia#citar.
 keywords:
   - EODI
   - drones
@@ -42,11 +39,6 @@ identifiers:
   - type: url
     value: "https://discuss-data.net/dataset/f2ca4ae9-b2d3-4b0f-8f58-6cfbde30d39f/"
     description: Version 1.0 in Discuss Data.
-  - type: url
-    value: "https://droneobservatory.eu/metodologia#versiones"
-    description: >-
-      Monthly citable versions of the open data on the website, frozen on the 1st of each
-      month with their SHA-256 fingerprints.
 preferred-citation:
   type: data
   abbreviation: EODI

@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-import { descargarConReintentos } from "../datos/reintentos.ts";
-import { validarVersiones } from "../datos/validar.ts";
-import { RUTA_INDICE_VERSIONES, rutasDeVersion } from "../datos/versiones.ts";
-import type { VersionDatos } from "../datos/versiones.ts";
-import { fecha, fechaHora, numero } from "../i18n/index.ts";
+import { fechaHora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Marca, Trozo } from "../i18n/tipos.ts";
-import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, versionDeDatos } from "../sitio.ts";
+import { partesDeCita, ULTIMA_ARCHIVADA } from "../datos/versionesArchivadas.ts";
+import type { VersionArchivada } from "../datos/versionesArchivadas.ts";
+import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
 import { enlacesSobre } from "../texto/servicio.ts";
@@ -145,84 +143,27 @@ function Descargas({
       </p>
       <p className="rotulo mt-3">{d.autoriaTitulo}</p>
       <Autoria t={t} idioma={idioma} />
-      {actualizado !== null && (
-        <>
-          <p className="rotulo mt-3">{d.citaTitulo}</p>
-          <p className="mt-1 border-l border-acento pl-2 text-secundario" data-cita-recomendada="">
-            {d.cita(versionDeDatos(actualizado))}
-          </p>
-        </>
-      )}
+      {ULTIMA_ARCHIVADA !== undefined && <CitaConDoi t={t} version={ULTIMA_ARCHIVADA} />}
     </section>
   );
 }
 
-/**
- * Las versiones citables de los datos abiertos (datos/versiones.ts): se piden al abrir el panel,
- * no en la primera carga. Cada una enlaza a su página; la más reciente lleva su cita y un botón
- * para copiarla.
- */
-function Versiones({ t, idioma, abierta }: { t: Textos; idioma: Idioma; abierta: boolean }) {
-  const v = t.metodologia.versiones;
-  const [versiones, setVersiones] = useState<VersionDatos[] | null>(null);
-  const [copiada, setCopiada] = useState(false);
-  useEffect(() => {
-    if (!abierta || versiones !== null) return;
-    const control = new AbortController();
-    descargarConReintentos(RUTA_INDICE_VERSIONES, { signal: control.signal })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((datos: unknown) => {
-        const resultado = validarVersiones(datos);
-        setVersiones(resultado.ok ? resultado.datos.versiones : []);
-      })
-      .catch(() => {
-        if (!control.signal.aborted) setVersiones([]);
-      });
-    return () => control.abort();
-  }, [abierta, versiones]);
-  const ultima = versiones?.[0];
+/** La cita recomendada de los datos: la de la versión archivada más reciente, con su DOI. */
+function CitaConDoi({ t, version }: { t: Textos; version: VersionArchivada }) {
+  const p = partesDeCita(version);
   return (
-    <section className="mt-6" aria-labelledby="metodologia-versiones" data-versiones="">
-      <h3 id="metodologia-versiones" className="text-lg font-semibold tracking-tight">
-        {v.titulo}
-      </h3>
-      <p className="mt-2">{v.intro}</p>
-      {versiones !== null && versiones.length === 0 && <p className="mt-2 text-secundario">{v.ninguna}</p>}
-      {versiones !== null && versiones.length > 0 && (
-        <ul className="mt-2">
-          {versiones.map((x) => (
-            <li key={x.version}>
-              <a className="inline-flex min-h-11 items-center underline underline-offset-2 esc:min-h-7" href={rutasDeVersion(x.version)[idioma]}>
-                {v.linea(x.version, fecha(new Date(x.fecha)), numero(x.incidentes, idioma))}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-      {ultima !== undefined && (
-        <>
-          <p className="rotulo mt-3">{v.citaTitulo}</p>
-          <p className="mt-1 border-l border-acento pl-2 text-secundario" data-cita-version={ultima.version}>
-            {ultima.cita[idioma]}
-          </p>
-          <button
-            type="button"
-            className="control mt-2 min-h-11 px-3 text-xs esc:min-h-7"
-            onClick={() => {
-              void navigator.clipboard?.writeText(ultima.cita[idioma]).then(
-                () => setCopiada(true),
-                () => setCopiada(false),
-              );
-            }}
-          >
-            {v.copiar}
-          </button>
-          <span role="status" className="ml-2 text-xs text-secundario">
-            {copiada ? v.copiada : ""}
-          </span>
-        </>
-      )}
-    </section>
+    <>
+      <p className="rotulo mt-3" id="metodologia-citar">
+        {t.metodologia.descargas.citaTitulo}
+      </p>
+      <p className="mt-1 border-l border-acento pl-2 text-secundario" data-cita-recomendada={version.version}>
+        {p.antes}
+        <EnlaceExterno enlace={p.doi} aviso={t.ficha.enlaceExterno} avisoNoValido={t.ficha.enlaceNoValido}>
+          {p.doi}
+        </EnlaceExterno>
+        {p.despues}
+      </p>
+    </>
   );
 }
 
@@ -313,7 +254,6 @@ export function Metodologia({ t, idioma, abierta, actualizado, sinUbicacion, onC
             </section>
           ))}
           <Descargas t={t} idioma={idioma} actualizado={actualizado} sinUbicacion={sinUbicacion} />
-          <Versiones t={t} idioma={idioma} abierta={abierta} />
           <Sobre t={t} idioma={idioma} />
         </div>
       </div>

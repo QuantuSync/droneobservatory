@@ -16,9 +16,9 @@ proyecto, para que un problema de una ubicación no se lleve las dos:
   `visitas/ultima.sqlite.gz`, que se sustituyen cuando cambian.
 - `exportaciones/…`: la exportación semanal del bucket privado (almacen/exportaciones.py), que ya
   va cifrada, tal cual. No se sobrescribe ni se borra.
-- `versiones/…`: las versiones citables de los datos abiertos del almacén público
-  (recogida/versiones.py), tal cual: son públicas. Solo las publicadas (con su metadatos.json) y
-  nunca se sobrescriben ni se borran.
+- `versiones/…`: las antiguas versiones mensuales de los datos abiertos, retiradas el 3 de
+  noviembre de 2026 (la única forma de citar los datos es el DOI de Discuss Data). Lo que ya se
+  copió se queda en la réplica; no se copia nada más.
 
 Para cifrar basta la clave pública (`destinatario_age` de la configuración): esta unidad no
 necesita la identidad. Para restaurar sí (EODI_CLAVE_AGE o ~/.eodi/clave_age.txt).
@@ -44,7 +44,6 @@ import pyrage
 
 from almacen import buckets, copias
 from almacen.casa import casa
-from recogida import almacen_publico
 
 registro = logging.getLogger("replica")
 
@@ -54,7 +53,6 @@ CONFIGURACION_ARCHIVO = RAIZ / "configuracion" / "archivo_seguimiento.json"
 PREFIJO_BASE = "base/"
 PREFIJO_ARCHIVO = "archivo/"
 PREFIJO_EXPORTACIONES = "exportaciones/"
-PREFIJO_VERSIONES = "versiones/"
 SUFIJO_CIFRADO = ".age"
 # Lo único del archivo que cambia de contenido con la misma clave: las rutas (se pueden volver a
 # calcular) y la última copia de la base de visitas (recogida/visitas.py; cada día queda además una
@@ -96,7 +94,6 @@ def replicar(
     destinatario: str,
     ahora: datetime,
     origen_exportaciones: copias.Copias | None = None,
-    origen_versiones: copias.Copias | None = None,
 ) -> dict[str, Any]:
     """Una pasada: lo que falta en la réplica se sube; después se poda su parte base/."""
     hechos: dict[str, Any] = {
@@ -104,7 +101,6 @@ def replicar(
         "archivo": 0,
         "sustituidos": 0,
         "exportaciones": 0,
-        "versiones": 0,
         "podados": [],
     }
     en_replica = {o.clave for o in replica.listar("")}
@@ -136,18 +132,6 @@ def replicar(
                 continue
             replica.subir(clave, origen_exportaciones.bajar(objeto.clave))
             hechos["exportaciones"] += 1
-
-    if origen_versiones is not None:
-        objetos = list(origen_versiones.listar(PREFIJO_VERSIONES))
-        publicadas = {
-            o.clave.rsplit("/", 1)[0] + "/" for o in objetos if o.clave.endswith("/metadatos.json")
-        }
-        for objeto in objetos:
-            carpeta = objeto.clave.rsplit("/", 1)[0] + "/"
-            if carpeta not in publicadas or objeto.clave in en_replica:
-                continue
-            replica.subir(objeto.clave, origen_versiones.bajar(objeto.clave))
-            hechos["versiones"] += 1
 
     hechos["podados"] = replica.podar(ahora)
     return hechos
@@ -223,13 +207,9 @@ def principal(
     from almacen import exportaciones
 
     origen_exportaciones = copias.Copias(exportaciones.destino(), credenciales)
-    publico = almacen_publico.cargar()
-    origen_versiones = copias.Copias(
-        copias.Destino(publico.ubicacion, publico.punto_s3, publico.bucket, "", {}), credenciales
-    )
     hechos = replicar(
         origen_base, origen_archivo, replica, configuracion["destinatario_age"], momento,
-        origen_exportaciones, origen_versiones,
+        origen_exportaciones,
     )  # fmt: skip
     registro.info("réplica: %s", json.dumps(hechos, ensure_ascii=False))
     registro_ruta = Path(os.environ.get("EODI_SECRETOS") or casa() / ".eodi") / "replica.json"

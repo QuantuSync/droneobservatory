@@ -2,13 +2,17 @@
 // esperada, la metodología las enseña con su DOI, su repositorio, sus cifras y su cita en los dos
 // idiomas, y el Dataset de schema.org lleva el DOI como identifier y cada versión como parte.
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import { erroresDeVersionesArchivadas, urlDeDoi, VERSIONES_ARCHIVADAS } from "../src/datos/versionesArchivadas.ts";
 import type { VersionArchivada } from "../src/datos/versionesArchivadas.ts";
 import { conjuntoDeDatos } from "../src/texto/paginas.ts";
 import { jsonLd } from "../src/texto/html.ts";
-import { seccionArchivadas } from "../src/texto/versiones.ts";
+import { seccionArchivadas } from "../src/texto/archivadas.ts";
 
 const DOI = "10.48320/F2CA4AE9-B2D3-4B0F-8F58-6CFBDE30D39F";
 const ACTUALIZADO = "2026-11-03T08:17:00Z";
@@ -98,5 +102,27 @@ describe("versiones archivadas con DOI", () => {
       // Las descargas vivas de la web siguen siendo la distribución del conjunto.
       expect((d.distribution as Record<string, unknown>[]).every((x) => x["@type"] === "DataDownload")).toBe(true);
     }
+  });
+});
+
+describe("las antiguas versiones mensuales (retiradas el 3 de noviembre de 2026)", () => {
+  const vercel = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "..", "vercel.json"), "utf-8")) as {
+    redirects: { source: string; destination: string; permanent: boolean }[];
+    rewrites: { source: string; destination: string }[];
+  };
+  const destino = (ruta: string) =>
+    vercel.redirects.find((r) => new RegExp(`^${r.source.replace(/\./g, "\\.").replace(/\/:resto\*$/, "/.*")}$`).test(ruta))?.destination;
+
+  it("sus direcciones llevan al apartado del DOI, en el idioma de la dirección", () => {
+    for (const ruta of ["/datos/versiones/2026-10/incidentes.csv", "/datos/versiones/2026-11/ucrania.json", "/datos/versiones/2026-10", "/datos/versiones", "/datos/versiones.json"]) {
+      expect(destino(ruta), ruta).toBe("/metodologia#citar");
+    }
+    for (const ruta of ["/en/data/versions/2026-10", "/en/data/versions"]) {
+      expect(destino(ruta), ruta).toBe("/en/methodology#citar");
+    }
+  });
+
+  it("ya no se reescriben hacia el almacén", () => {
+    expect(vercel.rewrites.some((r) => r.destination.includes("versiones/"))).toBe(false);
   });
 });

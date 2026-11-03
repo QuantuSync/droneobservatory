@@ -105,7 +105,8 @@ describe("llms.txt", () => {
     expect(texto).toContain("https://droneobservatory.eu/avisos");
     expect(texto).toContain("https://droneobservatory.eu/en/methodology");
     expect(texto).toContain("https://creativecommons.org/licenses/by/4.0/");
-    expect(texto).toContain("How to cite:");
-    expect(texto).toContain("Cómo citar:");
+    expect(texto).toContain("How to cite (DOI): ");
+    expect(texto).toContain("https://doi.org/10.48320/");
+    expect(texto).toContain("Cómo citar (DOI): ");
   });
 });

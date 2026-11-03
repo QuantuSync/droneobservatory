@@ -74,10 +74,6 @@ def preparar(tmp_path: Path, recepcion: datetime, copia: datetime) -> tuple[Path
     (secretos / "alertas.json").write_text(
         json.dumps({"ultima_respuesta": _iso(recepcion)}), encoding="utf-8"
     )
-    (secretos / "versiones.json").write_text(
-        json.dumps({"publicadas": ["2026-10"], "comprobada": _iso(AHORA - timedelta(hours=12))}),
-        encoding="utf-8",
-    )
     (datos / "copias" / "2026-10-07.json").write_text(
         json.dumps({"objetos": {"neptun/x.gz": {"copiado": _iso(copia)}}}), encoding="utf-8"
     )
@@ -117,9 +113,6 @@ def test_cada_problema_tiene_su_frase(tmp_path: Path) -> None:
     (secretos / "alertas.json").write_text(
         json.dumps({"error_autorizacion": {"momento": _iso(AHORA), "http": 401}}), encoding="utf-8"
     )
-    (secretos / "versiones.json").write_text(
-        json.dumps({"publicadas": [], "fallo": "2026-10-01T02:35:00Z sin red"}), encoding="utf-8"
-    )
     # Dos recogidas anteriores también fallidas: con esta son tres seguidas.
     anteriores = [{"fin": _iso(AHORA - timedelta(hours=h)), "codigo": 1} for h in (5, 4)]
     (secretos / "vigilancia.json").write_text(
@@ -138,7 +131,6 @@ def test_cada_problema_tiene_su_frase(tmp_path: Path) -> None:
         "copia_base",
         "copia_archivo",
         "replica",
-        "versiones",
     }
 
 

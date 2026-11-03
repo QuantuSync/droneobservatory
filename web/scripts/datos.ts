@@ -30,11 +30,9 @@ import {
   validarPublicacionUcrania,
   validarPrevision,
   validarSinUbicacion,
-  validarVersiones,
 } from "../src/datos/validar.ts";
-import type { IndiceVersiones } from "../src/datos/versiones.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
-import { carpetaPublicacion, leerVersiones } from "./publicacion.ts";
+import { carpetaPublicacion } from "./publicacion.ts";
 import { AVISO, aceptar } from "./tolerancia.ts";
 import type { Validar } from "./tolerancia.ts";
 
@@ -144,17 +142,6 @@ async function principal(): Promise<void> {
   }
 
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
-  // Las versiones citables (recogida/versiones.py): las listan la metodología y sus páginas.
-  const leidas = await aceptar(
-    "versiones.json",
-    () => leerVersiones(join(WEB, "..")),
-    validarVersiones,
-    ["versiones"],
-    avisos,
-  );
-  const versiones: IndiceVersiones = leidas?.datos ?? { versiones: [] };
-  if (leidas === null) avisos.push("versiones.json: se publica la web sin versiones citables");
-  await escribir(join(DATOS, "versiones.json"), JSON.stringify(versiones));
   // La previsión (proceso/prevision), validada: se sirve tal cual y la usan sus páginas de texto.
   const rutaPrevision = join(PUBLICACION, "prevision.json");
   if ((await existe(rutaPrevision)) && (await usar(rutaPrevision, validarPrevision, [], false))) {
@@ -217,7 +204,6 @@ async function principal(): Promise<void> {
     `datos: ${avisos.length} avisos de datos, ${coleccion.features.length} incidentes en el mapa, ` +
       `${sinUbicacion?.incidentes.length ?? 0} con ubicación imprecisa y ` +
       `${ucrania.ataques.length} ataques, ${ucrania.impactos?.length ?? 0} impactos con lugar, ` +
-      `${versiones.versiones.length} versiones citables, ` +
       `actualizados a ${resumen.actualizado}`,
   );
 }

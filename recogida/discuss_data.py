@@ -6,7 +6,7 @@ En el servidor lo lanza la exportación semanal (servidor/exportacion.sh), al te
 julio u octubre genera el del trimestre si aún no está en el almacén privado
 (`discuss-data/eodi-incidentes-AAAA-MM-DD.zip`, en el bucket de las exportaciones), con los datos
 publicados en la web en ese momento (los mismos ficheros que la descarga abierta, bajados en una
-sola versión de los datos, como las versiones citables de recogida/versiones.py) y el registro de
+sola versión de los datos, recogida/datos_web.py) y el registro de
 cambios respecto al paquete anterior. Después manda un único aviso al tema privado del responsable
 (el del resumen diario) con el nombre, las cifras y un enlace firmado de descarga que vale 7 días.
 
@@ -40,7 +40,7 @@ from typing import Any
 from almacen import copias, exportaciones
 from almacen.casa import casa
 from exportacion import discuss_data as paquete
-from recogida import versiones
+from recogida import datos_web
 from recogida.almacen_publico import ALGORITMO, SERVICIO
 
 registro = logging.getLogger("discuss_data")
@@ -77,8 +77,7 @@ def bajar_web(leer: Leer, dormir: Callable[[float], None] = time.sleep) -> tuple
     dict[str, bytes], str
 ]:  # fmt: skip
     """Los ficheros de la descarga abierta (una sola versión de los datos) y la metodología."""
-    conf = {**versiones.configuracion(), "ficheros": dict.fromkeys(paquete.FICHEROS, "")}
-    resumen, ficheros = versiones.bajar_version(leer, conf, dormir)
+    resumen, ficheros = datos_web.bajar_version(leer, paquete.FICHEROS, dormir)
     ficheros[paquete.RESUMEN] = json.dumps(resumen).encode("utf-8")
     pagina = leer(paquete.METODOLOGIA_EN).decode("utf-8")
     return ficheros, pagina
@@ -178,7 +177,7 @@ def trimestral(
     ruta_registro: Path,
     ahora: datetime,
     avisar: Avisar | None,
-    leer: Leer = versiones.leer_http,
+    leer: Leer = datos_web.leer_http,
 ) -> dict[str, Any]:
     """Genera el paquete del trimestre si falta, lo guarda y avisa. Nunca lanza excepciones."""
     datos = leer_registro(ruta_registro)
@@ -267,7 +266,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             if previa is None:
                 opciones.error("--anterior tiene que llamarse eodi-incidentes-AAAA-MM-DD.zip")
             anterior = (previa, paquete.leer_paquete(args.anterior.read_bytes()))
-        cuerpo, resumen = generar(versiones.leer_http, fecha, anterior)
+        cuerpo, resumen = generar(datos_web.leer_http, fecha, anterior)
         args.salida.mkdir(parents=True, exist_ok=True)
         destino = args.salida / resumen["nombre"]
         if destino.exists():

@@ -1,5 +1,5 @@
 {
-  "descripcion": "Licencia y créditos de los datos abiertos del observatorio, los mismos que dicen la web (web/src/sitio.ts, web/src/datos/licencia.ts; un test comprueba que coinciden) y la página de datos abiertos. La llevan dentro, como miembro «licencia» al principio y en los metadatos del objeto (x-amz-meta-licencia, x-amz-meta-autor, x-amz-meta-orcid), los ficheros públicos del almacén (recogida/publicacion.py), las versiones citables (recogida/versiones.py) y la exportación semanal (exportacion/semanal.py, «creditos» del manifiesto). En «cita», {anio} y {version} (AAAA-MM) se rellenan con la versión de los datos.",
+  "descripcion": "Licencia y créditos de los datos abiertos del observatorio, los mismos que dicen la web (web/src/sitio.ts, web/src/datos/licencia.ts; un test comprueba que coinciden) y la página de datos abiertos. La llevan dentro, como miembro «licencia» al principio y en los metadatos del objeto (x-amz-meta-licencia, x-amz-meta-autor, x-amz-meta-orcid), los ficheros públicos del almacén (recogida/publicacion.py) y la exportación semanal (exportacion/semanal.py, «creditos» del manifiesto). En «cita», {anio} y {version} (AAAA-MM) se rellenan con la versión de los datos.",
   "nombre": "CC BY 4.0",
   "url": "https://creativecommons.org/licenses/by/4.0/",
   "titular": "European Observatory of Drone Incidents",

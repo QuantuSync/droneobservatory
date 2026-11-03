@@ -637,37 +637,13 @@ export interface Textos {
       /** Qué cubre la licencia y qué no: la compilación, las citas, el tráfico aéreo. */
       licenciaTexto: string;
       citaTitulo: string;
-      /** La cita recomendada de la versión AAAA-MM de los datos. */
-      cita: (version: string) => string;
       /** Créditos: quién es el autor, su ORCID y cómo contactar. */
       autoriaTitulo: string;
       contacto: string;
     };
-    /** Versiones citables de los datos abiertos (datos/versiones.ts): una fija cada mes. */
-    versiones: {
-      titulo: string;
-      intro: string;
-      ninguna: string;
-      /** Una versión en la lista: su nombre, cuándo se congeló y cuántos incidentes tiene. */
-      linea: (version: string, fecha: string, incidentes: string) => string;
-      citaTitulo: string;
-      copiar: string;
-      copiada: string;
-      /** Página de una versión. */
-      tituloVersion: (version: string) => string;
-      descripcionVersion: (version: string) => string;
-      congelada: (fecha: string, datos: string, incidentes: string) => string;
-      fija: string;
-      fichero: string;
-      bytes: string;
-      huella: string;
-      comoComprobar: string;
-      todas: string;
-    };
-    /** Versiones depositadas con DOI en un repositorio de datos (datos/versionesArchivadas.ts). */
     archivadas: {
       titulo: string;
-      /** Qué las distingue de los datos vivos (cada hora) y de las versiones mensuales. */
+      /** Qué las distingue de los datos vivos, que cambian cada hora. */
       intro: string;
       /** Una versión: su número, el día del depósito, cuántos incidentes y en cuántos países. */
       linea: (version: string, fecha: string, incidentes: string, paises: string) => string;
