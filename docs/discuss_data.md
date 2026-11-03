@@ -50,7 +50,7 @@ Un `.zip` fechado, `eodi-incidentes-AAAA-MM-DD.zip`, con una carpeta del mismo n
 | `README.md` | En inglés: qué es el observatorio, qué contiene el paquete, fecha de corte, número de incidentes y de países, cada campo, los estados y la presencia del dron, la regla de que un estado solo cambia por una declaración oficial, los enlaces a la web y a los datos abiertos, cómo suscribirse a los avisos (ntfy: `drones-europe` y `drones-<país>`, y la página de avisos), las licencias y la cita |
 | `METHODOLOGY.md` | La página de metodología en inglés de la web, convertida a Markdown en el momento de generar el paquete |
 | `LICENSE.md` | CC BY 4.0 para la compilación, ODbL 1.0 para el tráfico medido y las atribuciones de terceros |
-| `CITATION.cff` | El de este repositorio, con la versión y la fecha del paquete |
+| `CITATION.cff` | El de este repositorio con la versión del paquete: su número (si ya está depositada, el de `configuracion/versiones_archivadas.json`, con su DOI; si no, el siguiente al de la anterior, 1.0 → 1.1), su fecha y su cita; la versión archivada anterior va en `references` como versión previa, con su DOI, nunca como la suya |
 | `CHANGELOG.md` | Cambios respecto al paquete anterior: incidentes nuevos, unidos o retirados, cambios de estado y de presencia del dron («First version» en el primero) |
 
 Los ficheros de datos salen de la web en una sola versión de los datos (el `resumen.json` antes y
