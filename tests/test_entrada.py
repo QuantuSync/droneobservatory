@@ -446,3 +446,30 @@ def test_las_fichas_sin_punto_ni_hora_del_mismo_dia_entran_en_el_conjunto() -> N
         "EODI-2026-00727",
         "EODI-2026-00741",
     }
+
+
+def test_lo_retenido_sin_fecha_se_retira_a_las_6_horas() -> None:
+    # EODI-2026-00697 (un dron hallado en un poste) y EODI-2026-00744 (un balance mensual):
+    # retenidas por el filtro sin límite desde el 28 de octubre y el 2 de noviembre de 2026.
+    almacen = _base(SULINA_582, SULINA_692)
+    ctx = _contexto(almacen, Cliente([_respuesta(), _respuesta()]))
+    entrada.filtrar(ctx, {"EODI-2026-00582"})
+    desde = (AHORA - timedelta(hours=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cursor = {"vistos": {"EODI-2026-00582": desde},
+              "retenidos": {"EODI-2026-00692": {"desde": desde}}}  # fmt: skip
+    nuevo = control_fichas.retener(ctx, cursor, False, con_entrada=True)
+    assert "EODI-2026-00692" not in nuevo["retenidos"]
+    queda = almacen.incidente("EODI-2026-00692")
+    assert queda is not None and queda["retirado"]["motivo"] == control_fichas.MOTIVO_SIN_FECHA
+    assert "6 horas" in ctx.resultado.liberados["EODI-2026-00692"]
+    # Antes de las 6 horas sigue retenida y sin retirar.
+    almacen = _base(SULINA_582, SULINA_692)
+    ctx = _contexto(almacen, Cliente([_respuesta(), _respuesta()]))
+    entrada.filtrar(ctx, {"EODI-2026-00582"})
+    reciente = (AHORA - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cursor = {"vistos": {"EODI-2026-00582": desde},
+              "retenidos": {"EODI-2026-00692": {"desde": reciente}}}  # fmt: skip
+    nuevo = control_fichas.retener(ctx, cursor, False, con_entrada=True)
+    assert "EODI-2026-00692" in nuevo["retenidos"]
+    queda = almacen.incidente("EODI-2026-00692")
+    assert queda is not None and not queda.get("retirado")

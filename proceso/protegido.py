@@ -47,6 +47,7 @@ import re
 import sys
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
+from datetime import date, timedelta
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -76,12 +77,30 @@ DECISIONES_RETIRADA = (
     "recogida.barrera.", "recogida.repaso_entrada.", "recogida.revisados.",
     "proceso.extraccion.retirar_por_veredicto",
 )  # fmt: skip
+# Las retiradas de una regla explícita que pasan por `extraccion.retirar`: se reconocen por los dos
+# pasos más cercanos, no por cualquier paso de la pila (un fallo dentro de una reconstrucción no es
+# la decisión de retirar una copia). Las tres de la noche del 1 al 2 de noviembre de 2026: el alta
+# que salía solo del parte ucraniano (EODI-2026-00482), la alta oficial cuyo día no está en su frase
+# (EODI-2024-00002) y la copia numerada de más al reconstruir (EODI-2026-00254). Con una autoridad
+# en la ficha, ni estas bastan: piden una revisión a mano o una fuente nueva con su frase.
+DECISIONES_RETIRADA_DIRECTAS = (
+    ("proceso.extraccion.retirar", "proceso.incursiones.retirar"),
+    ("proceso.extraccion.retirar", "proceso.extraccion_oficial.revalidar_altas"),
+    ("proceso.extraccion.retirar", "proceso.extraccion.reconstruir"),
+)  # fmt: skip
+# Las fichas que nunca salieron en la web (las retiene el filtro de entrada): su retirada a las 6
+# horas sin fecha verificable no quita nada publicado (recogida/control_fichas.resolver_sin_fecha).
+DECISIONES_SIN_PUBLICAR = ("recogida.control_fichas.resolver_sin_fecha",)
+# Una fuente no cuenta un suceso posterior a su publicación: margen en días para la zona horaria y
+# las fechas aproximadas de publicación (EODI-2026-00079: una nota del 17 de febrero de 2026 acabó
+# en una ficha del 11 de agosto).
+MARGEN_FUENTE_ANTERIOR = 2
 # Las comprobaciones de la auditoría que miran lo protegido (proceso/auditoria_fichas.py).
 AUDITORIA = ("P", "R", "V", "W", "X")
 
 DATOS_MANUAL = (
-    "estado", "presencia_dron", "tipo", "objetivo", "lugar", "inicio", "drones", "cierre",
-    "titulo", "retirado",
+    "estado", "presencia_dron", "tipo", "objetivo", "lugar", "inicio", "drones", "modelo",
+    "cierre", "titulo", "retirado",
 )  # fmt: skip
 # Las afirmaciones que dicen cada dato (además de las de decididos para el resto).
 CAMPOS_AFIRMACION = {
@@ -90,16 +109,21 @@ CAMPOS_AFIRMACION = {
     "presencia_dron": ("presencia_dron",),
     "tipo": ("tipo",),
     "objetivo": ("objetivo_nombre", "objetivo_categoria", "objetivo_conocido"),
+    "modelo": ("modelo_dron",),
     "titulo": (),
 }
+# La comprobación de toda la versión: una fuente publicada antes del día del suceso.
+COHERENCIA = "fuente_anterior"
 # Lo que deja el titular tal como está decidido: si lo justificado cambia, el titular lo sigue.
 TITULO_SIGUE_A = ("presencia_dron", "drones", "lugar", "objetivo", "tipo")
 # Si se retiene uno de estos, el titular y el estado se quedan como estaban: son su resumen
 # (con la presencia retenida pasaría «Posible dron…» en EODI-2025-00178, 00472 y EODI-2026-00694).
-SIGUEN_A = ("presencia_dron", "drones", "lugar", "inicio")
+# El cierre y el modelo también (EODI-2026-00725: «con restricciones del espacio aéreo» seguía a un
+# cierre que ninguna frase da; «Un dron Gerbera…» nombra el modelo).
+SIGUEN_A = ("presencia_dron", "drones", "lugar", "inicio", "cierre", "modelo")
 SEGUIDORES = ("titulo", "estado")
 # Los datos con un valor que se puede buscar en la frase: una frase que no lo dice no los respalda.
-DE_FRASE = ("drones", "inicio", "presencia_dron", "lugar", "cierre")
+DE_FRASE = ("drones", "inicio", "presencia_dron", "lugar", "cierre", "modelo")
 RESPALDO_FIRME = ("revision", "rectificacion")
 # Una hora escrita: 10:26, 22.30, 7h15, 22 Uhr, klokken 14. No una fecha (11.03.2026).
 _HORA = re.compile(
@@ -186,6 +210,8 @@ _VALORES: dict[str, Callable[[Documento], Any]] = {
     "cierre": _cierre,
     "titulo": lambda d: {c: v for c, v in (d.get("titulo") or {}).items() if c in ("es", "en")},
     "retirado": lambda d: "retirado" in d,
+    "modelo": lambda d: (d.get("drones") or {}).get("modelo") or None,
+    COHERENCIA: lambda d: fuentes_anteriores(d),
 }
 
 
@@ -199,10 +225,37 @@ def huella(dato: str, documento: Documento) -> str:
     return hashlib.sha256(texto.encode()).hexdigest()[:12]
 
 
+def fuentes_anteriores(documento: Documento) -> list[str]:
+    """Las fuentes publicadas más de `MARGEN_FUENTE_ANTERIOR` días antes del día del suceso: una
+    nota no cuenta lo que aún no ha pasado. Si las hay, la ficha junta dos sucesos (EODI-2026-00079,
+    una nota del 17 de febrero de 2026 en una ficha del 11 de agosto, 2 de noviembre de 2026)."""
+    inicio = str((((documento.get("tiempo") or {}).get("inicio")) or {}).get("valor") or "")[:10]
+    if len(inicio) != 10:
+        return []
+    try:
+        limite = date.fromisoformat(inicio) - timedelta(days=MARGEN_FUENTE_ANTERIOR)
+    except ValueError:
+        return []
+    salida = []
+    for fuente in documento.get("fuentes", []):
+        publicada = str((fuente.get("fecha") or {}).get("valor") or "")[:10]
+        try:
+            if len(publicada) == 10 and date.fromisoformat(publicada) < limite:
+                salida.append(str(fuente.get("id")))
+        except ValueError:
+            continue
+    return sorted(salida)
+
+
 def _distinto(dato: str, antes: Any, despues: Any) -> bool:
     if dato == "lugar":
         # Rellenar lo que no estaba (una localidad) no cambia lo decidido.
         return any(v is not None and despues.get(c) != v for c, v in antes.items())
+    if dato == "modelo" and antes and despues:
+        # Otra redacción del mismo modelo («витлов самолет» y «безпилотен летателен апарат тип
+        # "витлов самолет"», EODI-2025-00068) no lo cambia.
+        uno, otro = (re.sub(r"[\W_]+", "", str(v).casefold()) for v in (antes, despues))
+        return not (uno in otro or otro in uno)
     return bool(antes != despues)
 
 
@@ -284,9 +337,15 @@ def dice_el_dato(dato: str, frase: str, dicho: Any) -> bool:
         if not isinstance(dicho, dict):
             return False
         extremos = {dicho.get("min"), dicho.get("max")}
-        return extremos == {1} or bool(extremos & _numeros_de(frase))
+        # Un intervalo lo dice la frase que da sus dos extremos: «9 drone» no dice «de 9 a 19»
+        # (EODI-2026-00744, un balance mensual con 19 violaciones del espacio aéreo).
+        return extremos == {1} or extremos <= _numeros_de(frase)
     if dato == "inicio" and dicho.get("precision") != "dia":
         return bool(_HORA.search(frase))
+    if dato == "modelo":
+        # El modelo lo dice la frase que lo nombra (Shahed, Gerbera, Geran-2...).
+        nombre = re.sub(r"[\W_]+", "", str(dicho or "").casefold())
+        return bool(nombre) and nombre in re.sub(r"[\W_]+", "", frase.casefold())
     return True
 
 
@@ -315,6 +374,18 @@ def _lo_dice_una_frase(guardado: Documento, dato: str) -> bool:
         fuentes.append(origen.get("fuente_id"))
     dicho = valor(guardado, dato)
     return any(dice_el_dato(dato, _frase_de(guardado, f), dicho) for f in fuentes)
+
+
+def _cierre_dicho(documento: Documento) -> bool:
+    """Alguna frase de una fuente que afirma el cierre nombra un cierre, una suspensión o un
+    desvío (proceso/presencia.CIERRE_EN_FRASE). Sin afirmación del cierre, la de cualquier
+    fuente."""
+    from proceso import presencia
+
+    ids = {a.get("fuente_id") for a in documento.get("afirmaciones", []) if a.get("campo") in
+           ("cierre", "cierre_minutos")}  # fmt: skip
+    fuentes = [f for f in documento.get("fuentes", []) if not ids or f.get("id") in ids]
+    return any(presencia.CIERRE_EN_FRASE.search(str(f.get("frase_origen") or "")) for f in fuentes)
 
 
 def _fijado_a_mano(guardado: Documento, dato: str) -> bool:
@@ -347,6 +418,31 @@ def candidatos(guardado: Documento, nuevo: Documento) -> list[Cambio]:
     for dato in decididos.juicios(nuevo, guardado):
         if dato not in cambios and _lo_dice_una_frase(guardado, dato):
             cambios[dato] = Cambio(dato, CON_CITA, valor(guardado, dato), valor(nuevo, dato))
+    # El modelo de dron que nombra la frase de una fuente, en cualquier ficha publicada: el mismo
+    # criterio que el número (EODI-2025-00261 volvía a Shahed tras su revisión, 1/11/2026).
+    antes, despues = valor(guardado, "modelo"), valor(nuevo, "modelo")
+    if (
+        "modelo" not in cambios
+        and antes
+        and _distinto("modelo", antes, despues)
+        and _lo_dice_una_frase(guardado, "modelo")
+    ):
+        cambios["modelo"] = Cambio("modelo", CON_CITA, antes, despues)
+    # Un cierre nuevo lo dice una frase que nombra el cierre: una alerta a la población no cierra
+    # nada (EODI-2026-00725, «O avertizare RO-Alert a fost transmisă... pentru județul Suceava»).
+    antes, despues = valor(guardado, "cierre"), valor(nuevo, "cierre")
+    if (
+        "cierre" not in cambios
+        and despues.get("valor") == "si"
+        and antes.get("valor") != "si"
+        and not _cierre_dicho(nuevo)
+    ):
+        cambios["cierre"] = Cambio("cierre", CON_CITA, antes, despues)
+    # Una fuente publicada antes del día del suceso que la versión guardada no tenía: la versión
+    # nueva junta dos sucesos (EODI-2026-00079). Solo la deshace una revisión.
+    anteriores = set(fuentes_anteriores(nuevo)) - set(fuentes_anteriores(guardado))
+    if anteriores:
+        cambios[COHERENCIA] = Cambio(COHERENCIA, PUBLICADA, [], sorted(anteriores))
     for dato in ("estado", "presencia_dron"):
         antes, despues = valor(guardado, dato), valor(nuevo, dato)
         if dato not in cambios and antes != despues and _decidido_por_autoridad(guardado, dato):
@@ -376,6 +472,8 @@ def _revisado(nuevo: Documento, dato: str) -> bool:
         return all(valor(nuevo, dato).get(c) == revisado.get(c) for c in ("es", "en"))
     if dato == "drones":
         return bool(decidir.revisiones(nuevo)["drones"].get("valor") == valor(nuevo, dato))
+    if dato == "modelo":
+        return bool(decidir.revisiones(nuevo)["modelo"].get("valor") == valor(nuevo, dato))
     return True
 
 
@@ -443,8 +541,15 @@ def dice_el_valor_nuevo(dato: str, fuente: Documento, nuevo: Documento) -> bool:
         return any(a.get("valor") == dicho for a in suyas)
     if not suyas and not set(campos) & set(fuente.get("campos_respaldados", [])):
         return False
-    if dato == "cierre" and dicho.get("minutos"):
-        return dicho["minutos"] in _numeros_de(str(fuente.get("frase_origen") or ""))
+    if dato == "cierre" and isinstance(dicho.get("minutos"), dict):
+        # Los minutos son {min, max}: la frase tiene que dar los dos extremos.
+        minutos = dicho["minutos"]
+        extremos = {minutos.get("min"), minutos.get("max")}
+        return extremos <= _numeros_de(str(fuente.get("frase_origen") or ""))
+    if dato == "cierre" and dicho.get("valor") == "si":
+        from proceso import presencia
+
+        return bool(presencia.CIERRE_EN_FRASE.search(str(fuente.get("frase_origen") or "")))
     if dato == "inicio" and dicho.get("precision") == decididos.PRECISIONES[0]:
         return False
     return dice_el_dato(dato, str(fuente.get("frase_origen") or ""), dicho)
@@ -491,8 +596,19 @@ def por_revision(pasos: Iterable[str]) -> bool:
 
 
 def por_decision(pasos: Iterable[str]) -> bool:
-    """La retirada sale de una decisión explícita (`DECISIONES_RETIRADA`)."""
-    return any(paso.startswith(DECISIONES_RETIRADA) for paso in pasos)
+    """La retirada sale de una decisión explícita (`DECISIONES_RETIRADA`, o los dos pasos más
+    cercanos de `DECISIONES_RETIRADA_DIRECTAS`, o una ficha que nunca se publicó)."""
+    pasos = list(pasos)
+    return (
+        any(paso.startswith(DECISIONES_RETIRADA) for paso in pasos)
+        or tuple(pasos[:2]) in DECISIONES_RETIRADA_DIRECTAS
+        or sin_publicar(pasos)
+    )
+
+
+def sin_publicar(pasos: Iterable[str]) -> bool:
+    """La retirada es de una ficha que el filtro de entrada nunca dejó salir en la web."""
+    return any(paso.startswith(DECISIONES_SIN_PUBLICAR) for paso in pasos)
 
 
 def juzgar(
@@ -509,16 +625,22 @@ def juzgar(
     justificados: set[str] = set()
 
     def razon(cambio: Cambio) -> str | None:
-        # La revisión del cierre fija si lo hubo: no da permiso para perder su duración.
+        # La revisión del cierre fija si lo hubo: no da permiso para perder su duración. Ni la
+        # del inicio para perder su fin (EODI-2026-00077, 3/11/2026: una reextracción le quitó el
+        # fin y pasó como «revisión»).
         pierde = (
             cambio.dato == "cierre" and cambio.antes["minutos"] and not cambio.despues["minutos"]
-        )
+        ) or (cambio.dato == "inicio" and cambio.antes.get("fin") and not cambio.despues.get("fin"))
+        if cambio.dato == COHERENCIA:
+            return "revision" if revision else None
         if revision or (_revisado(nuevo, cambio.dato) and not pierde):
             return "revision"
         if rectificada and cambio.dato in ("presencia_dron", "titulo"):
             return "rectificacion"
         if cambio.nivel == PUBLICADA and por_decision(pasos):
             return "decision"
+        if cambio.dato == "retirado" and sin_publicar(pasos):
+            return "sin_publicar"
         if cambio.dato == "titulo" and justificados & set(TITULO_SIGUE_A):
             return "sigue_a_lo_justificado"
         if cambio.nivel == CON_CITA and fuente_nueva_con_frase(
@@ -560,7 +682,7 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
     """`nuevo` con el valor de `guardado` en cada dato retenido, con sus afirmaciones. Una retirada
     retenida deja la versión publicada entera."""
     cambios = list(cambios)
-    if any(cambio.dato == "retirado" for cambio in cambios):
+    if any(cambio.dato in ("retirado", COHERENCIA) for cambio in cambios):
         return copy.deepcopy(guardado)
     resultado = copy.deepcopy(nuevo)
     fuentes = {f.get("id") for f in resultado.get("fuentes", [])}
@@ -593,6 +715,16 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
                 resultado.pop("objetivo", None)
         elif dato == "titulo":
             resultado["titulo"] = copy.deepcopy(guardado["titulo"])
+        elif dato == "modelo":
+            drones = {k: v for k, v in (resultado.get("drones") or {}).items() if k != "modelo"}
+            if modelo := (guardado.get("drones") or {}).get("modelo"):
+                drones["modelo"] = modelo
+            resultado["drones"] = drones
+            resultado["afirmaciones"] = [
+                *(a for a in resultado.get("afirmaciones", []) if a.get("campo") != "modelo_dron"),
+                *(copy.deepcopy(a) for a in guardado.get("afirmaciones", [])
+                  if a.get("campo") == "modelo_dron" and a.get("fuente_id") in fuentes),
+            ]  # fmt: skip
     return resultado
 
 
@@ -672,6 +804,14 @@ def union_prohibida(
 
     prohibidos = incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen)
     a_mano = pares_a_mano(almacen)
+    queda = almacen.incidente(destino)
+    par = frozenset((str(absorbido["id"]), destino))
+    if queda is not None and not any(par <= grupo for grupo in a_mano):
+        # La que queda contaría un suceso anterior a la publicación de una fuente de la que se
+        # funde: son dos sucesos (EODI-2026-00079, del 17/2, fundida en la del 11/8/2026).
+        juntas = {**queda, "fuentes": [*absorbido.get("fuentes", [])]}
+        if fuentes_anteriores(juntas):
+            return {"uno": str(absorbido["id"]), "otro": destino, "motivo": COHERENCIA}
     documentos = {i: almacen.incidente(i) for i in propio | ajeno}
     documentos[str(absorbido["id"])] = absorbido
     for uno in sorted(propio):

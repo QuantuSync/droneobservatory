@@ -1589,6 +1589,16 @@ def retener(
             filtro = entrada.motivo_retencion(decisiones.get(entrada.clave(id_)), incidente)
             if filtro is not None:
                 motivos.append(filtro)
+        if (
+            con_entrada
+            and motivos == [MOTIVO_ENTRADA_SIN_FECHA]
+            and ctx.ahora - _leer(desde) >= ESPERA
+            and resolver_sin_fecha(ctx, incidente)
+        ):
+            # Como la barrera de titulares: lo que el filtro retiene porque ninguna frase da la
+            # fecha del suceso no queda retenido para siempre (EODI-2026-00697, desde el 28/10).
+            ctx.resultado.liberados[id_] = "retirada a las 6 horas: ninguna frase da la fecha"
+            continue
         sin_limite = con_entrada or id_ in esperan or sin_fecha
         if motivos and (sin_limite or ctx.ahora - _leer(desde) < ESPERA):
             nuevos_retenidos[id_] = {"desde": desde, "motivo": "; ".join(motivos)}
@@ -1600,6 +1610,33 @@ def retener(
             ctx.resultado.liberados[id_] = nota
     # Lo retenido que ya no está activo (unido a otro o retirado) sale de la lista.
     return {**cursor, "vistos": vistos, "retenidos": nuevos_retenidos}
+
+
+MOTIVO_ENTRADA_SIN_FECHA = "filtro de entrada: ninguna frase da la fecha del suceso"
+MOTIVO_SIN_FECHA = (
+    "No verificable: retenida 6 horas por el filtro de entrada y ninguna frase de sus fuentes da "
+    "la fecha del suceso."
+)
+MOTIVO_SIN_FECHA_EN = (
+    "Not verifiable: held for 6 hours by the entry filter and no sentence of its sources gives "
+    "the date of the event."
+)
+
+
+def resolver_sin_fecha(ctx: Contexto, incidente: Documento) -> bool:
+    """La ficha que el filtro de entrada retiene 6 horas sin una frase que dé la fecha del suceso
+    se retira como no verificable, con su motivo: nunca salió en la web (EODI-2026-00697, un dron
+    civil hallado en un poste que pudo llevar allí tiempo; EODI-2026-00744, un balance mensual).
+    Es la salida b) de la barrera de titulares (recogida/barrera.py) para la fecha."""
+    nuevo = {k: v for k, v in incidente.items() if k != "episodio"}
+    nuevo["retirado"] = {
+        "fecha": _instante(ctx.ahora), "motivo": MOTIVO_SIN_FECHA, "motivo_en": MOTIVO_SIN_FECHA_EN,
+    }  # fmt: skip
+    if not _guardar(ctx, incidente, nuevo, MOTIVO_SIN_FECHA):
+        return False
+    ctx.almacen.anotar_motivo(TABLA_MOTIVOS, incidente["id"], {"retirado": None},
+                              {"retirado": nuevo["retirado"]}, MOTIVO_SIN_FECHA)  # fmt: skip
+    return True
 
 
 def retenidos(almacen: Almacen) -> frozenset[str]:
