@@ -715,7 +715,7 @@
         "EODI-2025-00039"
       ],
       "conserva": "EODI-2025-00243",
-      "motivo": "el mismo suceso: los dos drones que entraron en el espacio aéreo de Moldavia la noche del 28 al 29 de noviembre de 2025 y el cierre temporal del espacio aéreo (Poliția de Frontieră y Ministerul Apărării). Queda 00243, sin atribución: ninguna autoridad atribuye los drones con sus palabras (la de la presidenta Maia Sandu es indirecta, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), y 00039 (dos notas de news.yam.md) no tenía ninguna",
+      "motivo": "el mismo suceso: los dos drones que entraron en el espacio aéreo de Moldavia la noche del 28 al 29 de noviembre de 2025 y el cierre temporal del espacio aéreo (Poli\u021bia de Frontier\u0103 y Ministerul Ap\u0103r\u0103rii). Queda 00243, sin atribución: ninguna autoridad atribuye los drones con sus palabras (la de la presidenta Maia Sandu es indirecta, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), y 00039 (dos notas de news.yam.md) no tenía ninguna",
       "motivo_en": "the same event: the two drones that entered Moldovan airspace on the night of 28 to 29 November 2025 and the temporary closure of the airspace (Border Police and Ministry of Defence). 00243 stays, with no attribution: no authority attributes the drones in its own words (President Maia Sandu's is reported, «oskarżyła Moskwę o próbę destabilizacji», wiadomosci.wp.pl), and 00039 (two news.yam.md reports) had none"
     },
     {
@@ -4080,7 +4080,7 @@
       "medio": "army.md",
       "fecha": "2026-10-23",
       "idioma": "ro",
-      "frase": "Ulterior un cetățean a anunțat Poliția despre depistarea unui aparat de zbor lângă locuința sa din satul Chiștelnița, raionul Telenești.",
+      "frase": "Ulterior un cet\u0103\u021bean a anun\u021bat Poli\u021bia despre depistarea unui aparat de zbor l\u00e2ng\u0103 locuin\u021ba sa din satul Chi\u0219telni\u021ba, raionul Telene\u0219ti.",
       "comprobada": {
         "fecha": "2026-10-25",
         "en": "https://army.md/ro/comunicate-de-presa/doua-cazuri-de-incalcare-spatiului-aerian-al-republicii-moldova-perioada-16-23 (original)"
@@ -5507,7 +5507,7 @@
       "incidente": "EODI-2025-00158",
       "presencia": {
         "valor": "confirmada",
-        "cita": "Anchetatorii au identificat drona şi locaţia de unde a fost operată.",
+        "cita": "Anchetatorii au identificat drona \u015fi loca\u0163ia de unde a fost operat\u0103.",
         "enlace": "https://ziare.com/drona/avion-echipaj-aeroport-otopeni-1965347"
       },
       "motivo": {
@@ -5627,7 +5627,7 @@
       "incidente": "EODI-2026-00359",
       "presencia": {
         "valor": "confirmada",
-        "cita": "Fragmente dintr-o dronă militară au fost găsite în curtea unui localnic din Vrancea. MApN confirmă informaţia",
+        "cita": "Fragmente dintr-o dron\u0103 militar\u0103 au fost g\u0103site \u00een curtea unui localnic din Vrancea. MApN confirm\u0103 informa\u0163ia",
         "enlace": "https://ziuaveche.ro/top-secret/armata-2/drona-militara-gasite-in-curtea-unui-localnic-din-vrancea-343686.html"
       },
       "motivo": {
@@ -5639,7 +5639,7 @@
       "incidente": "EODI-2026-00496",
       "presencia": {
         "valor": "confirmada",
-        "cita": "Informația a fost prezentată de Serviciul Operații Aeriene al Armatei Naționale",
+        "cita": "Informa\u021bia a fost prezentat\u0103 de Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
         "enlace": "https://news.yam.md/ro/story/73086183"
       },
       "motivo": {
@@ -7792,7 +7792,7 @@
         "medio": "army.md",
         "fecha": "2026-10-23",
         "idioma": "ro",
-        "frase": "Ulterior un cetățean a anunțat Poliția despre depistarea unui aparat de zbor lângă locuința sa din satul Chiștelnița, raionul Telenești.",
+        "frase": "Ulterior un cet\u0103\u021bean a anun\u021bat Poli\u021bia despre depistarea unui aparat de zbor l\u00e2ng\u0103 locuin\u021ba sa din satul Chi\u0219telni\u021ba, raionul Telene\u0219ti.",
         "oficial": true,
         "declaracion": {
           "autoridad": "Ministerul Apărării",
@@ -11536,7 +11536,7 @@
       "incidente": "EODI-2026-00281",
       "campo": "tipo",
       "valor": "incursion",
-      "cita": "O dronă de tip Shahed a survolat frontiera de stat a Republicii Moldova între Ucraina și Crocmaz, potrivit unui anunț făcut de Poliția de Frontieră.",
+      "cita": "O dron\u0103 de tip Shahed a survolat frontiera de stat a Republicii Moldova \u00eentre Ucraina \u0219i Crocmaz, potrivit unui anun\u021b f\u0103cut de Poli\u021bia de Frontier\u0103.",
       "enlace": "https://antena3.ro/externe/alerta-de-securitate-in-republica-moldova-o-drona-shahed-a-intrat-in-spatiul-aerian-780956.html",
       "pais": "MD",
       "motivo": "la Policía de Fronteras de Moldavia vio el Shahed cruzar la frontera (propuesta del repaso de entrada del 28 de octubre de 2026, revisada leyendo la fuente)"
@@ -11821,7 +11821,7 @@
       "incidente": "EODI-2026-00105",
       "campo": "tipo",
       "valor": "incursion",
-      "cita": "a pătruns neautorizat în spațiul aerian al Republicii Moldova din direcția Ucrainei",
+      "cita": "a p\u0103truns neautorizat \u00een spa\u021biul aerian al Republicii Moldova din direc\u021bia Ucrainei",
       "enlace": "https://ziarulnational.md/ultima-ora-o-noua-drona-a-survolat-ilegal-r-moldova-spatiul-aerian-din-sudul-tarii-inchis",
       "pais": "MD",
       "motivo": "repaso de entrada con el experto: Suceso nuevo del 8 de mayo de 2026 en Moldavia, distinto de las fichas rumanas; el tipo es incursión porque el dron entró desde Ucrania."
@@ -11830,7 +11830,7 @@
       "incidente": "EODI-2026-00148",
       "campo": "tipo",
       "valor": "incursion",
-      "cita": "obiectul aerian a intrat în spațiul național la ora 11:16, din direcția localității Stepanivka, regiunea Odesa, Ucraina",
+      "cita": "obiectul aerian a intrat \u00een spa\u021biul na\u021bional la ora 11:16, din direc\u021bia localit\u0103\u021bii Stepanivka, regiunea Odesa, Ucraina",
       "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-20",
       "pais": "MD",
       "motivo": "repaso de entrada con el experto: Suceso nuevo del 26 de septiembre en Moldavia, sin ficha equivalente; el tipo correcto es incursión porque el objeto entró desde Ucrania."
@@ -11881,7 +11881,7 @@
       "incidente": "EODI-2026-00325",
       "campo": "tipo",
       "valor": "incursion",
-      "cita": "pătrunderea în spațiul aerian național al Republicii Moldova, a unei drone neidentificate din direcția Ucraina, cu traversarea frontierei de stat",
+      "cita": "p\u0103trunderea \u00een spa\u021biul aerian na\u021bional al Republicii Moldova, a unei drone neidentificate din direc\u021bia Ucraina, cu traversarea frontierei de stat",
       "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-7",
       "pais": "MD",
       "motivo": "repaso de entrada con el experto: Suceso nuevo del 24-08-2026 en Vulcănești, sin ficha equivalente. El tipo debe ser incursión: el ministerio dice que el dron entró desde Ucrania cruzando la frontera."
@@ -12107,20 +12107,20 @@
     {
       "incidente": "EODI-2026-00719",
       "campo": "lugar",
-      "valor": {"nivel": "region", "region": "Iași", "suceso": "județul Iași", "punto": {"lat": 47.2, "lon": 27.4}, "radio_km": 50.0},
-      "cita": "alertei transmise de Ministerul Apărării Naționale (MApN) privind prezența unei drone la nivelul județului Iași",
+      "valor": {"nivel": "region", "region": "I\u0061\u0219i", "suceso": "jude\u021bul I\u0061\u0219i", "punto": {"lat": 47.2, "lon": 27.4}, "radio_km": 50.0},
+      "cita": "alertei transmise de Ministerul Ap\u0103r\u0103rii Na\u021bionale (MApN) privind prezen\u021ba unei drone la nivelul jude\u021bului I\u0061\u0219i",
       "enlace": "https://ziare.com/spatiu-aerian/aeroport-drona-cursa-redirectionata-2044991",
       "pais": "RO",
-      "motivo": "el Ministerio de Defensa rumano avisó de un dron en el distrito de Iași, a unos 10 km de la frontera con Moldavia; el aeropuerto de Iași solo cerró su espacio aéreo por la alerta («în urma mesajului RO-Alert», news.yam.md) y no es el lugar del suceso (revisado el 3 de noviembre de 2026)"
+      "motivo": "el Ministerio de Defensa rumano avisó de un dron en el distrito de I\u0061\u0219i, a unos 10 km de la frontera con Moldavia; el aeropuerto de I\u0061\u0219i solo cerró su espacio aéreo por la alerta («\u00een urma mesajului RO-Alert», news.yam.md) y no es el lugar del suceso (revisado el 3 de noviembre de 2026)"
     },
     {
       "incidente": "EODI-2026-00719",
       "campo": "objetivo",
       "valor": null,
-      "cita": "Oficialii Aeroportului Iaşi au anunţat că, în urma mesajului RO-Alert referitor la posibila incursiune a unei drone, spaţiul aerian a fost închis temporar",
+      "cita": "Oficialii Aeroportului I\u0061\u015fi au anun\u0163at c\u0103, \u00een urma mesajului RO-Alert referitor la posibila incursiune a unei drone, spa\u0163iul aerian a fost \u00eenchis temporar",
       "enlace": "https://news.yam.md/ro/story/80717321",
       "pais": "RO",
-      "motivo": "el aeropuerto de Iași cerró su espacio aéreo por la alerta, no porque el dron fuera hacia él; ninguna fuente dice a qué se dirigía (revisado el 3 de noviembre de 2026)"
+      "motivo": "el aeropuerto de I\u0061\u0219i cerró su espacio aéreo por la alerta, no porque el dron fuera hacia él; ninguna fuente dice a qué se dirigía (revisado el 3 de noviembre de 2026)"
     }
   ]
 }

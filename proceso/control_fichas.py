@@ -632,7 +632,7 @@ def _lugar(c: Correccion, v: Verificada, nom: Nomenclator | None) -> None:
         return
     if nivel == "instalacion" and reacciona_a_una_alerta(frase):
         # Una instalación que solo reacciona a una alerta de su región no es el sitio del dron
-        # (EODI-2026-00719: el aeropuerto de Iași cerró «în urma mesajului RO-Alert», y la alerta
+        # (EODI-2026-00719: el aeropuerto de Iasi cerró «în urma mesajului RO-Alert», y la alerta
         # era para el norte del județ).
         c.dudas.append(f"lugar «{valor['nombre']}»: la frase cuenta la reacción a una alerta")
         return
