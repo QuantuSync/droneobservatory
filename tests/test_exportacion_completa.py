@@ -26,7 +26,16 @@ def lineas(fichero: semanal.Fichero) -> list[Any]:
 
 @pytest.fixture(scope="module")
 def ficheros() -> dict[str, semanal.Fichero]:
-    return {f.nombre: f for f in semanal.generar(base_prueba.base_prueba())}
+    # Un accesorio del módulo va antes que `cerrojo_en_observar` (tests/conftest.py), que es de
+    # cada prueba: la base de prueba se hace también en «observar», no con el modo del fichero.
+    from proceso import protegido
+
+    leer = protegido.modo
+    with pytest.MonkeyPatch.context() as parche:
+        parche.setattr(
+            protegido, "modo", lambda ruta=None: protegido.OBSERVAR if ruta is None else leer(ruta)
+        )
+        return {f.nombre: f for f in semanal.generar(base_prueba.base_prueba())}
 
 
 @pytest.fixture(scope="module")
