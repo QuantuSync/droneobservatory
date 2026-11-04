@@ -172,3 +172,16 @@ def test_el_ministerio_rumano_citado_en_moldavia_sigue_siendo_de_defensa_naciona
         autoridades.traduccion_de_su_pais("Ministerul Apărării a anunțat", traducida, "es", "RO")
         == traducida
     )
+
+
+def test_lo_que_resume_varios_sucesos_se_retira_como_no_es_un_suceso() -> None:
+    # EODI-2026-00744, el balance mensual de Moldavia, se retiró como «no verificable» (3/11/2026).
+    from recogida import control_fichas
+
+    decisiones = {
+        "par:EODI-2026-00728|EODI-2026-00744": {"decision": "distinto", "varios_sucesos": True},
+        "par:EODI-2026-00700|EODI-2026-00701": {"decision": "distinto", "varios_sucesos": True},
+    }
+    assert control_fichas.resume_varios_sucesos(decisiones, "EODI-2026-00744")
+    assert not control_fichas.resume_varios_sucesos(decisiones, "EODI-2026-00702")
+    assert control_fichas.MOTIVO_VARIOS_SUCESOS.startswith("No es un suceso")
