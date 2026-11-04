@@ -105,6 +105,30 @@ def test_larnaca_sin_localidad_lleva_la_ciudad_de_su_aeropuerto() -> None:
     )
 
 
+def test_el_aeropuerto_ya_dicho_no_se_repite_al_poner_su_nombre() -> None:
+    # EODI-2026-00057: el objetivo «Vilnius» pasa a «aeropuerto de Vilna», y con «el aeropuerto de
+    # Vilnius» en el titular se publicaba «el aeropuerto del aeropuerto de Vilna».
+    doc = incidente(
+        "LT",
+        punto={"lat": 54.63, "lon": 25.28},
+        objetivo={"categoria": "aeropuerto", "nombre": "Vilnius", "oaci": "EYVI"},
+        titulo={
+            "es": "Drones sobre Lituania cierran el aeropuerto de Vilnius y activan la defensa",
+            "en": "Drone over Lithuania closes Vilnius airport",
+        },
+    )
+    corregido = nombres_lugar.titulo_corregido(doc)
+    assert "aeropuerto del aeropuerto" not in corregido["es"]
+    assert corregido["es"] == (
+        "Drones sobre Lituania cierran el aeropuerto de Vilna y activan la defensa"
+    )
+    # Sin «aeropuerto» delante, el nombre del objetivo lo sigue poniendo.
+    otro = {**doc, "titulo": {"es": "Drones en Vilnius cierran el tráfico", "en": "x"}}
+    assert nombres_lugar.titulo_corregido(otro)["es"] == (
+        "Drones en el aeropuerto de Vilna cierran el tráfico"
+    )
+
+
 def test_akrotiri_es_base_britanica_en_chipre_y_el_pais_de_los_datos_no_cambia() -> None:
     doc = incidente(
         "GB",
