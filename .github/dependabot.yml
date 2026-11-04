@@ -1,5 +1,6 @@
 # Revisión mensual de las acciones fijadas por hash y de las dependencias de pip y de npm: un solo PR
-# por ecosistema (el 1 de noviembre de 2026 doce PR de golpe atascaron la CI).
+# por ecosistema (el 1 de noviembre de 2026 doce PR de golpe atascaron la CI). TypeScript, sin
+# versiones mayores: la 7 no la soporta aún typescript-eslint y tumbaba el PR del grupo (PR 391).
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -25,6 +26,10 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
     groups:
       npm:
         patterns:
