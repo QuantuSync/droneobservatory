@@ -28,6 +28,15 @@ export default defineConfig({
     baseURL: BASE,
     screenshot: "off",
     trace: "off",
+    // Sin el service worker de la app (public/sw.js), salvo en los recorridos de la app
+    // (e2e/app-recorridos.spec.ts, que lo pide con serviceWorkers: "allow"). Con él, cada prueba
+    // pedía a la web dos veces casi todo: Playwright desactiva la caché HTTP del navegador al
+    // interceptar peticiones (e2e/base.ts), así que lo que la página manda guardar al service worker
+    // («guardar», con «force-cache») volvía a la red, y lo que responde el service worker no pasa por
+    // las rutas de base.ts. Medido el 4 de noviembre de 2026: de 700 a 800 de las unas 2.400
+    // peticiones de cada trabajo eran del service worker. Los contextos que abren las pruebas con
+    // browser.newContext() lo bloquean también (base.ts).
+    serviceWorkers: "block",
     // Con la clave, Vercel deja además una cookie de acceso: las peticiones que hace el service worker
     // de la app (public/sw.js), que no llevan las cabeceras de Playwright, también pasan.
     ...(CLAVE === undefined || CLAVE === ""

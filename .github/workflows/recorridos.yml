@@ -8,9 +8,12 @@ name: recorridos
 #   las vistas previas en el secreto EODI_VERCEL_BYPASS).
 # - En cada PR que no cambia la web (Vercel no construye: web/scripts/omitir-build.ts), los
 #   recorridos van contra producción, que es la web con la que se va a fusionar.
-# - Producción se recorre tras el despliegue de cada commit nuevo y cada 6 horas por reloj
-#   (schedule). Los redespliegues de datos del mismo commit (el gancho de despliegue de la recogida
-#   horaria añade otro estado «success» al mismo despliegue) ya no: desde el 27 de octubre de
+# - Producción se recorre tras el despliegue de cada commit nuevo que cambia la web y cada 6 horas
+#   por reloj (schedule). Un commit que no toca nada de lo que construye la web (datos, recogida,
+#   documentación; las rutas de web/scripts/omitir-build.ts) no se recorre: desde el 4 de noviembre
+#   de 2026 se compara con el último commit recorrido. Los redespliegues de datos del mismo commit
+#   (el gancho de despliegue de la recogida horaria añade otro estado «success» al mismo
+#   despliegue) tampoco: desde el 27 de octubre de
 #   2026, cuando recorrían el mismo commit cada hora y el 97 % de los 1,5 millones de peticiones
 #   diarias que recibía Vercel eran de los recorridos. Si fallan, se abre (o se comenta) la
 #   incidencia «Los recorridos fallan en producción»; si pasan, se cierra.
@@ -53,7 +56,7 @@ concurrency:
 
 jobs:
   # Contra qué se recorre, o nada: un deployment_status que no es un éxito, un redespliegue de
-  # datos de un commit ya recorrido en producción, o un PR que cambia la web (lo recorre su vista
+  # datos de un commit ya recorrido en producción, un commit nuevo que no cambia la web, o un PR que cambia la web (lo recorre su vista
   # previa, que llega después como deployment_status).
   destino:
     runs-on: ubuntu-latest
@@ -66,10 +69,12 @@ jobs:
       sha: ${{ steps.decidir.outputs.sha }}
       matriz: ${{ steps.decidir.outputs.matriz }}
     steps:
+      # El historial entero: en los PR, para comparar con su base; en el despliegue de producción de
+      # un commit nuevo, para comparar con el último commit recorrido.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' || (github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.event.deployment.sha }}
           fetch-depth: 0
       - id: decidir
         env:
@@ -83,6 +88,8 @@ jobs:
           SHA_PR: ${{ github.event.pull_request.head.sha }}
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          # Lo que construye la web: las rutas de web/scripts/omitir-build.ts (RUTAS_QUE_DESPLIEGAN).
+          RUTAS_WEB: web publicacion vercel.json api configuracion/almacen_publico.json configuracion/avisos.json configuracion/publicacion_web.json
         run: |
           set -euo pipefail
           base=""; produccion=false; sha="$GITHUB_SHA"
@@ -92,23 +99,43 @@ jobs:
                 sha="$SHA_DESPLIEGUE"
                 if [ "$ENTORNO" = "Production" ]; then
                   base="https://droneobservatory.eu"; produccion=true
-                  # ¿Ya se recorrió producción con este commit? Lo dice una ejecución anterior
-                  # terminada (éxito o fallo, no cancelada) cuyo trabajo «incidencia» corrió: solo
-                  # corre tras recorrer producción. Si la API falla, se recorre.
-                  if previas="$(gh api "repos/$GH_REPO/actions/workflows/recorridos.yml/runs?event=deployment_status&status=completed&head_sha=$sha&per_page=100" \
-                      --jq '.workflow_runs[] | select(.conclusion == "success" or .conclusion == "failure") | "\(.id) \(.created_at)"')"; then
-                    while read -r id creada; do
+                  # ¿Cambia la web desde el último commit recorrido en producción? Lo dice la
+                  # ejecución terminada más reciente (éxito o fallo, no cancelada), tras un despliegue
+                  # o por reloj, cuyo trabajo «incidencia» corrió: solo corre tras recorrer
+                  # producción. Si el commit es el mismo (un redespliegue de datos) o no toca nada de
+                  # lo que construye la web (las mismas rutas que en los PR y que
+                  # web/scripts/omitir-build.ts), no corre ningún trabajo: producción sirve la misma
+                  # web y la recorre la pasada de cada 6 horas. Desde el 4 de noviembre de 2026:
+                  # del 3 al 4, 10 de las 16 pasadas completas tras un despliegue eran de commits de
+                  # datos, del cerrojo o de documentación. Ante cualquier duda (la API o git fallan,
+                  # no hay ejecución anterior), se recorre.
+                  ultimo=""
+                  if previas="$(gh api "repos/$GH_REPO/actions/workflows/recorridos.yml/runs?status=completed&per_page=40" \
+                      --jq '.workflow_runs[] | select((.event == "deployment_status" or .event == "schedule") and (.conclusion == "success" or .conclusion == "failure")) | "\(.id) \(.head_sha) \(.created_at)"')"; then
+                    while read -r id previo creada; do
                       [ -n "$id" ] || continue
                       if corrio="$(gh api "repos/$GH_REPO/actions/runs/$id/jobs" \
                           --jq '[.jobs[] | select(.name == "incidencia" and (.conclusion == "success" or .conclusion == "failure"))] | length')" \
                           && [ "$corrio" != "0" ]; then
-                        base=""; produccion=false
-                        echo "redespliegue de datos del commit ${sha:0:7}: ya recorrido a las $(date -u -d "$creada" +%H:%M) UTC; producción se recorre cada 6 horas y tras cada commit nuevo"
+                        ultimo="$previo"
+                        echo "último commit recorrido en producción: ${previo:0:7} ($(date -u -d "$creada" '+%d/%m %H:%M') UTC)"
                         break
                       fi
                     done <<< "$previas"
                   else
-                    echo "::warning::no se pudo consultar si el commit ya se recorrió: se recorre"
+                    echo "::warning::no se pudo consultar el último commit recorrido: se recorre"
+                  fi
+                  if [ -n "$ultimo" ]; then
+                    # shellcheck disable=SC2086
+                    if [ "$ultimo" = "$sha" ]; then
+                      base=""; produccion=false
+                      echo "redespliegue de datos del commit ${sha:0:7}, ya recorrido: producción se recorre cada 6 horas y tras cada commit que cambia la web"
+                    elif git cat-file -e "$ultimo^{commit}" 2>/dev/null && git diff --quiet "$ultimo" "$sha" -- $RUTAS_WEB; then
+                      base=""; produccion=false
+                      echo "el commit ${sha:0:7} no cambia la web desde ${ultimo:0:7}: no se recorre (producción se recorre cada 6 horas)"
+                    else
+                      echo "el commit ${sha:0:7} cambia la web desde ${ultimo:0:7} (o no se puede comparar): se recorre"
+                    fi
                   fi
                 else
                   base="$URL_DESPLIEGUE"
@@ -125,9 +152,8 @@ jobs:
               sha="$SHA_PR"
               git fetch --quiet origin "${BASE_PR#origin/}"
               comun="$(git merge-base "$BASE_PR" HEAD)"
-              rutas="web publicacion vercel.json api configuracion/almacen_publico.json configuracion/avisos.json configuracion/publicacion_web.json"
               # shellcheck disable=SC2086
-              if git diff --quiet "$comun" HEAD -- $rutas; then
+              if git diff --quiet "$comun" HEAD -- $RUTAS_WEB; then
                 base="https://droneobservatory.eu"
                 echo "el PR no cambia la web: los recorridos van contra producción"
               else
