@@ -104,10 +104,9 @@ def escribir_registro(ruta: Path, datos: dict[str, Any]) -> None:
 
 def publicable(carpeta: Path, nombre: str, ahora: datetime) -> bytes:
     """Lo que se sube de un fichero: el JSON de la carpeta con su licencia y sus créditos dentro
-    (recogida/licencia.py), como los que se descargan de la web; la cita, con la versión del mes
-    de `ahora`."""
-    version = licencia.version_actual(ahora)
-    return licencia.con_licencia((carpeta / nombre).read_bytes(), version)
+    (recogida/licencia.py), como los que se descargan de la web; la cita, la de los datos vivos
+    actualizados en `ahora`, con el DOI de la versión archivada más reciente."""
+    return licencia.con_licencia((carpeta / nombre).read_bytes(), ahora)
 
 
 def manifiesto(carpeta: Path, ahora: datetime) -> dict[str, Any]:

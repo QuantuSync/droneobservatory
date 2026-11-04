@@ -29,15 +29,27 @@ def cargar(ruta: Path = RUTA) -> dict[str, Any]:
     return datos
 
 
-def version_actual(momento: datetime | None = None) -> str:
-    """La versión (AAAA-MM) que se cita para los datos vivos: el mes en curso, en UTC."""
-    return f"{(momento or datetime.now(UTC)).astimezone(UTC):%Y-%m}"
+ARCHIVADAS = RUTA.parent / "versiones_archivadas.json"
 
 
-def cita(version: str) -> dict[str, str]:
-    """La cita recomendada de la versión AAAA-MM, en español y en inglés."""
+def doi_archivado() -> str:
+    """El DOI de la versión archivada más reciente (la primera de
+    configuracion/versiones_archivadas.json): la única forma de citar los datos desde que se
+    retiraron las versiones mensuales (3 de noviembre de 2026)."""
+    versiones: list[dict[str, Any]] = json.loads(ARCHIVADAS.read_text(encoding="utf-8"))[
+        "versiones"
+    ]
+    return str(versiones[0]["doi"])
+
+
+def cita(actualizado: datetime | None = None) -> dict[str, str]:
+    """La cita de los datos vivos (del año de `actualizado`, ahora si no se da), en español y en
+    inglés: son los datos vivos a la fecha de actualización del fichero y, para citarlos, se usa
+    el DOI de la versión archivada más reciente. Sin la fecha dentro: un fichero que no cambia
+    tiene la misma huella y no se vuelve a subir (recogida/publicacion.py)."""
+    momento = (actualizado or datetime.now(UTC)).astimezone(UTC)
     plantilla: dict[str, str] = cargar()["cita"]
-    return {i: plantilla[i].format(anio=version[:4], version=version) for i in ("es", "en")}
+    return {i: plantilla[i].format(anio=momento.year, doi=doi_archivado()) for i in ("es", "en")}
 
 
 def autor() -> dict[str, Any]:
@@ -50,7 +62,7 @@ def autor() -> dict[str, Any]:
     return resultado
 
 
-def miembro(version: str | None = None) -> dict[str, Any]:
+def miembro(actualizado: datetime | None = None) -> dict[str, Any]:
     """El miembro `licencia` de un fichero JSON publicado (el mismo que pone la web)."""
     datos = cargar()
     return {
@@ -58,11 +70,11 @@ def miembro(version: str | None = None) -> dict[str, Any]:
         "autor": autor(),
         "fuente": datos["fuente"],
         "alcance": datos["alcance"],
-        "cita": cita(version or version_actual()),
+        "cita": cita(actualizado),
     }
 
 
-def creditos(version: str) -> dict[str, Any]:
+def creditos(actualizado: datetime) -> dict[str, Any]:
     """Los créditos de un conjunto de datos (exportación semanal): autor, licencia, cita y
     dirección."""
     datos = cargar()
@@ -70,7 +82,7 @@ def creditos(version: str) -> dict[str, Any]:
         "titulo": datos["titular"],
         "autor": autor(),
         "licencia": {"nombre": datos["nombre"], "url": datos["url"]},
-        "cita": cita(version),
+        "cita": cita(actualizado),
         "direccion": datos["fuente"],
     }
 
@@ -86,12 +98,12 @@ def cabeceras() -> dict[str, str]:
     }
 
 
-def con_licencia(datos: bytes, version: str | None = None) -> bytes:
+def con_licencia(datos: bytes, actualizado: datetime | None = None) -> bytes:
     """El JSON con la licencia como primer miembro del objeto raíz (en un GeoJSON, un miembro
     ajeno que el estándar permite). Si ya la traía, se sustituye; el resto no cambia."""
     documento = json.loads(datos)
     nuevo = {
-        "licencia": miembro(version),
+        "licencia": miembro(actualizado),
         **{k: v for k, v in documento.items() if k != "licencia"},
     }
     return (json.dumps(nuevo, ensure_ascii=False, indent=1) + "\n").encode("utf-8")

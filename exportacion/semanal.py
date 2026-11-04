@@ -1093,7 +1093,7 @@ def _empaquetar(
         },
         "ficheros": entradas,
         # Desde el formato 1.8.0: autor, licencia, cita y dirección viajan con los datos.
-        "creditos": licencia.creditos(licencia.version_actual(generada)),
+        "creditos": licencia.creditos(generada),
         # Desde el formato 1.9.0: terceros con su atribución y lo que no se exporta.
         "terceros": [dict(t) for t in TERCEROS],
         "excluidos": [dict(seguimiento.ATRIBUCION_ALERTAS_EXCLUIDA)],
