@@ -16,9 +16,10 @@ proyecto, para que un problema de una ubicación no se lleve las dos:
   `visitas/ultima.sqlite.gz`, que se sustituyen cuando cambian.
 - `exportaciones/…`: la exportación semanal del bucket privado (almacen/exportaciones.py), que ya
   va cifrada, tal cual. No se sobrescribe ni se borra.
-- `versiones/…`: las antiguas versiones mensuales de los datos abiertos, retiradas el 3 de
-  noviembre de 2026 (la única forma de citar los datos es el DOI de Discuss Data). Lo que ya se
-  copió se queda en la réplica; no se copia nada más.
+- `versiones/…`: ya no hay. Las antiguas versiones mensuales de los datos abiertos se retiraron el
+  3 de noviembre de 2026 (la única forma de citar los datos es el DOI de Discuss Data); las que
+  guardaba la réplica se quitaron el 4 de noviembre, con su copia en el almacén privado de las
+  exportaciones. No se copia nada más.
 
 Para cifrar basta la clave pública (`destinatario_age` de la configuración): esta unidad no
 necesita la identidad. Para restaurar sí (EODI_CLAVE_AGE o ~/.eodi/clave_age.txt).
