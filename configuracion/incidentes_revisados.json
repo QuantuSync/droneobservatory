@@ -967,6 +967,13 @@
         "es": "Fecha del suceso desconocida: la noticia cuenta un suceso anterior sin decir cuándo fue (repaso de entrada con el experto).",
         "en": "Unknown event date: the report tells of an earlier event without saying when it happened (entry review by the expert model)."
       }
+    },
+    {
+      "incidente": "EODI-2026-00744",
+      "motivo": {
+        "es": "No es un suceso: es el balance mensual de octubre del Ministerio de Defensa de Moldavia (19 violaciones del espacio aéreo), no un hecho de un día.",
+        "en": "Not an event: it is the Moldovan Defence Ministry's monthly summary for October (19 airspace violations), not an event on a given day."
+      }
     }
   ],
   "citas": [
