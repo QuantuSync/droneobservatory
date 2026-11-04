@@ -178,18 +178,19 @@ _TRAYECTO = re.compile(
 _NO_SE_COMPRUEBAN = frozenset({"MC"})
 
 
-def nombrado_como_lugar(texto: str, pais: str) -> bool:
+def nombrado_como_lugar(texto: str, pais: str, trayecto_es_lugar: bool = True) -> bool:
     """Si el texto nombra al país como lugar de lo que cuenta: por su nombre o su capital, no
     como procedencia («două drone venite dinspre Republica Moldova au pătruns în spațiul aerian
-    al României» no nombra Moldavia como lugar) ni como trayecto («drona a traversat spațiul
-    aerian al Ucrainei și al Republicii Moldova»), o por su gentilicio junto al espacio aéreo."""
+    al României» no nombra Moldavia como lugar), o por su gentilicio junto al espacio aéreo. Con
+    `trayecto_es_lugar` falso, tampoco como trayecto («drona a traversat spațiul aerian al
+    Ucrainei și al Republicii Moldova»)."""
     patrones = _tabla().get(pais)
     if patrones is None:
         return False
     normal = normalizar(texto)
     for encontrado in patrones["estado"].finditer(normal):
         antes = normal[: encontrado.start()]
-        if not _PROCEDENCIA.search(antes) and not _TRAYECTO.search(antes):
+        if not _PROCEDENCIA.search(antes) and (trayecto_es_lugar or not _TRAYECTO.search(antes)):
             return True
     for encontrado in patrones["gentilicio"].finditer(normal):
         cerca = normal[max(0, encontrado.start() - 30) : encontrado.end() + 40]
@@ -206,8 +207,9 @@ def de_otro_pais(frase: str, pais: str | None) -> str | None:
     drones, los del suceso de Iași. None si la frase es de la ficha o no nombra país."""
     if not frase or not pais or nombrado_como_lugar(frase, pais):
         return None
+    # Pasar por el país de la ficha es estar en él; por otro, no (EODI-2026-00171, 00277).
     for otro in sorted(paises() - PAISES_DE_ORIGEN - _NO_SE_COMPRUEBAN - {pais}):
-        if nombrado_como_lugar(frase, otro):
+        if nombrado_como_lugar(frase, otro, trayecto_es_lugar=False):
             return otro
     return None
 
