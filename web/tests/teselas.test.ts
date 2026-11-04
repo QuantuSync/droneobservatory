@@ -9,7 +9,20 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { SUFIJO_AGENTE } from "../e2e/agente.ts";
-import { OBJETIVO_BYTES, TOPE_BYTES, cabecerasAGuardar, sobrantes, trozoDe } from "../e2e/teselas.ts";
+import {
+  CARPETAS_PUBLICAS,
+  OBJETIVO_BYTES,
+  OBJETIVO_FIJOS_BYTES,
+  PUBLICOS_SUELTOS,
+  TOPE_BYTES,
+  TOPE_FIJOS_BYTES,
+  cabecerasAGuardar,
+  claveDePublico,
+  codigoGuardable,
+  fijoDe,
+  sobrantes,
+  trozoDe,
+} from "../e2e/teselas.ts";
 import configuracion from "../playwright.config.ts";
 import { dispositivoDe } from "../src/avisos.ts";
 
@@ -99,6 +112,70 @@ describe("recorte de la caché", () => {
     expect(fuera).toEqual(["viejo", "medio"]);
     const queda = ficheros.filter((f) => !fuera.includes(f.nombre)).reduce((s, f) => s + f.bytes, 0);
     expect(queda).toBeLessThan(OBJETIVO_BYTES);
+  });
+});
+
+describe("ficheros fijos de la web", () => {
+  const SITIO = "droneobservatory.eu";
+  const web = (camino: string) => `https://${SITIO}${camino}`;
+  const PUBLICA = join(import.meta.dirname, "..", "public");
+
+  it("el código con huella en el nombre: la clave es el nombre", () => {
+    expect(fijoDe(web("/assets/app-DuKEQFg-.js"), SITIO)).toEqual({
+      tipo: "codigo",
+      camino: "/assets/app-DuKEQFg-.js",
+      clave: "codigo-app-DuKEQFg-_js",
+    });
+    expect(fijoDe(web("/assets/onest-latin-wght-normal-Dun_Rd-l.woff2"), SITIO)?.tipo).toBe("codigo");
+    // Los scripts de scripts/paginas.ts: huella sha256 de 12 caracteres.
+    expect(fijoDe(web("/assets/estado-6e706d9ba6da.js"), SITIO)?.clave).toBe("codigo-estado-6e706d9ba6da_js");
+  });
+
+  it("sin huella clara, con parámetros o de otro sitio, a la red", () => {
+    for (const camino of [
+      "/assets/build-viejo.js",
+      "/assets/estilo-principal.js",
+      "/assets/graficos-abcdefgh.js",
+      "/assets/app-DuKEQFg-.js?reintento=1",
+      "/assets/app.js",
+      "/assets/../datos/app-DuKEQFg-.js",
+    ]) {
+      expect(fijoDe(web(camino), SITIO), camino).toBeNull();
+    }
+    expect(fijoDe("https://otro.example/assets/app-DuKEQFg-.js", SITIO)).toBeNull();
+    expect(fijoDe("no es una dirección", SITIO)).toBeNull();
+  });
+
+  it("los ficheros públicos del mapa, la marca, las banderas y los iconos, sin clave propia", () => {
+    for (const camino of ["/mapa/paises.geojson", "/mapa/sprites/dark.json", "/iconos/icono-192.png"]) {
+      expect(fijoDe(web(camino), SITIO), camino).toEqual({ tipo: "publico", camino });
+    }
+    // Las fuentes, en carpetas con espacios: el camino es el del fichero.
+    expect(fijoDe(web("/mapa/fuentes/Noto%20Sans%20Regular/0-255.pbf"), SITIO)).toEqual({
+      tipo: "publico",
+      camino: "/mapa/fuentes/Noto Sans Regular/0-255.pbf",
+    });
+    expect(fijoDe(web("/mapa/%2e%2e/datos/resumen.json"), SITIO)).toBeNull();
+    expect(fijoDe(web("/mapa/%ZZ.json"), SITIO)).toBeNull();
+    expect(fijoDe(web("/banderas/ua.svg"), SITIO)).toEqual({ tipo: "publico", camino: "/banderas/ua.svg" });
+    expect(fijoDe(web("/favicon.svg"), SITIO)?.tipo).toBe("publico");
+    for (const camino of ["/mapa/", "/datos/resumen.json", "/sw.js", "/manifest.webmanifest", "/", "/EODI-2026-00057"]) {
+      expect(fijoDe(web(camino), SITIO), camino).toBeNull();
+    }
+  });
+
+  it("cada carpeta y fichero público existe en web/public", () => {
+    for (const carpeta of CARPETAS_PUBLICAS) expect(readdirSync(join(PUBLICA, carpeta)).length, carpeta).toBeGreaterThan(0);
+    for (const fichero of PUBLICOS_SUELTOS) expect(readFileSync(join(PUBLICA, fichero)).length, fichero).toBeGreaterThan(0);
+  });
+
+  it("la clave de un público es su huella; el código solo se guarda si no es una página", () => {
+    expect(claveDePublico("a".repeat(64))).toBe(`publico-${"a".repeat(64)}`);
+    expect(codigoGuardable(200, { "Content-Type": "text/javascript; charset=utf-8" })).toBe(true);
+    expect(codigoGuardable(200, { "content-type": "text/html; charset=utf-8" })).toBe(false);
+    expect(codigoGuardable(200, {})).toBe(false);
+    expect(codigoGuardable(404, { "content-type": "text/javascript" })).toBe(false);
+    expect(TOPE_FIJOS_BYTES).toBeGreaterThan(OBJETIVO_FIJOS_BYTES);
   });
 });
 

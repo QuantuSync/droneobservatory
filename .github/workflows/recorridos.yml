@@ -20,8 +20,10 @@ name: recorridos
 # - El mapa de fondo no se descarga de la web en cada prueba: web/e2e/base.ts guarda cada trozo
 #   en una carpeta que se conserva entre ejecuciones con la caché de Actions (clave: la huella
 #   del mapa en configuracion/almacen_publico.json). Solo la prueba «el mapa de fondo se sirve por
-#   la web» (e2e/web.spec.ts) lo pide de verdad. Los navegadores llevan «EODI-recorrido/1.0» en
-#   su agente de usuario (web/e2e/agente.ts).
+#   la web» (e2e/web.spec.ts) lo pide de verdad. Igual, desde el 4 de noviembre de 2026, el código
+#   de /assets/ y los ficheros públicos del mapa (caché «fijos», clave: la huella de esos ficheros
+#   del repositorio); los pide de verdad «el código y los contornos se sirven por la web». Los
+#   navegadores llevan «EODI-recorrido/1.0» en su agente de usuario (web/e2e/agente.ts).
 # - A mano: Actions → recorridos → Run workflow, con la dirección que se quiera.
 # - Cuántos trabajos: los 11 de la matriz solo en el despliegue de un commit nuevo de main
 #   (Production), en la pasada por reloj y a mano. En los PR (pull_request) y en las vistas previas
@@ -229,6 +231,18 @@ jobs:
           restore-keys: |
             teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-
             teselas-${{ steps.huella.outputs.huella }}-
+      # Los ficheros fijos de la web ya descargados (web/e2e/base.ts y e2e/teselas.ts): el código de
+      # /assets/ con huella en el nombre y los ficheros públicos del mapa, la marca, las banderas y
+      # los iconos. La clave lleva la huella de esos ficheros del repositorio: si cambian, la caché
+      # empieza de cero (y base.ts solo sirve un fichero público si sus bytes son los del repositorio).
+      - name: Caché de los ficheros fijos
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/fijos
+          key: fijos-${{ hashFiles('web/public/mapa/**', 'web/public/marca/**', 'web/public/banderas/**', 'web/public/iconos/**', 'web/public/favicon.*', 'web/public/apple-touch-icon.png', 'web/public/arranque.js') }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
+          restore-keys: |
+            fijos-${{ hashFiles('web/public/mapa/**', 'web/public/marca/**', 'web/public/banderas/**', 'web/public/iconos/**', 'web/public/favicon.*', 'web/public/apple-touch-icon.png', 'web/public/arranque.js') }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-
+            fijos-${{ hashFiles('web/public/mapa/**', 'web/public/marca/**', 'web/public/banderas/**', 'web/public/iconos/**', 'web/public/favicon.*', 'web/public/apple-touch-icon.png', 'web/public/arranque.js') }}-
       # La imagen y las dependencias de la web. Si algo de esto falla (red, registro, tiempo
       # agotado), se repite una vez y solo una: es un fallo antes de abrir la primera página, no de
       # la web. Sustituye al segundo intento «solo si se agota el tiempo» del 23 de octubre de 2026.
@@ -265,9 +279,10 @@ jobs:
         run: |
           set -uo pipefail
           mkdir -p "$RUNNER_TEMP/capturas"
-          mkdir -p "$RUNNER_TEMP/teselas"
+          mkdir -p "$RUNNER_TEMP/teselas" "$RUNNER_TEMP/fijos"
           docker run --rm --init --ipc=host -v "$GITHUB_WORKSPACE:/w" -v "$RUNNER_TEMP/capturas:/capturas" \
             -v "$RUNNER_TEMP/teselas:/teselas" -e TESELAS_CACHE=/teselas \
+            -v "$RUNNER_TEMP/fijos:/fijos" -e FIJOS_CACHE=/fijos \
             -w /w/web -e CI -e TZ=UTC -e LANG=C.UTF-8 -e BASE -e BYPASS -e VERCEL_BYPASS -e CAPTURAS=/capturas \
             -e PLAYWRIGHT_HTML_OPEN=never "$IMAGEN" \
             npx playwright test --project=${{ matrix.proyecto }} --shard=${{ matrix.trozo }} --reporter=list,html
@@ -282,12 +297,23 @@ jobs:
             echo "hay=true" >> "$GITHUB_OUTPUT"
           fi
           echo "caché del mapa de fondo: $(find "$RUNNER_TEMP/teselas" -name '*.bin' | wc -l) trozos, $(du -sh "$RUNNER_TEMP/teselas" | cut -f1)"
+          if [ -f "$RUNNER_TEMP/fijos/nuevos" ]; then
+            mv -f "$RUNNER_TEMP/fijos/nuevos" "$RUNNER_TEMP/fijos-nuevos"
+            echo "fijos=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "caché de los ficheros fijos: $(find "$RUNNER_TEMP/fijos" -name '*.bin' | wc -l) ficheros, $(du -sh "$RUNNER_TEMP/fijos" | cut -f1)"
       - name: Guardar la caché del mapa de fondo
         if: always() && steps.nuevos.outputs.hay == 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ runner.temp }}/teselas
           key: teselas-${{ steps.huella.outputs.huella }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
+      - name: Guardar la caché de los ficheros fijos
+        if: always() && steps.nuevos.outputs.fijos == 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/fijos
+          key: fijos-${{ hashFiles('web/public/mapa/**', 'web/public/marca/**', 'web/public/banderas/**', 'web/public/iconos/**', 'web/public/favicon.*', 'web/public/apple-touch-icon.png', 'web/public/arranque.js') }}-${{ matrix.proyecto }}-${{ strategy.job-index }}-${{ github.run_id }}
       - name: Informe de Playwright
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
