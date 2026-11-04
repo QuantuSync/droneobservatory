@@ -7,6 +7,7 @@ import { join, resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { lugarSoloRegion } from "../src/datos/nombres.ts";
 import { NOMBRES_LUGAR, nombreDeLugar } from "../src/i18n/nombresLugar.ts";
 import type { ColeccionIncidentes, PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 
@@ -57,5 +58,20 @@ describe("nombres de lugar", () => {
         }
       }
     }
+  });
+});
+
+describe("la fila «Lugar» con solo la región", () => {
+  const base = { pais: "RO", radio_km: 10 };
+  it("avisa de que el lugar es aproximado si la fila solo nombra la región", () => {
+    const d = { lugar: base, nombres: { lugar: { es: "Suceava, Rumanía", en: "Suceava, Romania" }, region: { es: "Suceava", en: "Suceava" } } };
+    expect(lugarSoloRegion(d)).toBe(true);
+  });
+  it("no avisa si hay localidad u objetivo", () => {
+    const conLocalidad = { lugar: base, nombres: { lugar: { es: "Tulcea, Rumanía", en: "Tulcea, Romania" }, localidad: { es: "Tulcea", en: "Tulcea" }, region: { es: "Tulcea", en: "Tulcea" } } };
+    const conObjetivo = { lugar: base, nombres: { lugar: { es: "Rumanía", en: "Romania" }, objetivo: { es: "Puerto", en: "Port" }, region: { es: "Tulcea", en: "Tulcea" } } };
+    expect(lugarSoloRegion(conLocalidad)).toBe(false);
+    expect(lugarSoloRegion(conObjetivo)).toBe(false);
+    expect(lugarSoloRegion({ lugar: base })).toBe(false);
   });
 });

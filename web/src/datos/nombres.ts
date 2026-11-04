@@ -56,6 +56,16 @@ export function lugarEscrito(d: ConNombres, idioma: Idioma, conRegion: boolean):
   return partes.join(", ");
 }
 
+/**
+ * Si la fila «Lugar» de un incidente con punto solo nombra la región («Suceava, Rumanía»): no se
+ * sabe la localidad ni hay otro sitio que nombrar. La ficha lo dice con la nota de lugar
+ * aproximado (4 de noviembre de 2026).
+ */
+export function lugarSoloRegion(d: ConNombres): boolean {
+  const n = d.nombres;
+  return n !== undefined && d.lugar.localidad === undefined && n.localidad === undefined && n.objetivo === undefined && n.region !== undefined;
+}
+
 /** La localidad sola (para los datos estructurados y los avisos), o null si no se conoce. */
 export function localidadEscrita(d: ConNombres, idioma: Idioma): string | null {
   if (d.nombres !== undefined) return d.nombres.localidad?.[idioma] ?? null;

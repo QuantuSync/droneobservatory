@@ -164,6 +164,16 @@ _ESPACIO_AEREO = re.compile(
     r"(?<!\w)(?:airspace|luftraum|luchtruim|przestrzen\w*|espace aerien|espacio aereo|"
     r"spazio aereo|vzdusn\w*|ilmatila\w*|luftrum\w*|воздушн\w*|повітрян\w*)(?!\w)"
 )
+# Palabras de trayecto antes del país, con hasta diez palabras en medio («drona a traversat
+# spațiul aerian al Ucrainei și al Republicii Moldova», «after passing through Moldovan
+# airspace»): el país es por donde pasó el dron antes de llegar, no donde ocurre lo que cuenta
+# (EODI-2026-00277, Rumanía, 4 de noviembre de 2026). No «crossed into» ni «survolat»: entrar en
+# un país o sobrevolarlo sí es estar en él. Texto normalizado.
+_TRAYECTO = re.compile(
+    r"(?<!\w)(?:a traversat|au traversat|traversand|traversat|traversed|transited|transiting|"
+    r"passed through|passing through|after crossing|durchquert\w*|przelecial przez|"
+    r"przelecialy przez|пролетел через|пролетів через|пройшов через)(?:\s+\S+){0,10}\s+$"
+)
 # Mónaco no se comprueba: «Monaco di Baviera» es Múnich en italiano (EODI-2025-00055).
 _NO_SE_COMPRUEBAN = frozenset({"MC"})
 
@@ -171,13 +181,15 @@ _NO_SE_COMPRUEBAN = frozenset({"MC"})
 def nombrado_como_lugar(texto: str, pais: str) -> bool:
     """Si el texto nombra al país como lugar de lo que cuenta: por su nombre o su capital, no
     como procedencia («două drone venite dinspre Republica Moldova au pătruns în spațiul aerian
-    al României» no nombra Moldavia como lugar), o por su gentilicio junto al espacio aéreo."""
+    al României» no nombra Moldavia como lugar) ni como trayecto («drona a traversat spațiul
+    aerian al Ucrainei și al Republicii Moldova»), o por su gentilicio junto al espacio aéreo."""
     patrones = _tabla().get(pais)
     if patrones is None:
         return False
     normal = normalizar(texto)
     for encontrado in patrones["estado"].finditer(normal):
-        if not _PROCEDENCIA.search(normal[: encontrado.start()]):
+        antes = normal[: encontrado.start()]
+        if not _PROCEDENCIA.search(antes) and not _TRAYECTO.search(antes):
             return True
     for encontrado in patrones["gentilicio"].finditer(normal):
         cerca = normal[max(0, encontrado.start() - 30) : encontrado.end() + 40]

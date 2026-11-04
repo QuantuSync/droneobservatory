@@ -2061,6 +2061,19 @@
     }
   ],
   "textos": {
+    "Bruksela-Stolica": {"es": "Región de Bruselas-Capital", "en": "Brussels-Capital Region"},
+    "Brussel-Hoofdstad": {"es": "Región de Bruselas-Capital", "en": "Brussels-Capital Region"},
+    "Flandes": {"es": "Flandes", "en": "Flanders"},
+    "Flanders": {"es": "Flandes", "en": "Flanders"},
+    "Bretagna": {"es": "Bretaña", "en": "Brittany"},
+    "Occitanie": {"es": "Occitania", "en": "Occitania"},
+    "Normandie": {"es": "Normandía", "en": "Normandy"},
+    "Provence-Alpes-Côte d'Azur": {"es": "Provenza-Alpes-Costa Azul", "en": "Provence-Alpes-Côte d'Azur"},
+    "Grand Est": {"es": "Gran Este", "en": "Grand Est"},
+    "Campania": {"es": "Campania", "en": "Campania"},
+    "Schwaben": {"es": "Suabia", "en": "Swabia"},
+    "Gagauzia": {"es": "Gagauzia", "en": "Gagauzia"},
+    "Marea Baltică": {"es": "mar Báltico", "en": "Baltic Sea"},
     "Eemshaven": {
       "es": "Puerto de Eemshaven",
       "en": "Port of Eemshaven",

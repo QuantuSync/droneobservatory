@@ -37,6 +37,7 @@ import {
   anteriorEscrito,
   enFlancoEste,
   lugarEscrito,
+  lugarSoloRegion,
   modeloEscrito,
   objetivoEscrito,
   otroLugarEscrito,
@@ -352,9 +353,16 @@ export function FichaIncidente({ t, idioma, incidente, actualizado = null }: Pro
             </span>
           )}
           {imprecisa === null && "radio_km" in lugar ? (
-            <span className="block text-xs text-secundario">
-              {t.ficha.radio(numero(lugar.radio_km, idioma))}
-            </span>
+            <>
+              {lugarSoloRegion(incidente) && (
+                <span className="block text-xs text-notificado" data-lugar-solo-region="">
+                  {t.imprecisa.aproximado(t.imprecisa.niveles.region)}
+                </span>
+              )}
+              <span className="block text-xs text-secundario">
+                {t.ficha.radio(numero(lugar.radio_km, idioma))}
+              </span>
+            </>
           ) : (
             imprecisa !== null && (
               <span className="block text-xs" data-lugar-aproximado={aproximado?.nivel ?? ""}>

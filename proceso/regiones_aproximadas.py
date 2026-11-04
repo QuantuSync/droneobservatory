@@ -24,27 +24,41 @@ TABLA = Path(__file__).resolve().parent.parent / "configuracion" / "regiones_apr
 
 
 @cache
-def _indice() -> dict[tuple[str, str], tuple[float, float]]:
+def _filas() -> dict[tuple[str, str], tuple[float, float, dict[str, str]]]:
+    """(país, nombre normalizado) → (longitud, latitud, nombre escrito en español e inglés)."""
     datos: dict[str, Any] = json.loads(TABLA.read_text(encoding="utf-8"))
-    indice: dict[tuple[str, str], tuple[float, float]] = {}
-    for pais, lon, lat, nombres in datos["regiones"]:
+    indice: dict[tuple[str, str], tuple[float, float, dict[str, str]]] = {}
+    for pais, lon, lat, nombres, escrito_ in datos["regiones"]:
         for nombre in nombres:
-            indice.setdefault((pais, nombre), (float(lon), float(lat)))
+            indice.setdefault((pais, nombre), (float(lon), float(lat), escrito_))
     return indice
+
+
+def _fila(pais: str | None, region: str | None) -> tuple[float, float, dict[str, str]] | None:
+    if not pais or not region:
+        return None
+    normal = normalizar(region)
+    indice = _filas()
+    for forma in (normal, sin_genericos(normal)):
+        fila = indice.get((pais, forma))
+        if fila is not None:
+            return fila
+    return None
 
 
 def centro(pais: str | None, region: str | None) -> tuple[float, float] | None:
     """(longitud, latitud) del centro de la región del país con ese nombre, o None si no está
     o no se sabe cuál es."""
-    if not pais or not region:
-        return None
-    normal = normalizar(region)
-    indice = _indice()
-    for forma in (normal, sin_genericos(normal)):
-        punto = indice.get((pais, forma))
-        if punto is not None:
-            return punto
-    return None
+    fila = _fila(pais, region)
+    return None if fila is None else (fila[0], fila[1])
+
+
+def escrito(pais: str | None, region: str | None) -> dict[str, str] | None:
+    """El nombre de la región en español y en inglés (Natural Earth), sea cual sea la lengua en
+    que la nombra la ficha: «Dolna Saksonia», «Niedersachsen» y «Lower Saxony» son «Baja Sajonia»
+    y «Lower Saxony». None si la región no está en la tabla."""
+    fila = _fila(pais, region)
+    return None if fila is None else dict(fila[2])
 
 
 def con_centro(lugar: dict[str, Any]) -> dict[str, Any]:

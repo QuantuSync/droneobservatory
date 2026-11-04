@@ -39,7 +39,7 @@ from typing import Any
 
 from almacen.casa import casa
 from esquema import Documento
-from proceso import buques
+from proceso import buques, regiones_aproximadas
 
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 MANUAL = CONFIGURACION / "nombres_lugar.json"
@@ -463,6 +463,22 @@ def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | N
     return None
 
 
+def region(texto: str | None, pais: str) -> Bilingue | None:
+    """El nombre de la región de la ficha en los dos idiomas: el escrito a mano, el de las
+    tablas, el español y el inglés de Natural Earth (proceso/regiones_aproximadas.escrito) o, si
+    no está en ninguna, el de `lugar`. Nunca el de la lengua de la fuente si hay uno propio:
+    «Dolna Saksonia» es «Baja Sajonia» / «Lower Saxony» (4 de noviembre de 2026)."""
+    if not texto:
+        return None
+    texto = nfc(texto)
+    base = nombre_base(texto)
+    escritos = textos()
+    for forma in (texto, base):
+        if forma in escritos:
+            return _bilingue(escritos[forma])
+    return _en_tablas(base, pais) or regiones_aproximadas.escrito(pais, texto) or lugar(texto, pais)
+
+
 def lugar(texto: str | None, pais: str) -> Bilingue | None:
     """Un nombre de lugar de la ficha (localidad, región, otro lugar) en los dos idiomas, o None
     si no se puede escribir bien (una descripción, otro alfabeto sin nombre conocido)."""
@@ -661,7 +677,7 @@ def sitio(incidente: Documento) -> Bilingue | None:
         lugar(simple, pais) if simple and escrito is None and not objetivo_.get("oaci") else None,
     ]
     if ("punto" not in lugar_ and incidente.get("lon") is None) or buque:
-        candidatos.append(lugar(lugar_.get("region"), pais))
+        candidatos.append(region(lugar_.get("region"), pais))
     return next((c for c in candidatos if c is not None), None)
 
 
@@ -724,15 +740,18 @@ def nombres_publicos(incidente: Documento) -> Documento:
     pais = lugar_.get("pais", "")
     terr = territorio(incidente)
     sitio_ = sitio(incidente)
-    salida: Documento = {"lugar": lugar_con_pais(sitio_, incidente)}
+    region_ = region(lugar_.get("region"), pais)
+    # Con punto y sin localidad ni otro sitio, la fila «Lugar» dice la región («Suceava,
+    # Rumanía»), nunca solo el país si se sabe la región; la región no pasa por localidad
+    # (4 de noviembre de 2026: 39 fichas decían solo el país).
+    salida: Documento = {"lugar": lugar_con_pais(sitio_ or region_, incidente)}
     if sitio_ is not None:
         salida["localidad"] = sitio_
     nombre_objetivo = objetivo(incidente.get("objetivo"), pais)
     if nombre_objetivo is not None:
         salida["objetivo"] = nombre_objetivo
-    region = lugar(lugar_.get("region"), pais)
-    if region is not None:
-        salida["region"] = region
+    if region_ is not None:
+        salida["region"] = region_
     otros = lugar_.get("otros_lugares") or []
     if otros:
         salida["otros"] = [lugar(o.get("nombre"), pais) for o in otros]

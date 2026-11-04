@@ -52,6 +52,7 @@ import {
   enFlancoEste,
   lugarEscrito as lugarDeFicha,
   localidadEscrita,
+  lugarSoloRegion,
   modeloEscrito,
   objetivoEscrito,
   otroLugarEscrito,
@@ -622,7 +623,10 @@ function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): Pa
         t.ficha.lugar,
         lugar,
         d.lon !== null
-          ? e("span", { class: "texto-nota" }, t.ficha.radio(numero(d.lugar.radio_km, idioma)))
+          ? html(
+              lugarSoloRegion(d) && e("span", { class: "texto-nota", "data-lugar-solo-region": "" }, t.imprecisa.aproximado(t.imprecisa.niveles.region)),
+              e("span", { class: "texto-nota" }, t.ficha.radio(numero(d.lugar.radio_km, idioma))),
+            )
           : d.aproximado !== undefined && d.aproximado !== null
             ? html(
                 e("span", { class: "texto-nota", "data-lugar-aproximado": d.aproximado.nivel }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais, regionEscrita(d, idioma)).nivel),

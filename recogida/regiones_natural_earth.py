@@ -6,7 +6,10 @@ primer nivel de cada país del observatorio (los județe de Rumanía, los raioan
 voivodatos de Polonia, los departamentos de Francia…), solo el punto de etiqueta de Natural
 Earth y los nombres normalizados (minúsculas, sin acentos ni signos: «iasi», «яссы»), en todas
 las formas que trae: el nombre, el local, los alternativos y los de cada idioma. Un nombre que en
-el mismo país lleva a dos regiones lejanas no se guarda: no se sabe cuál es.
+el mismo país lleva a dos regiones lejanas no se guarda: no se sabe cuál es. Desde el 4 de
+noviembre de 2026 se guarda también el nombre escrito en español y en inglés (`name_es`,
+`name_en`), para la fila «Lugar» de una ficha sin localidad: «Baja Sajonia, Alemania», nunca
+«Dolna Saksonia» ni «Niedersachsen» en la página española.
 
 Fuente: ne_10m_admin_1_states_provinces.dbf (los atributos del shapefile, unos 15 MB), de
 https://github.com/nvkelso/natural-earth-vector/tree/master/10m_cultural. Se descarga una vez,
@@ -136,6 +139,13 @@ def sin_genericos(normal: str) -> str:
     return " ".join(p for p in palabras if p not in GENERICOS)
 
 
+def escrito_de(fila: dict[str, str]) -> dict[str, str]:
+    """El nombre de la región para la página: el español y el inglés de Natural Earth, o su
+    nombre si le falta uno."""
+    nombre = fila.get("name") or ""
+    return {"es": fila.get("name_es") or nombre, "en": fila.get("name_en") or nombre}
+
+
 def tabla(filas: list[dict[str, str]]) -> list[list[Any]]:
     regiones: list[list[Any]] = []
     for fila in filas:
@@ -151,10 +161,10 @@ def tabla(filas: list[dict[str, str]]) -> list[list[Any]]:
             continue
         nombres = nombres_de(fila)
         if nombres:
-            regiones.append([pais, punto[0], punto[1], nombres])
+            regiones.append([pais, punto[0], punto[1], nombres, escrito_de(fila)])
     # Un nombre que en el mismo país es de dos regiones lejanas no se sabe de cuál es: fuera.
     donde: dict[tuple[str, str], list[tuple[float, float]]] = defaultdict(list)
-    for pais, lon, lat, nombres in regiones:
+    for pais, lon, lat, nombres, _ in regiones:
         for nombre in nombres:
             donde[(pais, nombre)].append((lon, lat))
     dudosos = {
@@ -162,10 +172,10 @@ def tabla(filas: list[dict[str, str]]) -> list[list[Any]]:
         if any(_km(puntos[0], p) > KM_MISMA for p in puntos[1:])
     }  # fmt: skip
     salida = []
-    for pais, lon, lat, nombres in regiones:
+    for pais, lon, lat, nombres, escrito in regiones:
         validos = [n for n in nombres if (pais, n) not in dudosos]
         if validos:
-            salida.append([pais, lon, lat, validos])
+            salida.append([pais, lon, lat, validos, escrito])
     salida.sort(key=lambda r: (r[0], r[3][0]))
     return salida
 
@@ -181,7 +191,8 @@ def principal(argumentos: list[str] | None = None) -> int:
         "version_esquema": "1.0.0",
         "descripcion": (
             "Regiones de primer nivel de los países del observatorio para el lugar aproximado: "
-            "[país, longitud, latitud, nombres normalizados]. Generada con "
+            "[país, longitud, latitud, nombres normalizados, nombre en español e inglés]. "
+            "Generada con "
             "recogida/regiones_natural_earth.py."
         ),
         "licencia": "Natural Earth (https://www.naturalearthdata.com), dominio público",
@@ -191,7 +202,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     }
     texto = json.dumps(documento, ensure_ascii=False, separators=(",", ":"))
     # Una región por línea, para que los cambios se lean en un diff.
-    texto = texto.replace(',"regiones":[[', ',"regiones":[\n[').replace("]],[", "]],\n[")
+    texto = texto.replace(',"regiones":[[', ',"regiones":[\n[').replace("}],[", "}],\n[")
     args.destino.write_bytes((texto + "\n").encode("utf-8"))
     print(f"{len(regiones)} regiones en {args.destino}", file=sys.stderr)
     return 0
