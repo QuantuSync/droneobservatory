@@ -5025,6 +5025,10 @@
     },
     {
       "incidente": "EODI-2025-00062",
+      "titulo": {
+        "es": "Un dron sobre el aeropuerto de Erfurt-Weimar obliga a cerrarlo una hora",
+        "en": "A drone over Erfurt-Weimar airport forces a one-hour closure"
+      },
       "inicio": {
         "valor": "2025-10-21T22:35Z",
         "precision": "minuto",
@@ -5034,8 +5038,8 @@
         "fin_cita": "Von 0.35 bis 1.45 Uhr wurde der Flughafen für den Flugbetrieb gesperrt."
       },
       "motivo": {
-        "es": "La ficha publicaba de las 00:35 a las 01:45 UTC del 22 de octubre: tomó como UTC la hora local de otz.de («Von 0.35 bis 1.45 Uhr»), que en octubre (UTC+2) son de las 22:35 a las 23:45 UTC del 21.",
-        "en": "The record showed 00:35 to 01:45 UTC on 22 October: it took otz.de's local time («Von 0.35 bis 1.45 Uhr») as UTC, which in October (UTC+2) is 22:35 to 23:45 UTC on the 21st."
+        "es": "La ficha publicaba de las 00:35 a las 01:45 UTC del 22 de octubre: tomó como UTC la hora local de otz.de («Von 0.35 bis 1.45 Uhr»), que en octubre (UTC+2) son de las 22:35 a las 23:45 UTC del 21. El titular decía «Drones», en plural, y la ficha tiene un dron: «Die Bundespolizei habe die Drohne gegen 0.30 Uhr gesichtet» (stern.de) (revisado el 4 de noviembre de 2026).",
+        "en": "The record showed 00:35 to 01:45 UTC on 22 October: it took otz.de's local time («Von 0.35 bis 1.45 Uhr») as UTC, which in October (UTC+2) is 22:35 to 23:45 UTC on the 21st. The headline said «Drones», in the plural, and the record has one drone: «Die Bundespolizei habe die Drohne gegen 0.30 Uhr gesichtet» (stern.de) (reviewed on 4 November 2026)."
       }
     },
     {
@@ -5120,6 +5124,10 @@
     },
     {
       "incidente": "EODI-2025-00032",
+      "titulo": {
+        "es": "Un dron obliga a cerrar el aeropuerto de Hannover 45 minutos",
+        "en": "A drone closes Hannover airport for 45 minutes"
+      },
       "inicio": {
         "valor": "2025-11-05T21:00Z",
         "precision": "minuto",
@@ -5129,8 +5137,8 @@
         "fin_cita": "Der Flughafen sei am Mittwoch von 22 Uhr bis 22.45 Uhr gesperrt gewesen."
       },
       "motivo": {
-        "es": "El aeropuerto de Hannover estuvo cerrado de las 22:00 a las 22:45 hora de Alemania (21:00-21:45 UTC; la policía federal en mopo.de); la ficha publicaba las 20:00 UTC.",
-        "en": "Hannover airport was closed from 22:00 to 22:45 German time (21:00-21:45 UTC; the federal police in mopo.de); the record showed 20:00 UTC."
+        "es": "El aeropuerto de Hannover estuvo cerrado de las 22:00 a las 22:45 hora de Alemania (21:00-21:45 UTC; la policía federal en mopo.de); la ficha publicaba las 20:00 UTC. El titular decía «Drones», en plural, y la ficha tiene un dron: «Drohne am Flughafen Hannover» (weser-kurier.de, stern.de) (revisado el 4 de noviembre de 2026).",
+        "en": "Hannover airport was closed from 22:00 to 22:45 German time (21:00-21:45 UTC; the federal police in mopo.de); the record showed 20:00 UTC. The headline said «Drones», in the plural, and the record has one drone: «Drohne am Flughafen Hannover» (weser-kurier.de, stern.de) (reviewed on 4 November 2026)."
       }
     },
     {
@@ -5740,6 +5748,61 @@
       "motivo": {
         "es": "El titular decía «Posibles drones», en plural: el aviso fue el de un piloto que vio un dron («Pilot meldet Drohnensichtung am Flughafen Hannover», haz.de; «Keine Landungen nach Drohnensichtung möglich», Neue Presse, 17 de febrero de 2026), sin número de drones en las fuentes (revisado el 3 de noviembre de 2026).",
         "en": "The headline said «Possible drones», in the plural: the report was a pilot who saw a drone («Pilot meldet Drohnensichtung am Flughafen Hannover», haz.de; «Keine Landungen nach Drohnensichtung möglich», Neue Presse, 17 February 2026), with no number of drones in the sources (reviewed on 3 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00304",
+      "titulo": {
+        "es": "Cierre del aeropuerto de Bergen por el vuelo ilegal de un posible dron",
+        "en": "Bergen airport closed due to the illegal flight of a possible drone"
+      },
+      "motivo": {
+        "es": "El titular decía «posibles drones», en plural, y la ficha tiene un dron: «etter at en drone ble observert i over 400 meters høyde» (tu.no) (revisado el 4 de noviembre de 2026).",
+        "en": "The headline said «possible drones», in the plural, and the record has one drone: «etter at en drone ble observert i over 400 meters høyde» (tu.no) (reviewed on 4 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00382",
+      "titulo": {
+        "es": "Un posible dron en el aeropuerto de Fuerteventura obliga a desviar tres vuelos",
+        "en": "A possible drone at Fuerteventura airport forces the diversion of three flights"
+      },
+      "motivo": {
+        "es": "El titular decía «Posibles drones», en plural, y la ficha tiene un dron: «El avistamiento de un dron en los alrededores del aeropuerto de Fuerteventura» (larazon.es), «tras avistar un dron en los alrededores» (lavozdelanzarote.com) (revisado el 4 de noviembre de 2026).",
+        "en": "The headline said «Possible drones», in the plural, and the record has one drone: «El avistamiento de un dron en los alrededores del aeropuerto de Fuerteventura» (larazon.es), «tras avistar un dron en los alrededores» (lavozdelanzarote.com) (reviewed on 4 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00057",
+      "titulo": {
+        "es": "Un dron sobre Lituania obliga a cerrar el aeropuerto de Vilna y activa la defensa aérea de la OTAN",
+        "en": "Drone over Lithuania closes Vilnius airport and triggers NATO air defence response"
+      },
+      "motivo": {
+        "es": "El titular en español decía «Drones», en plural (y al publicarse, «el aeropuerto del aeropuerto de Vilna»), y la ficha tiene un dron: «Alertă privind o dronă în Lituania» (agerpres.ro) (revisado el 4 de noviembre de 2026).",
+        "en": "The Spanish headline said «Drones», in the plural, and the record has one drone: «Alertă privind o dronă în Lituania» (agerpres.ro) (reviewed on 4 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00094",
+      "titulo": {
+        "es": "Un dron sobre el aeropuerto de Bruselas altera el tráfico aéreo",
+        "en": "A drone near Brussels Airport disrupts air traffic"
+      },
+      "motivo": {
+        "es": "El titular decía «Drones», en plural, y la ficha tiene un dron: «El avistamiento de un dron altera brevemente el tráfico aéreo en el aeropuerto de Bruselas» (elperiodico.com) (revisado el 4 de noviembre de 2026).",
+        "en": "The headline said «Drones», in the plural, and the record has one drone: «El avistamiento de un dron altera brevemente el tráfico aéreo en el aeropuerto de Bruselas» (elperiodico.com) (reviewed on 4 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00200",
+      "titulo": {
+        "es": "Restos de un dron caen en Rumanía tras un ataque contra Ucrania",
+        "en": "Drone debris falls in Romania following attack on Ukraine"
+      },
+      "motivo": {
+        "es": "El titular en español decía «Restos de drones», en plural, y la ficha tiene un dron: «Drona căzută în Galați» (hotnews.ro) (revisado el 4 de noviembre de 2026).",
+        "en": "The Spanish headline said «Restos de drones», in the plural, and the record has one drone: «Drona căzută în Galați» (hotnews.ro) (reviewed on 4 November 2026)."
       }
     }
   ],
