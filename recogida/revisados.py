@@ -716,7 +716,7 @@ def _retirar(
             # El motivo guardado que ya es el principio del revisado (la retirada del repaso de
             # entrada, sin la explicación del experto) dice lo mismo: se queda.
             if not isinstance(retirado, dict) or motivo.startswith(
-                str(retirado.get("motivo") or " ").rstrip(".")
+                str(retirado.get("motivo") or "-").rstrip(".")
             ):
                 continue
             nuevo = {k: v for k, v in documento.items() if k != "episodio"}
