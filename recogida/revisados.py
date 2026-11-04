@@ -704,14 +704,28 @@ def _retirar(
         if str(revision["incidente"]) in repuestas:
             continue
         documento = almacen.incidente(revision["incidente"])
-        if documento is None or not incidentes.activo(documento):
+        if documento is None:
+            continue
+        motivo = revision["motivo"]["es"][: extraccion.MAX_LETRAS_MOTIVO]
+        motivo_en = revision["motivo"]["en"][: extraccion.MAX_LETRAS_MOTIVO]
+        retirado = documento.get("retirado")
+        if not incidentes.activo(documento):
+            # Ya retirada por otro camino con otro motivo: queda con el de la revisión y su fecha
+            # (EODI-2026-00744, el balance mensual de Moldavia retirado como «no verificable»,
+            # 4 de noviembre de 2026). La que no está retirada (unida, descartada) no se toca.
+            if not isinstance(retirado, dict) or (
+                retirado.get("motivo") == motivo and retirado.get("motivo_en") == motivo_en
+            ):
+                continue
+            nuevo = {k: v for k, v in documento.items() if k != "episodio"}
+            nuevo["retirado"] = {**retirado, "motivo": motivo, "motivo_en": motivo_en}
+            if _guardar(
+                almacen, documento, nuevo, ahora, modelos, revision["motivo"]["es"], hechos
+            ):
+                hechos.retirados.append(documento["id"])
             continue
         nuevo = {k: v for k, v in documento.items() if k != "episodio"}
-        nuevo["retirado"] = {
-            "fecha": _instante(ahora),
-            "motivo": revision["motivo"]["es"][: extraccion.MAX_LETRAS_MOTIVO],
-            "motivo_en": revision["motivo"]["en"][: extraccion.MAX_LETRAS_MOTIVO],
-        }
+        nuevo["retirado"] = {"fecha": _instante(ahora), "motivo": motivo, "motivo_en": motivo_en}
         if _guardar(almacen, documento, nuevo, ahora, modelos, revision["motivo"]["es"], hechos):
             hechos.retirados.append(documento["id"])
 

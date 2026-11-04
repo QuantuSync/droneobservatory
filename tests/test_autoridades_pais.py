@@ -321,3 +321,24 @@ def test_la_auditoria_cuenta_autoridad_y_dato_de_otro_pais() -> None:
         [con_dos], verificaciones={con_dos["id"]: _verificacion_728()}
     )
     assert resultado["Y"] == ["EODI-2026-00728 drones"]
+
+
+def test_el_trayecto_por_otro_pais_no_hace_la_frase_de_otro_pais() -> None:
+    # EODI-2026-00277 (Rumanía): la Y la marcaba por el paso del dron por Moldavia (4/11/2026).
+    from proceso import atribucion
+
+    trayecto = (
+        "Potrivit unui comunicat de presă emis de MApN, drona a traversat spațiul aerian al "
+        "Ucrainei și al Republicii Moldova"
+    )
+    assert atribucion.de_otro_pais(trayecto, "RO") is None
+    # Pasar por el país de la ficha es estar en él: la frase sigue siendo de Moldavia.
+    moldavia = (
+        "O dronă Shahed a traversat spațiul aerian al Republicii Moldova. A venit din Ucraina și "
+        "a zburat spre România"
+    )
+    assert atribucion.de_otro_pais(moldavia, "MD") is None
+    # Entrar en otro país sí es de otro país.
+    assert (
+        atribucion.de_otro_pais("Două drone au pătruns în spațiul aerian al României", "MD") == "RO"
+    )

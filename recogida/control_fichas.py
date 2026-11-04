@@ -1623,19 +1623,41 @@ MOTIVO_SIN_FECHA_EN = (
 )
 
 
+MOTIVO_VARIOS_SUCESOS = (
+    "No es un suceso: resume varios sucesos (un balance o un recuento), no un hecho de un día."
+)
+MOTIVO_VARIOS_SUCESOS_EN = (
+    "Not an event: it sums up several events (a summary or a tally), not one event on a given day."
+)
+
+
+def resume_varios_sucesos(decisiones: dict[str, Documento], id_: str) -> bool:
+    """Si el control ya dijo, al compararla con otra ficha, que resume varios sucesos
+    (`varios_sucesos` en la decisión del par): un balance mensual no es un suceso."""
+    return any(
+        d.get("varios_sucesos") is True
+        for clave, d in decisiones.items()
+        if clave.startswith("par:") and id_ in clave.removeprefix("par:").split("|")
+    )
+
+
 def resolver_sin_fecha(ctx: Contexto, incidente: Documento) -> bool:
     """La ficha que el filtro de entrada retiene 6 horas sin una frase que dé la fecha del suceso
-    se retira como no verificable, con su motivo: nunca salió en la web (EODI-2026-00697, un dron
-    civil hallado en un poste que pudo llevar allí tiempo; EODI-2026-00744, un balance mensual).
-    Es la salida b) de la barrera de titulares (recogida/barrera.py) para la fecha."""
+    se retira, con su motivo: nunca salió en la web. Como no verificable (EODI-2026-00697, un dron
+    civil hallado en un poste que pudo llevar allí tiempo) o, si el control ya dijo que resume
+    varios sucesos, como «no es un suceso» (EODI-2026-00744, un balance mensual, que se retiró
+    como no verificable el 3 de noviembre de 2026). Es la salida b) de la barrera de titulares
+    (recogida/barrera.py) para la fecha."""
+    if resume_varios_sucesos({**ctx.decisiones, **ctx.nuevas}, incidente["id"]):
+        motivo, motivo_en = MOTIVO_VARIOS_SUCESOS, MOTIVO_VARIOS_SUCESOS_EN
+    else:
+        motivo, motivo_en = MOTIVO_SIN_FECHA, MOTIVO_SIN_FECHA_EN
     nuevo = {k: v for k, v in incidente.items() if k != "episodio"}
-    nuevo["retirado"] = {
-        "fecha": _instante(ctx.ahora), "motivo": MOTIVO_SIN_FECHA, "motivo_en": MOTIVO_SIN_FECHA_EN,
-    }  # fmt: skip
-    if not _guardar(ctx, incidente, nuevo, MOTIVO_SIN_FECHA):
+    nuevo["retirado"] = {"fecha": _instante(ctx.ahora), "motivo": motivo, "motivo_en": motivo_en}
+    if not _guardar(ctx, incidente, nuevo, motivo):
         return False
     ctx.almacen.anotar_motivo(TABLA_MOTIVOS, incidente["id"], {"retirado": None},
-                              {"retirado": nuevo["retirado"]}, MOTIVO_SIN_FECHA)  # fmt: skip
+                              {"retirado": nuevo["retirado"]}, motivo)  # fmt: skip
     return True
 
 
