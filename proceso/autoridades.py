@@ -246,3 +246,36 @@ def nombres(documento: dict[str, Any]) -> list[tuple[str, str]]:
 def por_traducir(documento: dict[str, Any]) -> list[tuple[str, str]]:
     """Las autoridades del documento que no están en la tabla: (nombre, idioma)."""
     return [(n, i) for n, i in nombres(documento) if not en_tabla(n)]
+
+
+# --- Las autoridades en las citas traducidas (4 de noviembre de 2026) --------------------------
+# El traductor de las citas no sabe de qué país es la ficha: «Ministerul Apărării» de Moldavia
+# salía como «Ministerio de Defensa Nacional», el nombre del ministerio rumano (EODI-2026-00728,
+# Viișoara). Por país de la ficha, lo que la traducción no puede decir si el original no lo dice.
+# (país, lo que tendría que decir el original, {idioma: [(lo que dice la traducción, cambio)]})
+_NACIONAL = re.compile(r"ap[aă]r[aă]rii\s+na[tţț]ional", re.IGNORECASE)
+TRADUCCION_POR_PAIS: dict[str, tuple[re.Pattern[str], dict[str, tuple[tuple[str, str], ...]]]] = {
+    "MD": (
+        _NACIONAL,
+        {
+            "es": (("Ministerio de Defensa Nacional", "Ministerio de Defensa"),),
+            "en": (
+                ("Ministry of National Defence", "Ministry of Defence"),
+                ("Ministry of National Defense", "Ministry of Defence"),
+                ("National Defence Ministry", "Defence Ministry"),
+                ("National Defense Ministry", "Defence Ministry"),
+            ),
+        },
+    ),
+}
+
+
+def traduccion_de_su_pais(original: str, traducida: str, idioma: str, pais: str | None) -> str:
+    """La traducción de una cita con la autoridad del país de la ficha: en Moldavia, «Ministerio
+    de Defensa», no «Ministerio de Defensa Nacional», si el original no dice «Naționale»."""
+    regla = TRADUCCION_POR_PAIS.get(pais or "")
+    if regla is None or regla[0].search(original):
+        return traducida
+    for mal, bien in regla[1].get(idioma, ()):
+        traducida = re.sub(re.escape(mal), bien, traducida, flags=re.IGNORECASE)
+    return traducida

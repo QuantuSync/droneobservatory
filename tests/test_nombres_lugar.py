@@ -445,3 +445,41 @@ def test_el_aeropuerto_de_la_ciudad_se_llama_igual_en_las_dos_versiones() -> Non
     # El otro sigue con su nombre propio en las dos versiones.
     assert tabla["EDHI"]["aeropuerto"]["es"] == "Aeropuerto de Hamburgo-Finkenwerder"
     assert nombres_lugar._aeropuerto("EDDH")["aeropuerto"]["es"] == "Aeropuerto de Hamburgo"
+
+
+# --- La región en la fila «Lugar» (4 de noviembre de 2026) ------------------------------------
+PUNTO_SUCEAVA = {"lat": 47.86, "lon": 25.86}
+
+
+def test_con_punto_y_sin_localidad_la_fila_lugar_dice_la_region() -> None:
+    # EODI-2026-00725, 00307 y 00344 decían solo «Rumanía» desde el PR 394.
+    doc = incidente("RO", region="Suceava", nivel="localidad", punto=PUNTO_SUCEAVA, radio_km=10)
+    nombres = nombres_lugar.nombres_publicos(doc)
+    assert nombres["lugar"] == {"es": "Suceava, Rumanía", "en": "Suceava, Romania"}
+    # La región no pasa por localidad: la ficha sigue sin localidad.
+    assert "localidad" not in nombres
+
+
+@pytest.mark.parametrize(
+    ("pais", "fuente", "es", "en"),
+    [
+        ("DE", "Dolna Saksonia", "Baja Sajonia", "Lower Saxony"),
+        ("DE", "Niedersachsen", "Baja Sajonia", "Lower Saxony"),
+        ("DE", "Sassonia", "Sajonia", "Saxony"),
+        ("DE", "Bavaria", "Baviera", "Bavaria"),
+        ("BE", "Bruksela-Stolica", "Región de Bruselas-Capital", "Brussels-Capital Region"),
+        ("FR", "Bretagna", "Bretaña", "Brittany"),
+        ("MD", "Gagauzia", "Gagauzia", "Gagauzia"),
+    ],
+)
+def test_la_region_se_escribe_en_el_idioma_de_la_pagina(
+    pais: str, fuente: str, es: str, en: str
+) -> None:
+    assert nombres_lugar.region(fuente, pais) == {"es": es, "en": en}
+
+
+def test_la_region_en_la_fila_lugar_de_una_ficha_sin_punto() -> None:
+    doc = incidente("DE", region="Dolna Saksonia", nivel="region")
+    nombres = nombres_lugar.nombres_publicos(doc)
+    assert nombres["lugar"] == {"es": "Baja Sajonia, Alemania", "en": "Lower Saxony, Germany"}
+    assert nombres["region"] == {"es": "Baja Sajonia", "en": "Lower Saxony"}

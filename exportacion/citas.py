@@ -175,7 +175,27 @@ def con_traducciones(
         idioma = idiomas.get(str(recorrido.get("fuente")), "")
         _traducir(recorrido, "cita", "cita_traduccion", idioma, traducciones, faltan)
     con_sus_lugares(publico)
+    con_su_pais(publico)
     con_autoridades(publico, traducciones, faltan)
+
+
+def con_su_pais(publico: Documento) -> None:
+    """Las traducciones de las citas con las autoridades del país de la ficha
+    (proceso/autoridades.traduccion_de_su_pais): «Ministerio de Defensa» en Moldavia."""
+    pais = (publico.get("lugar") or {}).get("pais")
+    objetos = [
+        *[(f, "frase_origen", "traduccion") for f in publico.get("fuentes", [])],
+        *[(a, "cita", "cita_traduccion") for a in publico.get("afirmaciones_publicas", [])],
+        *[(e, "cita", "cita_traduccion") for e in publico.get("investigacion", []) or []],
+    ]
+    for objeto, original, clave in objetos:
+        hecha = objeto.get(clave)
+        if not isinstance(hecha, dict):
+            continue
+        texto = str(objeto.get(original) or "")
+        objeto[clave] = {
+            i: autoridades.traduccion_de_su_pais(texto, str(t), i, pais) for i, t in hecha.items()
+        }
 
 
 def con_sus_lugares(publico: Documento) -> None:

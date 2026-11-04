@@ -133,3 +133,42 @@ def test_la_cita_revisada_vuelve_a_confirmar_la_ficha_rebajada() -> None:
     assert vuelta["estado"]["actual"] == "confirmado"
     assert MINISTERIO in _autoridades(vuelta)
     assert reglas.bajar_estado(vuelta, ejemplos.instante("2026-11-02T05:00Z")) is None
+
+
+def test_la_cita_traducida_nombra_el_ministerio_de_moldavia() -> None:
+    # El traductor escribía «Ministerio de Defensa Nacional», el nombre del rumano (4/11/2026).
+    from exportacion import citas
+
+    frase = "Ministerul Apărării a anunțat că drona a părăsit spațiul aerian al Republicii Moldova"
+    publico: dict[str, Any] = {
+        "lugar": {"pais": "MD"},
+        "fuentes": [{"id": "f1", "frase_origen": frase, "traduccion": {
+            "es": "el Ministerio de Defensa Nacional anunció que el dron abandonó el espacio aéreo",
+            "en": "the Ministry of National Defence announced that the drone left the airspace",
+        }}],
+        "afirmaciones_publicas": [{"cita": FRASE_MINISTERIO, "cita_traduccion": {
+            "es": "Según el Ministerio de Defensa, el segundo dron penetró",
+            "en": "According to the Ministry of National Defence, the second drone entered",
+        }}],
+    }  # fmt: skip
+    citas.con_su_pais(publico)
+    assert publico["fuentes"][0]["traduccion"] == {
+        "es": "el Ministerio de Defensa anunció que el dron abandonó el espacio aéreo",
+        "en": "the Ministry of Defence announced that the drone left the airspace",
+    }
+    assert publico["afirmaciones_publicas"][0]["cita_traduccion"]["en"] == (
+        "According to the Ministry of Defence, the second drone entered"
+    )
+
+
+def test_el_ministerio_rumano_citado_en_moldavia_sigue_siendo_de_defensa_nacional() -> None:
+    from proceso import autoridades
+
+    original = "Ministerul Apărării Naționale al României a anunțat"
+    traducida = "El Ministerio de Defensa Nacional de Rumanía anunció"
+    assert autoridades.traduccion_de_su_pais(original, traducida, "es", "MD") == traducida
+    # Y en Rumanía no cambia nada.
+    assert (
+        autoridades.traduccion_de_su_pais("Ministerul Apărării a anunțat", traducida, "es", "RO")
+        == traducida
+    )

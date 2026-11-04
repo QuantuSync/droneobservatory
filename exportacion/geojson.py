@@ -66,7 +66,8 @@ def con_nombres(documento: Documento) -> Documento:
                 )
                 nombres_lista[i] = None
     if "localidad" not in nombres:
-        nombres["lugar"] = nombres_lugar.lugar_con_pais(None, documento)
+        # Sin localidad publicable, la región si la hay y se puede publicar; si no, el país.
+        nombres["lugar"] = nombres_lugar.lugar_con_pais(nombres.get("region"), documento)
     documento["nombres"] = nombres
     for problema in nombres_lugar.problemas(documento):
         registro.warning("%s: %s", documento.get("id"), problema)
