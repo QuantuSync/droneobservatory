@@ -88,6 +88,17 @@ function contar(contexto: BrowserContext): void {
   contexto.on("requestfailed", (pedido) => anotar(pedido, "fallida"));
 }
 
+type OpcionesDeContexto = Parameters<Browser["newContext"]>[0];
+
+/**
+ * Las opciones de un contexto que abre una prueba con browser.newContext(): sin el service worker
+ * de la app si la prueba no dice otra cosa (lo mismo que playwright.config.ts para los demás; el
+ * motivo está allí). Los recorridos de la app lo piden con serviceWorkers: "allow".
+ */
+function sinServiceWorker(opciones: OpcionesDeContexto): OpcionesDeContexto {
+  return { serviceWorkers: "block", ...opciones };
+}
+
 function resumenPeticiones(): string {
   const total = { red: 0, fallida: 0 };
   for (const [clave, n] of peticiones) {
@@ -178,8 +189,8 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
       enWebkit = browserName === "webkit";
       if (enWebkit) {
         const original = browser.newContext.bind(browser);
-        browser.newContext = async (...argumentos: Parameters<Browser["newContext"]>) => {
-          const contexto = await original(...argumentos);
+        browser.newContext = async (opciones?: OpcionesDeContexto) => {
+          const contexto = await original(sinServiceWorker(opciones));
           contar(contexto);
           return contexto;
         };
@@ -191,8 +202,8 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
       if (!existsSync(CARPETA)) mkdirSync(CARPETA, { recursive: true });
       recortar();
       const original = browser.newContext.bind(browser);
-      browser.newContext = async (...argumentos: Parameters<Browser["newContext"]>) => {
-        const contexto = await original(...argumentos);
+      browser.newContext = async (opciones?: OpcionesDeContexto) => {
+        const contexto = await original(sinServiceWorker(opciones));
         await instalar(contexto);
         return contexto;
       };
