@@ -887,15 +887,24 @@ def corregir_texto(texto: str, cambios: dict[str, str], idioma: str | None = Non
 
 # «Possible possible drone», «posible posible dron»: el calificativo repetido (2025-00299).
 _POSIBLE_REPETIDO = re.compile(r"\b(possible|posibles?)\s+\1\b", re.IGNORECASE)
+# La categoría del objetivo repetida al ponerle su nombre cuando el titular ya la decía: «cierran el
+# aeropuerto de Vilnius» → «el aeropuerto del aeropuerto de Vilna» (EODI-2026-00057, 4/11/2026).
+_CATEGORIA_REPETIDA = re.compile(
+    r"\b(aeropuerto|base|central|puerto|muelle|estación)\s+(?:del|en\s+el)\s+\1\s+de\b",
+    re.IGNORECASE,
+)
 
 
 def titulo_corregido(incidente: Documento) -> Documento:
     incidente = _nfc_incidente(incidente)
     titulo = incidente.get("titulo") or {}
     return {
-        i: _POSIBLE_REPETIDO.sub(
-            lambda m: m.group(0).split()[0],
-            corregir_texto(str(titulo[i]), _cambios(incidente, i), i),
+        i: _CATEGORIA_REPETIDA.sub(
+            lambda m: f"{m.group(1)} de",
+            _POSIBLE_REPETIDO.sub(
+                lambda m: m.group(0).split()[0],
+                corregir_texto(str(titulo[i]), _cambios(incidente, i), i),
+            ),
         )
         if i in IDIOMAS and isinstance(titulo.get(i), str)
         else titulo.get(i)
