@@ -31,6 +31,8 @@ VARIABLE = "EODI_REINTENTOS_DATOS"
 TOPE_DIARIO_REINTENTOS = 40
 ESPERA_PRIMER_FALLO = timedelta(hours=1)
 ESPERA_MAXIMA = timedelta(hours=24)
+# Las veces que se dobla la espera antes de llegar a la máxima (1, 2, 4… 32 horas > 24).
+_DOBLES_HASTA_MAXIMA = 5
 _NO_PERMITIDO = re.compile(r"[^A-Za-z0-9._-]")
 
 
@@ -40,7 +42,11 @@ def espera_tras_fallos(fallos_seguidos: int, rechazo: bool = False) -> timedelta
         return timedelta(0)
     if rechazo:
         return ESPERA_MAXIMA
-    espera: timedelta = ESPERA_PRIMER_FALLO * 2 ** (fallos_seguidos - 1)
+    # El exponente con tope: tras unos 30 fallos seguidos (favt.gov.ru, caída desde el 3 de
+    # noviembre de 2026) 2 ** (fallos - 1) horas no cabía en un timedelta, el OverflowError
+    # tumbaba el lector de canales cada hora y no se guardaba el estado.
+    veces = min(fallos_seguidos - 1, _DOBLES_HASTA_MAXIMA)
+    espera: timedelta = ESPERA_PRIMER_FALLO * 2**veces
     return min(espera, ESPERA_MAXIMA)
 
 

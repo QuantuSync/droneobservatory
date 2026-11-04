@@ -100,3 +100,18 @@ def test_sin_tope_configurado_reintenta_como_siempre(monkeypatch: pytest.MonkeyP
     with pytest.raises(DescargaFallida):
         descargador.texto("https://caido.example/a", lambda _t: True)
     assert sitio.peticiones == 3
+
+
+def test_muchos_fallos_seguidos_no_desbordan_la_espera() -> None:
+    # favt.gov.ru caída desde el 3 de noviembre de 2026: con ~32 fallos seguidos 2 ** 31 horas
+    # no cabía en un timedelta y el lector de canales de la guerra fallaba cada hora.
+    from datetime import UTC, datetime
+
+    from recogida import reintentos
+
+    for fallos in (6, 31, 32, 10_000):
+        assert reintentos.espera_tras_fallos(fallos) == reintentos.ESPERA_MAXIMA
+    ahora = datetime(2026, 11, 4, 8, tzinfo=UTC)
+    assert reintentos.siguiente_intento(ahora, 10_000) == ahora + reintentos.ESPERA_MAXIMA
+    assert reintentos.espera_tras_fallos(1) == reintentos.ESPERA_PRIMER_FALLO
+    assert reintentos.espera_tras_fallos(5) == 16 * reintentos.ESPERA_PRIMER_FALLO
