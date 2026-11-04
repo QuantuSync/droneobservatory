@@ -27,7 +27,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { expect, test as base } from "@playwright/test";
-import type { Browser, BrowserContext, Route } from "@playwright/test";
+import type { Browser, BrowserContext, Request, Route } from "@playwright/test";
 
 import { cabecerasAGuardar, sobrantes, trozoDe } from "./teselas.ts";
 
@@ -40,6 +40,63 @@ const cuenta = { red: 0, cache: 0 };
 let reales = REALES_SIEMPRE;
 let enWebkit = false;
 const instalados = new WeakSet<BrowserContext>();
+const contados = new WeakSet<BrowserContext>();
+const deLaCache = new WeakSet<Request>();
+
+// Cuántas peticiones llegan a la web que se recorre, por quién las hace (la página o el service
+// worker de la app), por cómo se sirven y por tipo de ruta: se escribe una línea «peticiones:» por
+// trabajo al terminar. Sirve para medir lo que cuesta cada pasada en Vercel (noviembre de 2026).
+// Las del service worker solo se ven en Chromium.
+const SITIO = (() => {
+  try {
+    return new URL(process.env.BASE ?? "https://droneobservatory.eu").host;
+  } catch {
+    return "droneobservatory.eu";
+  }
+})();
+const peticiones = new Map<string, number>();
+
+function tipoDeRuta(camino: string): string {
+  for (const prefijo of ["/almacen/", "/assets/", "/datos/", "/api/", "/mapa/", "/iconos/", "/banderas/", "/marca/"]) {
+    if (camino.startsWith(prefijo)) return prefijo.slice(1, -1);
+  }
+  return camino.includes(".") ? "otros" : "paginas";
+}
+
+function anotar(pedido: Request, como: string): void {
+  let url: URL;
+  try {
+    url = new URL(pedido.url());
+  } catch {
+    return;
+  }
+  if (url.host !== SITIO) return;
+  const quien = pedido.serviceWorker() === null ? "pagina" : "sw";
+  const clave = `${quien} ${como} ${tipoDeRuta(url.pathname)}`;
+  peticiones.set(clave, (peticiones.get(clave) ?? 0) + 1);
+}
+
+function contar(contexto: BrowserContext): void {
+  if (contados.has(contexto)) return;
+  contados.add(contexto);
+  contexto.on("response", (respuesta) => {
+    const pedido = respuesta.request();
+    if (deLaCache.has(pedido)) anotar(pedido, "cache-teselas");
+    else if (respuesta.fromServiceWorker()) anotar(pedido, "cache-sw");
+    else anotar(pedido, "red");
+  });
+  contexto.on("requestfailed", (pedido) => anotar(pedido, "fallida"));
+}
+
+function resumenPeticiones(): string {
+  const total = { red: 0, fallida: 0 };
+  for (const [clave, n] of peticiones) {
+    if (clave.includes(" red ")) total.red += n;
+    if (clave.includes(" fallida ")) total.fallida += n;
+  }
+  const detalle = Object.fromEntries([...peticiones].sort((a, b) => b[1] - a[1]));
+  return `peticiones: ${JSON.stringify({ sitio: SITIO, ...total, detalle })}`;
+}
 
 /** Quita lo más antiguo si la caché ha crecido demasiado (es del ejecutor, no del repositorio). */
 function recortar(): void {
@@ -88,6 +145,7 @@ async function servir(ruta: Route): Promise<void> {
   const guardado = leer(trozo.clave);
   if (guardado !== null) {
     cuenta.cache += 1;
+    deLaCache.add(pedido);
     await ruta.fulfill({ status: trozo.estado, headers: guardado.cabeceras, body: guardado.cuerpo });
     return;
   }
@@ -105,6 +163,7 @@ async function servir(ruta: Route): Promise<void> {
 }
 
 async function instalar(contexto: BrowserContext): Promise<void> {
+  contar(contexto);
   if (enWebkit || instalados.has(contexto)) return;
   instalados.add(contexto);
   await contexto.route((url) => trozoDe(url.href, "bytes=0-0") !== null, servir);
@@ -118,7 +177,15 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
     async ({ browser, browserName }, usar) => {
       enWebkit = browserName === "webkit";
       if (enWebkit) {
+        const original = browser.newContext.bind(browser);
+        browser.newContext = async (...argumentos: Parameters<Browser["newContext"]>) => {
+          const contexto = await original(...argumentos);
+          contar(contexto);
+          return contexto;
+        };
         await usar(undefined);
+        browser.newContext = original;
+        console.log(resumenPeticiones());
         return;
       }
       if (!existsSync(CARPETA)) mkdirSync(CARPETA, { recursive: true });
@@ -132,6 +199,7 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
       await usar(undefined);
       browser.newContext = original;
       console.log(`teselas: ${cuenta.red} trozos de la red, ${cuenta.cache} de la caché (${CARPETA})`);
+      console.log(resumenPeticiones());
     },
     { scope: "worker", auto: true },
   ],
