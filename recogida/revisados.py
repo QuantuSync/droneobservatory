@@ -1456,6 +1456,7 @@ def separar(
                 if n == queda
                 else not almacen.extracciones(str(entrada.get("candidato")))
             )
+            extraido_ahora = False
             if cand is not None and pendiente:
                 # El extractor, por el camino normal de altas: la parte nueva y también la que
                 # conserva el identificador, cuya ficha anterior hablaba de los dos sucesos (su
@@ -1469,12 +1470,20 @@ def separar(
                                        modelos)
                 ):  # fmt: skip
                     hechos.extraidos.append(cand["id"])
+                    extraido_ahora = True
                 else:
                     hechos.pendientes.append(cand["id"])
             if n == queda and cand is not None and hecho.get("conservado_perdio"):
                 # Ya extraído de nuevo (aquí o por el extractor de la horaria): una vez por ficha.
+                # En la misma pasada que la extrae, también: si no, la ficha pasaba una hora sin
+                # las fuentes de sus registros fundidos (EODI-2025-00200 perdió la de drimble.nl
+                # de 15:23 a 16:22 el 3 de noviembre de 2026, y así se publicó).
                 ultima = (almacen.extracciones(cand["id"]) or [{}])[-1].get("fecha")
-                if ultima and hecho.get("reabsorbido") != ultima and not pendiente:
+                if (
+                    ultima
+                    and hecho.get("reabsorbido") != ultima
+                    and (not pendiente or extraido_ahora)
+                ):
                     reabsorber(
                         almacen,
                         revision["incidente"],
