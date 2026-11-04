@@ -140,6 +140,26 @@ test("el mapa de fondo se sirve por la web", async ({ request, baseURL }, info) 
   expect(respuesta.headers()["cache-control"] ?? "").not.toBe("");
 });
 
+// Lo mismo con los ficheros fijos (e2e/base.ts): las demás pruebas reciben el código de /assets/ y
+// los ficheros públicos del mapa de la caché de los recorridos; esta pide de verdad a la web el
+// código de la portada y un contorno del mapa, unas pocas peticiones por ejecución.
+test("el código y los contornos se sirven por la web", async ({ request, baseURL }, info) => {
+  test.skip(info.project.name !== "escritorio", "una vez por ejecución, en escritorio");
+  const portada = await request.get(`${baseURL ?? ""}/`, { headers: ACCESO });
+  expect(portada.status()).toBe(200);
+  const codigo = /<script[^>]+src="(\/assets\/[^"]+\.js)"/.exec(await portada.text())?.[1];
+  expect(codigo, "la portada carga su código de /assets/").toBeDefined();
+  const js = await request.get(`${baseURL ?? ""}${codigo ?? ""}`, { headers: ACCESO });
+  expect(js.status()).toBe(200);
+  expect(js.headers()["content-type"] ?? "").toContain("javascript");
+  expect((await js.body()).length).toBeGreaterThan(0);
+  const contorno = await request.get(`${baseURL ?? ""}/mapa/paises.geojson`, { headers: ACCESO });
+  expect(contorno.status()).toBe(200);
+  const paises = (await contorno.json()) as { type?: string; features?: unknown[] };
+  expect(paises.type).toBe("FeatureCollection");
+  expect(paises.features?.length ?? 0).toBeGreaterThan(0);
+});
+
 test("carga el mapa sin errores ni violaciones de la política de contenido", async ({ page, baseURL }, info) => {
   const problemas = vigilar(page);
   const movil = info.project.name === "movil";

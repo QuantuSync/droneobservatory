@@ -18,10 +18,20 @@
 //   última registrada, y las de la página antes que las del contexto).
 // - Al añadir algún trozo se deja el fichero «nuevos» en la carpeta: la CI solo guarda la caché
 //   si lo encuentra.
+// - Desde el 4 de noviembre de 2026, igual con los ficheros fijos de la web (e2e/teselas.ts, «Los
+//   ficheros fijos»): el código de /assets/ con huella en el nombre y los ficheros públicos del mapa
+//   (contornos, fuentes, sprites, marca, banderas, iconos), en otra carpeta (FIJOS_CACHE; en
+//   local, web/.cache/fijos) con su propia caché de Actions, ligada a la huella de esos ficheros.
+//   Un fichero público solo se sirve de la caché si sus bytes son los del repositorio, y solo se
+//   guarda si la web ha servido exactamente esos bytes. La única prueba que pide de verdad el
+//   código y un contorno es «el código y los contornos se sirven por la web» (e2e/web.spec.ts).
+//   Los recorridos de la app (e2e/app-recorridos.spec.ts, con su service worker) los piden siempre
+//   a la web, como antes. En WebKit tampoco: no hay interceptación (arriba).
 //
 // Las pruebas importan `test` y `expect` de aquí, no de @playwright/test (tests/teselas.test.ts
 // lo comprueba).
 
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,19 +39,37 @@ import { fileURLToPath } from "node:url";
 import { expect, test as base } from "@playwright/test";
 import type { Browser, BrowserContext, Request, Route } from "@playwright/test";
 
-import { cabecerasAGuardar, sobrantes, trozoDe } from "./teselas.ts";
+import {
+  OBJETIVO_FIJOS_BYTES,
+  TOPE_FIJOS_BYTES,
+  cabecerasAGuardar,
+  claveDePublico,
+  codigoGuardable,
+  fijoDe,
+  sobrantes,
+  trozoDe,
+} from "./teselas.ts";
+import type { Fijo } from "./teselas.ts";
 
 export { expect };
 
 const CARPETA = process.env.TESELAS_CACHE ?? join(dirname(fileURLToPath(import.meta.url)), "..", ".cache", "teselas");
 const REALES_SIEMPRE = process.env.TESELAS_REALES === "1";
+const CARPETA_FIJOS = process.env.FIJOS_CACHE ?? join(dirname(fileURLToPath(import.meta.url)), "..", ".cache", "fijos");
+const PUBLICA = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
+// Los recorridos de la app piden los ficheros fijos a la web, como antes (su service worker los
+// guarda y los sirve: es lo que prueban).
+const SIN_FIJOS = /app-recorridos\.spec\.ts$/;
 
 const cuenta = { red: 0, cache: 0 };
+const cuentaFijos = { red: 0, cache: 0, guardados: 0 };
 let reales = REALES_SIEMPRE;
+let fijosReales = REALES_SIEMPRE;
 let enWebkit = false;
 const instalados = new WeakSet<BrowserContext>();
 const contados = new WeakSet<BrowserContext>();
 const deLaCache = new WeakSet<Request>();
+const deLosFijos = new WeakSet<Request>();
 
 // Cuántas peticiones llegan a la web que se recorre, por quién las hace (la página o el service
 // worker de la app), por cómo se sirven y por tipo de ruta: se escribe una línea «peticiones:» por
@@ -82,6 +110,7 @@ function contar(contexto: BrowserContext): void {
   contexto.on("response", (respuesta) => {
     const pedido = respuesta.request();
     if (deLaCache.has(pedido)) anotar(pedido, "cache-teselas");
+    else if (deLosFijos.has(pedido)) anotar(pedido, "cache-fijos");
     else if (respuesta.fromServiceWorker()) anotar(pedido, "cache-sw");
     else anotar(pedido, "red");
   });
@@ -110,24 +139,24 @@ function resumenPeticiones(): string {
 }
 
 /** Quita lo más antiguo si la caché ha crecido demasiado (es del ejecutor, no del repositorio). */
-function recortar(): void {
+function recortar(carpeta = CARPETA, tope?: number, objetivo?: number): void {
   try {
-    const ficheros = readdirSync(CARPETA)
+    const ficheros = readdirSync(carpeta)
       .filter((n) => n.endsWith(".bin") || n.endsWith(".json"))
       .map((nombre) => {
-        const s = statSync(join(CARPETA, nombre));
+        const s = statSync(join(carpeta, nombre));
         return { nombre, bytes: s.size, fecha: s.mtimeMs };
       });
-    for (const nombre of sobrantes(ficheros)) unlinkSync(join(CARPETA, nombre));
+    for (const nombre of sobrantes(ficheros, tope, objetivo)) unlinkSync(join(carpeta, nombre));
   } catch {
     // Sin carpeta o sin permiso: se trabaja sin recortar.
   }
 }
 
-function leer(clave: string): { cuerpo: Buffer; cabeceras: Record<string, string> } | null {
+function leer(clave: string, carpeta = CARPETA): { cuerpo: Buffer; cabeceras: Record<string, string> } | null {
   try {
-    const cabeceras = JSON.parse(readFileSync(join(CARPETA, `${clave}.json`), "utf8")) as Record<string, string>;
-    const cuerpo = readFileSync(join(CARPETA, `${clave}.bin`));
+    const cabeceras = JSON.parse(readFileSync(join(carpeta, `${clave}.json`), "utf8")) as Record<string, string>;
+    const cuerpo = readFileSync(join(carpeta, `${clave}.bin`));
     if (typeof cabeceras !== "object" || cuerpo.length === 0) return null;
     return { cuerpo, cabeceras };
   } catch {
@@ -135,12 +164,12 @@ function leer(clave: string): { cuerpo: Buffer; cabeceras: Record<string, string
   }
 }
 
-function guardar(clave: string, cuerpo: Buffer, cabeceras: Record<string, string>): void {
+function guardar(clave: string, cuerpo: Buffer, cabeceras: Record<string, string>, carpeta = CARPETA): void {
   try {
-    mkdirSync(CARPETA, { recursive: true });
-    writeFileSync(join(CARPETA, `${clave}.bin`), cuerpo);
-    writeFileSync(join(CARPETA, `${clave}.json`), JSON.stringify(cabeceras));
-    writeFileSync(join(CARPETA, "nuevos"), "");
+    mkdirSync(carpeta, { recursive: true });
+    writeFileSync(join(carpeta, `${clave}.bin`), cuerpo);
+    writeFileSync(join(carpeta, `${clave}.json`), JSON.stringify(cabeceras));
+    writeFileSync(join(carpeta, "nuevos"), "");
   } catch {
     // Sin poder guardar, la prueba sigue: el trozo ya se ha servido de la red.
   }
@@ -173,11 +202,78 @@ async function servir(ruta: Route): Promise<void> {
   }
 }
 
+const huellasLocales = new Map<string, string | null>();
+
+/** La huella sha256 del fichero de web/public que corresponde a un camino, o null si no existe. */
+function huellaLocal(camino: string): string | null {
+  const guardada = huellasLocales.get(camino);
+  if (guardada !== undefined) return guardada;
+  let huella: string | null;
+  try {
+    const fichero = join(PUBLICA, ...camino.split("/").filter((p) => p !== ""));
+    huella = createHash("sha256").update(readFileSync(fichero)).digest("hex");
+  } catch {
+    huella = null;
+  }
+  huellasLocales.set(camino, huella);
+  return huella;
+}
+
+/** La clave en la caché de un fichero fijo, o null si no puede servirse de la caché. */
+function claveDeFijo(fijo: Fijo): string | null {
+  if (fijo.tipo === "codigo") return fijo.clave ?? null;
+  const huella = huellaLocal(fijo.camino);
+  return huella === null ? null : claveDePublico(huella);
+}
+
+/** Si lo que ha servido la web de un fichero fijo se puede guardar. */
+function guardable(fijo: Fijo, estado: number, cabeceras: Record<string, string>, cuerpo: Buffer): boolean {
+  if (!codigoGuardable(estado, cabeceras) || cuerpo.length === 0) return false;
+  if (fijo.tipo === "codigo") return true;
+  return createHash("sha256").update(cuerpo).digest("hex") === huellaLocal(fijo.camino);
+}
+
+async function servirFijo(ruta: Route, fijo: Fijo): Promise<void> {
+  const pedido = ruta.request();
+  const clave = claveDeFijo(fijo);
+  if (clave === null || fijosReales || pedido.method() !== "GET" || (await pedido.headerValue("range")) !== null) {
+    await ruta.fallback();
+    return;
+  }
+  const guardado = leer(clave, CARPETA_FIJOS);
+  if (guardado !== null) {
+    cuentaFijos.cache += 1;
+    deLosFijos.add(pedido);
+    await ruta.fulfill({ status: 200, headers: guardado.cabeceras, body: guardado.cuerpo });
+    return;
+  }
+  try {
+    const respuesta = await ruta.fetch();
+    cuentaFijos.red += 1;
+    const cuerpo = await respuesta.body();
+    if (guardable(fijo, respuesta.status(), respuesta.headers(), cuerpo)) {
+      cuentaFijos.guardados += 1;
+      guardar(clave, cuerpo, cabecerasAGuardar(respuesta.headers()), CARPETA_FIJOS);
+    }
+    await ruta.fulfill({ response: respuesta });
+  } catch {
+    // La prueba ya ha terminado (o la red ha fallado): la petición en vuelo no importa.
+    await ruta.abort().catch(() => undefined);
+  }
+}
+
+/** Los trozos del mapa de fondo y los ficheros fijos, cada uno con su caché. */
+async function enrutar(ruta: Route): Promise<void> {
+  const fijo = fijoDe(ruta.request().url(), SITIO);
+  if (fijo !== null) await servirFijo(ruta, fijo);
+  else await servir(ruta);
+}
+
 async function instalar(contexto: BrowserContext): Promise<void> {
   contar(contexto);
   if (enWebkit || instalados.has(contexto)) return;
   instalados.add(contexto);
-  await contexto.route((url) => trozoDe(url.href, "bytes=0-0") !== null, servir);
+  await contexto.route((url) => trozoDe(url.href, "bytes=0-0") !== null || fijoDe(url.href, SITIO) !== null, enrutar);
 }
 
 export const test = base.extend<{ teselasReales: boolean; _teselas: undefined }, { _cacheTeselas: undefined }>({
@@ -201,6 +297,8 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
       }
       if (!existsSync(CARPETA)) mkdirSync(CARPETA, { recursive: true });
       recortar();
+      if (!existsSync(CARPETA_FIJOS)) mkdirSync(CARPETA_FIJOS, { recursive: true });
+      recortar(CARPETA_FIJOS, TOPE_FIJOS_BYTES, OBJETIVO_FIJOS_BYTES);
       const original = browser.newContext.bind(browser);
       browser.newContext = async (opciones?: OpcionesDeContexto) => {
         const contexto = await original(sinServiceWorker(opciones));
@@ -210,15 +308,20 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
       await usar(undefined);
       browser.newContext = original;
       console.log(`teselas: ${cuenta.red} trozos de la red, ${cuenta.cache} de la caché (${CARPETA})`);
+      console.log(
+        `fijos: ${cuentaFijos.red} de la red (${cuentaFijos.guardados} guardados), ${cuentaFijos.cache} de la caché (${CARPETA_FIJOS})`,
+      );
       console.log(resumenPeticiones());
     },
     { scope: "worker", auto: true },
   ],
   _teselas: [
-    async ({ teselasReales }, usar) => {
+    async ({ teselasReales }, usar, info) => {
       reales = REALES_SIEMPRE || teselasReales;
+      fijosReales = REALES_SIEMPRE || SIN_FIJOS.test(info.file);
       await usar(undefined);
       reales = REALES_SIEMPRE;
+      fijosReales = REALES_SIEMPRE;
     },
     { auto: true },
   ],
