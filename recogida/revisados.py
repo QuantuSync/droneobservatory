@@ -713,8 +713,10 @@ def _retirar(
             # Ya retirada por otro camino con otro motivo: queda con el de la revisión y su fecha
             # (EODI-2026-00744, el balance mensual de Moldavia retirado como «no verificable»,
             # 4 de noviembre de 2026). La que no está retirada (unida, descartada) no se toca.
-            if not isinstance(retirado, dict) or (
-                retirado.get("motivo") == motivo and retirado.get("motivo_en") == motivo_en
+            # El motivo guardado que ya es el principio del revisado (la retirada del repaso de
+            # entrada, sin la explicación del experto) dice lo mismo: se queda.
+            if not isinstance(retirado, dict) or motivo.startswith(
+                str(retirado.get("motivo") or " ").rstrip(".")
             ):
                 continue
             nuevo = {k: v for k, v in documento.items() if k != "episodio"}
