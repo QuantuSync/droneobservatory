@@ -1,5 +1,5 @@
 {
-  "descripcion": "Licencia y créditos de los datos abiertos del observatorio, los mismos que dicen la web (web/src/sitio.ts, web/src/datos/licencia.ts; un test comprueba que coinciden) y la página de datos abiertos. La llevan dentro, como miembro «licencia» al principio y en los metadatos del objeto (x-amz-meta-licencia, x-amz-meta-autor, x-amz-meta-orcid), los ficheros públicos del almacén (recogida/publicacion.py) y la exportación semanal (exportacion/semanal.py, «creditos» del manifiesto). En «cita», {anio} y {version} (AAAA-MM) se rellenan con la versión de los datos.",
+  "descripcion": "Licencia y créditos de los datos abiertos del observatorio, los mismos que dicen la web (web/src/sitio.ts, web/src/datos/licencia.ts; un test comprueba que coinciden) y la página de datos abiertos. La llevan dentro, como miembro «licencia» al principio y en los metadatos del objeto (x-amz-meta-licencia, x-amz-meta-autor, x-amz-meta-orcid), los ficheros públicos del almacén (recogida/publicacion.py) y la exportación semanal (exportacion/semanal.py, «creditos» del manifiesto). En «cita», {anio} se rellena con el año de los datos vivos y {doi} con el DOI de la versión archivada más reciente (configuracion/versiones_archivadas.json): las versiones mensuales se retiraron el 3 de noviembre de 2026 y para citar los datos se usa ese DOI. La cita no lleva la fecha: así un fichero que no cambia no se vuelve a subir cada día (recogida/publicacion.py).",
   "nombre": "CC BY 4.0",
   "url": "https://creativecommons.org/licenses/by/4.0/",
   "titular": "European Observatory of Drone Incidents",
@@ -17,7 +17,7 @@
   },
   "fuente": "https://droneobservatory.eu/",
   "cita": {
-    "es": "Alaniz Pintos, L. ({anio}). European Observatory of Drone Incidents. Versión {version}. https://droneobservatory.eu. Licencia CC BY 4.0.",
-    "en": "Alaniz Pintos, L. ({anio}). European Observatory of Drone Incidents. Version {version}. https://droneobservatory.eu. Licence CC BY 4.0."
+    "es": "Alaniz Pintos, L. ({anio}). European Observatory of Drone Incidents. Datos vivos a la fecha de actualización de este fichero. https://droneobservatory.eu. Licencia CC BY 4.0. Para citar los datos, use la versión archivada más reciente: https://doi.org/{doi}",
+    "en": "Alaniz Pintos, L. ({anio}). European Observatory of Drone Incidents. Live data as of this file's update date. https://droneobservatory.eu. Licence CC BY 4.0. To cite the data, use the latest archived version: https://doi.org/{doi}"
   }
 }

@@ -5,7 +5,7 @@
 // de datos abiertos.
 
 import { textos } from "../i18n/index.ts";
-import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, citaRecomendada, versionDeDatos } from "../sitio.ts";
+import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, citaDeLosDatos } from "../sitio.ts";
 
 /** El autor, como lo llevan los ficheros (recogida/licencia.py). */
 export interface AutorDatos {
@@ -34,7 +34,6 @@ export interface MetadatosLicencia {
 
 /** La licencia de los datos publicados a `actualizado` (instante ISO de la versión). */
 export function metadatosLicencia(actualizado: string): MetadatosLicencia {
-  const version = versionDeDatos(actualizado);
   const es = textos("es").metodologia.descargas;
   const en = textos("en").metodologia.descargas;
   return {
@@ -44,7 +43,7 @@ export function metadatosLicencia(actualizado: string): MetadatosLicencia {
     autor: AUTOR_DATOS,
     fuente: `${ORIGEN}/`,
     alcance: { es: es.licenciaTexto, en: en.licenciaTexto },
-    cita: { es: citaRecomendada(version, "es"), en: citaRecomendada(version, "en") },
+    cita: { es: citaDeLosDatos(actualizado, "es"), en: citaDeLosDatos(actualizado, "en") },
   };
 }
 

@@ -1,5 +1,7 @@
 // Constantes del sitio que comparten la web, el build y los tests.
 
+import archivadas from "../../configuracion/versiones_archivadas.json" with { type: "json" };
+
 /** El nombre del proyecto va siempre en inglés, también en la versión española. */
 export const NOMBRE = "European Observatory of Drone Incidents";
 /** El nombre en español, al lado del oficial en la portada y en el pie de las páginas de texto. */
@@ -52,17 +54,21 @@ export const CORREO_AUTOR: string = (
   ""
 ).trim();
 
-/** La versión (AAAA-MM, en UTC) que se cita para unos datos actualizados en `instante`. */
-export function versionDeDatos(instante: string): string {
-  return new Date(instante).toISOString().slice(0, 7);
-}
+/** El DOI de la versión archivada más reciente (configuracion/versiones_archivadas.json, la primera). */
+export const DOI_ARCHIVADO: string = archivadas.versiones[0]?.doi ?? "";
 
-/** La cita recomendada de la versión AAAA-MM. */
-export function citaRecomendada(version: string, idioma: Idioma): string {
-  const anio = version.slice(0, 4);
+/**
+ * La cita que llevan dentro los ficheros de datos actualizados en `instante`: son los datos vivos a
+ * la fecha de actualización del fichero y, para citarlos, se usa el DOI de la versión archivada más
+ * reciente (las versiones mensuales se retiraron el 3 de noviembre de 2026). La misma que
+ * configuracion/licencia_datos.json (recogida/licencia.py; un test lo comprueba).
+ */
+export function citaDeLosDatos(instante: string, idioma: Idioma): string {
+  const anio = new Date(instante).toISOString().slice(0, 4);
+  const doi = `https://doi.org/${DOI_ARCHIVADO}`;
   return idioma === "en"
-    ? `Alaniz Pintos, L. (${anio}). ${NOMBRE}. Version ${version}. ${ORIGEN}. Licence ${LICENCIA_DATOS}.`
-    : `Alaniz Pintos, L. (${anio}). ${NOMBRE}. Versión ${version}. ${ORIGEN}. Licencia ${LICENCIA_DATOS}.`;
+    ? `Alaniz Pintos, L. (${anio}). ${NOMBRE}. Live data as of this file's update date. ${ORIGEN}. Licence ${LICENCIA_DATOS}. To cite the data, use the latest archived version: ${doi}`
+    : `Alaniz Pintos, L. (${anio}). ${NOMBRE}. Datos vivos a la fecha de actualización de este fichero. ${ORIGEN}. Licencia ${LICENCIA_DATOS}. Para citar los datos, use la versión archivada más reciente: ${doi}`;
 }
 
 /** El autor como persona de schema.org, con su ORCID. */

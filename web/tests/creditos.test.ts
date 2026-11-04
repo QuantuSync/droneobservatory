@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { AUTOR_DATOS, metadatosLicencia } from "../src/datos/licencia.ts";
-import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, ORCID_URL, autorEstructurado, citaRecomendada } from "../src/sitio.ts";
+import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, ORCID_URL, autorEstructurado, citaDeLosDatos, DOI_ARCHIVADO } from "../src/sitio.ts";
 import { html } from "../src/texto/html.ts";
 import { marco, paginaServicio } from "../src/texto/paginas.ts";
 import type { PaginaTexto } from "../src/texto/paginas.ts";
@@ -27,8 +27,9 @@ describe("créditos del autor", () => {
     expect(CORREO_AUTOR).toBe("autor@ejemplo.org");
     expect(CONTACTO).toBe(CORREO_AUTOR);
     for (const idioma of ["es", "en"] as const) {
-      const esperada = configuracion.cita[idioma].replace("{anio}", "2026").replace("{version}", "2026-11");
-      expect(citaRecomendada("2026-11", idioma)).toBe(esperada);
+      const esperada = configuracion.cita[idioma].replace("{anio}", "2026").replace("{doi}", DOI_ARCHIVADO);
+      expect(citaDeLosDatos("2026-11-04T09:17Z", idioma)).toBe(esperada);
+      expect(esperada).not.toMatch(/Versi[oó]n 20/);
     }
   });
 
@@ -41,7 +42,8 @@ describe("créditos del autor", () => {
   it("la descarga lleva autor, ORCID, licencia, cita y dirección", () => {
     const m = metadatosLicencia("2026-12-31T23:30:00Z");
     expect(m.autor.orcid).toBe(ORCID_URL);
-    expect(m.cita.es).toContain("Versión 2026-12.");
+    expect(m.cita.es).toContain("Datos vivos a la fecha de actualización de este fichero.");
+    expect(m.cita.es).not.toContain("Versión 2026-12");
     expect(m.fuente).toBe("https://droneobservatory.eu/");
   });
 
