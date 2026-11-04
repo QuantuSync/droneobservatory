@@ -1,6 +1,16 @@
 # Revisión mensual de las acciones fijadas por hash y de las dependencias de pip y de npm: un solo PR
 # por ecosistema (el 1 de noviembre de 2026 doce PR de golpe atascaron la CI). TypeScript, sin
 # versiones mayores: la 7 no la soporta aún typescript-eslint y tumbaba el PR del grupo (PR 391).
+#
+# Las actualizaciones de seguridad van aparte y abren su propio PR siempre (4 de noviembre de 2026):
+# - open-pull-requests-limit solo cuenta los PR de versión; los de seguridad tienen su propio tope
+#   (10 abiertos) y no esperan a que se cierre el PR mensual del grupo.
+# - Los grupos llevan «applies-to: version-updates»: el PR mensual nunca recoge una de seguridad.
+# - Un PR de dependabot cerrado sin fusionar hace que no vuelva a proponer esa versión, tampoco por
+#   seguridad («pull_request_exists_for_latest_version»: pypdf 6.21.4, cerrado en el PR 375 el
+#   1 de noviembre). Un PR de seguridad no se cierra sin fusionar; si se cierra, la subida se hace a
+#   mano en otro PR.
+# - Los ignore valen también para las de seguridad: aquí solo las mayores de TypeScript.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -10,6 +20,7 @@ updates:
     open-pull-requests-limit: 1
     groups:
       acciones:
+        applies-to: version-updates
         patterns:
           - "*"
   - package-ecosystem: pip
@@ -19,6 +30,7 @@ updates:
     open-pull-requests-limit: 1
     groups:
       pip:
+        applies-to: version-updates
         patterns:
           - "*"
   - package-ecosystem: npm
@@ -32,5 +44,6 @@ updates:
           - version-update:semver-major
     groups:
       npm:
+        applies-to: version-updates
         patterns:
           - "*"
