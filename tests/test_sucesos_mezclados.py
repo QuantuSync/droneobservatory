@@ -472,7 +472,18 @@ def test_el_que_se_queda_sin_articulos_propios_toma_los_de_su_parte(
     monkeypatch.setattr(revisados, "REEXTRAER_DESDE", "2026-10-01T00:00Z")
     llamadas: list[str] = []
     monkeypatch.setattr(revisados, "_extraer", _extractor_falso(llamadas))
+    reabsorbidos: list[str] = []
+    reabsorber = revisados.reabsorber
+
+    def espia(almacen_: Almacen, id_: str, *resto: Any) -> bool:
+        reabsorbidos.append(id_)
+        return reabsorber(almacen_, id_, *resto)
+
+    monkeypatch.setattr(revisados, "reabsorber", espia)
     revisados.separar(almacen, AHORA, MODELOS, cliente=object())
+    # Reabsorbe en la misma pasada en que la vuelve a extraer, no una hora después
+    # (EODI-2025-00200, 3 de noviembre de 2026).
+    assert reabsorbidos == ["EODI-2026-00541"]
     candidatos = {c["id"]: c for c in almacen.candidatos()}
     assert candidatos["CAND-M"]["articulos"] == [sulina[0][0]]
     assert "CAND-M" in llamadas
