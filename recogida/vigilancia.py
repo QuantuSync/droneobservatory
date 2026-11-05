@@ -57,7 +57,8 @@ Problemas (cada uno con su frase):
 - **goatcounter**: el contador de visitas (https://stats.droneobservatory.eu) no responde a /status
   (dos intentos), en el servidor que lo tiene;
 - **resumen**: el resumen diario privado del día anterior (recogida/visitas.py) no ha salido a las
-  09:00 de Madrid;
+  08:30 de Madrid (sin gracia: la incidencia se abre a esa hora, y se avisa una vez por día al
+  tema privado del responsable);
 - **copia_visitas**: la última copia de la base de visitas tiene más de 3 horas;
 - **visitas_privadas**: el panel de visitas, su API o el tema privado del resumen responden sin
   usuario;
@@ -141,8 +142,12 @@ GRACIA = timedelta(minutes=30)
 SIN_GRACIA = frozenset({
     "publicacion", "recogida", "visitas_privadas", "prueba_restauracion", "base_solo_disco",
     "barrera_resoluciones", "barrera_atascada", "mapa_parado", "control_fichas",
-    "version_anterior",
+    "version_anterior", "resumen",
 })  # fmt: skip
+# El resumen diario sin enviar a su hora límite (visitas.HORA_LIMITE_RESUMEN) también se avisa, una
+# vez por día, al tema privado del responsable: la incidencia sola llega por correo.
+TITULO_AVISO_RESUMEN = "EODI · Resumen diario sin enviar"
+Avisar = Callable[[str], None]
 DIAS_RESUELTOS = timedelta(days=8)
 # Las fichas en versión anterior que cuenta la frase de la incidencia.
 MAX_VERSION_ANTERIOR = 5
@@ -499,8 +504,12 @@ def componer(
     privacidad: Callable[[], list[str]] = visitas.fallos_de_privacidad,
     certificados: Callable[[], list[str]] = certificados_que_caducan,
     guardian: Path | None = None,
+    aviso_privado: Callable[[], Avisar | None] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
-    """salud.json y las líneas de detalle para el diario (con los identificadores)."""
+    """salud.json y las líneas de detalle para el diario (con los identificadores).
+
+    `aviso_privado` da, si hace falta avisar, la función que manda un aviso al tema privado del
+    responsable (None: sin avisos, como en las pruebas)."""
     detalle: list[str] = []
     problemas: list[dict[str, str]] = []
     avisos: list[dict[str, str]] = []
@@ -729,6 +738,7 @@ def componer(
     web = _leer_json(secretos / "publicacion.json").get("web") or {}
     problemas, observacion = persistentes(problemas, memoria, ahora)
     avisos = observacion + avisos
+    avisar_resumen(problemas, memoria, ahora, aviso_privado)
     salud: dict[str, Any] = {
         "version": VERSION,
         "generado": _iso(ahora),
@@ -807,6 +817,34 @@ def _escribir(ruta: Path, datos: dict[str, Any]) -> None:
     os.replace(temporal, ruta)
 
 
+def avisar_resumen(
+    problemas: list[dict[str, str]],
+    memoria: dict[str, Any],
+    ahora: datetime,
+    aviso_privado: Callable[[], Avisar | None] | None,
+) -> bool:
+    """Si el resumen diario es problema, lo avisa una vez por día al tema privado; anota el día en
+    `memoria['aviso_resumen']` solo si el aviso ha salido (si no, lo intenta la pasada siguiente).
+    """
+    problema = next((p for p in problemas if p["id"] == "resumen"), None)
+    if problema is None or aviso_privado is None:
+        return False
+    dia = (ahora.astimezone(visitas.MADRID).date() - timedelta(days=1)).isoformat()
+    if memoria.get("aviso_resumen") == dia:
+        return False
+    try:
+        avisar = aviso_privado()
+        if avisar is None:
+            return False
+        avisar(problema["frase"])
+    except (OSError, ValueError) as error:
+        registro.warning("aviso del resumen sin enviar: %s", error)
+        return False
+    memoria["aviso_resumen"] = dia
+    registro.info("aviso del resumen del %s enviado a %s", dia, visitas.TEMA_RESUMEN)
+    return True
+
+
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     opciones.add_argument("--sin-subir", action="store_true")
@@ -815,7 +853,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     secretos = Path(os.environ.get("EODI_SECRETOS") or casa() / ".eodi")
     datos = Path(os.environ.get("EODI_SEGUIMIENTO_DATOS") or casa() / "datos" / "seguimiento")
-    salud, detalle = componer(datetime.now(UTC), secretos, datos, casa(), guardian=GUARDIAN)
+    salud, detalle = componer(
+        datetime.now(UTC), secretos, datos, casa(), guardian=GUARDIAN,
+        aviso_privado=lambda: visitas.avisador_privado(TITULO_AVISO_RESUMEN, secretos),
+    )  # fmt: skip
     for linea in detalle:
         registro.info("%s", linea)
     for problema in salud["problemas"]:

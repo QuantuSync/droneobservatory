@@ -17,8 +17,8 @@ cada una por su cuenta (un fallo de una no para las otras):
    (almacen/replica.py) la lleva cifrada como el resto del archivo.
 3. **Resumen diario**, a partir de las 08:00 de Madrid: el del día anterior (00:00 a 24:00 de
    Madrid) al tema privado `lucas-resumen`, una sola vez. Si el envío falla, la pasada siguiente
-   (5 minutos después) lo repite; si a las 09:00 de Madrid no ha salido, la vigilancia lo da como
-   problema (`resumen`).
+   (5 minutos después) lo repite; si a las 08:30 de Madrid no ha salido, la vigilancia lo da como
+   problema (`resumen`): incidencia y un aviso al mismo tema privado.
 
 Qué cuenta GoatCounter: cada página vista con su sesión, un número aleatorio que dura 8 horas y no
 lleva la dirección IP (servidor/goatcounter_ajustes.py). Visitas = páginas vistas; visitantes
@@ -41,6 +41,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -72,7 +73,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 MADRID = ZoneInfo("Europe/Madrid")
 HORA_RESUMEN = hora(8, 0)
 # Pasada esta hora de Madrid sin el resumen del día anterior, la vigilancia lo da como problema.
-HORA_LIMITE_RESUMEN = hora(9, 0)
+HORA_LIMITE_RESUMEN = hora(8, 30)
 TEMA_RESUMEN = "lucas-resumen"
 TITULO = "EODI · Resumen diario"
 PANEL = "https://stats.droneobservatory.eu/"
@@ -93,6 +94,8 @@ DIAS_MUESTRAS = 40
 CADA_COPIA = timedelta(minutes=55)
 COPIA_ULTIMA = "visitas/ultima.sqlite.gz"
 COPIA_DIARIA = "visitas/diaria/{dia}.sqlite.gz"
+# La copia se comprime por bloques de 1 MB (instantanea).
+BLOQUE_COPIA = 1 << 20
 INTENTOS_ENVIO = 3
 TIEMPO_ESPERA_S = 15
 LIMITE = 5
@@ -1165,9 +1168,16 @@ def enviar_con_reintentos(
 
 # --- Copia de la base de visitas --------------------------------------------------------------
 def instantanea(goatcounter: Path) -> bytes:
-    """Copia coherente de la base de GoatCounter (API de copia de SQLite), comprimida."""
+    """Copia coherente de la base de GoatCounter (API de copia de SQLite), comprimida.
+
+    La base sin comprimir no pasa nunca entera por la memoria: se copia a un fichero temporal y
+    se comprime de ese fichero a otro por bloques; solo vuelve, para subirla, la copia comprimida.
+    Leerla entera de golpe llevó la unidad a su tope de memoria en cuanto la base pasó de unos
+    130 MB (casi todo la tabla `bots` de GoatCounter), y el núcleo la mataba en cada pasada.
+    """
     with tempfile.TemporaryDirectory() as carpeta:
         destino = Path(carpeta) / "copia.sqlite3"
+        comprimida = Path(carpeta) / "copia.sqlite3.gz"
         origen = abrir_goatcounter(goatcounter)
         copia = sqlite3.connect(destino)
         try:
@@ -1175,7 +1185,15 @@ def instantanea(goatcounter: Path) -> bytes:
         finally:
             copia.close()
             origen.close()
-        return gzip.compress(destino.read_bytes(), compresslevel=9, mtime=0)
+        with (
+            destino.open("rb") as entrada,
+            comprimida.open("wb") as bruto,
+            gzip.GzipFile(
+                filename="", mode="wb", fileobj=bruto, compresslevel=9, mtime=0
+            ) as salida,
+        ):
+            shutil.copyfileobj(entrada, salida, BLOQUE_COPIA)
+        return comprimida.read_bytes()
 
 
 def destino_copia() -> Any:
@@ -1263,19 +1281,9 @@ def pasada(
     except (OSError, ValueError) as error:
         registro.warning("suscriptores de ntfy sin muestra: %s", error)
 
-    copia = estado.get("copia") or {}
-    ultima = _instante(copia.get("ultima"))
-    if ultima is None or ahora - ultima >= CADA_COPIA:
-        try:
-            registro.info(
-                "copia de las visitas: %s",
-                copiar(rutas.goatcounter, estado, ahora, cliente_copia()),
-            )
-            estado["copia"].pop("error", None)
-        except (OSError, ValueError, sqlite3.Error) as error:
-            estado.setdefault("copia", {})["error"] = f"{type(error).__name__}: {error}"[:200]
-            registro.warning("copia de las visitas sin hacer: %s", error)
-
+    # El resumen va antes que la copia, y el estado se guarda entre los dos: si la copia muere
+    # (el 5 de noviembre de 2026 el núcleo la mataba por memoria), el resumen ya ha salido y
+    # consta como enviado.
     dia = dia_pendiente(estado, ahora)
     if dia is not None and enviar is not None:
         resumen: Documento = dict(estado.get("resumen") or {})
@@ -1303,14 +1311,27 @@ def pasada(
             )  # fmt: skip
         except (OSError, ValueError, sqlite3.Error) as error:
             registro.warning("incidentes publicados sin anotar: %s", error)
-
     _escribir_json(ruta_estado, estado)
+
+    copia = estado.get("copia") or {}
+    ultima = _instante(copia.get("ultima"))
+    if ultima is None or ahora - ultima >= CADA_COPIA:
+        try:
+            registro.info(
+                "copia de las visitas: %s",
+                copiar(rutas.goatcounter, estado, ahora, cliente_copia()),
+            )
+            estado["copia"].pop("error", None)
+        except (OSError, ValueError, sqlite3.Error) as error:
+            estado.setdefault("copia", {})["error"] = f"{type(error).__name__}: {error}"[:200]
+            registro.warning("copia de las visitas sin hacer: %s", error)
+        _escribir_json(ruta_estado, estado)
     return estado
 
 
 # --- Vigilancia -------------------------------------------------------------------------------
 def problemas_para_vigilancia(estado: Documento, ahora: datetime) -> list[dict[str, str]]:
-    """El resumen del día anterior no ha salido a las 09:00 de Madrid, o la copia de la base de
+    """El resumen del día anterior no ha salido a las 08:30 de Madrid, o la copia de la base de
     visitas tiene más de 3 horas."""
     problemas: list[dict[str, str]] = []
     local = ahora.astimezone(MADRID)
