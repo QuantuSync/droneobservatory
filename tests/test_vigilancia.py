@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from recogida import reinicio, vigilancia
+from recogida import reinicio, vigilancia, visitas
 
 AHORA = datetime(2026, 10, 7, 14, 50, tzinfo=UTC)
 
@@ -23,7 +23,7 @@ def sin_gracia(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(vigilancia, "dias_de_certificado", lambda _host: 60.0)
     # La limpieza diaria de robots de la base de visitas, al día (la suya tiene prueba propia).
     monkeypatch.setattr(
-        vigilancia.visitas,
+        visitas,
         "leer_purga",
         lambda ruta=None: {"momento": _iso(AHORA - timedelta(hours=3)), "correcto": True},
     )
