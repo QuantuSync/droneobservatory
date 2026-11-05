@@ -5,6 +5,7 @@ autoridad de EODI-2026-00512 (el Consejo de Seguridad búlgaro tomado por moldav
 
 import copy
 import json
+import sys
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -447,6 +448,96 @@ def test_las_fichas_sin_punto_ni_hora_del_mismo_dia_entran_en_el_conjunto() -> N
         "EODI-2026-00727",
         "EODI-2026-00741",
     }
+
+
+def _moldavia() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """El dron que entró en Moldavia desde Ucrania el 4 de noviembre de 2026 a las 04:23 (hora
+    local): EODI-2026-00748 con su punto y la hora, y dos fichas de la misma recogida que solo
+    sabían el país (00749 sin hora, 00750 con ella), salidas de candidatos que GDELT situó en
+    otros sitios (el Danubio, Chisináu)."""
+    buena = _ficha(
+        "EODI-2026-00748",
+        "MD",
+        "2026-11-04T02:23Z",
+        "minuto",
+        punto=(48.03, 28.7),
+        nivel="localidad",
+        frase="o dronă a pătruns în spațiul aerian al Republicii Moldova la ora 04:23",
+    )
+    sin_hora = _ficha(
+        "EODI-2026-00749",
+        "MD",
+        "2026-11-04T00:00Z",
+        nivel="pais",
+        frase="Ministerul Apărării: o dronă a survolat teritoriul țării",
+    )
+    con_hora = _ficha(
+        "EODI-2026-00750",
+        "MD",
+        "2026-11-04T02:23Z",
+        "minuto",
+        nivel="pais",
+        frase="drona a fost detectată la ora 04:23",
+    )
+    return buena, sin_hora, con_hora  # fmt: skip
+
+
+def test_el_filtro_compara_con_las_fichas_de_la_misma_recogida(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Bloque A del 5 de noviembre de 2026: los duplicados de 00748 (y los de 00719 el 31/10)
+    nacieron en la misma recogida que se unieron. El conjunto sale de la base en cada ficha, así
+    que lleva las fichas creadas en esa misma pasada y aún sin publicar, y lo que el filtro une
+    deja de estar en el conjunto de la siguiente."""
+    monkeypatch.setattr(sys.modules[__name__], "AHORA", datetime(2026, 11, 4, 8, 17, tzinfo=UTC))
+    buena, sin_hora, con_hora = _moldavia()
+    almacen = _base(buena, sin_hora, con_hora)
+    frase = "o dronă a pătruns în spațiul aerian al Republicii Moldova la ora 04:23"
+    cliente = Cliente([
+        _respuesta(mismo_suceso="EODI-2026-00749", fecha_frase=frase, lugar_frase=frase),
+        _respuesta(mismo_suceso="EODI-2026-00748", fecha_frase=frase, lugar_frase=frase),
+    ])  # fmt: skip
+    ctx = _contexto(almacen, cliente)
+    # Ninguna estaba vista: las tres son de la misma recogida.
+    entrada.filtrar(ctx, set())
+    assert "EODI-2026-00749 |" in cliente.pedidas[0] and "EODI-2026-00750 |" in cliente.pedidas[0]
+    assert ctx.nuevas[entrada.clave("EODI-2026-00748")]["decision"] == entrada.UNIDA
+    # 00749 ya no es activa: ni se pasa ni aparece en la lista de 00750.
+    assert entrada.clave("EODI-2026-00749") not in ctx.nuevas
+    assert "EODI-2026-00749 |" not in cliente.pedidas[1]
+    assert "EODI-2026-00748 |" in cliente.pedidas[1]
+    decision = ctx.nuevas[entrada.clave("EODI-2026-00750")]
+    assert decision["decision"] == entrada.UNIDA and decision["conserva"] == "EODI-2026-00748"
+    for id_ in ("EODI-2026-00749", "EODI-2026-00750"):
+        unida = almacen.incidente(id_)
+        assert unida is not None and unida["fusionado_en"] == "EODI-2026-00748"
+
+
+def test_el_filtro_compara_con_la_ficha_retenida_y_sin_publicar(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """EODI-2026-00719 (Iasi, 31/10) estuvo retenida por el filtro; la ficha que llega después
+    (como 00742, el 1/11) la tiene en su conjunto aunque no esté publicada."""
+    monkeypatch.setattr(sys.modules[__name__], "AHORA", datetime(2026, 11, 1, 17, 17, tzinfo=UTC))
+    nombre = "Iași"
+    iasi = _ficha(
+        "EODI-2026-00719", "RO", "2026-10-31T00:00Z", frase=f"RO-Alert în județul {nombre}"
+    )
+    iasi["lugar"] = {"pais": "RO", "nivel": "region", "region": nombre, "suceso": nombre}
+    nueva = _ficha("EODI-2026-00742", "RO", "2026-10-31T00:00Z", publicada="2026-11-01T17:00Z",
+                   frase="drone deasupra județului")  # fmt: skip
+    almacen = _base(iasi, nueva)
+    retenida = {"decision": entrada.RETENER, "huella": entrada.huella(iasi),
+                "motivo": "ninguna frase da la fecha del suceso"}  # fmt: skip
+    almacen.guardar_controles({entrada.clave("EODI-2026-00719"): retenida}, "2026-10-31T18:17:03Z")
+    frase = "drone deasupra județului"
+    cliente = Cliente([_respuesta(mismo_suceso="EODI-2026-00719", fecha_frase=frase,
+                                  lugar_frase=frase)])  # fmt: skip
+    ctx = _contexto(almacen, cliente)
+    entrada.filtrar(ctx, set())
+    # La retenida no se vuelve a pasar (su decisión sigue valiendo) y está en la lista de la nueva.
+    assert len(cliente.pedidas) == 1 and "EODI-2026-00719 |" in cliente.pedidas[0]
+    assert ctx.nuevas[entrada.clave("EODI-2026-00742")]["decision"] == entrada.UNIDA
 
 
 def test_lo_retenido_sin_fecha_se_retira_a_las_6_horas() -> None:
