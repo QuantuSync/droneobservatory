@@ -94,6 +94,10 @@ DIAS_MUESTRAS = 40
 CADA_COPIA = timedelta(minutes=55)
 COPIA_ULTIMA = "visitas/ultima.sqlite.gz"
 COPIA_DIARIA = "visitas/diaria/{dia}.sqlite.gz"
+# Lo que dejó la limpieza diaria de robots de la base de GoatCounter (servidor privado:
+# goatcounter_ajustes.py purgar-bots), junto a la base. Más de 26 horas sin ella es un problema.
+PURGA = "purga_bots.json"
+MAX_SIN_PURGA = timedelta(hours=26)
 # La copia se comprime por bloques de 1 MB (instantanea).
 BLOQUE_COPIA = 1 << 20
 INTENTOS_ENVIO = 3
@@ -931,6 +935,8 @@ class Datos:
     oficiales_en_pausa: dict[str, int] = field(default_factory=dict)
     # La espera media de la web antes de avisar, en minutos (avisos_ntfy.espera_del_dia).
     espera_web: float | None = None
+    # Lo que ocupa en disco la base de GoatCounter (con su diario WAL), en bytes.
+    base_visitas: int | None = None
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -991,6 +997,8 @@ def texto_resumen(d: Datos) -> str:
             ]
         else:
             lineas += ["Dispositivos: sin visitantes", ""]
+    if d.base_visitas is not None:
+        lineas += [f"Base de visitas: {numero(round(d.base_visitas / 1_000_000))} MB", ""]
     s = d.suscriptores
     lineas.append("AVISOS (ntfy)")
     if s.conectados is None:
@@ -1147,7 +1155,18 @@ def reunir(
         control=control_del_dia(secretos / CONTROL, dia) if secretos else None,
         guardian=guardian_del_dia(guardian, dia) if guardian else None,
         rectificaciones=rectificaciones_del_dia(base, dia),
+        base_visitas=tamano_base(goatcounter),
     )
+
+
+def tamano_base(goatcounter: Path) -> int | None:
+    """Lo que ocupa la base de GoatCounter en disco, con su diario WAL; None si no se puede ver."""
+    try:
+        total = goatcounter.stat().st_size
+    except OSError:
+        return None
+    wal = goatcounter.with_name(goatcounter.name + "-wal")
+    return total + (wal.stat().st_size if wal.exists() else 0)
 
 
 def enviar_con_reintentos(
@@ -1330,10 +1349,17 @@ def pasada(
 
 
 # --- Vigilancia -------------------------------------------------------------------------------
-def problemas_para_vigilancia(estado: Documento, ahora: datetime) -> list[dict[str, str]]:
-    """El resumen del día anterior no ha salido a las 08:30 de Madrid, o la copia de la base de
-    visitas tiene más de 3 horas."""
+def problemas_para_vigilancia(
+    estado: Documento, ahora: datetime, purga: Documento | None = None
+) -> list[dict[str, str]]:
+    """El resumen del día anterior no ha salido a las 08:30 de Madrid, la copia de la base de
+    visitas tiene más de 3 horas o (con `purga`, lo que dejó la limpieza diaria de robots) esa
+    limpieza falló o lleva más de 26 horas sin pasar."""
     problemas: list[dict[str, str]] = []
+    if purga is not None:
+        frase = problema_de_la_purga(purga, ahora)
+        if frase is not None:
+            problemas.append({"id": "purga_bots", "frase": frase})
     local = ahora.astimezone(MADRID)
     resumen = estado.get("resumen") or {}
     esperado = (local.date() - timedelta(days=1)).isoformat()
@@ -1354,6 +1380,33 @@ def problemas_para_vigilancia(estado: Documento, ahora: datetime) -> list[dict[s
             + ": más de 3 horas sin copia.",
         })  # fmt: skip
     return problemas
+
+
+def ruta_purga() -> Path:
+    return rutas_del_entorno().goatcounter.with_name(PURGA)
+
+
+def leer_purga(ruta: Path | None = None) -> Documento:
+    """Lo que dejó la limpieza de robots; {} si no está o no se puede leer."""
+    return _leer_json(ruta or ruta_purga())
+
+
+def problema_de_la_purga(purga: Documento, ahora: datetime) -> str | None:
+    momento = _instante(purga.get("momento"))
+    if purga.get("correcto") is False:
+        return (
+            "La limpieza diaria de robots de la base de visitas falló"
+            + (f" ({purga['error']})" if purga.get("error") else "")
+            + (f" el {momento:%Y-%m-%d %H:%M} UTC" if momento else "")
+            + ": la base de GoatCounter vuelve a crecer."
+        )
+    if momento is None or ahora - momento > MAX_SIN_PURGA:
+        return (
+            "La limpieza diaria de robots de la base de visitas no ha pasado desde "
+            + (f"el {momento:%Y-%m-%d %H:%M} UTC" if momento else "hace un tiempo desconocido")
+            + " (más de 26 horas)."
+        )
+    return None
 
 
 def goatcounter_responde(intentos: int = 2, espera_s: float = 5) -> bool:

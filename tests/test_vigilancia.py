@@ -21,6 +21,12 @@ def sin_gracia(monkeypatch: pytest.MonkeyPatch) -> None:
     red: los certificados, al día."""
     monkeypatch.setattr(vigilancia, "GRACIA", timedelta(0))
     monkeypatch.setattr(vigilancia, "dias_de_certificado", lambda _host: 60.0)
+    # La limpieza diaria de robots de la base de visitas, al día (la suya tiene prueba propia).
+    monkeypatch.setattr(
+        vigilancia.visitas,
+        "leer_purga",
+        lambda ruta=None: {"momento": _iso(AHORA - timedelta(hours=3)), "correcto": True},
+    )
 
 
 def test_un_certificado_sin_renovar_es_problema() -> None:
@@ -304,6 +310,14 @@ def test_contador_de_visitas_resumen_y_su_copia(tmp_path: Path) -> None:
     problemas = {p["id"]: p["frase"] for p in salud["problemas"]}
     assert set(problemas) == {"resumen", "copia_visitas"}
     assert "2026-10-06" in problemas["resumen"] and "sin red" in problemas["resumen"]
+    # La limpieza diaria de robots de la base de visitas que falla.
+    visitas_al_dia(secretos)
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True, lambda: True, list,
+        purga_visitas=lambda: {"momento": _iso(AHORA), "correcto": False, "error": "sin disco"},
+    )  # fmt: skip
+    problemas = {p["id"]: p["frase"] for p in salud["problemas"]}
+    assert set(problemas) == {"purga_bots"} and "sin disco" in problemas["purga_bots"]
 
 
 def test_el_resumen_sin_enviar_se_avisa_una_vez_al_dia(
