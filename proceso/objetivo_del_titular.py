@@ -17,6 +17,7 @@ from functools import cache
 
 from esquema import Documento
 from proceso import noticias
+from proceso.reaccion import despegan_sin_dron_encima
 from proceso.ubicacion import CATEGORIA_LUGAR
 
 # Margen sobre el radio de la instalación: el punto de la ficha puede ser el del pueblo de al lado.
@@ -71,6 +72,11 @@ def objetivo_nombrado(incidente: Documento) -> Documento | None:
     nomenclator = noticias.nomenclator()
     hallados: set[str] = set()
     for texto in _textos(incidente):
+        if despegan_sin_dron_encima(texto):
+            # La base de la que despegan los cazas no es la instalación afectada (EODI-2026-00753:
+            # «Armata a ridicat două avioane F-16 de la Baza Borcea»): proceso/reaccion.py. Una
+            # alerta sí puede nombrarla («Alertă în Portul Constanța», EODI-2026-00152).
+            continue
         for id_ in noticias.lugares_en(texto, nomenclator):
             sitio = nomenclator.lugares[id_]
             if sitio.tipo not in TIPOS or sitio.pais != lugar.get("pais"):

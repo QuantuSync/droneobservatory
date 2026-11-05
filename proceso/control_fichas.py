@@ -53,6 +53,8 @@ from proceso.presencia import (
     presencias_revisadas,
     pruebas_fisicas_confirmadas,
 )
+from proceso.reaccion import reacciona_a_una_alerta as reacciona_a_una_alerta
+from proceso.reaccion import solo_reacciona
 from proceso.ubicacion import (
     CATEGORIA_LUGAR,
     DECIMALES,
@@ -596,22 +598,6 @@ def lugar_de_nombre(nombre: str, nivel: str, pais: str, region: str | None,
     return hallada, "localidad"
 
 
-# Una alerta o aviso a la población de una región (RO-Alert, sirena, alarma aérea): la frase que la
-# nombra cuenta la reacción de quien la recibe, no dónde estuvo el dron.
-_ALERTA = re.compile(
-    r"ro-alert|\balert\w*|\balarm\w*|\bavertiz\w*|\bwarnung\w*|\bwarning\b|\bostrze[zż]\w*|"
-    r"\bsiren\w*|\bsirén\w*|\bsyren\w*|\bpovitrian\w* tryvo\w*|тривог\w*|тревог\w*|"
-    r"\bperspėj\w*|\bbrīdinā\w*|\bhoiatus\w*|\bvarsl\w*|\bvaroitu\w*|\bσυναγερμ\w*",
-    re.IGNORECASE,
-)
-
-
-def reacciona_a_una_alerta(frase: str) -> bool:
-    """La frase cuenta que algo pasó a raíz de una alerta regional (cerrar el espacio aéreo de un
-    aeropuerto tras un RO-Alert), no que el dron estuviera allí."""
-    return bool(_ALERTA.search(frase or ""))
-
-
 def _lugar(c: Correccion, v: Verificada, nom: Nomenclator | None) -> None:
     d = c.incidente
     dato = v.datos.get("lugar")
@@ -630,11 +616,12 @@ def _lugar(c: Correccion, v: Verificada, nom: Nomenclator | None) -> None:
     if not dentro_del_pais(pais, sitio.lat, sitio.lon):
         c.dudas.append(f"lugar «{valor['nombre']}» fuera de {pais}")
         return
-    if nivel == "instalacion" and reacciona_a_una_alerta(frase):
+    if nivel == "instalacion" and solo_reacciona(frase):
         # Una instalación que solo reacciona a una alerta de su región no es el sitio del dron
         # (EODI-2026-00719: el aeropuerto de Iasi cerró «în urma mesajului RO-Alert», y la alerta
-        # era para el norte del județ).
-        c.dudas.append(f"lugar «{valor['nombre']}»: la frase cuenta la reacción a una alerta")
+        # era para el norte del județ), ni la base de la que despegan los cazas (EODI-2026-00747,
+        # EODI-2026-00753): proceso/reaccion.py.
+        c.dudas.append(f"lugar «{valor['nombre']}»: la frase cuenta solo su reacción")
         return
     lugar = {k: v2 for k, v2 in d["lugar"].items() if k in {"region", "historial", "otros_lugares"}}
     lugar.update(pais=pais, nivel=nivel, radio_km=sitio.radio_km, geocodificacion="frase_origen",
