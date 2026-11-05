@@ -306,6 +306,52 @@ def test_contador_de_visitas_resumen_y_su_copia(tmp_path: Path) -> None:
     assert "2026-10-06" in problemas["resumen"] and "sin red" in problemas["resumen"]
 
 
+def test_el_resumen_sin_enviar_se_avisa_una_vez_al_dia(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Sin gracia (la hora límite ya es la espera) y con un aviso privado, solo uno por día; si
+    el aviso no sale, se intenta en la pasada siguiente."""
+    monkeypatch.setattr(vigilancia, "GRACIA", timedelta(minutes=30))
+    secretos, datos = preparar(
+        tmp_path, AHORA - timedelta(seconds=20), AHORA - timedelta(minutes=47)
+    )
+    sistema = Sistema(0, AHORA - timedelta(minutes=17), [])
+    copia = lambda: AHORA - timedelta(minutes=18)  # noqa: E731
+    (secretos / "ntfy_observatorio").write_text("tk_x", encoding="utf-8")
+    (secretos / "visitas.json").write_text(
+        json.dumps({
+            "resumen": {"dia": "2026-10-05"},
+            "copia": {"ultima": _iso(AHORA - timedelta(minutes=30))},
+        }),
+        encoding="utf-8",
+    )  # fmt: skip
+    avisos: list[str] = []
+    fallar = [True]
+
+    def avisar(texto: str) -> None:
+        if fallar[0]:
+            raise OSError("sin red")
+        avisos.append(texto)
+
+    def pasar() -> list[str]:
+        salud, _ = vigilancia.componer(
+            AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True, lambda: True, list,
+            aviso_privado=lambda: avisar,
+        )  # fmt: skip
+        return [p["id"] for p in salud["problemas"]]
+
+    assert pasar() == ["resumen"]  # incidencia en la primera pasada, sin esperar la gracia
+    assert avisos == []
+    fallar[0] = False
+    pasar()
+    pasar()
+    assert len(avisos) == 1 and "2026-10-06" in avisos[0]
+    registro = json.loads((secretos / "vigilancia.json").read_text(encoding="utf-8"))
+    assert registro["aviso_resumen"] == "2026-10-06"
+    # Sin quien avise (pruebas, fuera del servidor) no pasa nada.
+    assert not vigilancia.avisar_resumen([{"id": "resumen", "frase": "x"}], {}, AHORA, lambda: None)
+
+
 # --- Que se cura sola -------------------------------------------------------------------------
 def test_una_o_dos_recogidas_fallidas_son_aviso_y_la_tercera_problema(tmp_path: Path) -> None:
     secretos, datos = preparar(tmp_path, AHORA, AHORA - timedelta(minutes=30))

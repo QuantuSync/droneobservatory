@@ -305,7 +305,7 @@ def test_pasada_envia_una_vez_a_partir_de_las_8_y_reintenta(
     estado = pasar(datetime(2026, 10, 12, 6, 0, tzinfo=UTC))
     assert estado["resumen"]["fallos_seguidos"] == 1 and "sin red" in estado["resumen"]["error"]
     assert (
-        visitas.problemas_para_vigilancia(estado, datetime(2026, 10, 12, 6, 30, tzinfo=UTC)) == []
+        visitas.problemas_para_vigilancia(estado, datetime(2026, 10, 12, 6, 25, tzinfo=UTC)) == []
     )
     # 08:05: sale el del día 11, al tema privado; después no se repite.
     fallar[0] = False
@@ -321,7 +321,48 @@ def test_pasada_envia_una_vez_a_partir_de_las_8_y_reintenta(
     assert len(muestras) == 4 and json.loads(muestras[0])["suscriptores"] == 7
 
 
+def test_si_la_copia_muere_el_resumen_ya_consta_enviado(
+    goatcounter: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """El 5 de noviembre de 2026 el núcleo mataba la copia por memoria y, con ella, la pasada
+    entera antes del resumen: ahora el resumen sale y se guarda antes de la copia."""
+    monkeypatch.setattr("recogida.visitas.time.sleep", lambda _s: None)
+    rutas = _rutas(tmp_path, goatcounter)
+    enviados: list[dict[str, Any]] = []
+
+    def copia_que_muere() -> Any:
+        raise MemoryError("sin memoria")
+
+    with pytest.raises(MemoryError):
+        visitas.pasada(
+            rutas, datetime(2026, 10, 12, 6, 0, tzinfo=UTC), enviados.append,
+            lambda: {"ntfy_subscribers_total": 1.0}, copia_que_muere, lambda _orden: "",
+            lambda: [],
+        )  # fmt: skip
+    assert [c["topic"] for c in enviados] == ["lucas-resumen"]
+    guardado = json.loads((rutas.secretos / visitas.ESTADO).read_text(encoding="utf-8"))
+    assert guardado["resumen"]["dia"] == "2026-10-11"
+
+
+def test_la_copia_se_comprime_por_bloques_sin_cambiar_la_base(
+    goatcounter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(visitas, "BLOQUE_COPIA", 512)
+    copia = gzip.decompress(visitas.instantanea(goatcounter))
+    assert copia.startswith(b"SQLite format 3")
+    # La misma base da la misma copia: la huella solo cambia si cambia la base.
+    assert visitas.instantanea(goatcounter) == visitas.instantanea(goatcounter)
+
+
 def test_problemas_para_la_vigilancia() -> None:
+    # El resumen tiene hasta las 08:30 de Madrid.
+    a_las_ocho_y_veinte = datetime(2026, 10, 12, 6, 20, tzinfo=UTC)
+    a_las_ocho_y_media = datetime(2026, 10, 12, 6, 30, tzinfo=UTC)
+    sin_enviar_hoy = {"resumen": {"dia": "2026-10-10"}, "copia": {"ultima": "2026-10-12T06:00:00Z"}}
+    assert visitas.problemas_para_vigilancia(sin_enviar_hoy, a_las_ocho_y_veinte) == []
+    assert [
+        p["id"] for p in visitas.problemas_para_vigilancia(sin_enviar_hoy, a_las_ocho_y_media)
+    ] == ["resumen"]
     a_las_nueve = datetime(2026, 10, 12, 7, 1, tzinfo=UTC)  # 09:01 de Madrid
     sin_enviar = {"resumen": {"dia": "2026-10-10"}, "copia": {"ultima": "2026-10-12T06:30:00Z"}}
     assert [p["id"] for p in visitas.problemas_para_vigilancia(sin_enviar, a_las_nueve)] == [
