@@ -374,6 +374,48 @@ def test_problemas_para_la_vigilancia() -> None:
     ]
 
 
+def test_la_vigilancia_ve_la_limpieza_de_robots_fallida_o_parada() -> None:
+    ahora = datetime(2026, 11, 6, 9, 0, tzinfo=UTC)
+    bien = {"resumen": {"dia": "2026-11-05"}, "copia": {"ultima": "2026-11-06T08:30:00Z"}}
+    hecha = {"momento": "2026-11-06T01:25:03+00:00", "correcto": True, "borradas": 20000}
+    assert visitas.problemas_para_vigilancia(bien, ahora, hecha) == []
+    # Sin el estado de la limpieza (no se pasa), nada cambia respecto a antes.
+    assert visitas.problemas_para_vigilancia(bien, ahora) == []
+    fallida = {"momento": "2026-11-06T01:25:03+00:00", "correcto": False,
+               "error": "OperationalError: database is locked"}  # fmt: skip
+    problemas = visitas.problemas_para_vigilancia(bien, ahora, fallida)
+    assert [p["id"] for p in problemas] == ["purga_bots"]
+    assert "database is locked" in problemas[0]["frase"]
+    vieja = {"momento": "2026-11-05T06:00:00+00:00", "correcto": True}
+    assert [p["id"] for p in visitas.problemas_para_vigilancia(bien, ahora, vieja)] == [
+        "purga_bots"
+    ]
+    # Sin fichero (nunca ha pasado o no se puede leer) también es un problema.
+    assert [p["id"] for p in visitas.problemas_para_vigilancia(bien, ahora, {})] == ["purga_bots"]
+
+
+def test_leer_purga_junto_a_la_base(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    base = tmp_path / "goatcounter.sqlite3"
+    monkeypatch.setenv("EODI_GOATCOUNTER_BASE", str(base))
+    assert visitas.ruta_purga() == tmp_path / "purga_bots.json"
+    assert visitas.leer_purga() == {}
+    (tmp_path / "purga_bots.json").write_text('{"correcto": true}', encoding="utf-8")
+    assert visitas.leer_purga() == {"correcto": True}
+
+
+def test_el_resumen_dice_lo_que_ocupa_la_base_de_visitas(goatcounter: Path, tmp_path: Path) -> None:
+    sin_dato = visitas.texto_resumen(_datos(goatcounter, tmp_path))
+    assert "Base de visitas" not in sin_dato
+    datos = _datos(goatcounter, tmp_path)
+    datos.base_visitas = 132_620_288 + 4_165_352
+    assert "Base de visitas: 137 MB" in visitas.texto_resumen(datos)
+    # Lo mide del fichero y su diario WAL.
+    wal = goatcounter.with_name(goatcounter.name + "-wal")
+    esperado = goatcounter.stat().st_size + (wal.stat().st_size if wal.exists() else 0)
+    assert visitas.tamano_base(goatcounter) == esperado
+    assert visitas.tamano_base(tmp_path / "no-esta.sqlite3") is None
+
+
 def test_restaurar_comprueba_la_base(goatcounter: Path, tmp_path: Path) -> None:
     copia = Copia()
     estado: dict[str, Any] = {}

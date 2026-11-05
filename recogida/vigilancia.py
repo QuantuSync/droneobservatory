@@ -60,6 +60,8 @@ Problemas (cada uno con su frase):
   08:30 de Madrid (sin gracia: la incidencia se abre a esa hora, y se avisa una vez por día al
   tema privado del responsable);
 - **copia_visitas**: la última copia de la base de visitas tiene más de 3 horas;
+- **purga_bots**: la limpieza diaria de robots de la base de visitas (los de más de 30 días, para
+  que la base de GoatCounter no crezca sin tope) falló o lleva más de 26 horas sin pasar;
 - **visitas_privadas**: el panel de visitas, su API o el tema privado del resumen responden sin
   usuario;
 - **barrera_resoluciones**: la barrera de titulares ha resuelto sola (a nivel de país o descartado
@@ -505,6 +507,7 @@ def componer(
     certificados: Callable[[], list[str]] = certificados_que_caducan,
     guardian: Path | None = None,
     aviso_privado: Callable[[], Avisar | None] | None = None,
+    purga_visitas: Callable[[], dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     """salud.json y las líneas de detalle para el diario (con los identificadores).
 
@@ -686,7 +689,9 @@ def componer(
                 "id": "goatcounter",
                 "frase": "El contador de visitas (GoatCounter) no responde (/status).",
             })  # fmt: skip
-        problemas += visitas.problemas_para_vigilancia(_leer_json(secretos / visitas.ESTADO), ahora)
+        problemas += visitas.problemas_para_vigilancia(
+            _leer_json(secretos / visitas.ESTADO), ahora, (purga_visitas or visitas.leer_purga)()
+        )
         caducan = certificados()
         if caducan:
             problemas.append({
