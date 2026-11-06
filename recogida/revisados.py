@@ -124,6 +124,55 @@ def sacar_de(almacen: Almacen, registros: list[str], antes_en: str, ahora: datet
     return vueltos
 
 
+def _vivos_del_grupo(almacen: Almacen, registros: list[str]) -> dict[str, Documento]:
+    vivos: dict[str, Documento] = {}
+    for id_ in registros:
+        documento = _vivo(almacen, id_)
+        if documento is not None:
+            vivos[documento["id"]] = documento
+    return vivos
+
+
+# Los datos revisados a mano con cita que pesan al elegir la ficha que queda en una unión: van
+# por identificador (decidir._revisiones), y la ficha absorbida los pierde.
+DATOS_QUE_QUEDAN = ("drones", "inicio", "lugar", "modelo")
+
+
+def _con_datos_revisados(documento: Documento) -> bool:
+    return any(decidir.revision_de(documento, campo) for campo in DATOS_QUE_QUEDAN)
+
+
+def _destino_del_grupo(vivos: list[Documento], ahora: datetime) -> Documento:
+    """La ficha que queda en una unión revisada: entre las publicadas antes de esta pasada (una
+    dada de alta ahora no le quita la dirección a una que la gente ya conocía), la que tiene
+    datos revisados con cita (el número de drones, el día, el lugar: si no, se pierden), y entre
+    ellas la regla de siempre (incidentes.destino_de). Hasta el 6 de noviembre de 2026 todas
+    contaban como publicadas y ganaba la de más fuentes: EODI-2026-00760, recién dada de alta con
+    2 drones, el día y el lugar mal, se quedó con EODI-2026-00746, que tenía 1 dron revisado."""
+    marca = ahora.strftime("%Y-%m-%dT%H:%MZ")
+    antes = [d for d in vivos if str(d["control"]["alta"]["valor"]) < marca] or vivos
+    revisadas = [d for d in antes if _con_datos_revisados(d)] or antes
+    publicados = frozenset(d["id"] for d in antes)
+    destino = revisadas[0]
+    for otro in revisadas[1:]:
+        destino = incidentes.destino_de(destino, otro, publicados)[0]
+    return destino
+
+
+# Desde cuándo una unión hecha al revés (el registro que debe quedar, fundido en otro del grupo)
+# se deshace y se rehace con el que debe quedar: la separación de EODI-2026-00756.
+VUELTA_DESDE = "2026-11-06T00:00Z"
+
+
+def _fundido_desde(almacen: Almacen, id_: str) -> str:
+    """La fecha de la fusión vigente del registro («» si no tiene)."""
+    fusion = next(
+        (f for f in reversed(almacen.fusiones()) if f["absorbido"] == id_ and not f["revertida"]),
+        None,
+    )
+    return str(fusion["fecha"]) if fusion is not None else ""
+
+
 def unir_grupo(
     almacen: Almacen, registros: list[str], motivo: str, ahora: datetime,
     modelos: frozenset[str], conserva: str | None = None, antes_en: str | None = None,
@@ -133,17 +182,26 @@ def unir_grupo(
     primero sale de esa ficha el registro del grupo que una regla fundió en ella."""
     if antes_en is not None:
         sacar_de(almacen, registros, antes_en, ahora, modelos)
-    vivos: dict[str, Documento] = {}
-    for id_ in registros:
-        documento = _vivo(almacen, id_)
-        if documento is not None:
-            vivos[documento["id"]] = documento
+    vivos = _vivos_del_grupo(almacen, registros)
+    if conserva is not None and conserva in registros:
+        # El registro que debe quedar estaba fundido dentro de otro del grupo (EODI-2026-00746,
+        # el dron del martes en Letonia, quedó dentro de EODI-2026-00760, la parte que la
+        # separación de 00756 dio de alta el 6 de noviembre de 2026): esa fusión se deshace y
+        # la unión se hace al revés. Su dirección vuelve a ser la del suceso. Solo las fusiones
+        # desde VUELTA_DESDE: las de antes ya se publican así y sus direcciones redirigen bien
+        # (EODI-2026-00262 en 00636, 00544 en 00698); darles la vuelta cambiaría fichas publicadas.
+        propio = almacen.incidente(conserva)
+        if (
+            propio is not None
+            and propio.get("fusionado_en") in vivos
+            and "retirado" not in propio
+            and _fundido_desde(almacen, conserva) >= VUELTA_DESDE
+        ):
+            incidentes.revertir(almacen, conserva, ahora, modelos)
+            vivos = _vivos_del_grupo(almacen, registros)
     if len(vivos) < 2:
         return 0
-    publicados = frozenset(vivos)
-    destino = next(iter(vivos.values()))
-    for otro in list(vivos.values())[1:]:
-        destino = incidentes.destino_de(destino, otro, publicados)[0]
+    destino = _destino_del_grupo(list(vivos.values()), ahora)
     elegido = _vivo(almacen, conserva) if conserva else None
     if elegido is not None and elegido["id"] in vivos:
         destino = vivos[elegido["id"]]
@@ -1413,6 +1471,50 @@ def _incidentes_de(almacen: Almacen, entrada: Documento) -> list[str]:
     return ids
 
 
+def _ids_de_parte(
+    almacen: Almacen, revision: Documento, entrada: Documento, conservada_: bool
+) -> list[str]:
+    ids = _incidentes_de(almacen, entrada)
+    if conservada_ and revision["incidente"] not in ids:
+        ids.insert(0, revision["incidente"])
+    return ids
+
+
+def _unir_coincidente(
+    almacen: Almacen, revision: Documento, parte: Documento, ids: list[str], ahora: datetime,
+    modelos: frozenset[str], nueva: bool,
+) -> int:  # fmt: skip
+    """Una parte que es el suceso de otra ficha (`coincide_con`) se une a ella. Si la parte es
+    nueva (la dio de alta la separación), queda esa ficha: es la que ya se publicaba con ese
+    suceso y su dirección. La parte que conserva el identificador separado ya se publicaba: entre
+    las dos, la regla de siempre."""
+    if not parte.get("coincide_con") or not ids:
+        return 0
+    return unir_grupo(
+        almacen, [*ids, parte["coincide_con"]], revision["motivo"]["es"], ahora, modelos,
+        conserva=parte["coincide_con"] if nueva else None,
+    )  # fmt: skip
+
+
+def unir_coincidentes(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
+    """Las partes ya repartidas que coinciden con otra ficha, unidas a ella. La horaria lo llama
+    también después del extractor: una parte que el extractor de la horaria extrae más tarde que
+    la separación se daba de alta y se publicaba una hora como ficha nueva hasta la pasada
+    siguiente. Devuelve cuántos registros funde."""
+    unidos = 0
+    for revision in cargar().get("separar", []):
+        hecho = almacen.cursor(CURSOR_SEPARAR + revision["incidente"])
+        if hecho is None:
+            continue
+        queda = conservada(revision)
+        for n, (parte, entrada) in enumerate(zip(revision["partes"], hecho["partes"], strict=True)):
+            if not parte.get("es_suceso", True):
+                continue
+            ids = _ids_de_parte(almacen, revision, entrada, n == queda)
+            unidos += _unir_coincidente(almacen, revision, parte, ids, ahora, modelos, n != queda)
+    return unidos
+
+
 def separar(
     almacen: Almacen, ahora: datetime, modelos: frozenset[str], cliente: Any = None
 ) -> Separados:
@@ -1493,14 +1595,10 @@ def separar(
                     )
                     hecho["reabsorbido"] = ultima
                     almacen.guardar_cursor(clave, hecho)
-            ids = _incidentes_de(almacen, entrada)
-            if n == queda and revision["incidente"] not in ids:
-                ids.insert(0, revision["incidente"])
-            if parte.get("coincide_con") and ids:
-                hechos.unidos += unir_grupo(
-                    almacen, [*ids, parte["coincide_con"]], revision["motivo"]["es"], ahora,
-                    modelos,
-                )  # fmt: skip
+            ids = _ids_de_parte(almacen, revision, entrada, n == queda)
+            hechos.unidos += _unir_coincidente(
+                almacen, revision, parte, ids, ahora, modelos, n != queda
+            )
             de_partes.append(ids)
         _deshacer_entre_partes(almacen, de_partes, ahora, modelos)
         for ids in de_partes:
