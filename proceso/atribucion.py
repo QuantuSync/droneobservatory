@@ -420,23 +420,35 @@ _NACIONALIDAD_DEL_DRON = {
     ),
 }
 # El reparto entre varios drones: «, uno probablemente ruso y otro ucraniano», «, one probably
-# Russian and the other Ukrainian» (EODI-2026-00757). Sin atribución sale entero.
+# Russian and the other Ukrainian» (EODI-2026-00757), «, one likely Russian and one Ukrainian,»
+# (EODI-2026-00760). Sin atribución sale entero, con las dos comas que lo encierran: quitar solo
+# la primera dejaba «Dos drones, violan el espacio aéreo de Letonia» (6 de noviembre de 2026).
 _DUDA = {
-    "es": r"(?:(?:probablemente|posiblemente|presuntamente)\s+)?",
-    "en": r"(?:(?:probably|likely|possibly|reportedly)\s+)?",
+    "es": r"(?:(?:probablemente|posiblemente|presuntamente|al parecer|quiz[aá]s?)\s+)?",
+    "en": r"(?:(?:probably|likely|possibly|reportedly|apparently|allegedly)\s+)?",
 }
 _REPARTO = {
     "es": re.compile(
-        rf"\s*,?\s+(?:uno|una)\s+{_DUDA['es']}{_GENTILICIO['es']}\s+(?:y|e)\s+(?:el\s+)?"
-        rf"(?:otro|otra)\s+{_DUDA['es']}{_GENTILICIO['es']}(?!\w)",
+        rf"(?:\s*,)?\s+(?:uno|una)\s+{_DUDA['es']}{_GENTILICIO['es']}\s+(?:y|e|u|o)\s+"
+        rf"(?:(?:el|la)\s+)?(?:otro|otra|uno|una)\s+{_DUDA['es']}{_GENTILICIO['es']}(?!\w)"
+        r"(?:\s*,(?=\s))?",
         re.IGNORECASE,
     ),
     "en": re.compile(
-        rf"\s*,?\s+one\s+{_DUDA['en']}{_GENTILICIO['en']}\s+and\s+(?:the\s+)?other\s+"
-        rf"{_DUDA['en']}{_GENTILICIO['en']}(?!\w)",
+        rf"(?:\s*,)?\s+one\s+{_DUDA['en']}{_GENTILICIO['en']}\s+(?:and|or)\s+"
+        rf"(?:(?:the\s+)?other|another|one)\s+{_DUDA['en']}{_GENTILICIO['en']}(?!\w)"
+        r"(?:\s*,(?=\s))?",
         re.IGNORECASE,
     ),
 }
+# La coma que queda sola entre el sujeto y el verbo de un titular ya guardado sin su reparto
+# («Dos drones, violan el espacio aéreo de Letonia»): tras un sujeto corto con el dron y sin otra
+# coma detrás que la empareje («Posible dron, probablemente un globo, cierra…» se queda).
+_COMA_SUELTA = re.compile(
+    r"^((?:Dos|Tres|Cuatro|Cinco|Varios|Unos|Two|Three|Four|Five|Several|Some)\s+(?:\S+\s+)?"
+    r"(?:drones|dron|drone))"
+    r",\s+(?=[a-záéíóúñ]\S*\s+(?!(?:y|e|o|u|and|or)\s))(?=[^,]*$)"
+)
 # Señalar a un autor sin atribución: «controlado por Rusia», «Iranian-backed».
 _ESTADOS_TITULAR = {
     "es": r"(?:Rusia|Bielorrusia|Ucrania|Ir[aá]n|Turqu[ií]a|Marruecos|China|Mosc[uú]|el Kremlin)",
@@ -486,6 +498,7 @@ def titulo_sin_atribucion(incidente: Documento) -> dict[str, str]:
         texto = _AUTOR[idioma].sub(" " if idioma == "en" else "", titulo[idioma])
         texto = _NACIONALIDAD_DEL_DRON[idioma].sub(r"\1" if idioma == "es" else "", texto)
         texto = _REPARTO[idioma].sub("", texto)
+        texto = _COMA_SUELTA.sub(r"\1 ", texto)
         if not autoridad_dice_explosivos:
             texto = _EXPLOSIVOS[idioma].sub(" " if idioma == "en" else "", texto)
         titulo[idioma] = _mayuscula(" ".join(texto.split()))
