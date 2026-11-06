@@ -230,3 +230,17 @@ Aparte, la revisión vio fichas duplicadas del mismo suceso que no mezclan nada 
 explosión del puerto de Constanza en EODI-2026-00207, 00361, 00392, 00393, 00411 y 00416, o el
 cierre de Bruselas del 4 de noviembre de 2025 en EODI-2025-00072 y 00249). No son mezclas y no
 se tocan aquí.
+
+## Una frase con dos días (6 de noviembre de 2026)
+
+EODI-2026-00756 juntó en una ficha del domingo 1 de noviembre de 2026 los dos drones que entraron en
+Letonia «w niedzielę i wtorek» (onet.pl, wp.pl y rp.pl del 5 de noviembre, con la información del
+ejército letón): la fecha toma el primer día que nombra la frase y la regla de fusión unió la nota
+que contaba los dos (EODI-2026-00757). Se separa con `coincide_con`: el martes es EODI-2026-00746
+(el dron que cayó cerca de Tilža). Desde entonces una frase de las fuentes con dos días de la
+semana unidos por una conjunción que no caben en una noche (`proceso/fechas.dias_distintos`)
+marca la ficha: el filtro de entrada la retiene sin preguntar al experto y la auditoría la cuenta en
+la letra **AA** hasta que una revisión (una separación, «distintos» o el inicio revisado) dice a
+qué día va cada cosa. Una fecha escrita en la frase («donderdag 15 januari») o dos días sueltos
+(«le detuvieron el lunes… este miércoles») no cuentan. Medido en todo el registro publicado el 6
+de noviembre: solo EODI-2026-00756.

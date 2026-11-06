@@ -10725,6 +10725,44 @@
           ]
         }
       ]
+    },
+    {
+      "incidente": "EODI-2026-00756",
+      "distintos": true,
+      "motivo": {
+        "es": "Juntaba en una ficha del domingo 1 de noviembre de 2026 los dos drones que, según el ejército letón, entraron en Letonia «w niedzielę i wtorek»: el del domingo por la tarde (Krāslava y Ludza, probablemente un Geran) y el del martes poco después de medianoche, que cayó cerca de Tilža y ya cuenta EODI-2026-00746.",
+        "en": "It merged into one record for Sunday 1 November 2026 the two drones that, according to the Latvian army, entered Latvia «w niedzielę i wtorek»: Sunday evening's (Krāslava and Ludza, probably a Geran) and Tuesday's shortly after midnight, which crashed near Tilža and is already EODI-2026-00746."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-01",
+          "pais": "LV",
+          "descripcion": "Un dron entra en el espacio aéreo de Letonia por los municipios de Krāslava y Ludza, junto a la frontera con Bielorrusia y Rusia, el domingo 1 de noviembre de 2026 poco antes de las 19:00 hora local, y sale hacia Rusia; el ejército letón cree que era un Geran",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-be99e55cbe78aa9e",
+            "gdelt-d4512a7349862ed4",
+            "gdelt-d4512a7349862ed4-declaracion-1",
+            "gdelt-3277f7b14a18d8af",
+            "gdelt-3277f7b14a18d8af-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-03",
+          "pais": "LV",
+          "descripcion": "Otro dron entra en Letonia el martes 3 de noviembre de 2026 poco después de medianoche, con alerta de media hora y cazas de la OTAN, y cae en el este del país; se busca cerca de Tilža (Balvi). Es el suceso de EODI-2026-00746",
+          "coincide_con": "EODI-2026-00746",
+          "fuentes": [
+            "gdelt-be99e55cbe78aa9e",
+            "gdelt-d4512a7349862ed4",
+            "gdelt-d4512a7349862ed4-declaracion-1",
+            "gdelt-3277f7b14a18d8af",
+            "gdelt-3277f7b14a18d8af-declaracion-1"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
@@ -12333,6 +12371,78 @@
       "enlace": "https://www.mapn.ro/cpresa/19465_informa%C8%9Bie-de-presa",
       "pais": "RO",
       "motivo": "la base aérea es de donde despegaron los cazas, no a donde iban los drones; ninguna fuente dice a qué se dirigían (revisado el 3 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00756",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "W niedzielę niezidentyfikowany dron wleciał nad Łotwę, a następnie opuścił jej przestrzeń powietrzną i skierował się do Rosji.",
+      "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
+      "pais": "LV",
+      "motivo": "el domingo entró un dron; los «dwa drony» de la nota son el del domingo y el del martes, que está en EODI-2026-00746 (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00756",
+      "campo": "modelo",
+      "valor": "Geran",
+      "cita": "Łotewskie wojsko uznało, że ten obiekt był najprawdopodobniej rosyjskim dronem typu Gierań.",
+      "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
+      "pais": "LV",
+      "motivo": "el ejército letón cree que el dron del domingo era un Geran; del del martes no dijo el modelo (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00756",
+      "campo": "titulo",
+      "valor": {
+        "es": "Un dron entra en el espacio aéreo de Letonia por el sureste y sale a los pocos minutos",
+        "en": "A drone enters Latvian airspace in the south-east and leaves minutes later"
+      },
+      "cita": "Po kilkunastu minutach bezzałogowiec opuścił łotewską przestrzeń powietrzną, przekraczając granicę z Rosją.",
+      "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
+      "pais": "LV",
+      "motivo": "el titular contaba los dos drones y salía roto («Drones y ucraniano…»); esta ficha es la del domingo, con un dron, y sin atribución no dice de qué país era (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00746",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Z kolei bezzałogowiec wykryty we wtorek po północy mógł należeć do Ukrainy.",
+      "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
+      "pais": "LV",
+      "motivo": "el martes entró un dron; al recibir las notas del 5 de noviembre, que cuentan también el del domingo (EODI-2026-00756), no pasa a dos (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00746",
+      "campo": "modelo",
+      "valor": null,
+      "cita": "Nie ujawniono, jaki był model bezzałogowca.",
+      "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
+      "pais": "LV",
+      "motivo": "del dron del martes no se dijo el modelo; el Geran es el del domingo, en EODI-2026-00756 (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00756",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "region",
+        "region": "Latgale",
+        "suceso": "municipios de Krāslava y Ludza, junto a la frontera con Bielorrusia y Rusia",
+        "punto": {
+          "lat": 56.2,
+          "lon": 27.45
+        },
+        "radio_km": 45.0
+      },
+      "cita": "Przed godz. 19 czasu lokalnego w rejonach Krasławia i Lucyna ogłoszono stan zagrożenia",
+      "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
+      "pais": "LV",
+      "motivo": "la alerta del domingo fue en los municipios de Krāslava y Ludza, en el sureste, junto a la frontera con Bielorrusia y Rusia (revisado el 6 de noviembre de 2026)"
     }
   ]
 }

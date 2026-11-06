@@ -216,6 +216,9 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             # restos de Robeasca del 21/10/2026 y dos notas de julio (Z, 3/11/2026).
             "EODI-2025-00200",
             "EODI-2026-00655",
+            # Letonia: el dron del domingo 1/11/2026 y el del martes 3/11 (EODI-2026-00746),
+            # «w niedzielę i wtorek» en una sola frase (AA, 6/11/2026).
+            "EODI-2026-00756",
         }
     )
     # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.

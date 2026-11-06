@@ -400,15 +400,40 @@ _ENTRE = {
         r"Geran(?:-2)?|Gerbera|Shahed-type)\s+)*"
     ),
 }
+# Varios gentilicios seguidos se quitan juntos: «drones ruso y ucraniano», «Russian and Ukrainian
+# drones». Quitar solo el primero dejaba «Drones y ucraniano» y «Russian and drones»
+# (EODI-2026-00756, 5 de noviembre de 2026).
+_VARIOS = {
+    "es": rf"{_GENTILICIO['es']}(?:\s*(?:,|y|e|o|u)\s+{_GENTILICIO['es']})*",
+    "en": rf"{_GENTILICIO['en']}(?:\s*(?:,|and|or)\s+{_GENTILICIO['en']})*",
+}
 _NACIONALIDAD_DEL_DRON = {
     "es": re.compile(
         rf"(?<!\w)((?:drones|dron|Shahed|Geran(?:-2)?|Gerbera){_ENTRE['es']})"
-        rf"\s+{_GENTILICIO['es']}(?!\w)",
+        rf"\s+{_VARIOS['es']}(?!\w)",
         re.IGNORECASE,
     ),
     "en": re.compile(
-        rf"(?<!\w){_GENTILICIO['en']}\s+"
+        rf"(?<!\w){_VARIOS['en']}\s+"
         rf"(?={_ENTRE['en']}(?:drones?|Shaheds?|Gerans?|Gerberas?|aircraft and drones?)(?!\w))",
+        re.IGNORECASE,
+    ),
+}
+# El reparto entre varios drones: «, uno probablemente ruso y otro ucraniano», «, one probably
+# Russian and the other Ukrainian» (EODI-2026-00757). Sin atribución sale entero.
+_DUDA = {
+    "es": r"(?:(?:probablemente|posiblemente|presuntamente)\s+)?",
+    "en": r"(?:(?:probably|likely|possibly|reportedly)\s+)?",
+}
+_REPARTO = {
+    "es": re.compile(
+        rf"\s*,?\s+(?:uno|una)\s+{_DUDA['es']}{_GENTILICIO['es']}\s+(?:y|e)\s+(?:el\s+)?"
+        rf"(?:otro|otra)\s+{_DUDA['es']}{_GENTILICIO['es']}(?!\w)",
+        re.IGNORECASE,
+    ),
+    "en": re.compile(
+        rf"\s*,?\s+one\s+{_DUDA['en']}{_GENTILICIO['en']}\s+and\s+(?:the\s+)?other\s+"
+        rf"{_DUDA['en']}{_GENTILICIO['en']}(?!\w)",
         re.IGNORECASE,
     ),
 }
@@ -460,6 +485,7 @@ def titulo_sin_atribucion(incidente: Documento) -> dict[str, str]:
     for idioma in (i for i in _NACIONALIDAD_DEL_DRON if i in titulo):
         texto = _AUTOR[idioma].sub(" " if idioma == "en" else "", titulo[idioma])
         texto = _NACIONALIDAD_DEL_DRON[idioma].sub(r"\1" if idioma == "es" else "", texto)
+        texto = _REPARTO[idioma].sub("", texto)
         if not autoridad_dice_explosivos:
             texto = _EXPLOSIVOS[idioma].sub(" " if idioma == "en" else "", texto)
         titulo[idioma] = _mayuscula(" ".join(texto.split()))

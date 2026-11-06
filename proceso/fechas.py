@@ -32,6 +32,7 @@ import re
 from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime, time, timedelta
 from functools import cache
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -880,3 +881,63 @@ def sin_fin_sin_frase(incidente: dict[str, Any]) -> dict[str, Any]:
     if "afirmaciones" in incidente:
         incidente["afirmaciones"] = [a for a in incidente["afirmaciones"] if vale(a)]
     return incidente
+
+
+# Dos días de una misma frase que no son la misma noche (como mucho un día entre ellos): «w
+# niedzielę i wtorek dwa drony» son dos sucesos, el domingo y el martes. La fecha toma el más
+# temprano (_leer_con) y la ficha quedaba con un solo día y los drones de los dos
+# (EODI-2026-00756, Letonia, 1 y 3 de noviembre de 2026).
+DIAS_MISMA_NOCHE = 1
+# Entre los dos días, como mucho la conjunción y un artículo o preposición («y el», «i we»).
+MAX_ENTRE_DIAS = 3
+_CONJUNCIONES = frozenset(
+    {"y", "e", "i", "oraz", "and", "und", "et", "si", "ir", "ja", "en", "og", "och", "a", "es"}
+)
+
+
+def dias_distintos(
+    frase: str, publicacion: datetime, zona_medio: ZoneInfo, idioma: str | None
+) -> list[date]:
+    """Los días locales que nombra la frase si son dos días de la semana unidos por una
+    conjunción («w niedzielę i wtorek», «el domingo y el martes», «on Sunday and Tuesday») que no
+    caben en una noche; si no, []. Con una fecha escrita no cuenta: el día de la semana que la
+    acompaña es el mismo («donderdag 15 januari»). Dos días sueltos en la frase tampoco: «le
+    detuvieron el lunes… este miércoles» cuenta dos momentos de un mismo suceso."""
+    todos = lexicos()
+    lexico = [todos[i] for i in dict.fromkeys([idioma or "", "en"]) if i in todos]
+    hoy = publicacion.astimezone(zona_medio).date()
+    if _explicitas(frase, lexico, hoy):
+        return []
+    palabras = _normal(frase).split()
+    for lx in lexico:
+        formas = dict(lx.dias)
+        posiciones = [
+            (i, formas[p]) for i, p in enumerate(palabras) if p in formas
+        ]  # fmt: skip
+        for (i, uno), (j, otro) in pairwise(posiciones):
+            entre = set(palabras[i + 1 : j])
+            if j - i - 1 > MAX_ENTRE_DIAS or not entre & _CONJUNCIONES:
+                continue
+            dias = sorted({_ultimo(uno, hoy), _ultimo(otro, hoy)})
+            if (dias[-1] - dias[0]).days > DIAS_MISMA_NOCHE:
+                return dias
+    return []
+
+
+def frase_de_dos_dias(incidente: dict[str, Any]) -> tuple[str, list[date]] | None:
+    """La primera frase de una fuente de la ficha que da dos días distintos (dias_distintos),
+    con esos días; None si ninguna. Una ficha es un suceso de un día: esa frase pide separarla
+    o una revisión que diga a qué día va cada cosa."""
+    pais = (incidente.get("lugar") or {}).get("pais")
+    for fuente in incidente.get("fuentes", []):
+        frase = str(fuente.get("frase_origen") or "")
+        valor = (fuente.get("fecha") or {}).get("valor")
+        if not frase or not valor:
+            continue
+        zona_medio = (
+            _zona_del_dominio(str(fuente.get("enlace") or "")) or zona(pais) or ZoneInfo("UTC")
+        )
+        publicacion = _momento(str(valor))
+        if dias := dias_distintos(frase, publicacion, zona_medio, fuente.get("idioma")):
+            return frase, dias
+    return None
