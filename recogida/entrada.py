@@ -37,8 +37,8 @@ from esquema import Documento
 from modelo import control, coste
 from modelo import entrada as peticiones
 from modelo.cliente import LlamadaFallida
+from proceso import auditoria_fichas, fechas, fronteras, incidentes, noticias
 from proceso import control_fichas as reglas
-from proceso import fechas, fronteras, incidentes, noticias
 from recogida import control_fichas
 from recogida.plazo import Plazo, TiempoAgotado
 
@@ -479,6 +479,13 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
     clave_ = clave(incidente["id"])
     base: Documento = {"version": peticiones.VERSION_ENTRADA, "fecha": _iso(ctx.ahora)}
     cambios: list[str] = []
+    if auditoria_fichas.dos_dias_sin_revisar(incidente):
+        # Una frase da dos días («w niedzielę i wtorek»): son dos sucesos y la ficha tiene uno.
+        # No se publica ni se pregunta: la separa una revisión (EODI-2026-00756).
+        frase, dias = fechas.frase_de_dos_dias(incidente) or ("", [])
+        return {**base, "huella": huella(incidente), "decision": RETENER, "cambios": cambios,
+                "motivo": f"una frase da dos días ({', '.join(map(str, dias))}): «{frase}»; "
+                "separar en dos fichas"}  # fmt: skip
     for vuelta in range(2):
         activos = _activos(ctx.almacen)
         decision, elegidas, _ = preguntar(experto, incidente, activos, clave_)

@@ -113,6 +113,12 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   día del suceso (proceso/protegido.fuentes_anteriores): una nota no cuenta lo que aún no ha pasado,
   así que la ficha junta dos sucesos. EODI-2026-00079 (2 de noviembre de 2026): las notas del 17 de
   febrero de 2026 acabaron en la ficha del 11 de agosto.
+- **AA, una frase con dos días**: una frase de sus fuentes da dos días de la semana unidos por
+  una conjunción que no caben en una noche (proceso/fechas.frase_de_dos_dias) y ninguna revisión
+  (una separación, «distintos» o el inicio revisado con cita) ha dicho a qué día va cada cosa:
+  la ficha junta dos sucesos y hay que separarla. EODI-2026-00756 (5 de noviembre de 2026): «W
+  łotewską przestrzeń powietrzną wkroczyły w niedzielę i wtorek dwa drony» quedó en una ficha del
+  domingo con los drones de los dos días.
 """
 
 import json
@@ -120,6 +126,7 @@ import re
 from collections import Counter
 from collections.abc import Callable, Iterable
 from datetime import date, datetime, timedelta
+from functools import cache
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -153,7 +160,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y", "Z",
+    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -182,6 +189,7 @@ NOMBRES = {
     "X": "cambio a algo protegido sin justificación",
     "Y": "autoridad de otro país sin frase",
     "Z": "fuente anterior al suceso",
+    "AA": "una frase con dos días",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -607,9 +615,36 @@ def de_otro_pais(incidente: Documento, verificacion: Documento | None = None) ->
     )
 
 
+@cache
+def _fecha_revisada() -> frozenset[str]:
+    """Las fichas cuya fecha ya fijó una revisión: las de una separación (la ficha separada y
+    la que recibe una parte), las de «distintos» y las que tienen el inicio revisado con cita."""
+    datos = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
+    ids = {str(e["incidente"]) for e in datos.get("separar", [])}
+    ids |= {
+        str(p["coincide_con"])
+        for e in datos.get("separar", [])
+        for p in e.get("partes", [])
+        if p.get("coincide_con")
+    }
+    ids |= {str(i) for e in datos.get("distintos", []) for i in e.get("incidentes", [])}
+    ids |= {str(e["incidente"]) for e in datos.get("datos", []) if e.get("campo") == "inicio"}
+    return frozenset(ids)
+
+
+def dos_dias_sin_revisar(incidente: Documento) -> bool:
+    """Una frase de sus fuentes da dos días distintos («w niedzielę i wtorek»,
+    proceso/fechas.frase_de_dos_dias) y ninguna revisión ha dicho a qué día va cada cosa: una
+    ficha es un suceso de un día; hay que separarla (EODI-2026-00756, 1 y 3 de noviembre de
+    2026). Una parte nacida de una separación lleva «relacionados» y no cuenta."""
+    if incidente.get("relacionados") or str(incidente["id"]) in _fecha_revisada():
+        return False
+    return fechas.frase_de_dos_dias(incidente) is not None
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
-    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
+    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u, "AA": dos_dias_sin_revisar,
 }  # fmt: skip
 
 

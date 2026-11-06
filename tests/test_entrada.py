@@ -565,3 +565,18 @@ def test_lo_retenido_sin_fecha_se_retira_a_las_6_horas() -> None:
     assert "EODI-2026-00692" in nuevo["retenidos"]
     queda = almacen.incidente("EODI-2026-00692")
     assert queda is not None and not queda.get("retirado")
+
+
+def test_una_frase_con_dos_dias_se_retiene_sin_preguntar() -> None:
+    # Letonia (EODI-2026-00756, 5 de noviembre de 2026): «w niedzielę i wtorek dwa drony» son dos
+    # sucesos (aquí, el domingo 25 y el martes 27); la ficha tenía uno. No sale ni se pregunta.
+    letonia = _ficha("EODI-2026-09756", "LV", "2026-10-25T00:00Z", publicada="2026-10-27T08:15Z",
+                     frase="Two drones entered Latvian airspace on Sunday and Tuesday")  # fmt: skip
+    almacen = _base(letonia)
+    cliente = Cliente([])
+    ctx = _contexto(almacen, cliente)
+    entrada.filtrar(ctx, set())
+    decision = ctx.nuevas[entrada.clave("EODI-2026-09756")]
+    assert decision["decision"] == entrada.RETENER
+    assert "2026-10-25, 2026-10-27" in decision["motivo"]
+    assert cliente.pedidas == []

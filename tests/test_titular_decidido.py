@@ -274,3 +274,34 @@ def test_lo_revisado_a_mano_no_lo_quita_el_control() -> None:
         "GB",
     )  # fmt: skip
     assert (decidir.revision_de(akrotiri, "lugar") or {})["valor"] == {"localidad": "Akrotiri"}
+
+
+def test_varios_gentilicios_se_quitan_juntos() -> None:
+    # Letonia (2026-00756/00757, 5 de noviembre de 2026): quitar solo el primero de «ruso y
+    # ucraniano» dejaba «Drones y ucraniano…» y «Russian and drones…».
+    assert _sin_atribucion(
+        "Drones ruso y ucraniano violan el espacio aéreo de Letonia",
+        "Russian and Ukrainian drones violate Latvian airspace",
+    ) == {
+        "es": "Drones violan el espacio aéreo de Letonia",
+        "en": "Drones violate Latvian airspace",
+    }
+    assert _sin_atribucion(
+        "Drones rusos y ucranianos entran en Letonia; uno cae en el este del país",
+        "Russian and Ukrainian drones enter Latvia; one crashes in the east of the country",
+    ) == {
+        "es": "Drones entran en Letonia; uno cae en el este del país",
+        "en": "Drones enter Latvia; one crashes in the east of the country",
+    }
+    assert _sin_atribucion(
+        "Dos drones entran en el espacio aéreo de Letonia, uno probablemente ruso y otro ucraniano",
+        "Two drones enter Latvian airspace, one probably Russian and the other Ukrainian",
+    ) == {
+        "es": "Dos drones entran en el espacio aéreo de Letonia",
+        "en": "Two drones enter Latvian airspace",
+    }
+    # Lo que no es del dron se queda: «ataques rusos y ucranianos» no lleva dron.
+    assert _sin_atribucion("Ataques rusos y ucranianos", "Russian and Ukrainian attacks") == {
+        "es": "Ataques rusos y ucranianos",
+        "en": "Russian and Ukrainian attacks",
+    }
