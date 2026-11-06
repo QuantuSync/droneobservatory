@@ -7950,7 +7950,23 @@
     },
     {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}},
     {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f-declaracion-1", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}},
-    {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f-declaracion-2", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}}
+    {"incidente": "EODI-2026-00079", "fuente": "gdelt-b995592746bb507f-declaracion-2", "motivo": {"es": "La nota de sueddeutsche.de (11 de agosto de 2026) cuenta el dron de la noche del 10 al 11 de agosto (EODI-2026-00022), no el aviso del piloto del 17 de febrero de 2026; la llevó a esta ficha la segunda búsqueda del 2 de noviembre de 2026.", "en": "The sueddeutsche.de article (11 August 2026) is about the drone of the night of 10 to 11 August (EODI-2026-00022), not the pilot's report of 17 February 2026; the second search of 2 November 2026 took it to this record."}},
+    {
+      "incidente": "EODI-2026-00743",
+      "fuente": "gdelt-a925912b3ec523e4",
+      "motivo": {
+        "es": "La nota de promptmedia.ro (5 de noviembre de 2026) cuenta «incidentul din seara de 31 octombrie», los dos drones del noreste de Rumanía (EODI-2026-00719), no la noche del 1 al 2 de noviembre; de ella salían los dos drones de esta ficha.",
+        "en": "The promptmedia.ro article (5 November 2026) is about «incidentul din seara de 31 octombrie», the two drones over north-eastern Romania (EODI-2026-00719), not the night of 1 to 2 November; the two drones of this record came from it."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00743",
+      "fuente": "gdelt-a925912b3ec523e4-declaracion-1",
+      "motivo": {
+        "es": "La declaración del Ministerio de Defensa citada por promptmedia.ro es el comunicado del 31 de octubre de 2026 sobre los dos drones del noreste (EODI-2026-00719), no la noche del 1 al 2 de noviembre.",
+        "en": "The Ministry of Defence statement quoted by promptmedia.ro is the communiqué of 31 October 2026 about the two drones over the north-east (EODI-2026-00719), not the night of 1 to 2 November."
+      }
+    }
   ],
   "separar": [
     {
@@ -12443,6 +12459,36 @@
       "enlace": "https://wiadomosci.wp.pl/incydenty-nad-lotwa-wojsko-ujawnilo-pochodzenie-dronow-7347630134045120a",
       "pais": "LV",
       "motivo": "la alerta del domingo fue en los municipios de Krāslava y Ludza, en el sureste, junto a la frontera con Bielorrusia y Rusia (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00743",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "region",
+        "region": "Tulcea",
+        "suceso": "norte del distrito de Tulcea, junto a los puertos ucranianos del Danubio",
+        "punto": {
+          "lat": 45.33,
+          "lon": 28.95
+        },
+        "radio_km": 40.0
+      },
+      "cita": "instituirea măsurilor de alertare a populației din nordul județului Tulcea, iar la ora 04.11 a fost transmis un mesaj RO-Alert",
+      "enlace": "https://www.mapn.ro/cpresa/19462_informa%C8%9Bie-de-presa",
+      "pais": "RO",
+      "motivo": "la noche del 1 al 2 de noviembre de 2026 el Ministerio de Defensa avisó a la población del norte del distrito de Tulcea por los ataques con drones a los puertos ucranianos del Danubio (comunicado nº 353; revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00743",
+      "campo": "titulo",
+      "valor": {
+        "es": "Rumanía hace despegar cazas F-16 y avisa al norte de Tulcea por ataques con drones junto a la frontera",
+        "en": "Romania scrambles F-16 fighters and alerts northern Tulcea over drone attacks near the border"
+      },
+      "cita": "În noaptea de 1 spre 2 noiembrie, porturile ucrainene de la Dunăre au fost ținta unor atacuri masive cu drone.",
+      "enlace": "https://www.mapn.ro/cpresa/19462_informa%C8%9Bie-de-presa",
+      "pais": "RO",
+      "motivo": "el titular decía «drones en su espacio aéreo»; el Ministerio de Defensa cuenta ataques con drones a los puertos ucranianos del Danubio, cazas en el aire y la alerta en el norte de Tulcea, y que «nu au fost raportate pătrunderi în spațiul aerian național» (revisado el 6 de noviembre de 2026)"
     }
   ]
 }
