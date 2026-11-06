@@ -26,7 +26,7 @@ guarda lo que cambia, con su motivo en el historial.
 import copy
 import json
 import re
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from functools import cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -112,6 +112,72 @@ def _textos(incidente: Documento) -> str:
     return "\n".join(p for p in partes if p)
 
 
+# Lo que nombra una noche en la frase que dio el día: el léxico de proceso/fechas.py («anoche»,
+# «noaptea spre») y la palabra «noche» en las lenguas de los países del ataque y de sus notas.
+_NOCHE = re.compile(
+    r"(?<!\w)(?:noche|night|nacht|nuit|notte|noapte|noaptea|nop[tț]ii|noc[yią]?|nakt[iįs]?|"
+    r"naktī|öö(?:sel)?|yö(?:llä)?|natt(?:en)?|ніч|ночі|ночь|ночью)(?!\w)",
+    re.IGNORECASE,
+)
+_CITA = re.compile(r"«([^»]+)»")
+# Dos días seguidos de una noche: «1 spre 2», «16-17», «night of 16 to 17», «Nacht zum».
+_PAR = re.compile(
+    r"(?<!\d)(\d{1,2})(?:\s*(?:-|–|/|spre|al|to|into|zum|auf|na|do|au|a)\s*|\s+)(\d{1,2})(?!\d)"
+)
+_PUBLICADA = re.compile(r"publicada el (\d{4}-\d\d-\d\d) (\d\d):\d\d")
+
+
+def _par_de_dias(normal: str, dia: date) -> bool:
+    """La frase nombra el día y el siguiente («1 spre 2», «luni marti»)."""
+    from proceso import fechas
+
+    for m in _PAR.finditer(normal):
+        if int(m[1]) == dia.day and int(m[2]) in {dia.day + 1, 1}:
+            return True
+    semana = [
+        n
+        for lx in fechas.lexicos().values()
+        for forma, n in lx.dias
+        if f" {forma} " in f" {normal} "
+    ]
+    siguiente = (dia.weekday() + 1) % 7
+    return len(semana) >= 2 and semana[0] == dia.weekday() and semana[1] == siguiente
+
+
+def dia_de_una_noche(incidente: Documento) -> bool:
+    """El día del inicio es la tarde de la noche que nombra la frase que lo dio, y la noche que
+    cuenta es la que empieza ese día: «În noaptea de 1 spre 2 noiembrie» da el 1 (EODI-2026-00743,
+    Rumanía, 6 de noviembre de 2026), «noaptea de luni marti» el lunes, y «noaptea trecută» en una
+    nota de la mañana, la víspera (proceso/fechas.HORA_NOCHE_SIGUIENTE). Sin esto, una ficha con
+    solo el día se enlazaba con la noche que acaba ese día (la del 31 de octubre al 1 de noviembre)
+    y la web contaba la noche anterior. «În noaptea de 18 martie» o un «overnight» cuyo día es el
+    de la nota no dicen la tarde: se quedan como estaban."""
+    from proceso import fechas
+
+    tiempo = incidente.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if origen.get("tipo") not in fechas.VERIFICADOS:
+        return False
+    dia = _leer(str(tiempo["inicio"]["valor"])).date()
+    motivo = str(origen.get("motivo") or "")
+    publicada = _PUBLICADA.search(motivo)
+    for frase in _CITA.findall(motivo):
+        normal = fechas.normal(frase)
+        if _NOCHE.search(frase) and _par_de_dias(normal, dia):
+            return True
+        relativa = any(
+            fechas._contiene(normal, forma) >= 0
+            for lx in fechas.lexicos().values()
+            for forma in lx.noches
+        )
+        if relativa and publicada:
+            nota = date.fromisoformat(publicada[1])
+            manana = int(publicada[2]) < fechas.HORA_NOCHE_SIGUIENTE
+            if (nota - timedelta(days=1) if manana else nota) == dia:
+                return True
+    return False
+
+
 def _ataque_de(
     ataques: Ataques, incidente: Documento
 ) -> str | None:  # fmt: skip
@@ -121,7 +187,12 @@ def _ataque_de(
     inicio = incidente["tiempo"]["inicio"]
     momento = _leer(inicio["valor"])
     if inicio["precision"] == "dia":
-        dos = datetime.combine(momento.date(), datetime.min.time(), tzinfo=UTC) - KYIV_DESFASE
+        dia = momento.date()
+        if dia_de_una_noche(incidente):
+            # El día salió de una noche («În noaptea de 1 spre 2 noiembrie», «anoche»): es el de
+            # su tarde (proceso/fechas.py), y la noche es la que empieza ese día.
+            dia += timedelta(days=1)
+        dos = datetime.combine(dia, datetime.min.time(), tzinfo=UTC) - KYIV_DESFASE
         periodo = ataques.que_contiene("RU_UA", dos + timedelta(hours=2))
         return periodo.id if periodo else None
     periodo = ataques.que_contiene("RU_UA", momento)

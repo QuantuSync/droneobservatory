@@ -435,6 +435,36 @@ def _presencia(c: Correccion, v: Verificada) -> None:
         c.cambios.append(f"presencia no confirmada: «{frase}»")
 
 
+def dia_de_otro_suceso(incidente: Documento, fuente_id: str) -> str | None:
+    """El día que esa fuente da al suceso que cuenta, si es otro que el de la ficha (su
+    afirmación «inicio»); None si coincide o no lo da. Una nota sobre otro suceso del mismo país
+    no da el número de drones de este: promptmedia.ro (5 de noviembre de 2026) contaba «incidentul
+    din seara de 31 octombrie» (EODI-2026-00719) y el control puso sus dos drones en
+    EODI-2026-00743, la noche del 1 al 2 de noviembre."""
+    from datetime import date
+
+    from proceso import cruces
+
+    valor = str(((incidente.get("tiempo") or {}).get("inicio") or {}).get("valor") or "")[:10]
+    if not valor:
+        return None
+    dia = date.fromisoformat(valor)
+    # Los días de su suceso: los de su noche si el día salió de una noche («În noaptea de 1 spre 2
+    # noiembrie»: el 1 y el 2); si no, la víspera, el día y el siguiente (una noche, la hora UTC).
+    if cruces.dia_de_una_noche(incidente):
+        suyos = {dia, dia + timedelta(days=1)}
+    else:
+        suyos = {dia - timedelta(days=1), dia, dia + timedelta(days=1)}
+    dias = {
+        str(a["valor"])[:10]
+        for a in incidente.get("afirmaciones", [])
+        if a.get("campo") == "inicio" and a.get("fuente_id") == fuente_id and a.get("valor")
+    }
+    if any(date.fromisoformat(d) in suyos for d in dias):
+        return None
+    return min(dias) if dias else None
+
+
 def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
     d = c.incidente
     actual = (d.get("drones") or {}).get("numero", "desconocido")
@@ -442,6 +472,14 @@ def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
     if dato is not None and not NUMERO_DE_DRONES.search(dato[2]):
         # Guardado antes de exigir el número junto a la palabra dron: no cuenta.
         dato = None
+    if (
+        dato is not None
+        and dato[0] != actual
+        and (otro := dia_de_otro_suceso(d, dato[1])) is not None
+    ):
+        # La fuente del número cuenta un suceso de otro día: no cambia el que hay.
+        c.dudas.append(f"drones: «{dato[2]}» es de una fuente que da otro día ({otro})")
+        return
     if dato is not None:
         valor, fuente, frase = dato
         if actual != valor and "drones" in conservar:
