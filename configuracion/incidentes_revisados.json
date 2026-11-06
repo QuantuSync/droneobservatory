@@ -5804,6 +5804,18 @@
         "es": "El titular en español decía «Restos de drones», en plural, y la ficha tiene un dron: «Drona căzută în Galați» (hotnews.ro) (revisado el 4 de noviembre de 2026).",
         "en": "The Spanish headline said «Restos de drones», in the plural, and the record has one drone: «Drona căzută în Galați» (hotnews.ro) (reviewed on 4 November 2026)."
       }
+    },
+    {
+      "incidente": "EODI-2026-00743",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Nu au fost raportate pătrunderi în spațiul aerian național.",
+        "enlace": "https://www.mapn.ro/cpresa/19462_informa%C8%9Bie-de-presa"
+      },
+      "motivo": {
+        "es": "El Ministerio de Defensa rumano dice que, en la noche del 1 al 2 de noviembre de 2026, no se informó de entradas en el espacio aéreo de Rumanía: hubo alerta en el norte de Tulcea y cazas en el aire por los ataques a los puertos ucranianos del Danubio, pero ningún dron confirmado en Rumanía. Alerta sin entrada confirmada: ficha normal con el dron no confirmado (revisado el 6 de noviembre de 2026).",
+        "en": "The Romanian Ministry of Defence says that, on the night of 1 to 2 November 2026, no entries into Romanian airspace were reported: there was an alert in northern Tulcea and fighters in the air because of the attacks on the Ukrainian Danube ports, but no drone confirmed in Romania. Alert without a confirmed entry: a normal record with the drone not confirmed (reviewed on 6 November 2026)."
+      }
     }
   ],
   "titular_justificado": [],
