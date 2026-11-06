@@ -4,6 +4,8 @@ titulares que oscilaban o se publicaban mal el 22-23 de octubre de 2026, con la 
 import copy
 import json
 
+import pytest
+
 from esquema import Documento
 from proceso import atribucion, decidir, referencia, titulares
 
@@ -301,6 +303,71 @@ def test_varios_gentilicios_se_quitan_juntos() -> None:
         "en": "Two drones enter Latvian airspace",
     }
     # Lo que no es del dron se queda: «ataques rusos y ucranianos» no lleva dron.
+    assert _sin_atribucion("Ataques rusos y ucranianos", "Russian and Ukrainian attacks") == {
+        "es": "Ataques rusos y ucranianos",
+        "en": "Russian and Ukrainian attacks",
+    }
+
+
+@pytest.mark.parametrize(
+    ("es", "en", "es_queda", "en_queda"),
+    [
+        # EODI-2026-00760 (6 de noviembre de 2026): el reparto entre comas dejaba la segunda
+        # («Dos drones, violan»), y «one … and one …» no se reconocía.
+        ("Dos drones, uno ruso y otro ucraniano, violan el espacio aéreo de Letonia",
+         "Two drones, one likely Russian and one Ukrainian, violate Latvian airspace",
+         "Dos drones violan el espacio aéreo de Letonia", "Two drones violate Latvian airspace"),
+        ("Dos drones, uno probablemente ruso y el otro ucraniano, entran en Letonia",
+         "Two drones, one probably Russian and the other Ukrainian, enter Latvia",
+         "Dos drones entran en Letonia", "Two drones enter Latvia"),
+        ("Dos drones, una presuntamente bielorrusa y otra rusa, cruzan a Lituania",
+         "Two drones, one allegedly Belarusian and another Russian, cross into Lithuania",
+         "Dos drones cruzan a Lituania", "Two drones cross into Lithuania"),
+        ("Dos drones cruzan a Polonia, uno ruso o uno bielorruso",
+         "Two drones cross into Poland, one Russian or one Belarusian",
+         "Dos drones cruzan a Polonia", "Two drones cross into Poland"),
+        # Una coma que no encierra el reparto se queda.
+        ("Dos drones, uno ruso y otro ucraniano, violan el espacio aéreo de Letonia, "
+         "según el ejército",
+         "Two drones, one Russian and one Ukrainian, violate Latvian airspace, army says",
+         "Dos drones violan el espacio aéreo de Letonia, según el ejército",
+         "Two drones violate Latvian airspace, army says"),
+    ],
+)  # fmt: skip
+def test_el_reparto_sale_con_sus_comas(es: str, en: str, es_queda: str, en_queda: str) -> None:
+    assert _sin_atribucion(es, en) == {"es": es_queda, "en": en_queda}
+
+
+def test_la_coma_suelta_de_un_titular_guardado_sale() -> None:
+    # EODI-2026-00760 guardó «Dos drones, violan…» antes del arreglo.
+    assert _sin_atribucion(
+        "Dos drones, violan el espacio aéreo de Letonia", "Two drones, violate Latvian airspace"
+    ) == {
+        "es": "Dos drones violan el espacio aéreo de Letonia",
+        "en": "Two drones violate Latvian airspace",
+    }
+    # Las comas que emparejan un inciso o separan dos frases se quedan.
+    for es, en in (
+        ("Posible dron, probablemente un globo, cierra 45 minutos una pista de Schiphol",
+         "Possible drone, probably a balloon, closes a Schiphol runway for 45 minutes"),
+        ("Un dron sobrevuela el sur de Moldavia, de Lesnaia hacia Săiți",
+         "A drone flies over southern Moldova, from Lesnaia towards Săiți"),
+        ("Dron explota en Galați, Rumania rechaza activar Artículo 4 de la OTAN",
+         "Drone explodes in Galați, Romania refuses to trigger NATO Article 4"),
+        ("Drones, aviones y cazas sobre Letonia", "Drones, planes and fighters over Latvia"),
+    ):  # fmt: skip
+        assert _sin_atribucion(es, en) == {"es": es, "en": en}
+
+
+def test_lo_que_no_es_un_reparto_se_queda() -> None:
+    # Ni la nacionalidad del espacio aéreo ni «uno» que no reparte gentilicios.
+    assert _sin_atribucion(
+        "Dos drones entran en el espacio aéreo ucraniano, uno cae en Moldavia",
+        "Two drones enter Ukrainian airspace, one crashes in Moldova",
+    ) == {
+        "es": "Dos drones entran en el espacio aéreo ucraniano, uno cae en Moldavia",
+        "en": "Two drones enter Ukrainian airspace, one crashes in Moldova",
+    }
     assert _sin_atribucion("Ataques rusos y ucranianos", "Russian and Ukrainian attacks") == {
         "es": "Ataques rusos y ucranianos",
         "en": "Russian and Ukrainian attacks",
