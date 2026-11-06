@@ -215,6 +215,27 @@ def incidentes_publicados(carpeta: Path) -> dict[str, list[str]]:
     return indice
 
 
+def redirigidos(carpeta: Path) -> set[str]:
+    """Los identificadores unidos a otro que la web redirige a la ficha que queda («unidos»)."""
+    redirigen: set[str] = set()
+    for nombre in FICHEROS_INCIDENTES:
+        ruta = carpeta / nombre
+        if ruta.exists():
+            unidos = json.loads(ruta.read_text(encoding="utf-8")).get("unidos") or {}
+            redirigen |= {str(i) for i in unidos}
+    return redirigen
+
+
+def sin_direccion(
+    anteriores: dict[str, list[str]], incidentes: dict[str, list[str]], redirigen: set[str]
+) -> list[str]:
+    """Las fichas que se publicaban en la reconstrucción anterior y ahora ni se publican ni
+    redirigen a otra: su dirección da 404. Una retirada lo hace a propósito; cualquier otra es un
+    fallo (el 6 de noviembre de 2026 una unión revisada dejó una ficha que la gente conocía
+    redirigida a otra recién dada de alta, y la comprobación se hizo a mano)."""
+    return sorted(set(anteriores) - set(incidentes) - redirigen)
+
+
 def _instante(texto: Any) -> datetime | None:
     try:
         return datetime.strptime(str(texto), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
@@ -361,6 +382,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         return 1
     ahora = datetime.now(UTC)
     incidentes = incidentes_publicados(args.carpeta)
+    perdidas = sin_direccion(
+        (anterior.get("web") or {}).get("incidentes") or {}, incidentes, redirigidos(args.carpeta)
+    )
+    if perdidas:
+        registro.warning(
+            "fichas publicadas que pasan a 404 (ni se publican ni redirigen; ¿retiradas?): %s",
+            ", ".join(perdidas[:20]),
+        )
     pedir, motivo, web = decidir_reconstruccion(anterior.get("web") or {}, incidentes, cambiado,
                                                 ahora)  # fmt: skip
     if pedir and args.gancho is not None:

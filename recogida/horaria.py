@@ -514,6 +514,15 @@ def principal(argumentos: list[str] | None = None) -> int:
         estados["extractor"] = EstadoFuente(
             estado_extractor, paso("última llamada", ultima_llamada, almacen)
         )
+        # Las partes de una separación que el extractor acaba de dar de alta y son el suceso de
+        # otra ficha (`coincide_con`): unidas a ella en esta misma pasada, no una hora después.
+        try:
+            registro.info(
+                "partes separadas unidas a su ficha tras el extractor: %d",
+                revisados.unir_coincidentes(almacen, ahora, modelos(almacen)),
+            )
+        except Exception as error:
+            registro.warning("partes separadas sin unir: %s", str(error)[:300])
         # Fuentes oficiales de detalle: lo que dejó en disco su temporizador entra en la base y
         # se cruza con los incidentes; lo nuevo se extrae con lo que deje del límite diario el
         # extractor de noticias. Como FIRMS, no cambia el código de salida.
