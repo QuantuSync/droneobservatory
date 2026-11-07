@@ -10,6 +10,7 @@ import copy
 import json
 import random
 import sqlite3
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -1177,3 +1178,43 @@ def test_el_aeropuerto_que_reacciona_a_una_alerta_no_es_el_lugar(
     from proceso import control_fichas as reglas
 
     assert reglas.reacciona_a_una_alerta(frase) is esperado
+
+
+# --- EODI-2026-00622: la relectura que perdía la fecha revisada ------------------------------
+
+RELECTURA_00622 = json.loads(
+    (Path(__file__).parent / "cerrojo" / "relectura_00622.json").read_text(encoding="utf-8")
+)
+AHORA_00622 = datetime(2026, 11, 7, 15, 44, tzinfo=UTC)
+
+
+def _relectura_00622() -> Almacen:
+    almacen = Almacen.abrir()
+    almacen._escribir_incidente(copy.deepcopy(RELECTURA_00622["guardado"]))
+    almacen.guardar_incidente(
+        copy.deepcopy(RELECTURA_00622["releida"]), AHORA_00622, VOCABULARIO_MODELOS
+    )
+    return almacen
+
+
+def test_la_relectura_de_00622_conserva_la_fecha_y_el_estado_revisados(aplicar: None) -> None:
+    # Los documentos reales del 7/11/2026: sin el arreglo, el cerrojo fallaba («estado.historial[1]
+    # cita una fuente inexistente») y la ficha quedaba con la fecha de la noticia, el 25.
+    almacen = _relectura_00622()
+    actual = almacen.incidente("EODI-2026-00622")
+    assert actual is not None
+    assert actual["tiempo"]["inicio"] == {"precision": "dia", "valor": "2026-09-18T00:00Z"}
+    assert actual["estado"] == RELECTURA_00622["guardado"]["estado"]
+    ids = {f["id"] for f in actual["fuentes"]}
+    assert {"revisada-4d8cd915f5f5d4b0-declaracion-1", "revisada-7f2fa9a8ec55c41c"} <= ids
+    assert not almacen.controles(protegido.PREFIJO_FALLO)
+
+
+def test_la_relectura_de_00622_si_el_cerrojo_falla_no_pasa(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Si aun así lo retenido no validara, la ficha se queda como estaba.
+    monkeypatch.setattr(protegido, "_con_fuentes_citadas", lambda resultado, _: resultado)
+    almacen = _relectura_00622()
+    assert almacen.incidente("EODI-2026-00622") == RELECTURA_00622["guardado"]
+    assert len(almacen.controles(protegido.PREFIJO_FALLO)) == 1

@@ -1,0 +1,449 @@
+{
+ "descripcion": "EODI-2026-00622 (Melilla), 7 de noviembre de 2026: la versión guardada (publicada, con la fecha revisada a mano, 18 de septiembre) y la que trae la relectura de su candidato con main en una copia de la base. La relectura no trae las fuentes revisada-…: el estado conservado citaba una de ellas, lo retenido no validaba y la escritura pasaba.",
+ "guardado": {
+  "afirmaciones": [
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": true
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.5,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "2026-09-25"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "dia"
+   },
+   {
+    "campo": "localidad",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "Melilla"
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "aeropuerto de Melilla",
+     "pais": "ES",
+     "region": "Melilla"
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "Aeropuerto de Melilla"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "ES"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "valor": "interrupcion_aeroportuaria"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-10-19T09:17Z"
+   },
+   "candidato": "CAND-20260925T0654-GEML-aeropuerto",
+   "huella_fuentes": "44c616ad5c01d71f0c79b0a3e305286028267c61776c8e04074b18b2d25d0903",
+   "modelos": {
+    "es_incidente": "claude-sonnet-5-5",
+    "inicio": "claude-sonnet-5-5",
+    "inicio_precision": "claude-sonnet-5-5",
+    "localidad": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "objetivo_categoria": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "objetivo_nombre": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-11-01T13:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T06:54Z"
+     },
+     "fuente_id": "gdelt-44c616ad5c01d71f"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-25T00:00Z"
+     },
+     "fuente_id": "revisada-4d8cd915f5f5d4b0-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "es_incidente",
+     "inicio",
+     "inicio_precision",
+     "localidad",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-09-25T06:54Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "El aeropuerto de Melilla ha registrado al menos dos incidentes durante la última semana relacionados con la presencia de drones en la zona de aproximación",
+    "id": "gdelt-44c616ad5c01d71f",
+    "idioma": "es",
+    "interna_fuera_de_ucrania": false,
+    "medio": "gaceta.es",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [],
+    "credibilidad": 3,
+    "enlace": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-09-25T00:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "El primer incidente tuvo lugar durante la noche del 18 de septiembre",
+    "id": "revisada-7f2fa9a8ec55c41c",
+    "idioma": "es",
+    "interna_fuera_de_ucrania": false,
+    "medio": "gaceta.es",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-09-25T00:00Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "La Delegación del Gobierno en Melilla reconoció el jueves ambos sucesos",
+    "id": "revisada-4d8cd915f5f5d4b0-declaracion-1",
+    "idioma": "es",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Delegación del Gobierno en Melilla (declaración oficial citada en gaceta.es)",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00622",
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "localidad": "Melilla",
+   "nivel": "instalacion",
+   "pais": "ES",
+   "punto": {
+    "lat": 35.28015,
+    "lon": -2.95645
+   },
+   "radio_km": 5.0,
+   "region": "Melilla",
+   "suceso": "aeropuerto de Melilla"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Aeropuerto de Melilla",
+   "oaci": "GEML"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-09-18T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "revisada-7f2fa9a8ec55c41c",
+    "motivo": "«la noche del 18 de septiembre» en gaceta.es (25 de septiembre de 2026)",
+    "tipo": "explicita"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "A possible drone on the approach to Melilla airport's runway",
+   "es": "Un posible dron en la aproximación a la pista del aeropuerto de Melilla"
+  },
+  "zona": {
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ },
+ "releida": {
+  "id": "EODI-2026-00622",
+  "tipo": "sobrevuelo",
+  "estado": {
+   "actual": "notificado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "valor": "2026-09-25T06:54Z",
+      "precision": "aproximada"
+     },
+     "fuente_id": "gdelt-44c616ad5c01d71f"
+    }
+   ]
+  },
+  "titulo": {
+   "es": "Un posible dron en la aproximación a la pista del aeropuerto de Melilla",
+   "en": "A possible drone on the approach to Melilla airport's runway"
+  },
+  "presencia_dron": "no_confirmada",
+  "tiempo": {
+   "inicio": {
+    "valor": "2026-09-25T06:54Z",
+    "precision": "aproximada"
+   },
+   "origen_inicio": {
+    "tipo": "publicacion",
+    "motivo": "ninguna frase escribe el día del suceso: fecha de publicación (2026-09-25 08:54, hora local del medio)",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "corregido": true
+   }
+  },
+  "lugar": {
+   "pais": "ES",
+   "nivel": "instalacion",
+   "punto": {
+    "lat": 35.28015,
+    "lon": -2.95645
+   },
+   "radio_km": 5.0,
+   "geocodificacion": "nomenclator",
+   "localidad": "Melilla",
+   "region": "Melilla",
+   "suceso": "aeropuerto de Melilla"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "fuentes": [
+   {
+    "id": "gdelt-44c616ad5c01d71f",
+    "enlace": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+    "medio": "gaceta.es",
+    "fecha": {
+     "valor": "2026-09-25T06:54Z",
+     "precision": "aproximada"
+    },
+    "idioma": "es",
+    "fiabilidad": "C",
+    "credibilidad": 3,
+    "frase_origen": "El aeropuerto de Melilla ha registrado al menos dos incidentes durante la última semana relacionados con la presencia de drones en la zona de aproximación",
+    "replicas": 0,
+    "es_autoridad": false,
+    "interna_fuera_de_ucrania": false,
+    "publica": true,
+    "campos_respaldados": [
+     "es_incidente",
+     "inicio",
+     "inicio_precision",
+     "localidad",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ]
+   }
+  ],
+  "afirmaciones": [
+   {
+    "campo": "es_incidente",
+    "valor": true,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.9
+   },
+   {
+    "campo": "inicio",
+    "valor": "2026-09-25",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.5
+   },
+   {
+    "campo": "inicio_precision",
+    "valor": "dia",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.5
+   },
+   {
+    "campo": "localidad",
+    "valor": "Melilla",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.9
+   },
+   {
+    "campo": "lugar_suceso",
+    "valor": {
+     "nombre": "aeropuerto de Melilla",
+     "nivel": "instalacion",
+     "pais": "ES",
+     "region": "Melilla"
+    },
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.85
+   },
+   {
+    "campo": "objetivo_categoria",
+    "valor": "aeropuerto",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.9
+   },
+   {
+    "campo": "objetivo_conocido",
+    "valor": true,
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.9
+   },
+   {
+    "campo": "objetivo_nombre",
+    "valor": "Aeropuerto de Melilla",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.9
+   },
+   {
+    "campo": "pais",
+    "valor": "ES",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.9
+   },
+   {
+    "campo": "presencia_dron",
+    "valor": "no_confirmada",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.7
+   },
+   {
+    "campo": "tipo",
+    "valor": "interrupcion_aeroportuaria",
+    "fuente_id": "gdelt-44c616ad5c01d71f",
+    "confianza_extraccion": 0.7
+   }
+  ],
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-10-19T09:17Z"
+   },
+   "ultima_actualizacion": {
+    "valor": "2026-11-07T15:44Z",
+    "precision": "minuto"
+   },
+   "version_extractor": "ficha/5",
+   "huella_fuentes": "44c616ad5c01d71f0c79b0a3e305286028267c61776c8e04074b18b2d25d0903",
+   "candidato": "CAND-20260925T0654-GEML-aeropuerto",
+   "modelos": {
+    "es_incidente": "claude-sonnet-5-5",
+    "inicio": "claude-sonnet-5-5",
+    "inicio_precision": "claude-sonnet-5-5",
+    "localidad": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "objetivo_categoria": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "objetivo_nombre": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5"
+   }
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Aeropuerto de Melilla",
+   "oaci": "GEML"
+  },
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "zona": {
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ }
+}
