@@ -547,23 +547,29 @@ class ClienteFalso:
         return respuesta(self.datos)
 
 
-def test_el_limite_diario_detiene_las_llamadas(almacen: Almacen) -> None:
+def test_el_tope_mensual_detiene_las_llamadas(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Desde el 7 de noviembre de 2026 solo frena el tope mensual (el de cada día, ya no).
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.30")
     candidato = candidato_con_articulos(almacen)
     peticion = extraccion.preparar(almacen, candidato, None)
     almacen.registrar_llamada({
         "fecha": "2025-09-24T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
-        "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_DIARIO_USD,
+        "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": 0.30,
     })  # fmt: skip
     falso = ClienteFalso(ficha_ejemplo())
     extraccion.extraer(almacen, falso, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert falso.llamadas == 0
 
 
-def test_el_limite_diario_no_se_puede_superar(almacen: Almacen) -> None:
+def test_el_tope_mensual_no_se_puede_superar(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.30")
     candidato = candidato_con_articulos(almacen)
     peticion = extraccion.preparar(almacen, candidato, None)
-    casi = coste.LIMITE_DIARIO_USD - 0.02
+    casi = 0.30 - 0.02
     almacen.registrar_llamada({
         "fecha": "2025-09-24T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": casi,
@@ -571,7 +577,7 @@ def test_el_limite_diario_no_se_puede_superar(almacen: Almacen) -> None:
     falso = ClienteFalso(ficha_ejemplo())
     extraccion.extraer(almacen, falso, [peticion] * 50, AHORA, coste.Modo.HORARIO, MODELOS)
     assert 0 < falso.llamadas < 50
-    assert almacen.gastado("horario", "2025-09-24") <= coste.LIMITE_DIARIO_USD
+    assert coste.del_mes(almacen, AHORA).total <= 0.30
 
 
 def test_candidatos_que_necesitan_extraccion(almacen: Almacen) -> None:
@@ -775,14 +781,15 @@ def test_el_saldo_agotado_para_como_el_limite_sin_poner_en_rojo(
     assert (tmp_path / "saldo_api.json").exists()
 
 
-def test_alcanzar_el_limite_diario_no_es_un_fallo(
-    almacen: Almacen, candidato_pendiente: dict[str, Any], caplog: pytest.LogCaptureFixture
-) -> None:
+def test_alcanzar_el_tope_mensual_no_es_un_fallo(
+    almacen: Almacen, candidato_pendiente: dict[str, Any], caplog: pytest.LogCaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:  # fmt: skip
     caplog.set_level(logging.WARNING, logger="recogida")
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.30")
     almacen.registrar_llamada({
         "fecha": f"{DIA_AHORA}T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
-        "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_DIARIO_USD,
+        "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": 0.30,
     })  # fmt: skip
     resultado, servicio = paso_horario(almacen, [])
     assert servicio.pedidas == []

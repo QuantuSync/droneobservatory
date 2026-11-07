@@ -1,12 +1,16 @@
-"""Los dos modelos del servicio: el base, para todo, y el experto, para los casos difíciles.
+"""El modelo del servicio: desde el 7 de noviembre de 2026, uno solo para todo.
 
 Configuración (variables de entorno, secretos en el servidor; docs/modelos.md):
 
-- EODI_MODELO_BASE: el modelo de todas las llamadas. Si no está, el de EODI_EXTRACTOR_MODELO
-  (el único modelo de antes del 14 de octubre de 2026), así que volver atrás es quitar la
-  variable.
-- EODI_MODELO_EXPERTO: el modelo al que se escalan los casos difíciles (proceso/escalado.py).
-  Si no está, no se escala nada.
+- EODI_MODELO: el modelo único de todas las llamadas (Sonnet 5.5). Manda sobre las dos de abajo:
+  con él, el base y el experto son el mismo modelo y nada se escala (escala()).
+- EODI_MODELO_BASE y EODI_MODELO_EXPERTO: los dos modelos del 14 de octubre al 7 de noviembre de
+  2026 (Haiku 5.5 para todo y Sonnet 5.5 para los casos que escalaba proceso/escalado.py). Sin
+  EODI_MODELO, el base es EODI_MODELO_BASE (o EODI_EXTRACTOR_MODELO, el de antes del 14 de
+  octubre) y el experto, EODI_MODELO_EXPERTO.
+- EODI_EXTRACCION_HAIKU=1 (interruptor de vuelta atrás, en la configuración del servidor): solo la
+  extracción de las fichas vuelve al modelo de EODI_MODELO_BASE (Haiku 5.5), con su escalado de
+  antes al modelo único. Todo lo demás sigue con el modelo único.
 
 Cada modelo tiene su tarifa (dólares por millón de tokens) y lo que admite la petición. Los
 modelos nuevos no admiten temperatura ni muestreo (darían un error 400), razonan antes de
@@ -94,13 +98,51 @@ def de(identificador: str | None) -> Modelo:
     return RESERVA
 
 
+VARIABLE_UNICO = "EODI_MODELO"
+VARIABLE_INTERRUPTOR = "EODI_EXTRACCION_HAIKU"
+
+
+def unico() -> str:
+    """El modelo único (EODI_MODELO), o vacío si no está configurado."""
+    return os.environ.get(VARIABLE_UNICO, "").strip()
+
+
 def base() -> str:
-    return os.environ.get("EODI_MODELO_BASE") or os.environ.get("EODI_EXTRACTOR_MODELO", "")
+    """El modelo de las llamadas: el único si está; si no, el base de antes."""
+    return (
+        unico() or os.environ.get("EODI_MODELO_BASE") or os.environ.get("EODI_EXTRACTOR_MODELO", "")
+    )
 
 
 def experto() -> str:
-    """El modelo experto, o vacío si no se escala."""
-    return os.environ.get("EODI_MODELO_EXPERTO", "").strip()
+    """El modelo que decide los casos difíciles: el único si está (el mismo que el base); si no,
+    el experto de antes, o vacío."""
+    return unico() or os.environ.get("EODI_MODELO_EXPERTO", "").strip()
+
+
+def extraccion() -> str:
+    """El modelo de la extracción de las fichas: el base, salvo con el interruptor de vuelta atrás
+    (EODI_EXTRACCION_HAIKU=1), que la devuelve al modelo de EODI_MODELO_BASE."""
+    if os.environ.get(VARIABLE_INTERRUPTOR, "").strip() == "1":
+        return os.environ.get("EODI_MODELO_BASE", "").strip() or base()
+    return base()
+
+
+def familia(identificador: str | None) -> str:
+    """La familia y versión de un modelo (su prefijo conocido), o el identificador tal cual."""
+    texto = (identificador or "").strip()
+    conocido = de(texto)
+    return conocido.prefijo or texto
+
+
+def escala(modelo_respuesta: str | None) -> bool:
+    """Si una respuesta de `modelo_respuesta` se puede escalar: solo si hay experto y es otro
+    modelo. Con un modelo único nada se escala (repetir la llamada con el mismo modelo solo
+    gastaría el doble)."""
+    otro = experto()
+    if not otro:
+        return False
+    return familia(modelo_respuesta or base()) != familia(otro)
 
 
 def coste(

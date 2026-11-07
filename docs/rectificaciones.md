@@ -1,5 +1,10 @@
 # Rectificaciones oficiales de la presencia del dron
 
+> **Desde el 7 de noviembre de 2026** hay un solo modelo ([`modelos.md`](modelos.md), «Un solo
+> modelo»): donde aquí dice «experto» o «modelo base», es el mismo modelo único. Los topes de cada
+> día que se citan ya no frenan: solo cuenta el tope mensual de 150 USD; la búsqueda mensual tiene
+> 6,00 USD por pasada (era 0,30 con el modelo base).
+
 Desde el 16 de octubre de 2026. Código: [`proceso/rectificaciones.py`](../proceso/rectificaciones.py)
 (qué cambia y cómo queda), [`recogida/rectificaciones.py`](../recogida/rectificaciones.py) (de dónde
 salen y quién decide) y [`modelo/rectificacion.py`](../modelo/rectificacion.py) (la pregunta al

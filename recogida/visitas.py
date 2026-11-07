@@ -736,12 +736,7 @@ def lineas_control(control: Documento | None) -> list[str]:
     lineas += lineas_auditoria(control.get("auditoria") or {})
     lineas += lineas_cerrojo(control.get("cerrojo"))
     lineas += lineas_entrada(control.get("entrada"))
-    return (
-        lineas
-        + lineas_api(control.get("api"))
-        + lineas_modelos(control.get("modelos"))
-        + lineas_experto(control)
-    )
+    return lineas + lineas_api(control.get("api")) + lineas_modelos(control.get("modelos"))
 
 
 def lineas_entrada(dia: Documento | None) -> list[str]:
@@ -796,47 +791,34 @@ def lineas_cerrojo(cerrojo: Documento | None) -> list[str]:
 
 
 def lineas_api(api: Documento | None) -> list[str]:
-    """Lo gastado en la API ese día (UTC, todas las llamadas) y en el mes hasta entonces, frente al
-    tope mensual (modelo/coste.py)."""
+    """Lo gastado en la API ese día (UTC, todas las llamadas), en el mes hasta entonces frente al
+    tope mensual (modelo/coste.py) y la previsión de fin de mes (al ritmo de los últimos 7 días)."""
     if not api:
         return ["  Gasto de la API: sin registro"]
     tope = float(api["tope"])
     parte = f" ({float(api['mes']) / tope:.0%})" if tope else ""
-    return [
+    linea = (
         f"  Gasto de la API: {float(api['dia']):.2f} USD ese día; en el mes, "
-        f"{float(api['mes']):.2f} de {tope:.2f} USD{parte}".replace(".", ",")
-    ]
+        f"{float(api['mes']):.2f} de {tope:.2f} USD{parte}"
+    )
+    if api.get("prevision") is not None:
+        linea += f"; previsión a fin de mes, {float(api['prevision']):.2f} USD"
+    return [linea.replace(".", ",")]
 
 
-def lineas_experto(control: Documento) -> list[str]:
-    """El gasto del experto ese día (UTC) en su tope normal y en la reserva crítica, y los casos
-    críticos que esperan ahora al experto (se reintentan en cada recogida)."""
-    lineas = []
-    experto = control.get("experto")
-    if experto:
-        lineas.append(
-            "  Experto: tope normal "
-            + f"{float(experto['normal']):.4f} de {float(experto['limite']):.2f} USD; reserva "
-            f"crítica {float(experto['reserva']):.4f} de {float(experto['reserva_limite']):.2f} "
-            "USD".replace(".", ",")
-        )
-    esperando = control.get("criticos_esperando") or []
-    if esperando:
-        lineas.append(
-            f"  Casos críticos esperando al experto: {len(esperando)} (se reintentan en cada "
-            "recogida)"
-        )
-        lineas += [f"  - {c['clave'][:120]} desde {c['desde']}" for c in esperando[:LIMITE]]
-    return lineas
-
-
-# Los papeles de los modelos (docs/modelos.md), en el orden en que se cuentan.
-PAPELES = (("base", "modelo base"), ("experto", "modelo experto"), ("anterior", "modelo anterior"))
+# Los papeles de los modelos (docs/modelos.md), en el orden en que se cuentan. Desde el 7 de
+# noviembre de 2026 hay un modelo único; los otros papeles salen solo en los días de antes.
+PAPELES = (
+    ("unico", "modelo único"),
+    ("base", "modelo base"),
+    ("experto", "modelo experto"),
+    ("anterior", "modelo anterior"),
+)
 
 
 def lineas_modelos(modelos: Documento | None) -> list[str]:
-    """Las llamadas de cada modelo ese día, cuántas se escalaron al experto y lo que costó cada
-    uno (todas las llamadas del observatorio, no solo las del control)."""
+    """Las llamadas de cada modelo ese día y lo que costó cada uno (todas las llamadas del
+    observatorio, no solo las del control)."""
     if modelos is None:
         return ["  Modelos: sin registro"]
     if not modelos:
@@ -847,8 +829,6 @@ def lineas_modelos(modelos: Documento | None) -> list[str]:
         if not cuenta:
             continue
         texto = f"{nombre} {numero(int(cuenta['llamadas']))} llamadas"
-        if clave == "experto":
-            texto += f" ({numero(int(cuenta['escaladas']))} escaladas)"
         texto += f", {cuenta['coste']:.4f} USD".replace(".", ",")
         partes.append(texto)
     total = sum(float(c.get("coste") or 0) for c in modelos.values())

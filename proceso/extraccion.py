@@ -278,7 +278,7 @@ def anotar_espera(
     documento[candidato_id] = {
         "hasta": hasta, "desde": anterior.get("desde", _fecha(ahora)),
         "motivos": motivos[:10], "por": "tope" if por_tope else "fallo",
-        "tope": coste.LIMITE_EXPERTO_DIARIO_USD,
+        "tope": coste.TOPE_ESPERA_USD,
     }  # fmt: skip
     if critico or anterior.get("critico"):
         documento[candidato_id]["critico"] = True
@@ -850,8 +850,9 @@ def publicada_sin_experto(
     almacen: Almacen, peticion: Peticion, escalado_por: list[str] | None
 ) -> Documento | None:
     """La ficha publicada del candidato que una respuesta del base no puede retirar ni rebajar:
-    solo con dos modelos y si la respuesta no es del experto."""
-    if escalado_por or not modelos.experto():
+    solo con dos modelos y si la respuesta no es del experto. Con el modelo único (desde el 7 de
+    noviembre de 2026) decide su respuesta, como la del experto."""
+    if escalado_por or not modelos.escala(modelos.extraccion()):
         return None
     return publicada_del_candidato(almacen, peticion.candidato["id"])
 
@@ -899,7 +900,9 @@ def escalar(
     """
     fabrica_experto = getattr(cliente, "experto", None)
     experto = fabrica_experto() if callable(fabrica_experto) else None
-    if experto is None:
+    if experto is None or not modelos.escala(str(respuesta.get("model") or "")):
+        # Sin experto, o la respuesta ya es del modelo que decide (el modelo único desde el 7 de
+        # noviembre de 2026): vale la respuesta, sin repetirla.
         return respuesta, None
     candidato_id = peticion.candidato["id"]
     publicada = publicada_del_candidato(almacen, candidato_id)
@@ -1644,6 +1647,10 @@ def extraer(
     la ejecución.
     """
     hechas = Extraidas()
+    # El cliente de la extracción: el mismo, salvo con el interruptor de vuelta atrás
+    # (modelos.extraccion), que la hace con el modelo de antes y escala como entonces.
+    para_extraccion = getattr(cliente, "para_extraccion", None)
+    extractor = para_extraccion() if callable(para_extraccion) else cliente
     # Agotado el tope del modo, siguen solo los casos críticos que esperaban al experto: van
     # directos a él (critico_sin_base) y la tanda acaba con la parada del límite.
     sin_tope: coste.LimiteGasto | None = None
@@ -1677,7 +1684,7 @@ def extraer(
                         almacen, cliente, peticion, ahora, sin_tope
                     )
                 else:
-                    respuesta = cliente.mensaje(peticion.cuerpo())
+                    respuesta = extractor.mensaje(peticion.cuerpo())
                     respuesta, escalado_por = escalar(
                         almacen, cliente, peticion, respuesta, ahora, modo
                     )

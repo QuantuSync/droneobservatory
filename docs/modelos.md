@@ -1,9 +1,102 @@
-# Dos modelos: base y experto
+# Modelos: uno solo desde el 7 de noviembre de 2026
 
-Documentación técnica interna (no se enseña en la web). Desde el 14 de octubre de 2026 las
-llamadas al servicio de modelos usan dos modelos: el **base** para todo y el **experto** solo
-para los casos difíciles, que decide el código con reglas fijas. Antes había uno solo (Haiku 4.5,
-el de `EODI_EXTRACTOR_MODELO`).
+Documentación técnica interna (no se enseña en la web).
+
+## Un solo modelo (desde el 7 de noviembre de 2026)
+
+**Todas las llamadas usan Sonnet 5.5** (2 USD por millón de tokens de entrada y 10 de salida; la
+caché y los lotes, como abajo): la extracción de las fichas, las traducciones, las comparaciones
+y verificaciones del control, el filtro de entrada, la segunda lectura, las rectificaciones, los
+partes de Ucrania y el catálogo. No hay escalado entre modelos: ninguna llamada se repite con otro
+modelo.
+
+Por qué: Haiku 5.5 cometía errores de lectura que llegaban a la web (frases que mezclan dos días,
+el número de drones de otro suceso, titulares rotos). En la prueba comparativa del 14 de octubre
+de 2026 (abajo), con las mismas 553 noticias, Sonnet 5.5 acertó 534 datos frente a 471 y se
+inventó 6 frente a 28.
+
+Gasto medido antes del cambio (del 31 de octubre al 6 de noviembre de 2026, `llamadas_extractor`
+y `llamadas_modelo` del servidor): 961 llamadas, 5,0 millones de tokens de entrada y 1,22 de
+salida; 6,57 USD con los dos modelos. Las mismas llamadas con Sonnet 5.5: 18,66 USD (80 USD al
+mes), o unos 12,7 (55 al mes) con la salida que da Sonnet de verdad, que razona mucho menos que
+Haiku. El día de más gasto de los 30 anteriores sin contar los repasos de una sola vez (el 21 de
+octubre de 2026) habría costado 6,12 USD, 184 al mes a ese ritmo. Por modo, con todo en Sonnet:
+recogida horaria 9,73; control 4,99; segunda lectura 1,65; entrada 1,25; segunda búsqueda 0,80;
+revisión 0,17; guerra 0,07.
+
+### Configuración
+
+- `EODI_MODELO` (secretos `extractor.env`): el identificador completo del modelo único (el del
+  proveedor, que acaba en `sonnet-5-5`). Manda sobre `EODI_MODELO_BASE` y `EODI_MODELO_EXPERTO`:
+  con él, el modelo base y el experto son el mismo (`modelos.base()` y `modelos.experto()` lo
+  devuelven) y `modelos.escala()` dice que nada se escala.
+- Donde el código de antes escalaba (la ficha de una noticia, `extraccion.escalar`; las
+  comparaciones y verificaciones del control, `control_fichas.Llamador.llamar`; el lote de la
+  madrugada, `control_fichas.escalar_lote`; la red de seguridad de las fichas publicadas,
+  `extraccion.publicada_sin_experto`) se mira si la respuesta ya es del modelo que decide (la misma
+  familia que el experto): si lo es, vale y no se repite. Lo que antes era «solo del experto» (el
+  filtro de entrada, la segunda lectura, las rectificaciones, la segunda búsqueda) lo hace el mismo
+  modelo único.
+- `proceso/escalado.py` se queda como biblioteca de señales (qué fuente es oficial, qué caso es
+  crítico, las señales de `configuracion/senales_escalado.json`), que usan el control, la segunda
+  lectura y el filtro de lo que no es un suceso. Con el modelo único sus motivos ya no repiten
+  ninguna llamada.
+- **Interruptor de vuelta atrás** (`EODI_EXTRACCION_HAIKU=1`, en la configuración del servidor,
+  `interno/servidor/configuracion.sh`; apagado): solo la extracción de las fichas vuelve a Haiku
+  5.5 (el modelo de `EODI_MODELO_BASE`, que sigue en `extractor.env`) con su escalado de antes al
+  modelo único; todo lo demás sigue con Sonnet. Para volver del todo al esquema de dos modelos,
+  quitar `EODI_MODELO` de `extractor.env`.
+- Peticiones: Sonnet 5.5 da un error 400 con `temperature`, `top_p` o `top_k` y no admite el uso
+  forzado de una herramienta; las peticiones ya se escriben sin herramientas (salida estructurada
+  con `output_config.format`) y `modelos.adaptar` quita el muestreo. El esfuerzo de cada petición
+  no cambia (tabla de abajo) y el máximo de salida lleva el margen del razonamiento de Sonnet (2.000
+  / 4.000 / 6.000 tokens con esfuerzo bajo / medio / alto). Espera de cada respuesta: 150 s.
+
+### Un solo tope: 150 USD al mes
+
+- **Todo lo que se gasta en la API en el mes de calendario (UTC) cuenta contra 150 USD**
+  (`coste.TOPE_MENSUAL_USD`; `EODI_TOPE_MENSUAL_USD` lo cambia). El presupuesto es de 200 USD: 50
+  quedan de margen para imprevistos.
+- Antes de cada llamada se mira solo que lo gastado en el mes más el peor caso de la llamada quepa
+  (`coste.comprobar_mes`). **Ya no hay topes de cada día**: ni el del experto (1,50) ni su reserva
+  crítica (0,50), ni los cupos de entrada (3,00), control, segunda lectura y segunda búsqueda, ni
+  el de la recogida horaria. Sus constantes quedan en `modelo/coste.py` como historia. Los
+  presupuestos de los trabajos de una sola vez (histórico, repasos, revisiones) siguen igual.
+- Los topes de cada pasada que medían trabajo en dólares del modelo base se multiplican por 20 (la
+  diferencia de tarifa) para hacer el mismo trabajo: la pasada de madrugada del control
+  (`TOPE_NOCHE_USD` 0,08 → 1,60; `TOPE_NOCHE_CITAS_USD` 0,05 → 1,00), la búsqueda mensual de
+  rectificaciones (0,30 → 6,00) y el cupo diario del reproceso de la recogida
+  (`LIMITE_DIARIO_USD` 0,30 → 6,00, que ya no frena la recogida). El catálogo vivo conserva su
+  tope de 0,10 USD al día (hará menos frases cada día).
+- **Al 80 %**, un aviso por el canal privado de avisos (el mismo del resumen diario), una sola vez
+  al mes (`recogida/gasto_api.py`).
+- **Al 100 %** (cuando lo que queda ya no da para una llamada grande, `MARGEN_AVISO_100_USD`, 0,50
+  USD), **el trabajo nuevo se retiene sin publicarse** hasta el mes siguiente y llega un aviso, una
+  vez. Ninguna ficha sale sin leer o leída a medias: un candidato sin extraer sigue pendiente, una
+  ficha nueva sin la decisión del filtro de entrada sigue retenida y nada publicado cambia sin una
+  respuesta del modelo.
+- Las esperas anotadas antes del cambio (con el tope diario del experto) vencen en la recogida
+  siguiente (`coste.TOPE_ESPERA_USD`) y se hacen con el modelo único.
+
+### Qué modelo decidió cada ficha y resumen diario
+
+- Cada llamada sigue anotada con su modelo (`llamadas_modelo`) y cada ficha guarda en
+  `control.modelos` el modelo que decidió cada dato (abajo, «Qué modelo decidió cada dato»).
+- El resumen diario privado dice el gasto del día, el del mes frente a los 150 USD y la previsión
+  de fin de mes (lo gastado más la media de los últimos 7 días por cada día que queda;
+  `control_fichas.gasto_api`, `visitas.lineas_api`), y las llamadas y el gasto del modelo único
+  («Modelos: modelo único N llamadas, X USD»). Ya no salen las líneas del escalado ni del experto.
+
+Pruebas: `tests/test_modelos.py`, `tests/test_gasto_api.py` y las de cada paso que llamaba al
+experto.
+
+## Hasta el 7 de noviembre de 2026: dos modelos, base y experto
+
+Lo que sigue describe el esquema anterior, que se conserva como historia y para el interruptor de
+vuelta atrás. Del 14 de octubre al 7 de noviembre de 2026 las llamadas al servicio de modelos
+usaron dos modelos: el **base** para todo y el **experto** solo para los casos difíciles, que
+decidía el código con reglas fijas. Antes había uno solo (Haiku 4.5, el de
+`EODI_EXTRACTOR_MODELO`).
 
 | Papel | Modelo | Tarifa (USD por millón de tokens) |
 |---|---|---|
@@ -16,7 +109,7 @@ la mitad. El tramo de más de 100.000 tokens se aplica a toda la petición cuand
 caché) pasa de 100.000. Las tarifas están en `modelo/modelos.py` (`MODELOS`) y cada llamada se
 cobra con la del modelo que la hizo (el campo `model` de la respuesta).
 
-## Configuración
+### Configuración de entonces
 
 Variables del fichero de secretos `extractor.env` (en el servidor, en la carpeta de
 secretos del usuario del observatorio; en local, `%USERPROFILE%\.eodi\extractor.env`), que cargan todas las unidades:

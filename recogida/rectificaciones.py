@@ -61,7 +61,9 @@ MAX_POR_PASADA = 4
 DIAS_DESDE_EL_SUCESO = 1
 # Búsqueda mensual: incidentes confirmados de más de un mes, titulares por incidente y tope.
 DIAS_MENSUAL = 30
-TOPE_MENSUAL_USD = 0.30
+# Era 0,30 con el modelo base; con el modelo único (desde el 7 de noviembre de 2026, unas 20
+# veces más caro por token), 6,00 deja el mismo trabajo.
+TOPE_MENSUAL_USD = 6.00
 MOTIVO_ESCALADO = "publicada: rectificación oficial de la presencia"
 # Lo que entra en la cola desde el barrido diario de la segunda lectura.
 ORIGEN_SEGUNDA = "segunda_lectura"

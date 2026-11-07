@@ -6,6 +6,8 @@ from dataclasses import replace
 from datetime import timedelta
 from typing import Any
 
+import pytest
+
 from almacen.base import Almacen
 from modelo import coste, ficha
 from proceso import escalado, extraccion
@@ -26,6 +28,13 @@ DUDOSA = ficha_ejemplo(**SIN_CIERRE, es_incidente=campo(False, "Droner over", 0.
 SEGURA = ficha_ejemplo(**SIN_CIERRE, es_incidente=campo(False, "Droner over", 0.95))
 LLANO = "Nogen så noget i himlen over byen i aftes."
 BUQUE = "Restos de un dron en la cubierta del buque Chelsea 3, en aguas de Bulgaria."
+
+
+@pytest.fixture(autouse=True)
+def dos_modelos(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Con dos modelos distintos se escala (modelos.escala); con el modelo único, no.
+    monkeypatch.setenv("EODI_MODELO_BASE", BASE)
+    monkeypatch.setenv("EODI_MODELO_EXPERTO", EXPERTO)
 
 
 def _peticion_texto(almacen: Almacen, texto: str, id_: str | None = None) -> extraccion.Peticion:
@@ -67,10 +76,12 @@ def _peticiones(almacen: Almacen, texto: str) -> extraccion.Peticion:
     return _peticion_texto(almacen, texto)
 
 
-def test_sin_margen_del_experto_el_descarte_dudoso_espera_y_no_bloquea_nada(
-    almacen: Almacen,
-) -> None:
-    _gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD)
+def test_sin_presupuesto_para_el_experto_el_descarte_dudoso_espera_y_no_bloquea_nada(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch,
+) -> None:  # fmt: skip
+    # Lo que queda del tope mensual (el único desde el 7 de noviembre de 2026) da para el peor caso
+    # del base, no para el del experto.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.03")
     peticion = _peticiones(almacen, LLANO)
     cliente = Cliente(DUDOSA, ficha_ejemplo())
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
@@ -86,15 +97,18 @@ def test_sin_margen_del_experto_el_descarte_dudoso_espera_y_no_bloquea_nada(
     segura = Cliente(SEGURA, ficha_ejemplo())
     extraccion.extraer(almacen, segura, [otro], AHORA, coste.Modo.HORARIO, MODELOS)
     assert segura.pedidas == [BASE] and "otro" not in extraccion.esperan_experto(almacen)
-    # Al día siguiente, con su tope renovado, lo decide el experto.
+    # Al día siguiente, con presupuesto, lo decide el experto.
+    monkeypatch.delenv(coste.VARIABLE_TOPE_MENSUAL)
     manana = AHORA + timedelta(days=1)
     luego = extraccion.extraer(almacen, cliente, [peticion], manana, coste.Modo.HORARIO, MODELOS)
     assert luego.escalados == [peticion.candidato["id"]]
     assert peticion.candidato["id"] not in extraccion.esperan_experto(almacen)
 
 
-def test_el_buque_del_alcance_usa_la_reserva_critica(almacen: Almacen) -> None:
-    _gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD)
+def test_el_buque_del_alcance_lo_decide_el_experto_aunque_el_dia_vaya_gastado(
+    almacen: Almacen,
+) -> None:
+    _gasto_experto(almacen, 2.0)
     peticion = _peticiones(almacen, BUQUE)
     cliente = Cliente(DUDOSA, ficha_ejemplo())
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)

@@ -15,7 +15,6 @@ from datetime import datetime, timedelta
 from typing import Any
 
 import pytest
-from pytest import approx
 
 from almacen.base import Almacen
 from exportacion import publicar
@@ -53,22 +52,26 @@ def _gasto(
     })  # fmt: skip
 
 
-def test_un_par_que_ya_no_esta_en_juego_no_retiene_ni_espera() -> None:
-    # Como EODI-2025-00438|00444: el par crítico espera al experto sin tope ni reserva y retiene
-    # la ficha nueva; después la regla de fusión une la otra a ella.
-    almacen = tm._par_de_nuremberg_con_gasto(
-        coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD
-    )
+def test_un_par_que_ya_no_esta_en_juego_no_retiene_ni_espera(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Como EODI-2025-00438|00444: el par crítico espera (desde el 7 de noviembre de 2026, con el
+    # tope mensual agotado) y retiene la ficha nueva; después la regla de fusión une la otra a ella.
+    almacen = tm._par_de_nuremberg_con_gasto(0.0)
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0")
     tcf._ejecutar(almacen, tm.ServicioControl("dudoso", "mismo"), tcf.AHORA + timedelta(minutes=10))
+    monkeypatch.delenv(coste.VARIABLE_TOPE_MENSUAL)
     assert PAR in [c["clave"] for c in control_fichas.criticos_esperando(almacen)]
     otra = almacen.incidente("EODI-2026-09515")
     assert otra is not None
     almacen.guardar_incidente(
         {**otra, "fusionado_en": "EODI-2026-09516"}, tcf.AHORA, MODELOS_CONTROL
     )
-    # El par ya no cuenta; la verificación de la ficha que queda, sí (sigue en juego).
+    # El par ya no cuenta; lo que espera de la ficha que queda, sí (sigue en juego: con el mes
+    # agotado, su filtro de entrada).
     claves = [c["clave"] for c in control_fichas.criticos_esperando(almacen)]
-    assert claves == ["verificacion:EODI-2026-09516"]
+    assert claves and PAR not in claves
+    assert all(c.endswith(":EODI-2026-09516") for c in claves)
     # Al día siguiente el experto la verifica y la ficha sale; el par no se vuelve a pedir.
     servicio = tm.ServicioControl("distinto", "distinto")
     resultado = tcf._ejecutar(almacen, servicio, tcf.AHORA + timedelta(days=1))
@@ -80,51 +83,51 @@ def test_un_par_que_ya_no_esta_en_juego_no_retiene_ni_espera() -> None:
     assert almacen.controles("par:")[PAR]["decision"] == "dudoso"
 
 
-def test_un_par_critico_con_el_tope_del_control_agotado_va_directo_al_experto() -> None:
+def test_el_gasto_del_dia_del_control_ya_no_frena_al_par_critico() -> None:
+    # Más de lo que era el tope diario del control: desde el 7 de noviembre de 2026 no frena.
     almacen = tm._par_de_nuremberg_con_gasto(0.0)
-    _gasto(almacen, coste.LIMITE_CONTROL_DIARIO_USD, "control", tm.BASE, False)
+    _gasto(almacen, 1.0, "control", tm.BASE, False)
     servicio = tm.ServicioControl("dudoso", "mismo")
     resultado = tcf._ejecutar(almacen, servicio, tcf.AHORA + timedelta(minutes=10))
-    assert resultado.parada == "limite_gasto" and resultado.esperan_experto == []
+    assert resultado.parada != "limite_gasto" and resultado.esperan_experto == []
     decision = almacen.controles("par:")[PAR]
     assert decision["decision"] == "mismo" and decision["modelo"] == tm.EXPERTO
-    assert decision["escalado"][0].startswith("critico_sin_base")
-    # Solo el experto: el base ya no cabía (el gasto del modo no sube).
+    # Lo leyó el base y lo decidió el experto (el gasto del modo sube).
     dia = coste.dia(tcf.AHORA)
-    assert almacen.gastado("control", dia) == approx(coste.LIMITE_CONTROL_DIARIO_USD)
-    # El experto del control va en su cupo (no en el tope del experto) y cuenta para la reserva.
+    assert almacen.gastado("control", dia) > 1.0
     assert almacen.gastado_experto_en("control", dia) > 0
-    assert almacen.gastado_modelo(tm.EXPERTO, dia) == 0
 
 
-def test_un_candidato_critico_con_el_tope_horario_agotado_va_directo_al_experto(
-    almacen: Almacen,
-) -> None:
+def test_el_gasto_del_dia_de_la_horaria_ya_no_frena_a_nadie(almacen: Almacen) -> None:
+    # Más de lo que era el tope diario de la horaria: desde el 7 de noviembre de 2026 no frena; el
+    # crítico que esperaba y el otro se extraen.
     peticion = tm._peticion(almacen)
     candidato = peticion.candidato["id"]
     extraccion.anotar_espera(almacen, candidato, ["critico: cierre de aeropuerto"],
                              AHORA - timedelta(hours=2), True, critico=True)  # fmt: skip
-    _gasto(almacen, coste.LIMITE_DIARIO_USD, "horario", tm.BASE, False, AHORA)
+    _gasto(almacen, 1.0, "horario", tm.BASE, False, AHORA)
     otra = extraccion.Peticion(**{**peticion.__dict__, "candidato": {
         **peticion.candidato, "id": "otro"}})  # fmt: skip
     cliente = tm.Cliente(ficha_ejemplo(**tm.SIN_CITA), ficha_ejemplo())
     hechas = extraccion.extraer(
         almacen, cliente, [otra, peticion], AHORA, coste.Modo.HORARIO, MODELOS
     )
-    # El que no es crítico no se llama; el crítico, solo con el experto.
-    assert cliente.pedidas == [tm.EXPERTO]
-    assert hechas.escalados == [candidato] and hechas.parada is extraccion.Parada.LIMITE_GASTO
+    assert cliente.pedidas == [tm.BASE, tm.EXPERTO, tm.BASE, tm.EXPERTO]
+    assert hechas.escalados == ["otro", candidato] and hechas.parada is None
     assert candidato not in extraccion.esperan_experto(almacen)
     assert control_fichas.criticos_esperando(almacen) == []
 
 
-def test_sin_reserva_el_candidato_critico_sigue_esperando(almacen: Almacen) -> None:
+def test_con_el_mes_agotado_el_candidato_critico_sigue_esperando(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch,
+) -> None:  # fmt: skip
+    # Sin reserva crítica desde el 7 de noviembre de 2026: con el tope mensual agotado, tampoco lo
+    # crítico se llama; sigue esperando.
     peticion = tm._peticion(almacen)
     candidato = peticion.candidato["id"]
     extraccion.anotar_espera(almacen, candidato, ["critico: cierre de aeropuerto"],
                              AHORA - timedelta(hours=2), True, critico=True)  # fmt: skip
-    _gasto(almacen, coste.LIMITE_DIARIO_USD, "horario", tm.BASE, False, AHORA)
-    tm._gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD)
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0")
     cliente = tm.Cliente(ficha_ejemplo(**tm.SIN_CITA), ficha_ejemplo())
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [] and hechas.esperan == [candidato]

@@ -206,12 +206,16 @@ def test_la_api_rota_deja_los_candidatos_pendientes_sin_tumbar_nada(
     assert resultado.parada is parada
 
 
-def test_tope_diario_agotado_no_llama_ni_es_fallo(almacen: Almacen) -> None:
+def test_tope_mensual_agotado_no_llama_ni_es_fallo(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Desde el 7 de noviembre de 2026 el único tope es el mensual.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.30")
     gdelt.incorporar(almacen, [articulo(80)])
     almacen.registrar_llamada({
         "fecha": AHORA.strftime("%Y-%m-%dT%H:%M:%SZ"), "modo": "horario", "candidato": "x",
         "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_DIARIO_USD,
+        "coste": 0.30,
     })  # fmt: skip
     falso = ClienteFalso(ficha_ejemplo())
     resultado = extractor.horaria(almacen, AHORA, lambda _c: falso)

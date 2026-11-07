@@ -371,34 +371,26 @@ def test_el_experto_verifica_lo_marcado_una_sola_vez(
     assert len(cliente.pedidas) == 1
 
 
-def test_con_el_tope_agotado_los_candidatos_esperan(
+def test_con_el_tope_mensual_agotado_los_candidatos_esperan(
     recogida: tuple[Almacen, ClienteModelos], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     almacen, cliente = recogida
     monkeypatch.setattr(control_fichas, "_fabrica", lambda: lambda: cliente)
+    # Más de lo que era su límite del día (0,30) y del tope del experto: desde el 7 de noviembre
+    # de 2026 solo frena el tope mensual agotado.
     almacen.registrar_llamada({
         "fecha": "2026-10-15T03:00:00Z", "modo": coste.Modo.SEGUNDA_LECTURA.value,
         "candidato": "x", "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0,
-        "lectura_cache": 0, "coste": coste.LIMITE_SEGUNDA_EXPERTO_DIARIO_USD, "modelo": EXPERTO,
-        "escalada": True,
+        "lectura_cache": 0, "coste": 2.0, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "2.0")
     hecho = segunda.paso_horario(almacen, AHORA, VOCABULARIO_MODELOS)
     assert cliente.pedidas == [] and hecho["decididos"] == [] and hecho["esperan"] == 1
+    assert "tope" in hecho["experto"]
     assert almacen.controles(segunda.PREFIJO) == {}
-    # El experto con su tope normal ya gastado en otras cosas: tampoco (nunca la reserva).
-    otro = Almacen.abrir()
-    otro.guardar_incidente(_copenhague(), AHORA, VOCABULARIO_MODELOS)
-    otro.registrar_llamada({
-        "fecha": "2026-10-15T03:00:00Z", "modo": coste.Modo.HORARIO.value, "candidato": "y",
-        "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_EXPERTO_DIARIO_USD, "modelo": EXPERTO, "escalada": True,
-    })  # fmt: skip
-    hecho = segunda.paso_horario(otro, AHORA, VOCABULARIO_MODELOS)
-    assert cliente.pedidas == [] and hecho["decididos"] == [] and "tope" in hecho["experto"]
-    # Al día siguiente, ya de madrugada (el margen de los escalados es fijo, no un reparto por
-    # horas que deje la mañana sin experto), el candidato pasa.
-    hecho = segunda.paso_horario(almacen, datetime(2026, 10, 16, 1, 17, tzinfo=UTC),
-                                 VOCABULARIO_MODELOS)  # fmt: skip
+    # Con sitio en el mes, lo gastado en el día no lo frena: el candidato pasa.
+    monkeypatch.delenv(coste.VARIABLE_TOPE_MENSUAL)
+    hecho = segunda.paso_horario(almacen, AHORA, VOCABULARIO_MODELOS)
     assert len(cliente.pedidas) == 1 and len(hecho["decididos"]) == 1
 
 
@@ -480,7 +472,9 @@ def test_rectificaciones_diarias_a_la_cola_del_mensual(tmp_path: Path, entorno: 
     almacen.cerrar()
 
 
-def test_rectificacion_con_el_tope_de_la_capa_agotado_espera(tmp_path: Path) -> None:
+def test_rectificacion_con_el_tope_mensual_agotado_espera(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     almacen = Almacen.abrir()
     d = _copenhague()
     d["fuentes"] = [f for f in d["fuentes"] if f["id"] != "N2"]
@@ -492,34 +486,31 @@ def test_rectificacion_con_el_tope_de_la_capa_agotado_espera(tmp_path: Path) -> 
     almacen.registrar_llamada({
         "fecha": "2026-10-15T03:00:00Z", "modo": coste.Modo.SEGUNDA_LECTURA.value,
         "candidato": "x", "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0,
-        "lectura_cache": 0, "coste": coste.LIMITE_SEGUNDA_EXPERTO_DIARIO_USD, "modelo": EXPERTO,
-        "escalada": True,
+        "lectura_cache": 0, "coste": 2.0, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "2.0")
     cliente = ClienteModelos([_decision(frase="find no proof drones caused")])
     hechos = rectificaciones.ejecutar(almacen, AHORA, VOCABULARIO_MODELOS, lambda: cliente)
     assert cliente.pedidas == [] and len(hechos.esperan) == 1
     assert (almacen.incidente(ID) or {})["presencia_dron"] == "confirmada"
+    # Con sitio en el mes, lo gastado hoy por la capa (más que su antiguo límite) no la frena.
+    monkeypatch.delenv(coste.VARIABLE_TOPE_MENSUAL)
+    rectificaciones.ejecutar(almacen, AHORA, VOCABULARIO_MODELOS, lambda: cliente)
+    assert (almacen.incidente(ID) or {})["presencia_dron"] == "no_acreditada"
     almacen.cerrar()
 
 
-def test_margen_para_los_escalados_del_resto_del_dia() -> None:
-    """La segunda lectura solo gasta del experto lo que deja libre el margen fijo de los escalados
-    (sin reparto por horas que deje la mañana sin experto)."""
-    margen = coste.MARGEN_ESCALADOS_USD
-    libre = coste.LIMITE_EXPERTO_DIARIO_USD - margen
-    assert coste.margen_escalados(datetime(2026, 10, 19, 0, 0, tzinfo=UTC)) == margen
-    assert coste.margen_escalados(datetime(2026, 10, 19, 12, 0, tzinfo=UTC)) == margen
-    # Al final del día, solo lo que corresponde a lo que queda de él.
-    assert coste.margen_escalados(datetime(2026, 10, 19, 23, 0, tzinfo=UTC)) < margen
-    for momento in (datetime(2026, 10, 19, 0, 30, tzinfo=UTC),
-                    datetime(2026, 10, 19, 12, 0, tzinfo=UTC)):  # fmt: skip
-        coste.comprobar_segunda(libre - 0.06, 0.0, 0.05, momento)
-        with pytest.raises(coste.LimiteGasto, match="escalados"):
-            coste.comprobar_segunda(libre - 0.04, 0.0, 0.05, momento)
-    # Su modo, como mucho 0,30 USD al día (desde el 25 de octubre de 2026).
-    assert coste.LIMITE_SEGUNDA_EXPERTO_DIARIO_USD == 0.30
-    with pytest.raises(coste.LimiteGasto, match="segunda_lectura"):
-        coste.comprobar_segunda(0.0, 0.28, 0.05, datetime(2026, 10, 19, 12, 0, tzinfo=UTC))
+def test_la_segunda_lectura_ya_no_tiene_margen_ni_limite_del_dia() -> None:
+    """Desde el 7 de noviembre de 2026 la segunda lectura no guarda margen para los escalados ni
+    tiene límite propio del día: solo el tope mensual la frena."""
+    momento = datetime(2026, 10, 19, 12, 0, tzinfo=UTC)
+    libre = coste.LIMITE_EXPERTO_DIARIO_USD - coste.MARGEN_ESCALADOS_USD
+    coste.comprobar_segunda(libre - 0.04, 0.0, 0.05, momento)
+    coste.comprobar_segunda(0.0, coste.LIMITE_SEGUNDA_EXPERTO_DIARIO_USD, 0.05, momento)
+    coste.comprobar_segunda(5.0, 5.0, 0.05, momento, coste.Mes(momento, total=10.0))
+    lleno = coste.Mes(momento, total=coste.tope_mensual() - 0.01)
+    with pytest.raises(coste.LimiteGasto, match="tope mensual"):
+        coste.comprobar_segunda(0.0, 0.0, 0.05, momento, lleno)
 
 
 def test_fecha_sin_apoyo_sola_no_va_al_experto() -> None:

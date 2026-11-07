@@ -30,14 +30,17 @@ def _no_es(**cambios: Any) -> dict[str, Any]:
     return ficha_ejemplo(**(NO_ES | cambios))
 
 
-def _gastado_el_experto(almacen: Almacen, cuando: str = "2025-09-24T01:00:00Z") -> None:
-    """El experto sin tope ni reserva crítica (retirar o rebajar una publicada es crítico)."""
+def _gastado_el_experto(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch, cuando: str = "2025-09-24T01:00:00Z"
+) -> None:
+    """Sin presupuesto para el experto: lo que queda del tope mensual (el único desde el 7 de
+    noviembre de 2026) da para el peor caso de una llamada del base, no para la del experto."""
     almacen.registrar_llamada({
         "fecha": cuando, "modo": "horario", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD,
-        "modelo": EXPERTO, "escalada": True,
+        "coste": 2.0, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "2.03")
 
 
 class ExpertoCaido(Cliente):
@@ -174,10 +177,12 @@ def test_retirar_una_ficha_publicada_lo_decide_el_experto(almacen: Almacen) -> N
 
 
 @pytest.mark.parametrize("caso", ["tope", "fallo"])
-def test_sin_experto_la_ficha_publicada_se_queda_como_estaba(almacen: Almacen, caso: str) -> None:
+def test_sin_experto_la_ficha_publicada_se_queda_como_estaba(
+    almacen: Almacen, caso: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
     peticion, id_ = _publicada(almacen)
     if caso == "tope":
-        _gastado_el_experto(almacen)
+        _gastado_el_experto(almacen, monkeypatch)
         cliente: Cliente = Cliente(_no_es(), _no_es())
     else:
         cliente = ExpertoCaido(_no_es(), _no_es())
@@ -189,9 +194,11 @@ def test_sin_experto_la_ficha_publicada_se_queda_como_estaba(almacen: Almacen, c
     assert f"publicada: {id_} retirada por «no es incidente»" in espera["motivos"]
 
 
-def test_rebajar_la_presencia_de_una_ficha_publicada_se_escala(almacen: Almacen) -> None:
+def test_rebajar_la_presencia_de_una_ficha_publicada_se_escala(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
     peticion, id_ = _publicada(almacen)
-    _gastado_el_experto(almacen)
+    _gastado_el_experto(almacen, monkeypatch)
     rebaja = ficha_ejemplo(
         cierre=campo("no", "Københavns Lufthavn var lukket"),
         presencia_dron=campo("descartada", "observeret tre til fire"),
@@ -277,10 +284,12 @@ def test_unir_dos_fichas_publicadas_lo_decide_el_experto() -> None:
     assert decision["escalado"] == ["publicada: la unión retira EODI-2026-09516"]
 
 
-def test_sin_tope_del_experto_las_dos_fichas_publicadas_siguen() -> None:
+def test_sin_presupuesto_para_el_experto_las_dos_fichas_publicadas_siguen(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     almacen = tcf._base(tcf._nuremberg_alemana(), tcf._nuremberg_griega())
     tcf._ejecutar(almacen, None)
-    _gastado_el_experto(almacen, tcf.AHORA.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _gastado_el_experto(almacen, monkeypatch, tcf.AHORA.strftime("%Y-%m-%dT%H:%M:%SZ"))
     resultado = tcf._ejecutar(almacen, ServicioControl("mismo", "mismo"),
                               tcf.AHORA + timedelta(minutes=10), alcance="repaso")  # fmt: skip
     clave = "par:EODI-2026-09515|EODI-2026-09516"

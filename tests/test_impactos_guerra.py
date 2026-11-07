@@ -332,15 +332,19 @@ def test_el_extractor_con_su_limite_diario_y_su_registro(tmp_path: Path) -> None
                                      lambda: servicio).llamadas == 0  # fmt: skip
 
 
-def test_limite_diario_propio() -> None:
+def test_sin_limite_diario_propio_solo_el_tope_mensual() -> None:
+    # Desde el 7 de noviembre de 2026 la capa de guerra no tiene tope del día: solo el mensual.
     almacen = Almacen.abrir()
     almacen.registrar_llamada({
         "fecha": "2026-10-01T08:00:00Z", "modo": "guerra", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": 0.199,
     })  # fmt: skip
+    mes = coste.del_mes(almacen, AHORA)
+    coste.comprobar(almacen.gastado("guerra", "2026-10-01"), 0.01, coste.Modo.GUERRA, mes)
+    agotado = coste.Mes(AHORA, total=coste.TOPE_MENSUAL_USD)
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar(almacen.gastado("guerra", "2026-10-01"), 0.01, coste.Modo.GUERRA)
-    # No toca el límite horario de las noticias.
+        coste.comprobar(0.0, 0.01, coste.Modo.GUERRA, agotado)
+    # No toca el gasto horario de las noticias.
     assert almacen.gastado("horario", "2026-10-01") == 0
 
 

@@ -6,8 +6,9 @@ versión) llega en variables de entorno, que en GitHub Actions son secretos:
 - EODI_EXTRACTOR_CLAVE: la clave.
 - EODI_EXTRACTOR_URL: el servicio de mensajes.
 - EODI_EXTRACTOR_URL_LOTES: el servicio de lotes.
-- EODI_EXTRACTOR_MODELO: el modelo de antes; desde el 14 de octubre de 2026 mandan
-  EODI_MODELO_BASE y EODI_MODELO_EXPERTO (modelo/modelos.py, docs/modelos.md).
+- EODI_EXTRACTOR_MODELO: el modelo de antes; del 14 de octubre de 2026 mandaron
+  EODI_MODELO_BASE y EODI_MODELO_EXPERTO y desde el 7 de noviembre de 2026 manda EODI_MODELO,
+  el modelo único (modelo/modelos.py, docs/modelos.md).
 - EODI_EXTRACTOR_CABECERAS: JSON con las cabeceras propias del servicio; el
   texto «{clave}» en un valor se sustituye por la clave.
 
@@ -45,6 +46,7 @@ VARIABLES = (
     "EODI_EXTRACTOR_CABECERAS",
     "EODI_MODELO_BASE",
     "EODI_MODELO_EXPERTO",
+    "EODI_MODELO",
 )
 # Las que tienen que estar; el modelo, en EODI_MODELO_BASE o en EODI_EXTRACTOR_MODELO.
 OBLIGATORIAS = (
@@ -227,11 +229,20 @@ class Cliente:
         self.modelo = modelo or config.modelo
 
     def experto(self) -> "Cliente | None":
-        """El mismo cliente con el modelo experto, o None si no hay experto configurado."""
+        """El mismo cliente con el modelo experto, o None si no hay experto configurado. Con el
+        modelo único (EODI_MODELO), el experto es ese mismo modelo."""
         if not self.config.experto:
             return None
         return Cliente(self.config, self._transporte, self._dormir, self._insistencia,
                        self.config.experto)  # fmt: skip
+
+    def para_extraccion(self) -> "Cliente":
+        """El cliente de la extracción de las fichas: este mismo, salvo con el interruptor de
+        vuelta atrás (modelos.extraccion), que la hace con el modelo de antes."""
+        modelo = modelos.extraccion()
+        if not modelo or modelo == self.modelo:
+            return self
+        return Cliente(self.config, self._transporte, self._dormir, self._insistencia, modelo)
 
     def _limpio(self, texto: str) -> str:
         """El texto en una línea, sin la clave y con tope de letras."""
