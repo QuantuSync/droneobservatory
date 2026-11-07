@@ -539,6 +539,31 @@ def test_la_ficha_manual_si_recibe_un_duplicado(
     assert not almacen.controles(f"retenido:{OTRA}:fusionado_en:")
 
 
+def test_la_regla_de_fusion_no_intenta_la_union_que_el_cerrojo_retiene(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """EODI-2026-00747 en EODI-2026-00743 (6-7 de noviembre de 2026): cada recogida guardaba la
+    que queda con las fuentes de la manual y el cerrojo la devolvía en el mismo instante; la K de
+    la auditoría lo marcaba como un dato que oscila. La regla ya no lo intenta."""
+    _manual(monkeypatch)
+    almacen = _dos_fichas()
+    antes = almacen.incidente(OTRA)
+    cambios = len(almacen.cambios_desde("2000-01-01T00:00:00Z"))
+    for _ in range(3):
+        assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS, frozenset({OTRA})) == 0
+    assert almacen.incidente(OTRA) == antes
+    assert "fusionado_en" not in (almacen.incidente(MANUAL) or {})
+    assert len(almacen.cambios_desde("2000-01-01T00:00:00Z")) == cambios
+    assert not almacen.controles("retenido:")
+
+
+def test_en_observar_la_regla_de_fusion_si_une_la_manual(monkeypatch: pytest.MonkeyPatch) -> None:
+    _manual(monkeypatch)
+    almacen = _dos_fichas()
+    assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS, frozenset({OTRA})) == 1
+    assert (almacen.incidente(MANUAL) or {}).get("fusionado_en") == OTRA
+
+
 def _fundida() -> Almacen:
     almacen = _dos_fichas()
     _unir_por_regla(almacen, OTRA, MANUAL)
