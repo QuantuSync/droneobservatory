@@ -53,7 +53,10 @@ sale de lo que ya existe; no añade ficheros de datos protegidos.
 - **Fichas del nivel manual que se funden.** Aunque no haya par prohibido, una ficha publicada del
   nivel manual solo la funde en otra una revisión a mano o una unión a mano anterior. Se mira la
   ficha que se funde, no la que queda: recibir un duplicado no le quita nada a la que queda, cuyos
-  datos siguen protegidos uno a uno.
+  datos siguen protegidos uno a uno. En «aplicar», la regla de fusión
+  (`incidentes.retiene_la_union`) ni siquiera intenta una unión que el cerrojo retendría: antes
+  guardaba la que queda con las fuentes de la otra y el cerrojo la devolvía en el mismo instante,
+  en cada recogida (EODI-2026-00747 en EODI-2026-00743, noviembre de 2026; auditoría K).
 - **Retirada de una ficha publicada.** Solo pasa si sale de una decisión explícita
   (`protegido.DECISIONES_RETIRADA`):
   - la barrera de titulares a las 6 horas;
