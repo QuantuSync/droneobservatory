@@ -517,6 +517,8 @@ def unir(
     if incidentes.no_se_juntan(conserva, une, incidentes.distintos_del_experto(almacen)):
         proponer(almacen, conserva, une, motivo, ahora)
         return None
+    if incidentes.revisiones_distintas(une["id"], conserva["id"]):
+        return None
     nuevo, aportadas = incidentes.absorber(conserva, une, ahora)
     nuevo = completar(nuevo, [une])
     fundido = {**copy.deepcopy(une), "fusionado_en": conserva["id"]}

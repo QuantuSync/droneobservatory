@@ -206,6 +206,14 @@ def unir_grupo(
     if elegido is not None and elegido["id"] in vivos:
         destino = vivos[elegido["id"]]
     unidos = [d for d in vivos.values() if d["id"] != destino["id"]]
+    # Dos revisiones a mano del mismo dato con valores distintos: la unión se retiene (unir la
+    # deja en el registro y en los fallidos).
+    for absorbido in unidos:
+        if distintos := incidentes.revisiones_distintas(absorbido["id"], destino["id"]):
+            raise ValueError(
+                f"retenida: {absorbido['id']} y {destino['id']} tienen revisado a mano, con "
+                f"valores distintos, {', '.join(distintos)}"
+            )
     nuevo = destino
     fundidos = []
     for absorbido in unidos:

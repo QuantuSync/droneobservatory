@@ -45,6 +45,45 @@ _CARCEL = re.compile(
 # Las fuentes de una revisión a mano (configuracion/incidentes_revisados.json): mandan.
 REVISADA = "revisada-"
 
+# Las fichas fundidas en otra ({absorbida: la que queda}), que fija el almacén al abrirse y al
+# guardar (almacen/base.Almacen): las revisiones a mano van por el número de la ficha, y las de
+# una ficha fundida pasan a la que queda. Hasta el 7 de noviembre de 2026 se perdían: EODI-2026-
+# 00746, con 1 dron y sin modelo revisados con cita, quedó dentro de 00760 el 6 de noviembre y la
+# web enseñó 2 drones y un Gerán.
+_FUNDIDO_EN: dict[str, str] = {}
+
+
+def fijar_fusiones(fundido_en: dict[str, str]) -> None:
+    """El almacén abierto da sus fusiones vigentes (el mismo diccionario, que mantiene al día)."""
+    global _FUNDIDO_EN
+    _FUNDIDO_EN = fundido_en
+
+
+def ficha_que_queda(id_: str) -> str:
+    """La ficha en la que acaba fundida `id_` (la misma si no lo está)."""
+    vistos = {id_}
+    while (siguiente := _FUNDIDO_EN.get(id_)) is not None and siguiente not in vistos:
+        vistos.add(siguiente)
+        id_ = siguiente
+    return id_
+
+
+def fundidas_en(id_: str) -> list[str]:
+    """Las fichas fundidas en `id_`, también las fundidas en ellas, por orden de número."""
+    return sorted(a for a in _FUNDIDO_EN if a != id_ and ficha_que_queda(a) == id_)
+
+
+def _con_las_fundidas[V](indice: dict[str, V]) -> dict[str, V]:
+    """El índice por número de ficha con lo de cada ficha fundida también en la que queda, si la
+    que queda no tiene lo suyo."""
+    if not _FUNDIDO_EN:
+        return indice
+    resultado = dict(indice)
+    for id_ in sorted(indice):
+        if id_ in _FUNDIDO_EN:
+            resultado.setdefault(ficha_que_queda(id_), indice[id_])
+    return resultado
+
 
 @dataclass(frozen=True)
 class Decision:
@@ -115,8 +154,13 @@ def _afirmada(incidente: Documento, fuente_id: str) -> str | None:
     return None
 
 
-@cache
 def _revisadas() -> dict[str, str]:
+    """La presencia revisada a mano de cada incidente, también la de las fichas fundidas en él."""
+    return _con_las_fundidas(_revisadas_propias())
+
+
+@cache
+def _revisadas_propias() -> dict[str, str]:
     """La presencia revisada a mano de cada incidente, con su cita (configuracion/
     incidentes_revisados.json, «titulares»)."""
     from proceso import presencia
@@ -134,8 +178,14 @@ def revisiones(incidente: Documento) -> dict[str, Documento]:
     return _revisiones(incidente)
 
 
-@cache
 def _inicios_revisados() -> frozenset[str]:
+    """Los incidentes con el inicio revisado a mano, también por una ficha fundida en ellos."""
+    propios = _inicios_revisados_propios()
+    return propios | {ficha_que_queda(i) for i in propios if i in _FUNDIDO_EN}
+
+
+@cache
+def _inicios_revisados_propios() -> frozenset[str]:
     """Los incidentes con el inicio revisado a mano («titulares.inicio» o «datos», «inicio»), sea
     cual sea la fuente de su cita (una noticia, una revisada-…)."""
     from proceso import presencia
@@ -248,17 +298,83 @@ def _revisiones_de_datos() -> dict[str, dict[str, Documento]]:
     return resultado
 
 
+def _revisiones_por_ficha(id_: str) -> dict[str, Documento]:
+    """{dato: revisión} de la ficha y de las fundidas en ella; la suya manda en cada dato."""
+    indice = _revisiones_de_datos()
+    resultado = dict(indice.get(id_, {}))
+    for fundida in fundidas_en(id_):
+        for campo, revision in indice.get(fundida, {}).items():
+            resultado.setdefault(campo, revision)
+    return resultado
+
+
 def _revisiones(incidente: Documento) -> dict[str, Documento]:
-    """Las revisiones de datos de este incidente: las que citan una de sus fuentes o, si la fuente
-    leída no está en la ficha, las de su país (una ficha de prueba con el mismo identificador no
-    las toma)."""
+    """Las revisiones de datos de este incidente (y de las fichas fundidas en él): las que citan
+    una de sus fuentes o, si la fuente leída no está en la ficha, las de su país (una ficha de
+    prueba con el mismo identificador no las toma)."""
     enlaces = {f.get("enlace") for f in incidente.get("fuentes", [])}
     pais = (incidente.get("lugar") or {}).get("pais")
     return {
         campo: revision
-        for campo, revision in _revisiones_de_datos().get(str(incidente.get("id")), {}).items()
+        for campo, revision in _revisiones_por_ficha(str(incidente.get("id"))).items()
         if revision.get("enlace") in enlaces or revision.get("pais") == pais
     }
+
+
+# Lo que fija una revisión de «titulares», como el dato de «datos» que fija lo mismo.
+_DATOS_DE_TITULARES = {"presencia": "presencia", "inicio": "inicio", "titulo": "titulo",
+                       "drones": "drones", "lugar": "lugar", "objetivo": "objetivo"}  # fmt: skip
+# Lo que no es el valor de una revisión: su cita, su enlace, su motivo.
+_NO_ES_EL_VALOR = frozenset({"cita", "enlace", "motivo", "motivo_en", "fuente", "medio", "fecha"})
+
+
+def _valor_revisado(valor: Any) -> str:
+    if isinstance(valor, dict):
+        if "valor" in valor and set(valor) <= {"valor", "precision"} | _NO_ES_EL_VALOR:
+            valor = valor["valor"]
+        else:
+            valor = {k: v for k, v in valor.items() if k not in _NO_ES_EL_VALOR}
+    return json.dumps(valor, ensure_ascii=False, sort_keys=True)
+
+
+@cache
+def _titulares_revisados() -> dict[str, dict[str, str]]:
+    """{incidente: {dato: valor}} de «titulares» de incidentes_revisados.json."""
+    from proceso import presencia
+
+    datos = json.loads(presencia.REVISADOS.read_text(encoding="utf-8"))
+    resultado: dict[str, dict[str, str]] = {}
+    for revision in datos.get("titulares", []):
+        propios = resultado.setdefault(str(revision.get("incidente")), {})
+        for clave, campo in _DATOS_DE_TITULARES.items():
+            if revision.get(clave) is not None:
+                propios.setdefault(campo, _valor_revisado(revision[clave]))
+    return resultado
+
+
+def _datos_revisados(id_: str) -> dict[str, str]:
+    """{dato: valor} revisado a mano de la ficha y de las fundidas en ella («datos» y
+    «titulares»), para comparar dos fichas antes de unirlas."""
+    resultado: dict[str, str] = {}
+    for uno in (id_, *fundidas_en(id_)):
+        for campo, revision in _revisiones_de_datos().get(uno, {}).items():
+            resultado.setdefault(campo, _valor_revisado(revision.get("valor")))
+        for campo, valor in _titulares_revisados().get(uno, {}).items():
+            resultado.setdefault(campo, valor)
+    return resultado
+
+
+def revisiones_en_conflicto(a: str, b: str) -> list[str]:
+    """Los datos que las dos fichas (o las fundidas en ellas) tienen revisados a mano con valores
+    distintos. Con alguno, la unión se retiene y no se hace: no hay a cuál de las dos revisiones
+    hacer caso (docs/control_fichas.md, «Uniones»)."""
+    de_a, de_b = _datos_revisados(a), _datos_revisados(b)
+    return sorted(campo for campo in de_a.keys() & de_b.keys() if de_a[campo] != de_b[campo])
+
+
+def con_revisiones(id_: str) -> bool:
+    """La ficha (o una fundida en ella) tiene alguna revisión a mano por su número."""
+    return bool(_datos_revisados(id_))
 
 
 def revision_de(incidente: Documento, campo: str) -> Documento | None:
@@ -614,8 +730,13 @@ def _con_tipo_revisado(documento: Documento) -> Documento:
     return documento
 
 
-@cache
 def _titulos_revisados() -> dict[str, dict[str, str]]:
+    """{incidente: titular} revisado a mano, también el de una ficha fundida en él."""
+    return _con_las_fundidas(_titulos_revisados_propios())
+
+
+@cache
+def _titulos_revisados_propios() -> dict[str, dict[str, str]]:
     """{incidente: titular} revisado a mano en «titulares» de incidentes_revisados.json."""
     from proceso import presencia
 

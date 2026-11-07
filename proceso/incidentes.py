@@ -27,6 +27,7 @@ Reglas del diseño:
 import copy
 import hashlib
 import json
+import logging
 import math
 import re
 from collections import defaultdict
@@ -45,6 +46,8 @@ from proceso.fronteras import nombres_del_pais
 from proceso.noticias import filtro, normalizar
 from proceso.ubicacion import Ubicacion
 from proceso.validacion_ficha import Validada, leer_fecha
+
+registro = logging.getLogger(__name__)
 
 MAX_PALABRAS_FRASE = 25
 DECIMALES = 5
@@ -1054,6 +1057,8 @@ def fusionar(
         destino, absorbido = destino_de(anteriores[0], incidente, publicados)
         if retiene_la_union(almacen, absorbido, destino["id"]):
             continue
+        if revisiones_distintas(absorbido["id"], destino["id"]):
+            continue
         nuevo, aportadas = absorber(destino, absorbido, ahora)
         fundido = {**copy.deepcopy(absorbido), "fusionado_en": destino["id"]}
         fundido.pop("episodio", None)
@@ -1083,6 +1088,22 @@ def retiene_la_union(almacen: Almacen, absorbido: Documento, destino: str) -> bo
         protegido.union_prohibida(almacen, fundido, destino) is not None
         or protegido.union_de_manual(almacen, absorbido, destino) is not None
     )
+
+
+def revisiones_distintas(absorbido: str, destino: str) -> list[str]:
+    """Los datos que las dos fichas tienen revisados a mano con valores distintos
+    (proceso/decidir.revisiones_en_conflicto). Con alguno, la unión se retiene y no se hace, y
+    queda en el registro: las revisiones van por el número de la ficha y la absorbida pasa las
+    suyas a la que queda, así que no hay a cuál de las dos hacer caso."""
+    from proceso import decidir
+
+    distintos = decidir.revisiones_en_conflicto(absorbido, destino)
+    if distintos:
+        registro.warning(
+            "unión %s→%s retenida: las dos tienen revisado a mano, con valores distintos, %s",
+            absorbido, destino, ", ".join(distintos),
+        )  # fmt: skip
+    return distintos
 
 
 def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
