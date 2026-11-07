@@ -1052,6 +1052,8 @@ def fusionar(
         if len(anteriores) != 1:
             continue
         destino, absorbido = destino_de(anteriores[0], incidente, publicados)
+        if retiene_la_union(almacen, absorbido, destino["id"]):
+            continue
         nuevo, aportadas = absorber(destino, absorbido, ahora)
         fundido = {**copy.deepcopy(absorbido), "fusionado_en": destino["id"]}
         fundido.pop("episodio", None)
@@ -1064,6 +1066,23 @@ def fusionar(
         del vivos[absorbido["id"]]
         hechas += 1
     return hechas
+
+
+def retiene_la_union(almacen: Almacen, absorbido: Documento, destino: str) -> bool:
+    """El cerrojo, en «aplicar», retendría marcar `absorbido` como fundida en `destino` (un par
+    prohibido o una ficha manual que desaparecería; proceso/protegido.py, la misma regla): la
+    unión no se intenta. Intentarla guardaba la que queda con las fuentes de la otra y el cerrojo
+    la devolvía a lo que era en el mismo instante, en cada recogida: EODI-2026-00747 en
+    EODI-2026-00743 desde el 6 de noviembre de 2026, dos cambios cada hora (auditoría K)."""
+    from proceso import protegido
+
+    if protegido.modo() != protegido.APLICAR:
+        return False
+    fundido = {**absorbido, "fusionado_en": destino}
+    return (
+        protegido.union_prohibida(almacen, fundido, destino) is not None
+        or protegido.union_de_manual(almacen, absorbido, destino) is not None
+    )
 
 
 def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
