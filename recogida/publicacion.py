@@ -47,6 +47,7 @@ import hashlib
 import json
 import logging
 import os
+import sqlite3
 import sys
 import time
 import urllib.error
@@ -236,6 +237,107 @@ def sin_direccion(
     return sorted(set(anteriores) - set(incidentes) - redirigen)
 
 
+# El aviso al responsable por su tema privado (el del resumen diario) cuando una ficha que estaba
+# en la web deja de llevar a una ficha: una vez por ficha, anotado en el registro de publicación.
+TITULO_AVISO_404 = "EODI · Ficha que ya no está en la web"
+AVISADAS_404 = "avisadas_404"
+# Las direcciones que redirigían a otra ficha en la publicación anterior.
+REDIRIGIDAS = "redirigidas"
+
+
+def ruta_base() -> Path:
+    """La base de la recogida, solo para leer qué fue de una ficha que ya no está."""
+    from almacen.casa import casa
+
+    if directa := os.environ.get("EODI_BASE"):
+        return Path(directa)
+    if directorio := os.environ.get("EODI_BASE_DIRECTORIO"):
+        return Path(directorio) / "eodi.sqlite"
+    return casa() / "base" / "eodi.sqlite"
+
+
+def que_fue_de(ids: list[str], base: Path) -> dict[str, dict[str, str]]:
+    """{ficha: {«unida_a»: la ficha en que está fundida, «retirada»: su motivo}} según la base,
+    en solo lectura. Si no se puede leer, vacío: el aviso sale igual, con solo el número."""
+    if not ids or not base.exists():
+        return {}
+    resultado: dict[str, dict[str, str]] = {}
+    try:
+        conexion = sqlite3.connect(f"file:{base}?mode=ro", uri=True)
+        try:
+            for id_ in ids:
+                fila = conexion.execute(
+                    "SELECT documento FROM incidentes WHERE id = ?", (id_,)
+                ).fetchone()
+                if fila is None:
+                    continue
+                documento = json.loads(fila[0])
+                datos = {}
+                if documento.get("fusionado_en"):
+                    datos["unida_a"] = str(documento["fusionado_en"])
+                if "retirado" in documento:
+                    retirado = documento["retirado"]
+                    motivo = retirado.get("motivo") if isinstance(retirado, dict) else retirado
+                    datos["retirada"] = str(motivo or "sin motivo")[:200]
+                resultado[id_] = datos
+        finally:
+            conexion.close()
+    except (sqlite3.Error, ValueError) as error:
+        registro.warning("no se pudo leer qué fue de las fichas sin dirección: %s", error)
+        return {}
+    return resultado
+
+
+def texto_aviso_404(id_: str, datos: dict[str, str]) -> str:
+    """El aviso de una ficha cuya dirección ya no lleva a ninguna ficha (da 404)."""
+    texto = f"{id_} estaba en la web y su dirección ya no lleva a ninguna ficha (404)."
+    if "unida_a" in datos:
+        texto += (
+            f" Redirige a {datos['unida_a']}, que no se publica: la redirección no lleva a nada."
+        )
+    if "retirada" in datos:
+        texto += f" Retirada: {datos['retirada']}"
+    elif "unida_a" not in datos:
+        texto += " Ni se publica ni está unida a otra; no consta como retirada."
+    return texto
+
+
+def avisar_sin_direccion(
+    perdidas: list[str],
+    avisadas: dict[str, str],
+    base: Path,
+    ahora: datetime,
+    avisador: Callable[[], Callable[[str], None] | None],
+) -> dict[str, str]:
+    """Avisa por el tema privado, una vez por ficha, de las que pasan a 404. Devuelve las avisadas
+    (con la fecha del aviso). Sin quien avise (fuera del servidor, ensayo) o si el envío falla, no
+    se anota: se avisa en la publicación siguiente."""
+    nuevas = [id_ for id_ in perdidas if id_ not in avisadas]
+    if not nuevas:
+        return avisadas
+    avisar = avisador()
+    if avisar is None:
+        registro.info("fichas sin dirección sin avisar (sin aviso privado aquí): %s", nuevas)
+        return avisadas
+    resultado = dict(avisadas)
+    datos = que_fue_de(nuevas, base)
+    for id_ in nuevas:
+        try:
+            avisar(texto_aviso_404(id_, datos.get(id_, {})))
+        except (urllib.error.URLError, OSError, ValueError) as error:
+            registro.warning("aviso de %s sin dirección sin enviar: %s", id_, str(error)[:200])
+            continue
+        resultado[id_] = ahora.strftime("%Y-%m-%dT%H:%M:%SZ")
+        registro.info("avisada por el tema privado: %s sin dirección", id_)
+    return resultado
+
+
+def _avisador_privado() -> Callable[[str], None] | None:
+    from recogida import visitas
+
+    return visitas.avisador_privado(TITULO_AVISO_404)
+
+
 def _instante(texto: Any) -> datetime | None:
     try:
         return datetime.strptime(str(texto), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
@@ -382,14 +484,26 @@ def principal(argumentos: list[str] | None = None) -> int:
         return 1
     ahora = datetime.now(UTC)
     incidentes = incidentes_publicados(args.carpeta)
+    redirigen = redirigidos(args.carpeta)
     perdidas = sin_direccion(
-        (anterior.get("web") or {}).get("incidentes") or {}, incidentes, redirigidos(args.carpeta)
+        (anterior.get("web") or {}).get("incidentes") or {}, incidentes, redirigen
     )
+    # Las que redirigían (308) a una ficha que ya no se publica tampoco llevan a nada.
+    perdidas = sorted(
+        set(perdidas) | (set(anterior.get(REDIRIGIDAS) or []) - set(incidentes) - redirigen)
+    )
+    nuevo[REDIRIGIDAS] = sorted(redirigen)
     if perdidas:
         registro.warning(
             "fichas publicadas que pasan a 404 (ni se publican ni redirigen; ¿retiradas?): %s",
             ", ".join(perdidas[:20]),
         )
+    # Al responsable, por su tema privado: una vez por ficha. Solo con el destino principal (la
+    # copia de reserva tiene su propio registro y avisaría dos veces).
+    avisadas: dict[str, str] = dict(anterior.get(AVISADAS_404) or {})
+    if not args.reserva:
+        avisadas = avisar_sin_direccion(perdidas, avisadas, ruta_base(), ahora, _avisador_privado)
+    nuevo[AVISADAS_404] = avisadas
     pedir, motivo, web = decidir_reconstruccion(anterior.get("web") or {}, incidentes, cambiado,
                                                 ahora)  # fmt: skip
     if pedir and args.gancho is not None:
