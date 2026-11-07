@@ -1,5 +1,6 @@
 """Base de datos SQLite. Nada se borra: los triggers impiden DELETE y registran cada cambio."""
 
+import copy
 import json
 import logging
 import sqlite3
@@ -567,15 +568,17 @@ class Almacen:
         vocabulario_modelos: frozenset[str],
     ) -> Documento:  # fmt: skip
         """Lo protegido (proceso/protegido.py) frente a la versión guardada. Devuelve lo que se
-        escribe: el mismo documento en «observar» o sin nada que retener. Nunca para la recogida:
-        si falla, lo apunta y la escritura pasa como siempre."""
+        escribe: el mismo documento en «observar» o sin nada que retener. Nunca para la recogida.
+        Si falla (también si lo retenido no valida), lo apunta y, en «aplicar», retiene la versión
+        guardada entera: lo que no se puede comprobar no pasa (EODI-2026-00622, 7/11/2026: la
+        escritura pasaba y la fecha revisada a mano se perdía). En «observar» pasa como siempre."""
         from proceso import protegido
 
         if guardado is None or guardado == documento:
             return documento
+        modo = protegido.modo()
+        aplica = modo == protegido.APLICAR
         try:
-            modo = protegido.modo()
-            aplica = modo == protegido.APLICAR
             pasos = protegido.pila()
             veredicto = protegido.juzgar(guardado, documento, pasos, self.texto_guardado)
             for cambio, motivo in veredicto.permitidos:
@@ -605,7 +608,7 @@ class Almacen:
             return self._cerrojo_reapertura(resultado, guardado, pasos, aplica, ahora)
         except Exception as error:
             self._fallo_del_cerrojo(documento, error, ahora)
-            return documento
+            return copy.deepcopy(guardado) if aplica else documento
 
     def _cerrojo_union(
         self, documento: Documento, guardado: Documento, pasos: list[str], aplica: bool,

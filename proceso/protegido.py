@@ -725,6 +725,32 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
                 *(copy.deepcopy(a) for a in guardado.get("afirmaciones", [])
                   if a.get("campo") == "modelo_dron" and a.get("fuente_id") in fuentes),
             ]  # fmt: skip
+    return _con_fuentes_citadas(resultado, guardado)
+
+
+def _citadas(nodo: Any) -> set[str]:
+    """Los identificadores de fuente que cita una parte del documento (cualquier «fuente_id»)."""
+    if isinstance(nodo, dict):
+        ids = {nodo["fuente_id"]} if isinstance(nodo.get("fuente_id"), str) else set()
+        return ids.union(*(_citadas(v) for v in nodo.values()))
+    if isinstance(nodo, list):
+        return set().union(*(_citadas(v) for v in nodo))
+    return set()
+
+
+def _con_fuentes_citadas(resultado: Documento, guardado: Documento) -> Documento:
+    """Lo conservado cita las fuentes de la versión guardada: las que la versión nueva ya no trae
+    se recuperan de la guardada. Una relectura rehace la ficha con las fuentes de su candidato y
+    deja fuera las de una revisión a mano: EODI-2026-00622, 7 de noviembre de 2026, el estado
+    conservado citaba «revisada-…-declaracion-1», lo retenido no validaba y la escritura pasaba,
+    con la fecha revisada perdida."""
+    tiene = {f.get("id") for f in resultado.get("fuentes", [])}
+    faltan = _citadas({k: v for k, v in resultado.items() if k != "fuentes"}) - tiene
+    if faltan:
+        resultado["fuentes"] = [
+            *resultado.get("fuentes", []),
+            *(copy.deepcopy(f) for f in guardado.get("fuentes", []) if f.get("id") in faltan),
+        ]
     return resultado
 
 

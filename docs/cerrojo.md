@@ -104,8 +104,15 @@ Después de `rectificaciones.mantener` y de `decidir.aplicar`, y antes de valida
   destinataria vuelve a su versión anterior y la fusión no se da por revertida;
 - cada caso queda en `control_fichas` con el prefijo `retenido:`: ficha, dato, antes, después,
   módulo y función que lo intentó, y fecha. Lo que pasa con justificación queda con `permitido:`;
-- si el propio cerrojo falla, la escritura pasa como antes y el fallo se apunta con
-  `cerrojo_fallo:`. Nunca para la recogida.
+- lo conservado cita las fuentes de la versión guardada: las que la versión nueva ya no trae (una
+  relectura rehace la ficha con las fuentes de su candidato, sin las de una revisión a mano) se
+  recuperan de la guardada;
+- si el propio cerrojo falla, también si lo retenido no valida, el fallo se apunta con
+  `cerrojo_fallo:` y, en modo `aplicar`, se queda la versión guardada entera: lo que no se puede
+  comprobar no pasa. En `observar` la escritura pasa como antes. Nunca para la recogida. Hasta el
+  7 de noviembre de 2026 un fallo dejaba pasar la escritura: al releer EODI-2026-00622, el estado
+  conservado citaba una fuente de su revisión que la relectura ya no traía, lo retenido no validaba
+  y la fecha revisada a mano se perdía (en un ensayo; en producción no llegó a pasar).
 
 El modo está en `configuracion/cerrojo.json`: `observar` solo apunta y no cambia nada de lo que se
 guarda; `aplicar` retiene. Un modo desconocido o el fichero ausente equivalen a `observar`.
@@ -177,7 +184,8 @@ EODI-2026-00130 y EODI-2026-00302 el 1 de noviembre de 2026.
 `tests/test_cerrojo.py` intenta guardar por `guardar_incidente`, en `aplicar`, cada error real desde
 el 20 de octubre de 2026 (`tests/cerrojo/errores_reales.json`), además de cadenas de uniones y
 renumeraciones al azar con semilla fija, los cambios legítimos, que en `observar` la base queda como
-sin cerrojo y que un fallo del cerrojo no para la escritura. `tests/test_retiradas_por_fallo.py`
+sin cerrojo, que un fallo del cerrojo no para la recogida y que, en `aplicar`, deja la
+ficha como estaba. `tests/test_retiradas_por_fallo.py`
 reproduce el camino de EODI-2026-00130 y EODI-2026-00302, cada camino de fallo y la retirada en los
 dos modos. `tests/test_version_buena.py` reproduce una ficha marcada en cada comprobación de la
 red de la publicación.
