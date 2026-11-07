@@ -26,7 +26,7 @@ WP = (
     "7347630134045120a"
 )
 # Las dos revisiones de 00746, tal como están en incidentes_revisados.json.
-REVISIONES_746 = {
+REVISIONES_746: dict[str, dict[str, Any]] = {
     "drones": {
         "incidente": MARTES, "campo": "drones", "valor": {"min": 1, "max": 1},
         "cita": "Z kolei bezzałogowiec wykryty we wtorek po północy mógł należeć do Ukrainy.",
