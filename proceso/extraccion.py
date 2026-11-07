@@ -74,6 +74,7 @@ from proceso import (
     no_es_suceso,
     presencia,
     protegido,
+    relectura,
 )
 from proceso.control_fichas import declaraciones_de, declaraciones_no_oficiales
 from proceso.estados import Estado, TransicionNoPermitida, transitar
@@ -719,7 +720,17 @@ def procesar_respuesta(
             prefijos_genericos=prefijos_genericos(),
             publicaciones=publicaciones(peticion.articulos, peticion.enviadas),
         )
+        # Lo que la ficha publicada tenía con la frase de una autoridad no lo borra una lectura
+        # nueva que no lo trae (proceso/relectura.py), con cualquier modelo.
+        vigente = publicada_del_candidato(almacen, peticion.candidato["id"])
+        conservado: list[str] = []
+        if vigente is not None:
+            anterior = relectura.lectura_publicada(
+                almacen.extracciones(peticion.candidato["id"]), vigente["id"]
+            )
+            leida, conservado = relectura.conservar(leida, anterior, vigente, contexto.textos)
         validada = validar(leida, contexto)
+        validada.motivos.extend(conservado)
         completar_pais(validada, leida, contexto.textos)
         objetivo_compartido(
             validada, peticion.candidato["lugar"], peticion.articulos, peticion.enviadas

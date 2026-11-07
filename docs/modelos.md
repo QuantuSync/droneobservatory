@@ -87,8 +87,30 @@ revisión 0,17; guerra 0,07.
   `control_fichas.gasto_api`, `visitas.lineas_api`), y las llamadas y el gasto del modelo único
   («Modelos: modelo único N llamadas, X USD»). Ya no salen las líneas del escalado ni del experto.
 
-Pruebas: `tests/test_modelos.py`, `tests/test_gasto_api.py` y las de cada paso que llamaba al
-experto.
+### Una lectura nueva no borra lo que dijo una autoridad
+
+Con dos modelos, una lectura del base que rebajaba una ficha publicada se repetía con el experto.
+Con el modelo único no hay a quién repetirla, y una lectura que no recoge una declaración la
+perdía: EODI-2026-00766 (Vărăncău, Moldavia) dice «…, anunță Ministerul Apărării» al final del
+párrafo; la lectura de producción la recogió y las dos del ensayo del 7 de noviembre de 2026, con
+la misma petición y el mismo modelo, no, y la ficha bajaba a «posible dron» y a sobrevuelo.
+
+Desde entonces, con cualquier modelo (`proceso/relectura.py`, al procesar la respuesta): cuando el
+candidato de una ficha publicada se vuelve a leer, la lectura nueva conserva de la lectura
+publicada las declaraciones de autoridad que la ficha cita como fuente, la presencia (si la nueva
+es más baja y la ficha está a ese nivel) y el dron estatal y la entrada desde fuera (si la nueva no
+los da y la ficha los tiene en sus pruebas). Solo si la frase sigue en el texto de alguna fuente
+leída, y nunca si la lectura nueva trae una autoridad en contra: que no hubo drones, que no pasó
+nada, la presencia descartada, o abierta con la frase de una de sus declaraciones (como el
+Ministerio de Defensa rumano en EODI-2026-00743). Lo conservado queda en los motivos de la
+extracción («relectura: se conserva de la lectura publicada …»).
+
+El 7 de noviembre de 2026 había 34 fichas publicadas con el mismo patrón (de 265 confirmadas con
+cita de autoridad): la cita de la autoridad no nombra el dron y la confirmación sale de
+relacionarla con otra frase. Prueba: `tests/test_relectura.py`, con el texto de la 00766.
+
+Pruebas: `tests/test_modelos.py`, `tests/test_gasto_api.py`, `tests/test_relectura.py` y las de
+cada paso que llamaba al experto.
 
 ## Hasta el 7 de noviembre de 2026: dos modelos, base y experto
 
