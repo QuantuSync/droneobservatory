@@ -9,6 +9,7 @@ from modelo import coste
 from proceso import extraccion, relectura
 from tests.test_extraccion import AHORA, MODELOS, campo, ficha_ejemplo
 from tests.test_modelos import EXPERTO, Cliente, _peticion
+from tests.test_modelos import _respuesta as _respuesta_modelo
 
 # EODI-2026-00766 (Vărăncău, Moldavia), tal como la trae news.yam.md de Ziarul de Gardă el 6 de
 # noviembre de 2026: la autoridad va al final del párrafo, en la frase de los restos.
@@ -162,5 +163,27 @@ def test_con_el_modelo_unico_una_relectura_no_rebaja_la_ficha_publicada(
     despues = almacen.incidente(id_)
     assert despues is not None and despues["presencia_dron"] == "confirmada"
     assert any(f.get("es_autoridad") for f in despues["fuentes"])
+    ultima = almacen.extracciones(peticion.candidato["id"])[-1]
+    assert any(m.startswith(relectura.MOTIVO) for m in ultima["motivos"])
+
+
+def test_tambien_en_la_ficha_fundida_en_otra(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """EODI-2026-00766 está fundida en la 00748 desde el 6 de noviembre de 2026: su relectura
+    también conserva lo que dijo la autoridad (vuelve a publicarse si se separa)."""
+    monkeypatch.setenv("EODI_MODELO", EXPERTO)
+    peticion = _peticion(almacen)
+    id_ = _leer(almacen, peticion, ficha_ejemplo(
+        presencia_dron=campo("confirmada", "observeret tre til fire store droner"),
+        declaraciones=[POLICIA],
+    ))  # fmt: skip
+    fundida = almacen.incidente(id_)
+    assert fundida is not None
+    almacen._escribir_incidente({**fundida, "fusionado_en": "EODI-2026-09999"})
+    extraccion.procesar_respuesta(
+        almacen, peticion, _respuesta_modelo(ficha_ejemplo(), EXPERTO), AHORA,
+        coste.Modo.HORARIO, False, MODELOS,
+    )  # fmt: skip
     ultima = almacen.extracciones(peticion.candidato["id"])[-1]
     assert any(m.startswith(relectura.MOTIVO) for m in ultima["motivos"])

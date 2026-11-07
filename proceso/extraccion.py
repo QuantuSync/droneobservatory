@@ -721,10 +721,12 @@ def procesar_respuesta(
             publicaciones=publicaciones(peticion.articulos, peticion.enviadas),
         )
         # Lo que la ficha publicada tenía con la frase de una autoridad no lo borra una lectura
-        # nueva que no lo trae (proceso/relectura.py), con cualquier modelo.
-        vigente = publicada_del_candidato(almacen, peticion.candidato["id"])
+        # nueva que no lo trae (proceso/relectura.py), con cualquier modelo. También en la ficha
+        # fundida en otra: vuelve a publicarse si se separa (EODI-2026-00766, en la 00748).
+        previa = incidente_del_candidato(almacen, peticion.candidato["id"])
+        vigente = almacen.incidente(previa) if previa else None
         conservado: list[str] = []
-        if vigente is not None:
+        if vigente is not None and not vigente.get("retirado"):
             anterior = relectura.lectura_publicada(
                 almacen.extracciones(peticion.candidato["id"]), vigente["id"]
             )

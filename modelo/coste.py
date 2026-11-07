@@ -381,10 +381,8 @@ def comprobar_experto(
 
 
 def margen_escalados(momento: datetime, tope: float = LIMITE_EXPERTO_DIARIO_USD) -> float:
-    """Lo que hay que dejar libre del tope normal del experto para los escalados de lo que queda
-    del día (UTC): MARGEN_ESCALADOS_USD, o lo que corresponda a lo que queda del día a ritmo
-    constante si es menos (nada a las 24:00). Sin reparto por horas que deje la mañana sin
-    experto."""
+    """Hasta el 7 de noviembre de 2026, lo que había que dejar libre del tope diario del experto
+    para los escalados de lo que quedaba de ese día (UTC). Con el modelo único ya no frena nada."""
     utc = momento.astimezone(UTC)
     transcurrido = utc.hour * 3600 + utc.minute * 60 + utc.second
     return min(MARGEN_ESCALADOS_USD, tope * (1 - transcurrido / 86400))
@@ -394,10 +392,9 @@ def comprobar_al_ritmo(
     gastado_experto_hoy: float, previsto: float, momento: datetime, mes: Mes | None = None,
     que: str = EXPERTO,
 ) -> None:  # fmt: skip
-    """Lo que el experto hace si le sobra (la segunda lectura, los motivos opcionales): solo con
-    lo que no necesitan los escalados que no pueden esperar. El gasto del experto en el día tiene
-    que ir por debajo del ritmo de su tope (margen_escalados), nunca en la reserva crítica ni con
-    el tope mensual agotado. Lanza LimiteGasto si no."""
+    """Lo que el modelo hace si le sobra (la segunda lectura, los motivos opcionales). Desde el 7
+    de noviembre de 2026, solo el tope mensual de 150 USD (comprobar_mes); sin ritmo diario ni
+    reserva crítica. Lanza LimiteGasto si no cabe."""
     comprobar_mes(mes, previsto, que)
 
 
@@ -405,28 +402,25 @@ def comprobar_segunda(
     gastado_experto_hoy: float, gastado_segunda_hoy: float, previsto: float,
     momento: datetime | None = None, mes: Mes | None = None,
 ) -> None:  # fmt: skip
-    """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,30 al
-    día) y en el tope normal del experto, nunca en la reserva crítica, y solo al ritmo de su tope
-    (comprobar_al_ritmo). Desde el 7 de noviembre de 2026, solo el tope mensual. Lanza
-    LimiteGasto si no."""
+    """La revisión de lo que marca la segunda lectura. Desde el 7 de noviembre de 2026, solo el
+    tope mensual de 150 USD (antes, 0,30 USD diarios de su modo dentro del tope del experto).
+    Lanza LimiteGasto si no cabe."""
     comprobar_al_ritmo(
         gastado_experto_hoy, previsto, momento or datetime.now(UTC), mes, Modo.SEGUNDA_LECTURA
     )
 
 
 def comprobar_cupo(gastado_hoy: float, previsto: float, modo: Modo, mes: Mes | None = None) -> None:
-    """El cupo propio del experto de un modo (la segunda búsqueda): su límite del día y lo que
-    queda de su parte del mes, sin repartirla por días; nunca con el tope mensual agotado ni de la
-    reserva crítica. Desde el 7 de noviembre de 2026, solo el tope mensual. Lanza LimiteGasto si
-    no cabe."""
+    """El gasto de un modo con cupo propio (la segunda búsqueda). Desde el 7 de noviembre de
+    2026, solo el tope mensual de 150 USD (antes, su límite diario y su parte mensual). Lanza
+    LimiteGasto si no cabe."""
     comprobar_mes(mes, previsto, str(modo))
 
 
 def comprobar_control_experto(gastado_hoy: float, previsto: float, mes: Mes | None = None
                               ) -> None:  # fmt: skip
-    """El cupo propio del experto en el control (lo no crítico): su límite del día, nunca con el
-    tope mensual agotado ni de la reserva crítica. Desde el 7 de noviembre de 2026, solo el tope
-    mensual. Lanza LimiteGasto si no cabe."""
+    """El gasto del control en lo no crítico. Desde el 7 de noviembre de 2026, solo el tope
+    mensual de 150 USD (antes, un cupo diario del experto). Lanza LimiteGasto si no cabe."""
     comprobar_mes(mes, previsto, f"experto del {Modo.CONTROL}")
 
 
