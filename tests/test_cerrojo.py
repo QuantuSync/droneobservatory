@@ -656,9 +656,28 @@ def test_cadenas_y_renumeraciones_al_azar_nunca_juntan_un_par_prohibido(aplicar:
 # --- Nunca para la recogida -------------------------------------------------------------------
 
 
-def test_si_el_cerrojo_falla_la_escritura_pasa_y_se_cuenta(
+def test_si_el_cerrojo_falla_en_aplicar_retiene_y_se_cuenta(
     aplicar: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # Lo que no se puede comprobar no pasa: se queda la versión guardada entera (EODI-2026-00622,
+    # 7/11/2026: el fallo dejaba pasar la escritura y la fecha revisada se perdía).
+    almacen = base(ficha())
+    guardado = almacen.incidente("EODI-2026-09600")
+    assert guardado is not None
+
+    def rota(*_: Any) -> protegido.Veredicto:
+        raise RuntimeError("roto")
+
+    monkeypatch.setattr(protegido, "juzgar", rota)
+    guardar(almacen, version_mala(guardado, "drones"))
+    assert almacen.incidente("EODI-2026-09600") == guardado
+    assert len(almacen.controles(protegido.PREFIJO_FALLO)) == 1
+
+
+def test_si_el_cerrojo_falla_en_observar_la_escritura_pasa_y_se_cuenta(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(protegido, "modo", lambda: protegido.OBSERVAR)
     almacen = base(ficha())
     guardado = almacen.incidente("EODI-2026-09600")
     assert guardado is not None
@@ -685,17 +704,42 @@ def test_si_ni_apuntar_el_fallo_se_puede_tampoco_para(
 
     monkeypatch.setattr(almacen, "_apuntar_control", rota)
     guardar(almacen, version_mala(guardado, "drones"))
+    assert almacen.incidente("EODI-2026-09600") == guardado
 
 
-def test_lo_retenido_que_no_valida_deja_pasar_y_se_cuenta(
+def test_lo_retenido_que_no_valida_retiene_la_version_guardada_y_se_cuenta(
     aplicar: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # Caso general: la validación de lo retenido falla, sea por lo que sea. Antes la escritura
+    # pasaba con el dato protegido cambiado; ahora la ficha se queda como estaba.
     almacen = base(ficha())
     guardado = almacen.incidente("EODI-2026-09600")
     assert guardado is not None
     monkeypatch.setattr(protegido, "conservar", lambda *_: {**guardado, "tipo": "no vale"})
     guardar(almacen, version_mala(guardado, "drones"))
-    assert len(almacen.controles(protegido.PREFIJO_FALLO)) == 1
+    assert almacen.incidente("EODI-2026-09600") == guardado
+    (apunte,) = almacen.controles(protegido.PREFIJO_FALLO).values()
+    assert "lo retenido no valida" in apunte["error"]
+
+
+def test_lo_retenido_cita_una_fuente_que_la_relectura_ya_no_trae(aplicar: None) -> None:
+    # El patrón de EODI-2026-00622 (7/11/2026): la relectura rehace la ficha con las fuentes de su
+    # candidato, sin la declaración que confirmó el estado. Lo retenido (estado e inicio) la cita:
+    # se recupera de la versión guardada, lo retenido valida y no hay fallo.
+    almacen = base(ficha())
+    guardado = almacen.incidente("EODI-2026-09600")
+    assert guardado is not None
+    releida = version_mala(guardado, "inicio")
+    releida["fuentes"] = [f for f in releida["fuentes"] if f["id"] == "gdelt-base"]
+    releida["afirmaciones"] = [a for a in releida["afirmaciones"] if a["fuente_id"] == "gdelt-base"]
+    releida["estado"] = {"actual": "notificado", "historial": releida["estado"]["historial"][:1]}
+    guardar(almacen, releida)
+    actual = almacen.incidente("EODI-2026-09600")
+    assert actual is not None
+    assert actual["tiempo"]["inicio"] == guardado["tiempo"]["inicio"]
+    assert actual["estado"] == guardado["estado"]
+    assert "gdelt-base-declaracion-1" in {f["id"] for f in actual["fuentes"]}
+    assert not almacen.controles(protegido.PREFIJO_FALLO)
 
 
 # --- Auditoría X, resumen y vigilancia --------------------------------------------------------
