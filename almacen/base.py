@@ -467,6 +467,19 @@ class Almacen:
         conexion.execute("PRAGMA recursive_triggers = ON")
         conexion.execute("PRAGMA foreign_keys = ON")
         conexion.executescript(ESQUEMA_SQL)
+        # Las fichas fundidas en otra ({absorbida: la que queda}): las revisiones a mano de la
+        # absorbida pasan a la que queda (proceso/decidir.fijar_fusiones).
+        self._fundido_en: dict[str, str] = {
+            str(id_): str(destino)
+            for id_, destino in conexion.execute(
+                "SELECT id, json_extract(documento, '$.fusionado_en') FROM incidentes "
+                "WHERE json_extract(documento, '$.fusionado_en') IS NOT NULL "
+                "AND json_extract(documento, '$.retirado') IS NULL"
+            )
+        }
+        from proceso import decidir
+
+        decidir.fijar_fusiones(self._fundido_en)
 
     @classmethod
     def abrir(cls, ruta: Path | str = ":memory:") -> "Almacen":
@@ -534,6 +547,7 @@ class Almacen:
             raise DocumentoInvalido(errores)
         self._escribir_incidente(documento)
         self._ultimo_guardado = (documento["id"], guardado)
+        self._con_las_revisiones_de_la_fundida(documento, guardado, ahora, vocabulario_modelos)
         # Lo que cambió la decisión queda en el historial con la regla que lo decide, solo si
         # cambia lo guardado (o, en el alta, lo que proponía el documento): un paso que vuelve a
         # proponer lo mismo no engorda el historial.
@@ -549,7 +563,33 @@ class Almacen:
 
             presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas, confirmada))
 
+    def _con_las_revisiones_de_la_fundida(
+        self, documento: Documento, guardado: Documento | None, ahora: datetime,
+        vocabulario_modelos: frozenset[str],
+    ) -> None:  # fmt: skip
+        """Recién fundida una ficha con revisiones a mano, la que queda se vuelve a decidir con
+        ellas: se guardó justo antes de marcar la fundida, cuando aún no eran suyas."""
+        from proceso import decidir
+
+        destino = documento.get("fusionado_en")
+        if not destino or (guardado or {}).get("fusionado_en") == destino:
+            return
+        if not decidir.con_revisiones(str(documento["id"])):
+            return
+        queda = self.incidente(decidir.ficha_que_queda(str(destino)))
+        if queda is None or "fusionado_en" in queda or "retirado" in queda:
+            return
+        # El cerrojo mira el último guardado (la que queda, antes de la fundida): se conserva.
+        ultimo = self._ultimo_guardado
+        self.guardar_incidente(queda, ahora, vocabulario_modelos)
+        self._ultimo_guardado = ultimo
+
     def _escribir_incidente(self, documento: Documento) -> None:
+        id_ = str(documento["id"])
+        if documento.get("fusionado_en") and "retirado" not in documento:
+            self._fundido_en[id_] = str(documento["fusionado_en"])
+        else:
+            self._fundido_en.pop(id_, None)
         with self._conexion:
             self._guardar_fuentes(documento["fuentes"])
             self._upsert(
