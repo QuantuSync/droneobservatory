@@ -590,7 +590,9 @@ def test_dudoso_se_resuelve_a_las_seis_horas() -> None:
     assert decision["decision"] == "distinto" and decision["plazo"] is True
 
 
-def test_el_tope_de_gasto_para_las_llamadas() -> None:
+def test_el_tope_de_gasto_para_las_llamadas(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Desde el 7 de noviembre de 2026 el único tope es el mensual.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, str(coste.LIMITE_CONTROL_DIARIO_USD))
     almacen = _base(_nuremberg_alemana(), _nuremberg_griega())
     almacen.registrar_llamada(
         {

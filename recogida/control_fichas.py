@@ -46,6 +46,7 @@ modo «control_repaso», 4 dólares y después 6 más (el 14 de octubre de 2026)
 """
 
 import argparse
+import calendar
 import copy
 import hashlib
 import json
@@ -62,7 +63,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from almacen.casa import casa
 from esquema import Documento
 from modelo import control as peticiones
-from modelo import coste, ficha, paginas
+from modelo import coste, ficha, modelos, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import (
     autoridades,
@@ -102,14 +103,16 @@ MAX_LETRAS_CITA = 600
 FALLOS_PARA_AVISAR = 3
 PREFIJO_UNION = "control de fichas: "
 # La pasada de madrugada gasta como mucho esto del día en revisar lo publicado (pares y
-# verificaciones por lote, con su escalado al experto).
-TOPE_NOCHE_USD = 0.08
+# verificaciones por lote, con su escalado al experto). Era 0,08 con el modelo base; desde el 7 de
+# noviembre de 2026, con el modelo único (unas 20 veces más caro por token), 1,60 deja el mismo
+# trabajo.
+TOPE_NOCHE_USD = 1.60
 # Y aparte, esto en las citas sin traducir: lo nuevo de cada día (unas 15 a 30 citas de la capa
 # de Ucrania y lo que no recogieron los lotes de cada hora, medido el 14 de octubre de 2026) cabe
 # de sobra (unas 500 citas en el peor caso con el modelo base por lote; con el de antes, una
 # petición al menos) y el resto del tope se come lo atrasado. Lo que gaste la revisión no le
-# quita sitio.
-TOPE_NOCHE_CITAS_USD = 0.05
+# quita sitio. Era 0,05 con el modelo base; 1,00 con el modelo único (el mismo trabajo).
+TOPE_NOCHE_CITAS_USD = 1.00
 # Y como mucho este tiempo: tiene que acabar antes de la recogida siguiente.
 TOPE_NOCHE_S = 25 * 60.0
 # Repaso por lotes: espera entre consultas del estado del lote y tope de espera.
@@ -248,6 +251,10 @@ class Llamador:
                 self.resultado.errores.append(f"{clave}: {str(error)[:150]}")
                 return None
         if escalar is None or self._servicio is None:
+            return leida
+        if not sin_base and not modelos.escala(self.ultimo_modelo):
+            # La respuesta ya es del modelo que decide (el modelo único desde el 7 de noviembre de
+            # 2026): no se repite.
             return leida
         if sin_base:
             motivos = [f"{escalado.CRITICO_SIN_BASE}: tope de {self.modo} agotado"]
@@ -873,7 +880,7 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
             "decision": "dudoso", "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
             "desde": anterior.get("desde", _iso(ctx.ahora)), "version": peticiones.VERSION,
             "espera_experto": ctx.llamador.ultima_espera,
-            "tope_experto": coste.LIMITE_EXPERTO_DIARIO_USD,
+            "tope_experto": coste.TOPE_ESPERA_USD,
             "escalado": ctx.llamador.ultimos_motivos,
         }  # fmt: skip
         if ctx.llamador.ultimo_critico:
@@ -1115,7 +1122,7 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
         ctx.nuevas[peticion.clave] = {
             "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
             "version": peticiones.VERSION, "espera_experto": ctx.llamador.ultima_espera,
-            "tope_experto": coste.LIMITE_EXPERTO_DIARIO_USD,
+            "tope_experto": coste.TOPE_ESPERA_USD,
             "desde": anterior.get("desde") if anterior.get("espera_experto") else _iso(ctx.ahora),
             "escalado": ctx.llamador.ultimos_motivos,
         }  # fmt: skip
@@ -1920,7 +1927,8 @@ def escalar_lote(
     quedan en `respuestas.llamadas_experto` para anotarlas después en la base."""
     experto = getattr(servicio, "experto", None)
     cliente_experto = experto() if callable(experto) else None
-    if cliente_experto is None:
+    if cliente_experto is None or not modelos.escala(str(getattr(servicio, "modelo", "") or "")):
+        # Sin experto, o el lote ya lo hizo el modelo que decide (el modelo único): nada se repite.
         return
     modelo_experto = str(getattr(cliente_experto, "modelo", ""))
     dia = coste.dia(ahora)
@@ -2790,10 +2798,12 @@ DIAS_MODELOS = 10
 
 
 def papel(modelo: str) -> str:
-    """El papel de un modelo en el esquema de dos (docs/modelos.md): «base», «experto» o
-    «anterior» (el único modelo de antes). Los nombres de los modelos no salen de aquí."""
-    from modelo import modelos
-
+    """El papel de un modelo (docs/modelos.md): «unico» (el modelo único desde el 7 de noviembre
+    de 2026), «base», «experto» o «anterior» (el único modelo de antes del 14 de octubre de 2026).
+    Los nombres de los modelos no salen de aquí."""
+    unico = modelos.unico()
+    if unico and modelo.startswith(unico):
+        return "unico"
     base, experto = modelos.base(), modelos.experto()
     if experto and modelo.startswith(experto):
         return "experto"
@@ -2828,8 +2838,6 @@ def gasto_por_modelo(almacen: Almacen, ahora: datetime, anterior: Documento) -> 
 def gasto_experto(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
     """Lo que gastó el experto cada día UTC, repartido entre su tope normal y la reserva crítica
     (modelo/coste.py), con los dos topes: hoy y ayer se recalculan con la base."""
-    from modelo import modelos
-
     experto = modelos.experto()
     hoy = ahora.astimezone(UTC).date()
     dias: Documento = {d: v for d, v in anterior.items()
@@ -2850,16 +2858,22 @@ def gasto_experto(almacen: Almacen, ahora: datetime, anterior: Documento) -> Doc
 
 def gasto_api(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
     """Lo gastado en la API cada día UTC (todas las llamadas) y lo acumulado en su mes hasta el
-    final de ese día, con el tope mensual (coste.tope_mensual): hoy y ayer se recalculan con la
-    base. El resumen diario lo cuenta (recogida/visitas.py, lineas_api)."""
+    final de ese día, con el tope mensual (coste.tope_mensual) y la previsión de fin de mes (lo
+    acumulado más la media de los 7 días que acaban ese día por cada día que queda del mes): hoy y
+    ayer se recalculan con la base. El resumen diario lo cuenta (recogida/visitas.py,
+    lineas_api)."""
     hoy = ahora.astimezone(UTC).date()
     dias: Documento = {d: v for d, v in anterior.items()
                        if d >= (hoy - timedelta(days=DIAS_MODELOS)).isoformat()}  # fmt: skip
     for dia in (hoy - timedelta(days=1), hoy):
+        mes = almacen.gasto_entre(dia.replace(day=1).isoformat(), dia.isoformat())
+        semana = almacen.gasto_entre((dia - timedelta(days=6)).isoformat(), dia.isoformat())
+        quedan = calendar.monthrange(dia.year, dia.month)[1] - dia.day
         dias[dia.isoformat()] = {
             "dia": round(almacen.gasto_entre(dia.isoformat(), dia.isoformat()), 4),
-            "mes": round(almacen.gasto_entre(dia.replace(day=1).isoformat(), dia.isoformat()), 4),
+            "mes": round(mes, 4),
             "tope": coste.tope_mensual(),
+            "prevision": round(mes + semana / 7 * quedan, 2),
         }
     return dias
 

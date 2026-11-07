@@ -1,5 +1,10 @@
 # Segunda lectura con un servicio secundario de modelos
 
+> **Desde el 7 de noviembre de 2026** hay un solo modelo ([`modelos.md`](modelos.md), «Un solo
+> modelo»): donde aquí dice «experto», es el modelo único. Los topes de cada día que se citan
+> (el modo `segunda_lectura`, el cupo de la segunda búsqueda) ya no frenan: solo cuenta el tope
+> mensual de 150 USD. La capa secundaria sigue siendo gratuita y prescindible.
+
 Desde el 18 de octubre de 2026. Una capa **secundaria, gratuita y prescindible** que vuelve a leer
 lo publicado con un servicio secundario de modelos y señala lo que conviene revisar. El
 observatorio no depende de ella: si el servicio se cae, va lento o desaparece, todo sigue

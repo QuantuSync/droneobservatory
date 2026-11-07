@@ -22,10 +22,10 @@ Dos partes, separadas:
   existente, como mucho `por_recogida` por recogida: los de datos, a la verificación del control
   de las fichas hecha por el experto; los duplicados, a su comparación hecha por el experto; los
   de rectificaciones, a la cola del barrido mensual (recogida/rectificaciones.encolar). El
-  experto los paga con el modo «segunda_lectura» (0,30 dólares al día dentro de su tope normal,
-  nunca de la reserva crítica); lo que no cabe espera al día siguiente. Lo que decide el experto
-  se aplica con las reglas de siempre y queda guardado (clave `segunda:…` del control de las
-  fichas) para no repetirlo. Nunca cambia el código de salida de la recogida.
+  modelo los paga con el modo «segunda_lectura», dentro del tope mensual único de 150 dólares
+  desde el 7 de noviembre de 2026 (antes, 0,30 dólares diarios); lo que no cabe espera. Lo que
+  decide se aplica con las reglas de siempre y queda guardado (clave `segunda:…` del control de
+  las fichas) para no repetirlo. Nunca cambia el código de salida de la recogida.
 
 Se desactiva quitando EODI_SECUNDARIO_URL: la pasada no hace nada y la recogida no lee nada.
 """

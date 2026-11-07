@@ -231,15 +231,19 @@ def test_sin_experto_no_se_rebaja_nada(almacen: Almacen, monkeypatch: pytest.Mon
     assert almacen.controles(seguimiento.PREFIJO) == {}
 
 
-def test_con_el_tope_del_experto_agotado_espera(almacen: Almacen) -> None:
+def test_con_el_tope_mensual_agotado_espera(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
     almacen.registrar_llamada({
         "fecha": "2026-10-15T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_EXPERTO_DIARIO_USD, "modelo": EXPERTO, "escalada": True,
+        "coste": 2.0, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip
+    # Desde el 7 de noviembre de 2026 el gasto del día no frena: solo el tope mensual agotado.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "2.0")
     cliente = Cliente([_decision()])
     hechos = _pasar(almacen, cliente)
-    # No usa la reserva crítica: espera a la recogida siguiente.
+    # Sin reserva crítica: espera a la recogida siguiente.
     assert hechos.aplicadas == [] and cliente.pedidas == [] and hechos.esperan
 
 
@@ -530,14 +534,18 @@ def test_busqueda_mensual_con_el_base_y_su_tope(almacen: Almacen, modelos: dict[
     assert cursor["gasto"] <= seguimiento.TOPE_MENSUAL_USD
 
 
-def test_la_busqueda_mensual_no_pasa_del_tope(almacen: Almacen, modelos: dict[str, Any]) -> None:
+def test_la_busqueda_mensual_espera_con_el_tope_mensual_agotado(
+    almacen: Almacen, modelos: dict[str, Any], monkeypatch: pytest.MonkeyPatch
+) -> None:
     modelos["rectificaciones"] = []
     almacen.registrar_llamada({
         "fecha": "2026-10-15T01:00:00Z", "modo": coste.Modo.RECTIFICACIONES.value,
         "candidato": "x", "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0,
-        "lectura_cache": 0, "coste": coste.LIMITE_RECTIFICACIONES_USD, "modelo": BASE,
-        "escalada": False,
+        "lectura_cache": 0, "coste": 0.30, "modelo": BASE, "escalada": False,
     })  # fmt: skip
+    # Desde el 7 de noviembre de 2026 lo gastado hoy en el modo no la frena (su tope es por
+    # pasada, TOPE_MENSUAL_USD); el tope mensual agotado, sí.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.30")
     texto = "Danish police find no proof drones caused Københavns Lufthavn shutdown"
     almacen.guardar_articulo({"url": "https://r.example/a", "medio": "r.example",
                               "fecha": "2026-06-25T12:00Z", "idioma": "en", "titular": texto,

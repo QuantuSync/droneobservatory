@@ -1,11 +1,13 @@
 """Avisos del gasto de la API al responsable, por su tema privado de ntfy.
 
 Al final de cada recogida horaria (nunca en un ensayo), con lo gastado en el mes (UTC) en la
-base y el tope mensual (modelo/coste.py, 10 USD por defecto):
+base y el tope mensual (modelo/coste.py, 150 USD desde el 28 de octubre de 2026; desde el 7 de
+noviembre de 2026, el único tope del modelo único):
 
 - al 80 % del tope, una vez al mes: el gasto va alto;
-- al 100 %, una vez al mes: desde ahí solo trabaja el modelo base de la recogida horaria y
-  los casos críticos con la reserva del experto;
+- al 100 % (cuando lo que queda ya no da para una llamada grande, coste.MARGEN_AVISO_100_USD),
+  una vez al mes: desde ahí el trabajo nuevo se retiene sin publicarse hasta el mes siguiente
+  (ninguna ficha sale sin leer o leída a medias);
 - con el saldo agotado o un error de facturación (modelo/cliente.ErrorSaldo, anotado en
   ~/.eodi/saldo_api.json), una vez por episodio: «Saldo de la API agotado: recargar». La
   recogida sigue publicando lo que no necesita el modelo, con el mismo código de salida.
@@ -75,14 +77,15 @@ def revisar(almacen: Almacen, ahora: datetime, avisador: Avisador) -> list[str]:
     total = coste.del_mes(almacen, ahora).total
     enviados: list[str] = []
     resumen = f"Gastado en {mes}: {total:.2f} de {tope:.2f} USD."
-    if total >= tope and not estado.get("aviso_100"):
-        texto = (f"{resumen} Hasta fin de mes solo trabaja el modelo base de la recogida "
-                 "horaria y los casos críticos con la reserva del experto.")  # fmt: skip
+    if total >= tope - coste.MARGEN_AVISO_100_USD and not estado.get("aviso_100"):
+        texto = (f"{resumen} Hasta fin de mes el trabajo nuevo se retiene sin publicarse: "
+                 "ninguna ficha sale sin leer o leída a medias.")  # fmt: skip
         if _enviar(avisador, TITULO_100, texto):
             estado["aviso_100"] = estado["aviso_80"] = True
             enviados.append(TITULO_100)
     elif total >= coste.AVISO_MENSUAL * tope and not estado.get("aviso_80"):
-        if _enviar(avisador, TITULO_80, f"{resumen} Al llegar al tope, solo lo crítico."):
+        texto = f"{resumen} Al llegar al tope, el trabajo nuevo se retiene hasta el mes siguiente."
+        if _enviar(avisador, TITULO_80, texto):
             estado["aviso_80"] = True
             enviados.append(TITULO_80)
     saldo = _leer(cliente.ruta_saldo())

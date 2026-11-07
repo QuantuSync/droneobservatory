@@ -37,7 +37,7 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 | `publicacion/` | Solo una nota: desde el 8 de octubre de 2026 los ficheros públicos (`ucrania.json`, `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `prevision.json`) ya no están en el repositorio sino en el almacén público, y se descargan de la web ([`publicacion/LEEME.md`](publicacion/LEEME.md)) |
 | `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
-| `docs/` | Metodología que se puede reutilizar: dos modelos (base y experto), control de las fichas, nombres de lugar, sucesos mezclados y licencias de terceros |
+| `docs/` | Metodología que se puede reutilizar: modelos (uno solo desde el 7 de noviembre de 2026; antes, base y experto), control de las fichas, nombres de lugar, sucesos mezclados y licencias de terceros |
 
 ## Ejecutar los tests
 

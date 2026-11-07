@@ -54,7 +54,7 @@ def test_el_tope_del_experto_es_el_diario_al_principio_de_mes() -> None:
     assert coste.tope_experto(None) == coste.LIMITE_EXPERTO_DIARIO_USD
 
 
-def test_el_tope_del_experto_baja_si_su_parte_del_mes_va_deprisa() -> None:
+def test_el_tope_del_experto_del_resumen_baja_si_su_parte_va_deprisa_pero_no_frena() -> None:
     almacen = Almacen.abrir()
     parte = coste.parte_del_mes(coste.EXPERTO)
     minimo = coste.MINIMO_EXPERTO_DIARIO_USD
@@ -71,29 +71,32 @@ def test_el_tope_del_experto_baja_si_su_parte_del_mes_va_deprisa() -> None:
     mes = coste.del_mes(almacen, AHORA, EXPERTO)
     assert mes.experto_antes == pytest.approx(parte - 1.20)
     assert coste.tope_experto(mes) == pytest.approx(1.20 / 12, abs=1e-6)
-    with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_experto(0.09, 0.02, mes=mes)
-    # Lo crítico sigue teniendo su reserva de 0,50.
-    assert coste.comprobar_experto(0.09, 0.02, critico=True, mes=mes) is coste.Tramo.RESERVA
+    # Desde el 7 de noviembre de 2026 ese tope solo se informa: no frena (solo el mensual).
+    assert coste.comprobar_experto(0.09, 0.02, mes=mes) is coste.Tramo.NORMAL
+    assert coste.comprobar_experto(0.09, 0.02, critico=True, mes=mes) is coste.Tramo.NORMAL
 
 
-def test_con_el_tope_mensual_agotado_solo_trabajan_la_horaria_y_lo_critico() -> None:
+def test_con_el_tope_mensual_agotado_no_trabaja_nadie() -> None:
+    # Desde el 7 de noviembre de 2026: al 100 % el trabajo nuevo se retiene, también el de la
+    # recogida horaria y lo crítico (ya no hay reserva).
     almacen = Almacen.abrir()
     _llamada(almacen, "2026-10-03T10:00:00Z", coste.TOPE_MENSUAL_USD)
     mes = coste.del_mes(almacen, AHORA)
     assert coste.mes_agotado(mes)
-    for modo in (coste.Modo.CONTROL, coste.Modo.GUERRA, coste.Modo.RECTIFICACIONES):
+    for modo in (coste.Modo.CONTROL, coste.Modo.GUERRA, coste.Modo.RECTIFICACIONES,
+                 coste.Modo.HORARIO, coste.Modo.ENTRADA):  # fmt: skip
         with pytest.raises(coste.LimiteGasto):
             coste.comprobar(0.0, 0.001, modo, mes)
-    # El modelo base de la horaria nunca para: le queda su parte media de cada día.
-    coste.comprobar(0.0, 0.001, coste.Modo.HORARIO, mes)
-    media = coste.parte_del_mes(coste.Modo.HORARIO) / 31
-    assert coste.limite_de_hoy(coste.Modo.HORARIO, mes) == pytest.approx(media, abs=1e-6)
     with pytest.raises(coste.LimiteGasto):
         coste.comprobar_experto(0.0, 0.01, mes=mes)
-    assert coste.comprobar_experto(0.0, 0.01, critico=True, mes=mes) is coste.Tramo.RESERVA
+    with pytest.raises(coste.LimiteGasto):
+        coste.comprobar_experto(0.0, 0.01, critico=True, mes=mes)
     with pytest.raises(coste.LimiteGasto):
         coste.comprobar_al_ritmo(0.0, 0.001, AHORA, mes)
+    with pytest.raises(coste.LimiteGasto):
+        coste.comprobar_cupo(0.0, 0.001, coste.Modo.SEGUNDA_BUSQUEDA, mes)
+    with pytest.raises(coste.LimiteGasto):
+        coste.comprobar_control_experto(0.0, 0.001, mes)
     # El mes siguiente empieza de cero.
     noviembre = datetime(2026, 11, 2, 12, tzinfo=UTC)
     assert not coste.mes_agotado(coste.del_mes(almacen, noviembre))
@@ -107,16 +110,13 @@ def test_el_tope_mensual_se_cambia_por_entorno(monkeypatch: pytest.MonkeyPatch) 
     )
 
 
-def test_el_experto_del_control_lleva_su_cupo_y_no_gasta_el_de_la_horaria() -> None:
-    # El 20 de octubre de 2026, de 00:00 a 06:00 UTC, el control gastó 0,07 del experto y la
-    # recogida horaria se quedó sin él el resto del día.
+def test_el_experto_del_control_cuenta_como_el_control_y_no_tiene_cupo_del_dia() -> None:
     almacen = Almacen.abrir()
     _llamada(almacen, "2026-10-20T01:57:00Z", 0.05, "control", EXPERTO, True)
     assert almacen.gastado_modelo(EXPERTO, "2026-10-20") == 0.0
     assert almacen.gastado_experto_en("control", "2026-10-20") == pytest.approx(0.05)
-    coste.comprobar_control_experto(0.05, 0.005)
-    with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_control_experto(0.05, coste.LIMITE_CONTROL_EXPERTO_DIARIO_USD - 0.04)
+    # Desde el 7 de noviembre de 2026 su cupo del día ya no frena: solo el tope mensual.
+    coste.comprobar_control_experto(0.05, coste.LIMITE_CONTROL_EXPERTO_DIARIO_USD)
     # Cuenta como el control en el mes, no como el experto.
     mes = coste.del_mes(almacen, datetime(2026, 10, 21, 12, tzinfo=UTC), EXPERTO)
     assert mes.experto_antes == 0.0 and mes.modos_antes["control"] == pytest.approx(0.05)
@@ -293,22 +293,30 @@ def test_de_madrugada_lo_no_critico_va_al_lote_del_experto_y_lo_critico_directo(
     assert respuestas.leidas["par:A|B"] is not None
 
 
-def test_el_cupo_de_la_segunda_busqueda_va_aparte_y_sin_reserva() -> None:
+def test_la_segunda_busqueda_ya_no_tiene_cupo_del_dia_ni_parte_del_mes() -> None:
     almacen = Almacen.abrir()
     modo = coste.Modo.SEGUNDA_BUSQUEDA
-    # Su límite del día y su parte del mes entera, sin repartirla por días: un peor caso de 0,06
-    # cabe aunque su parte entre los días que quedan sea menor.
+    # Desde el 7 de noviembre de 2026 solo frena el tope mensual: ni su límite del día ni su parte
+    # del mes.
     mes = coste.del_mes(almacen, AHORA, EXPERTO)
-    coste.comprobar_cupo(0.0, 0.06, modo, mes)
-    with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_cupo(coste.LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD - 0.05, 0.06, modo, mes)
-    # Lo que gasta no cuenta contra el tope normal del experto.
-    gastado = coste.parte_del_mes(modo) - 0.10
+    coste.comprobar_cupo(coste.LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD, 0.06, modo, mes)
+    gastado = coste.parte_del_mes(modo) + 1.0
     _llamada(almacen, "2026-10-05T10:00:00Z", gastado, modo.value, EXPERTO, True)
     mes = coste.del_mes(almacen, AHORA, EXPERTO)
+    # Lo que gasta sigue sin contar como el experto.
     assert mes.experto_antes == 0.0
     assert mes.modos_antes[modo.value] == pytest.approx(gastado)
-    # Con su parte del mes gastada, para.
-    coste.comprobar_cupo(0.0, 0.06, modo, mes)
+    coste.comprobar_cupo(0.0, 0.11, modo, mes)
+    # Con el tope mensual casi agotado, para.
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_cupo(0.0, 0.11, modo, mes)
+        coste.comprobar_cupo(0.0, coste.TOPE_MENSUAL_USD - gastado + 0.01, modo, mes)
+
+
+def test_el_aviso_del_100_llega_cuando_ya_no_cabe_una_llamada_grande() -> None:
+    almacen = Almacen.abrir()
+    avisos = Avisos()
+    _llamada(almacen, "2026-10-03T10:00:00Z", coste.TOPE_MENSUAL_USD - coste.MARGEN_AVISO_100_USD)
+    assert gasto_api.revisar(almacen, AHORA, avisos) == [gasto_api.TITULO_100]
+    _, texto = avisos.enviados[0]
+    assert "se retiene sin publicarse" in texto and "leída a medias" in texto
+    assert gasto_api.revisar(almacen, AHORA, avisos) == []

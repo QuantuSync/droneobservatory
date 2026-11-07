@@ -381,7 +381,11 @@ def test_un_cierre_que_no_pudo_demostrar_los_drones_corrige_la_presencia() -> No
     assert all(i["id"] != "EODI-2025-00134" for i, _ in presencia.pendientes(almacen))
 
 
-def test_las_llamadas_directas_paran_en_el_limite_de_gasto() -> None:
+def test_las_llamadas_directas_paran_en_el_limite_de_gasto(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Desde el 7 de noviembre de 2026 el único tope es el mensual.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "0.30")
     almacen = Almacen.abrir()
 
     class Servicio:
@@ -398,7 +402,7 @@ def test_las_llamadas_directas_paran_en_el_limite_de_gasto() -> None:
             "salida": 0,
             "escritura_cache": 0,
             "lectura_cache": 0,
-            "coste": coste.LIMITE_DIARIO_USD,
+            "coste": 0.30,
         }
     )
     hechos = extraccion_oficial.extraer(

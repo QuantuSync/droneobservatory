@@ -1,5 +1,10 @@
 # Control de calidad permanente de las fichas
 
+> **Desde el 7 de noviembre de 2026** hay un solo modelo ([`modelos.md`](modelos.md), «Un solo
+> modelo»): donde aquí dice «experto» o «modelo base», es el mismo modelo único, y nada se
+> escala de uno a otro. Los topes de cada día que se citan (del experto, su reserva crítica y los
+> cupos propios) ya no frenan: solo cuenta el tope mensual de 150 USD.
+
 Desde el 14 de octubre de 2026. El 13 de octubre salieron dos veces el ataque con drones a dos
 barcos en la zona económica búlgara del mar Negro (EODI-2026-00513 y 00514, con fuentes rumanas y
 finlandesas) y la alerta del aeropuerto de Núremberg (00515 y 00516, con fuentes alemanas y una

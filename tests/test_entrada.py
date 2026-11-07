@@ -339,25 +339,28 @@ def test_sin_experto_espera_como_caso_critico_y_no_sale_nunca_por_tiempo() -> No
     assert entrada.motivo_retencion(None, ficha) == "sin pasar por el filtro de entrada"
 
 
-def test_el_cupo_de_entrada_es_aparte_del_experto() -> None:
+def test_el_filtro_de_entrada_solo_espera_con_el_tope_mensual_agotado(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     almacen = _base(SULINA_692)
     almacen.registrar_llamada({
         "fecha": "2026-10-27T10:00:00Z", "modo": "entrada", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
         "coste": coste.LIMITE_ENTRADA_DIARIO_USD, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip
-    # No cuenta contra el tope del experto, sí contra su propio cupo: la ficha espera.
-    assert almacen.gastado_modelo(EXPERTO, "2026-10-27") == 0.0
+    # Desde el 7 de noviembre de 2026 no hay cupo del día: lo gastado hoy no frena.
     assert almacen.gastado_experto_en("entrada", "2026-10-27") == coste.LIMITE_ENTRADA_DIARIO_USD
+    coste.comprobar_cupo(coste.LIMITE_ENTRADA_DIARIO_USD, 0.05, coste.Modo.ENTRADA,
+                         coste.del_mes(almacen, AHORA))  # fmt: skip
+    # Con el tope mensual agotado, la ficha nueva espera sin publicarse y no se llama.
+    monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, str(coste.LIMITE_ENTRADA_DIARIO_USD))
     cliente = Cliente([_respuesta()])
     ctx = _contexto(almacen, cliente)
     entrada.filtrar(ctx, set())
     decision = ctx.nuevas[entrada.clave("EODI-2026-00692")]
     assert decision["decision"] == entrada.ESPERA and decision["motivo"].startswith("cupo")
     assert cliente.pedidas == []
-    assert coste.limite(coste.Modo.ENTRADA) == 3.00
     assert coste.TOPE_MENSUAL_USD == 150.00
-    assert coste.REPARTO_MENSUAL_USD[coste.Modo.ENTRADA] == 90.00
 
 
 def test_la_medida_a_las_24_horas_une_el_duplicado_y_lo_cuenta() -> None:
