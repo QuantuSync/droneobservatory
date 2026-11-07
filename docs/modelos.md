@@ -173,6 +173,28 @@ Pruebas: `tests/test_nada_se_retira.py` (la 00489, cada señal con un caso inven
 oficiales, retirada y rebaja de una ficha publicada con y sin experto, lotes, reconstrucción y
 uniones del control).
 
+### Una lectura nueva no borra lo que dijo una autoridad
+
+Desde el 7 de noviembre de 2026, con cualquier modelo (`proceso/relectura.py`, al procesar la
+respuesta de la extracción): cuando se vuelve a leer el candidato de una ficha publicada, o de una
+fundida en otra (vuelve a publicarse si se separa), la lectura nueva conserva de la lectura
+publicada las declaraciones de autoridad que la ficha cita como fuente, la presencia (si la nueva
+es más baja y la ficha está a ese nivel) y el dron estatal y la entrada desde fuera, de los que
+sale el tipo «incursión» (si la nueva no los da y la ficha los tiene en sus pruebas). Solo si la
+frase sigue en el texto de alguna fuente leída, y nunca si la lectura nueva trae una autoridad en
+contra: que no hubo drones, que no pasó nada, la presencia descartada, o abierta con la frase de
+una de sus declaraciones (como el Ministerio de Defensa rumano en EODI-2026-00743). Lo conservado
+queda en los motivos de la extracción («relectura: se conserva de la lectura publicada …»).
+
+El caso: EODI-2026-00766 (Vărăncău, Moldavia, fundida en la 00748) dice «…, anunță Ministerul
+Apărării» al final del párrafo. Una lectura la recogió y otras, con la misma petición y el mismo
+modelo, no; la ficha bajaba a «posible dron» y a sobrevuelo. La repetición con el experto no lo
+cubría, porque la lectura que la perdía ya era del experto.
+
+El 7 de noviembre de 2026 había 34 fichas activas con el mismo patrón (de 265 confirmadas con
+cita de autoridad): la cita de la autoridad no nombra el dron y la confirmación sale de
+relacionarla con otra frase. Prueba: `tests/test_relectura.py`, con el texto de la 00766.
+
 ## Lo que no es un suceso no es ficha
 
 Desde el 15 de octubre de 2026. La EODI-2026-00539 se publicó a partir de un reportaje de
