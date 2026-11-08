@@ -93,10 +93,22 @@ _NUMEROS = (
     r"δύο|τρία|τρεις|один|одна|два|две|три|четыре|пять|jedan|dva|tri|četiri|vienas|trys|viens|"
     r"divi|trīs|edin|edna"
 )
+# Lo que cuenta un número junto a la palabra dron puede no ser drones sino vuelos, entradas,
+# violaciones o avisos de drones: «fiksavo 3 draudžiamus dronų skrydžius» son tres vuelos
+# prohibidos (EODI-2025-00004, que llevaba 3 drones por esa frase, y además de otro día), «dva
+# upada bespilotnih letjelica», dos entradas. Esa palabra, justo antes o justo después de la
+# palabra dron, hace que el número no cuente drones (en inglés, «two drone intrusions»).
+_NO_SON_DRONES = (
+    r"(?:flights?|vuelos?|vols?|vol[io]|vlucht(?:en)?|fl[uü]ge?|flug\w*|lot(?:y|ów)|zbor(?:uri)?|"
+    r"skryd\w*|skrydž\w*|lidojum\w*|flyvning\w*|flygning\w*|let[yů]|letov[iea]?|"
+    r"intrusions?|intrusiones?|incursions?|incursiones?|pătrunder\w*|încălcăr\w*|upad[ai]?|"
+    r"violations?|violaciones?|reports?|zgłosze\w*|meldungen?|sightings?|avistamientos?)(?!\w)"
+)
 NUMERO_DE_DRONES = re.compile(
-    rf"(?i)(?<!\w)(?:{_NUMEROS})\s+(?:[\w-]+\s+)?"
+    rf"(?i)(?<!\w)(?:{_NUMEROS})\s+(?:(?!{_NO_SON_DRONES})[\w-]+\s+)?"
     r"(?:drohne\w*|drones?|drone\w*|dron\w*|drön\w*|droni|drony|дрон\w*|беспилотник\w*|"
-    r"безпілотник\w*|bezzałogow\w*|μη\s+επανδρωμέν\w*|bespilot\w*)"
+    r"безпілотник\w*|bezzałogow\w*|μη\s+επανδρωμέν\w*|bespilot\w*)(?!\w)"
+    rf"(?!\s+{_NO_SON_DRONES})"
 )
 # Una duración solo de una frase que habla del cierre o de los vuelos, no de cuánto duró un
 # avistamiento o cuánto esperó un avión.

@@ -5816,6 +5816,28 @@
         "es": "El Ministerio de Defensa rumano dice que, en la noche del 1 al 2 de noviembre de 2026, no se informó de entradas en el espacio aéreo de Rumanía: hubo alerta en el norte de Tulcea y cazas en el aire por los ataques a los puertos ucranianos del Danubio, pero ningún dron confirmado en Rumanía. Alerta sin entrada confirmada: ficha normal con el dron no confirmado (revisado el 6 de noviembre de 2026).",
         "en": "The Romanian Ministry of Defence says that, on the night of 1 to 2 November 2026, no entries into Romanian airspace were reported: there was an alert in northern Tulcea and fighters in the air because of the attacks on the Ukrainian Danube ports, but no drone confirmed in Romania. Alert without a confirmed entry: a normal record with the drone not confirmed (reviewed on 6 November 2026)."
       }
+    },
+    {
+      "incidente": "EODI-2026-00372",
+      "titulo": {
+        "es": "Dos drones y tres misiles cruzan Moldavia y explotan en varios distritos",
+        "en": "Two drones and three missiles cross Moldova and explode in several districts"
+      },
+      "motivo": {
+        "es": "El titular dec\u00eda \u00abM\u00faltiples drones\u00bb; de los cinco aparatos que cruzaron Moldavia, tres eran misiles y dos drones: \u00abCele cinci aparate de zbor care au survolat \u0219i explodat \u00een R. Moldova sunt trei rachete \u0219i dou\u0103 drone\u00bb (news.yam.md) (revisado el 8 de noviembre de 2026).",
+        "en": "The headline said \u00abMultiple drones\u00bb; of the five objects that crossed Moldova, three were missiles and two were drones: \u00abCele cinci aparate de zbor care au survolat \u0219i explodat \u00een R. Moldova sunt trei rachete \u0219i dou\u0103 drone\u00bb (news.yam.md) (reviewed on 8 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00725",
+      "titulo": {
+        "es": "Alerta en el distrito de Suceava por la posible entrada de un dron, con restricciones del espacio a\u00e9reo",
+        "en": "Alert in Suceava county over a possible drone incursion, with airspace restrictions"
+      },
+      "motivo": {
+        "es": "El titular dec\u00eda \u00abposibles drones\u00bb; la alerta fue por la posible entrada de un dron: \u00abdespre posibilitatea p\u0103trunderii unei drone \u00een spa\u021biul aerian na\u021bional\u00bb (monitorulsv.ro, seg\u00fan el MApN) (revisado el 8 de noviembre de 2026).",
+        "en": "The headline said \u00abpossible drones\u00bb; the alert was over the possible entry of one drone: \u00abdespre posibilitatea p\u0103trunderii unei drone \u00een spa\u021biul aerian na\u021bional\u00bb (monitorulsv.ro, citing the Defence Ministry) (reviewed on 8 November 2026)."
+      }
     }
   ],
   "titular_justificado": [],
@@ -12501,6 +12523,39 @@
       "enlace": "https://www.mapn.ro/cpresa/19462_informa%C8%9Bie-de-presa",
       "pais": "RO",
       "motivo": "el titular decía «drones en su espacio aéreo»; el Ministerio de Defensa cuenta ataques con drones a los puertos ucranianos del Danubio, cazas en el aire y la alerta en el norte de Tulcea, y que «nu au fost raportate pătrunderi în spațiul aerian național» (revisado el 6 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00004",
+      "campo": "drones",
+      "valor": "desconocido",
+      "cita": "Skelbiama, jog ketvirtadien\u012f Vie\u0161ojo saugumo tarnyba Vilniuje fiksavo 3 draud\u017eiamus dron\u0173 skryd\u017eius oro uosto apylink\u0117se.",
+      "enlace": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/penktadieni-vilniaus-oro-uosto-darba-sutrikde-netoliese-kile-civiliniai-dronai",
+      "pais": "LT",
+      "motivo": "los 3 de la ficha eran tres vuelos prohibidos de drones del jueves 25 de septiembre, no los drones del viernes 26; del viernes las notas dicen \u00abdar vien\u0105 dron\u0105\u00bb (lrytas.lt) y \u00abciviliniai dronai\u00bb (Oro navigacija), sin n\u00famero (revisado el 8 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00372",
+      "campo": "drones",
+      "valor": {
+        "min": 2,
+        "max": 2
+      },
+      "cita": "Cele cinci aparate de zbor care au survolat \u0219i explodat \u00een R. Moldova sunt trei rachete \u0219i dou\u0103 drone",
+      "enlace": "https://news.yam.md/ro/story/70615119",
+      "pais": "MD",
+      "motivo": "de los cinco aparatos que cruzaron Moldavia el 3 de octubre de 2026, tres eran misiles y dos drones; la ficha dec\u00eda entre 2 y 10 por \u00abmai multe drone\u00bb (revisado el 8 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00725",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "\u00een urma notific\u0103rii transmise de c\u0103tre Statul Major al Fortelor Aeriene / MApN despre posibilitatea p\u0103trunderii unei drone \u00een spa\u021biul aerian na\u021bional",
+      "enlace": "https://monitorulsv.ro/alerta-de-drone-in-judetul-suceava-drone-semnalate-in-zonele-fratauti-si-horodnic-doua-avioane-survoleaza-zona_923d20",
+      "pais": "RO",
+      "motivo": "la alerta de Suceava fue por la posible entrada de un dron seg\u00fan el Estado Mayor de la Fuerza A\u00e9rea (MApN); el titular de la nota dice \u00abdrone\u00bb sin n\u00famero (revisado el 8 de noviembre de 2026)"
     }
   ]
 }
