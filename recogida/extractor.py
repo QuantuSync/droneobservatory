@@ -321,6 +321,15 @@ def horaria(
     # anterior, del más reciente al más antiguo. El límite diario de gasto corta la ejecución
     # donde toque.
     nuevos = pendientes(almacen, ahora - VENTANA_HORARIA)
+    # Una sola vez, los de antes de la ventana con un artículo que no leyó su ficha.
+    try:
+        sin_leer = extraccion.revisar_fuentes_sin_leer(almacen, ahora) - {c["id"] for c in nuevos}
+        nuevos += utilizables(almacen, [
+            c for c in almacen.candidatos()
+            if c["id"] in sin_leer and extraccion.necesita_extraccion(almacen, c)
+        ])  # fmt: skip
+    except Exception:
+        registro.exception("repaso de las fuentes sin leer: falló; en la siguiente")
     revision = extraccion.en_revision(almacen) - {c["id"] for c in nuevos}
     nuevos += utilizables(almacen, [c for c in almacen.candidatos() if c["id"] in revision])
     vistos = {c["id"] for c in nuevos}

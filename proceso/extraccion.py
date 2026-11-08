@@ -154,6 +154,11 @@ ENTRADA_MODELO_BASE = "2026-10-14T13:42:00Z"
 # sola vez, los descartes del base desde el 13 de octubre se repasan con ella.
 REVISION_DUDOSOS = "revision_descartes_dudosos"
 DESDE_DUDOSOS = "2026-10-13T00:00:00Z"
+# Los huecos de las fuentes con artículos del mismo medio (elegir_fuentes) llegaron el 8 de
+# noviembre de 2026: una sola vez, los candidatos extraídos desde 14 días antes que no son un
+# incidente y tienen un artículo que nunca se mandó se vuelven a extraer con él.
+REVISION_FUENTES = "revision_fuentes_sin_leer"
+DESDE_FUENTES = "2026-10-25T00:00:00Z"
 
 
 class Servicio(Protocol):
@@ -366,6 +371,29 @@ def revisar_descartes_dudosos(
     return [c for _, c, _ in sorted(elegidos)]
 
 
+def revisar_fuentes_sin_leer(
+    almacen: Almacen, ahora: datetime, desde: str = DESDE_FUENTES
+) -> set[str]:
+    """Los candidatos que se vuelven a extraer por el camino normal (el base y su escalado de
+    siempre) porque su última ficha no es un incidente y no leyó un artículo que hoy se mandaría
+    (fuentes_sin_leer). La lista se hace una sola vez (cursor `revision_fuentes_sin_leer`) con los
+    extraídos desde `desde`; cada uno sale de ella cuando ya no lo necesita."""
+    hecho = almacen.cursor(REVISION_FUENTES)
+    if isinstance(hecho, dict):
+        return set(hecho.get("marcados") or [])
+    candidatos = {c["id"]: c for c in almacen.candidatos()}
+    marcados = sorted(
+        c for c in almacen.candidatos_extraidos_desde(desde)
+        if c in candidatos and fuentes_sin_leer(almacen, candidatos[c])
+    )  # fmt: skip
+    almacen.guardar_cursor(REVISION_FUENTES, {
+        "fecha": _fecha(ahora), "desde": desde, "marcados": marcados,
+    })  # fmt: skip
+    registro.info("fuentes sin leer desde %s: %d candidatos se vuelven a extraer", desde,
+                  len(marcados))  # fmt: skip
+    return set(marcados)
+
+
 def en_revision(almacen: Almacen) -> set[str]:
     """Los candidatos que se repiten con el experto (`revision`)."""
     return {id_ for id_, e in esperan_experto(almacen).items() if e.get("revision")}
@@ -408,6 +436,8 @@ def necesita_extraccion(almacen: Almacen, candidato: Documento) -> bool:
         return False
     if articulos_retirados(almacen, candidato):
         return True
+    if fuentes_sin_leer(almacen, candidato):
+        return True
     ultima = anteriores[-1]
     if ultima["huella"] == huella(candidato["articulos"]):
         return False
@@ -428,8 +458,9 @@ def desactualizado(almacen: Almacen, candidato: Documento) -> bool:
 def elegir_fuentes(
     articulos: list[Documento], dirigidos: frozenset[str] = frozenset()
 ) -> list[Documento]:
-    """El primer artículo y después los más replicados de otros medios, hasta tres. Un artículo
-    dirigido (apuntado a mano porque trae lo que los demás no dicen) va siempre."""
+    """El primer artículo y después los más replicados de otros medios, hasta tres; si no hay
+    tres medios, los más recientes de los mismos. Un artículo dirigido (apuntado a mano porque trae
+    lo que los demás no dicen) va siempre."""
     ordenados = sorted(articulos, key=lambda a: (a["fecha"], a["url"]))
     elegidos = [a for a in ordenados if a["url"] in dirigidos][: MAX_FUENTES - 1]
     elegidos += [a for a in ordenados[:1] if a not in elegidos]
@@ -440,7 +471,34 @@ def elegir_fuentes(
         if articulo["medio"] not in medios:
             elegidos.append(articulo)
             medios.add(articulo["medio"])
+    # Con menos de tres medios, los huecos los llenan los artículos más recientes de los mismos
+    # medios: la noticia que sigue a otra en el mismo medio (o en un agregador) suele traer lo que
+    # la primera no sabía. Gordinești, 5/11/2026: news.yam.md publicó «Un obiect suspect,
+    # asemănător unei drone» y después «Poliția precizează: ... este o dronă de recunoaștere»;
+    # solo se mandaba la primera y el candidato se quedó en «no es incidente».
+    urls = {a["url"] for a in elegidos}
+    for articulo in sorted(ordenados[1:], key=lambda a: (a["fecha"], a["url"]), reverse=True):
+        if len(elegidos) == MAX_FUENTES:
+            break
+        if articulo["url"] not in urls:
+            elegidos.append(articulo)
+            urls.add(articulo["url"])
     return elegidos
+
+
+def fuentes_sin_leer(almacen: Almacen, candidato: Documento) -> bool:
+    """La última ficha del candidato no es un incidente y hoy se mandaría un artículo que no
+    leyó ninguna de sus fichas (llegó después y era de un medio ya elegido): hay que volver a
+    extraerlo con él."""
+    anteriores = almacen.extracciones(candidato["id"])
+    if not anteriores or anteriores[-1].get("incidente"):
+        return False
+    leidas = {url for e in anteriores for url in e.get("enviadas") or []}
+    if not leidas:
+        return False
+    articulos = [a for a in _articulos(almacen, candidato) if a.get("idioma")]
+    dirigidos = frozenset(almacen.cursor(CURSOR_DIRIGIDOS) or {})
+    return any(a["url"] not in leidas for a in elegir_fuentes(articulos, dirigidos))
 
 
 def objetivo_de(almacen: Almacen, candidato: Documento, nom: Nomenclator) -> Objetivo:
