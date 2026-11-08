@@ -206,7 +206,9 @@ def test_una_union_imposible_no_vale() -> None:
     otra = _ficha("EODI-2025-00061", "LT", "2025-09-26T00:00Z", punto=(54.65, 25.30),
                   nivel="instalacion", publicada="2025-09-26T13:00Z")  # fmt: skip
     assert repaso.mismo_imposible(viernes, otra) is None
-    assert repaso.ajustar(decision | {"mismo": otra["id"]}, viernes, otra)["cambios"] == [
+    # Sin fichas protegidas: EODI-2025-00004 tiene revisado a mano el número de drones.
+    nada = repaso.Protegidas(frozenset())
+    assert repaso.ajustar(decision | {"mismo": otra["id"]}, viernes, otra, nada)["cambios"] == [
         repaso.UNIR
     ]
 
