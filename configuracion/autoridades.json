@@ -739,6 +739,15 @@
    "en": "the Romanian Ministry of National Defence",
    "pais": "RO"
   },
+  "Minister van Defensie": {
+   "es": "el ministro de Defensa",
+   "en": "the Minister of Defence"
+  },
+  "Poli\u021bia": {
+   "es": "la Polic\u00eda",
+   "en": "the Police",
+   "original": true
+  },
   "Ministerie van Defensie": {
    "es": "el Ministerio de Defensa de los Pa\u00edses Bajos",
    "en": "the Netherlands Ministry of Defence",
@@ -2087,6 +2096,46 @@
      "interne de la bucuresti",
      "interne roman",
      "interne al romaniei"
+    ]
+   }
+  },
+  "Minister van Defensie": {
+   "NL": {
+    "es": "el ministro de Defensa de los Pa\u00edses Bajos",
+    "en": "the Netherlands Minister of Defence",
+    "senales": [
+     "nederlandse minister van defensie",
+     "brekelmans"
+    ]
+   },
+   "BE": {
+    "es": "el ministro de Defensa de B\u00e9lgica",
+    "en": "the Belgian Minister of Defence",
+    "senales": [
+     "belgische minister van defensie",
+     "francken"
+    ]
+   }
+  },
+  "Poli\u021bia": {
+   "MD": {
+    "es": "la Polic\u00eda de Moldavia",
+    "en": "the Moldovan Police",
+    "original": true,
+    "senales": [
+     "politia republicii moldova",
+     "politiei republicii moldova",
+     "politia moldovei"
+    ]
+   },
+   "RO": {
+    "es": "la Polic\u00eda de Ruman\u00eda",
+    "en": "the Romanian Police",
+    "original": true,
+    "senales": [
+     "politia romana",
+     "politiei romane",
+     "igpr"
     ]
    }
   },
