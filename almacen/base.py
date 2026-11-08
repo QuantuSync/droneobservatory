@@ -1721,6 +1721,15 @@ class Almacen:
         ).fetchone()
         return int(fila[0])
 
+    def articulos_por_candidato_desde(self, fecha: str) -> dict[str, int]:
+        """Cuántos artículos con fecha desde `fecha` (ISO) tiene cada candidato."""
+        filas = self._conexion.execute(
+            "SELECT candidato, count(*) FROM articulos WHERE fecha >= ? AND candidato IS NOT NULL "
+            "GROUP BY candidato",
+            (fecha,),
+        ).fetchall()
+        return {str(f[0]): int(f[1]) for f in filas}
+
     def guardar_extraccion(
         self, candidato: str, fecha: str, version: str, huella: str, valida: bool,
         documento: Documento,

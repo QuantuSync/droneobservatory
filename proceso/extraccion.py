@@ -159,6 +159,8 @@ DESDE_DUDOSOS = "2026-10-13T00:00:00Z"
 # incidente y tienen un artículo que nunca se mandó se vuelven a extraer con él.
 REVISION_FUENTES = "revision_fuentes_sin_leer"
 DESDE_FUENTES = "2026-10-25T00:00:00Z"
+# Las fichas con los mismos artículos tras las que fuentes_sin_leer ya no pide otra lectura.
+MAX_LECTURAS_MISMOS_ARTICULOS = 2
 
 
 class Servicio(Protocol):
@@ -492,6 +494,11 @@ def fuentes_sin_leer(almacen: Almacen, candidato: Documento) -> bool:
     extraerlo con él."""
     anteriores = almacen.extracciones(candidato["id"])
     if not anteriores or anteriores[-1].get("incidente"):
+        return False
+    # Una relectura con los mismos artículos se hace una vez: si ya hay dos fichas con los
+    # artículos de ahora y sigue quedando uno sin leer, otra llamada leería lo mismo.
+    actual = huella(candidato["articulos"])
+    if sum(e.get("huella") == actual for e in anteriores) >= MAX_LECTURAS_MISMOS_ARTICULOS:
         return False
     leidas = {url for e in anteriores for url in e.get("enviadas") or []}
     if not leidas:

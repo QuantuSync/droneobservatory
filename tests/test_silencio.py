@@ -9,7 +9,7 @@ import pytest
 
 from almacen.base import Almacen
 from modelo import cliente
-from proceso import escalado
+from proceso import escalado, extraccion
 from recogida import silencio
 
 AHORA = datetime(2026, 10, 20, 15, 30, tzinfo=UTC)
@@ -88,6 +88,46 @@ def test_mide_de_la_base() -> None:
     medidas = silencio.medir(almacen, AHORA)
     assert medidas.ultima_llamada is None and medidas.esperas == {}
     assert silencio.avisos(medidas, AHORA) == {}
+
+
+def test_una_noticia_en_un_candidato_que_ya_no_se_extrae_no_avisa(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """8/11/2026, 14:17: «Tragedie în Retezat», un rescate «cu drone și câini», se unió a un
+    candidato de una subestación con sus tres extracciones hechas; el extractor no tenía nada que
+    hacer y el aviso «sin llamadas» saltó igual. Solo cuentan las noticias de candidatos que la
+    extracción todavía tiene que leer."""
+    almacen = Almacen.abrir()
+    lleno = {"id": "CAND-20261108T0315-subestacion:way/198901559-infraestructura"}
+    pendiente = {"id": "CAND-20261108T1330-loc:1-aeropuerto"}
+    monkeypatch.setattr(almacen, "articulos_por_candidato_desde",
+                        lambda _d: {lleno["id"]: 1, pendiente["id"]: 2})  # fmt: skip
+    monkeypatch.setattr(almacen, "candidatos", lambda: [lleno, pendiente])
+    monkeypatch.setattr(extraccion, "necesita_extraccion",
+                        lambda _a, c: c["id"] == pendiente["id"])  # fmt: skip
+    assert silencio.candidatas_por_extraer(almacen, "2026-11-08T10:17:03Z") == 2
+    monkeypatch.setattr(extraccion, "necesita_extraccion", lambda _a, _c: False)
+    assert silencio.candidatas_por_extraer(almacen, "2026-11-08T10:17:03Z") == 0
+    medidas = silencio.Medidas(ultima_alta="2026-11-08T08:17:00Z", candidatas_24h=4,
+                               ultima_llamada="2026-11-08T10:17:03Z")  # fmt: skip
+    assert silencio.avisos(medidas, datetime(2026, 11, 8, 14, 35, tzinfo=UTC)) == {}
+
+
+def test_articulos_por_candidato_desde_la_base() -> None:
+    almacen = Almacen.abrir()
+    for n, (fecha, candidato) in enumerate([
+        ("2026-11-08T09:00:00Z", "CAND-a"), ("2026-11-08T13:30:00Z", "CAND-a"),
+        ("2026-11-08T13:45:00Z", "CAND-b"), ("2026-11-08T14:00:00Z", None),
+    ]):  # fmt: skip
+        almacen.conexion.execute(
+            "INSERT INTO articulos (url, medio, fecha, titular, titular_normalizado, temas, "
+            "lugares, candidato) VALUES (?, 'm', ?, 't', 't', '[]', '[]', ?)",
+            (f"https://m/{n}", fecha, candidato),
+        )
+    almacen.conexion.commit()
+    assert almacen.articulos_por_candidato_desde("2026-11-08T10:17:03Z") == {
+        "CAND-a": 1, "CAND-b": 1,
+    }  # fmt: skip
 
 
 def test_el_aviso_sin_incidentes_trae_lo_que_hace_falta_para_juzgarlo() -> None:

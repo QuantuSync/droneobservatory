@@ -180,6 +180,9 @@ MAX_REPROCESO_POR_HORA = 10
 # Parte del límite diario que puede gastar el reproceso: el resto queda para los
 # candidatos nuevos que lleguen más tarde ese día.
 FRACCION_REPROCESO = 0.5
+# Candidatos del repaso de las fuentes sin leer (extraccion.revisar_fuentes_sin_leer) que entran
+# en cada ejecución horaria, detrás de las noticias nuevas.
+MAX_SIN_LEER_POR_HORA = 3
 
 
 # Candidatos nunca extraídos que merecen una llamada aunque ya no sean recientes: los de una
@@ -321,13 +324,18 @@ def horaria(
     # anterior, del más reciente al más antiguo. El límite diario de gasto corta la ejecución
     # donde toque.
     nuevos = pendientes(almacen, ahora - VENTANA_HORARIA)
-    # Una sola vez, los de antes de la ventana con un artículo que no leyó su ficha.
+    # Una sola vez, los de antes de la ventana con un artículo que no leyó su ficha: detrás de las
+    # noticias nuevas, en tandas de MAX_SIN_LEER_POR_HORA y solo mientras el gasto horario del día
+    # no pase de la parte del reproceso, para que el repaso nunca se coma el tope del día.
     try:
         sin_leer = extraccion.revisar_fuentes_sin_leer(almacen, ahora) - {c["id"] for c in nuevos}
-        nuevos += utilizables(almacen, [
-            c for c in almacen.candidatos()
-            if c["id"] in sin_leer and extraccion.necesita_extraccion(almacen, c)
-        ])  # fmt: skip
+        if sin_leer and almacen.gastado(coste.Modo.HORARIO.value, coste.dia(ahora)) < (
+            coste.LIMITE_DIARIO_USD * FRACCION_REPROCESO
+        ):
+            nuevos += utilizables(almacen, [
+                c for c in almacen.candidatos()
+                if c["id"] in sin_leer and extraccion.necesita_extraccion(almacen, c)
+            ])[:MAX_SIN_LEER_POR_HORA]  # fmt: skip
     except Exception:
         registro.exception("repaso de las fuentes sin leer: falló; en la siguiente")
     revision = extraccion.en_revision(almacen) - {c["id"] for c in nuevos}
