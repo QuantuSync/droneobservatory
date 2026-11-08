@@ -191,7 +191,7 @@ jobs:
       # WebKit pasó de 40 minutos y el trabajo murió antes de abrir la web. La etiqueta es la versión
       # exacta de @playwright/test en web/package.json (los navegadores de la imagen son los de esa
       # versión); al subir Playwright hay que subirla aquí también.
-      IMAGEN: mcr.microsoft.com/playwright:v1.64.1-noble
+      IMAGEN: mcr.microsoft.com/playwright:v1.63.0-noble
     strategy:
       fail-fast: false
       # La calcula «destino»: los recorridos de una persona (e2e/*recorridos.spec.ts), cada uno en
