@@ -13,7 +13,8 @@ en cada uno de estos casos:
 - **esperas**: candidatos que esperan al experto por los topes de gasto desde hace más de 6 horas,
   o la API sin saldo desde hace más de 6 horas;
 - **sin_llamadas**: la extracción lleva más de 3 horas sin llamar al modelo y desde entonces han
-  entrado noticias candidatas;
+  entrado noticias en candidatos que todavía tiene que leer (candidatas_por_extraer, desde el 8 de
+  noviembre de 2026);
 - **dudosos**: un descarte dudoso del modelo base (proceso/escalado.descarte_dudoso) que lleva más
   de 48 horas esperando al experto (uno por candidato);
 - **auditoria**: una comprobación de la auditoría de las fichas (proceso/auditoria_fichas.py) con
@@ -84,6 +85,24 @@ def _iso(momento: datetime) -> str:
     return momento.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def candidatas_por_extraer(almacen: Almacen, desde: str) -> int:
+    """Las noticias que han entrado desde `desde` en candidatos que la extracción todavía tiene
+    que leer (extraccion.necesita_extraccion, sin retirar). Una noticia que se une a un candidato
+    que ya no se vuelve a extraer (por ejemplo, con sus tres llamadas hechas) no espera al modelo:
+    el 8 de noviembre de 2026 un rescate en el Retezat «con drones y perros», unido a un candidato
+    de una subestación con sus tres extracciones, dio un aviso «sin llamadas» con el extractor
+    sano."""
+    por_candidato = almacen.articulos_por_candidato_desde(desde)
+    if not por_candidato:
+        return 0
+    retirados = extraccion.retirados(almacen)
+    return sum(
+        por_candidato[c["id"]] for c in almacen.candidatos()
+        if c["id"] in por_candidato and c["id"] not in retirados
+        and extraccion.necesita_extraccion(almacen, c)
+    )  # fmt: skip
+
+
 def medir(almacen: Almacen, ahora: datetime) -> Medidas:
     ultima = almacen.ultima_llamada("horario")
     esperas = {
@@ -107,7 +126,7 @@ def medir(almacen: Almacen, ahora: datetime) -> Medidas:
         ultima_alta=almacen.ultima_alta("incidentes"),
         candidatas_24h=almacen.articulos_candidatos_desde(_iso(ahora - SIN_INCIDENTES)),
         ultima_llamada=ultima,
-        candidatas_tras_llamada=almacen.articulos_candidatos_desde(ultima) if ultima else 0,
+        candidatas_tras_llamada=candidatas_por_extraer(almacen, ultima) if ultima else 0,
         esperas=esperas,
         saldo_desde=saldo.get("desde"),
         auditoria=auditoria if isinstance(auditoria, dict) else {},
@@ -205,7 +224,7 @@ def avisos(medidas: Medidas, ahora: datetime) -> dict[str, tuple[str, str]]:
         casos["sin_llamadas"] = (TITULO, (
             f"La extracción lleva más de 3 h sin llamar al modelo (la última, "
             f"{medidas.ultima_llamada}) y han entrado {medidas.candidatas_tras_llamada} noticias "
-            "candidatas."
+            "en candidatos que esperan la extracción."
         ))  # fmt: skip
     dias = sorted(medidas.auditoria)
     if len(dias) >= 2:

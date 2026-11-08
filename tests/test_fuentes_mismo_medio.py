@@ -13,8 +13,10 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
+from modelo import cliente, coste
 from proceso import extraccion
 from proceso.incidentes import huella
+from recogida import extractor
 
 AHORA = datetime(2026, 11, 8, 12, tzinfo=UTC)
 CANDIDATO = "CAND-20261105T1315-loc:617502-avistamiento"
@@ -94,3 +96,53 @@ def test_ya_leida_o_ya_incidente_no_se_repite(
     assert not extraccion.necesita_extraccion(almacen, candidato)
     candidato = _preparar(almacen, monkeypatch, [PRIMERA], "EODI-2026-00999")
     assert not extraccion.fuentes_sin_leer(almacen, candidato)
+
+
+def test_con_los_mismos_articulos_la_relectura_no_se_repite(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """8/11/2026: si después de releer sigue quedando un artículo sin leer (una respuesta que no
+    guardó lo enviado, por ejemplo), otra llamada con los mismos artículos leería lo mismo."""
+    candidato = _preparar(almacen, monkeypatch, [PRIMERA], None)
+    misma = {"enviadas": [PRIMERA], "incidente": None, "huella": huella([PRIMERA, POLICIA])}
+    monkeypatch.setattr(almacen, "extracciones", lambda _c: [misma, misma])
+    assert not extraccion.fuentes_sin_leer(almacen, candidato)
+    assert not extraccion.necesita_extraccion(almacen, candidato)
+    # Con un artículo nuevo (otra huella) sí se vuelve a mirar.
+    otra = {**misma, "huella": huella([PRIMERA])}
+    monkeypatch.setattr(almacen, "extracciones", lambda _c: [otra, misma])
+    assert extraccion.fuentes_sin_leer(almacen, candidato)
+
+
+def test_el_repaso_va_detras_de_las_noticias_nuevas_y_en_tandas(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """El repaso único no se come el tope del día: entra detrás de los nuevos, como mucho
+    MAX_SIN_LEER_POR_HORA por hora y nada si el gasto horario del día pasó de la parte del
+    reproceso."""
+    nuevo = {"id": "CAND-nuevo", "articulos": [], "lugar": "loc:1", "ultimo": "2026-11-08"}
+    viejos = [{"id": f"CAND-viejo-{n}", "articulos": [], "lugar": "loc:2", "ultimo": "2026-11-01"}
+              for n in range(7)]  # fmt: skip
+    monkeypatch.setattr(cliente, "configuracion", lambda: None)
+    monkeypatch.setattr(extractor, "pendientes", lambda _a, _d=None: [nuevo])
+    monkeypatch.setattr(extractor, "utilizables", lambda _a, cs: cs)
+    monkeypatch.setattr(extractor, "prioritarios", lambda _a: [])
+    monkeypatch.setattr(almacen, "candidatos", lambda: [nuevo, *viejos])
+    monkeypatch.setattr(extraccion, "revisar_fuentes_sin_leer",
+                        lambda _a, _h: {c["id"] for c in viejos})  # fmt: skip
+    monkeypatch.setattr(extraccion, "necesita_extraccion", lambda _a, _c: True)
+    pedidos: list[list[str]] = []
+
+    def preparar_todas(_a: Almacen, candidatos: list[dict[str, Any]], *_: Any) -> list[Any]:
+        pedidos.append([c["id"] for c in candidatos])
+        return []
+
+    monkeypatch.setattr(extractor, "preparar_todas", preparar_todas)
+    gasto = {"valor": 0.0}
+    monkeypatch.setattr(almacen, "gastado", lambda *_: gasto["valor"])
+    extractor.horaria(almacen, AHORA, lambda _c: None)  # type: ignore[arg-type, return-value]
+    tanda = [c["id"] for c in viejos][: extractor.MAX_SIN_LEER_POR_HORA]
+    assert pedidos[-1] == ["CAND-nuevo", *tanda]
+    gasto["valor"] = coste.LIMITE_DIARIO_USD * extractor.FRACCION_REPROCESO
+    extractor.horaria(almacen, AHORA, lambda _c: None)  # type: ignore[arg-type, return-value]
+    assert pedidos[-1] == ["CAND-nuevo"]
