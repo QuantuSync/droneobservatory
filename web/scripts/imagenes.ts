@@ -39,6 +39,12 @@ const MAPA_X = 470;
 const MARGEN = 56;
 const ANCHO_TEXTO = 600;
 const LARGO_TITULAR = 130;
+/**
+ * El lienzo del texto: el relleno va dentro del ancho y el alto. Desde satori 0.63 la caja es
+ * «content-box» si no se dice, y con el relleno de arriba y abajo la última línea de la ficha (fecha,
+ * lugar y número) caía fuera de la imagen (8 de noviembre de 2026).
+ */
+export const LIENZO = { width: ANCHO, height: ALTO, boxSizing: "border-box" } as const;
 
 function mercatorY(lat: number): number {
   return Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
@@ -202,7 +208,7 @@ async function imagenGeneral(h: Herramientas, puntos: readonly { xy: [number, nu
   const texto = await capaDeTexto(
     h,
     div(
-      { width: ANCHO, height: ALTO, alignItems: "center", padding: `0 ${MARGEN}px`, fontFamily: "Onest", color: "#f4f7fb" },
+      { ...LIENZO, alignItems: "center", padding: `0 ${MARGEN}px`, fontFamily: "Onest", color: "#f4f7fb" },
       { type: "img", props: { src: h.logo, width: 200, height: 200, style: { marginRight: 36 } } },
       div(
         { flexDirection: "column", width: 420 },
@@ -231,7 +237,7 @@ async function imagenDeIncidente(
   const texto = await capaDeTexto(
     h,
     div(
-      { width: ANCHO, height: ALTO, flexDirection: "column", justifyContent: "space-between", padding: `${MARGEN - 8}px ${MARGEN}px`, fontFamily: "Onest", color: "#f4f7fb" },
+      { ...LIENZO, flexDirection: "column", justifyContent: "space-between", padding: `${MARGEN - 8}px ${MARGEN}px`, fontFamily: "Onest", color: "#f4f7fb" },
       div(
         { alignItems: "center", fontSize: 22, color: "#93a0b4" },
         { type: "img", props: { src: h.logo, width: 44, height: 44, style: { marginRight: 14 } } },

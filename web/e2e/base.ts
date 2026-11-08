@@ -10,10 +10,12 @@
 // - Teselas reales en una prueba: test.use({ teselasReales: true }); en todas: TESELAS_REALES=1.
 //   La única prueba que comprueba el camino real es «el mapa de fondo se sirve por la web»
 //   (e2e/web.spec.ts).
-// - En WebKit (iPhone y escritorio-webkit) no hay caché: con la interceptación de peticiones
-//   puesta, WebKit da «Importing a module script failed» al navegar mientras la página aún carga
-//   su código (las fichas unidas que redirigen, en control-fichas-recorridos.spec.ts; visto en el
-//   PR del 27 de octubre de 2026, y sin interceptar no pasa). Son 2 de los 11 trabajos.
+// - En WebKit (iPhone y escritorio-webkit), con la interceptación de peticiones puesta, WebKit da
+//   «Importing a module script failed» al navegar mientras la página aún carga su código: las
+//   fichas unidas que redirigen, en control-fichas-recorridos.spec.ts (visto en el PR del 27 de
+//   octubre de 2026; sin interceptar no pasa). Hasta el 8 de noviembre de 2026 WebKit iba sin
+//   ninguna caché (unas 11.000 peticiones a la web por pasada en sus 2 trabajos, la mitad de todas);
+//   ahora solo ese fichero va sin interceptar en WebKit (SIN_RUTA_EN_WEBKIT).
 // - Las rutas que registra una prueba después tienen prioridad (Playwright prueba primero la
 //   última registrada, y las de la página antes que las del contexto).
 // - Al añadir algún trozo se deja el fichero «nuevos» en la carpeta: la CI solo guarda la caché
@@ -26,7 +28,7 @@
 //   guarda si la web ha servido exactamente esos bytes. La única prueba que pide de verdad el
 //   código y un contorno es «el código y los contornos se sirven por la web» (e2e/web.spec.ts).
 //   Los recorridos de la app (e2e/app-recorridos.spec.ts, con su service worker) los piden siempre
-//   a la web, como antes. En WebKit tampoco: no hay interceptación (arriba).
+//   a la web, como antes.
 //
 // Las pruebas importan `test` y `expect` de aquí, no de @playwright/test (tests/teselas.test.ts
 // lo comprueba).
@@ -60,12 +62,15 @@ const PUBLICA = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 // Los recorridos de la app piden los ficheros fijos a la web, como antes (su service worker los
 // guarda y los sirve: es lo que prueban).
 const SIN_FIJOS = /app-recorridos\.spec\.ts$/;
+// Lo que en WebKit va sin ninguna interceptación (arriba): ni teselas ni ficheros fijos de la caché.
+const SIN_RUTA_EN_WEBKIT = /control-fichas-recorridos\.spec\.ts$/;
 
 const cuenta = { red: 0, cache: 0 };
 const cuentaFijos = { red: 0, cache: 0, guardados: 0 };
 let reales = REALES_SIEMPRE;
 let fijosReales = REALES_SIEMPRE;
 let enWebkit = false;
+let sinRuta = false;
 const instalados = new WeakSet<BrowserContext>();
 const contados = new WeakSet<BrowserContext>();
 const deLaCache = new WeakSet<Request>();
@@ -271,7 +276,7 @@ async function enrutar(ruta: Route): Promise<void> {
 
 async function instalar(contexto: BrowserContext): Promise<void> {
   contar(contexto);
-  if (enWebkit || instalados.has(contexto)) return;
+  if (sinRuta || instalados.has(contexto)) return;
   instalados.add(contexto);
   await contexto.route((url) => trozoDe(url.href, "bytes=0-0") !== null || fijoDe(url.href, SITIO) !== null, enrutar);
 }
@@ -283,18 +288,6 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
   _cacheTeselas: [
     async ({ browser, browserName }, usar) => {
       enWebkit = browserName === "webkit";
-      if (enWebkit) {
-        const original = browser.newContext.bind(browser);
-        browser.newContext = async (opciones?: OpcionesDeContexto) => {
-          const contexto = await original(sinServiceWorker(opciones));
-          contar(contexto);
-          return contexto;
-        };
-        await usar(undefined);
-        browser.newContext = original;
-        console.log(resumenPeticiones());
-        return;
-      }
       if (!existsSync(CARPETA)) mkdirSync(CARPETA, { recursive: true });
       recortar();
       if (!existsSync(CARPETA_FIJOS)) mkdirSync(CARPETA_FIJOS, { recursive: true });
@@ -319,13 +312,17 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
     async ({ teselasReales }, usar, info) => {
       reales = REALES_SIEMPRE || teselasReales;
       fijosReales = REALES_SIEMPRE || SIN_FIJOS.test(info.file);
+      sinRuta = enWebkit && SIN_RUTA_EN_WEBKIT.test(info.file);
       await usar(undefined);
       reales = REALES_SIEMPRE;
       fijosReales = REALES_SIEMPRE;
+      sinRuta = false;
     },
     { auto: true },
   ],
-  context: async ({ context }, usar) => {
+  // Después de _teselas, que decide si esta prueba va sin interceptación.
+  context: async ({ context, _teselas: antes }, usar) => {
+    void antes;
     await instalar(context);
     await usar(context);
   },

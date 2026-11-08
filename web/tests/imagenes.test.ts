@@ -1,11 +1,14 @@
 // Las imágenes de la vista previa (scripts/imagenes.ts): Europa cabe en la imagen, el PNG es válido
 // y cada ficha declara la suya en la cabecera.
 
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { inflateSync } from "node:zlib";
 
+import satori from "satori";
 import { describe, expect, it } from "vitest";
 
-import { codificarPng, proyectar, trazoDePaises } from "../scripts/imagenes.ts";
+import { LIENZO, codificarPng, proyectar, trazoDePaises } from "../scripts/imagenes.ts";
 import { etiquetasDeCabecera } from "../src/cabecera.ts";
 import { IMAGEN_COMPARTIR_ALTO, IMAGEN_COMPARTIR_ANCHO, imagenDeFicha } from "../src/sitio.ts";
 
@@ -53,5 +56,22 @@ describe("imágenes de la vista previa", () => {
     expect(ficha).toContain('<meta name="twitter:card" content="summary_large_image">');
     const portada = etiquetasDeCabecera({ idioma: "es", id: null, titulo: "t", descripcion: "d" });
     expect(portada).toContain('content="https://droneobservatory.eu/compartir.png"');
+  });
+
+  it("la última línea de la ficha (fecha, lugar y número) cae dentro de la imagen", async () => {
+    const requerir = createRequire(import.meta.url);
+    const datos = readFileSync(requerir.resolve("@fontsource/onest/files/onest-latin-400-normal.woff"));
+    const fuentes = [{ name: "Onest", data: datos, weight: 400 as const, style: "normal" as const }];
+    const div = (style: Record<string, unknown>, ...children: unknown[]) => ({ type: "div", props: { style: { display: "flex", ...style }, children } });
+    const nodo = div(
+      { ...LIENZO, flexDirection: "column", justifyContent: "space-between", padding: "48px 56px", fontFamily: "Onest" },
+      div({ fontSize: 22 }, "EODI"),
+      div({ fontSize: 44 }, "Titular"),
+      div({ fontSize: 24 }, "31 de octubre de 2026 · Suceava, Rumanía", "  ·  EODI-2026-00725"),
+    );
+    const svg = await satori(nodo as never, { width: IMAGEN_COMPARTIR_ANCHO, height: IMAGEN_COMPARTIR_ALTO, fonts: fuentes });
+    const alturas = [...svg.matchAll(/<path[^>]* d="M[-0-9.]+ ([-0-9.]+)/gu)].map((m) => Number(m[1]));
+    expect(alturas).toHaveLength(3);
+    expect(Math.max(...alturas)).toBeLessThan(IMAGEN_COMPARTIR_ALTO - 30);
   });
 });

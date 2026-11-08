@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       EODI_PUBLICACION: ${{ github.workspace }}/tests/fixtures/publicacion
-      IMAGEN: mcr.microsoft.com/playwright:v1.63.0-noble
+      IMAGEN: mcr.microsoft.com/playwright:v1.64.1-noble
     defaults:
       run:
         working-directory: web
