@@ -964,6 +964,52 @@ def comprobar_retrospectiva(
     }
 
 
+def salida_retrospectiva(
+    incidente: Documento, activos: list[Documento], previa: dict[str, Any] | None
+) -> dict[str, Any] | None:
+    """La salida de una noticia retrospectiva que sigue sin fecha respaldada al cumplir su plazo
+    (recogida/control_fichas.SALIDA_RETROSPECTIVA), sin preguntar más al experto:
+
+    - {"decision": "fecha", ...} (lo de comprobar_retrospectiva): la frase literal de una fuente
+      da el mes y ninguna ficha del mismo sitio es de ese mes; sale con el día 1, «aproximada»;
+    - {"decision": "retirar", "previas": [ids]}: es un suceso anterior (lo dice una palabra de sus
+      fuentes o el experto) pero no se sabe cuál ni cuándo; no se publica (EODI-2026-00765: la
+      búsqueda del 6/11/2026 de los autores del intento de atentado de agosto en el aeropuerto de
+      Leipzig/Halle, con dos fichas de agosto allí);
+    - None: nadie ha dicho todavía que sea un suceso anterior (el experto no respondió, por el tope
+      o un fallo, que nunca retiran: PR 382); sigue retenida y el resumen diario la señala."""
+    previas = [
+        d
+        for d in activos
+        if d["id"] != incidente["id"]
+        and incidentes.fecha_verificada(d)
+        and instante(d) < instante(incidente) - timedelta(days=1)
+        and incidentes.mismo_sitio(incidente, d)
+    ]
+    if (mes := fechas.mes_retrospectivo(incidente)) is not None:
+        fuente_id, frase, dia = mes
+        del_mes = sorted(
+            d["id"]
+            for d in previas
+            if (instante(d).year, instante(d).month) == (dia.year, dia.month)
+        )
+        if not del_mes:
+            return {
+                "decision": "fecha",
+                "inicio": {
+                    "valor": f"{dia.isoformat()}T00:00Z",
+                    "precision": incidentes.APROXIMADA,
+                },
+                "fuente_id": fuente_id,
+                "frase": frase,
+            }
+        return {"decision": "retirar", "previas": del_mes}
+    respuesta = (previa or {}).get("respuesta") or {}
+    if fechas.retrospectiva(incidente) is None and respuesta.get("retrospectiva") is not True:
+        return None
+    return {"decision": "retirar", "previas": sorted(d["id"] for d in previas)}
+
+
 def con_fecha_retrospectiva(incidente: Documento, decision: dict[str, Any]) -> Documento:
     """La ficha con lo que decidió el experto sobre su fecha: la fecha que respalda la frase, o
     la marca de revisada en el motivo del inicio (no era retrospectiva). Sin cambios si ya lo

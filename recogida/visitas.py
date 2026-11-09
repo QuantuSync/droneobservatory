@@ -710,7 +710,32 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
                                  or {}).get(dia.isoformat(), []),
         },
         "entrada": (datos.get("entrada") or {}).get(dia.isoformat()),
+        "atascadas": atascadas(datos),
     }  # fmt: skip
+
+
+# Horas de retención a partir de las que una ficha va en una línea propia del resumen: después de
+# la salida automática (recogida/control_fichas.SALIDA_RETROSPECTIVA), nada debería llegar aquí.
+HORAS_ATASCADA = 24
+
+
+def atascadas(datos: Documento) -> list[tuple[str, int, str]]:
+    """Las fichas que el control retiene desde hace más de HORAS_ATASCADA en el último registro
+    (`retenidos` de control.json: desde cuándo y por qué): (id, horas, motivo), la más antigua
+    primero (EODI-2026-00765, retenida del 6 al 9 de noviembre de 2026 sin que el resumen lo
+    dijera más que con su identificador)."""
+    generado = _instante(datos.get("generado"))
+    if generado is None:
+        return []
+    filas = []
+    for id_, retenido in (datos.get("retenidos") or {}).items():
+        desde = _instante((retenido or {}).get("desde")) if isinstance(retenido, dict) else None
+        if desde is None:
+            continue
+        horas = int((generado - desde).total_seconds() // 3600)
+        if horas >= HORAS_ATASCADA:
+            filas.append((str(id_), horas, str(retenido.get("motivo") or "sin motivo")))
+    return sorted(filas, key=lambda f: (-f[1], f[0]))
 
 
 def lineas_control(control: Documento | None) -> list[str]:
@@ -731,6 +756,8 @@ def lineas_control(control: Documento | None) -> list[str]:
         lineas.append(f"  - {id_}: {'; '.join(dict.fromkeys(motivos))[:160]}")
     if control["retenidas"]:
         lineas.append(f"  Retenidas por el control: {', '.join(control['retenidas'][:LIMITE])}")
+    for id_, horas, motivo in control.get("atascadas") or []:
+        lineas.append(f"  Retenida más de {HORAS_ATASCADA} h: {id_}, {horas} h ({motivo[:160]})")
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
     lineas += lineas_auditoria(control.get("auditoria") or {})

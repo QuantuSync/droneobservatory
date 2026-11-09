@@ -1,0 +1,716 @@
+{
+ "EODI-2026-00058": {
+  "afirmaciones": [
+   {
+    "campo": "dron_estatal",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": false
+   },
+   {
+    "campo": "drones",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   {
+    "campo": "entrada_exterior",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": false
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": true
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "2026-08-26"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "dia"
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "Flughafen Leipzig/Halle",
+     "pais": "DE",
+     "region": "Sachsen"
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "Flughafen Leipzig/Halle"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "DE"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": "interrupcion_aeroportuaria"
+   },
+   {
+    "campo": "vuelos_desviados",
+    "confianza_extraccion": 0.95,
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "valor": {
+     "max": 2,
+     "min": 2
+    }
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   },
+   "vuelos_desviados": {
+    "max": 2,
+    "min": 2
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-09-28T09:43Z"
+   },
+   "candidato": "CAND-20260828T0645-EDDP-aeropuerto",
+   "huella_fuentes": "d80c45370f39a11dc3163290d0eb8d13adb28464b860ae222bbb6c01f736f3a7",
+   "modelos": {
+    "dron_estatal": "claude-sonnet-5-5",
+    "drones": "claude-sonnet-5-5",
+    "entrada_exterior": "claude-sonnet-5-5",
+    "es_incidente": "claude-sonnet-5-5",
+    "inicio": "claude-sonnet-5-5",
+    "inicio_precision": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "objetivo_categoria": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "objetivo_nombre": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5",
+    "vuelos_desviados": "claude-sonnet-5-5"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-10-21T05:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-28T06:45Z"
+     },
+     "fuente_id": "gdelt-dc64b865ae6ca20e"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-28T07:30Z"
+     },
+     "fuente_id": "gdelt-c88ef1b2a492e702-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "credibilidad": 3,
+    "enlace": "https://tlz.de/politik/article412986292/zwei-flieger-umgeleitet-drohnen-nervositaet-in-leipzig-haelt-an.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-28T06:45Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Drohne in Leipzig/Halle: Verwirrung am Flughafen \u2013 zwei Fl\u00fcge umgeleitet",
+    "id": "gdelt-dc64b865ae6ca20e",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "tlz.de",
+    "publica": true,
+    "replicas": 5
+   },
+   {
+    "campos_respaldados": [
+     "dron_estatal",
+     "drones",
+     "entrada_exterior",
+     "es_incidente",
+     "inicio",
+     "inicio_precision",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo",
+     "vuelos_desviados"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://spiegel.de/panorama/justiz/flughafen-leipzig-halle-flugzeuge-nach-drohnensichtung-umgeleitet-a-881c7785-6242-4d28-98a0-fbd740cd76bf",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-28T07:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "In der N\u00e4he des Flughafens Leipzig/Halle sind zwei Flugzeuge umgeleitet worden, nachdem eine Drohne gesichtet worden war.",
+    "id": "gdelt-c88ef1b2a492e702",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "spiegel.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://focus-news.net/novini/mejdunarodni/Dron-sprya-rabotata-na-letishteto-v-Laipcig-3016784",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-28T11:15Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "\u0414\u0440\u043e\u043d \u0441\u043f\u0440\u044f \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u0430 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435\u0442\u043e \u0432 \u041b\u0430\u0439\u043f\u0446\u0438\u0433",
+    "id": "gdelt-55a66ea3995493c2",
+    "idioma": "bg",
+    "interna_fuera_de_ucrania": false,
+    "medio": "focus-news.net",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://spiegel.de/panorama/justiz/flughafen-leipzig-halle-flugzeuge-nach-drohnensichtung-umgeleitet-a-881c7785-6242-4d28-98a0-fbd740cd76bf",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-08-28T07:30Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "Menschen h\u00e4tten am Mittwoch im sachsen-anhaltischen Gro\u00dfkugel mit einer handels\u00fcblichen Drohne Sanierungsarbeiten an einem Haus dokumentieren wollen, teilte ein Polizeisprecher mit.",
+    "id": "gdelt-c88ef1b2a492e702-declaracion-1",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Polizei (declaraci\u00f3n oficial citada en spiegel.de)",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00058",
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "nivel": "instalacion",
+   "pais": "DE",
+   "punto": {
+    "lat": 51.42105,
+    "lon": 12.23654
+   },
+   "radio_km": 5.0,
+   "region": "Sachsen",
+   "suceso": "Flughafen Leipzig/Halle"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Flughafen Leipzig/Halle",
+   "oaci": "EDDP"
+  },
+  "presencia_dron": "confirmada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-08-26T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "gdelt-c88ef1b2a492e702",
+    "motivo": "\u00abmittwoch\u00bb en una nota publicada el 2026-08-28 09:30 (hora local del medio)",
+    "tipo": "relativa"
+   }
+  },
+  "tipo": "interrupcion_aeroportuaria",
+  "titulo": {
+   "en": "Two flights diverted near Leipzig/Halle airport due to a private drone",
+   "es": "Dos vuelos desviados cerca del aeropuerto de Leipzig/Halle por un dron de un particular"
+  },
+  "zona": {
+   "distancia_km": 611,
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ },
+ "EODI-2026-00765": {
+  "afirmaciones": [
+   {
+    "campo": "dron_estatal",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": true
+   },
+   {
+    "campo": "drones",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": true
+   },
+   {
+    "campo": "localidad",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": "Leipzig"
+   },
+   {
+    "campo": "lugar_nuevo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": {
+     "categoria": "aeropuerto",
+     "lat": 51.4324,
+     "lon": 12.2416,
+     "nombre": "Flughafen Leipzig/Halle",
+     "pais": "DE"
+    }
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "Flughafen Leipzig",
+     "pais": "DE",
+     "region": "Sachsen"
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": false
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": "Flughafen Leipzig"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": "DE"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-2625d4eb878ac2d7",
+    "valor": "sobrevuelo"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-11-06T14:17Z"
+   },
+   "candidato": "CAND-20261106T1330-gkg:4:51.3000:12.3333:DE:Leipzig-avistamiento",
+   "huella_fuentes": "9ffc3611d016b10f911effa404b7642d75781c3ccceb11abe29f491fb17060cb",
+   "modelos": {
+    "dron_estatal": "claude-sonnet-5-5",
+    "drones": "claude-sonnet-5-5",
+    "es_incidente": "claude-sonnet-5-5",
+    "localidad": "claude-sonnet-5-5",
+    "lugar_nuevo": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "objetivo_categoria": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "objetivo_nombre": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-11-06T17:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": {
+    "max": 1,
+    "min": 1
+   }
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-06T13:30Z"
+     },
+     "fuente_id": "gdelt-1cad689c38ef8f61"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-06T13:30Z"
+     },
+     "fuente_id": "gdelt-1cad689c38ef8f61-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "credibilidad": 3,
+    "enlace": "https://focus.de/panorama/welt/leipziger-drohnenangriff-bka-sucht-verdaechtigen-mit-ki-bild_0f0f5741-c1ae-44af-bd8c-21db6ba76d11.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T13:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Leipziger Drohnenangriff: BKA sucht Verd\u00e4chtigen mit KI-Bild",
+    "id": "gdelt-1cad689c38ef8f61",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "focus.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://tagesspiegel.de/politik/anschlagsversuch-mit-drohne-in-leipzig-ermittler-fahnden-mit-ki-bild-nach-verdachtigem-auf-e-bike-16251482.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T14:45Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Anschlagsversuch mit Drohne in Leipzig: Ermittler fahnden mit KI-Bild nach Verd\u00e4chtigem auf E-Bike",
+    "id": "gdelt-23d4b579e131ae9b",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "tagesspiegel.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://unternehmen-heute.de/news.php?newsid=6717173",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T14:45Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Russland - Anschlagsversuch mit Drohne in Leipzig: Ermittler fahnden nach Verd\u00e4chtigem auf E-Bike",
+    "id": "gdelt-82859daa1a2ead1d",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "unternehmen-heute.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://berchtesgadener-anzeiger.de/startseite_artikel,-drohnenangriff-ermittler-fahnden-nach-verdaechtiger-person-_arid,1025329.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T15:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Drohnenangriff: Ermittler fahnden nach verd\u00e4chtiger Person",
+    "id": "gdelt-d5eb5ba2cab36625",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "berchtesgadener-anzeiger.de",
+    "publica": true,
+    "replicas": 25
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://gea.de/welt/politik_artikel,-drohnenangriff-ermittler-fahnden-nach-verd%C3%A4chtiger-person-_arid,7174536.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T15:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Drohnenangriff: Ermittler fahnden nach verd\u00e4chtiger Person - Politik-Nachrichten - Reutlinger General-Anzeiger",
+    "id": "gdelt-b366e4d8d201925b",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "gea.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://gea.de/welt_artikel,-drohnenangriff-ermittler-fahnden-nach-verd%C3%A4chtiger-person-_arid,7174536.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T15:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Drohnenangriff: Ermittler fahnden nach verd\u00e4chtiger Person - Weltnachrichten - Reutlinger General-Anzeiger",
+    "id": "gdelt-37563760822cd1f8",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "gea.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "dron_estatal",
+     "drones",
+     "es_incidente",
+     "localidad",
+     "lugar_nuevo",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://mz.de/deutschland-und-welt/deutschland/drohnenangriff-ermittler-fahnden-nach-verdachtiger-person-4351776",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T15:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Im Zusammenhang mit dem mutma\u00dflichen Anschlagsversuch mit einer Sprengstoffdrohne auf dem Flughafen Leipzig fahndet die Polizei nach einer verd\u00e4chtigen Person.",
+    "id": "gdelt-2625d4eb878ac2d7",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "mz.de",
+    "publica": true,
+    "replicas": 9
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://finanznachrichten.de/nachrichten-2026-11/70061351-drohnenangriff-in-leipzig-ermittler-fahnden-nach-verdaechtiger-person-016.htm",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T15:15Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Drohnenangriff in Leipzig: Ermittler fahnden nach verd\u00e4chtiger Person",
+    "id": "gdelt-e0c30a1c7e5b5e4a",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "finanznachrichten.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://n-tv.de/panorama/Versuchter-Drohnenanschlag-in-Leipzig-Polizei-fahndet-nach-Verdaechtigen-id31505047.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T16:15Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Tatmittel gefunden: Versuchter Drohnenanschlag in Leipzig - Polizei fahndet nach Verd\u00e4chtigen",
+    "id": "gdelt-79a289daa77f8e7f",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "n-tv.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "credibilidad": 3,
+    "enlace": "https://n-tv.de/ticker/Ermittler-suchen-Verdaechtigen-auf-E-Bike-mit-KI-Bild-id31505113.html",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T16:15Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Versuchter Drohnenanschlag: Ermittler suchen Verd\u00e4chtigen auf E-Bike mit KI-Bild",
+    "id": "gdelt-cacd339bbd3b33d3",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "n-tv.de",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://focus.de/panorama/welt/leipziger-drohnenangriff-bka-sucht-verdaechtigen-mit-ki-bild_0f0f5741-c1ae-44af-bd8c-21db6ba76d11.html",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-06T13:30Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "Das Bundeskriminalamt konnte bislang zwei Tatverd\u00e4chtige identifizieren.",
+    "id": "gdelt-1cad689c38ef8f61-declaracion-1",
+    "idioma": "de",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Bundeskriminalamt (declaraci\u00f3n oficial citada en focus.de)",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00765",
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "historial": [
+    {
+     "anterior": {
+      "localidad": "Leipzig",
+      "punto": {
+       "lat": 51.424,
+       "lon": 12.222
+      },
+      "radio_km": 5.0
+     },
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-11-06T17:17Z"
+     },
+     "motivo": {
+      "en": "More precise place: the affected facility identified in the record.",
+      "es": "Lugar m\u00e1s preciso: la instalaci\u00f3n afectada que identifica la ficha."
+     }
+    }
+   ],
+   "localidad": "Leipzig",
+   "nivel": "instalacion",
+   "pais": "DE",
+   "punto": {
+    "lat": 51.42105,
+    "lon": 12.23654
+   },
+   "radio_km": 5.0,
+   "region": "Sachsen",
+   "suceso": "Flughafen Leipzig/Halle"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Flughafen Leipzig/Halle",
+   "oaci": "EDDP"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": true,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "aproximada",
+    "valor": "2026-11-06T13:30Z"
+   },
+   "origen_inicio": {
+    "motivo": "la ficha no da el inicio: fecha de publicaci\u00f3n de la primera nota (2026-11-06 14:30, hora local del medio)",
+    "tipo": "publicacion"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "Investigation into explosive possible drone attack at Leipzig airport",
+   "es": "Investigan un presunto atentado con dron explosivo en el aeropuerto de Leipzig"
+  },
+  "zona": {
+   "distancia_km": 611,
+   "grupo": "interior",
+   "motivo": "lejos_de_la_frontera"
+  }
+ }
+}

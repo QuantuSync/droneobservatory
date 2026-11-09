@@ -1584,13 +1584,28 @@ def retener(
         # casi siempre un suceso nuevo: espera al experto como mucho las 6 horas de siempre.
         sin_fecha = fechas.retrospectiva(incidente) is not None
         if reglas.pide_fecha(incidente, activos) is not None:
-            motivos.append("fecha del suceso sin respaldar (noticia retrospectiva)")
+            motivos.append(MOTIVO_RETROSPECTIVA)
         if con_entrada:
             from recogida import entrada
 
             filtro = entrada.motivo_retencion(decisiones.get(entrada.clave(id_)), incidente)
             if filtro is not None:
                 motivos.append(filtro)
+        if (
+            con_entrada
+            and MOTIVO_RETROSPECTIVA in motivos
+            and set(motivos) <= {MOTIVO_RETROSPECTIVA, MOTIVO_ENTRADA_SIN_FECHA}
+            and ctx.ahora - _leer(desde) >= SALIDA_RETROSPECTIVA
+            and (nota := salir_de_la_retencion(ctx, incidente, activos, decisiones)) is not None
+        ):
+            if nota.startswith(NOTA_CON_FECHA):
+                # Sigue sin publicar hasta la pasada siguiente: el filtro de entrada vuelve a mirar
+                # la ficha con su fecha nueva (su decisión ya no vale).
+                nuevos_retenidos[id_] = {"desde": desde, "motivo": nota}
+                ctx.resultado.retenidos[id_] = nota
+            else:
+                ctx.resultado.liberados[id_] = nota
+            continue
         if (
             con_entrada
             and motivos == [MOTIVO_ENTRADA_SIN_FECHA]
@@ -1643,14 +1658,72 @@ def resume_varios_sucesos(decisiones: dict[str, Documento], id_: str) -> bool:
     )
 
 
-def resolver_sin_fecha(ctx: Contexto, incidente: Documento) -> bool:
+MOTIVO_RETROSPECTIVA = "fecha del suceso sin respaldar (noticia retrospectiva)"
+# Plazo de una noticia retrospectiva sin fecha respaldada antes de su salida sin el experto
+# (reglas.salida_retrospectiva). Antes del 9 de noviembre de 2026 no tenía ninguno: EODI-2026-00765
+# siguió retenida desde el 6/11 porque el experto respondió tres veces «sin fecha» y, con la misma
+# huella, no se le vuelve a preguntar. Con la pasada horaria, sale antes de 24 horas aunque una
+# hora falle.
+SALIDA_RETROSPECTIVA = timedelta(hours=12)
+NOTA_CON_FECHA = "con la fecha que da su fuente"
+
+
+def _motivo_retrospectiva(previas: list[str]) -> tuple[str, str]:
+    lista = ", ".join(previas)
+    if previas:
+        return (
+            "No es un suceso nuevo que se pueda fechar: la noticia cuenta un suceso anterior del "
+            f"mismo sitio (fichas anteriores de ese sitio: {lista}) y ninguna frase de sus fuentes "
+            "dice cuándo ocurrió ni cuál de ellos es.",
+            "Not a new event that can be dated: the article reports an earlier event at the same "
+            f"site (earlier records for that site: {lista}) and no sentence of its sources says "
+            "when it happened or which one it is.",
+        )
+    return (
+        "No verificable: la noticia cuenta un suceso anterior y ninguna frase de sus fuentes dice "
+        "cuándo ocurrió.",
+        "Not verifiable: the article reports an earlier event and no sentence of its sources says "
+        "when it happened.",
+    )
+
+
+def salir_de_la_retencion(
+    ctx: Contexto, incidente: Documento, activos: list[Documento], decisiones: dict[str, Documento]
+) -> str | None:
+    """La salida de una noticia retrospectiva al cumplir SALIDA_RETROSPECTIVA sin fecha respaldada
+    (reglas.salida_retrospectiva): toma el mes que da la frase literal de una fuente o se retira
+    sin haber salido en la web. Devuelve la nota de lo hecho, o None si sigue retenida."""
+    previa = decisiones.get(reglas.clave_retrospectiva(incidente["id"]))
+    salida = reglas.salida_retrospectiva(incidente, activos, previa)
+    if salida is None:
+        return None
+    if salida["decision"] == "fecha":
+        nuevo = reglas.con_fecha_retrospectiva(incidente, salida)
+        if nuevo is incidente:
+            return None
+        ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
+        ctx.resultado.corregidos.setdefault(incidente["id"], []).append("inicio")
+        return f"{NOTA_CON_FECHA}: {salida['inicio']['valor'][:7]} («{salida['frase'][:80]}»)"
+    if not resolver_sin_fecha(ctx, incidente, _motivo_retrospectiva(salida["previas"])):
+        return None
+    return "retirada: noticia retrospectiva sin fecha a las " + (
+        f"{int(SALIDA_RETROSPECTIVA.total_seconds() // 3600)} horas"
+    )
+
+
+def resolver_sin_fecha(
+    ctx: Contexto, incidente: Documento, motivos: tuple[str, str] | None = None
+) -> bool:
     """La ficha que el filtro de entrada retiene 6 horas sin una frase que dé la fecha del suceso
     se retira, con su motivo: nunca salió en la web. Como no verificable (EODI-2026-00697, un dron
     civil hallado en un poste que pudo llevar allí tiempo) o, si el control ya dijo que resume
     varios sucesos, como «no es un suceso» (EODI-2026-00744, un balance mensual, que se retiró
     como no verificable el 3 de noviembre de 2026). Es la salida b) de la barrera de titulares
-    (recogida/barrera.py) para la fecha."""
-    if resume_varios_sucesos({**ctx.decisiones, **ctx.nuevas}, incidente["id"]):
+    (recogida/barrera.py) para la fecha. Con `motivos` (es, en), la de una noticia retrospectiva
+    (salir_de_la_retencion)."""
+    if motivos is not None:
+        motivo, motivo_en = motivos
+    elif resume_varios_sucesos({**ctx.decisiones, **ctx.nuevas}, incidente["id"]):
         motivo, motivo_en = MOTIVO_VARIOS_SUCESOS, MOTIVO_VARIOS_SUCESOS_EN
     else:
         motivo, motivo_en = MOTIVO_SIN_FECHA, MOTIVO_SIN_FECHA_EN

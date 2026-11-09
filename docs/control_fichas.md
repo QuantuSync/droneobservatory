@@ -329,7 +329,10 @@ una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales
   corregidas y por qué, duplicados unidos, retenidas y liberadas, gasto y paradas.
 - El resumen diario privado (sección SISTEMA) dice cuántas fichas corrigió el
   control y de qué clase (lugar, drones, presencia, cierre, hora, día, estado), los duplicados que
-  unió, las que retuvo y lo que gastó, con hasta 5 ejemplos.
+  unió, las que retuvo y lo que gastó, con hasta 5 ejemplos. Cada ficha retenida desde hace más
+  de 24 horas (en el último `control.json`) va en una línea propia, «Retenida más de 24 h», con
+  sus horas y su motivo (`visitas.atascadas`, desde el 9 de noviembre de 2026). No manda ningún
+  aviso aparte.
 - La vigilancia solo abre incidencia («control_fichas») si el propio control falla 3 pasadas
   seguidas; lo que corrige o retiene no es un problema.
 
@@ -458,6 +461,18 @@ así que nunca casaba con la ficha del suceso. Así entraron EODI-2026-00663 («
   mes o un pasado lejano se retiene sin límite; la que solo comparte instalación con una ficha
   anterior (casi siempre un suceso nuevo) esperaba como mucho 6 horas (hasta el 28 de octubre de
   2026; ahora la decide el filtro de entrada).
+- **Salida a las 12 horas** (desde el 9 de noviembre de 2026, `SALIDA_RETROSPECTIVA`,
+  `proceso/control_fichas.salida_retrospectiva`): la que sigue sin fecha respaldada (el experto
+  respondió sin una fecha comprobada y, con las mismas fuentes, no se le vuelve a preguntar) ya no
+  queda retenida para siempre. Si la frase literal de una fuente da el mes
+  (`fechas.mes_retrospectivo`) y ninguna ficha del mismo sitio es de ese mes, toma el día 1 de ese
+  mes, «aproximada», con la frase como cita, y vuelve a pasar por el filtro de entrada. Si no, y
+  sus fuentes o el experto dicen que es un suceso anterior, se retira sin haber salido en la web,
+  con un motivo que nombra las fichas anteriores del sitio. Si nadie lo ha dicho (el experto no
+  respondió: un fallo o el tope nunca retiran), sigue retenida. Caso: EODI-2026-00765, la
+  búsqueda del 6/11 de los autores del intento de atentado de agosto en el aeropuerto de
+  Leipzig/Halle (fichas 00134 y 00058 de agosto allí), retenida del 6 al 9 de noviembre.
+  Prueba fija: `tests/test_retenidas.py`.
 - **Comprobación fija**: la N de la auditoría es la misma regla sobre todo lo publicado.
 
 ### Fin sin frase que lo respalde (desde el 26 de octubre de 2026)

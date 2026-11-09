@@ -761,21 +761,47 @@ def retrospectiva(incidente: dict[str, Any]) -> str | None:
     origen = tiempo.get("origen_inicio") or {}
     if origen.get("tipo") != PUBLICACION or retrospectiva_revisada(incidente):
         return None
-    inicio = date.fromisoformat(str(tiempo["inicio"]["valor"])[:10])
-    vale = {inicio.month} | ({(inicio.month - 2) % 12 + 1} if inicio.day <= 3 else set())
     for fuente in incidente.get("fuentes", []):
         frase = _normal(str(fuente.get("frase_origen") or ""))
-        idioma = str(fuente.get("idioma") or "")
-        lexico = lexicos().get(idioma)
-        if lexico is not None:
-            ambiguos = MESES_AMBIGUOS.get(idioma, frozenset())
-            for palabra in frase.split():
-                mes = lexico.meses.get(palabra)
-                if mes is not None and mes not in vale and palabra not in ambiguos:
-                    return palabra
+        if (mes := _mes_anterior(incidente, fuente)) is not None:
+            return mes[0]
         for expresion in _anteriores():
             if _contiene(frase, expresion) >= 0:
                 return expresion
+    return None
+
+
+def _mes_anterior(incidente: dict[str, Any], fuente: dict[str, Any]) -> tuple[str, int] | None:
+    """La palabra de un mes anterior al del inicio en la frase de la fuente, y su número."""
+    inicio = date.fromisoformat(str(incidente["tiempo"]["inicio"]["valor"])[:10])
+    vale = {inicio.month} | ({(inicio.month - 2) % 12 + 1} if inicio.day <= 3 else set())
+    idioma = str(fuente.get("idioma") or "")
+    lexico = lexicos().get(idioma)
+    if lexico is None:
+        return None
+    ambiguos = MESES_AMBIGUOS.get(idioma, frozenset())
+    for palabra in _normal(str(fuente.get("frase_origen") or "")).split():
+        mes = lexico.meses.get(palabra)
+        if mes is not None and mes not in vale and palabra not in ambiguos:
+            return palabra, mes
+    return None
+
+
+def mes_retrospectivo(incidente: dict[str, Any]) -> tuple[str, str, date] | None:
+    """El mes que la frase literal de una fuente da a una noticia retrospectiva: (fuente_id,
+    frase, día 1 de ese mes), el último anterior a la publicación. None si ninguna frase lo da (un
+    pasado sin medida, «el mes pasado», no dice qué mes). Es la precisión que sostienen las fuentes
+    cuando el experto no da el día (recogida/control_fichas.salir_de_la_retencion)."""
+    if retrospectiva(incidente) is None:
+        return None
+    publicacion = date.fromisoformat(str(incidente["tiempo"]["inicio"]["valor"])[:10])
+    for fuente in incidente.get("fuentes", []):
+        if (encontrado := _mes_anterior(incidente, fuente)) is None:
+            continue
+        mes = encontrado[1]
+        anio = publicacion.year if mes < publicacion.month else publicacion.year - 1
+        frase = " ".join(str(fuente.get("frase_origen") or "").split())
+        return str(fuente.get("id") or ""), frase, date(anio, mes, 1)
     return None
 
 
