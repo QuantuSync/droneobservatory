@@ -4261,6 +4261,42 @@
         "categoria": "ministerio",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2026-00770",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "medio": "news.de",
+      "fecha": "2026-11-09",
+      "idioma": "de",
+      "frase": "Im Rahmen eines Tuning-Events stieg am Samstag gegen 19:20 Uhr eine Drohne über dem Gelände des Autohofs Leipzig-Flughafen auf eine Höhe von 50 Metern auf.",
+      "comprobada": {
+        "fecha": "2026-11-09",
+        "en": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/ (original; nota del Polizeipräsidium Leipzig)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei Leipzig",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00770",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "medio": "news.de",
+      "fecha": "2026-11-09",
+      "idioma": "de",
+      "frase": "Im Zuge der Drohnensichtung wurde der Flugbetrieb auf der Südpiste für wenige Minuten gesperrt.",
+      "comprobada": {
+        "fecha": "2026-11-09",
+        "en": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/ (original; nota del Polizeipräsidium Leipzig)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei Leipzig",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [
@@ -12597,6 +12633,42 @@
       "enlace": "https://timpul.md/articol/ministrul-nosatii-condamna-patrunderea-neautorizata-a-patru-drone-in-spatiul-aerian-al-republicii-moldova-334c2a66.html",
       "pais": "MD",
       "motivo": "la ficha es la noche del 15 al 16 de octubre de 2026 (el primer dron entró a las 23:02 hora de Moldavia del día 15, según el Centro de Operaciones Aéreas); la frase «on Thursday and Friday» de freemalaysiatoday.com suma el dron que cayó el viernes 16 en Dondușeni, que tiene su propia ficha (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00770",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Im Rahmen eines Tuning-Events stieg am Samstag gegen 19:20 Uhr eine Drohne über dem Gelände des Autohofs Leipzig-Flughafen auf eine Höhe von 50 Metern auf.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "el sábado hubo un dron; los «zwei Drohnen» de la nota de dpa son el del sábado y el del domingo, que es otra ficha tras la separación (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00770",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-11-07T18:20Z",
+        "precision": "aproximada"
+      },
+      "cita": "Im Rahmen eines Tuning-Events stieg am Samstag gegen 19:20 Uhr eine Drohne über dem Gelände des Autohofs Leipzig-Flughafen auf eine Höhe von 50 Metern auf.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "el dron del sábado subió hacia las 19:20 hora de Alemania del 7 de noviembre de 2026 (18:20 UTC), según la policía (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00770",
+      "campo": "titulo",
+      "valor": {
+        "es": "Un dron obliga a cerrar unos minutos la pista sur del aeropuerto de Leipzig/Halle",
+        "en": "A drone closes the southern runway at Leipzig/Halle airport for a few minutes"
+      },
+      "cita": "Im Zuge der Drohnensichtung wurde der Flugbetrieb auf der Südpiste für wenige Minuten gesperrt.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "el titular contaba los dos días; esta ficha es la del sábado, con un dron y la pista sur cerrada unos minutos (revisado el 9 de noviembre de 2026)"
     }
   ]
 }
