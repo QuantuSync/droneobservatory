@@ -1081,6 +1081,54 @@ def _extraido_antes(almacen: Almacen, candidato: Documento, hecho: Documento) ->
     return _fecha_articulo({"fecha": ultima}) < _fecha_articulo({"fecha": hecho["fecha"]})
 
 
+# Desde aquí, el candidato de cada parte que es un suceso lleva su día y su descripción
+# («parte»), que van al extractor (modelo/ficha.suceso_de_la_parte), y se vuelve a extraer una
+# vez con ellos. Antes, la parte que conservaba el identificador sin perder fuentes no se volvía
+# a extraer y las dos se extraían con las mismas notas: EODI-2026-00770 (Leipzig/Halle, 9 de
+# noviembre de 2026) seguía con los dos drones y el titular del sábado y el domingo. Los repartos
+# anteriores ya se revisaron con su ficha de entonces.
+PARTE_DESDE = "2026-11-09T00:00Z"
+
+
+def _con_parte(
+    almacen: Almacen, revision: Documento, parte: Documento, candidato: Documento,
+    hecho: Documento, ahora: datetime,
+) -> Documento:  # fmt: skip
+    """El candidato de una parte con su «parte» (fecha, descripción y desde cuándo), guardado
+    una vez, si la separación tiene dos sucesos o más y es de PARTE_DESDE en adelante."""
+    sucesos = sum(1 for p in revision["partes"] if p.get("es_suceso", True))
+    if (
+        candidato.get("parte")
+        or not parte.get("es_suceso", True)
+        or sucesos < 2
+        or not hecho.get("fecha")
+        or _fecha_articulo({"fecha": hecho["fecha"]}) < _fecha_articulo({"fecha": PARTE_DESDE})
+    ):
+        return candidato
+    nuevo = {
+        **candidato,
+        "parte": {
+            "fecha": parte.get("fecha"),
+            "descripcion": parte.get("descripcion", ""),
+            "desde": ahora.strftime("%Y-%m-%dT%H:%MZ"),
+        },
+    }
+    almacen.corregir_candidatos(
+        [nuevo], f"{CURSOR_SEPARAR}{revision['incidente']}: el suceso de la parte, al extractor"
+    )
+    return nuevo
+
+
+def _parte_sin_extraer(almacen: Almacen, candidato: Documento) -> bool:
+    """El candidato lleva su parte y su última extracción es anterior a ella (o no tiene): su
+    ficha no sabe de qué suceso es."""
+    desde = (candidato.get("parte") or {}).get("desde")
+    if not desde:
+        return False
+    ultima = (almacen.extracciones(candidato["id"]) or [{}])[-1].get("fecha")
+    return not ultima or _fecha_articulo({"fecha": ultima}) < _fecha_articulo({"fecha": desde})
+
+
 def _con_su_parte(almacen: Almacen, revision: Documento, candidato: Documento,
                   motivo: str) -> bool:  # fmt: skip
     """El candidato del que conserva el identificador con los artículos de su parte, si todos los
@@ -1547,6 +1595,8 @@ def separar(
             if not parte.get("es_suceso", True):
                 continue
             cand = candidatos.get(str(entrada.get("candidato")))
+            if cand is not None:
+                cand = _con_parte(almacen, revision, parte, cand, hecho, ahora)
             con_su_parte = (
                 n == queda
                 and cand is not None
@@ -1565,7 +1615,7 @@ def separar(
                 )
                 if n == queda
                 else not almacen.extracciones(str(entrada.get("candidato")))
-            )
+            ) or (cand is not None and _parte_sin_extraer(almacen, cand))
             extraido_ahora = False
             if cand is not None and pendiente:
                 # El extractor, por el camino normal de altas: la parte nueva y también la que

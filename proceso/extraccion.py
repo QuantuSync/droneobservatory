@@ -189,12 +189,14 @@ class Peticion:
         return hashlib.sha256(self.candidato["id"].encode()).hexdigest()[:MAX_ID_LOTE]
 
     def cuerpo(self) -> dict[str, Any]:
-        return ficha.cuerpo(descripcion_objetivo(self.objetivo), self.fuentes)
+        return ficha.cuerpo(
+            descripcion_objetivo(self.objetivo), self.fuentes, self.candidato.get("parte")
+        )
 
     def letras(self) -> int:
         return (
             len(ficha.INSTRUCCIONES)
-            + len(ficha.contenido("", self.fuentes))
+            + len(ficha.contenido("", self.fuentes, self.candidato.get("parte")))
             + len(str(ficha.ESQUEMA))
         )
 

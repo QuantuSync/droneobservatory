@@ -60,6 +60,12 @@ aplica una vez, antes del extractor (`recogida/revisados.separar`, cursor
   por recogida; lo que quede, en las siguientes o con el extractor de la horaria, que lleva
   delante los candidatos separados). Nada se deduce: estado, presencia, tipo, fecha y lugar
   salen de sus fuentes con las reglas de siempre;
+- desde el 9 de noviembre de 2026, el candidato de cada parte que es un suceso lleva su día y su
+  descripción (`parte`), que van en la petición al extractor («Suceso de esta ficha: solo el
+  del …», `modelo/ficha.suceso_de_la_parte`), y cada parte se vuelve a extraer una vez con ellos,
+  también la que conserva el identificador sin perder fuentes. Antes, con las mismas notas para
+  los dos días, EODI-2026-00770 (Leipzig/Halle) seguía con los dos drones y el titular del sábado
+  y el domingo;
 - lo que no es un suceso (una declaración política, un parte de la guerra, un ataque fuera de
   Europa) sale del incidente con un candidato anotado como «no es un suceso», sin formar otro;
 - una fusión anterior cuyas fuentes son todas de otra parte se deshace (las revisadas a mano no);
