@@ -4297,6 +4297,42 @@
         "categoria": "policia",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2026-00773",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "medio": "news.de",
+      "fecha": "2026-11-09",
+      "idioma": "de",
+      "frase": "Am Sonntag behinderte erneut eine Drohne den Flugbetrieb.",
+      "comprobada": {
+        "fecha": "2026-11-09",
+        "en": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/ (original; nota del Polizeipräsidium Leipzig)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei Leipzig",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00773",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "medio": "news.de",
+      "fecha": "2026-11-09",
+      "idioma": "de",
+      "frase": "Aus diesem Grund wurde vorsorglich die Nordpiste für eine halbe Stunde gesperrt.",
+      "comprobada": {
+        "fecha": "2026-11-09",
+        "en": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/ (original; nota del Polizeipräsidium Leipzig)"
+      },
+      "declaracion": {
+        "autoridad": "Polizei Leipzig",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
     }
   ],
   "titulares": [
@@ -12669,6 +12705,42 @@
       "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
       "pais": "DE",
       "motivo": "el titular contaba los dos días; esta ficha es la del sábado, con un dron y la pista sur cerrada unos minutos (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00773",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "Am Sonntag behinderte erneut eine Drohne den Flugbetrieb.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "el domingo hubo un dron; los «zwei Drohnen» de la nota de dpa son el del sábado (EODI-2026-00770) y el del domingo (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00773",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-11-08T07:15Z",
+        "precision": "aproximada"
+      },
+      "cita": "So wurde gegen 8:15 Uhr eine Drohne über der Schladitzer Bucht detektiert.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "el dron del domingo 8 de noviembre de 2026 se detectó hacia las 8:15 hora de Alemania (7:15 UTC), según la policía («Zeit: … 08.11.2026, gegen 08:15 Uhr»); la ficha decía el sábado 7, el día de la ficha separada (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00773",
+      "campo": "titulo",
+      "valor": {
+        "es": "Un dron obliga a cerrar media hora la pista norte del aeropuerto de Leipzig/Halle",
+        "en": "A drone closes the northern runway at Leipzig/Halle airport for half an hour"
+      },
+      "cita": "Aus diesem Grund wurde vorsorglich die Nordpiste für eine halbe Stunde gesperrt.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "el titular contaba los dos días; esta ficha es la del domingo, con un dron y la pista norte cerrada media hora (revisado el 9 de noviembre de 2026)"
     }
   ]
 }
