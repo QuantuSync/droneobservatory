@@ -484,6 +484,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
         # No se publica ni se pregunta: la separa una revisión (EODI-2026-00756).
         frase, dias = fechas.frase_de_dos_dias(incidente) or ("", [])
         return {**base, "huella": huella(incidente), "decision": RETENER, "cambios": cambios,
+                "dos_dias": True,
                 "motivo": f"una frase da dos días ({', '.join(map(str, dias))}): «{frase}»; "
                 "separar en dos fichas"}  # fmt: skip
     for vuelta in range(2):
@@ -563,6 +564,11 @@ def pendiente(decision: Documento | None, incidente: Documento, ahora: datetime)
     if not vigente(decision, incidente):
         return True
     assert decision is not None
+    if decision.get("dos_dias") and not auditoria_fichas.dos_dias_sin_revisar(incidente):
+        # Retenida por una frase con dos días y ya revisada: la parte de una separación que el
+        # extractor de la horaria dio de alta antes de que la separación la enlazara
+        # («relacionados») no cambia de huella y quedaba retenida para siempre.
+        return True
     if decision.get("decision") == ESPERA:
         return ahora >= _leer(str(decision.get("espera_experto") or _iso(ahora)))
     return False

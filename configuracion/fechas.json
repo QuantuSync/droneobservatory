@@ -1,6 +1,6 @@
 {
- "version_esquema": "1.0.0",
- "descripcion": "Léxico para leer el día de un suceso en la frase de una noticia (proceso/fechas.py). Por idioma: meses (enero a diciembre, con sus formas declinadas), días de la semana (lunes a domingo), expresiones relativas al día de publicación (0 hoy, -1 ayer, -2 anteayer), noches (la última noche: la víspera si la nota sale por la mañana) y marcas de «la noche del … al …» o «la noche hacia el …», que adelantan un día el día de la semana que nombran. Las formas se escriben como en la noticia; el código las normaliza igual que la frase (minúsculas, sin acentos, sin apóstrofos). Un día de la semana casa también como comienzo de palabra en los idiomas que los componen («Donnerstagabend», «mandagaften», «maandagavond»). zonas: zona horaria de cada país, para pasar la hora de publicación a la fecha local del medio.",
+ "version_esquema": "1.1.0",
+ "descripcion": "Léxico para leer el día de un suceso en la frase de una noticia (proceso/fechas.py). Por idioma: meses (enero a diciembre, con sus formas declinadas), días de la semana (lunes a domingo), expresiones relativas al día de publicación (0 hoy, -1 ayer, -2 anteayer), noches (la última noche: la víspera si la nota sale por la mañana) y marcas de «la noche del … al …» o «la noche hacia el …», que adelantan un día el día de la semana que nombran. Las formas se escriben como en la noticia; el código las normaliza igual que la frase (minúsculas, sin acentos, sin apóstrofos). Un día de la semana casa también como comienzo de palabra en los idiomas que los componen («Donnerstagabend», «mandagaften», «maandagavond»). partes_noche: por idioma, palabras de la noche o de una parte del día («late», «Abend», «nad ranem»); con una de ellas junto a dos días seguidos unidos por una conjunción, la frase cuenta una noche («late Saturday and early Sunday») y no dos sucesos. conjunciones_dias: las conjunciones que unen dos días de la semana («am Samstag und Sonntag», «w niedzielę i wtorek»). zonas: zona horaria de cada país, para pasar la hora de publicación a la fecha local del medio.",
  "componen_dias": ["de", "nl", "da", "no", "sv", "fi", "et", "lt", "lv", "hu"],
  "idiomas": {
   "en": {
@@ -235,6 +235,45 @@
    "noche_hacia": []
   }
  },
+ "partes_noche": {
+  "bg": ["нощ", "нощта", "вечер", "вечерта", "сутрин", "сутринта", "късно", "рано", "полунощ"],
+  "bs": ["noć", "noći", "noću", "večer", "navečer", "uveče", "jutro", "ujutro", "kasno", "rano", "ponoć", "ponoći"],
+  "ca": ["nit", "vespre", "matinada", "matí", "tard", "aviat", "mitjanit"],
+  "cs": ["noc", "noci", "večer", "večerní", "ráno", "pozdě", "brzy", "půlnoc", "půlnoci"],
+  "da": ["nat", "natten", "aften", "aftenen", "morgen", "morgenen", "sent", "tidligt", "midnat"],
+  "de": ["nacht", "abend", "abends", "morgen", "morgens", "früh", "frühen", "späten", "spät", "mitternacht"],
+  "el": ["νύχτα", "νύχτας", "βράδυ", "βραδιά", "πρωί", "ξημερώματα", "αργά", "νωρίς", "μεσάνυχτα"],
+  "en": ["night", "overnight", "evening", "morning", "late", "early", "midnight", "dawn"],
+  "es": ["noche", "madrugada", "tarde", "mañana", "medianoche"],
+  "et": ["öö", "öösel", "õhtu", "õhtul", "hommik", "hommikul", "hilja", "vara", "kesköö", "keskööl"],
+  "fi": ["yö", "yöllä", "ilta", "illalla", "iltana", "aamu", "aamulla", "aamuna", "myöhään", "aikaisin", "keskiyöllä"],
+  "fr": ["nuit", "soir", "soirée", "matin", "matinée", "tard", "tôt", "minuit"],
+  "gl": ["noite", "madrugada", "tarde", "mañá", "medianoite"],
+  "hr": ["noć", "noći", "noću", "večer", "navečer", "jutro", "ujutro", "kasno", "rano", "ponoć", "ponoći"],
+  "hu": ["éjjel", "éjszaka", "este", "reggel", "késő", "korán", "éjfél", "éjfélkor"],
+  "is": ["nótt", "kvöld", "kvöldi", "morgun", "morgni", "seint", "snemma", "miðnætti"],
+  "it": ["notte", "sera", "serata", "mattina", "mattino", "tarda", "tardi", "presto", "mezzanotte"],
+  "lt": ["naktį", "nakties", "vakare", "vakaro", "rytą", "ryte", "vėlai", "anksti", "vidurnaktį"],
+  "lv": ["naktī", "nakts", "vakarā", "vakara", "rītā", "rīta", "vēlu", "agri", "pusnaktī"],
+  "mk": ["ноќ", "ноќта", "вечер", "вечерта", "утро", "утрото", "доцна", "рано", "полноќ"],
+  "nl": ["nacht", "avond", "ochtend", "morgen", "laat", "vroeg", "middernacht"],
+  "no": ["natt", "natten", "kveld", "kvelden", "morgen", "morgenen", "sent", "tidlig", "midnatt"],
+  "pl": ["noc", "nocy", "nocą", "wieczór", "wieczorem", "rano", "ranem", "późnym", "wczesnym", "północy"],
+  "pt": ["noite", "madrugada", "tarde", "manhã", "meia-noite"],
+  "ro": ["noapte", "noaptea", "seară", "seara", "dimineață", "dimineața", "târziu", "devreme", "miezul"],
+  "ru": ["ночь", "ночью", "вечер", "вечером", "утро", "утром", "поздно", "рано", "полночь"],
+  "sk": ["noc", "noci", "večer", "ráno", "neskoro", "skoro", "polnoc", "polnoci"],
+  "sl": ["noč", "noči", "ponoči", "večer", "zvečer", "jutro", "zjutraj", "pozno", "zgodaj", "polnoč"],
+  "sq": ["natë", "natën", "mbrëmje", "mbrëmjen", "mëngjes", "mëngjesin", "vonë", "herët", "mesnatë"],
+  "sr": ["noć", "noći", "noću", "veče", "uveče", "jutro", "ujutro", "kasno", "rano", "ponoć", "ноћ", "ноћи", "ноћу", "вече", "увече", "јутро", "ујутро", "касно", "рано", "поноћ"],
+  "sv": ["natt", "natten", "kväll", "kvällen", "morgon", "morgonen", "sent", "tidigt", "midnatt"],
+  "tr": ["gece", "akşam", "sabah", "geç", "erken", "gece yarısı"],
+  "uk": ["ніч", "вночі", "уночі", "ночі", "вечір", "ввечері", "увечері", "ранок", "вранці", "уранці", "пізно", "рано", "опівночі"]
+ },
+ "conjunciones_dias": [
+  "y", "e", "i", "oraz", "and", "und", "sowie", "et", "și", "ir", "ja", "en", "og", "och", "a", "és",
+  "un", "in", "и", "і", "та", "й", "και", "ve", "dhe"
+ ],
  "zonas": {
   "AD": "Europe/Andorra", "AL": "Europe/Tirane", "AT": "Europe/Vienna", "BA": "Europe/Sarajevo",
   "BE": "Europe/Brussels", "BG": "Europe/Sofia", "BY": "Europe/Minsk", "CH": "Europe/Zurich",

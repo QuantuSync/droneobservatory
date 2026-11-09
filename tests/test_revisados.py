@@ -219,6 +219,9 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             # Letonia: el dron del domingo 1/11/2026 y el del martes 3/11 (EODI-2026-00746),
             # «w niedzielę i wtorek» en una sola frase (AA, 6/11/2026).
             "EODI-2026-00756",
+            # Leipzig/Halle: el cierre de pista del sábado 7/11/2026 y el del domingo 8/11, «am
+            # Samstag und Sonntag jeweils» en una sola frase (AA con días seguidos, 9/11/2026).
+            "EODI-2026-00770",
         }
     )
     # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.
