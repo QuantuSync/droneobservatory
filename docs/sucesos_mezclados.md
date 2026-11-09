@@ -267,7 +267,9 @@ marcó porque tomaba dos días seguidos por una noche que cruza la medianoche. D
   huella no cambiaba y quedaba retenida.
 
 Medido en todo el registro publicado el 9 de noviembre: EODI-2026-00770, que se separa en el
-sábado y el domingo (ninguna parte coincide con otra ficha; con `distintos`), y EODI-2026-00566,
+sábado y el domingo (ninguna parte coincide con otra ficha; con `distintos`; el sábado conserva el
+identificador y, como no pierde fuentes, no se vuelve a extraer: lleva la nota de la policía como
+cita y un dron, el inicio de las 19:20 hora alemana y el titular revisados), y EODI-2026-00566,
 la noche del 15 al 16 de octubre de 2026 en Moldavia, por «The five drones entered Moldovan
 airspace over a little more than 17 hours on Thursday and Friday» (freemalaysiatoday.com), que
 suma el dron que cayó el viernes en Dondușeni, con ficha propia: se revisa el inicio con su cita.
