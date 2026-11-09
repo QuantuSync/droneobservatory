@@ -370,13 +370,34 @@ class FuenteTexto:
         )
 
 
-def contenido(objetivo: str, fuentes: list[FuenteTexto]) -> str:
+def suceso_de_la_parte(parte: dict[str, Any] | None) -> str:
+    """La línea que dice al modelo qué suceso es la ficha cuando sus fuentes cuentan también
+    otros (la parte de una separación revisada, recogida/revisados.separar), o "" si no la hay.
+    Sin ella, las dos partes de EODI-2026-00770 (Leipzig/Halle, sábado 7 y domingo 8 de noviembre
+    de 2026), con las mismas notas, salían con los dos drones y el titular de los dos días."""
+    if not parte or not parte.get("fecha"):
+        return ""
+    descripcion = f" ({parte['descripcion']})" if parte.get("descripcion") else ""
+    return (
+        f"Suceso de esta ficha: solo el del {parte['fecha']}{descripcion}. Las fuentes cuentan "
+        "también otros sucesos: el número de drones, las horas, el cierre, el lugar y los demás "
+        "datos son solo los de este suceso."
+    )
+
+
+def contenido(
+    objetivo: str, fuentes: list[FuenteTexto], parte: dict[str, Any] | None = None
+) -> str:
     lineas = [f"Objetivo conocido: {objetivo}."]
+    if suceso := suceso_de_la_parte(parte):
+        lineas.append(suceso)
     lineas += [f.bloque(i) for i, f in enumerate(fuentes, 1)]
     return "\n".join(lineas)
 
 
-def cuerpo(objetivo: str, fuentes: list[FuenteTexto]) -> dict[str, Any]:
+def cuerpo(
+    objetivo: str, fuentes: list[FuenteTexto], parte: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Cuerpo de la petición sin el modelo, que añade el cliente."""
     return {
         "max_tokens": MAX_TOKENS_SALIDA,
@@ -386,7 +407,7 @@ def cuerpo(objetivo: str, fuentes: list[FuenteTexto]) -> dict[str, Any]:
             "format": {"type": "json_schema", "schema": ESQUEMA},
             "effort": ESFUERZO,
         },
-        "messages": [{"role": "user", "content": contenido(objetivo, fuentes)}],
+        "messages": [{"role": "user", "content": contenido(objetivo, fuentes, parte)}],
     }
 
 
