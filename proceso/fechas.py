@@ -909,43 +909,106 @@ def sin_fin_sin_frase(incidente: dict[str, Any]) -> dict[str, Any]:
     return incidente
 
 
-# Dos días de una misma frase que no son la misma noche (como mucho un día entre ellos): «w
-# niedzielę i wtorek dwa drony» son dos sucesos, el domingo y el martes. La fecha toma el más
-# temprano (_leer_con) y la ficha quedaba con un solo día y los drones de los dos
-# (EODI-2026-00756, Letonia, 1 y 3 de noviembre de 2026).
+# Dos días de una misma frase unidos por una conjunción son dos sucesos: «w niedzielę i wtorek
+# dwa drony», el domingo y el martes. La fecha toma el más temprano (_leer_con) y la ficha
+# quedaba con un solo día y los drones de los dos (EODI-2026-00756, Letonia, 1 y 3 de noviembre
+# de 2026). Dos días seguidos también («am Samstag und Sonntag jeweils eine der beiden
+# Landebahnen kurzzeitig gesperrt», EODI-2026-00770, Leipzig/Halle, 7 y 8 de noviembre de 2026),
+# salvo que la frase hable de la noche o de una parte del día junto a ellos («late Saturday and
+# early Sunday», «Samstagabend und Sonntag»): eso es una noche que cruza la medianoche.
 DIAS_MISMA_NOCHE = 1
 # Entre los dos días, como mucho la conjunción y un artículo o preposición («y el», «i we»).
 MAX_ENTRE_DIAS = 3
-_CONJUNCIONES = frozenset(
-    {"y", "e", "i", "oraz", "and", "und", "et", "si", "ir", "ja", "en", "og", "och", "a", "es"}
-)
+# Palabras alrededor de los dos días en que se busca la noche («late Saturday», «Sunday morning»).
+MARGEN_NOCHE = 3
+# Un día con hasta 3 letras más es el mismo día declinado («šeštadienį», «lauantaina»,
+# «szombaton»); con más, en los idiomas que los componen, es el día con su parte
+# («Samstagabend», «zaterdagavond», «lördagskvällen»).
+MAX_DECLINACION = 3
+
+
+@cache
+def _conjunciones() -> frozenset[str]:
+    return frozenset(_normal(c) for c in configuracion()["conjunciones_dias"])
+
+
+@cache
+def _partes_noche(idioma: str) -> tuple[frozenset[str], tuple[str, ...]]:
+    """Las palabras de la noche del idioma: sueltas y las de varias palabras («gece yarısı»)."""
+    formas = [_normal(f) for f in configuracion().get("partes_noche", {}).get(idioma, [])]
+    return (
+        frozenset(f for f in formas if " " not in f),
+        tuple(f for f in formas if " " in f),
+    )
+
+
+def _dias_en(palabras: list[str], lx: Lexico) -> list[tuple[int, int, int, bool]]:
+    """Los días de la semana de la frase: (primera palabra, última palabra, día, con su parte
+    del día pegada), en orden. Casa la forma entera, la de varias palabras («e shtunë»), la
+    declinada y, en los idiomas que componen, la compuesta («Samstagabend»)."""
+    hallados: dict[int, tuple[int, int, int, bool]] = {}
+    for forma, numero in lx.dias:
+        trozos = forma.split()
+        n = len(trozos)
+        for i in range(len(palabras) - n + 1):
+            if n > 1:
+                if palabras[i : i + n] == trozos:
+                    hallados.setdefault(i, (i, i + n - 1, numero, False))
+                continue
+            palabra = palabras[i]
+            if not palabra.startswith(forma):
+                continue
+            resto = len(palabra) - len(forma)
+            if resto <= MAX_DECLINACION:
+                hallados[i] = (i, i, numero, False)
+            elif lx.compone:
+                hallados.setdefault(i, (i, i, numero, True))
+    return [hallados[i] for i in sorted(hallados)]
+
+
+def _de_noche(palabras: list[str], desde: int, hasta: int, idioma: str) -> bool:
+    """Alguna palabra de la noche del idioma (o del inglés) entre las palabras desde…hasta,
+    con un margen de MARGEN_NOCHE a cada lado."""
+    tramo = palabras[max(0, desde - MARGEN_NOCHE) : hasta + MARGEN_NOCHE + 1]
+    texto = f" {' '.join(tramo)} "
+    for i in dict.fromkeys([idioma, "en"]):
+        sueltas, compuestas = _partes_noche(i)
+        if sueltas & set(tramo) or any(f" {c} " in texto for c in compuestas):
+            return True
+    return False
 
 
 def dias_distintos(
     frase: str, publicacion: datetime, zona_medio: ZoneInfo, idioma: str | None
 ) -> list[date]:
-    """Los días locales que nombra la frase si son dos días de la semana unidos por una
-    conjunción («w niedzielę i wtorek», «el domingo y el martes», «on Sunday and Tuesday») que no
-    caben en una noche; si no, []. Con una fecha escrita no cuenta: el día de la semana que la
-    acompaña es el mismo («donderdag 15 januari»). Dos días sueltos en la frase tampoco: «le
-    detuvieron el lunes… este miércoles» cuenta dos momentos de un mismo suceso."""
+    """Los días locales que nombra la frase si son dos días de la semana distintos unidos por
+    una conjunción («w niedzielę i wtorek», «el domingo y el martes», «am Samstag und
+    Sonntag»); si no, []. Dos días seguidos con la noche o una parte del día junto a ellos
+    («late Saturday and early Sunday») son una noche, no dos sucesos. Con una fecha escrita no
+    cuenta: el día de la semana que la acompaña es el mismo («donderdag 15 januari»). Dos días
+    sueltos en la frase tampoco: «le detuvieron el lunes… este miércoles» cuenta dos momentos de
+    un mismo suceso."""
     todos = lexicos()
-    lexico = [todos[i] for i in dict.fromkeys([idioma or "", "en"]) if i in todos]
+    idiomas = [i for i in dict.fromkeys([idioma or "", "en"]) if i in todos]
     hoy = publicacion.astimezone(zona_medio).date()
-    if _explicitas(frase, lexico, hoy):
+    if _explicitas(frase, [todos[i] for i in idiomas], hoy):
         return []
     palabras = _normal(frase).split()
-    for lx in lexico:
-        formas = dict(lx.dias)
-        posiciones = [
-            (i, formas[p]) for i, p in enumerate(palabras) if p in formas
-        ]  # fmt: skip
-        for (i, uno), (j, otro) in pairwise(posiciones):
-            entre = set(palabras[i + 1 : j])
-            if j - i - 1 > MAX_ENTRE_DIAS or not entre & _CONJUNCIONES:
+    conjunciones = _conjunciones()
+    for idioma_lx in idiomas:
+        for (i0, i1, uno, parte_uno), (j0, j1, otro, parte_otro) in pairwise(
+            _dias_en(palabras, todos[idioma_lx])
+        ):
+            entre = set(palabras[i1 + 1 : j0])
+            if j0 - i1 - 1 > MAX_ENTRE_DIAS or not entre & conjunciones:
                 continue
             dias = sorted({_ultimo(uno, hoy), _ultimo(otro, hoy)})
-            if (dias[-1] - dias[0]).days > DIAS_MISMA_NOCHE:
+            separados = (dias[-1] - dias[0]).days
+            if separados > DIAS_MISMA_NOCHE:
+                return dias
+            if separados == 1 and not (
+                parte_uno or parte_otro or _de_noche(palabras, i0, j1, idioma_lx)
+            ):
                 return dias
     return []
 

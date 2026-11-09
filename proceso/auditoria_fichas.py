@@ -118,7 +118,9 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   (una separación, «distintos» o el inicio revisado con cita) ha dicho a qué día va cada cosa:
   la ficha junta dos sucesos y hay que separarla. EODI-2026-00756 (5 de noviembre de 2026): «W
   łotewską przestrzeń powietrzną wkroczyły w niedzielę i wtorek dwa drony» quedó en una ficha del
-  domingo con los drones de los dos días.
+  domingo con los drones de los dos días. Desde el 9 de noviembre de 2026 también dos días
+  seguidos sin la noche junto a ellos: EODI-2026-00770, «am Samstag und Sonntag jeweils eine der
+  beiden Landebahnen kurzzeitig gesperrt» (Leipzig/Halle).
 """
 
 import json

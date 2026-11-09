@@ -244,3 +244,30 @@ la letra **AA** hasta que una revisión (una separación, «distintos» o el ini
 qué día va cada cosa. Una fecha escrita en la frase («donderdag 15 januari») o dos días sueltos
 («le detuvieron el lunes… este miércoles») no cuentan. Medido en todo el registro publicado el 6
 de noviembre: solo EODI-2026-00756.
+
+### Dos días seguidos (9 de noviembre de 2026)
+
+EODI-2026-00770 juntó en una ficha del sábado 7 de noviembre de 2026 los dos cierres de pista del
+aeropuerto de Leipzig/Halle: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine
+der beiden Landebahnen kurzzeitig gesperrt» (welt.de, dpa, 9 de noviembre). La regla AA no la
+marcó porque tomaba dos días seguidos por una noche que cruza la medianoche. Desde entonces
+(`proceso/fechas.dias_distintos`):
+
+- dos días seguidos unidos por una conjunción son dos sucesos, salvo que la frase hable de la noche
+  o de una parte del día junto a ellos («late Saturday and early Sunday», «sâmbătă seara și
+  duminică dimineața», «natten mellan lördag och söndag») o que un día lleve pegada su parte en
+  los idiomas que los componen («Samstagabend und Sonntag»). Las palabras de la noche de cada
+  idioma están en `configuracion/fechas.json` (`partes_noche`, los 33 idiomas del léxico);
+- el día casa también declinado, con hasta tres letras más («šeštadienį», «lauantaina»,
+  «szombaton»), y en varias palabras («të shtunën»);
+- las conjunciones están en `configuracion/fechas.json` (`conjunciones_dias`), con las que
+  faltaban: «sowie», «un» (letón), «in» (esloveno), «и», «і», «та», «και», «ve» y «dhe»;
+- una ficha que el filtro de entrada retuvo por una frase con dos días vuelve a pasar por él en
+  cuanto una revisión la cubre (la parte de una separación que se enlaza más tarde): antes su
+  huella no cambiaba y quedaba retenida.
+
+Medido en todo el registro publicado el 9 de noviembre: EODI-2026-00770, que se separa en el
+sábado y el domingo (ninguna parte coincide con otra ficha; con `distintos`), y EODI-2026-00566,
+la noche del 15 al 16 de octubre de 2026 en Moldavia, por «The five drones entered Moldovan
+airspace over a little more than 17 hours on Thursday and Friday» (freemalaysiatoday.com), que
+suma el dron que cayó el viernes en Dondușeni, con ficha propia: se revisa el inicio con su cita.

@@ -10813,6 +10813,38 @@
           ]
         }
       ]
+    },
+    {
+      "incidente": "EODI-2026-00770",
+      "distintos": true,
+      "motivo": {
+        "es": "Juntaba en una ficha del sábado 7 de noviembre de 2026 los dos cierres de pista del aeropuerto de Leipzig/Halle por drones que, según la policía, hubo el sábado y el domingo: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.» (welt.de, dpa, 9 de noviembre de 2026). Son dos sucesos, uno cada día.",
+        "en": "It merged into one record for Saturday 7 November 2026 the two runway closures at Leipzig/Halle airport caused by drones that, according to the police, happened on Saturday and on Sunday: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.» (welt.de, dpa, 9 November 2026). They are two events, one on each day."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-07",
+          "pais": "DE",
+          "descripcion": "El sábado 7 de noviembre de 2026 un dron obliga a cerrar brevemente una de las dos pistas del aeropuerto de Leipzig/Halle, según la policía",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-8b62f6dcf03854ba",
+            "gdelt-8b62f6dcf03854ba-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-08",
+          "pais": "DE",
+          "descripcion": "El domingo 8 de noviembre de 2026 otro dron obliga a cerrar brevemente una de las dos pistas del aeropuerto de Leipzig/Halle, según la policía",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-8b62f6dcf03854ba",
+            "gdelt-8b62f6dcf03854ba-declaracion-1"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
@@ -12556,6 +12588,15 @@
       "enlace": "https://monitorulsv.ro/alerta-de-drone-in-judetul-suceava-drone-semnalate-in-zonele-fratauti-si-horodnic-doua-avioane-survoleaza-zona_923d20",
       "pais": "RO",
       "motivo": "la alerta de Suceava fue por la posible entrada de un dron seg\u00fan el Estado Mayor de la Fuerza A\u00e9rea (MApN); el titular de la nota dice \u00abdrone\u00bb sin n\u00famero (revisado el 8 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00566",
+      "campo": "inicio",
+      "valor": "2026-10-15",
+      "cita": "Patru aparate de zbor fără pilot au pătruns neautorizat în spațiul aerian al Republicii Moldova în noaptea de 15 spre 16 octombrie",
+      "enlace": "https://timpul.md/articol/ministrul-nosatii-condamna-patrunderea-neautorizata-a-patru-drone-in-spatiul-aerian-al-republicii-moldova-334c2a66.html",
+      "pais": "MD",
+      "motivo": "la ficha es la noche del 15 al 16 de octubre de 2026 (el primer dron entró a las 23:02 hora de Moldavia del día 15, según el Centro de Operaciones Aéreas); la frase «on Thursday and Friday» de freemalaysiatoday.com suma el dron que cayó el viernes 16 en Dondușeni, que tiene su propia ficha (revisado el 9 de noviembre de 2026)"
     }
   ]
 }
