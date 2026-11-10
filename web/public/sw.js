@@ -10,9 +10,10 @@
 //   Sin red, la copia de esa dirección o, si no la hay, la portada de su idioma.
 // - «datos»: /datos/…, primero de la red (el navegador sigue preguntando con If-None-Match: la
 //   caché HTTP está debajo); sin red o con un fallo del servidor, la última copia guardada.
-// - «estatico»: contornos y fuentes del mapa, iconos y banderas: la copia guardada y, detrás, se
+// - «estatico»: contornos y fuentes del mapa, iconos, banderas y los QR de los avisos: la copia guardada y, detrás, se
 //   pide de nuevo (la caché HTTP del navegador responde casi siempre sin ir a la red).
-// - Nunca: /almacen/ (el mapa de fondo, por trozos), /api/, /datos/versiones/, los manifiestos (los
+// - Nunca: /almacen/ (el mapa de fondo, por trozos), /api/, /datos/versiones/, una navegación a un
+//   fichero (una descarga, /sitemap.xml, una imagen: no es una página), los manifiestos (los
 //   pide el navegador por su cuenta), otros sitios (el contador de visitas, la reserva de Helsinki),
 //   peticiones con Range y todo lo que no sea GET.
 //
@@ -52,7 +53,7 @@ const ESPERA_PAGINA_MS = 4000;
 const MAXIMO_A_GUARDAR = 300;
 
 const NUNCA = ["/almacen/", "/api/", "/datos/versiones/"];
-const ESTATICOS = ["/mapa/", "/iconos/", "/banderas/", "/marca/", "/capturas/"];
+const ESTATICOS = ["/mapa/", "/iconos/", "/banderas/", "/marca/", "/capturas/", "/avisos/qr/"];
 const ESTATICOS_SUELTOS = [
   "/favicon.ico",
   "/favicon.svg",
@@ -60,6 +61,17 @@ const ESTATICOS_SUELTOS = [
 ];
 /** Scripts sin huella de public/: primero de la red, como los datos. */
 const SCRIPTS_SIN_HUELLA = ["/arranque.js", "/visitas.js", "/borrar-visita.js"];
+
+/**
+ * Una navegación a un fichero (una descarga de /datos/, /sitemap.xml, /llms.txt, una imagen) no es
+ * una página: guardada como tal, ocupaba el sitio de una ficha y, sin conexión, en su lugar salía
+ * la portada (un «CSV» con HTML dentro). Va a la red, como sin service worker.
+ */
+function esFichero(ruta) {
+  if (ruta.startsWith("/datos/")) return true;
+  const nombre = ruta.slice(ruta.lastIndexOf("/") + 1);
+  return /\.[A-Za-z0-9]+$/.test(nombre) && !nombre.endsWith(".html");
+}
 
 /**
  * La regla de una petición: "pagina", "huella", "datos", "estatico" o null (no se toca).
@@ -79,7 +91,7 @@ function reglaDe(peticion, origen) {
   const ruta = url.pathname;
   if (NUNCA.some((prefijo) => ruta.startsWith(prefijo))) return null;
   if (ruta === "/sw.js") return null;
-  if (peticion.mode === "navigate") return "pagina";
+  if (peticion.mode === "navigate") return esFichero(ruta) ? null : "pagina";
   if (ruta.startsWith("/assets/")) return "huella";
   if (ruta.startsWith("/datos/")) return "datos";
   if (SCRIPTS_SIN_HUELLA.includes(ruta)) return "datos";
@@ -106,10 +118,15 @@ function codigoDe(html) {
 /**
  * Una petición nueva a la misma dirección, sin la señal de corte de la página (ni su modo o destino):
  * la usan el código, los datos y lo estático. Las páginas van con la suya (una navegación no se puede
- * rehacer, y su corte no llega a ninguna página).
+ * rehacer, y su corte no llega a ninguna página). Conserva el «sin caché» de quien la pide: los
+ * reintentos de la web (src/datos/reintentos.ts) vuelven a pedir con «no-cache» por si el navegador
+ * guardó una respuesta mala, y sin esto volvían a su caché HTTP.
  */
+const SIN_CACHE_HTTP = ["no-cache", "reload", "no-store"];
 function aparte(peticion) {
-  return new Request(peticion.url, { method: "GET", credentials: "same-origin" });
+  const opciones = { method: "GET", credentials: "same-origin" };
+  if (SIN_CACHE_HTTP.includes(peticion.cache)) opciones.cache = peticion.cache;
+  return new Request(peticion.url, opciones);
 }
 
 function guardable(respuesta) {

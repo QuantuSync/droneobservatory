@@ -84,6 +84,16 @@ describe("registro del service worker", () => {
     expect(lista).toEqual(["/en/EODI-2025-00001#pagina", "/assets/index-1.js", "/datos/resumen.json", "/mapa/tierra.geojson"]);
   });
 
+  it("manda guardar también los QR de los avisos, el contador y el icono: sin conexión no faltan", () => {
+    const origen = "https://droneobservatory.eu";
+    const lista = direccionesAGuardar(
+      [`${origen}/avisos/qr/eodi.svg`, `${origen}/visitas.js`, `${origen}/favicon.svg`, `${origen}/avisos`],
+      origen,
+      "/avisos",
+    );
+    expect(lista).toEqual(["/avisos#pagina", "/avisos/qr/eodi.svg", "/visitas.js", "/favicon.svg"]);
+  });
+
   it("public/sw.js existe y la política de contenido no se ha ampliado", () => {
     expect(readFileSync(join(PUBLICA, "sw.js"), "utf8")).toContain('addEventListener("fetch"');
     const vercel = readFileSync(join(import.meta.dirname, "..", "..", "vercel.json"), "utf8");
