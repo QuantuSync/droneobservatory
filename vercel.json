@@ -55,6 +55,10 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
     },
     {
+      "source": "/(banderas|marca|iconos)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    },
+    {
       "source": "/datos/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" },
