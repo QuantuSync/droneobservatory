@@ -94,6 +94,11 @@ class Candidato:
     # Inicio del suceso, cuando su incidente lo sabe (no se guarda: sale del incidente). La
     # repetición se mide desde él: las primeras noticias pueden salir horas después del suceso.
     suceso: datetime | None = None
+    # El suceso de la parte de una separación revisada (recogida/revisados._con_parte), que va al
+    # extractor. Se guarda tal cual: sin él, cada artículo nuevo de la zona volvía a guardar el
+    # candidato sin su parte, separar se la ponía con otra fecha y la parte se volvía a extraer
+    # cada hora (EODI-2026-00770 y 00773, del 9 al 10 de noviembre de 2026).
+    parte: dict[str, Any] | None = None
 
 
 # --- Normalización ---------------------------------------------------------------

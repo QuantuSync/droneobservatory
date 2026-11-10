@@ -1407,10 +1407,26 @@ def sin_oficiales_del_filtro(
     ids |= fuera_por_la_medida(almacen.controles(medida_).get(medida_), incidente, anterior)
     if not ids:
         return incidente
-    instante_ = dict(
+    instante_ = bajada_anterior(anterior) or dict(
         incidente["control"].get("ultima_actualizacion") or incidente["control"]["alta"]
     )
     return declaraciones_no_oficiales(incidente, ids, instante_)[0]
+
+
+def bajada_anterior(anterior: Documento | None) -> Documento | None:
+    """Cuándo bajó la ficha anterior a notificado porque ninguna fuente oficial daba su estado
+    (proceso/control_fichas.bajar_estado), la última vez. Al rehacerla, la misma bajada conserva
+    su fecha: con la de ahora, cada versión rehecha cambiaba el historial del estado
+    (EODI-2026-00770 y 00773, 10 de noviembre de 2026)."""
+    for paso in reversed((anterior or {}).get("estado", {}).get("historial", [])):
+        motivo = str((paso.get("motivo") or {}).get("es") or "")
+        if paso.get("estado") == Estado.NOTIFICADO and motivo.startswith(BAJADA_SIN_OFICIAL):
+            return dict(paso["fecha"])
+    return None
+
+
+# Cómo empieza el motivo de esa bajada (proceso/control_fichas.bajar_estado).
+BAJADA_SIN_OFICIAL = "Ninguna fuente oficial da el estado"
 
 
 # La clave de la contradicción de una extracción nueva con lo decidido de la ficha: la verifica
@@ -1440,6 +1456,30 @@ def conservar_decididos(
             _fecha(ahora),
         )  # fmt: skip
     return conservacion.incidente
+
+
+def con_lo_revisado(
+    almacen: Almacen, incidente: Documento, anterior: Documento, ahora: datetime
+) -> Documento:
+    """La versión rehecha (una extracción nueva o la reconstrucción) con lo que la revisión a mano
+    ya había puesto en la ficha y la extracción no da: las citas revisadas, con la confirmación de
+    su autoridad (recogida/revisados.con_citas y reconfirmar, como en `corregir`), y los sucesos
+    relacionados de una separación (los pone revisados.separar). Sin esto la versión se guardaba
+    con los datos de antes de la revisión y, segundos después, separar y corregir la devolvían a
+    lo revisado: EODI-2026-00770 y 00773 (Leipzig/Halle) se guardaron cada hora del 9 al 10 de
+    noviembre de 2026 sin la nota de la Polizei Leipzig, como «posible dron» y sin su enlace
+    (auditoría K, cambios retenidos por el cerrojo)."""
+    from recogida import revisados
+
+    resultado = incidente
+    citas = revisados.citas_de(almacen, str(incidente["id"]))
+    if citas:
+        resultado = revisados.reconfirmar(
+            revisados.con_citas(resultado, citas), citas, revisados.instante(ahora)
+        )
+    if anterior.get("relacionados") and "relacionados" not in resultado:
+        resultado = {**resultado, "relacionados": copy.deepcopy(anterior["relacionados"])}
+    return resultado
 
 
 def _alta(
@@ -1550,6 +1590,10 @@ def _guardar_version(
     if anterior is not None:
         incidente = conservar_oficiales(incidente, anterior)
         incidente = sin_oficiales_del_filtro(almacen, incidente, anterior)
+        # Lo revisado a mano que la extracción no trae: la versión nace ya revisada, con la
+        # confirmación de la autoridad citada en la revisión después de la bajada del filtro,
+        # como en la ficha anterior.
+        incidente = con_lo_revisado(almacen, incidente, anterior, ahora)
         if extraida:
             incidente = conservar_decididos(almacen, incidente, anterior, ahora)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).

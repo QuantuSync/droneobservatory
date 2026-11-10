@@ -368,8 +368,11 @@ class Corregidos:
         )
 
 
-def _instante(ahora: datetime) -> Documento:
+def instante(ahora: datetime) -> Documento:
     return {"valor": ahora.astimezone(UTC).strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"}
+
+
+_instante = instante
 
 
 def _fecha(valor: str) -> Documento:
@@ -439,6 +442,12 @@ def _por_incidente(almacen: Almacen, entradas: list[Documento]) -> dict[str, lis
         if documento is not None:
             resultado.setdefault(documento["id"], []).append(entrada)
     return resultado
+
+
+def citas_de(almacen: Almacen, id_: str) -> list[Documento]:
+    """Las citas revisadas que van a ese incidente (también las de una ficha fundida en él), como
+    las reparte `corregir`."""
+    return _por_incidente(almacen, cargar().get("citas", [])).get(id_, [])
 
 
 def con_citas(incidente: Documento, citas: list[Documento]) -> Documento:

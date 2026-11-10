@@ -1,0 +1,411 @@
+{
+"candidatos": [
+{
+"id": "CAND-20261109T1215-EDDP-aeropuerto",
+"documento": "{\"articulos\":[\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\"],\"id\":\"CAND-20261109T1215-EDDP-aeropuerto\",\"inicio\":\"2026-11-09T12:15:00Z\",\"lugar\":\"EDDP\",\"parte\":{\"descripcion\":\"El sábado 7 de noviembre de 2026 un dron obliga a cerrar brevemente una de las dos pistas del aeropuerto de Leipzig/Halle, según la policía\",\"desde\":\"2026-11-10T00:17Z\",\"fecha\":\"2026-11-07\"},\"precision\":\"dia\",\"tipo\":\"aeropuerto\",\"ultimo\":\"2026-11-09T12:15:00Z\"}"
+},
+{
+"id": "CAND-20261109T1215-EDDP-aeropuerto-2",
+"documento": "{\"articulos\":[\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\"],\"id\":\"CAND-20261109T1215-EDDP-aeropuerto-2\",\"inicio\":\"2026-11-09T12:15:00Z\",\"lugar\":\"EDDP\",\"parte\":{\"descripcion\":\"El domingo 8 de noviembre de 2026 otro dron obliga a cerrar brevemente una de las dos pistas del aeropuerto de Leipzig/Halle, según la policía\",\"desde\":\"2026-11-10T00:17Z\",\"fecha\":\"2026-11-08\"},\"precision\":\"dia\",\"separado_de\":\"CAND-20261109T1215-EDDP-aeropuerto\",\"tipo\":\"aeropuerto\",\"ultimo\":\"2026-11-09T12:15:00Z\"}"
+}
+],
+"extracciones": [
+{
+"id": 4851,
+"candidato": "CAND-20261109T1215-EDDP-aeropuerto",
+"fecha": "2026-11-10T00:17:03Z",
+"version": "ficha/5",
+"huella": "8b62f6dcf03854ba5270f6357e1cab90b153bf415760b4f4240827e4ccda7657",
+"valida": 1,
+"documento": "{\"campos\":{\"cierre\":{\"confianza\":0.6,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"si\"},\"dron_estatal\":{\"confianza\":0.5,\"frase\":\"Die unbekannten Drohnenpiloten konnten zunächst nicht gestellt werden.\",\"fuente\":1,\"valor\":false},\"drones\":{\"confianza\":0.5,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":{\"max\":1,\"min\":1}},\"es_incidente\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":true},\"inicio\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"2026-11-07\"},\"inicio_precision\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"dia\"},\"localidad\":{\"confianza\":0.7,\"frase\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"fuente\":1,\"valor\":\"Leipzig/Halle\"},\"lugar_suceso\":{\"confianza\":0.85,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}},\"objetivo_categoria\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"aeropuerto\"},\"objetivo_conocido\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":true},\"objetivo_nombre\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"Flughafen Leipzig/Halle\"},\"pais\":{\"confianza\":0.9,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"DE\"},\"presencia_dron\":{\"confianza\":0.75,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"confirmada\"},\"tipo\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"interrupcion_aeroportuaria\"}},\"declaraciones\":[{\"afirma\":\"incidente\",\"autor\":\"\",\"autor_pais\":\"\",\"autor_situacion\":\"\",\"autor_tipo\":\"\",\"autoridad\":\"Polizei\",\"categoria\":\"policia\",\"cita_literal\":false,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"pais\":\"DE\"}],\"enviadas\":[\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\"],\"escalado\":[\"poca_seguridad: presencia_dron\",\"critico: dron confirmado\"],\"ficha\":{\"cierre\":{\"confianza\":0.6,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"si\"},\"declaraciones\":[{\"afirma\":\"incidente\",\"autor\":\"\",\"autor_pais\":\"\",\"autor_situacion\":\"\",\"autor_tipo\":\"\",\"autoridad\":\"Polizei\",\"categoria\":\"policia\",\"cita_literal\":false,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"pais\":\"DE\"}],\"dron_estatal\":{\"confianza\":0.5,\"frase\":\"Die unbekannten Drohnenpiloten konnten zunächst nicht gestellt werden.\",\"fuente\":1,\"valor\":false},\"drones\":{\"confianza\":0.5,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":{\"max\":1,\"min\":1}},\"es_incidente\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":true},\"ilegibles\":[],\"inicio\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"2026-11-07\"},\"inicio_precision\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"dia\"},\"localidad\":{\"confianza\":0.7,\"frase\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"fuente\":1,\"valor\":\"Leipzig/Halle\"},\"lugar_suceso\":{\"confianza\":0.85,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}},\"objetivo_categoria\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"aeropuerto\"},\"objetivo_conocido\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":true},\"objetivo_nombre\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"Flughafen Leipzig/Halle\"},\"pais\":{\"confianza\":0.9,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"DE\"},\"presencia_dron\":{\"confianza\":0.75,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"confirmada\"},\"tipo\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"interrupcion_aeroportuaria\"},\"titulo_en\":\"Drone briefly forces closure of a runway at Leipzig/Halle airport\",\"titulo_es\":\"Un dron obliga a cerrar brevemente una pista del aeropuerto de Leipzig/Halle\"},\"incidente\":\"EODI-2026-00770\",\"modelo\":\"modelo-experto\",\"motivos\":[]}"
+},
+{
+"id": 4852,
+"candidato": "CAND-20261109T1215-EDDP-aeropuerto-2",
+"fecha": "2026-11-10T00:17:03Z",
+"version": "ficha/5",
+"huella": "8b62f6dcf03854ba5270f6357e1cab90b153bf415760b4f4240827e4ccda7657",
+"valida": 1,
+"documento": "{\"campos\":{\"cierre\":{\"confianza\":0.6,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"si\"},\"drones\":{\"confianza\":0.6,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":{\"max\":1,\"min\":1}},\"es_incidente\":{\"confianza\":0.95,\"frase\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"fuente\":1,\"valor\":true},\"inicio\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"2026-11-08\"},\"inicio_precision\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"dia\"},\"lugar_suceso\":{\"confianza\":0.8,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}},\"objetivo_categoria\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"aeropuerto\"},\"objetivo_conocido\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":true},\"objetivo_nombre\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"Flughafen Leipzig/Halle\"},\"pais\":{\"confianza\":0.8,\"frase\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"fuente\":1,\"valor\":\"DE\"},\"presencia_dron\":{\"confianza\":0.6,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"confirmada\"},\"tipo\":{\"confianza\":0.85,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"interrupcion_aeroportuaria\"}},\"declaraciones\":[{\"afirma\":\"incidente\",\"autor\":\"\",\"autor_pais\":\"\",\"autor_situacion\":\"\",\"autor_tipo\":\"\",\"autoridad\":\"Polizei\",\"categoria\":\"policia\",\"cita_literal\":false,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"pais\":\"DE\"}],\"enviadas\":[\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\"],\"escalado\":[\"poca_seguridad: tipo\",\"critico: dron confirmado\"],\"ficha\":{\"cierre\":{\"confianza\":0.6,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"si\"},\"declaraciones\":[{\"afirma\":\"incidente\",\"autor\":\"\",\"autor_pais\":\"\",\"autor_situacion\":\"\",\"autor_tipo\":\"\",\"autoridad\":\"Polizei\",\"categoria\":\"policia\",\"cita_literal\":false,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"pais\":\"DE\"}],\"drones\":{\"confianza\":0.6,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":{\"max\":1,\"min\":1}},\"es_incidente\":{\"confianza\":0.95,\"frase\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"fuente\":1,\"valor\":true},\"ilegibles\":[],\"inicio\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"2026-11-08\"},\"inicio_precision\":{\"confianza\":0.8,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"dia\"},\"lugar_suceso\":{\"confianza\":0.8,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}},\"objetivo_categoria\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"aeropuerto\"},\"objetivo_conocido\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":true},\"objetivo_nombre\":{\"confianza\":0.95,\"frase\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"fuente\":1,\"valor\":\"Flughafen Leipzig/Halle\"},\"pais\":{\"confianza\":0.8,\"frase\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"fuente\":1,\"valor\":\"DE\"},\"presencia_dron\":{\"confianza\":0.6,\"frase\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"confirmada\"},\"tipo\":{\"confianza\":0.85,\"frase\":\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"fuente\":1,\"valor\":\"interrupcion_aeroportuaria\"},\"titulo_en\":\"Drone briefly forces closure of a runway at Leipzig/Halle airport\",\"titulo_es\":\"Un dron obliga a cerrar brevemente una pista del aeropuerto de Leipzig/Halle\"},\"incidente\":\"EODI-2026-00773\",\"modelo\":\"modelo-experto\",\"motivos\":[]}"
+}
+],
+"incidentes": [
+{
+"id": "EODI-2026-00770",
+"tipo": "interrupcion_aeroportuaria",
+"estado": "confirmado",
+"documento": "{\"afirmaciones\":[{\"campo\":\"cierre\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"si\"},{\"campo\":\"dron_estatal\",\"confianza_extraccion\":0.5,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":false},{\"campo\":\"drones\",\"confianza_extraccion\":0.5,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":1,\"min\":1}},{\"campo\":\"es_incidente\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true},{\"campo\":\"inicio\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-07\"},{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"},{\"campo\":\"localidad\",\"confianza_extraccion\":0.7,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Leipzig/Halle\"},{\"campo\":\"lugar_suceso\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}},{\"campo\":\"objetivo_categoria\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"aeropuerto\"},{\"campo\":\"objetivo_conocido\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true},{\"campo\":\"objetivo_nombre\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Flughafen Leipzig/Halle\"},{\"campo\":\"pais\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"},{\"campo\":\"tipo\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"}],\"consecuencias\":{\"cierre\":{\"valor\":\"si\"}},\"control\":{\"alta\":{\"precision\":\"minuto\",\"valor\":\"2026-11-09T13:17Z\"},\"candidato\":\"CAND-20261109T1215-EDDP-aeropuerto\",\"huella_fuentes\":\"8b62f6dcf03854ba5270f6357e1cab90b153bf415760b4f4240827e4ccda7657\",\"modelos\":{\"cierre\":\"modelo-experto\",\"dron_estatal\":\"modelo-experto\",\"drones\":\"modelo-experto\",\"es_incidente\":\"modelo-experto\",\"inicio\":\"modelo-experto\",\"inicio_precision\":\"modelo-experto\",\"localidad\":\"modelo-experto\",\"lugar_suceso\":\"modelo-experto\",\"objetivo_categoria\":\"modelo-experto\",\"objetivo_conocido\":\"modelo-experto\",\"objetivo_nombre\":\"modelo-experto\",\"pais\":\"modelo-experto\",\"presencia_dron\":\"modelo-experto\",\"tipo\":\"modelo-experto\"},\"ultima_actualizacion\":{\"precision\":\"minuto\",\"valor\":\"2026-11-10T00:17Z\"},\"version_extractor\":\"ficha/5\"},\"drones\":{\"numero\":{\"max\":1,\"min\":1}},\"estado\":{\"actual\":\"confirmado\",\"historial\":[{\"estado\":\"notificado\",\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fuente_id\":\"gdelt-8b62f6dcf03854ba\"},{\"estado\":\"confirmado\",\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fuente_id\":\"gdelt-8b62f6dcf03854ba-declaracion-1\"},{\"estado\":\"notificado\",\"fecha\":{\"precision\":\"minuto\",\"valor\":\"2026-11-09T14:17Z\"},\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"motivo\":{\"en\":\"No official source gives the status «confirmado» (record check).\",\"es\":\"Ninguna fuente oficial da el estado «confirmado» (control de fichas).\"}},{\"estado\":\"confirmado\",\"fecha\":{\"precision\":\"dia\",\"valor\":\"2026-11-09T00:00Z\"},\"fuente_id\":\"revisada-075b924003cc4f3f-declaracion-1\"}]},\"fuentes\":[{\"campos_respaldados\":[\"cierre\",\"dron_estatal\",\"drones\",\"es_incidente\",\"inicio\",\"inicio_precision\",\"localidad\",\"lugar_suceso\",\"objetivo_categoria\",\"objetivo_conocido\",\"objetivo_nombre\",\"pais\",\"presencia_dron\",\"tipo\"],\"credibilidad\":3,\"enlace\":\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\",\"es_autoridad\":false,\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fiabilidad\":\"C\",\"frase_origen\":\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\",\"id\":\"gdelt-8b62f6dcf03854ba\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"welt.de\",\"publica\":true,\"replicas\":0},{\"campos_respaldados\":[\"estado\",\"presencia_dron\"],\"credibilidad\":1,\"enlace\":\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\",\"es_autoridad\":false,\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fiabilidad\":\"C\",\"frase_origen\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"id\":\"gdelt-8b62f6dcf03854ba-declaracion-1\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"Polizei (declaración oficial citada en welt.de)\",\"publica\":false,\"replicas\":0},{\"campos_respaldados\":[\"estado\",\"presencia_dron\"],\"credibilidad\":1,\"enlace\":\"https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/\",\"es_autoridad\":true,\"fecha\":{\"precision\":\"dia\",\"valor\":\"2026-11-09T00:00Z\"},\"fiabilidad\":\"B\",\"frase_origen\":\"Im Rahmen eines Tuning-Events stieg am Samstag gegen 19:20 Uhr eine Drohne über dem Gelände des Autohofs Leipzig-Flughafen auf eine Höhe von 50 Metern auf.\",\"id\":\"revisada-075b924003cc4f3f-declaracion-1\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"Polizei Leipzig (declaración oficial citada en news.de)\",\"publica\":true,\"replicas\":0},{\"campos_respaldados\":[\"estado\",\"presencia_dron\"],\"credibilidad\":1,\"enlace\":\"https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/\",\"es_autoridad\":true,\"fecha\":{\"precision\":\"dia\",\"valor\":\"2026-11-09T00:00Z\"},\"fiabilidad\":\"B\",\"frase_origen\":\"Im Zuge der Drohnensichtung wurde der Flugbetrieb auf der Südpiste für wenige Minuten gesperrt.\",\"id\":\"revisada-33e390af7d6f0279-declaracion-1\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"Polizei Leipzig (declaración oficial citada en news.de)\",\"publica\":true,\"replicas\":0}],\"id\":\"EODI-2026-00770\",\"lugar\":{\"geocodificacion\":\"nomenclator\",\"localidad\":\"Leipzig/Halle\",\"nivel\":\"instalacion\",\"pais\":\"DE\",\"punto\":{\"lat\":51.42105,\"lon\":12.23654},\"radio_km\":5.0,\"region\":\"Sachsen\",\"suceso\":\"Flughafen Leipzig/Halle\"},\"objetivo\":{\"categoria\":\"aeropuerto\",\"nombre\":\"Flughafen Leipzig/Halle\",\"oaci\":\"EDDP\"},\"presencia_dron\":\"confirmada\",\"pruebas\":{\"dron_estatal\":false,\"entrada_exterior\":false,\"evidencia\":[]},\"relacionados\":[{\"id\":\"EODI-2026-00773\",\"nota\":{\"en\":\"It merged into one record for Saturday 7 November 2026 the two runway closures at Leipzig/Halle airport caused by drones that, according to the police, happened on Saturday and on Sunday: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.» (welt.de, dpa, 9 November 2026). They are two events, one on each day.\",\"es\":\"Juntaba en una ficha del sábado 7 de noviembre de 2026 los dos cierres de pista del aeropuerto de Leipzig/Halle por drones que, según la policía, hubo el sábado y el domingo: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.» (welt.de, dpa, 9 de noviembre de 2026). Son dos sucesos, uno cada día.\"},\"separado_de\":\"EODI-2026-00770\"}],\"tiempo\":{\"inicio\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-07T18:20Z\"},\"origen_inicio\":{\"motivo\":\"el dron del sábado subió hacia las 19:20 hora de Alemania del 7 de noviembre de 2026 (18:20 UTC), según la policía (revisado el 9 de noviembre de 2026)\",\"tipo\":\"explicita\"}},\"tipo\":\"interrupcion_aeroportuaria\",\"titulo\":{\"en\":\"A drone closes the southern runway at Leipzig/Halle airport for a few minutes\",\"es\":\"Un dron obliga a cerrar unos minutos la pista sur del aeropuerto de Leipzig/Halle\"},\"zona\":{\"distancia_km\":613,\"grupo\":\"interior\",\"motivo\":\"lejos_de_la_frontera\"}}"
+},
+{
+"id": "EODI-2026-00773",
+"tipo": "interrupcion_aeroportuaria",
+"estado": "confirmado",
+"documento": "{\"afirmaciones\":[{\"campo\":\"drones\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":1,\"min\":1}},{\"campo\":\"es_incidente\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true},{\"campo\":\"inicio\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-08\"},{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"},{\"campo\":\"objetivo_conocido\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true},{\"campo\":\"pais\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"},{\"campo\":\"tipo\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"},{\"campo\":\"localidad\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Leipzig/Halle\"},{\"campo\":\"lugar_suceso\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}},{\"campo\":\"objetivo_categoria\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"aeropuerto\"},{\"campo\":\"objetivo_nombre\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Flughafen Leipzig/Halle\"},{\"campo\":\"cierre\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"si\"}],\"consecuencias\":{\"cierre\":{\"valor\":\"si\"}},\"control\":{\"alta\":{\"precision\":\"minuto\",\"valor\":\"2026-11-09T17:17Z\"},\"candidato\":\"CAND-20261109T1215-EDDP-aeropuerto-2\",\"huella_fuentes\":\"8b62f6dcf03854ba5270f6357e1cab90b153bf415760b4f4240827e4ccda7657\",\"modelos\":{\"cierre\":\"modelo-experto\",\"cierre_minutos\":\"modelo-base\",\"drones\":\"modelo-experto\",\"es_incidente\":\"modelo-experto\",\"inicio\":\"modelo-experto\",\"inicio_precision\":\"modelo-experto\",\"lugar_suceso\":\"modelo-experto\",\"objetivo_categoria\":\"modelo-experto\",\"objetivo_conocido\":\"modelo-experto\",\"objetivo_nombre\":\"modelo-experto\",\"pais\":\"modelo-experto\",\"presencia_dron\":\"modelo-experto\",\"tipo\":\"modelo-experto\"},\"ultima_actualizacion\":{\"precision\":\"minuto\",\"valor\":\"2026-11-10T06:17Z\"},\"version_extractor\":\"ficha/5\"},\"drones\":{\"numero\":{\"max\":1,\"min\":1}},\"estado\":{\"actual\":\"confirmado\",\"historial\":[{\"estado\":\"notificado\",\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fuente_id\":\"gdelt-8b62f6dcf03854ba\"},{\"estado\":\"confirmado\",\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fuente_id\":\"gdelt-8b62f6dcf03854ba-declaracion-1\"},{\"estado\":\"notificado\",\"fecha\":{\"precision\":\"minuto\",\"valor\":\"2026-11-09T18:17Z\"},\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"motivo\":{\"en\":\"No official source gives the status «confirmado» (record check).\",\"es\":\"Ninguna fuente oficial da el estado «confirmado» (control de fichas).\"}},{\"estado\":\"confirmado\",\"fecha\":{\"precision\":\"dia\",\"valor\":\"2026-11-09T00:00Z\"},\"fuente_id\":\"revisada-25b7908b1e9c49dd-declaracion-1\"}]},\"fuentes\":[{\"campos_respaldados\":[\"cierre\",\"drones\",\"es_incidente\",\"inicio\",\"inicio_precision\",\"lugar_suceso\",\"objetivo_categoria\",\"objetivo_conocido\",\"objetivo_nombre\",\"pais\",\"presencia_dron\",\"tipo\"],\"credibilidad\":3,\"enlace\":\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\",\"es_autoridad\":false,\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fiabilidad\":\"C\",\"frase_origen\":\"Am Wochenende mussten in Leipzig/Halle zwei Landebahnen zeitweise gesperrt werden.\",\"id\":\"gdelt-8b62f6dcf03854ba\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"welt.de\",\"publica\":true,\"replicas\":0},{\"campos_respaldados\":[\"estado\",\"presencia_dron\"],\"credibilidad\":1,\"enlace\":\"https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html\",\"es_autoridad\":false,\"fecha\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-09T12:15Z\"},\"fiabilidad\":\"C\",\"frase_origen\":\"Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.\",\"id\":\"gdelt-8b62f6dcf03854ba-declaracion-1\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"Polizei (declaración oficial citada en welt.de)\",\"publica\":false,\"replicas\":0},{\"campos_respaldados\":[\"estado\",\"presencia_dron\"],\"credibilidad\":1,\"enlace\":\"https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/\",\"es_autoridad\":true,\"fecha\":{\"precision\":\"dia\",\"valor\":\"2026-11-09T00:00Z\"},\"fiabilidad\":\"B\",\"frase_origen\":\"Am Sonntag behinderte erneut eine Drohne den Flugbetrieb.\",\"id\":\"revisada-25b7908b1e9c49dd-declaracion-1\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"Polizei Leipzig (declaración oficial citada en news.de)\",\"publica\":true,\"replicas\":0},{\"campos_respaldados\":[\"estado\",\"presencia_dron\"],\"credibilidad\":1,\"enlace\":\"https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/\",\"es_autoridad\":true,\"fecha\":{\"precision\":\"dia\",\"valor\":\"2026-11-09T00:00Z\"},\"fiabilidad\":\"B\",\"frase_origen\":\"Aus diesem Grund wurde vorsorglich die Nordpiste für eine halbe Stunde gesperrt.\",\"id\":\"revisada-4e69782f330798ca-declaracion-1\",\"idioma\":\"de\",\"interna_fuera_de_ucrania\":false,\"medio\":\"Polizei Leipzig (declaración oficial citada en news.de)\",\"publica\":true,\"replicas\":0}],\"id\":\"EODI-2026-00773\",\"lugar\":{\"geocodificacion\":\"nomenclator\",\"localidad\":\"Leipzig/Halle\",\"nivel\":\"instalacion\",\"pais\":\"DE\",\"punto\":{\"lat\":51.42105,\"lon\":12.23654},\"radio_km\":5.0,\"region\":\"Sachsen\",\"suceso\":\"Flughafen Leipzig/Halle\"},\"objetivo\":{\"categoria\":\"aeropuerto\",\"nombre\":\"Flughafen Leipzig/Halle\",\"oaci\":\"EDDP\"},\"presencia_dron\":\"confirmada\",\"pruebas\":{\"dron_estatal\":false,\"entrada_exterior\":false,\"evidencia\":[]},\"relacionados\":[{\"id\":\"EODI-2026-00770\",\"nota\":{\"en\":\"It merged into one record for Saturday 7 November 2026 the two runway closures at Leipzig/Halle airport caused by drones that, according to the police, happened on Saturday and on Sunday: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.» (welt.de, dpa, 9 November 2026). They are two events, one on each day.\",\"es\":\"Juntaba en una ficha del sábado 7 de noviembre de 2026 los dos cierres de pista del aeropuerto de Leipzig/Halle por drones que, según la policía, hubo el sábado y el domingo: «Wie die Polizei mitteilte, wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt.» (welt.de, dpa, 9 de noviembre de 2026). Son dos sucesos, uno cada día.\"},\"separado_de\":\"EODI-2026-00770\"}],\"tiempo\":{\"inicio\":{\"precision\":\"aproximada\",\"valor\":\"2026-11-08T07:15Z\"},\"origen_inicio\":{\"motivo\":\"el dron del domingo 8 de noviembre de 2026 se detectó hacia las 8:15 hora de Alemania (7:15 UTC), según la policía («Zeit: … 08.11.2026, gegen 08:15 Uhr»); la ficha decía el sábado 7, el día de la fic\",\"tipo\":\"explicita\"}},\"tipo\":\"interrupcion_aeroportuaria\",\"titulo\":{\"en\":\"A drone closes the northern runway at Leipzig/Halle airport for half an hour\",\"es\":\"Un dron obliga a cerrar media hora la pista norte del aeropuerto de Leipzig/Halle\"},\"zona\":{\"distancia_km\":613,\"grupo\":\"interior\",\"motivo\":\"lejos_de_la_frontera\"}}"
+}
+],
+"controles": [
+{
+"clave": "entrada:EODI-2026-00770",
+"fecha": "2026-11-09T13:17:03Z",
+"documento": "{\"autoridades\":{},\"autoridades_fuera\":{\"Polizei\":\"ninguna frase la nombra con su país\"},\"cambios\":[\"declaración no oficial: gdelt-8b62f6dcf03854ba-declaracion-1\",\"estado sin fuente oficial: notificado\"],\"conjunto\":1,\"decision\":\"publicar\",\"duda\":false,\"dudosas\":[],\"fecha\":\"2026-11-09T13:17:03Z\",\"frase_fecha\":[\"gdelt-8b62f6dcf03854ba\",\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt\"],\"frase_lugar\":[\"gdelt-8b62f6dcf03854ba\",\"den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt\"],\"huella\":\"652c26e0e46a27c9|2026-11-07T00:00Z\",\"motivo_en\":\"This is a new incident at Leipzig/Halle (Saturday 7 November), unrelated to the Munich record; the source does not say which country the Polizei belongs to.\",\"motivo_es\":\"Es un suceso nuevo en Leipzig/Halle (sábado 7 de noviembre), sin relación con la ficha de Múnich; la fuente no dice de qué país es la Polizei.\",\"repetida\":true,\"version\":\"entrada/1\"}"
+},
+{
+"clave": "entrada:EODI-2026-00773",
+"fecha": "2026-11-09T17:17:04Z",
+"documento": "{\"autoridades\":{},\"autoridades_fuera\":{\"Polizei\":\"ninguna frase la nombra con su país\"},\"cambios\":[\"declaración no oficial: gdelt-8b62f6dcf03854ba-declaracion-1\",\"estado sin fuente oficial: notificado\"],\"conjunto\":2,\"decision\":\"publicar\",\"duda\":false,\"dudosas\":[],\"fecha\":\"2026-11-09T17:17:04Z\",\"frase_fecha\":[\"gdelt-8b62f6dcf03854ba\",\"wurde am Samstag und Sonntag jeweils eine der beiden Landebahnen kurzzeitig gesperrt\"],\"frase_lugar\":[\"gdelt-8b62f6dcf03854ba\",\"Zwei Drohnen haben am Wochenende den Betrieb des Flughafens Leipzig/Halle vorübergehend beeinträchtigt.\"],\"huella\":\"652c26e0e46a27c9|2026-11-07T00:00Z\",\"motivo_en\":\"New incident at Leipzig/Halle on Saturday 7 November; it matches no existing record, and the source does not state which country the police belong to.\",\"motivo_es\":\"Suceso nuevo en Leipzig/Halle el sábado 7 de noviembre; no coincide con ninguna ficha existente, y la fuente no dice de qué país es la policía.\",\"repetida\":true,\"version\":\"entrada/1\"}"
+}
+],
+"cursores": [
+{
+"fuente_id": "revisados:separar:EODI-2026-00770",
+"documento": "{\"conservado_perdio\":false,\"fecha\":\"2026-11-09T17:17Z\",\"fuentes_conservadas\":[\"gdelt-8b62f6dcf03854ba\",\"gdelt-8b62f6dcf03854ba-declaracion-1\"],\"partes\":[{\"candidato\":\"CAND-20261109T1215-EDDP-aeropuerto\",\"vueltos\":[]},{\"candidato\":\"CAND-20261109T1215-EDDP-aeropuerto-2\",\"vueltos\":[]}]}"
+}
+],
+"articulos": [
+{
+"url": "https://welt.de/regionales/sachsen/article6af1b0fd79e1656222c37306/drohnen-behindern-betrieb-am-flughafen-leipzig-halle.html",
+"medio": "welt.de",
+"fecha": "2026-11-09T12:15:00Z",
+"idioma": "de",
+"pais": "DE",
+"titular": "Drohnen behindern Betrieb am Flughafen Leipzig/Halle",
+"titular_normalizado": "drohnen behindern betrieb am flughafen leipzig halle",
+"temas": "[\"AFFECT\",\"DRONES\",\"LEGISLATION\",\"SECURITY_SERVICES\",\"TRAFFIC\"]",
+"lugares": "[\"EDDP\"]",
+"replicas": 0,
+"candidato": "CAND-20261109T1215-EDDP-aeropuerto-2"
+}
+],
+"afirmaciones": [
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "cierre",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"cierre\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"si\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "dron_estatal",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"dron_estatal\",\"confianza_extraccion\":0.5,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":false}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "drones",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"drones\",\"confianza_extraccion\":0.5,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":1,\"min\":1}}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "drones",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"drones\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":2,\"min\":2}}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "es_incidente",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"es_incidente\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "es_incidente",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"es_incidente\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "fin",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"fin\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-08\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "inicio",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio\",\"confianza_extraccion\":0.7,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-07\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "inicio",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-07\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "inicio",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-07\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "inicio_precision",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "inicio_precision",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "localidad",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"localidad\",\"confianza_extraccion\":0.7,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Leipzig/Halle\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "lugar_suceso",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"lugar_suceso\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "objetivo_categoria",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_categoria\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"aeropuerto\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "objetivo_conocido",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_conocido\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "objetivo_conocido",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_conocido\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "objetivo_nombre",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_nombre\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Flughafen Leipzig/Halle\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "presencia_dron",
+"fuente_id": "revisada-075b924003cc4f3f-declaracion-1",
+"documento": "{\"campo\":\"presencia_dron\",\"confianza_extraccion\":1.0,\"fuente_id\":\"revisada-075b924003cc4f3f-declaracion-1\",\"valor\":\"confirmada\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "tipo",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"tipo\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"}"
+},
+{
+"entidad_id": "EODI-2026-00770",
+"campo": "tipo",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"tipo\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "cierre",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"cierre\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"si\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "cierre",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"cierre\",\"confianza_extraccion\":0.7,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"si\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "cierre",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"cierre\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"si\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "dron_estatal",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"dron_estatal\",\"confianza_extraccion\":0.5,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":false}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "drones",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"drones\",\"confianza_extraccion\":0.5,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":1,\"min\":1}}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "drones",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"drones\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":1,\"min\":1}}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "drones",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"drones\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"max\":2,\"min\":2}}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "es_incidente",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"es_incidente\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "es_incidente",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"es_incidente\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "fin",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"fin\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-08\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "inicio",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio\",\"confianza_extraccion\":0.7,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-07\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "inicio",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-08\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "inicio",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"2026-11-08\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "inicio_precision",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "inicio_precision",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "inicio_precision",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"inicio_precision\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"dia\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "localidad",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"localidad\",\"confianza_extraccion\":0.6,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Leipzig/Halle\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "lugar_suceso",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"lugar_suceso\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "lugar_suceso",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"lugar_suceso\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"\"}}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "lugar_suceso",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"lugar_suceso\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":{\"nivel\":\"instalacion\",\"nombre\":\"Flughafen Leipzig/Halle\",\"pais\":\"DE\",\"region\":\"Sachsen\"}}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "objetivo_categoria",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_categoria\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"aeropuerto\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "objetivo_conocido",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_conocido\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":true}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "objetivo_nombre",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"objetivo_nombre\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"Flughafen Leipzig/Halle\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.9,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "pais",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"pais\",\"confianza_extraccion\":0.95,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"DE\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "presencia_dron",
+"fuente_id": "revisada-25b7908b1e9c49dd-declaracion-1",
+"documento": "{\"campo\":\"presencia_dron\",\"confianza_extraccion\":1.0,\"fuente_id\":\"revisada-25b7908b1e9c49dd-declaracion-1\",\"valor\":\"confirmada\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "tipo",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"tipo\",\"confianza_extraccion\":0.7,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "tipo",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"tipo\",\"confianza_extraccion\":0.8,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"}"
+},
+{
+"entidad_id": "EODI-2026-00773",
+"campo": "tipo",
+"fuente_id": "gdelt-8b62f6dcf03854ba",
+"documento": "{\"campo\":\"tipo\",\"confianza_extraccion\":0.85,\"fuente_id\":\"gdelt-8b62f6dcf03854ba\",\"valor\":\"interrupcion_aeroportuaria\"}"
+}
+]
+}
