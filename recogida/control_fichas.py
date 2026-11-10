@@ -544,7 +544,7 @@ def reaplicar_uniones(
     con la declaración del primer ministro de Luxemburgo (auditoría L)."""
     pares: dict[tuple[str, str], str | None] = {}
     for decision in decisiones.values():
-        if decision.get("decision") == "mismo" and "conserva" in decision:
+        if una_union(decision):
             pares[(decision["conserva"], decision["une"])] = decision["motivo_es"]
     for fusion in almacen.fusiones():
         if not fusion["revertida"] and fusion["motivo"].startswith(
@@ -574,6 +574,14 @@ def reaplicar_uniones(
     return rehechas
 
 
+def una_union(decision: Documento) -> bool:
+    """La decisión es una unión hecha: «mismo», con la ficha que queda y la que se une. Una
+    retrospectiva que el experto da por el mismo suceso y no se pudo unir (el par no se junta) se
+    guarda como propuesta, con «conserva» y sin «une»: no es una unión, y leerle «une» paraba el
+    control entero en cada pasada (las fichas nuevas de esa hora salían sin su filtro)."""
+    return decision.get("decision") == "mismo" and "conserva" in decision and "une" in decision
+
+
 def conservar_la_mas_antigua(
     almacen: Almacen, decisiones: dict[str, Documento], ahora: datetime, modelos: frozenset[str]
 ) -> dict[str, Documento]:
@@ -588,7 +596,7 @@ def conservar_la_mas_antigua(
     vigentes = {**decisiones}
     for clave in sorted(vigentes):
         decision = vigentes[clave]
-        if decision.get("decision") != "mismo" or "conserva" not in decision:
+        if not una_union(decision):
             continue
         nuevo_id, viejo_id = decision["conserva"], decision["une"]
         if reglas.orden_registro(viejo_id) >= reglas.orden_registro(nuevo_id):
