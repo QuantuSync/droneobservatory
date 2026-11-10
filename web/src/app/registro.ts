@@ -22,7 +22,19 @@ export function sitioConApp(nombre: string): boolean {
 }
 
 /** Prefijos de lo que se manda guardar: lo mismo que acepta public/sw.js (reglaDe). */
-const GUARDABLES = ["/assets/", "/datos/", "/mapa/", "/iconos/", "/banderas/", "/marca/", "/arranque.js"];
+const GUARDABLES = [
+  "/assets/",
+  "/datos/",
+  "/mapa/",
+  "/iconos/",
+  "/banderas/",
+  "/marca/",
+  "/avisos/qr/",
+  "/arranque.js",
+  "/visitas.js",
+  "/favicon.svg",
+  "/favicon.ico",
+];
 /** Cuánto se espera para mandar juntas las descargas nuevas. */
 const TANDA_MS = 1500;
 

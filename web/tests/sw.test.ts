@@ -143,6 +143,28 @@ describe("reglas de caché", () => {
     expect(regla(`${ORIGEN}/apple-touch-icon.png`)).toBe("estatico");
   });
 
+  it("una navegación a un fichero (una descarga, el mapa del sitio, una imagen) no es una página", () => {
+    for (const ruta of [
+      "/datos/incidentes.csv",
+      "/datos/incidentes.geojson",
+      "/sitemap.xml",
+      "/llms.txt",
+      "/robots.txt",
+      "/compartir.png",
+      "/compartir/EODI-2026-00719.png",
+      "/avisos/qr/eodi.svg",
+    ]) {
+      expect(regla(`${ORIGEN}${ruta}`, { mode: "navigate" }), ruta).toBeNull();
+    }
+    // Las páginas, con o sin .html, siguen siéndolo.
+    for (const ruta of ["/", "/en", "/EODI-2026-00719", "/paises/de", "/en/methodology", "/404.html"]) {
+      expect(regla(`${ORIGEN}${ruta}`, { mode: "navigate" }), ruta).toBe("pagina");
+    }
+    // Y lo mismo, pedido por la página, sigue guardándose como dato o como estático.
+    expect(regla(`${ORIGEN}/datos/incidentes.geojson`)).toBe("datos");
+    expect(regla(`${ORIGEN}/avisos/qr/eodi.svg`)).toBe("estatico");
+  });
+
   it("nunca el mapa de fondo, /api/, las versiones, otros sitios, Range ni lo que no es GET", () => {
     expect(regla(`${ORIGEN}/almacen/europa-z14.pmtiles`)).toBeNull();
     expect(regla(`${ORIGEN}/almacen/estado.json`)).toBeNull();
@@ -267,6 +289,26 @@ describe("peticiones aparte (Safari corta las de la página que se va)", () => {
       expect((vista as Request).signal.aborted).toBe(false);
       expect((vista as Request).credentials).toBe("same-origin");
     }
+  });
+});
+
+describe("los reintentos sin caché llegan a la red sin caché", () => {
+  it("la petición aparte conserva «no-cache» y «reload»; lo demás va con la caché del navegador", async () => {
+    const vistas: Request[] = [];
+    const manejador = sw.crearManejador({
+      cajas: new CajasFalsas(),
+      origen: ORIGEN,
+      pedir: (p) => {
+        vistas.push(p as Request);
+        return Promise.resolve(respuesta("x"));
+      },
+      avisar: async () => undefined,
+    });
+    await manejador.responder(new Request(`${ORIGEN}/datos/resumen.json`, { cache: "no-cache" }));
+    await manejador.responder(new Request(`${ORIGEN}/assets/a-2.js`, { cache: "reload" }));
+    await manejador.responder(new Request(`${ORIGEN}/datos/estado.json`));
+    await manejador.responder(new Request(`${ORIGEN}/mapa/tierra.geojson`, { cache: "force-cache" }));
+    expect(vistas.map((v) => v.cache)).toEqual(["no-cache", "reload", "default", "default"]);
   });
 });
 
