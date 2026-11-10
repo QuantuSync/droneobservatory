@@ -490,19 +490,33 @@ def partes_sin_datos_propios(base: Path) -> set[str]:
     no se ha vuelto a extraer desde que la lleva. Leídas sin escribir en la base. No se avisan
     hasta tenerlos: el 9 de noviembre de 2026 a las 17:42 UTC salió el aviso de EODI-2026-00773,
     recién separada, con los datos de la ficha mezclada (dos drones y el sábado)."""
+    from recogida import revisados
+
     conexion = sqlite3.connect(f"{base.resolve().as_uri()}?mode=ro", uri=True)
     try:
+        revisiones = {str(r["incidente"]): r for r in revisados.cargar().get("separar", [])}
         cursores = conexion.execute(
-            "SELECT documento FROM cursores WHERE fuente_id LIKE ?", (CURSOR_SEPARAR + "%",)
+            "SELECT fuente_id, documento FROM cursores WHERE fuente_id LIKE ?",
+            (CURSOR_SEPARAR + "%",),
         ).fetchall()
         partes: set[str] = set()
-        for (documento,) in cursores:
-            propios = {
-                str(p["candidato"]) for p in json.loads(documento).get("partes", [])
-                if isinstance(p, dict) and p.get("candidato")
+        for fuente_id, documento in cursores:
+            revision = revisiones.get(str(fuente_id)[len(CURSOR_SEPARAR) :])
+            hecho = json.loads(documento)
+            # Solo las separaciones cuyos candidatos llevan su parte (revisados.lleva_parte): las
+            # anteriores al 9 de noviembre de 2026 y las de un solo suceso no la llevan nunca, y
+            # sus fichas se quedarían sin aviso para siempre.
+            if revision is None or not revisados.lleva_parte(revision, hecho):
+                continue
+            entradas = hecho.get("partes", [])
+            if len(entradas) != len(revision["partes"]):
+                continue
+            partes |= {
+                str(entrada["candidato"])
+                for parte, entrada in zip(revision["partes"], entradas, strict=True)
+                if parte.get("es_suceso", True) and isinstance(entrada, dict)
+                and entrada.get("candidato")
             }  # fmt: skip
-            if len(propios) >= 2:
-                partes |= propios
         sin_datos: set[str] = set()
         for id_ in sorted(partes):
             fila = conexion.execute("SELECT documento FROM candidatos WHERE id = ?", (id_,))

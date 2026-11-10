@@ -195,3 +195,19 @@ def test_sin_aviso_hasta_tener_sus_datos(tmp_path: Path) -> None:
     almacen.corregir_candidatos([posterior], "prueba")
     almacen.cerrar()
     assert avisos.partes_sin_datos_propios(ruta) == {DOMINGO}
+
+
+def test_las_separaciones_sin_parte_se_avisan(tmp_path: Path) -> None:
+    """Una separación repartida antes del 9 de noviembre de 2026 no pone «parte» a sus candidatos:
+    sus fichas no esperan nada y no se quedan sin aviso."""
+    ruta = tmp_path / "eodi.sqlite"
+    almacen = _almacen(ruta)
+    clave = revisados.CURSOR_SEPARAR + SABADO
+    hecho = almacen.cursor(clave)
+    assert hecho is not None
+    almacen.guardar_cursor(clave, {**hecho, "fecha": "2026-11-08T17:17Z"})
+    almacen.corregir_candidatos(
+        [{k: v for k, v in c.items() if k != "parte"} for c in almacen.candidatos()], "prueba"
+    )
+    almacen.cerrar()
+    assert avisos.partes_sin_datos_propios(ruta) == set()
