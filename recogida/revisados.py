@@ -1099,19 +1099,28 @@ def _extraido_antes(almacen: Almacen, candidato: Documento, hecho: Documento) ->
 PARTE_DESDE = "2026-11-09T00:00Z"
 
 
+def lleva_parte(revision: Documento, hecho: Documento) -> bool:
+    """La separación reparte dos sucesos o más y se repartió de PARTE_DESDE en adelante: los
+    candidatos de sus sucesos llevan su «parte». Las demás (las anteriores y las de un solo
+    suceso) no la llevan nunca, y sus fichas ya tienen los datos que van a tener."""
+    sucesos = sum(1 for p in revision["partes"] if p.get("es_suceso", True))
+    return (
+        sucesos >= 2
+        and bool(hecho.get("fecha"))
+        and _fecha_articulo({"fecha": hecho["fecha"]}) >= _fecha_articulo({"fecha": PARTE_DESDE})
+    )
+
+
 def _con_parte(
     almacen: Almacen, revision: Documento, parte: Documento, candidato: Documento,
     hecho: Documento, ahora: datetime,
 ) -> Documento:  # fmt: skip
     """El candidato de una parte con su «parte» (fecha, descripción y desde cuándo), guardado
     una vez, si la separación tiene dos sucesos o más y es de PARTE_DESDE en adelante."""
-    sucesos = sum(1 for p in revision["partes"] if p.get("es_suceso", True))
     if (
         candidato.get("parte")
         or not parte.get("es_suceso", True)
-        or sucesos < 2
-        or not hecho.get("fecha")
-        or _fecha_articulo({"fecha": hecho["fecha"]}) < _fecha_articulo({"fecha": PARTE_DESDE})
+        or not lleva_parte(revision, hecho)
     ):
         return candidato
     nuevo = {
