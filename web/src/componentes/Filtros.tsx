@@ -114,7 +114,8 @@ export function Filtros(props: Props) {
     onSeleccion({ clase: "entre", periodo: nuevo });
   }
 
-  const campo = "control min-h-11 rounded-sm border border-linea px-2 text-xs text-texto esc:min-h-8";
+  // En pantalla táctil, 16 px: con menos, Safari del iPhone amplía la página al enfocar el campo.
+  const campo = "control min-h-11 rounded-sm border border-linea px-2 text-xs text-texto tactil:text-base esc:min-h-8";
   return (
     <div role="group" aria-label={t.filtros.titulo} className="flex flex-col gap-4" data-filtros="">
       <div className="flex flex-col gap-1.5">

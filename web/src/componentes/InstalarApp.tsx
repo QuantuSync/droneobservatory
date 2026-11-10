@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 
 import { instalar, useInstalacion } from "../app/instalar.ts";
 import type { Textos } from "../i18n/index.ts";
+import { movimientoReducido } from "../mapa/animacion.ts";
 
 interface Props {
   t: Textos;
@@ -40,7 +41,7 @@ export function InstalarApp({ t, grande = false }: Props) {
   // Al abrirse, los pasos se desplazan a la vista dentro del menú: en el teléfono quedaban bajo el
   // pie fijo de «Aplicar». Solo se desplaza el menú, nunca el mapa.
   useEffect(() => {
-    if (pasos) cajaPasos.current?.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
+    if (pasos) cajaPasos.current?.scrollIntoView?.({ block: "nearest", behavior: movimientoReducido() ? "auto" : "smooth" });
   }, [pasos]);
   if (modo === null) return null;
   const clase = grande
