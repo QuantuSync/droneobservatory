@@ -78,7 +78,8 @@ export function BotonAvisos({
 }
 
 const ENLACE = "enlace-texto text-texto underline decoration-secundario underline-offset-2 hover:decoration-acento";
-const CAMPO = "control min-h-11 w-full rounded-sm border border-linea px-2 text-sm text-texto esc:min-h-9";
+// En pantalla táctil, 16 px: con menos, Safari del iPhone amplía la página al enfocar el campo.
+const CAMPO = "control min-h-11 w-full rounded-sm border border-linea px-2 text-sm text-texto tactil:text-base esc:min-h-9";
 /** El botón «Suscribirme»: grande y con el estilo de la acción principal («Aplicar»). */
 const BOTON_GRANDE = "control control-principal min-h-12 min-w-0 flex-1 rounded-sm px-4 text-center text-base esc:text-base";
 /** Los dos pasos del teléfono (instalar y suscribirse): el mismo botón, a todo el ancho. */

@@ -212,7 +212,7 @@ export function Metodologia({ t, idioma, abierta, actualizado, sinUbicacion, onC
       onClick={(evento) => {
         if (evento.target === dialogo.current) onCerrar();
       }}
-      className="m-0 ml-auto h-dvh max-h-none w-full max-w-2xl bg-panel-solido p-0 backdrop:bg-fondo/60"
+      className="m-0 ml-auto h-dvh max-h-none w-full max-w-2xl bg-panel-solido p-0 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] backdrop:bg-fondo/60"
     >
       <div className="flex h-full flex-col">
         <div className="flex items-center gap-3 border-b border-linea px-5 py-3">

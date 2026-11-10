@@ -146,7 +146,7 @@ export function Ayuda({ t, idioma, abierta, onCerrar }: Props) {
       onClick={(evento) => {
         if (evento.target === dialogo.current) onCerrar();
       }}
-      className="flotante m-auto max-h-[86vh] w-[min(92vw,40rem)] overflow-y-auto p-0 backdrop:bg-fondo/60"
+      className="flotante m-auto max-h-[86dvh] w-[min(92vw,40rem)] overflow-y-auto p-0 backdrop:bg-fondo/60"
     >
       <div className="flex items-center border-b border-linea px-5 py-3">
         <h2 id="ayuda-titulo" className="mr-auto text-lg font-semibold tracking-tight">

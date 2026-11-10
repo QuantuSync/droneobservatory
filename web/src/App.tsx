@@ -2137,7 +2137,8 @@ export function App() {
       >
         {t.saltarAlMapa}
       </a>
-      <div id="mapa" tabIndex={-1} className="absolute inset-0 outline-none">
+      {/* El contenido principal de la página, para quien navega por regiones con un lector de pantalla. */}
+      <main id="mapa" tabIndex={-1} className="absolute inset-0 outline-none">
         {mapaPermitido && !mapaFallido && avisoDeDatos === null && recientes !== null && (
           <Suspense fallback={null}>
             <Mapa
@@ -2196,7 +2197,7 @@ export function App() {
         <p className="sr-only" aria-live="polite" data-aviso-filtros="">
           {avisoFiltros === null ? "" : avisoFiltros.capas ? t.filtros.nadaALaVista : t.filtros.sinResultados}
         </p>
-      </div>
+      </main>
 
       {verEscritorio && (
         <div className="pointer-events-none relative z-10 flex h-full flex-col tel:hidden">

@@ -66,7 +66,7 @@ export function BarraMovil({
 }) {
   return (
     <header aria-label={t.cabecera.etiqueta} className="superficie border-b pt-[env(safe-area-inset-top)]">
-      <div className="flex min-h-11 items-center gap-2 pl-3 pr-1">
+      <div className="flex min-h-11 items-center gap-2 pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))]">
         <LogoPequeno lado={24} />
         {/* El nombre completo va siempre en inglés; en la barra del teléfono se ve la sigla. */}
         <h1 className="text-sm font-semibold text-texto">

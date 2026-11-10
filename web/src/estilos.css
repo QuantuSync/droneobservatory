@@ -390,7 +390,9 @@ body.pagina-texto {
 .texto-pagina {
   max-width: 64rem;
   margin: 0 auto;
-  padding: 0 1rem 2rem;
+  /* Con la muesca o la barra de gestos del teléfono (viewport-fit=cover), el texto no queda debajo. */
+  padding: 0 max(1rem, env(safe-area-inset-right)) calc(2rem + env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-left));
   font-size: 0.9375rem;
   line-height: 1.6;
   overflow-wrap: anywhere;
