@@ -525,10 +525,15 @@ def partes_sin_datos_propios(base: Path) -> set[str]:
                 ((json.loads(candidato[0]).get("parte") or {}).get("desde")) if candidato else None
             )
             ultima = conexion.execute(
-                "SELECT MAX(fecha) FROM extracciones WHERE candidato = ?", (id_,)
-            ).fetchone()[0]
-            extraida = _instante(ultima)
-            if desde is None or extraida is None or extraida < desde:
+                "SELECT fecha, json_extract(documento, '$.conservada') IS NOT NULL "
+                "FROM extracciones WHERE candidato = ? ORDER BY fecha DESC, id DESC LIMIT 1",
+                (id_,),
+            ).fetchone()
+            extraida = _instante(ultima[0]) if ultima else None
+            # Una extracción que deja la ficha publicada como estaba («conservada»: se repite
+            # con el experto, proceso/extraccion.py) no le ha dado sus datos.
+            conservada = bool(ultima and ultima[1])
+            if desde is None or extraida is None or extraida < desde or conservada:
                 sin_datos.add(id_)
         if not sin_datos:
             return set()

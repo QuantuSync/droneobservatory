@@ -211,3 +211,22 @@ def test_las_separaciones_sin_parte_se_avisan(tmp_path: Path) -> None:
     )
     almacen.cerrar()
     assert avisos.partes_sin_datos_propios(ruta) == set()
+
+
+def test_una_extraccion_que_conserva_la_ficha_no_le_da_sus_datos(tmp_path: Path) -> None:
+    """Si la extracción con su parte deja la ficha publicada como estaba (se repite con el
+    experto), la ficha sigue con los datos de antes: aún no se avisa."""
+    ruta = tmp_path / "eodi.sqlite"
+    almacen = _almacen(ruta)
+    fila = almacen.conexion.execute(
+        "SELECT id, documento FROM extracciones WHERE candidato = ? ORDER BY fecha DESC, id DESC "
+        "LIMIT 1", (CANDIDATO_DOMINGO,),
+    ).fetchone()  # fmt: skip
+    documento = {**json.loads(fila[1]), "conservada": ["publicada: se queda como estaba"]}
+    almacen.conexion.execute(
+        "UPDATE extracciones SET documento = ? WHERE id = ?",
+        (json.dumps(documento, ensure_ascii=False), fila[0]),
+    )
+    almacen.conexion.commit()
+    almacen.cerrar()
+    assert avisos.partes_sin_datos_propios(ruta) == {DOMINGO}
