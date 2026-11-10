@@ -12741,6 +12741,21 @@
       "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
       "pais": "DE",
       "motivo": "el titular contaba los dos días; esta ficha es la del domingo, con un dron y la pista norte cerrada media hora (revisado el 9 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00773",
+      "campo": "cierre",
+      "valor": {
+        "valor": "si",
+        "minutos": {
+          "min": 30,
+          "max": 30
+        }
+      },
+      "cita": "Aus diesem Grund wurde vorsorglich die Nordpiste für eine halbe Stunde gesperrt.",
+      "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
+      "pais": "DE",
+      "motivo": "la pista norte se cerró media hora, según la policía; el control de las fichas lo leía de la misma frase y el cerrojo lo retenía cada hora desde el 10 de noviembre de 2026"
     }
   ]
 }

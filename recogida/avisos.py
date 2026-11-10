@@ -480,6 +480,57 @@ def documentos(base: Path, ids: Iterable[str]) -> dict[str, Documento]:
         conexion.close()
 
 
+# Cursor de las separaciones revisadas a mano (recogida/revisados.CURSOR_SEPARAR).
+CURSOR_SEPARAR = "revisados:separar:"
+
+
+def partes_sin_datos_propios(base: Path) -> set[str]:
+    """Las fichas de las partes de una separación revisada en dos sucesos o más que aún no tienen
+    sus propios datos: su candidato no lleva su parte («parte», recogida/revisados._con_parte) o
+    no se ha vuelto a extraer desde que la lleva. Leídas sin escribir en la base. No se avisan
+    hasta tenerlos: el 9 de noviembre de 2026 a las 17:42 UTC salió el aviso de EODI-2026-00773,
+    recién separada, con los datos de la ficha mezclada (dos drones y el sábado)."""
+    conexion = sqlite3.connect(f"{base.resolve().as_uri()}?mode=ro", uri=True)
+    try:
+        cursores = conexion.execute(
+            "SELECT documento FROM cursores WHERE fuente_id LIKE ?", (CURSOR_SEPARAR + "%",)
+        ).fetchall()
+        partes: set[str] = set()
+        for (documento,) in cursores:
+            propios = {
+                str(p["candidato"]) for p in json.loads(documento).get("partes", [])
+                if isinstance(p, dict) and p.get("candidato")
+            }  # fmt: skip
+            if len(propios) >= 2:
+                partes |= propios
+        sin_datos: set[str] = set()
+        for id_ in sorted(partes):
+            fila = conexion.execute("SELECT documento FROM candidatos WHERE id = ?", (id_,))
+            candidato = fila.fetchone()
+            desde = _instante(
+                ((json.loads(candidato[0]).get("parte") or {}).get("desde")) if candidato else None
+            )
+            ultima = conexion.execute(
+                "SELECT MAX(fecha) FROM extracciones WHERE candidato = ?", (id_,)
+            ).fetchone()[0]
+            extraida = _instante(ultima)
+            if desde is None or extraida is None or extraida < desde:
+                sin_datos.add(id_)
+        if not sin_datos:
+            return set()
+        marcas = ",".join("?" * len(sin_datos))
+        filas = conexion.execute(
+            "SELECT id FROM incidentes "
+            f"WHERE json_extract(documento, '$.control.candidato') IN ({marcas})",
+            sorted(sin_datos),
+        ).fetchall()
+    except (sqlite3.Error, ValueError, TypeError, KeyError):
+        return set()
+    finally:
+        conexion.close()
+    return {str(f[0]) for f in filas}
+
+
 def unidos_en(base: Path) -> dict[str, set[str]]:
     """Los registros fundidos en cada incidente (fusiones no revertidas, también en cadena),
     leídos sin escribir en la base: un suceso ya avisado con otro número no se vuelve a avisar
@@ -922,6 +973,11 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
 
     publicados = ids_publicados(args.publicacion)
     internos = con_autoridades(documentos(args.base, publicados), args.publicacion)
+    esperan = partes_sin_datos_propios(args.base) & set(internos)
+    if esperan:
+        registro.info("partes de una separación sin sus datos, sin aviso todavía: %s",
+                      ", ".join(sorted(esperan)))  # fmt: skip
+        internos = {k: v for k, v in internos.items() if k not in esperan}
     enviados = Enviados(args.datos / BASE_AVISOS, config.get("temas_anteriores"))
     try:
         if args.orden == "ensayo":

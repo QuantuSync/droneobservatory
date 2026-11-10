@@ -334,6 +334,8 @@ def _documento_candidato(c: Candidato) -> Documento:
         documento["ubicacion"] = c.lugar.tipo
     if c.separado_de:
         documento["separado_de"] = c.separado_de
+    if c.parte:
+        documento["parte"] = c.parte
     return documento
 
 
@@ -370,6 +372,7 @@ def _candidato(
         articulos=list(documento["articulos"]),
         separado_de=documento.get("separado_de"),
         suceso=(sucesos or {}).get(documento["id"]),
+        parte=documento.get("parte"),
     )
 
 
