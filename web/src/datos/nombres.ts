@@ -176,6 +176,7 @@ const LOCALIDADES_GUERRA: Readonly<Record<string, Bilingue>> = {
   Київ: { es: "Kiev", en: "Kyiv" },
   "Одеський район": { es: "distrito de Odesa", en: "Odesa district" },
   "Лозівський район": { es: "distrito de Lozova", en: "Lozova district" },
+  Заводське: { es: "Zavodske", en: "Zavodske" },
 };
 
 /**
