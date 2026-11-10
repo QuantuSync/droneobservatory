@@ -12707,6 +12707,15 @@
       "motivo": "el titular contaba los dos días; esta ficha es la del sábado, con un dron y la pista sur cerrada unos minutos (revisado el 9 de noviembre de 2026)"
     },
     {
+      "incidente": "EODI-2026-00771",
+      "campo": "inicio",
+      "valor": "2026-11-08",
+      "cita": "Am Abend wurde an der Führungsakademie der Bundeswehr im Stadtteil Nienstedten eine Drohne entdeckt.",
+      "enlace": "https://bild.de/regional/hamburg/drohne-an-bundeswehr-akademie-in-hamburg-polizei-sucht-piloten-6af19b1580d3a1c6aa66e20b",
+      "pais": "DE",
+      "motivo": "la nota se publicó el lunes 9 de noviembre de 2026 a las 14:30 (hora de Alemania) y dice «Am Abend»: a esa hora la tarde del 9 no había llegado, así que el dron se encontró la tarde del domingo 8; la ficha llevaba el día de la nota (revisado el 10 de noviembre de 2026)"
+    },
+    {
       "incidente": "EODI-2026-00773",
       "campo": "drones",
       "valor": {

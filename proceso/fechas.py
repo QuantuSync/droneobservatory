@@ -92,6 +92,8 @@ class Lexico:
     noches: tuple[str, ...]
     noche_hacia: tuple[str, ...]
     compone: bool
+    # Las noches que son una tarde («am Abend», «dans la soirée»): acaban ese día.
+    tardes: frozenset[str] = frozenset()
 
 
 @cache
@@ -121,6 +123,7 @@ def lexicos() -> dict[str, Lexico]:
             noches=tuple(sorted((_normal(f) for f in datos["noches"]), key=len, reverse=True)),
             noche_hacia=tuple(_normal(f) for f in datos["noche_hacia"]),
             compone=idioma in config["componen_dias"],
+            tardes=frozenset(_normal(f) for f in datos.get("tardes", [])),
         )
     return resultado
 
@@ -307,10 +310,12 @@ def _leer_con(
             )
         for forma in noches:
             tarde = hoy - timedelta(days=1) if local.hour < HORA_NOCHE_SIGUIENTE else hoy
-            # La noche empieza la tarde de `tarde` y puede seguir pasada la medianoche.
-            lecturas.append(
-                Lectura(RELATIVA, frozenset({tarde, tarde + timedelta(days=1)}), tarde, forma)
-            )
+            # La noche empieza la tarde de `tarde` y puede seguir pasada la medianoche. Una
+            # tarde («am Abend») no: acaba ese día. En una nota de las 14:30 es la de la
+            # víspera, y la ficha no puede llevar el día de la nota (EODI-2026-00771, el dron
+            # de la Führungsakademie de Hamburgo, publicado con el 9 de noviembre de 2026).
+            admitidos = {tarde} if forma in lx.tardes else {tarde, tarde + timedelta(days=1)}
+            lecturas.append(Lectura(RELATIVA, frozenset(admitidos), tarde, forma))
         if lecturas:
             return lecturas
     return lecturas

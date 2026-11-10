@@ -1,6 +1,6 @@
 {
- "version_esquema": "1.1.0",
- "descripcion": "Léxico para leer el día de un suceso en la frase de una noticia (proceso/fechas.py). Por idioma: meses (enero a diciembre, con sus formas declinadas), días de la semana (lunes a domingo), expresiones relativas al día de publicación (0 hoy, -1 ayer, -2 anteayer), noches (la última noche: la víspera si la nota sale por la mañana) y marcas de «la noche del … al …» o «la noche hacia el …», que adelantan un día el día de la semana que nombran. Las formas se escriben como en la noticia; el código las normaliza igual que la frase (minúsculas, sin acentos, sin apóstrofos). Un día de la semana casa también como comienzo de palabra en los idiomas que los componen («Donnerstagabend», «mandagaften», «maandagavond»). partes_noche: por idioma, palabras de la noche o de una parte del día («late», «Abend», «nad ranem»); con una de ellas junto a dos días seguidos unidos por una conjunción, la frase cuenta una noche («late Saturday and early Sunday») y no dos sucesos. conjunciones_dias: las conjunciones que unen dos días de la semana («am Samstag und Sonntag», «w niedzielę i wtorek»). zonas: zona horaria de cada país, para pasar la hora de publicación a la fecha local del medio.",
+ "version_esquema": "1.2.0",
+ "descripcion": "Léxico para leer el día de un suceso en la frase de una noticia (proceso/fechas.py). Por idioma: meses (enero a diciembre, con sus formas declinadas), días de la semana (lunes a domingo), expresiones relativas al día de publicación (0 hoy, -1 ayer, -2 anteayer), noches (la última noche: la víspera si la nota sale por la mañana), tardes (las noches que son una tarde, «am Abend», «dans la soirée»: acaban ese día y no admiten el día siguiente) y marcas de «la noche del … al …» o «la noche hacia el …», que adelantan un día el día de la semana que nombran. Las formas se escriben como en la noticia; el código las normaliza igual que la frase (minúsculas, sin acentos, sin apóstrofos). Un día de la semana casa también como comienzo de palabra en los idiomas que los componen («Donnerstagabend», «mandagaften», «maandagavond»). partes_noche: por idioma, palabras de la noche o de una parte del día («late», «Abend», «nad ranem»); con una de ellas junto a dos días seguidos unidos por una conjunción, la frase cuenta una noche («late Saturday and early Sunday») y no dos sucesos. conjunciones_dias: las conjunciones que unen dos días de la semana («am Samstag und Sonntag», «w niedzielę i wtorek»). zonas: zona horaria de cada país, para pasar la hora de publicación a la fecha local del medio.",
  "componen_dias": ["de", "nl", "da", "no", "sv", "fi", "et", "lt", "lv", "hu"],
  "idiomas": {
   "en": {
@@ -36,6 +36,7 @@
    "dias": [["lundi"], ["mardi"], ["mercredi"], ["jeudi"], ["vendredi"], ["samedi"], ["dimanche"]],
    "relativos": {"0": ["aujourd'hui", "ce matin", "cet après-midi", "ce soir"], "-1": ["hier"], "-2": ["avant-hier"]},
    "noches": ["dans la soirée", "la nuit dernière", "cette nuit", "dans la nuit", "durant la nuit", "pendant la nuit"],
+   "tardes": ["dans la soirée"],
    "noche_hacia": []
   },
   "de": {
@@ -43,6 +44,7 @@
    "dias": [["montag"], ["dienstag"], ["mittwoch"], ["donnerstag"], ["freitag"], ["samstag", "sonnabend"], ["sonntag"]],
    "relativos": {"0": ["heute", "heute morgen", "heute früh", "heute abend", "heute nachmittag", "am morgen", "am vormittag", "am nachmittag"], "-1": ["gestern", "gestern abend"], "-2": ["vorgestern"]},
    "noches": ["am abend", "am späten abend", "heute nacht", "in der nacht", "letzte nacht", "vergangene nacht", "in der vergangenen nacht", "in der letzten nacht", "über nacht"],
+   "tardes": ["am abend", "am späten abend"],
    "noche_hacia": ["nacht zum", "nacht zu", "nacht auf"]
   },
   "it": {
@@ -50,6 +52,7 @@
    "dias": [["lunedì"], ["martedì"], ["mercoledì"], ["giovedì"], ["venerdì"], ["sabato"], ["domenica"]],
    "relativos": {"0": ["oggi", "stamattina", "stamani", "questa mattina", "stasera", "questa sera"], "-1": ["ieri", "ieri sera"], "-2": ["l'altro ieri", "altroieri"]},
    "noches": ["in serata", "nella serata", "stanotte", "questa notte", "la scorsa notte", "nella notte", "durante la notte", "in nottata"],
+   "tardes": ["in serata", "nella serata"],
    "noche_hacia": []
   },
   "pt": {
