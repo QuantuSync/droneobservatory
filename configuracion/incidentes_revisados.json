@@ -746,6 +746,14 @@
       ],
       "conserva": "EODI-2025-00049",
       "motivo": "el mismo suceso: el dron civil que la tripulación de un avión de Turkish Airlines vio el domingo 28 de septiembre de 2025 al acercarse a aterrizar en el aeropuerto Henri Coandă de Otopeni, por el que la policía abrió un expediente penal. EODI-2025-00106 son dos noticias posteriores fechadas por su publicación, el 30 de septiembre: «Echipajul unei aeronave a semnalat acum două zile, în timpul apropierii pentru aterizare pe Aeroportul Henri Coandă, prezența dronei în apropierea pistei.» (romania-actualitati.ro, 30 de septiembre de 2025) (revisado el 10 de noviembre de 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00777",
+        "EODI-2026-00784"
+      ],
+      "conserva": "EODI-2026-00777",
+      "motivo": "el mismo suceso: la noche del 10 al 11 de noviembre de 2026 en Letonia. EODI-2026-00777 son las alertas que las Fuerzas Armadas letonas fueron dando por municipios (Ludza, Krāslava, Augšdaugava, Balvi) y EODI-2026-00784 es su nota de la mañana siguiente, que cuenta esa misma noche alerta por alerta: «Ņemot vērā naktī uz 11. novembri izziņotos šūnu apraides paziņojumus, informējam par incidentu norises gaitu.» (mil.lv, 11 de noviembre de 2026). El control las dio por distintas porque una nombraba municipios y la otra, el país (revisado el 11 de noviembre de 2026)"
     }
   ],
   "reextraer": [
@@ -12840,6 +12848,30 @@
       "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
       "pais": "LT",
       "motivo": "de los drones de esa noche, uno entró en Lituania, cerca de Druskininkai, y salió cerca de Pasvalys, según el Centro Nacional de Gestión de Crisis (LRT); los otros tres se detectaron en Bielorrusia y no entraron (revisado el 11 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00777",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-11-10T00:00Z",
+        "precision": "dia"
+      },
+      "cita": "Otrdien, 10. novembrī ap plkst. 23.30 gaisa telpas apdraudējums tika izsludināts Ludzas novadā saistībā ar divu bezpilota lidaparātu īslaicīgu ielidošanu Latvijas gaisa telpā.",
+      "enlace": "https://www.mil.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+      "pais": "LV",
+      "motivo": "la primera alerta fue el martes 10 de noviembre de 2026 hacia las 23.30 (hora de Letonia), en Ludza, según las Fuerzas Armadas; «naktī uz 11. novembri» es la noche que empieza el 10, y la ficha tenía el 11 por la nota de las 00.23 (revisado el 11 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00777",
+      "campo": "drones",
+      "valor": {
+        "min": 3,
+        "max": 3
+      },
+      "cita": "Naktī uz 11. novembri Latvijas gaisa telpā ielidoja trīs bezpilota lidaparāti",
+      "enlace": "https://www.mil.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+      "pais": "LV",
+      "motivo": "tres drones entraron esa noche en el espacio aéreo de Letonia, según las Fuerzas Armadas: dos cruzaron uno o dos minutos la frontera oriental y el tercero entró desde Lituania y siguió hacia Estonia (revisado el 11 de noviembre de 2026)"
     }
   ]
 }
