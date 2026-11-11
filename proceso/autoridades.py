@@ -55,6 +55,20 @@ def _paises_oficiales() -> dict[str, str]:
             if f.get("medio") and f.get("pais")}  # fmt: skip
 
 
+def pais_del_organismo(medio: str) -> str | None:
+    """El país de una autoridad por el medio de su fuente: el de la fuente oficial que la publica
+    o, en una declaración citada («X (declaración oficial citada en Y)»), el de X en la tabla.
+    None si no se sabe."""
+    nombre = unicodedata.normalize("NFC", medio)
+    oficial = _paises_oficiales().get(nombre)
+    if oficial:
+        return oficial
+    citada = DECLARACION.match(nombre)
+    entrada = tabla().get(citada.group(1).strip() if citada else nombre)
+    pais = entrada.get("pais") if isinstance(entrada, dict) else None
+    return str(pais) if pais else None
+
+
 def sin_tildes(texto: str) -> str:
     descompuesto = unicodedata.normalize("NFKD", texto.casefold())
     return "".join(c for c in descompuesto if not unicodedata.combining(c))

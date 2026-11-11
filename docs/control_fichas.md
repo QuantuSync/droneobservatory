@@ -588,6 +588,28 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
      un día firme por otro a más de 2 días. En la prueba del 28 de octubre de 2026 el experto unía
      el ataque a buques del 12 de octubre (EODI-2026-00512) al del 6 (00489), tras moverlo al 6 por
      «o săptămână după ce atacurile au dus la scufundarea», que no da ningún día.
+   - **lo que nunca es el mismo suceso** (`entrada.nunca_el_mismo`, desde el 11 de noviembre de
+     2026), diga lo que diga el experto: dos fichas de **países distintos** si alguna cita a una
+     autoridad de su país (cada país cuenta su suceso; sin autoridad de ninguno de los dos, como
+     un buque en el mar, sigue decidiendo el experto), y dos fichas con notas de **la misma
+     autoridad que da sus alertas por zonas, de zonas distintas y a horas distintas**
+     (`proceso/alertas_zona.py`). Lo descartado queda en la decisión (`mismo_descartado`, con su
+     regla) y la ficha sigue por el filtro como un suceso propio. La medida a las 24 horas
+     tampoco une esos pares.
+   - **sin desacuerdos sin salida**: el conjunto no lleva las fichas que el experto ya dio por
+     distintas de la nueva en el control (`incidentes.distintos_del_experto`). Ninguna unión las
+     junta (`control_fichas.unir`), así que, cuando el filtro decía «el mismo» viendo solo una
+     línea de la otra, la ficha quedaba retenida como «propuesta para revisar» y, con las mismas
+     fuentes, para siempre. Vale la comparación del control, que leyó las fuentes de las dos: la
+     ficha sale sola en esa misma pasada (o se une a otra de la lista). Las que quedaron
+     retenidas así vuelven a pasar por el filtro (`SIN_SALIDA`, `entrada.pendiente`).
+
+   El caso, la noche del 10 al 11 de noviembre de 2026: EODI-2026-00778 (un resumen de la prensa
+   británica, «Latvia and Lithuania») quedó retenida diez horas porque el filtro decía «el mismo
+   que EODI-2026-00777» (las alertas de las Fuerzas Armadas de Letonia) y el experto los había
+   dado por distintos en el control; y la ficha de Lituania, EODI-2026-00779 (el aviso del Centro
+   Nacional de Gestión de Crisis y el aeropuerto de Kaunas), se unió a la 00778, con el lugar en
+   Letonia: de Lituania no salió nada. Prueba fija: `tests/test_desacuerdo.py`, con esas fichas.
 4. **Sin respuesta del experto** (tope, caída, tiempo de la pasada) la ficha **espera** y cuenta
    como caso crítico (`esperan_experto` del estado). Nada sale por tiempo: se quitó la salida a las
    6 horas de las fichas nuevas.

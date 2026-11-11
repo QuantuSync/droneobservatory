@@ -8,7 +8,10 @@ conjunto de comparación no se elige por distancia: todas las fichas activas del
 (mar, frontera, región o país), también las de los países vecinos y ribereños. Con la respuesta:
 
 - el mismo suceso que una de la lista: se une por el camino de las uniones del control, antes de
-  publicarse (queda la más antigua);
+  publicarse (queda la más antigua). Nunca con una ficha de otro país si alguna de las dos cita a
+  una autoridad del suyo, ni con la de otra alerta (otra zona y otra hora) de la misma autoridad
+  (`nunca_el_mismo`); y la lista no lleva las fichas que el experto ya dio por distintas de ella
+  en el control: ninguna unión las junta, así que preguntarlo solo dejaba la ficha sin salida;
 - un suceso de otro día, con la frase que lo da: la ficha toma ese día y vuelve a pasar por el
   filtro con él;
 - la fecha sin frase: la ficha no se publica hasta que una fuente la dé;
@@ -37,9 +40,17 @@ from esquema import Documento
 from modelo import control, coste
 from modelo import entrada as peticiones
 from modelo.cliente import LlamadaFallida
-from proceso import auditoria_fichas, fechas, fronteras, incidentes, noticias
+from proceso import (
+    alertas_zona,
+    auditoria_fichas,
+    autoridades,
+    fechas,
+    fronteras,
+    incidentes,
+    noticias,
+)
 from proceso import control_fichas as reglas
-from recogida import control_fichas
+from recogida import control_fichas, oficiales
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
@@ -58,6 +69,11 @@ MAX_MEDIDAS_POR_PASADA = 6
 # Tiempo del filtro y de la medida en cada recogida horaria, aparte del tope del control.
 TOPE_S = 480.0
 PUBLICAR, UNIDA, RETENER, ESPERA = "publicar", "unida", "retener", "dudoso"
+# Motivo de la retención que el filtro escribía hasta el 11 de noviembre de 2026 cuando decía «el
+# mismo» de una ficha que el experto había dado por distinta: no tenía salida. Las que quedaron
+# así vuelven a pasar por el filtro (`pendiente`), ya sin esa ficha en la lista.
+SIN_SALIDA = "dados por distintos: propuesta"
+SIN_UNIR = "el cerrojo retiene la unión o las dos tienen revisado a mano el mismo dato"
 FUERA_DE_PAIS = frozenset({"NATO", "OTAN", "EU", "UE"})
 
 # Los países que se miran también cuando el lugar es vago: los vecinos por tierra (y por un
@@ -137,16 +153,27 @@ def _referencias(incidente: Documento) -> list[datetime]:
     return [reglas.instante(incidente), reglas.primera_noticia(incidente)]
 
 
-def conjunto(incidente: Documento, activos: list[Documento]) -> list[Documento]:
+def conjunto(
+    incidente: Documento, activos: list[Documento],
+    distintos: frozenset[frozenset[str]] = frozenset(),
+) -> list[Documento]:  # fmt: skip
     """Las fichas activas que pueden contar el mismo suceso, sin mirar la distancia: de sus
     países (paises), de 30 días antes a 3 después de su inicio o de su primera noticia, salvo las
-    que una revisión separó. Si son más de MAX_CONJUNTO, las del mismo tipo y las más cercanas en
-    el tiempo."""
+    que una revisión separó y las que el experto ya dio por distintas de ella en el control
+    (`distintos`: incidentes.distintos_del_experto). Si son más de MAX_CONJUNTO, las del mismo
+    tipo y las más cercanas en el tiempo.
+
+    Un par que el experto dio por distinto comparando las fuentes de las dos no lo une nadie
+    (control_fichas.unir): si el filtro, que solo ve una línea de la otra, decía «el mismo», la
+    ficha quedaba retenida como «propuesta para revisar» y, con las mismas fuentes, para siempre
+    (EODI-2026-00778 frente a EODI-2026-00777, 11 de noviembre de 2026)."""
     referencias = _referencias(incidente)
     validos = paises(incidente)
     elegidas = []
     for otra in activos:
         if otra["id"] == incidente["id"] or otra["lugar"]["pais"] not in validos:
+            continue
+        if frozenset((str(incidente["id"]), str(otra["id"]))) in distintos:
             continue
         momento = reglas.instante(otra)
         if not any(
@@ -325,6 +352,70 @@ def sin_frase(decision: dict[str, Any]) -> list[str]:
     return faltan
 
 
+# --- Lo que nunca es el mismo suceso ------------------------------------------------------
+
+
+def paises_de_autoridades(incidente: Documento, decididas: dict[str, str]) -> frozenset[str]:
+    """Los países de las autoridades que cita la ficha: los que el filtro comprobó con su frase
+    (`decididas`: nombre -> país, de la decisión del filtro) y los de sus fuentes de autoridad
+    que se saben por la tabla o por la fuente oficial que las publica."""
+    paises_ = {str(p) for p in decididas.values() if p}
+    for fuente in incidente.get("fuentes", []):
+        if not fuente.get("es_autoridad") or fuente.get("publica", True) is False:
+            continue
+        pais = autoridades.pais_del_organismo(str(fuente.get("medio") or ""))
+        if pais:
+            paises_.add(pais)
+    return frozenset(paises_ - FUERA_DE_PAIS)
+
+
+def nunca_el_mismo(
+    incidente: Documento, otra: Documento, suyas: dict[str, str], de_la_otra: dict[str, str]
+) -> str | None:
+    """Por qué las dos fichas no pueden ser el mismo suceso diga lo que diga el experto, o None.
+
+    - Países distintos y alguna cita a una autoridad de su país: cada país cuenta su suceso. El
+      11 de noviembre de 2026 el filtro unió la ficha de Lituania (EODI-2026-00779: el aviso del
+      Centro Nacional de Gestión de Crisis y el aeropuerto de Kaunas) a la de un resumen con el
+      lugar en Letonia (EODI-2026-00778), y de Lituania no salió nada. Sin autoridad de ninguno de
+      los dos países (un buque en el mar, una frontera) sigue decidiendo el experto.
+    - El mismo país y notas de la misma autoridad que da sus alertas por zonas, de zonas
+      distintas y a horas distintas (proceso/alertas_zona.py): son dos alertas."""
+    pais, pais_otra = str(incidente["lugar"]["pais"]), str(otra["lugar"]["pais"])
+    if pais != pais_otra:
+        con_la_suya = pais in paises_de_autoridades(incidente, suyas)
+        if con_la_suya or pais_otra in paises_de_autoridades(otra, de_la_otra):
+            return (
+                f"países distintos ({pais} y {pais_otra}) con una autoridad del suyo: cada país "
+                "cuenta su suceso"
+            )
+        return None
+    for fuente in oficiales.fuentes():
+        regla = fuente.get("alertas_por_zona")
+        if not regla or fuente["pais"] != pais:
+            continue
+        propios = oficiales.titulos_de(incidente, fuente)
+        ajenos = oficiales.titulos_de(otra, fuente)
+        if alertas_zona.otra_alerta(propios, ajenos, pais, str(regla["hora"])):
+            return (
+                f"dos alertas de {fuente['medio']} en zonas distintas y a horas distintas: no "
+                "son el mismo suceso"
+            )
+    return None
+
+
+def sin_el_mismo_imposible(
+    decision: dict[str, Any], incidente: Documento, otra: Documento, de_la_otra: dict[str, str]
+) -> dict[str, Any]:
+    """La decisión sin el «mismo suceso» que una regla fija no deja unir (`nunca_el_mismo`); lo
+    descartado queda anotado con su regla."""
+    regla = nunca_el_mismo(incidente, otra, decision.get("autoridades") or {}, de_la_otra)
+    if regla is None:
+        return decision
+    resto = {k: v for k, v in decision.items() if k not in {"mismo", "motivo_mismo"}}
+    return {**resto, "mismo_descartado": {"id": otra["id"], "regla": regla}}
+
+
 # --- Lo que se hace con la decisión -------------------------------------------------------
 
 
@@ -433,7 +524,7 @@ def preguntar(
     sus fuentes. Si duda, o si no da frase para la fecha, el lugar o una autoridad, se le vuelve a
     preguntar con las fuentes de las candidatas más cercanas."""
     almacen = experto.ctx.almacen
-    elegidas = conjunto(incidente, activos)
+    elegidas = conjunto(incidente, activos, incidentes.distintos_del_experto(almacen))
     ids = [c["id"] for c in elegidas]
     fuentes = control_fichas.fuentes_de_ficha(almacen, incidente, _textos(incidente, experto.plazo))
     citadas = list(autoridades_de(incidente))
@@ -499,11 +590,23 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                     "motivo": experto.motivo_espera, "cambios": cambios}  # fmt: skip
         if "mismo" in decision:
             otra = next(c for c in elegidas if c["id"] == decision["mismo"])
+            previa_otra = ctx.decision(clave(otra["id"])) or {}
+            decision = sin_el_mismo_imposible(
+                decision, incidente, otra, previa_otra.get("autoridades") or {}
+            )
+            if "mismo_descartado" in decision:
+                registro.info("filtro de entrada %s: no es %s (%s)", incidente["id"], otra["id"],
+                              decision["mismo_descartado"]["regla"])  # fmt: skip
+        if "mismo" in decision:
+            otra = next(c for c in elegidas if c["id"] == decision["mismo"])
             conserva, une = reglas.mas_antiguo(otra, incidente)
             motivo = f"filtro de entrada: {decision.get('motivo_mismo') or decision['motivo_es']}"
             if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
                                    ctx.modelos) is None:  # fmt: skip
-                motivo = f"el mismo que {otra['id']}, dados por distintos: propuesta"
+                # Las que una revisión o el experto dieron por distintas no están en la lista
+                # (conjunto): lo que queda es una unión que el cerrojo retendría o dos fichas con
+                # el mismo dato revisado a mano con valores distintos. Eso lo decide una revisión.
+                motivo = f"el mismo que {otra['id']}, sin unir: {SIN_UNIR}"
                 return {**base, **decision, "decision": RETENER, "cambios": cambios,
                         "motivo": motivo}  # fmt: skip
             ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
@@ -571,7 +674,9 @@ def pendiente(decision: Documento | None, incidente: Documento, ahora: datetime)
         return True
     if decision.get("decision") == ESPERA:
         return ahora >= _leer(str(decision.get("espera_experto") or _iso(ahora)))
-    return False
+    # Retenida por un desacuerdo entre el filtro y el control: vuelve a pasar, sin esa ficha en la
+    # lista, y sale o se une a otra.
+    return decision.get("decision") == RETENER and SIN_SALIDA in str(decision.get("motivo") or "")
 
 
 def motivo_retencion(decision: Documento | None, incidente: Documento) -> str | None:
@@ -668,6 +773,10 @@ def corregir_medida(
             otra = next((c for c in elegidas if c["id"] == error["duplicado_de"]), None)
             if otra is None or not incidentes.activo(otra):
                 continue
+            suyas = (ctx.decision(clave(incidente["id"])) or {}).get("autoridades") or {}
+            de_la_otra = (ctx.decision(clave(otra["id"])) or {}).get("autoridades") or {}
+            if nunca_el_mismo(incidente, otra, suyas, de_la_otra) is not None:
+                continue
             conserva, une = reglas.mas_antiguo(otra, incidente)
             motivo = "medida a las 24 horas: el mismo suceso"
             if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
@@ -719,7 +828,7 @@ def medir(ctx: control_fichas.Contexto, publicadas: dict[str, str],
         if medidas >= MAX_MEDIDAS_POR_PASADA:
             break
         try:
-            elegidas = conjunto(incidente, activos)
+            elegidas = conjunto(incidente, activos, incidentes.distintos_del_experto(ctx.almacen))
             fuentes = control_fichas.fuentes_de_ficha(ctx.almacen, incidente, {})
             cuerpo = peticiones.cuerpo_medida(reglas.vista(incidente), fuentes.bloques,
                                               list(autoridades_de(incidente)),
