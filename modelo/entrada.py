@@ -15,9 +15,10 @@ el texto de su fuente, y cada identificador, en la lista que se mandó.
 from typing import Any
 
 from modelo.control import MAX_FUENTES, FuenteControl, _cuerpo, resumen_ficha
+from proceso.suceso import DEFINICION
 
-VERSION_ENTRADA = "entrada/1"
-VERSION_MEDIDA = "medida/2"
+VERSION_ENTRADA = "entrada/2"
+VERSION_MEDIDA = "medida/3"
 # Decidir si una ficha es un suceso ya registrado es lo más difícil del control.
 ESFUERZO_ENTRADA = "high"
 MAX_SALIDA_ENTRADA = 1500
@@ -80,7 +81,8 @@ ESQUEMA_ENTRADA: dict[str, Any] = {
     },
 }
 
-INSTRUCCIONES_ENTRADA = """Eres el control de entrada del European Observatory of Drone \
+INSTRUCCIONES_ENTRADA = (
+    """Eres el control de entrada del European Observatory of Drone \
 Incidents. Ninguna ficha nueva se publica sin pasar por ti. Recibes una ficha nueva de un \
 incidente con drones (sus datos, sus fuentes numeradas con medio, fecha de publicación, idioma, \
 titular y texto, y las autoridades cuyas declaraciones cita) y la lista de las fichas que ya \
@@ -91,11 +93,16 @@ otra vez un suceso ya registrado (una reacción, un balance, un recuerdo semanas
 agencia que lo cuenta con un día de diferencia porque la noche cae a caballo de dos días UTC, \
 un buque atacado en el mar entre dos países) o un suceso de otro día fechado por la publicación.
 
-- mismo_suceso: el identificador exacto de la ficha de la lista que cuenta el mismo hecho físico \
-(los mismos drones, el mismo derribo, el mismo buque, el mismo cierre del mismo aeropuerto la \
-misma noche), aunque cambien la fecha de publicación, el idioma, el lugar más o menos preciso o \
-el número; «ninguna» si no es ninguna. Dos sucesos parecidos en el mismo sitio en días \
-distintos son distintos. motivo_mismo: por qué, en una frase.
+"""
+    + DEFINICION
+    + """
+
+- mismo_suceso: el identificador exacto de la ficha de la lista que cuenta el mismo suceso que \
+la nueva según esa definición (los mismos drones, el mismo derribo, el mismo buque, el mismo \
+cierre del mismo aeropuerto la misma noche, la misma alerta de esa noche en ese país); «ninguna» \
+si no es ninguna. La de otro país solo si es el mismo hecho y el país de una de las dos está \
+mal (un buque en el mar entre dos países); nunca si es el mismo dron al otro lado de la \
+frontera, que es el suceso de ese otro país. motivo_mismo: por qué, en una frase.
 - otro_dia: true si las fuentes cuentan un suceso de un día distinto del de la ficha (no la \
 noche anterior a la publicación: eso es el mismo día del suceso). fecha_suceso: el día del \
 suceso, AAAA-MM-DD, que dan las fuentes (vacío si ninguna lo da).
@@ -114,6 +121,7 @@ pais vacío y frase «no».
 - duda: true si dudas entre dos respuestas (sobre todo si es o no el mismo suceso que una ficha \
 de la lista); dudosas: los identificadores de las fichas de la lista con las que dudas.
 - motivo_es y motivo_en: una frase corta, en español y en inglés, con lo que decidiste."""
+)
 
 
 def _resumenes(conjunto: list[dict[str, Any]]) -> list[str]:
@@ -177,11 +185,16 @@ ESQUEMA_MEDIDA: dict[str, Any] = {
     },
 }
 
-INSTRUCCIONES_MEDIDA = """Eres la medida independiente del European Observatory of Drone \
+INSTRUCCIONES_MEDIDA = (
+    """Eres la medida independiente del European Observatory of Drone \
 Incidents. Recibes una ficha publicada hace 24 horas (sus datos, sus fuentes numeradas y las \
 autoridades que cita) y la lista de las fichas que pueden contar el mismo suceso (las del mismo \
 país, y de los vecinos si el lugar es vago, de 30 días antes a 3 después, también las llegadas \
 después). Busca errores, sin dar por buena la ficha:
+
+"""
+    + DEFINICION
+    + """
 
 - fecha: el día del suceso no es el de la ficha (una noticia de otro día, la fecha de \
 publicación de un recuerdo); correcto: el día AAAA-MM-DD.
@@ -190,12 +203,13 @@ publicación de un recuerdo); correcto: el día AAAA-MM-DD.
 - autoridad: una autoridad citada es de otro país o no la nombra ninguna frase; autoridad: su \
 nombre exacto, tal como viene en la lista de autoridades citadas (un error por cada una, nunca \
 las que sí están bien; en los demás datos, vacío); correcto: su país (ISO de dos letras) o vacío.
-- duplicado: la ficha cuenta el mismo hecho físico que una de la lista; duplicado_de: su \
-identificador exacto.
+- duplicado: la ficha cuenta el mismo suceso que una de la lista, según esa definición; \
+duplicado_de: su identificador exacto.
 
 Cada error con la fuente y la frase literal, copiada tal cual de su texto, que lo muestra (0 y \
 vacío si el error es que ninguna frase lo respalda). Solo errores claros; ninguno, lista vacía. \
 motivo_es y motivo_en: una frase corta con lo que encontraste."""
+)
 
 
 def cuerpo_medida(
@@ -271,10 +285,13 @@ Además:
 en qué día fue (un recuerdo, «recientemente», «en las últimas semanas»); false si dan el día o si \
 cuentan algo de la noche o el día de la publicación.
 - mismo_suceso: solo si es seguro que es el mismo suceso. El mismo día y país no bastan: \
-en una noche con varios drones, cada uno en otro lugar es otro suceso; y una noticia publicada \
-antes del día del suceso no puede contarlo. Si es solo probable, duda.
-- varios_sucesos: true si la ficha junta sucesos de días o lugares distintos (un resumen, un \
-balance, «durante tres noches», drones en varios aeropuertos en noches distintas). partes: cada \
+en una noche con varios drones distintos, cada uno en otro lugar y contado aparte es otro \
+suceso; y una noticia publicada antes del día del suceso no puede contarlo. Si es solo \
+probable, duda.
+- varios_sucesos: true si la ficha junta sucesos de jornadas, países o drones distintos (un \
+resumen, un balance, «durante tres noches», drones en varios aeropuertos en noches distintas). \
+La noche de una oleada o de una alerta que recorre varias zonas de un país es un solo suceso. \
+partes: cada \
 suceso con su día (AAAA-MM-DD), una descripción corta y los números de las fuentes que lo \
 cuentan (una fuente que cuenta dos va en las dos); lista vacía si es un solo suceso.
 - resumen: true si la ficha es un resumen o un balance sin ningún suceso de un día concreto.

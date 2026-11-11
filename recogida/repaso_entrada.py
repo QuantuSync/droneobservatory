@@ -4,7 +4,7 @@
 Lo publicado antes del filtro de entrada (PR 335, 28 de octubre de 2026) no pasó por él, y ese
 día se encontraron publicados duplicados, fechas de noticias retrospectivas y una autoridad de
 otro país. Cada ficha publicada pasa por el experto como si fuera nueva, con su conjunto de
-comparación (recogida/entrada.conjunto: mismo país, 30 días antes y 3 después de su inicio y de
+comparación (recogida/suceso.conjunto: mismo país, 30 días antes y 3 después de su inicio y de
 su primera noticia, sin mirar la distancia; los vecinos si el lugar es vago) y la pregunta del
 filtro, con dos más: ¿junta varios sucesos de días o lugares distintos? y ¿hay un error en el
 número de drones, el tipo, el estado o la presencia?
@@ -50,7 +50,7 @@ import time
 from collections.abc import Callable, Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -60,8 +60,7 @@ from modelo import coste
 from modelo import entrada as peticiones
 from proceso import control_fichas as reglas
 from proceso import decidir as decide
-from proceso import incidentes, presencia, referencia
-from proceso.focos_termicos import distancia_km
+from proceso import incidentes, presencia, referencia, suceso
 from proceso.presencia import REVISADOS, TABLA_MOTIVOS
 from recogida import control_fichas, entrada
 from recogida.plazo import Plazo
@@ -80,14 +79,6 @@ POR_TANDA = 12
 # toma entre estos minutos. Empieza en el 10 porque guardar la base (con su copia) tarda hasta
 # dos minutos y el cerrojo tiene que estar suelto antes del 15.
 VENTANA_RECOGIDA = (10, 45)
-# Una unión es imposible (mismo_imposible) si las noticias de una ficha son todas de antes del día
-# firme de la otra (con este margen por la hora local), o si las dos tienen un lugar preciso a más
-# de esta distancia. Muestreo del grupo a del 28 de octubre de 2026: el aeropuerto de Vilna del 25
-# y del 26 de septiembre (EODI-2025-00060 y 00004) y dos drones de la misma noche en Moldavia,
-# en Hîrbovăț y en Orhei (EODI-2026-00168 y 00636), salían unidos.
-MARGEN_DIA_H = 3
-DISTANCIA_MAX_KM = 25.0
-PRECISOS = frozenset({"localidad", "instalacion"})
 
 UNIR, DIA, RETIRAR, SEPARAR, LUGAR, AUTORIDAD, DATO = (
     "unir", "dia", "retirar", "separar", "lugar", "autoridad", "dato"
@@ -246,35 +237,6 @@ def decidir(
     return decision
 
 
-def _ultima_noticia(incidente: Documento) -> datetime | None:
-    fechas = [incidentes._leer_instante(f["fecha"]) for f in incidente.get("fuentes", [])
-              if f.get("fecha")]  # fmt: skip
-    return max(fechas) if fechas else None
-
-
-def mismo_imposible(incidente: Documento, otra: Documento) -> str | None:
-    """Por qué las dos fichas no pueden ser el mismo suceso, o None: las noticias de una son
-    todas de antes del día firme de la otra, sus lugares precisos están a más de
-    DISTANCIA_MAX_KM o son de países distintos (cada país cuenta su incursión: el Shahed que
-    cruzó Moldavia y cayó en Rumanía, EODI-2026-00171 y 00106)."""
-    if incidente["lugar"]["pais"] != otra["lugar"]["pais"]:
-        return f"países distintos ({incidente['lugar']['pais']} y {otra['lugar']['pais']})"
-    for una, dos in ((incidente, otra), (otra, incidente)):
-        if not entrada.fecha_firme(una):
-            continue
-        dia = reglas.instante(una).replace(hour=0, minute=0, second=0, microsecond=0)
-        ultima = _ultima_noticia(dos)
-        if ultima is not None and ultima < dia - timedelta(hours=MARGEN_DIA_H):
-            return f"las noticias de {dos['id']} son de antes del {dia.date().isoformat()}"
-    a, b = incidente["lugar"], otra["lugar"]
-    if {a.get("nivel"), b.get("nivel")} <= PRECISOS and "punto" in a and "punto" in b:
-        km = distancia_km(a["punto"]["lat"], a["punto"]["lon"], b["punto"]["lat"],
-                          b["punto"]["lon"])  # fmt: skip
-        if km > DISTANCIA_MAX_KM:
-            return f"lugares a {km:.0f} km"
-    return None
-
-
 # --- Fichas protegidas --------------------------------------------------------------------
 
 # Lo que el repaso no aplica nunca en una ficha protegida: queda como propuesta para revisar.
@@ -415,9 +377,9 @@ def ajustar(decision: Documento, incidente: Documento, otra: Documento | None,
             protegidas_: Protegidas | None = None) -> Documento:  # fmt: skip
     """La decisión con las comprobaciones del repaso: una autoridad solo deja de ser oficial si
     es de otro país (la que no tiene una frase con su país se queda: Skeyes en Lieja,
-    EODI-2025-00092), una unión imposible (mismo_imposible) no vale, las correcciones de la
-    presencia que contradicen a una autoridad o a la referencia no se proponen y en una ficha
-    protegida (protegidas) lo que la cambia queda para revisar."""
+    EODI-2025-00092), una unión imposible (suceso.imposible_al_repasar) no vale, las correcciones
+    de la presencia que contradicen a una autoridad o a la referencia no se proponen y en una
+    ficha protegida (protegidas) lo que la cambia queda para revisar."""
     protegidas_ = protegidas() if protegidas_ is None else protegidas_
     nueva = dict(decision)
     for viejo in ("para_revisar", "errores_fuera"):
@@ -432,7 +394,7 @@ def ajustar(decision: Documento, incidente: Documento, otra: Documento | None,
         nueva["autoridades_sin_pais"] = {n: m for n, m in fuera.items() if n not in de_otro}
         nueva["autoridades_fuera"] = de_otro
     if nueva.get("mismo") and otra is not None:
-        imposible = mismo_imposible(incidente, otra)
+        imposible = suceso.imposible_al_repasar(incidente, otra)
         if imposible:
             mismo = nueva.pop("mismo")
             nueva["invalida"] = f"no es el mismo suceso que {mismo}: {imposible}"
@@ -469,7 +431,7 @@ def cambios(decision: Documento, incidente: Documento) -> list[str]:
     if (
         decision.get("fecha_desconocida")
         and not decision.get("frase_fecha")
-        and entrada.fecha_aproximada(incidente)
+        and suceso.fecha_aproximada(incidente)
     ):
         return [RETIRAR]
     hechos = []
@@ -557,7 +519,7 @@ def _leer(respuesta: dict[str, Any]) -> dict[str, Any] | None:
 
 def _preparar(almacen: Almacen, incidente: Documento, activos: list[Documento],
               plazo: Plazo) -> _Pregunta:  # fmt: skip
-    elegidas = entrada.conjunto(incidente, activos)
+    elegidas = suceso.conjunto(incidente, activos)
     fuentes = control_fichas.fuentes_de_ficha(almacen, incidente, entrada._textos(incidente, plazo))
     return _Pregunta(incidente, elegidas, fuentes, [entrada.resumen(c) for c in elegidas])
 
@@ -702,7 +664,7 @@ def _preguntar(
         decision = decisiones[incidente["id"]]
         por_id = {c["id"]: c for c in pregunta.elegidas}
         if "mismo" in decision:
-            fechas = entrada.fechas_distintas(incidente, por_id[decision["mismo"]])
+            fechas = suceso.fechas_distintas(incidente, por_id[decision["mismo"]])
             if fechas:
                 mismo = decision.pop("mismo")
                 decision["invalida"] = f"el mismo suceso que {mismo} con fechas firmes ({fechas})"
@@ -936,7 +898,7 @@ def aplicar_una(ctx: control_fichas.Contexto, incidente: Documento, decision: Do
         if otra is None or not incidentes.activo(otra):
             hecho.sin_aplicar.append(f"{incidente['id']}: {decision['mismo']} ya no está activa")
             return False
-        conserva, une = reglas.mas_antiguo(otra, incidente)
+        conserva, une = suceso.mas_antiguo(otra, incidente)
         texto = f"repaso de entrada: {decision.get('motivo_mismo') or decision.get('motivo_es')}"
         if control_fichas.unir(ctx.almacen, conserva, une, texto[:300], ctx.ahora,
                                ctx.modelos) is None:  # fmt: skip

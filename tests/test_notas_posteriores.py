@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
-from proceso import incidentes
+from proceso import incidentes, suceso
 from tests import ejemplos
 
 AHORA = datetime(2026, 10, 8, 15, 17, tzinfo=UTC)
@@ -72,11 +72,11 @@ ARCHIVO = _incidente("EODI-2025-00442", "2025-09-09T22:00Z", "2026-10-08T14:15Z"
 
 
 def test_la_nota_del_archivo_de_la_investigacion_se_une_al_suceso() -> None:
-    assert incidentes.nota_posterior(ARCHIVO)
-    assert not incidentes.nota_posterior(POLONIA)
-    assert incidentes.mismo_suceso_posterior(POLONIA, ARCHIVO)
+    assert suceso.nota_posterior(ARCHIVO)
+    assert not suceso.nota_posterior(POLONIA)
+    assert suceso.mismo_suceso_posterior(POLONIA, ARCHIVO)
     # La regla de siempre no la une: el suceso tiene punto y la nota solo el país.
-    assert not incidentes.encajan(POLONIA, ARCHIVO)
+    assert not suceso.encajan(POLONIA, ARCHIVO)
 
 
 def test_con_la_base_se_une_y_queda_anotada() -> None:
@@ -88,7 +88,7 @@ def test_con_la_base_se_une_y_queda_anotada() -> None:
     unido = almacen.incidente(ARCHIVO["id"])
     assert unido is not None and unido["fusionado_en"] == POLONIA["id"]
     [fusion] = almacen.fusiones()
-    assert fusion["motivo"] == incidentes.MOTIVO_NOTA_POSTERIOR
+    assert fusion["motivo"] == suceso.MOTIVO_NOTA_POSTERIOR
     # Revisar las fusiones no la deshace.
     assert incidentes.revisar_fusiones(almacen, AHORA, MODELOS) == []
 
@@ -121,7 +121,7 @@ def test_con_la_base_se_une_y_queda_anotada() -> None:
     ],
 )
 def test_no_une_lo_que_no_es_el_mismo_suceso(nota: dict[str, Any], porque: str) -> None:
-    assert not incidentes.mismo_suceso_posterior(POLONIA, nota), porque
+    assert not suceso.mismo_suceso_posterior(POLONIA, nota), porque
 
 
 def test_dos_sucesos_del_mismo_dia_y_pais_la_nota_no_se_une_a_ninguno() -> None:
@@ -151,12 +151,12 @@ def test_dos_sucesos_del_mismo_dia_y_pais_la_nota_no_se_une_a_ninguno() -> None:
     for documento in (manana, tarde, nota):
         almacen.guardar_incidente(documento, ahora, MODELOS)
     publicados = frozenset({manana["id"], tarde["id"]})
-    assert incidentes.mismo_suceso_posterior(manana, nota)
-    assert incidentes.mismo_suceso_posterior(tarde, nota)
+    assert suceso.mismo_suceso_posterior(manana, nota)
+    assert suceso.mismo_suceso_posterior(tarde, nota)
     assert incidentes.fusionar(almacen, ahora, MODELOS, publicados) == 0
     # Y los dos sucesos del día, que no son notas posteriores, siguen separados.
-    assert not incidentes.mismo_suceso_posterior(manana, tarde)
-    assert not incidentes.mismo_suceso_posterior(tarde, manana)
+    assert not suceso.mismo_suceso_posterior(manana, tarde)
+    assert not suceso.mismo_suceso_posterior(tarde, manana)
 
 
 def test_dos_aeropuertos_cerrados_la_misma_noche_siguen_separados() -> None:
@@ -186,9 +186,9 @@ def test_dos_aeropuertos_cerrados_la_misma_noche_siguen_separados() -> None:
         punto=(51.24, 22.71),
         cierre=True,
     )
-    assert incidentes.mismo_suceso_posterior(lublin, nota)
-    assert not incidentes.mismo_suceso_posterior(rzeszow, nota)
-    assert not incidentes.mismo_suceso_posterior(lublin, rzeszow)
+    assert suceso.mismo_suceso_posterior(lublin, nota)
+    assert not suceso.mismo_suceso_posterior(rzeszow, nota)
+    assert not suceso.mismo_suceso_posterior(lublin, rzeszow)
 
 
 def test_dos_cierres_de_noches_distintas_no_se_juntan() -> None:
@@ -209,4 +209,4 @@ def test_dos_cierres_de_noches_distintas_no_se_juntan() -> None:
         tipo="interrupcion_aeroportuaria",
         cierre=True,
     )
-    assert not incidentes.mismo_suceso_posterior(ocho, nota)
+    assert not suceso.mismo_suceso_posterior(ocho, nota)

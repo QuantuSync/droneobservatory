@@ -2,7 +2,7 @@
 
 - **Unir**: registros del mismo suceso que las reglas de fusión no juntan, porque las noticias
   que vuelven sobre él semanas después quedan fechadas por su publicación. Se funden en el que
-  elige la regla de siempre (`proceso/incidentes.destino_de`), con la fusión anotada y su motivo;
+  elige la regla de siempre (`proceso/suceso.destino_de`), con la fusión anotada y su motivo;
   `incidentes.revisar_fusiones` no las deshace. Si el que queda tiene un inicio posterior a su
   primera noticia, toma el de un registro unido con la fecha escrita por una fuente; si no sabe
   el cierre, toma el del registro que lo sabe.
@@ -31,6 +31,7 @@ from proceso import (
     incidentes,
     presencia,
     rectificaciones,
+    suceso,
 )
 from proceso.credibilidad import Credibilidad
 from proceso.estados import (
@@ -88,7 +89,7 @@ def completar(destino: Documento, unidos: list[Documento]) -> Documento:
     if resultado["tiempo"]["inicio"]["valor"] > primera:
         escritos = sorted(
             (u for u in unidos
-             if incidentes.fecha_verificada(u) and u["tiempo"]["inicio"]["valor"] <= primera),
+             if suceso.fecha_verificada(u) and u["tiempo"]["inicio"]["valor"] <= primera),
             key=lambda u: (u["tiempo"]["inicio"]["valor"], u["id"]),
         )  # fmt: skip
         if escritos:
@@ -117,7 +118,7 @@ def sacar_de(almacen: Almacen, registros: list[str], antes_en: str, ahora: datet
             (f for f in reversed(almacen.fusiones())
              if f["absorbido"] == id_ and not f["revertida"]), None,
         )  # fmt: skip
-        if fusion is None or fusion["motivo"].startswith(incidentes.PREFIJO_REVISADA):
+        if fusion is None or fusion["motivo"].startswith(suceso.PREFIJO_REVISADA):
             continue
         incidentes.revertir(almacen, id_, ahora, modelos)
         vueltos.append(id_)
@@ -146,7 +147,7 @@ def _destino_del_grupo(vivos: list[Documento], ahora: datetime) -> Documento:
     """La ficha que queda en una unión revisada: entre las publicadas antes de esta pasada (una
     dada de alta ahora no le quita la dirección a una que la gente ya conocía), la que tiene
     datos revisados con cita (el número de drones, el día, el lugar: si no, se pierden), y entre
-    ellas la regla de siempre (incidentes.destino_de). Hasta el 6 de noviembre de 2026 todas
+    ellas la regla de siempre (suceso.destino_de). Hasta el 6 de noviembre de 2026 todas
     contaban como publicadas y ganaba la de más fuentes: EODI-2026-00760, recién dada de alta con
     2 drones, el día y el lugar mal, se quedó con EODI-2026-00746, que tenía 1 dron revisado."""
     marca = ahora.strftime("%Y-%m-%dT%H:%MZ")
@@ -155,7 +156,7 @@ def _destino_del_grupo(vivos: list[Documento], ahora: datetime) -> Documento:
     publicados = frozenset(d["id"] for d in antes)
     destino = revisadas[0]
     for otro in revisadas[1:]:
-        destino = incidentes.destino_de(destino, otro, publicados)[0]
+        destino = suceso.destino_de(destino, otro, publicados)[0]
     return destino
 
 
@@ -229,7 +230,7 @@ def unir_grupo(
         almacen.guardar_incidente(fundido, ahora, modelos)
         almacen.registrar_fusion(
             ahora.strftime("%Y-%m-%dT%H:%MZ"), fundido["id"], destino["id"],
-            incidentes.PREFIJO_REVISADA + motivo, aportadas,
+            suceso.PREFIJO_REVISADA + motivo, aportadas,
             incidentes.instantanea(almacen, destino, vivos[fundido["id"]]),
         )  # fmt: skip
     return len(fundidos)
@@ -600,7 +601,7 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
                                   "motivo": inicio["motivo"]},
             }  # fmt: skip
             fin = fin_citado or resultado["tiempo"].get("fin")
-            if fin and inicio["precision"] in incidentes.PRECISIONES_HORA:
+            if fin and inicio["precision"] in suceso.PRECISIONES_HORA:
                 tiempo["fin"] = fin
                 if (duracion := derivar_duracion_min(tiempo)) is None:
                     tiempo.pop("fin")
@@ -1377,7 +1378,7 @@ def repartir(
         and any(
             f["absorbido"] == id_
             and not f["revertida"]
-            and not f["motivo"].startswith(incidentes.PREFIJO_REVISADA)
+            and not f["motivo"].startswith(suceso.PREFIJO_REVISADA)
             for f in almacen.fusiones()
         )
     ):
@@ -1410,7 +1411,7 @@ def repartir(
         if (
             fusion["destino"] != id_
             or fusion["revertida"]
-            or fusion["motivo"].startswith(incidentes.PREFIJO_REVISADA)
+            or fusion["motivo"].startswith(suceso.PREFIJO_REVISADA)
         ):
             continue
         parte = _parte_de_fuentes(revision, fusion["fuentes"])
@@ -1703,7 +1704,7 @@ def separar(
     for par in cargar().get("distintos", []):
         try:
             # Dos fichas que una revisión dio por sucesos distintos: relacionadas entre sí, y así
-            # ninguna unión automática las junta (incidentes.separados_por_revision). Si una ya está
+            # ninguna unión automática las junta (suceso.separados_por_revision). Si una ya está
             # unida en la otra, la unión se deshace: vuelve con sus fuentes.
             for id_ in par["incidentes"]:
                 documento = almacen.incidente(id_)
@@ -1747,7 +1748,7 @@ def registros_por_parte(almacen: Almacen, revision: Documento) -> list[list[str]
 
 def pares_de_partes(almacen: Almacen) -> frozenset[frozenset[str]]:
     """Los pares de registros de partes distintas de una misma separación: sucesos distintos que
-    ninguna regla junta (para la auditoría V, con `incidentes.distintos_del_experto`)."""
+    ninguna regla junta (para la auditoría V, con `suceso.distintos_del_experto`)."""
     pares: set[frozenset[str]] = set()
     for revision in cargar().get("separar", []):
         partes = registros_por_parte(almacen, revision) or []
@@ -1778,7 +1779,7 @@ def _deshacer_entre_partes(
                  if f["absorbido"] == id_ and not f["revertida"]),
                 None,
             )  # fmt: skip
-            if fusion is not None and not fusion["motivo"].startswith(incidentes.PREFIJO_REVISADA):
+            if fusion is not None and not fusion["motivo"].startswith(suceso.PREFIJO_REVISADA):
                 incidentes.revertir(almacen, id_, ahora, modelos)
                 registro.info("separación: %s vuelve de %s", id_, documento["fusionado_en"])
 

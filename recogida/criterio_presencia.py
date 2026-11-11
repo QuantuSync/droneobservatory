@@ -10,7 +10,7 @@ noches de los cierres (una vez, dentro de la recogida horaria).
    declaraciones guardadas, sin descargar nada ni llamar al extractor: criterio de presencia
    (proceso/declaraciones.py, proceso/presencia.py), titulares coherentes
    (proceso/titulares.py) y fusión que nunca junta dos cierres de noches distintas
-   (proceso/incidentes.cierres_de_noches_distintas).
+   (proceso/suceso.cierres_de_noches_distintas).
 3. **Motivo**: cada incidente que cambia de presencia, titular, estado o fecha deja su motivo
    en el historial; la base es de solo añadir y cada cambio es una versión nueva.
 

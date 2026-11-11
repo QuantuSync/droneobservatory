@@ -10,7 +10,7 @@ from typing import Any
 
 import pytest
 
-from proceso import auditoria_fichas, incidentes
+from proceso import auditoria_fichas, incidentes, suceso
 from recogida import revisados
 from tests.ejemplos import VOCABULARIO_MODELOS
 from tests.test_control_fichas import AHORA, _base, _nuremberg_alemana, _nuremberg_griega
@@ -42,10 +42,10 @@ def _separacion(ruta: Path, distintos: bool = False) -> dict[str, Any]:
 @pytest.fixture
 def separada(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, Any]:
     configuracion = _separacion(tmp_path / "revisados.json")
-    mapa = incidentes.partes_por_articulo(tmp_path / "revisados.json")
-    monkeypatch.setattr(incidentes, "partes_por_articulo", lambda: mapa)
-    monkeypatch.setattr(incidentes, "separaciones_distintas", lambda: frozenset())
-    monkeypatch.setattr(incidentes, "pares_distintos", lambda: frozenset())
+    mapa = suceso.partes_por_articulo(tmp_path / "revisados.json")
+    monkeypatch.setattr(suceso, "partes_por_articulo", lambda: mapa)
+    monkeypatch.setattr(suceso, "separaciones_distintas", lambda: frozenset())
+    monkeypatch.setattr(suceso, "pares_distintos", lambda: frozenset())
     monkeypatch.setattr(revisados, "cargar", lambda: configuracion)
     return configuracion
 
@@ -73,7 +73,7 @@ def _fundir(almacen: Any, motivo: str = "mismo sitio y misma ventana") -> None:
 
 
 def test_sin_separacion_la_regla_las_junta() -> None:
-    assert incidentes.encajan(_alemana(), _nuremberg_griega())
+    assert suceso.encajan(_alemana(), _nuremberg_griega())
 
 
 def test_las_partes_relacionadas_sin_la_marca_no_se_juntan(separada: dict[str, Any]) -> None:
@@ -81,8 +81,8 @@ def test_las_partes_relacionadas_sin_la_marca_no_se_juntan(separada: dict[str, A
     # «distintos». Antes del arreglo, la regla las fundía.
     viejo, nuevo = _alemana(), _nuremberg_griega()
     _relacionadas(viejo, nuevo)
-    assert incidentes.de_partes_separadas(viejo, nuevo)
-    assert not incidentes.encajan(viejo, nuevo)
+    assert suceso.de_partes_separadas(viejo, nuevo)
+    assert not suceso.encajan(viejo, nuevo)
     almacen = _base(viejo, nuevo)
     assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 0
     assert "fusionado_en" not in (almacen.incidente(NUEVO) or {})
@@ -98,15 +98,15 @@ def test_la_parte_recien_nacida_no_se_junta_antes_de_enlazarse(separada: dict[st
 def test_dos_registros_de_la_misma_parte_si_se_juntan(separada: dict[str, Any]) -> None:
     otro = _nuremberg_griega()
     otro["fuentes"] = [{**otro["fuentes"][0], "id": "gdelt-schwaebische"}]
-    assert not incidentes.de_partes_separadas(_alemana(), otro)
-    assert incidentes.encajan(_alemana(), otro)
+    assert not suceso.de_partes_separadas(_alemana(), otro)
+    assert suceso.encajan(_alemana(), otro)
 
 
 def test_un_articulo_de_las_dos_partes_no_separa(tmp_path: Path) -> None:
     configuracion = _separacion(tmp_path / "r.json")
     configuracion["separar"][0]["partes"][1]["fuentes"].append("gdelt-infranken-declaracion-2")
     (tmp_path / "r.json").write_text(json.dumps(configuracion), encoding="utf-8")
-    mapa = incidentes.partes_por_articulo(tmp_path / "r.json")
+    mapa = suceso.partes_por_articulo(tmp_path / "r.json")
     assert "gdelt-infranken" not in mapa
     assert mapa["gdelt-dnews"] == frozenset({(VIEJO, 1)})
 
@@ -144,16 +144,16 @@ def test_la_separacion_deshace_la_union_y_las_enlaza(separada: dict[str, Any]) -
 
 def test_la_union_revisada_a_mano_no_se_deshace(separada: dict[str, Any]) -> None:
     almacen = _base(_alemana(), _nuremberg_griega())
-    _fundir(almacen, incidentes.PREFIJO_REVISADA + "el mismo suceso")
+    _fundir(almacen, suceso.PREFIJO_REVISADA + "el mismo suceso")
     revisados._deshacer_entre_partes(almacen, [[VIEJO], [NUEVO]], AHORA, VOCABULARIO_MODELOS)
     assert (almacen.incidente(NUEVO) or {}).get("fusionado_en") == VIEJO
 
 
 def test_la_configuracion_de_vilna() -> None:
-    mapa = incidentes.partes_por_articulo()
+    mapa = suceso.partes_por_articulo()
     assert mapa["gdelt-8f443417cf9ade19"] == frozenset({("EODI-2025-00178", 0)})
     assert mapa["gdelt-16109fdf16777cbb"] == frozenset({("EODI-2025-00178", 1)})
-    assert frozenset(("EODI-2025-00178", "EODI-2025-00472")) in incidentes.pares_distintos()
+    assert frozenset(("EODI-2025-00178", "EODI-2025-00472")) in suceso.pares_distintos()
 
 
 def test_una_ficha_que_aun_junta_varias_partes_no_bloquea(separada: dict[str, Any]) -> None:
@@ -164,5 +164,5 @@ def test_una_ficha_que_aun_junta_varias_partes_no_bloquea(separada: dict[str, An
     registro = _nuremberg_griega()
     registro["id"] = "EODI-2026-09517"
     registro["fuentes"] = [{**_alemana()["fuentes"][0], "id": "gdelt-infranken-declaracion-1"}]
-    assert not incidentes.de_partes_separadas(mezclada, registro)
-    assert incidentes.de_partes_separadas(_alemana(), _nuremberg_griega())
+    assert not suceso.de_partes_separadas(mezclada, registro)
+    assert suceso.de_partes_separadas(_alemana(), _nuremberg_griega())

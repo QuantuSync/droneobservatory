@@ -31,6 +31,7 @@ from typing import Any
 from almacen.base import Almacen
 from esquema import Documento
 from modelo import coste
+from proceso import suceso
 
 registro = logging.getLogger(__name__)
 
@@ -123,7 +124,7 @@ def marcadas(almacen: Almacen, ahora: datetime) -> dict[str, list[str]]:
     """{ficha: [comprobaciones]} de las fichas vigentes en P, R, V, W o X ahora, con los mismos
     datos que la auditoría del control (recogida/control_fichas.auditoria_del_dia). En V cuenta la
     ficha que queda publicada (la de destino)."""
-    from proceso import auditoria_fichas, incidentes, protegido
+    from proceso import auditoria_fichas, protegido
     from recogida import revisados
 
     desde = (ahora - timedelta(hours=auditoria_fichas.HORAS_OSCILA)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -134,8 +135,8 @@ def marcadas(almacen: Almacen, ahora: datetime) -> dict[str, list[str]]:
         documentos,
         cambios,
         None,
-        incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
-        incidentes.uniones_a_mano(almacen),
+        suceso.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
+        suceso.uniones_a_mano(almacen),
         almacen.fechas_extraccion(desde),
         permitidos,
         primeras=almacen.primeras_publicaciones(),

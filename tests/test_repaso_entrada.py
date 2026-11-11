@@ -15,6 +15,7 @@ from almacen import base as almacen_base
 from almacen.base import Almacen
 from modelo import coste
 from modelo import entrada as peticiones
+from proceso import suceso
 from recogida import control_fichas, entrada
 from recogida import repaso_entrada as repaso
 from tests.ejemplos import VOCABULARIO_MODELOS
@@ -39,11 +40,11 @@ def test_el_conjunto_de_una_ficha_publicada_es_el_del_filtro_sin_ella() -> None:
                    nivel="localidad")  # fmt: skip
     otro_pais = _ficha("EODI-2025-00002", "AT", "2025-10-02T00:00Z", punto=(48.2, 16.4),
                        nivel="localidad")  # fmt: skip
-    elegidas = entrada.conjunto(ficha, [ficha, mismo_dia, lejos, otro_pais])
+    elegidas = suceso.conjunto(ficha, [ficha, mismo_dia, lejos, otro_pais])
     assert [c["id"] for c in elegidas] == ["EODI-2025-00340"]
     # Con el lugar en el país, también los vecinos.
     vaga = {**copy.deepcopy(ficha), "lugar": {"pais": "DE", "nivel": "pais"}}
-    assert {c["id"] for c in entrada.conjunto(vaga, [vaga, mismo_dia, otro_pais])} == {
+    assert {c["id"] for c in suceso.conjunto(vaga, [vaga, mismo_dia, otro_pais])} == {
         "EODI-2025-00340", "EODI-2025-00002"}  # fmt: skip
     # Los grupos: la lista de sospechosas, la fecha aproximada, el lugar vago y el resto.
     assert repaso.grupo_de(ficha) == "a"
@@ -189,8 +190,8 @@ def test_una_union_imposible_no_vale() -> None:
     jueves = _ficha("EODI-2025-00060", "LT", "2025-09-25T12:57Z", "aproximada",
                     punto=(54.64, 25.29), nivel="instalacion",
                     publicada="2025-09-25T15:00Z")  # fmt: skip
-    assert "antes del 2025-09-26" in (repaso.mismo_imposible(viernes, jueves) or "")
-    assert "antes del 2025-09-26" in (repaso.mismo_imposible(jueves, viernes) or "")
+    assert "antes del 2025-09-26" in (suceso.imposible_al_repasar(viernes, jueves) or "")
+    assert "antes del 2025-09-26" in (suceso.imposible_al_repasar(jueves, viernes) or "")
     decision = {"mismo": "EODI-2025-00060", "motivo_mismo": "el mismo cierre"}
     ajustada = repaso.ajustar(decision, viernes, jueves)
     assert "mismo" not in ajustada and ajustada["cambios"] == []
@@ -200,15 +201,15 @@ def test_una_union_imposible_no_vale() -> None:
                    nivel="localidad")  # fmt: skip
     hirbovat = _ficha("EODI-2026-00168", "MD", "2026-09-30T00:00Z", punto=(46.86, 29.33),
                       nivel="localidad")  # fmt: skip
-    assert "km" in (repaso.mismo_imposible(orhei, hirbovat) or "")
+    assert "km" in (suceso.imposible_al_repasar(orhei, hirbovat) or "")
     # Ni dos países: el Shahed del 16 de agosto de 2026 en Moldavia y en Rumanía.
     galati = _ficha("EODI-2026-00106", "RO", "2026-08-16T00:00Z")
     etulia = _ficha("EODI-2026-00171", "MD", "2026-08-16T00:00Z")
-    assert "países distintos" in (repaso.mismo_imposible(galati, etulia) or "")
+    assert "países distintos" in (suceso.imposible_al_repasar(galati, etulia) or "")
     # El mismo aeropuerto el mismo día sí puede serlo.
     otra = _ficha("EODI-2025-00061", "LT", "2025-09-26T00:00Z", punto=(54.65, 25.30),
                   nivel="instalacion", publicada="2025-09-26T13:00Z")  # fmt: skip
-    assert repaso.mismo_imposible(viernes, otra) is None
+    assert suceso.imposible_al_repasar(viernes, otra) is None
     # Sin fichas protegidas: EODI-2025-00004 tiene revisado a mano el número de drones.
     nada = repaso.Protegidas(frozenset())
     assert repaso.ajustar(decision | {"mismo": otra["id"]}, viernes, otra, nada)["cambios"] == [

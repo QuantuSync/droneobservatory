@@ -4,7 +4,7 @@ En cada recogida horaria, antes de publicar, y una vez al día de madrugada sobr
 horas:
 
 1. **Duplicados**, también entre idiomas: los pares de fichas candidatos (proceso/
-   control_fichas.pares_candidatos) se comparan con lo que dicen sus fuentes (modelo/control.py,
+   suceso.pares_candidatos) se comparan con lo que dicen sus fuentes (modelo/control.py,
    «comparar»). Mismo suceso: se unen, se conserva el identificador más antiguo y el otro enlace
    lleva al que queda. Distinto: no se vuelven a comparar salvo que lleguen fuentes nuevas.
    Dudoso: se vuelve a comparar con cada fuente nueva y, a las 6 horas, se resuelve como
@@ -75,6 +75,7 @@ from proceso import (
     no_es_suceso,
     presencia,
     rectificaciones,
+    suceso,
     validaciones,
 )
 from proceso import control_fichas as reglas
@@ -508,13 +509,17 @@ def unir(
     almacen: Almacen, conserva: Documento, une: Documento, motivo: str, ahora: datetime,
     modelos: frozenset[str],
 ) -> Documento | None:  # fmt: skip
-    """Une `une` en `conserva` (su enlace lleva al que queda) con la fusión anotada como
-    revisada: `incidentes.revisar_fusiones` no la deshace. Si una revisión o el experto las dio
-    por sucesos distintos, no las une: la unión queda como propuesta (`proponer`) y devuelve
-    None."""
+    """Une `une` en `conserva` (su enlace lleva al que queda) con la fusión anotada como hecha
+    por el control. Es el punto por el que pasan todas las uniones que decide quien lee las
+    fuentes (el control, el filtro de entrada, la medida, el repaso, las retrospectivas): si la
+    definición las da por sucesos distintos (suceso.veredicto: una revisión, el experto, países
+    distintos, cierres de noches distintas), no las une: la unión queda como propuesta
+    (`proponer`) y devuelve None."""
     from recogida.revisados import completar
 
-    if incidentes.no_se_juntan(conserva, une, incidentes.distintos_del_experto(almacen)):
+    dicho = suceso.veredicto_en(almacen, conserva, une)
+    if dicho.relacion == suceso.DISTINTOS:
+        registro.info("unión %s→%s: %s (%s)", une["id"], conserva["id"], dicho.motivo, dicho.regla)
         proponer(almacen, conserva, une, motivo, ahora)
         return None
     if incidentes.revisiones_distintas(une["id"], conserva["id"]):
@@ -535,7 +540,7 @@ def unir(
     almacen.guardar_incidente(fundido, ahora, modelos)
     almacen.registrar_fusion(
         ahora.strftime("%Y-%m-%dT%H:%MZ"), une["id"], conserva["id"],
-        incidentes.PREFIJO_REVISADA + PREFIJO_UNION + motivo, aportadas,
+        suceso.PREFIJO_REVISADA + PREFIJO_UNION + motivo, aportadas,
         incidentes.instantanea(almacen, conserva, une),
     )  # fmt: skip
     return nuevo
@@ -557,7 +562,7 @@ def reaplicar_uniones(
             pares[(decision["conserva"], decision["une"])] = decision["motivo_es"]
     for fusion in almacen.fusiones():
         if not fusion["revertida"] and fusion["motivo"].startswith(
-            incidentes.PREFIJO_REVISADA + PREFIJO_UNION
+            suceso.PREFIJO_REVISADA + PREFIJO_UNION
         ):
             pares.setdefault((fusion["destino"], fusion["absorbido"]), None)
     rehechas = 0
@@ -598,7 +603,7 @@ def una_union(decision: Documento) -> bool:
 def conservar_la_mas_antigua(
     almacen: Almacen, decisiones: dict[str, Documento], ahora: datetime, modelos: frozenset[str]
 ) -> dict[str, Documento]:
-    """Las uniones del control conservan la ficha más antigua (reglas.mas_antiguo). Las que
+    """Las uniones del control conservan la ficha más antigua (suceso.mas_antiguo). Las que
     conservaron la más nueva (hasta el 14 de octubre de 2026 se miraba la fecha de alta) cambian de
     número: la ficha publicada sigue igual (su lugar, sus fuentes y lo que el control verificó y
     corrigió, cada valor con su afirmación de origen) pero con el identificador de la más antigua;
@@ -613,7 +618,7 @@ def conservar_la_mas_antigua(
             if not una_union(decision):
                 continue
             nuevo_id, viejo_id = decision["conserva"], decision["une"]
-            if reglas.orden_registro(viejo_id) >= reglas.orden_registro(nuevo_id):
+            if suceso.orden_registro(viejo_id) >= suceso.orden_registro(nuevo_id):
                 continue
             conserva = almacen.incidente(nuevo_id)
             une = almacen.incidente(viejo_id)
@@ -640,7 +645,7 @@ def conservar_la_mas_antigua(
             almacen.revertir_fusion(viejo_id)
             almacen.registrar_fusion(
                 fecha, nuevo_id, viejo_id,
-                incidentes.PREFIJO_REVISADA + PREFIJO_UNION + str(decision.get("motivo_es", "")),
+                suceso.PREFIJO_REVISADA + PREFIJO_UNION + str(decision.get("motivo_es", "")),
                 aportadas,
             )  # fmt: skip
             for fusion in otros:
@@ -690,15 +695,8 @@ class Contexto:
 
     @property
     def del_experto(self) -> frozenset[frozenset[str]]:
-        """Los pares que el experto dio por distintos (incidentes.distintos_del_experto)."""
-        return frozenset(
-            frozenset(clave.split(":", 1)[1].split("|"))
-            for clave, d in self.decisiones.items()
-            if clave.startswith("par:")
-            and d.get("decision") == "distinto"
-            and d.get("escalado")
-            and not d.get("plazo")
-        )
+        """Los pares que el experto dio por distintos (suceso.distintos_en)."""
+        return suceso.distintos_en(self.decisiones)
 
     def decision(self, clave: str) -> Documento | None:
         return self.nuevas.get(clave) or self.decisiones.get(clave)
@@ -720,7 +718,7 @@ def espera_vigente(clave: str, activos: dict[str, Documento]) -> bool:
         return False
     if tipo == "par" and len(fichas) == 2:
         a, b = fichas
-        return a is not None and b is not None and reglas.candidatos(a, b)
+        return a is not None and b is not None and suceso.candidatos(a, b)
     return True
 
 
@@ -783,7 +781,7 @@ def pares_por_decidir(
     activos = _activos(ctx.almacen)
     del_experto = ctx.del_experto
     resultado = []
-    for a, b in reglas.pares_candidatos(activos, foco):
+    for a, b in suceso.pares_candidatos(activos, foco):
         clave = reglas.clave_par(a["id"], b["id"])
         huella = reglas.huella_fuentes(a) + reglas.huella_fuentes(b)
         previa = ctx.decision(clave)
@@ -832,7 +830,7 @@ def peticion_par(ctx: Contexto, a: Documento, b: Documento, huella: str,
     cuerpo = peticiones.cuerpo_comparar(_ficha_par(a), fa.bloques, _ficha_par(b), fb.bloques)
     clave = reglas.clave_par(a["id"], b["id"])
     # La que se uniría a la otra, si ya está publicada: esa unión solo la decide el experto.
-    une = reglas.mas_antiguo(a, b)[1]["id"]
+    une = suceso.mas_antiguo(a, b)[1]["id"]
     une_publicada = une if une not in retenidos(ctx.almacen) else None
     # Crítico para el gasto del experto: la unión retiraría una publicada, o una de las dos es
     # un caso crítico.
@@ -939,7 +937,7 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
         # Ya unidos por otro par, o uno retirado entretanto: nada que unir.
         pass
     else:
-        conserva, une = reglas.mas_antiguo(a, b)
+        conserva, une = suceso.mas_antiguo(a, b)
         decision.update(conserva=conserva["id"], une=une["id"])
         try:
             hecha = unir(ctx.almacen, conserva, une, decision["motivo_es"], ctx.ahora, ctx.modelos)
@@ -1575,7 +1573,7 @@ def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
                 ctx.resultado.dudas.setdefault(id_, []).append("retrospectiva sin comprobar")
                 continue
             if decidida["decision"] == "mismo":
-                conserva, une = reglas.mas_antiguo(por_id[decidida["conserva"]], incidente)
+                conserva, une = suceso.mas_antiguo(por_id[decidida["conserva"]], incidente)
                 if unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos):
                     ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
                     decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}
@@ -2877,8 +2875,8 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
             almacen.incidentes(),
             almacen.cambios_desde(desde),
             almacen.copias_archivadas(),
-            incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
-            incidentes.uniones_a_mano(almacen),
+            suceso.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
+            suceso.uniones_a_mano(almacen),
             almacen.fechas_extraccion(desde),
             protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
             {

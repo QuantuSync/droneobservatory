@@ -91,6 +91,7 @@ from exportacion import mejor_origen, seguimiento
 from exportacion import procedencia as origenes
 from modelo import ficha
 from proceso import incidentes as reglas
+from proceso import suceso as definicion
 from proceso.deduccion import catalogo as catalogo_deduccion
 from proceso.estados import Estado
 from proceso.focos_termicos import con_focos
@@ -504,7 +505,7 @@ def fusiones_dudosas(incidentes: list[Documento]) -> list[tuple[str, list[str]]]
     resultado = []
     for posicion, incidente in enumerate(activos):
         anteriores = sorted(
-            otro["id"] for otro in activos[:posicion] if reglas.encajan(otro, incidente)
+            otro["id"] for otro in activos[:posicion] if definicion.encajan(otro, incidente)
         )
         if len(anteriores) > 1:
             resultado.append((incidente["id"], anteriores))

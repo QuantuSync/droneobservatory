@@ -14,6 +14,7 @@ import pytest
 
 from almacen.base import Almacen
 from modelo import coste
+from proceso import suceso
 from recogida import control_fichas, entrada
 from tests.ejemplos import VOCABULARIO_MODELOS
 from tests.test_entrada import Cliente, Servicio, _ficha, _respuesta
@@ -74,11 +75,10 @@ def test_el_filtro_no_compara_con_la_ficha_que_el_experto_dio_por_distinta() -> 
     almacen = _base(F777, F778)
     almacen.guardar_controles({PAR: CASO["control"][PAR]}, "2026-11-11T02:17:03Z")
     activos = [F777, F778]
-    assert [d["id"] for d in entrada.conjunto(F778, activos)] == ["EODI-2026-00777"]
-    from proceso import incidentes
+    assert [d["id"] for d in suceso.conjunto(F778, activos)] == ["EODI-2026-00777"]
 
-    distintos = incidentes.distintos_del_experto(almacen)
-    assert entrada.conjunto(F778, activos, distintos) == []
+    distintos = suceso.distintos_del_experto(almacen)
+    assert suceso.conjunto(F778, activos, distintos) == []
     cliente = Cliente([_respuesta(fecha_frase=FRASE_778, lugar_frase=FRASE_778)])
     ctx = _contexto(almacen, cliente)
     assert entrada.filtrar(ctx, {"EODI-2026-00777"}) == 1
@@ -109,12 +109,12 @@ def test_la_ficha_de_lituania_no_se_une_a_la_de_letonia() -> None:
     """EODI-2026-00779 (LT, el aviso del Centro Nacional de Gestión de Crisis) y EODI-2026-00778
     (LV): países distintos y una autoridad del suyo. El experto dijo «el mismo»; no se unen."""
     assert (F779["lugar"]["pais"], F778["lugar"]["pais"]) == ("LT", "LV")
-    regla = entrada.nunca_el_mismo(F779, F778, {NKVC: "LT"}, {})
+    regla = suceso.nunca_el_mismo(F779, F778, {NKVC: "LT"}, {})
     assert regla is not None and "LT y LV" in regla
     # También del otro lado, y con lo que la tabla sabe de la autoridad letona de la 00777.
-    assert entrada.nunca_el_mismo(F778, F779, {}, {NKVC: "LT"}) is not None
-    assert entrada.paises_de_autoridades(F777, {}) == {"LV"}
-    assert entrada.nunca_el_mismo(F779, F777, {}, {}) is not None
+    assert suceso.nunca_el_mismo(F778, F779, {}, {NKVC: "LT"}) is not None
+    assert suceso.paises_de_autoridades(F777, {}) == {"LV"}
+    assert suceso.nunca_el_mismo(F779, F777, {}, {}) is not None
 
     almacen = _base(F778, F779)
     declaracion = next(f for f in F779["fuentes"] if "-declaracion-" in f["id"])
@@ -137,10 +137,10 @@ def test_sin_autoridad_de_ninguno_de_los_dos_paises_decide_el_experto() -> None:
     ninguno de los dos habla. La regla no dice nada."""
     bulgara = _ficha("EODI-2026-00689", "BG", "2026-10-13T00:00Z")
     rumana = _ficha("EODI-2026-00513", "RO", "2026-10-12T22:30Z", "minuto")
-    assert entrada.nunca_el_mismo(bulgara, rumana, {}, {}) is None
+    assert suceso.nunca_el_mismo(bulgara, rumana, {}, {}) is None
     # Una autoridad de un tercer país (la OTAN) tampoco la activa.
-    assert entrada.nunca_el_mismo(bulgara, rumana, {"NATO": "NATO"}, {}) is None
-    assert entrada.nunca_el_mismo(bulgara, rumana, {"Ministry of Defence": "BG"}, {}) is not None
+    assert suceso.nunca_el_mismo(bulgara, rumana, {"NATO": "NATO"}, {}) is None
+    assert suceso.nunca_el_mismo(bulgara, rumana, {"Ministry of Defence": "BG"}, {}) is not None
 
 
 def _alerta(id_: str, nombre: str, frase: str) -> dict[str, Any]:
@@ -152,28 +152,20 @@ def _alerta(id_: str, nombre: str, frase: str) -> dict[str, Any]:
     return {**ficha, "id": id_, "fuentes": [articulo]}
 
 
-def test_dos_alertas_letonas_de_otra_zona_y_otra_hora_no_son_el_mismo_suceso() -> None:
+def test_dos_alertas_letonas_de_otra_zona_y_otra_hora_las_decide_quien_lee_las_fuentes() -> None:
+    """Del 11 de noviembre de 2026 a las 12:04 hasta la definición, dos alertas de la misma
+    autoridad en zonas y horas distintas nunca eran el mismo suceso: esa regla partió en dos la
+    noche del 10 al 11 en Letonia. Ya no hay regla de zonas: las alertas que una autoridad va
+    dando en una noche son la misma oleada, y lo dice quien lee las fuentes."""
     smiltene = _alerta(
-        "EODI-2026-00790",
+        "EODI-2026-09790",
         "papildinats-plkst-0318-gaisa-telpas-apdraudejums-izsludinats-smiltenes-un-gulbenes-novados",
         "Nacionālie bruņotie spēki informē, ka 11. novembrī no plkst. 03:18 Latvijas gaisa telpā "
         "Smiltenes un Gulbenes novados ir izsludināts apdraudējums.",
     )
-    regla = entrada.nunca_el_mismo(smiltene, F777, {}, {})
-    assert regla is not None and "zonas distintas y a horas distintas" in regla
-    decision = entrada.sin_el_mismo_imposible(
-        {"mismo": "EODI-2026-00777", "motivo_mismo": "x", "autoridades": {}}, smiltene, F777, {}
-    )
-    assert "mismo" not in decision and decision["mismo_descartado"]["id"] == "EODI-2026-00777"
-    # La misma zona a otra hora (la alerta de Krāslava que sigue) sí puede ser el mismo.
-    kraslava = _alerta(
-        "EODI-2026-00791",
-        "apdraudejums-kraslavas-novada",
-        "no plkst. 02.40 Latvijas gaisa telpā Krāslavas novadā ir izsludināts apdraudējums.",
-    )
-    assert entrada.nunca_el_mismo(kraslava, F777, {}, {}) is None
-    igual = {"mismo": "EODI-2026-00777", "autoridades": {}}
-    assert entrada.sin_el_mismo_imposible(igual, kraslava, F777, {}) is igual
+    assert suceso.nunca_el_mismo(smiltene, F777, {}, {}) is None
+    igual = {"mismo": "EODI-2026-00777", "motivo_mismo": "x", "autoridades": {}}
+    assert entrada.sin_el_mismo_imposible(igual, smiltene, F777, {}) is igual
 
 
 # --- La nota-resumen de la noche y sus alertas ---------------------------------------------
@@ -185,7 +177,7 @@ TRES_DRONES = (
 NOTA_RESUMEN = "nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati"
 
 
-def _resumen(id_: str = "EODI-2026-00784", dia: str = "2026-11-11T00:00Z") -> dict[str, Any]:
+def _resumen(id_: str = "EODI-2026-09784", dia: str = "2026-11-11T00:00Z") -> dict[str, Any]:
     """La ficha de la nota de las Fuerzas Armadas de Letonia que cuenta la noche (como la real
     EODI-2026-00784): el país a secas y ninguna zona."""
     ficha = _alerta(id_, NOTA_RESUMEN, TRES_DRONES)
@@ -203,51 +195,57 @@ def _resumen(id_: str = "EODI-2026-00784", dia: str = "2026-11-11T00:00Z") -> di
 def test_la_nota_de_la_noche_y_sus_alertas_son_el_mismo_suceso() -> None:
     """EODI-2026-00784 y EODI-2026-00777: el experto las dio por distintas («A resume la entrada
     de tres drones… sin sitio concreto, mientras B, alertas locales») y salieron las dos."""
-    regla = entrada.resumen_de_la_misma_noche(_resumen(), F777)
+    regla = suceso.resumen_de_la_misma_noche(_resumen(), F777)
     assert regla is not None and "esa misma noche" in regla
-    assert entrada.resumen_de_la_misma_noche(F777, _resumen()) == regla
-    # La regla de «otra alerta» no las separa: la nota no nombra zona ni hora.
-    assert entrada.nunca_el_mismo(_resumen(), F777, {}, {}) is None
+    assert suceso.resumen_de_la_misma_noche(F777, _resumen()) == regla
+    dicho = suceso.veredicto(_resumen(), F777)
+    assert (dicho.relacion, dicho.regla) == (suceso.MISMO, suceso.REGLA_RESUMEN)
+    # Aunque el experto las diera por distintas: la regla 3 va antes que la 4.
+    par = frozenset({"EODI-2026-09784", "EODI-2026-00777"})
+    assert suceso.veredicto(_resumen(), F777, frozenset({par})).regla == suceso.REGLA_RESUMEN
     # Otra noche no: la nota de tres días después cuenta otra cosa.
-    assert entrada.resumen_de_la_misma_noche(_resumen(dia="2026-11-14T00:00Z"), F777) is None
-    # Dos alertas de zonas distintas no son «nota y alertas»: siguen siendo dos sucesos.
+    assert suceso.resumen_de_la_misma_noche(_resumen(dia="2026-11-14T00:00Z"), F777) is None
+    # Dos fichas de alertas de zonas distintas no son «nota y alertas»: no hay regla firme en
+    # ningún sentido y decide quien lee las fuentes.
     smiltene = _alerta(
-        "EODI-2026-00790", "papildinats-plkst-0318",
+        "EODI-2026-09790", "papildinats-plkst-0318",
         "no plkst. 03:18 Latvijas gaisa telpā Smiltenes un Gulbenes novados ir izsludināts",
     )  # fmt: skip
-    assert entrada.resumen_de_la_misma_noche(smiltene, F777) is None
-    assert entrada.nunca_el_mismo(smiltene, F777, {}, {}) is not None
+    assert suceso.resumen_de_la_misma_noche(smiltene, F777) is None
+    assert suceso.veredicto(smiltene, F777).relacion != suceso.DISTINTOS
     # Una nota que no habla de la noche (un dron hallado, sin zona del nomenclátor) tampoco.
-    hallado = _alerta("EODI-2026-00795", "atrasts", "Atrasts bezpilota lidaparāts, informē NBS")
-    assert entrada.resumen_de_la_misma_noche(hallado, F777) is None
+    hallado = _alerta("EODI-2026-09795", "atrasts", "Atrasts bezpilota lidaparāts, informē NBS")
+    assert suceso.resumen_de_la_misma_noche(hallado, F777) is None
     # Ni entre países: la ficha de Lituania de esa noche no es la nota letona.
-    assert entrada.resumen_de_la_misma_noche(_resumen(), F779) is None
+    assert suceso.resumen_de_la_misma_noche(_resumen(), F779) is None
 
 
-def test_el_filtro_une_la_nota_de_la_noche_aunque_el_experto_las_diera_por_distintas() -> None:
+def test_la_nota_de_la_noche_se_une_sin_preguntar_aunque_el_experto_las_diera_por_distintas() -> (
+    None
+):
+    """La une la regla de fusión, antes de que nadie pregunte: ni el control ni el filtro la
+    ven. El par que el experto dio por distinto no lo impide (ni a la unión ni al cerrojo), y
+    la auditoría no marca esa unión."""
+    from proceso import auditoria_fichas, incidentes
+
     almacen = _base(F777, _resumen())
-    par = "par:EODI-2026-00777|EODI-2026-00784"
+    par = "par:EODI-2026-00777|EODI-2026-09784"
     distinto = {**CASO["control"][PAR], "huella": "x"}
     almacen.guardar_controles({par: distinto}, "2026-11-11T09:17:03Z")
-    from proceso import incidentes
+    del_experto = suceso.distintos_del_experto(almacen)
+    assert frozenset({"EODI-2026-00777", "EODI-2026-09784"}) in del_experto
 
-    assert frozenset({"EODI-2026-00777", "EODI-2026-00784"}) in incidentes.distintos_del_experto(
-        almacen
-    )
-    cliente = Cliente([])  # no se pregunta al experto
-    ctx = _contexto(almacen, cliente)
-    assert entrada.filtrar(ctx, {"EODI-2026-00777"}) == 1
-    decision = ctx.nuevas[entrada.clave("EODI-2026-00784")]
-    assert (decision["decision"], decision["conserva"], decision["une"]) == (
-        entrada.UNIDA, "EODI-2026-00777", "EODI-2026-00784",
-    )  # fmt: skip
-    assert decision["regla"] == entrada.REGLA_RESUMEN and cliente.pedidas == []
-    unida = almacen.incidente("EODI-2026-00784")
+    assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 1
+    unida = almacen.incidente("EODI-2026-09784")
     queda = almacen.incidente("EODI-2026-00777")
     assert unida is not None and unida["fusionado_en"] == "EODI-2026-00777"
     assert queda is not None
     assert any(NOTA_RESUMEN in str(f.get("enlace")) for f in queda["fuentes"])
-    # El par queda decidido de nuevo, por la regla: ya no es de los que el experto dio por
-    # distintos (ninguna unión ni el cerrojo lo habrían dejado pasar).
-    assert almacen.controles("par:")[par]["regla"] == entrada.REGLA_RESUMEN
-    assert not incidentes.distintos_del_experto(almacen)
+    (fusion,) = [f for f in almacen.fusiones() if not f["revertida"]]
+    assert "esa misma noche" in fusion["motivo"]
+    # Nada la deshace ni la marca.
+    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == []
+    assert auditoria_fichas.uniones_marcadas(almacen.incidentes(), del_experto) == []
+    # Y el filtro no tiene nada que hacer con ella.
+    ctx = _contexto(almacen, Cliente([]))
+    assert entrada.filtrar(ctx, {"EODI-2026-00777"}) == 0

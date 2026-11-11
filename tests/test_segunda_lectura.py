@@ -16,8 +16,8 @@ import pytest
 
 from almacen.base import Almacen
 from modelo import coste, secundario
-from proceso import control_fichas as reglas
 from proceso import segunda_lectura as lectura
+from proceso import suceso
 from recogida import control_fichas, rectificaciones
 from recogida import segunda_lectura as segunda
 from tests import ejemplos
@@ -223,7 +223,7 @@ def test_pares_con_margenes_amplios() -> None:
     b["id"] = "EODI-2025-00160"
     b["tiempo"] = {"inicio": ejemplos.instante("2025-09-24T20:00Z", "hora")}
     # A 48 horas: el control no los compara (el mismo día o la misma noche); la segunda lectura sí.
-    assert not reglas.candidatos(a, b)
+    assert not suceso.candidatos(a, b)
     assert len(lectura.pares_amplios([a, b], 72, 30, set())) == 1
     assert lectura.pares_amplios([a, b], 72, 30, {f"par:{ID}|EODI-2025-00160"}) == []
     b["relacionados"] = [{"id": ID}]

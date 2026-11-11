@@ -23,6 +23,7 @@ from modelo.cliente import (
 )
 from modelo.paginas import primeras_frases
 from proceso import extraccion, incidentes
+from proceso import suceso as definicion
 from proceso.validacion_ficha import Contexto, validar
 from proceso.validaciones import validar_incidente
 from recogida import extractor, gdelt
@@ -516,9 +517,9 @@ def test_mas_de_doce_horas_sin_actividad_es_otro_incidente() -> None:
         "tiempo": {"inicio": {"valor": "2025-09-23T09:00Z", "precision": "hora"}},
         "fuentes": [],
     }
-    assert not incidentes.misma_ventana(a, b)
+    assert not definicion.misma_ventana(a, b)
     b["tiempo"]["inicio"]["valor"] = "2025-09-22T23:00Z"
-    assert incidentes.misma_ventana(a, b)
+    assert definicion.misma_ventana(a, b)
 
 
 def test_varios_objetivos_en_una_noche_forman_un_episodio(almacen: Almacen) -> None:

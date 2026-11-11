@@ -7,8 +7,7 @@ from typing import Any
 
 import pytest
 
-from proceso import auditoria_fichas, incidentes
-from proceso import control_fichas as reglas
+from proceso import auditoria_fichas, incidentes, suceso
 from recogida import control_fichas, revisados
 from tests.ejemplos import VOCABULARIO_MODELOS
 from tests.test_control_fichas import AHORA, _base, _nuremberg_alemana, _nuremberg_griega
@@ -20,7 +19,7 @@ MOTIVO = {"es": "Dos sucesos distintos.", "en": "Two different events."}
 
 @pytest.fixture
 def revisados_distintos(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(incidentes, "pares_distintos", lambda: frozenset({PAR}))
+    monkeypatch.setattr(suceso, "pares_distintos", lambda: frozenset({PAR}))
     configuracion: dict[str, Any] = {
         "separar": [],
         "distintos": [{"incidentes": [VIEJO, NUEVO], "separado_de": VIEJO, "motivo": MOTIVO}],
@@ -56,15 +55,15 @@ def test_la_revision_vale_para_el_control_el_filtro_y_la_segunda_lectura(
     revisados_distintos: None,
 ) -> None:
     viejo, nuevo = _nuremberg_alemana(), _nuremberg_griega()
-    assert reglas.separados(viejo, nuevo)
-    assert not reglas.candidatos(viejo, nuevo)
-    assert not incidentes.encajan(viejo, nuevo)
+    assert suceso.separados(viejo, nuevo)
+    assert not suceso.candidatos(viejo, nuevo)
+    assert not suceso.encajan(viejo, nuevo)
 
 
 def test_el_experto_que_dio_distintos_impide_la_union() -> None:
     almacen = _base(_nuremberg_alemana(), _nuremberg_griega())
     _decision_par(almacen, "distinto", escalado=True)
-    assert incidentes.distintos_del_experto(almacen) == frozenset({PAR})
+    assert suceso.distintos_del_experto(almacen) == frozenset({PAR})
     viejo, nuevo = almacen.incidente(VIEJO), almacen.incidente(NUEVO)
     assert viejo is not None and nuevo is not None
     assert (
@@ -76,7 +75,7 @@ def test_el_experto_que_dio_distintos_impide_la_union() -> None:
 def test_el_distinto_del_modelo_base_o_del_plazo_no_impide_la_union() -> None:
     almacen = _base(_nuremberg_alemana(), _nuremberg_griega())
     _decision_par(almacen, "distinto", escalado=False)
-    assert incidentes.distintos_del_experto(almacen) == frozenset()
+    assert suceso.distintos_del_experto(almacen) == frozenset()
     viejo, nuevo = almacen.incidente(VIEJO), almacen.incidente(NUEVO)
     assert viejo is not None and nuevo is not None
     assert control_fichas.unir(almacen, viejo, nuevo, "el mismo", AHORA, VOCABULARIO_MODELOS)
@@ -143,7 +142,7 @@ def test_la_auditoria_del_control_mira_las_uniones_como_la_manual(
 
 
 def test_la_configuracion_de_sulina() -> None:
-    assert frozenset(("EODI-2026-00538", "EODI-2026-00541")) in incidentes.pares_distintos()
+    assert frozenset(("EODI-2026-00538", "EODI-2026-00541")) in suceso.pares_distintos()
     for par in revisados.cargar()["distintos"]:
         assert len(par["incidentes"]) == 2 and par["separado_de"] in par["incidentes"]
         assert par["motivo"]["es"] and par["motivo"]["en"]

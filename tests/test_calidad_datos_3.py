@@ -16,6 +16,7 @@ from almacen.base import Almacen
 from esquema import VERSION, Documento, Esquema, validador
 from exportacion import procedencia as origenes
 from proceso import detalle, extraccion, fechas, incidentes
+from proceso import suceso as definicion
 from proceso.noticias import (
     Articulo,
     Candidato,
@@ -296,7 +297,7 @@ def inc(
 def test_la_misma_instalacion_dos_noches_seguidas_son_dos_incidentes() -> None:
     dos = inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto")
     tres = inc("EODI-2025-00002", "2025-10-03T19:30Z", "hora", primera="2025-10-04T06:00Z")
-    assert not incidentes.encajan(dos, tres)
+    assert not definicion.encajan(dos, tres)
     # Aunque las noticias del primero sigan saliendo el día 3: no son actividad del suceso.
     dos["fuentes"].append(
         {
@@ -304,7 +305,7 @@ def test_la_misma_instalacion_dos_noches_seguidas_son_dos_incidentes() -> None:
             "fecha": ejemplos.instante("2025-10-03T18:00Z", "aproximada"),
         }
     )
-    assert not incidentes.encajan(dos, tres)
+    assert not definicion.encajan(dos, tres)
 
 
 def test_dos_objetivos_la_misma_noche_son_dos_incidentes() -> None:
@@ -312,16 +313,16 @@ def test_dos_objetivos_la_misma_noche_son_dos_incidentes() -> None:
                    (50.901, 4.484), "BE")  # fmt: skip
     lieja = inc("EODI-2025-00002", "2025-11-04T19:09Z", "minuto", "Liège Airport",
                 (50.637, 5.443), "BE")  # fmt: skip
-    assert not incidentes.encajan(bruselas, lieja)
+    assert not definicion.encajan(bruselas, lieja)
 
 
 def test_la_fecha_de_publicacion_casa_con_el_suceso_de_la_vispera() -> None:
     suceso_ = inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto")
     nota = inc("EODI-2025-00002", "2025-10-03T06:40Z", "aproximada")
-    assert incidentes.encajan(suceso_, nota)
+    assert definicion.encajan(suceso_, nota)
     # Con el día escrito, el día siguiente es otro suceso.
     otro_dia = inc("EODI-2025-00003", "2025-10-03T00:00Z", "dia")
-    assert not incidentes.encajan(suceso_, otro_dia)
+    assert not definicion.encajan(suceso_, otro_dia)
 
 
 def test_la_madrugada_es_la_noche_de_la_vispera_en_hora_local() -> None:
@@ -329,7 +330,7 @@ def test_la_madrugada_es_la_noche_de_la_vispera_en_hora_local() -> None:
     hora = inc("EODI-2026-00001", "2026-05-28T22:00Z", "hora", "Galaţi", (45.437, 28.05), "RO")
     vispera = inc("EODI-2026-00002", "2026-05-28T00:00Z", "dia", "Galaţi", (45.437, 28.05), "RO")
     dia = inc("EODI-2026-00003", "2026-05-29T00:00Z", "dia", "Galaţi", (45.437, 28.05), "RO")
-    assert incidentes.encajan(vispera, hora) and incidentes.encajan(hora, dia)
+    assert definicion.encajan(vispera, hora) and definicion.encajan(hora, dia)
 
 
 def test_en_la_fusion_queda_el_publicado_y_despues_el_de_mas_fuentes_oficiales(
@@ -343,7 +344,7 @@ def test_en_la_fusion_queda_el_publicado_y_despues_el_de_mas_fuentes_oficiales(
     assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 1
     fundido = almacen.incidente("EODI-2025-00025")
     assert fundido is not None and fundido["fusionado_en"] == "EODI-2025-00154"
-    destino, _ = incidentes.destino_de(retrospectiva, original, frozenset({"EODI-2025-00025"}))
+    destino, _ = definicion.destino_de(retrospectiva, original, frozenset({"EODI-2025-00025"}))
     assert destino["id"] == "EODI-2025-00025"  # solo él estaba publicado
 
 
@@ -353,10 +354,10 @@ def test_entre_una_ficha_de_2025_y_una_de_2026_queda_la_de_2025() -> None:
     antigua = inc("EODI-2025-00199", "2025-12-05T09:00Z", "hora")
     nueva = inc("EODI-2026-00094", "2025-12-05T09:30Z", "hora", fuentes=4)
     ambas = frozenset({"EODI-2025-00199", "EODI-2026-00094"})
-    assert incidentes.destino_de(nueva, antigua, ambas)[0]["id"] == "EODI-2025-00199"
+    assert definicion.destino_de(nueva, antigua, ambas)[0]["id"] == "EODI-2025-00199"
     # Lo publicado sigue mandando: solo la de 2026 tenía enlace.
     solo_nueva = frozenset({"EODI-2026-00094"})
-    assert incidentes.destino_de(nueva, antigua, solo_nueva)[0]["id"] == "EODI-2026-00094"
+    assert definicion.destino_de(nueva, antigua, solo_nueva)[0]["id"] == "EODI-2026-00094"
 
 
 def test_lo_que_hereda_el_destino_lleva_su_afirmacion_aunque_compartan_fuente() -> None:
@@ -377,15 +378,20 @@ def test_lo_que_hereda_el_destino_lleva_su_afirmacion_aunque_compartan_fuente() 
 
 def test_un_dia_con_hora_no_hace_de_puente_hacia_la_noche_siguiente() -> None:
     # El extractor dio «2 de octubre, 22:00 UTC» con precisión de día: cuenta su fecha, el 2,
-    # y el cierre del 3 por la tarde es otro suceso. Dos días seguidos sin hora sí casan.
+    # y el cierre del 3 por la tarde es otro suceso. Dos días seguidos sin hora pueden ser una
+    # noche o dos sucesos (docs/definicion_suceso.md): no se unen solos, lo decide quien lee
+    # las fuentes. Hasta el 11 de noviembre de 2026 se unían sin preguntar.
     puente = inc("EODI-2025-00001", "2025-10-02T22:00Z", "dia")
     tercero = inc("EODI-2025-00002", "2025-10-03T19:30Z", "hora")
-    assert not incidentes.encajan(puente, tercero)
-    assert incidentes.encajan(puente, inc("EODI-2025-00003", "2025-10-03T00:00Z", "dia"))
+    assert not definicion.encajan(puente, tercero)
+    siguiente = inc("EODI-2025-00003", "2025-10-03T00:00Z", "dia")
+    assert not definicion.encajan(puente, siguiente)
+    assert definicion.veredicto(puente, siguiente).relacion == definicion.EXPERTO
+    assert definicion.encajan(puente, inc("EODI-2025-00004", "2025-10-02T00:00Z", "dia"))
     # Con un fin conocido se miden las 12 horas sin actividad aunque el inicio sea un día.
     puente["tiempo"]["fin"] = ejemplos.instante("2025-10-03T03:00Z")
     tercero["tiempo"]["inicio"] = ejemplos.instante("2025-10-03T17:30Z", "hora")
-    assert not incidentes.encajan(puente, tercero)
+    assert not definicion.encajan(puente, tercero)
 
 
 def test_la_fusion_dudosa_no_se_hace(almacen: Almacen) -> None:
@@ -403,16 +409,17 @@ def test_si_los_anteriores_encajan_entre_si_no_hay_duda(almacen: Almacen) -> Non
     for documento in (
         inc("EODI-2026-00001", "2026-08-04T00:00Z", "dia"),
         inc("EODI-2026-00002", "2026-08-05T00:00Z", "dia"),
-        # El 5 encaja con el 4 y con el 5 (días seguidos del mismo sitio), y esos dos encajan
-        # entre sí: es un mismo suceso partido y se funde.
+        # Los dos del 5 son el mismo sitio y la misma jornada: se funden. El del 4 y los del 5
+        # son días seguidos sin hora: una noche o dos sucesos, y eso no lo decide la regla.
         inc("EODI-2026-00003", "2026-08-05T00:00Z", "dia"),
     ):
         almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
-    assert incidentes.todos_encajan(
-        [i for i in almacen.incidentes() if i["id"] != "EODI-2026-00003"]
-    )
-    assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) >= 1
-    assert len([i for i in almacen.incidentes() if incidentes.activo(i)]) < 3
+    del_5 = [i for i in almacen.incidentes() if i["id"] != "EODI-2026-00001"]
+    assert definicion.todos_encajan(del_5)
+    assert not definicion.todos_encajan(almacen.incidentes())
+    assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 1
+    activos = [i["id"] for i in almacen.incidentes() if incidentes.activo(i)]
+    assert activos == ["EODI-2026-00001", "EODI-2026-00002"]
 
 
 def test_una_fecha_de_publicacion_no_compite_con_una_escrita(almacen: Almacen) -> None:
@@ -802,8 +809,8 @@ def test_las_fechas_aproximadas_no_cambian_lo_que_ya_estaba_bien() -> None:
                   (55.618, 12.656), "DK")  # fmt: skip
     nota = inc("EODI-2025-00002", "2025-09-22T21:00Z", "aproximada", "Københavns Lufthavn",
                (55.618, 12.656), "DK")  # fmt: skip
-    assert incidentes.encajan(suceso_, nota)
-    assert timedelta(hours=1) < incidentes.MADRUGADA
+    assert definicion.encajan(suceso_, nota)
+    assert timedelta(hours=1) < definicion.MADRUGADA
 
 
 def test_el_vocabulario_describe_cada_indicador_y_cada_origen_del_inicio() -> None:
