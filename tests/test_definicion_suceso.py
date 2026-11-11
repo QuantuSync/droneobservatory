@@ -122,13 +122,37 @@ def test_dos_dias_seguidos_sin_hora_no_se_unen_sin_preguntar() -> None:
     b = sin_revisar("2026-00773", "EODI-2026-09773")
     a["tiempo"] = {"inicio": ejemplos.instante("2026-11-07T00:00Z", "dia")}
     b["tiempo"] = {"inicio": ejemplos.instante("2026-11-08T00:00Z", "dia")}
+    # Las dos cuentan un cierre de pista y sus noticias son del lunes 9: dos cierres de noches
+    # distintas, dos sucesos (regla 5).
+    assert suceso.cierres_de_noches_distintas(a, b)
+    veredicto = dicho(a, b)
+    assert (veredicto.relacion, veredicto.regla) == (suceso.DISTINTOS, suceso.REGLA_CIERRES)
+    # Sin cierre no hay regla firme: ni se unen solas ni son distintas sin leer las fuentes.
+    for ficha in (a, b):
+        ficha.pop("consecuencias")
     assert dicho(a, b).relacion == suceso.EXPERTO
-    # Tampoco son «dos cierres de noches distintas»: con el día a secas, el cierre del 8 puede
-    # ser el de la noche que empezó el 7.
-    assert not suceso.cierres_de_noches_distintas(a, b)
     assert not suceso.encajan(a, b)
     b["tiempo"] = {"inicio": ejemplos.instante("2026-11-07T00:00Z", "dia")}
     assert dicho(a, b).relacion == suceso.MISMO
+
+
+def test_el_cierre_de_madrugada_es_de_la_noche_de_la_vispera() -> None:
+    """EODI-2026-00779 (Lituania, la suspensión del aeropuerto de Kaunas, fechada el miércoles
+    11 de noviembre por una nota de las 02:30 de ese día) y EODI-2026-00792 (las alertas desde
+    las 23:00 del martes 10): la misma noche. Con la regla de antes eran «dos cierres de noches
+    distintas» y nunca se habrían unido."""
+    kaunas, lituania = suelta("2026-00779"), f("2026-00792")
+    assert kaunas["tiempo"]["inicio"] == {"valor": "2026-11-11T00:00Z", "precision": "dia"}
+    assert suceso.noches_del_cierre(kaunas) == {date(2026, 11, 10), date(2026, 11, 11)}
+    assert suceso.noches_del_cierre(lituania) == {date(2026, 11, 10)}
+    assert not suceso.cierres_de_noches_distintas(kaunas, lituania)
+    assert dicho(kaunas, lituania).relacion == suceso.EXPERTO
+    # El cierre del día siguiente por la tarde, con sus noticias de esa tarde, sí es otra noche.
+    tarde = copy.deepcopy(kaunas)
+    for fuente in tarde["fuentes"]:
+        fuente["fecha"] = ejemplos.instante("2026-11-11T19:30Z")
+    assert suceso.noches_del_cierre(tarde) == {date(2026, 11, 11)}
+    assert suceso.cierres_de_noches_distintas(tarde, lituania)
 
 
 def test_moldavia_una_noche_no_son_dos_dias() -> None:

@@ -415,24 +415,30 @@ def noche_del_cierre(documento: Documento) -> date | None:
 
 def noches_del_cierre(documento: Documento) -> set[date]:
     """Las noches (el día local de su tarde) en que pudo ser un cierre con el día sabido: con
-    hora, una sola (`noche_del_cierre`); con el día a secas, la que empieza ese día o la que
-    acaba en su madrugada, porque una noche se fecha por su tarde o por su madrugada («in der
-    Nacht auf Dienstag (13. Oktober)», «am frühen Dienstagmorgen»). Vacío si no hubo cierre o si
-    el día es el de la publicación."""
+    hora, una sola (`noche_del_cierre`). Con el día a secas, la de ese día; y también la de la
+    víspera si su primera noticia salió antes de la tarde de ese día: entonces el cierre no fue
+    esa tarde, sino de madrugada, que es la noche que empezó la víspera (una noche se fecha por
+    su tarde o por su madrugada: «in der Nacht auf Dienstag (13. Oktober)», «am frühen
+    Dienstagmorgen»). Vacío si no hubo cierre o si el día es el de la publicación."""
     unica = noche_del_cierre(documento)
     if unica is None:
         return set()
-    if documento["tiempo"]["inicio"]["precision"] == "dia":
-        return {unica, unica - timedelta(days=1)}
-    return {unica}
+    if documento["tiempo"]["inicio"]["precision"] != "dia" or not documento.get("fuentes"):
+        return {unica}
+    suyo = str(documento["lugar"].get("pais", ""))
+    zona = fechas.zona(suyo)
+    primera = momento_primera_noticia(documento)
+    local = primera.astimezone(zona) if zona else primera
+    antes_de_la_tarde = (local.date(), local.hour) < (unica, HORA_TARDE)
+    return {unica, unica - timedelta(days=1)} if antes_de_la_tarde else {unica}
 
 
 def cierres_de_noches_distintas(a: Documento, b: Documento) -> bool:
     """Dos cierres del mismo sitio en noches distintas son dos incidentes, aunque las noticias
     del segundo salgan al día siguiente del primero (Lieja, 8 y 9 de noviembre de 2025). Con el
     día a secas en alguno de los dos, solo si ninguna de sus noches posibles es la del otro: el
-    cierre de Kaunas fechado el 11 de noviembre de 2026 (EODI-2026-00779) es de la noche que
-    empezó el 10 a las 23:00 (EODI-2026-00792)."""
+    cierre de Kaunas fechado el 11 de noviembre de 2026 por una nota de las 02:30 de ese día
+    (EODI-2026-00779) es de la noche que empezó el 10 a las 23:00 (EODI-2026-00792)."""
     noches_a, noches_b = noches_del_cierre(a), noches_del_cierre(b)
     return bool(noches_a) and bool(noches_b) and noches_a.isdisjoint(noches_b)
 
@@ -1277,15 +1283,26 @@ def _nombra_al_otro_pais(ficha: Documento, otro_pais: str) -> bool:
     )
 
 
+def entra_de_fuera(documento: Documento) -> bool:
+    """El suceso es de drones que entran en el país desde fuera (`pruebas.entrada_exterior`)."""
+    return (documento.get("pruebas") or {}).get("entrada_exterior") is True
+
+
 def mismo_episodio_transfronterizo(a: Documento, b: Documento) -> bool:
     """Dos sucesos de países vecinos que son el mismo episodio físico a los dos lados de la
-    frontera: de la misma jornada, y las fuentes de una cuentan el paso al país de la otra (una
-    frase suya nombra ese país) o las dos comparten una noticia. Siguen siendo dos sucesos, uno
-    por país; se enlazan con el mismo episodio. El dron de la noche del 10 al 11 de noviembre de
-    2026 cruzó Lituania (EODI-2026-00792), Letonia (EODI-2026-00777) y llegó a Estonia
-    (EODI-2026-00801)."""
+    frontera: en los dos, drones que entran desde fuera, de la misma jornada, y las fuentes de
+    uno cuentan el paso al país del otro (una frase suya nombra ese país) o los dos comparten
+    una noticia. Siguen siendo dos sucesos, uno por país; se enlazan con el mismo episodio. El
+    dron de la noche del 10 al 11 de noviembre de 2026 cruzó Lituania (EODI-2026-00792), Letonia
+    (EODI-2026-00777) y llegó a Estonia (EODI-2026-00801).
+
+    Que una noticia nombre el otro país no basta: las de un aeropuerto cerrado citan los de los
+    países de al lado («Drohne legt Flugverkehr in Bremen lahm – weitere Sichtung in Belgien»)
+    y no es el mismo episodio. Medido sobre el registro del 11 de noviembre de 2026: 35 pares
+    con la frase sola, 14 con los drones que entran desde fuera en los dos, todos de la misma
+    oleada."""
     pais_a, pais_b = pais(a), pais(b)
-    if pais_a == pais_b:
+    if pais_a == pais_b or not (entra_de_fuera(a) and entra_de_fuera(b)):
         return False
     if pais_b not in VECINOS.get(pais_a, frozenset()) and pais_a not in VECINOS.get(
         pais_b, frozenset()

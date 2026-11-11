@@ -651,6 +651,13 @@ def fusionar(
         if len(anteriores) != 1:
             continue
         destino, absorbido = suceso.destino_de(anteriores[0], incidente, publicados)
+        if almacen.esta_publicada(destino["id"]) and almacen.esta_publicada(absorbido["id"]):
+            # Las dos tienen su dirección en la web: la unión que retira una ficha publicada la
+            # decide quien lee las fuentes (el control compara el par), no una regla. Sin esto,
+            # un cambio en la regla o en un dato de una de las dos juntaría solas dos fichas que
+            # llevan meses publicadas (los dos cierres de Múnich del 2 y del 3 de octubre de
+            # 2025, EODI-2025-00055 y EODI-2025-00083).
+            continue
         if retiene_la_union(almacen, absorbido, destino["id"]):
             continue
         if revisiones_distintas(absorbido["id"], destino["id"]):

@@ -49,6 +49,11 @@
      "valor": "si"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "fuentes": [
     {
      "id": "revisada-dbd317e21ff0f256-declaracion-1",
@@ -228,6 +233,11 @@
      "min": 1
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2025-00049",
    "fuentes": [
     {
@@ -260,6 +270,166 @@
     }
    ],
    "fuentes_en_la_base": 2
+  },
+  "EODI-2026-00111": {
+   "id": "EODI-2026-00111",
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone enters Romanian airspace and crashes in Tulcea County",
+    "es": "Dron entra en el espacio aéreo de Rumania y se estrella en Tulcea"
+   },
+   "lugar": {
+    "geocodificacion": "candidato",
+    "localidad": "Tulcea",
+    "nivel": "localidad",
+    "pais": "RO",
+    "punto": {
+     "lat": 45.1787,
+     "lon": 28.80501
+    },
+    "radio_km": 5.0,
+    "region": "Tulcea",
+    "suceso": "Tulcea"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-08-20T03:21Z"
+    },
+    "origen_inicio": {
+     "corregido": true,
+     "fuente_id": "gdelt-fd05e71640dfd771",
+     "motivo": "la frase da la hora pero no el día: día de la publicación (2026-08-20 07:15, hora local del medio)",
+     "tipo": "publicacion"
+    }
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida"
+    ]
+   },
+   "relacionados": [
+    {
+     "id": "EODI-2026-00230",
+     "nota": {
+      "en": "Mixes the drone that crashed in Tulcea (20 Aug 2026) with the drone shot down over Latvia on 14 Aug",
+      "es": "Junta el dron estrellado en Tulcea (20 ago 2026) con el dron derribado sobre Letonia el 14 ago"
+     },
+     "separado_de": "EODI-2026-00218"
+    }
+   ],
+   "fuentes": [
+    {
+     "id": "gdelt-fd05e71640dfd771",
+     "medio": "mediafax.ro",
+     "enlace": "https://mediafax.ro/social/drona-intrata-in-spatiul-aerian-al-romaniei-in-judetul-tulcea-aeronave-f-18-spaniole-si-un-elicopter-iar-330-socat-au-monitorizat-situatia-23793110",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T04:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Un minut mai târziu, la ora 03.21, drona a pătruns în spațiul aerian al României."
+    },
+    {
+     "id": "gdelt-fd05e71640dfd771-declaracion-1",
+     "medio": "Ministerul Apărării Naționale (declaración oficial citada en mediafax.ro)",
+     "enlace": "https://mediafax.ro/social/drona-intrata-in-spatiul-aerian-al-romaniei-in-judetul-tulcea-aeronave-f-18-spaniole-si-un-elicopter-iar-330-socat-au-monitorizat-situatia-23793110",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T04:15Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Potrivit Ministerului Apărării Naționale, incidentul a fost detectat la ora 02.23."
+    },
+    {
+     "id": "gdelt-9bd2ca4452bcb0f6",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/55958852",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T06:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Dronă intrată în spațiul aerian al României, prăbușită în Tulcea."
+    },
+    {
+     "id": "gdelt-183a68e11b5faaf0",
+     "medio": "bgnes.com",
+     "enlace": "https://bgnes.com/conflicts/drone-crashes-in-romania-during-russian-attack-on-ukraine",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T07:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "Drone crashes in Romania during Russian attack on Ukraine"
+    },
+    {
+     "id": "gdelt-184dfc08b5912c65",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/55973139",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T07:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "O dronă a pătruns în spațiul aerian al României și s-a prăbușit în județul Tulcea. Două avioane F-18 au fost ridicate de la sol"
+    },
+    {
+     "id": "gdelt-625f03ab094cb38c",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/55983747",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T08:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă în România: O dronă a pătruns în spațiul aerian național și a căzut într-o zonă nelocuită din Tulcea"
+    },
+    {
+     "id": "gdelt-430be34afd86c6c9",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/55985676",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T08:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Dronă prăbușită în județul Tulcea, după ce a pătruns în spațiul aerian al României"
+    }
+   ],
+   "fuentes_en_la_base": 12
   },
   "EODI-2026-00134": {
    "id": "EODI-2026-00134",
@@ -313,6 +483,17 @@
      "max": 1,
      "min": 1
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "derribo",
+     "explosion",
+     "recuperado",
+     "restos"
+    ]
    },
    "fuentes": [
     {
@@ -514,6 +695,279 @@
    ],
    "fuentes_en_la_base": 866
   },
+  "EODI-2026-00140": {
+   "id": "EODI-2026-00140",
+   "tipo": "incursion",
+   "titulo": {
+    "en": "NATO fighters shoot down drone over Latvia",
+    "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+   },
+   "lugar": {
+    "fuente_punto": "revisada-ce0ef4f0dbb2097c",
+    "geocodificacion": "oficial",
+    "localidad": "Rugāji (municipio de Balvi)",
+    "nivel": "localidad",
+    "pais": "LV",
+    "punto": {
+     "lat": 57.0009,
+     "lon": 27.1297
+    },
+    "radio_km": 5.0,
+    "region": "Balvi",
+    "suceso": "noreste de Letonia"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-08-14T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-4e5496763e49f993",
+     "motivo": "«viernes» en una nota publicada el 2026-08-14 09:30 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "zona": {
+    "distancia_km": 34,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "derribo"
+    ]
+   },
+   "relacionados": [
+    {
+     "id": "EODI-2026-00528",
+     "nota": {
+      "en": "It merged the drone shot down over Latvia with a drone crash in Romania and articles on the war in Ukraine",
+      "es": "Juntaba el derribo del dron sobre Letonia con un dron estrellado en Rumanía y artículos de la guerra en Ucrania"
+     },
+     "separado_de": "EODI-2026-00204"
+    }
+   ],
+   "fuentes": [
+    {
+     "id": "revisada-c0c53a29e9f23723",
+     "medio": "kyivpost.com",
+     "enlace": "https://kyivpost.com/post/82328",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-08-14T00:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "Fighter jets shot down a drone that entered Latvian airspace, the country’s military said Friday."
+    },
+    {
+     "id": "gdelt-86e2146eea48b09b",
+     "medio": "sudouest.fr",
+     "enlace": "https://sudouest.fr/international/europe/ukraine/guerre-en-ukraine-un-drone-etranger-abattu-par-des-avions-de-chasse-allies-dans-l-espace-aerien-letton-30252100.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T05:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "fr",
+     "frase_origen": "un drone étranger abattu par des avions de chasse alliés dans l'espace aérien letton"
+    },
+    {
+     "id": "gdelt-db926ccda3bd2e41",
+     "medio": "ceskenoviny.cz",
+     "enlace": "https://ceskenoviny.cz/zpravy/stihacky-nato-sestrelily-dron-nad-lotysskem-uvedla-riga/2861832",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T05:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "cs",
+     "frase_origen": "Dron, který 14. srpna sestřelila ve vzdušném prostoru Lotyšska italská stíhačka, byl ukrajinského původu."
+    },
+    {
+     "id": "gdelt-aec35ded14dce1f1",
+     "medio": "independent.co.uk",
+     "enlace": "https://independent.co.uk/news/world/europe/ukraine-russia-war-live-putin-zelensky-nato-jet-crimea-b3032927.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T06:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "Ukraine-Russia war latest: Nato jets scrambled to shoot down foreign drone after it enters Latvian airspace"
+    },
+    {
+     "id": "gdelt-d4306fb832bec55d",
+     "medio": "lindependant.fr",
+     "enlace": "https://lindependant.fr/2026/08/14/guerre-en-ukraine-un-appareil-devie-a-la-suite-de-la-guerre-electronique-russe-un-drone-abattu-dans-lespace-aerien-de-la-lettonie-la-finlande-13508630.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T06:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "fr",
+     "frase_origen": "Un drone a été abattu vendredi matin par des avions de chasse de l'Otan après avoir pénétré"
+    },
+    {
+     "id": "gdelt-a9fe321269af89a7",
+     "medio": "kauno.diena.lt",
+     "enlace": "https://kauno.diena.lt/naujienos/lietuva/salies-pulsas/nkvc-vadovas-apie-nato-naikintuvu-latvijoje-numusta-drona-operacija-ivykdyta-siauliu-oro-bazes-1770087",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T06:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "lt",
+     "frase_origen": "Anot V. Vitkausko, šis drono incidentas labai panašus į fiksuotą gegužės mėnesį."
+    },
+    {
+     "id": "gdelt-4e5496763e49f993-declaracion-1",
+     "medio": "Fuerzas Armadas de Letonia (declaración oficial citada en larazon.es)",
+     "enlace": "https://larazon.es/internacional/cazas-otan-derriban-dron-letonia_202608146a7ebaaaa5690f047378fbc2.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T07:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "es",
+     "frase_origen": "Fuerzas Armadas del país báltico en un comunicado recogido por la agencia Efe."
+    },
+    {
+     "id": "gdelt-4e5496763e49f993-declaracion-2",
+     "medio": "Misión de Policía Aérea del Báltico de la OTAN (declaración oficial citada en larazon.es)",
+     "enlace": "https://larazon.es/internacional/cazas-otan-derriban-dron-letonia_202608146a7ebaaaa5690f047378fbc2.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T07:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "es",
+     "frase_origen": "El derribo se produjo por cazas de la Misión de Policía Aérea del Báltico de la OTAN"
+    },
+    {
+     "id": "gdelt-d71f5925cce9ea87",
+     "medio": "delfi.lt",
+     "enlace": "https://delfi.lt/naujienos/lietuvoje/nkvc-vadovas-dronas-latvijoje-numustas-nato-naikintuvais-is-siauliu-120289850",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T07:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "lt",
+     "frase_origen": "NKVC vadovas: dronas Latvijoje numuštas NATO naikintuvais iš Šiaulių"
+    },
+    {
+     "id": "gdelt-85c24aa7ea9b45dd-declaracion-1",
+     "medio": "Forze Armate lettoni (declaración oficial citada en laregione.ch)",
+     "enlace": "https://laregione.ch/estero/estero/1943894/abbattuto-stato-drone-pilota-lettonia-caccia-lettoni-nato",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T08:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "it",
+     "frase_origen": "i caccia NATO in pattugliamento hanno abbattuto con successo un drone che aveva violato lo spazio aereo lettone"
+    },
+    {
+     "id": "gdelt-85c24aa7ea9b45dd-declaracion-2",
+     "medio": "Forze Armate lettoni (declaración oficial citada en laregione.ch)",
+     "enlace": "https://laregione.ch/estero/estero/1943894/abbattuto-stato-drone-pilota-lettonia-caccia-lettoni-nato",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T08:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "it",
+     "frase_origen": "un veicolo aereo senza pilota che aveva violato lo spazio aereo del Paese è stato abbattuto"
+    },
+    {
+     "id": "revisada-14a37d8d48a60f05-declaracion-1",
+     "medio": "Nacionālie bruņotie spēki (declaración oficial citada en mil.lv)",
+     "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-08-15T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "lv",
+     "frase_origen": "Nacionālie bruņotie spēki informē, ka 14. augustā Balvu novada Rugāju apkārtnē tika notriekts Ukrainas bezpilota lidaparāts, kas Latvijas gaisa telpā no Baltkrievijas teritorijas ielidoja"
+    },
+    {
+     "id": "revisada-0603da1630dedfb1",
+     "medio": "Nacionālie bruņotie spēki",
+     "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-08-20T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "A",
+     "idioma": "lv",
+     "frase_origen": "14. augustā Balvu novada Rugāju apkārtnē tika notriekts Ukrainas bezpilota lidaparāts"
+    },
+    {
+     "id": "revisada-ce0ef4f0dbb2097c",
+     "medio": "Fuerzas Armadas Nacionales de Letonia",
+     "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-08-20T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "A",
+     "idioma": "en",
+     "frase_origen": "In the vicinity of Rugāji, Balvi Municipality, allied fighter jets successfully shot down the unmanned aerial vehicle."
+    },
+    {
+     "id": "gdelt-bb409f0423daf551-declaracion-1",
+     "medio": "Ministry of Foreign Affairs of Latvia (declaración oficial citada en odnako.org)",
+     "enlace": "https://odnako.org/natos-italian-eurofighter-shoots-down-a-drone-in-latvia-riga-thanks-you",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-20T13:45Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "en",
+     "frase_origen": "We are grateful to our Italian allies for their contribution to the NATO air defense mission in the Baltics and for maintaining the integrity of"
+    }
+   ],
+   "fuentes_en_la_base": 51
+  },
   "EODI-2026-00160": {
    "id": "EODI-2026-00160",
    "tipo": "incursion",
@@ -563,6 +1017,13 @@
     "cierre": {
      "valor": "si"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "explosion"
+    ]
    },
    "relacionados": [
     {
@@ -755,6 +1216,13 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "derribo"
+    ]
+   },
    "fusionado_en": "EODI-2026-00230",
    "fuentes": [
     {
@@ -875,6 +1343,13 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "derribo"
+    ]
    },
    "relacionados": [
     {
@@ -1014,6 +1489,15 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "derribo",
+     "rastreo"
+    ]
    },
    "relacionados": [
     {
@@ -1169,6 +1653,13 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "explosion"
+    ]
    },
    "fusionado_en": "EODI-2026-00636",
    "fuentes": [
@@ -1340,6 +1831,14 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "explosion"
+    ]
    },
    "relacionados": [
     {
@@ -1593,6 +2092,13 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": [
+     "derribo"
+    ]
+   },
    "fusionado_en": "EODI-2026-00218",
    "fuentes": [
     {
@@ -1684,6 +2190,11 @@
     "cierre": {
      "valor": "si"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
    },
    "fuentes": [
     {
@@ -1858,6 +2369,14 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "explosion"
+    ]
    },
    "relacionados": [
     {
@@ -2040,6 +2559,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "relacionados": [
     {
      "id": "EODI-2026-00541",
@@ -2122,6 +2646,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "relacionados": [
     {
@@ -2321,6 +2850,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00698",
    "fuentes": [
     {
@@ -2404,6 +2938,14 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "rastreo"
+    ]
    },
    "fuentes": [
     {
@@ -2676,6 +3218,14 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "explosion"
+    ]
+   },
    "relacionados": [
     {
      "id": "EODI-2026-00160",
@@ -2891,6 +3441,13 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "rastreo"
+    ]
    },
    "relacionados": [
     {
@@ -3112,6 +3669,13 @@
     "cierre": {
      "valor": "si"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "rastreo"
+    ]
    },
    "fuentes": [
     {
@@ -3347,6 +3911,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00719",
    "fuentes": [
     {
@@ -3420,6 +3989,13 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida"
+    ]
    },
    "relacionados": [
     {
@@ -3558,6 +4134,13 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida"
+    ]
+   },
    "relacionados": [
     {
      "id": "EODI-2026-00746",
@@ -3670,6 +4253,14 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida",
+     "rastreo"
+    ]
+   },
    "fusionado_en": "EODI-2026-00756",
    "fuentes": [
     {
@@ -3762,6 +4353,13 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida"
+    ]
    },
    "relacionados": [
     {
@@ -3898,6 +4496,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": false,
+    "evidencia": []
    },
    "retirado": {
     "fecha": {
@@ -4052,6 +4655,11 @@
      "valor": "si"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "relacionados": [
     {
      "id": "EODI-2026-00773",
@@ -4165,6 +4773,14 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": [
+     "caida",
+     "recuperado"
+    ]
+   },
    "fuentes": [
     {
      "id": "gdelt-a20944f5bde5e5ee",
@@ -4225,6 +4841,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
    },
    "fuentes": [
     {
@@ -4306,6 +4927,11 @@
      },
      "valor": "si"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
    },
    "relacionados": [
     {
@@ -4418,6 +5044,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fuentes": [
     {
@@ -4608,6 +5239,11 @@
     "cierre": {
      "valor": "si"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "retirado": {
     "fecha": {
@@ -4874,6 +5510,11 @@
      "valor": "si"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
     {
@@ -4939,6 +5580,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
     {
@@ -4985,6 +5631,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
@@ -5049,6 +5700,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
@@ -5115,6 +5771,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
     {
@@ -5179,6 +5840,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fusionado_en": "EODI-2026-00777",
    "fuentes": [
@@ -5289,6 +5955,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
     {
@@ -5384,6 +6055,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
@@ -5495,6 +6171,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fusionado_en": "EODI-2026-00778",
    "fuentes": [
@@ -5674,6 +6355,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00790",
    "fuentes": [
     {
@@ -5745,6 +6431,11 @@
     "cierre": {
      "valor": "desconocido"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fusionado_en": "EODI-2026-00787",
    "fuentes": [
@@ -5906,6 +6597,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00789",
    "fuentes": [
     {
@@ -6006,6 +6702,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
    "fusionado_en": "EODI-2026-00789",
    "fuentes": [
     {
@@ -6070,6 +6771,11 @@
     "cierre": {
      "valor": "si"
     }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
    },
    "fuentes": [
     {
@@ -6268,6 +6974,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fuentes": [
     {
      "id": "gdelt-62efdbbafedfeedb",
@@ -6328,6 +7039,90 @@
    ],
    "fuentes_en_la_base": 4
   },
+  "EODI-2026-00794": {
+   "id": "EODI-2026-00794",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Air raid alerts across Lithuania over a drone",
+    "es": "Alertas aéreas en toda Lituania por un dron"
+   },
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LT",
+    "suceso": "Lietuva"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "hora",
+     "valor": "2026-11-10T21:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-4dd9e293ece15fd4",
+     "motivo": "«tuesday» en una nota publicada el 2026-11-11 07:31 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
+   "fusionado_en": "EODI-2026-00792",
+   "fuentes": [
+    {
+     "id": "gdelt-2b874e0ad864a6be",
+     "medio": "lrt.lt",
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3007328/oro-pavojus-atsaukiamas-visoje-lietuvoje",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-10T20:56Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "lt",
+     "frase_origen": "Naktį iš antradienio į trečiadienį šalies gyventojus vienas po kito pasiekė skirtingi oro pavojaus signalai dėl galimo drono Lietuvos teritorijoje."
+    },
+    {
+     "id": "gdelt-4dd9e293ece15fd4",
+     "medio": "lrt.lt",
+     "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T05:31Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "Drone incursions prompted yellow and red air alerts across large parts of Lithuania overnight"
+    },
+    {
+     "id": "gdelt-4dd9e293ece15fd4-declaracion-1",
+     "medio": "Lithuanian officials (declaración oficial citada en lrt.lt)",
+     "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T05:31Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "en",
+     "frase_origen": "but the drones were not shot down and flew into Latvian airspace, Lithuanian officials said Wednesday"
+    }
+   ],
+   "fuentes_en_la_base": 3
+  },
   "EODI-2026-00801": {
    "id": "EODI-2026-00801",
    "tipo": "sobrevuelo",
@@ -6360,6 +7155,11 @@
      "valor": "desconocido"
     }
    },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
    "fuentes": [
     {
      "id": "gdelt-9711a285c6a1abff",
@@ -6391,6 +7191,76 @@
     }
    ],
    "fuentes_en_la_base": 2
+  },
+  "EODI-2026-00806": {
+   "id": "EODI-2026-00806",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Three possible drones enter Latvian airspace and are escorted by NATO fighter jets",
+    "es": "Tres posibles drones entran en el espacio aéreo de Letonia y los cazas de la OTAN los escoltan"
+   },
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LV",
+    "suceso": "Latvia"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-11-11T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-70d6bff1b3b2ce06",
+     "motivo": "«11 november» en una nota publicada el 2026-11-11 15:45 (hora local del medio)",
+     "tipo": "explicita"
+    }
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "fusionado_en": "EODI-2026-00777",
+   "fuentes": [
+    {
+     "id": "gdelt-70d6bff1b3b2ce06",
+     "medio": "bnn-news.com",
+     "enlace": "https://bnn-news.com/social/appropriate-operational-conditions-were-not-met-latvian-armed-forces-explain-why-drone-was-not-shot-down-gddgxcc",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "The military recalled that three unmanned aerial vehicles entered Latvian airspace during the night of the 11th of November."
+    },
+    {
+     "id": "gdelt-70d6bff1b3b2ce06-declaracion-1",
+     "medio": "Nacionālie bruņotie spēki (NBS) (declaración oficial citada en bnn-news.com)",
+     "enlace": "https://bnn-news.com/social/appropriate-operational-conditions-were-not-met-latvian-armed-forces-explain-why-drone-was-not-shot-down-gddgxcc",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:45Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "en",
+     "frase_origen": "The military recalled that three unmanned aerial vehicles entered Latvian airspace during the night of the 11th of November."
+    }
+   ],
+   "fuentes_en_la_base": 2
   }
  },
  "fusiones": [
@@ -6406,6 +7276,13 @@
    "absorbido": "EODI-2026-00218",
    "destino": "EODI-2026-00230",
    "motivo": "mismo sitio y misma ventana",
+   "revertida": 0
+  },
+  {
+   "fecha": "2026-10-14T03:36Z",
+   "absorbido": "EODI-2026-00219",
+   "destino": "EODI-2026-00140",
+   "motivo": "revisión: control de fichas: Ambas fichas cuentan el derribo del mismo dron ucraino el 14 de agosto de 2026 por cazas de la OTAN en la región de Balvi, Letonia (Rugāji), la misma localidad y el mismo día.",
    "revertida": 0
   },
   {
@@ -6542,10 +7419,24 @@
    "revertida": 0
   },
   {
+   "fecha": "2026-11-11T12:17Z",
+   "absorbido": "EODI-2026-00794",
+   "destino": "EODI-2026-00792",
+   "motivo": "revisión: control de fichas: Ambas fichas cuentan las alertas aéreas por drones en toda Lituania en la noche del martes 10 al miércoles 11 de noviembre de 2026 (primera alerta hacia las 23:00, cazas de la OTAN, drones hacia Letonia), es decir, el mismo conjunto de hechos.",
+   "revertida": 0
+  },
+  {
    "fecha": "2026-11-11T15:17Z",
    "absorbido": "EODI-2026-00784",
    "destino": "EODI-2026-00777",
    "motivo": "revisión: el mismo suceso: la noche del 10 al 11 de noviembre de 2026 en Letonia. EODI-2026-00777 son las alertas que las Fuerzas Armadas letonas fueron dando por municipios (Ludza, Krāslava, Augšdaugava, Balvi) y EODI-2026-00784 es su nota de la mañana siguiente, que cuenta esa misma noche alerta por alerta: «Ņemot vērā naktī uz 11. novembri izziņotos šūnu apraides paziņojumus, informējam par incidentu norises gaitu.» (mil.lv, 11 de noviembre de 2026). El control las dio por distintas porque una nombraba municipios y la otra, el país (revisado el 11 de noviembre de 2026)",
+   "revertida": 0
+  },
+  {
+   "fecha": "2026-11-11T15:17Z",
+   "absorbido": "EODI-2026-00806",
+   "destino": "EODI-2026-00777",
+   "motivo": "revisión: control de fichas: Ambas fichas cuentan la entrada de los tres drones en el espacio aéreo letón en la noche del 10 al 11 de noviembre (las alertas por distritos de A responden a esos mismos drones), y B solo da el país, lo que no la hace distinta.",
    "revertida": 0
   }
  ],
