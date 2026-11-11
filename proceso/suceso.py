@@ -8,14 +8,15 @@ audita o comprueba fichas pregunta aquí:
 - `veredicto(a, b)`: lo que la definición dice de dos fichas sin leer sus fuentes. «mismo» y
   «distintos» son firmes y nadie los contradice (ni el experto); «experto» es que pueden serlo y
   lo decide quien lee las fuentes, con `DEFINICION` delante; «ajenas», que ni se pregunta.
-- `DEFINICION` y `DEFINICION_EN`: el texto que llevan todas las peticiones al modelo que
-  preguntan por el mismo suceso (el filtro de entrada, la medida, el repaso, la comparación del
-  control, las retrospectivas y la segunda lectura).
-- `conjunto`: con qué fichas se compara una nueva.
+- `DEFINICION`: el texto que llevan las peticiones al modelo que preguntan por el mismo suceso
+  (el filtro de entrada, la medida, el repaso y la comparación de pares del control).
+- `conjunto` y `previas_del_sitio`: con qué fichas se compara una nueva, y con cuáles una
+  noticia sobre un suceso anterior.
 - `varios_dias`: la ficha que cuenta dos días que no son una noche (dos sucesos en una ficha).
-- `queda` y `tiempo_de_la_que_queda`: qué ficha queda de una unión y de dónde sale su fecha.
-- `episodios`: los sucesos que se enlazan entre sí (varios objetivos de un país en una noche, o
-  el mismo episodio a los dos lados de una frontera).
+- `queda`, `destino_de` y `toma_el_tiempo`: qué ficha queda de una unión y de dónde sale su
+  fecha.
+- `episodios_calculados`: los sucesos que se enlazan entre sí (varios objetivos de un país en
+  una noche, o el mismo episodio a los dos lados de una frontera).
 
 Las reglas firmes, en su orden (la primera que habla, decide):
 
@@ -28,10 +29,11 @@ Las reglas firmes, en su orden (la primera que habla, decide):
    el mismo país, son el mismo suceso, aunque el experto dijera otra cosa.
 4. Lo que el experto dio por distinto leyendo las fuentes de las dos no se vuelve a unir solo.
 5. Dos cierres del mismo sitio en noches distintas, o un cierre que las fuentes cuentan como
-   repetido, son dos sucesos.
+   repetido, son dos sucesos (`noches_del_cierre`).
 6. El mismo sitio y la misma jornada sin nada de lo anterior es el mismo suceso sin preguntar
    (la regla de fusión): con hora, inicios a menos de 6 horas; con día, el mismo día. Dos días
-   seguidos sin hora pueden ser una noche o dos sucesos: decide el experto.
+   seguidos sin hora pueden ser una noche o dos sucesos: decide el experto. Y la regla no une
+   sola dos fichas que ya tienen su página en la web (proceso/incidentes.fusionar).
 
 Lo que este módulo no hace: leer el día de una frase (proceso/fechas.py), ejecutar una unión o
 deshacerla (proceso/incidentes.py, recogida/control_fichas.py, recogida/revisados.py) ni agrupar
@@ -46,7 +48,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from functools import cache
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 from urllib.parse import urlsplit
 
 from esquema import Documento
@@ -106,15 +108,6 @@ DEFINICION = (
     "otro barco). Una ficha que junta varios de esos (un balance de varias noches, un resumen "
     "de dos países) no es ninguno de ellos."
 )
-DEFINICION_EN = (
-    "What an event is (the same definition across the observatory): one physical episode, that "
-    "is, the same drones or the same wave, in one country and in one period (a day, or a night "
-    "that crosses midnight, which is a single period). Two records report the same event if "
-    "they report that same episode, even if the publication date, the language, the number or "
-    "the precision of the place differ. Different countries, different days or nights, or "
-    "different drones at different places or hours reported separately are different events."
-)
-
 # --- Lo que mide el sitio y la jornada --------------------------------------------------------
 
 # El mismo sitio sin preguntar: puntos a menos de la suma de sus radios más este margen.
@@ -1426,14 +1419,3 @@ def episodios_calculados(incidentes_: list[Documento]) -> list[tuple[str, list[D
         resultado[ya[0]] = (noche_, sorted([*miembros, *nuevos], key=lambda m: m["id"]))
         en_alguno |= {m["id"]: ya[0] for m in nuevos}
     return resultado
-
-
-def datos(incidente: Documento) -> dict[str, Any]:
-    """El suceso de una ficha en una línea, para los registros y los informes."""
-    inicio = incidente["tiempo"]["inicio"]
-    return {
-        "id": incidente["id"],
-        "pais": pais(incidente),
-        "inicio": f"{inicio['valor']} ({inicio['precision']})",
-        "lugar": incidente["lugar"].get("suceso") or incidente["lugar"].get("localidad") or "",
-    }
