@@ -483,6 +483,12 @@ def pendiente(decision: Documento | None, incidente: Documento, ahora: datetime)
         # extractor de la horaria dio de alta antes de que la separación la enlazara
         # («relacionados») no cambia de huella y quedaba retenida para siempre.
         return True
+    if decision.get("decision") == UNIDA:
+        # El filtro la unió a otra y vuelve a estar activa: esa unión se deshizo (la definición
+        # las da por sucesos distintos, o una revisión). Con las mismas fuentes su decisión
+        # seguía «vigente» y la ficha se quedaba retenida para siempre, sin poder unirse a la
+        # ficha de su suceso (las de Lituania que el filtro unió a EODI-2026-00778).
+        return True
     if decision.get("decision") == ESPERA:
         return ahora >= _leer(str(decision.get("espera_experto") or _iso(ahora)))
     # Retenida por un desacuerdo entre el filtro y el control: vuelve a pasar, sin esa ficha en la
