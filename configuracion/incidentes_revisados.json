@@ -982,6 +982,13 @@
         "es": "No es un suceso: es el balance mensual de octubre del Ministerio de Defensa de Moldavia (19 violaciones del espacio aéreo), no un hecho de un día.",
         "en": "Not an event: it is the Moldovan Defence Ministry's monthly summary for October (19 airspace violations), not an event on a given day."
       }
+    },
+    {
+      "incidente": "EODI-2026-00778",
+      "motivo": {
+        "es": "No es un suceso solo: es el resumen de la prensa británica y croata de dos sucesos de la noche del 10 al 11 de noviembre de 2026, cada uno con su ficha: las alertas de las Fuerzas Armadas de Letonia (EODI-2026-00777) y las alertas aéreas de Lituania («People living in Latvia and Lithuania have been told to seek safety», mirror.co.uk). Tenía el lugar en Letonia y dentro lo de Lituania. No llegó a publicarse.",
+        "en": "Not a single event: it is the British and Croatian press summary of two events on the night of 10 to 11 November 2026, each with its own record: the alerts of the Latvian National Armed Forces (EODI-2026-00777) and the air alerts in Lithuania («People living in Latvia and Lithuania have been told to seek safety», mirror.co.uk). It placed the event in Latvia with the Lithuanian one inside. It was never published."
+      }
     }
   ],
   "citas": [
