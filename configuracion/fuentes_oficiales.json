@@ -106,7 +106,7 @@
       "url": "https://www.mil.lv/lv/zinas",
       "enlace": "mil\\.lv/lv/zinas/[a-z0-9-]{10,}",
       "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})",
-      "titulos_genericos": "apdraud[eē]jum\\w* Latvijas gaisa telp|[Gg]aisa telpas apdraud[eē]jum",
+      "titulos_genericos": "^(?!Atcelt).*(apdraud[eē]jums Latvijas gaisa telp|[Gg]aisa telpas apdraud[eē]jums)",
       "alertas_por_zona": {
         "hora": "plkst\\.?\\s*(\\d{1,2})[.:](\\d{2})"
       }
@@ -121,7 +121,7 @@
       "url": "https://www.mod.gov.lv/lv/zinas",
       "enlace": "mod\\.gov\\.lv/lv/zinas/[a-z0-9-]{10,}",
       "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})",
-      "titulos_genericos": "apdraud[eē]jum\\w* Latvijas gaisa telp|[Gg]aisa telpas apdraud[eē]jum",
+      "titulos_genericos": "^(?!Atcelt).*(apdraud[eē]jums Latvijas gaisa telp|[Gg]aisa telpas apdraud[eē]jums)",
       "alertas_por_zona": {
         "hora": "plkst\\.?\\s*(\\d{1,2})[.:](\\d{2})"
       }
