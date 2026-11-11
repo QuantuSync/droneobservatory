@@ -653,20 +653,27 @@ def autoridad_perdida(documentos: list[Documento]) -> list[str]:
     return sorted(salida)
 
 
+REGLAS_DE_V = frozenset({suceso.REGLA_REVISION, suceso.REGLA_EXPERTO, suceso.REGLA_PAISES})
+
+
 def uniones_marcadas(
     documentos: list[Documento],
     del_experto: frozenset[frozenset[str]] = frozenset(),
     a_mano: Iterable[frozenset[str]] = (),
 ) -> list[str]:
     """Las uniones vigentes (absorbido→destino) entre fichas que la definición da por sucesos
-    distintos (proceso/suceso.uniones_contrarias: una revisión las separó o las dio por
-    distintas, el experto las dio por distintas en el control, son de países distintos con una
-    autoridad del suyo o son dos cierres de noches distintas), salvo las que una revisión unió
-    a mano (sección `unir`, o `a_mano`: las fusiones revisadas a mano de
-    `suceso.uniones_a_mano`) (V)."""
+    distintos (proceso/suceso.uniones_contrarias) por una regla que manda sobre quien leyó las
+    fuentes: una revisión las separó o las dio por distintas, el experto las dio por distintas
+    en el control o son de países distintos con una autoridad del suyo; salvo las que una
+    revisión unió a mano (sección `unir`, o `a_mano`: las fusiones revisadas a mano de
+    `suceso.uniones_a_mano`) (V). Los cierres de noches distintas no se miran aquí: las uniones
+    de la regla de fusión que lo son se deshacen solas (`incidentes.revisar_fusiones`, y la
+    invariante I6 si no pudo), y las que hizo el control leyendo las fuentes valen."""
     return [
         f"{absorbido}→{destino}"
-        for absorbido, destino, _ in suceso.uniones_contrarias(documentos, del_experto, a_mano)
+        for absorbido, destino, _ in suceso.uniones_contrarias(
+            documentos, del_experto, a_mano, REGLAS_DE_V
+        )
     ]
 
 
