@@ -77,6 +77,35 @@ def test_los_titulos_nuevos_de_mil_lv_se_abren() -> None:
     assert not any(t.startswith("Atcelt") or "Lāčplēša" in t for t in interesan)
 
 
+def test_de_mil_lv_se_abren_tres_notas_por_pasada() -> None:
+    """mil.lv tarda y corta conexiones: con cinco notas, su lista y su robots.txt la fuente
+    llegaba a su tope de 45 s (43 s medidos desde el servidor el 11 de noviembre de 2026)."""
+    pagina = (FIXTURES / "mil_lv" / "zinas-2026-11-11.html").read_text(encoding="utf-8")
+    pedidas: list[str] = []
+
+    class _Descargador:
+        def texto(self, url: str, valido: Any) -> str:
+            pedidas.append(url)
+            nombre = url.rsplit("/", 1)[-1]
+            return (FIXTURES / "mil_lv" / f"{SMILTENE}.html").read_text(encoding="utf-8") + nombre
+
+    class _Robots:
+        def can_fetch(self, agente: str, url: str) -> bool:
+            return True
+
+    descargador: Any = _Descargador()
+    robots: Any = _Robots()
+    notas = oficiales.leer_pagina(descargador, robots, _mil_lv(), pagina)
+    assert _mil_lv()["max_notas"] == 3
+    assert len(pedidas) == len(notas) == 3
+    # Las más recientes: la de las 03.18, la de las 01.25 y la de las 00.23.
+    assert [n.titulo[:30] for n in notas] == [
+        "PAPILDINĀTS plkst. 03:18 – Gai",
+        "PAPILDINĀTS plkst. 01:25 - Ies",
+        "PAPILDINĀTS 11.NOV plkst. 00.2",
+    ]
+
+
 def test_la_nota_de_smiltene_da_su_dia_y_cuenta_un_suceso() -> None:
     nota = _nota(SMILTENE)
     assert (nota.fecha, nota.precision) == (datetime(2026, 11, 11, tzinfo=UTC), "dia")

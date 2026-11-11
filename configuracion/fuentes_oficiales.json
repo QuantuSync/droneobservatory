@@ -1,6 +1,6 @@
 {
   "version_esquema": "1.0.0",
-  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio. pagina_js: la lista de notas se monta con JavaScript; la renderiza un navegador sin interfaz en el temporizador de las fuentes de detalle (recogida/navegador.py) y las notas se abren sin navegador. titulo_nota: la lista no trae el título de la nota; se toma el de la propia nota. cuerpo_desde: la nota no va en párrafos (o los menús de la página los tapan); su texto es el de la página a partir de esa marca. delegada: el sitio no deja entrar a la dirección del servidor; sus páginas se descargan a través del lector delegado de la web (api/lector.ts, docs/lector_delegado.md), con la misma pausa, los mismos reintentos y la misma comprobación. alertas_por_zona: la autoridad da sus alertas aéreas por zonas y cada nota escribe su hora (hora: el patrón, con la hora y los minutos); una nota de otra zona y de otra hora que las que ya tiene una ficha es otro suceso (proceso/alertas_zona.py).",
+  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio. pagina_js: la lista de notas se monta con JavaScript; la renderiza un navegador sin interfaz en el temporizador de las fuentes de detalle (recogida/navegador.py) y las notas se abren sin navegador. titulo_nota: la lista no trae el título de la nota; se toma el de la propia nota. cuerpo_desde: la nota no va en párrafos (o los menús de la página los tapan); su texto es el de la página a partir de esa marca. delegada: el sitio no deja entrar a la dirección del servidor; sus páginas se descargan a través del lector delegado de la web (api/lector.ts, docs/lector_delegado.md), con la misma pausa, los mismos reintentos y la misma comprobación. alertas_por_zona: la autoridad da sus alertas aéreas por zonas y cada nota escribe su hora (hora: el patrón, con la hora y los minutos); una nota de otra zona y de otra hora que las que ya tiene una ficha es otro suceso (proceso/alertas_zona.py). max_notas: cuántas notas se abren como mucho en cada pasada (por defecto, 5), para los sitios lentos.",
   "fuentes": [
     {
       "id": "politi_kobenhavn",
@@ -107,6 +107,7 @@
       "enlace": "mil\\.lv/lv/zinas/[a-z0-9-]{10,}",
       "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})",
       "titulos_genericos": "^(?!Atcelt).*(apdraud[eē]jums Latvijas gaisa telp|[Gg]aisa telpas apdraud[eē]jums)",
+      "max_notas": 3,
       "alertas_por_zona": {
         "hora": "plkst\\.?\\s*(\\d{1,2})[.:](\\d{2})"
       }
@@ -122,6 +123,7 @@
       "enlace": "mod\\.gov\\.lv/lv/zinas/[a-z0-9-]{10,}",
       "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})",
       "titulos_genericos": "^(?!Atcelt).*(apdraud[eē]jums Latvijas gaisa telp|[Gg]aisa telpas apdraud[eē]jums)",
+      "max_notas": 3,
       "alertas_por_zona": {
         "hora": "plkst\\.?\\s*(\\d{1,2})[.:](\\d{2})"
       }

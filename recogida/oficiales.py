@@ -503,7 +503,7 @@ def leer_pagina(
         for direccion, titulo in paginas_oficiales.enlaces(html, fuente)
         if paginas_oficiales.interesa(titulo, fuente, filtro().dron)
         and lector.can_fetch(AGENTE_EODI, direccion)
-    ][: paginas_oficiales.MAX_NOTAS_POR_FUENTE]
+    ][: int(fuente.get("max_notas", paginas_oficiales.MAX_NOTAS_POR_FUENTE))]
     notas = []
     for direccion, titulo in candidatas:
         try:
