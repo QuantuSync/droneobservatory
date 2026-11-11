@@ -596,6 +596,18 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
      (`proceso/alertas_zona.py`). Lo descartado queda en la decisión (`mismo_descartado`, con su
      regla) y la ficha sigue por el filtro como un suceso propio. La medida a las 24 horas
      tampoco une esos pares.
+   - **la nota de la noche y sus alertas son el mismo suceso** (`entrada.resumen_de_la_misma_noche`,
+     desde el 11 de noviembre de 2026, por la tarde): antes de preguntar, si la ficha nueva es la
+     nota con la que una autoridad que da sus alertas por zonas cuenta una noche (no nombra
+     ninguna zona y habla de «la noche»: «Naktī uz 11. novembri Latvijas gaisa telpā ielidoja
+     trīs bezpilota lidaparāti») y hay una ficha activa del mismo país con las alertas de esa
+     noche (su zona y su hora), o al revés, se unen sin preguntar y queda la más antigua. Si el
+     experto había dado el par por distinto en el control, la regla lo decide de nuevo como
+     «mismo» (una decisión nueva del par, con `regla`): ni `unir` ni el cerrojo unen un par que
+     sigue dado por distinto. El experto dio por distintas EODI-2026-00777 (las alertas letonas
+     de la noche del 10 al 11) y EODI-2026-00784 (la nota de la mañana siguiente) porque una
+     nombraba municipios y la otra, el país; con el desacuerdo ya sin retención, salieron las dos.
+     Dos alertas de zonas y horas distintas siguen siendo dos sucesos.
    - **sin desacuerdos sin salida**: el conjunto no lleva las fichas que el experto ya dio por
      distintas de la nueva en el control (`incidentes.distintos_del_experto`). Ninguna unión las
      junta (`control_fichas.unir`), así que, cuando el filtro decía «el mismo» viendo solo una

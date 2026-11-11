@@ -98,7 +98,7 @@
    "noche_hacia": ["naktī uz"]
   },
   "et": {
-   "meses": [["jaanuar", "jaanuaril", "jaanuari"], ["veebruar", "veebruaril", "veebruari"], ["märts", "märtsil", "märtsi"], ["aprill", "aprillil", "aprilli"], ["mai", "mail"], ["juuni", "juunil"], ["juuli", "juulil"], ["august", "augustil", "augusti"], ["september", "septembril", "septembri"], ["oktoober", "oktoobril", "oktoobri"], ["november", "novembril", "novembri"], ["detsember", "detsembril", "detsembri"]],
+   "meses": [["jaanuar", "jaanuaril", "jaanuari", "jaanuarit"], ["veebruar", "veebruaril", "veebruari", "veebruarit"], ["märts", "märtsil", "märtsi"], ["aprill", "aprillil", "aprilli"], ["mai", "mail", "maid"], ["juuni", "juunil", "juunit"], ["juuli", "juulil", "juulit"], ["august", "augustil", "augusti", "augustit"], ["september", "septembril", "septembri", "septembrit"], ["oktoober", "oktoobril", "oktoobri", "oktoobrit"], ["november", "novembril", "novembri", "novembrit"], ["detsember", "detsembril", "detsembri", "detsembrit"]],
    "dias": [["esmaspäev"], ["teisipäev"], ["kolmapäev"], ["neljapäev"], ["reede"], ["laupäev"], ["pühapäev"]],
    "relativos": {"0": ["täna", "täna hommikul", "täna õhtul"], "-1": ["eile", "eile õhtul"], "-2": ["üleeile"]},
    "noches": ["öösel", "eile öösel", "möödunud öösel", "täna öösel"],

@@ -7,6 +7,10 @@ conjunto de comparación no se elige por distancia: todas las fichas activas del
 30 días anteriores a los 3 posteriores a su inicio y a su primera noticia; si el lugar es vago
 (mar, frontera, región o país), también las de los países vecinos y ribereños. Con la respuesta:
 
+- antes de preguntar: si la ficha es la nota-resumen de una autoridad que da sus alertas por
+  zonas y hay una ficha activa con las alertas de esa misma noche (o al revés), son el mismo
+  suceso y se unen sin más (`resumen_de_la_misma_noche`), aunque el experto diera el par por
+  distinto;
 - el mismo suceso que una de la lista: se une por el camino de las uniones del control, antes de
   publicarse (queda la más antigua). Nunca con una ficha de otro país si alguna de las dos cita a
   una autoridad del suyo, ni con la de otra alerta (otra zona y otra hora) de la misma autoridad
@@ -404,6 +408,92 @@ def nunca_el_mismo(
     return None
 
 
+REGLA_RESUMEN = "resumen_de_la_misma_noche"
+MOTIVO_RESUMEN_EN = (
+    "The authority's summary note of the night and its zone alerts of that same night are the "
+    "same event."
+)
+# Dos fichas de la misma noche: sus días (el de cada una, sin hora) son el mismo o seguidos.
+DIAS_MISMA_NOCHE = 1
+
+
+def resumen_de_la_misma_noche(incidente: Documento, otra: Documento) -> str | None:
+    """Por qué las dos fichas son el mismo suceso sin preguntarlo, o None: una es la nota-resumen
+    de una autoridad que da sus alertas por zonas y la otra, las alertas de esa misma noche en el
+    mismo país. La nota-resumen no nombra una zona («Naktī uz 11. novembri Latvijas gaisa telpā
+    ielidoja trīs bezpilota lidaparāti»); las alertas, sí.
+
+    El 11 de noviembre de 2026 el experto dio por distintas la ficha de las alertas letonas de la
+    noche (EODI-2026-00777, municipios) y la de la nota con la que las Fuerzas Armadas contaron
+    esa misma noche a la mañana siguiente (EODI-2026-00784, el país), y salieron las dos. Dos
+    alertas de zonas y horas distintas siguen siendo dos sucesos (`nunca_el_mismo`)."""
+    pais = str(incidente["lugar"]["pais"])
+    if pais != str(otra["lugar"]["pais"]):
+        return None
+    dias = abs((reglas.instante(incidente).date() - reglas.instante(otra).date()).days)
+    if dias > DIAS_MISMA_NOCHE:
+        return None
+    for fuente in oficiales.fuentes():
+        regla = fuente.get("alertas_por_zona")
+        if not regla or fuente["pais"] != pais:
+            continue
+        textos = [" . ".join(oficiales.titulos_de(ficha, fuente)) for ficha in (incidente, otra)]
+        if not all(textos):
+            continue
+        for de_la_noche, de_las_alertas in (textos, textos[::-1]):
+            # La nota de la noche: no nombra ninguna zona y habla de «la noche». Las alertas:
+            # nombran su zona y escriben su hora.
+            if (
+                not alertas_zona.zonas(de_la_noche, pais)
+                and fechas.nombra_la_noche(de_la_noche, str(fuente["idioma"]))
+                and alertas_zona.zonas(de_las_alertas, pais)
+                and alertas_zona.horas(de_las_alertas, str(regla["hora"]))
+            ):
+                return (
+                    f"la nota de {fuente['medio']} que cuenta la noche y sus alertas por zonas "
+                    "de esa misma noche son el mismo suceso"
+                )
+    return None
+
+
+def unir_al_resumen(ctx: control_fichas.Contexto, incidente: Documento) -> dict[str, Any] | None:
+    """Une la ficha nueva a la activa que es su misma noche según `resumen_de_la_misma_noche`
+    (queda la más antigua). Si el experto había dado el par por distinto en el control, la regla
+    lo decide de nuevo como «mismo» (una decisión nueva del par, con su regla): ni `unir` ni el
+    cerrojo unen un par que sigue dado por distinto. Devuelve lo que se apunta en la decisión del
+    filtro, o None si no hay ninguna o la unión no se puede hacer (una revisión a mano o el
+    cerrojo: la decisión anterior del par se repone y sigue el filtro de siempre)."""
+    for otra in sorted(_activos(ctx.almacen), key=lambda d: str(d["id"])):
+        if otra["id"] == incidente["id"]:
+            continue
+        regla = resumen_de_la_misma_noche(incidente, otra)
+        if regla is None:
+            continue
+        conserva, une = reglas.mas_antiguo(otra, incidente)
+        clave_par = reglas.clave_par(str(conserva["id"]), str(une["id"]))
+        anterior = ctx.decision(clave_par)
+        del_par: Documento = {
+            "decision": "mismo", "regla": REGLA_RESUMEN, "fecha": _iso(ctx.ahora),
+            "conserva": conserva["id"], "une": une["id"], "motivo_es": regla,
+            "motivo_en": MOTIVO_RESUMEN_EN, "version": peticiones.VERSION_ENTRADA,
+        }  # fmt: skip
+        ctx.almacen.guardar_controles({clave_par: del_par}, _iso(ctx.ahora))
+        motivo = f"filtro de entrada: {regla}"
+        hecha = control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora, ctx.modelos)
+        if hecha is None:
+            if anterior is not None:
+                ctx.almacen.guardar_controles({clave_par: anterior}, _iso(ctx.ahora))
+            continue
+        ctx.nuevas[clave_par] = del_par
+        ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
+        return {
+            "decision": UNIDA, "conserva": conserva["id"], "une": une["id"],
+            "mismo": otra["id"], "motivo_mismo": regla, "regla": REGLA_RESUMEN,
+            "motivo_es": regla, "motivo_en": MOTIVO_RESUMEN_EN,
+        }  # fmt: skip
+    return None
+
+
 def sin_el_mismo_imposible(
     decision: dict[str, Any], incidente: Documento, otra: Documento, de_la_otra: dict[str, str]
 ) -> dict[str, Any]:
@@ -578,6 +668,10 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                 "dos_dias": True,
                 "motivo": f"una frase da dos días ({', '.join(map(str, dias))}): «{frase}»; "
                 "separar en dos fichas"}  # fmt: skip
+    del_resumen = unir_al_resumen(ctx, incidente)
+    if del_resumen is not None:
+        registro.info("filtro de entrada %s: %s", incidente["id"], del_resumen["motivo_mismo"])
+        return {**base, "huella": huella(incidente), **del_resumen, "cambios": cambios}
     for vuelta in range(2):
         activos = _activos(ctx.almacen)
         decision, elegidas, _ = preguntar(experto, incidente, activos, clave_)
