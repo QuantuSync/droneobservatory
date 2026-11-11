@@ -41,5 +41,7 @@ comprobación, se añade con su entrada en `configuracion/fuentes_oficiales.json
 
 Las notas de las Fuerzas Armadas de Letonia (`mil_lv`) cambiaron ese día la forma de sus títulos
 («Izsludināts gaisa telpas apdraudējums…», «Atcelts Latvijas gaisa telpas apdraudējums…»): cinco
-de las siete notas de la noche no se abrieron. `titulos_genericos` las recoge ahora, y sus
-alertas van por zonas (`alertas_por_zona`, `proceso/alertas_zona.py`).
+de las siete notas de la noche no se abrieron. `titulos_genericos` recoge ahora las que avisan
+de una alerta (las que la anulan, «Atcelts…», no se abren: no cuentan nada nuevo del suceso y con
+ellas la fuente rozaba su tope de 45 s), y sus alertas van por zonas (`alertas_por_zona`,
+`proceso/alertas_zona.py`).

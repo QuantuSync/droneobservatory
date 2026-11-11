@@ -59,19 +59,22 @@ class _Base:
 
 def test_los_titulos_nuevos_de_mil_lv_se_abren() -> None:
     """El 11 de noviembre de 2026 solo entraron dos de las siete notas de la noche: «Izsludināts
-    gaisa telpas apdraudējums…» y «Atcelts Latvijas gaisa telpas apdraudējums…» no casaban con
-    «apdraudējums Latvijas gaisa telp» y no se abrían."""
+    gaisa telpas apdraudējums…» y «… Gaisa telpas apdraudējums izsludināts…» no casaban con
+    «apdraudējums Latvijas gaisa telp» y no se abrían. Las que anulan una alerta («Atcelts…») no
+    se abren: no dicen nada nuevo del suceso y la fuente rozaba su tope de tiempo."""
     pagina = (FIXTURES / "mil_lv" / "zinas-2026-11-11.html").read_text(encoding="utf-8")
     dron = filtro().dron
     interesan = [
-        t for _, t in paginas_oficiales.enlaces(pagina, _mil_lv())
+        t
+        for _, t in paginas_oficiales.enlaces(pagina, _mil_lv())
         if paginas_oficiales.interesa(t, _mil_lv(), dron)
-    ]  # fmt: skip
-    assert len(interesan) == 7
-    assert TITULOS[ANULADA_SMILTENE] in interesan
+    ]
+    assert len(interesan) == 4
     assert any(t.startswith("PAPILDINĀTS plkst. 03:18") for t in interesan)
+    assert any(t.startswith("PAPILDINĀTS plkst. 01:25") for t in interesan)
+    assert any(t.startswith("PAPILDINĀTS 11.NOV plkst. 00.23") for t in interesan)
     assert "Izsludināts gaisa telpas apdraudējums Ludzas novadā" in interesan
-    assert not any("Lāčplēša" in t for t in interesan)
+    assert not any(t.startswith("Atcelt") or "Lāčplēša" in t for t in interesan)
 
 
 def test_la_nota_de_smiltene_da_su_dia_y_cuenta_un_suceso() -> None:
