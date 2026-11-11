@@ -138,9 +138,13 @@ def marcadas(almacen: Almacen, ahora: datetime) -> dict[str, list[str]]:
         incidentes.uniones_a_mano(almacen),
         almacen.fechas_extraccion(desde),
         permitidos,
+        primeras=almacen.primeras_publicaciones(),
     )
     # X mira 48 horas de historial: aquí solo cuenta lo que la ficha aún tiene.
-    resultado["X"] = x_vigentes(cambios, permitidos, {str(d["id"]): d for d in documentos})
+    resultado["X"] = x_vigentes(
+        cambios, permitidos, {str(d["id"]): d for d in documentos},
+        almacen.primeras_publicaciones(),
+    )  # fmt: skip
     salida: dict[str, list[str]] = {}
     for comprobacion in protegido.AUDITORIA:
         for entrada in resultado.get(comprobacion, []):
@@ -155,6 +159,7 @@ def x_vigentes(
     cambios: list[Documento],
     permitidos: frozenset[tuple[str, str, str]],
     vigentes: dict[str, Documento],
+    primeras: dict[str, str] | None = None,
 ) -> list[str]:
     """X (proceso/protegido.cambios_sin_permiso) de lo que la ficha aún tiene, la misma que la
     auditoría: un cambio sin permiso que ya se deshizo (una revisión, el control) o un dato que
@@ -162,7 +167,7 @@ def x_vigentes(
     que el cambio salga de las 48 horas."""
     from proceso import protegido
 
-    return protegido.cambios_sin_permiso(cambios, permitidos, vigentes)
+    return protegido.cambios_sin_permiso(cambios, permitidos, vigentes, primeras)
 
 
 def _id(entrada: Documento) -> str:

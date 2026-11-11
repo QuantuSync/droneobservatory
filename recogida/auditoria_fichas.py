@@ -50,6 +50,7 @@ def principal(argumentos: list[str] | None = None) -> int:
                 c.removeprefix("verificacion:"): v
                 for c, v in almacen.controles("verificacion:").items()
             },
+            almacen.primeras_publicaciones(),
         )
     if args.json:
         print(json.dumps(resultado, ensure_ascii=False, indent=1))

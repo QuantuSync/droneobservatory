@@ -2885,6 +2885,7 @@ def auditoria_del_dia(almacen: Almacen, ahora: datetime, anterior: Documento) ->
                 c.removeprefix("verificacion:"): v
                 for c, v in almacen.controles("verificacion:").items()
             },
+            almacen.primeras_publicaciones(),
         )
     except Exception as error:
         registro.warning("auditoría de fichas sin hacer: %s", str(error)[:200])

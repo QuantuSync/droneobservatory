@@ -1971,6 +1971,14 @@ class Almacen:
         filas = self._conexion.execute("SELECT id, estado FROM publicado").fetchall()
         return {str(id_): str(estado) for id_, estado in filas}
 
+    def primeras_publicaciones(self) -> dict[str, str]:
+        """{ficha: desde cuándo está publicada} (ISO UTC), para saber si un cambio se hizo con la
+        ficha ya en la web (proceso/protegido.cambios_sin_permiso). Las que ya estaban publicadas
+        cuando se sembró la tabla (las de fecha más antigua) cuentan desde siempre: «»."""
+        filas = self._conexion.execute("SELECT id, primera FROM publicado").fetchall()
+        siembra = min((str(primera) for _, primera in filas), default="")
+        return {str(id_): "" if str(primera) == siembra else str(primera) for id_, primera in filas}
+
     def esta_publicada(self, id_: str) -> bool:
         """La ficha ha salido alguna vez en la web (tiene dirección publicada)."""
         fila = self._conexion.execute(

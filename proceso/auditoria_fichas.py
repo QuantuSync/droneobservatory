@@ -845,6 +845,7 @@ def auditar(
     extracciones: dict[str, list[str]] | None = None,
     permitidos: frozenset[tuple[str, str, str]] | None = None,
     verificaciones: dict[str, Documento] | None = None,
+    primeras: dict[str, str] | None = None,
 ) -> dict[str, list[str]]:
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
     son los de las últimas 48 horas (`Almacen.cambios_desde`), para K y W; `copias`, las copias
@@ -899,7 +900,7 @@ def auditar(
 
         # Solo lo que la ficha aún tiene (lo deshecho o fijado por una revisión no cuenta).
         actuales = {str(d["id"]): d for d in vistos}
-        resultado["X"] = protegido.cambios_sin_permiso(cambios, permitidos, actuales)
+        resultado["X"] = protegido.cambios_sin_permiso(cambios, permitidos, actuales, primeras)
     # R: las fichas del conjunto de referencia (proceso/referencia.py) que se apartan del valor
     # comprobado contra sus fuentes en algo que no es una discrepancia conocida.
     from proceso import referencia
