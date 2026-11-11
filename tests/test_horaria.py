@@ -14,7 +14,16 @@ from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, abrir_cifrada, guardar_cifrada
 from exportacion import publicar
 from proceso.extraccion import Parada
-from recogida import extractor, firms, fuerza_aerea, gdelt, horaria, mindef, oficiales
+from recogida import (
+    extractor,
+    firms,
+    fuerza_aerea,
+    gdelt,
+    horaria,
+    medios_publicos,
+    mindef,
+    oficiales,
+)
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, Respuesta
 from tests.telegram_falso import CanalFalso, descargador
@@ -37,6 +46,9 @@ def entorno(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[str, Canal
     monkeypatch.setattr(
         oficiales, "ejecutar", lambda almacen, ahora, modelos, **_: oficiales.Recuentos()
     )
+    # Medios públicos sin red (sin esto cada recogida de prueba reintenta 90 s contra un sitio
+    # que las pruebas no dejan resolver).
+    monkeypatch.setattr(medios_publicos, "paso_horario", lambda almacen, ahora, **_: 0)
     salida = tmp_path / "publicacion"
     monkeypatch.setattr(
         horaria, "publicar", lambda a, ahora, **kw: publicar.publicar(a, ahora, salida, **kw)
