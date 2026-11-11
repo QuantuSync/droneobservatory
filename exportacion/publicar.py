@@ -8,12 +8,13 @@ El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de
 su ataque antes de exportar. Igual la copia archivada de cada fuente de los incidentes y la marca
 de enlace caído (tabla copias_archivadas, recogida/archivo_web.py).
 
-El control de las fichas (recogida/control_fichas.py) deja fuera las fichas nuevas que retiene
-(como mucho 6 horas) y añade a lo publicado la traducción de cada cita y la frase que respalda
-cada dato verificado (exportacion/citas.py).
-
-Una ficha que la auditoría marca en una comprobación de protección (P, R, V, W o X) sale en su
-última versión buena (exportacion/version_buena.py): la red de seguridad del cerrojo.
+Los incidentes pasan por la puerta de la publicación (exportacion/puerta.py,
+docs/ciclo_de_vida.md): de la base sale la versión candidata de cada ficha, con la traducción de
+cada cita y la frase que respalda cada dato verificado (exportacion/citas.py), y solo entra en la
+tabla `publicado` la que tiene el pase del control en esta pasada y no está marcada por la
+auditoría de protección ni rompe una invariante. Los dos ficheros de incidentes se escriben con
+las filas de esa tabla: la ficha que no pasa sale en su última versión buena y la que nunca salió
+no sale.
 
 Cada fichero se genera por separado: si uno falla, queda el que ya había, los demás se publican
 y el fallo queda en el registro (y en `fallidos`, si se pasa). Solo si no se puede generar ninguno
@@ -27,7 +28,7 @@ from pathlib import Path
 
 from almacen.base import Almacen
 from esquema import Documento
-from exportacion import version_buena
+from exportacion import puerta
 from exportacion.citas import Pendientes, con_traducciones, enriquecer_incidentes
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
@@ -81,27 +82,16 @@ class NadaPublicado(RuntimeError):
     """No se pudo generar ninguno de los ficheros publicados."""
 
 
-def sin_retenidos(incidente: Documento, retenidos: frozenset[str]) -> Documento:
-    """El incidente sin los sucesos relacionados que el control retiene todavía: su página no
-    existe hasta que se publique y el enlace daría 404 (EODI-2025-00066 enlazaba a la 00444,
-    retenida, el 20 de octubre de 2026). El enlace vuelve solo cuando se publica."""
-    relacionados = incidente.get("relacionados")
-    if not relacionados or not any(r.get("id") in retenidos for r in relacionados):
-        return incidente
-    quedan = [r for r in relacionados if r.get("id") not in retenidos]
-    resultado = {k: v for k, v in incidente.items() if k != "relacionados"}
-    if quedan:
-        resultado["relacionados"] = quedan
-    return resultado
-
-
 def publicar(
     almacen: Almacen,
     ahora: datetime,
     directorio: Path = DIRECTORIO,
     fallidos: list[str] | None = None,
+    semilla: Path | None = None,
 ) -> list[Path]:
-    """Regenera los ficheros y devuelve los que han cambiado."""
+    """Regenera los ficheros y devuelve los que han cambiado. Con `semilla`, si la tabla de lo
+    publicado está vacía se llena antes con los ficheros de esa carpeta (la migración, una vez:
+    exportacion/puerta.sembrar)."""
     directorio.mkdir(parents=True, exist_ok=True)
     incidentes, ataques = con_focos(
         almacen.incidentes(), almacen.ataques_ucrania(), almacen.focos_termicos()
@@ -120,10 +110,10 @@ def publicar(
     ]
     from recogida import control_fichas
 
-    retenidos = control_fichas.retenidos(almacen)
-    if retenidos:
-        registro.info("fichas retenidas por el control: %s", ", ".join(sorted(retenidos)))
-    incidentes = [sin_retenidos(i, retenidos) for i in incidentes if i["id"] not in retenidos]
+    # Los documentos de la base tal como están: lo que guarda la fila de lo publicado junto a la
+    # entrada pública de esa misma versión (los avisos se componen con él).
+    base = {str(d["id"]): d for d in almacen.incidentes()}
+    apartados: dict[str, str] = {}
     # Las autoridades que se escriben igual en varios países, con el suyo («Ministerul Apărării
     # (MD)»): la web, los avisos y el «quién» del historial escriben así el de la ficha.
     incidentes = [autoridades.con_pais(i) for i in incidentes]
@@ -165,9 +155,11 @@ def publicar(
 
     documentos: dict[str, Callable[[], Documento]] = {
         UCRANIA: lambda: con_citas(exportar_ucrania(ataques, ahora, impactos), "ucrania"),
-        INCIDENTES: lambda: con_citas(exportar(incidentes, ahora, vocabulario), "features"),
+        INCIDENTES: lambda: con_citas(
+            exportar(incidentes, ahora, vocabulario, apartados), "features"
+        ),
         SIN_UBICACION: lambda: con_citas(
-            exportar_sin_ubicacion(incidentes, ahora, vocabulario), "incidentes"
+            exportar_sin_ubicacion(incidentes, ahora, vocabulario, apartados), "incidentes"
         ),
     }
     cambiados = []
@@ -180,13 +172,27 @@ def publicar(
             # Queda el fichero que ya había (escribir lo sustituye de una vez): los demás siguen.
             registro.exception("%s sin generar: queda el anterior", nombre)
             errores.append(f"{nombre}: {error!r}")
-    # La red de seguridad: una ficha marcada en una comprobación de protección de la auditoría
-    # sale en su última versión buena (exportacion/version_buena.py). Nunca para lo demás.
-    con_red = version_buena.aplicar(
-        almacen, ahora, {n: d for n, d in generados.items() if n in version_buena.LISTAS},
-        directorio,
-    )  # fmt: skip
-    generados.update(con_red)
+    # La puerta (exportacion/puerta.py): los incidentes que se escriben son las filas de la tabla
+    # `publicado`, y en ella solo entra la versión que pasa. Si la puerta falla entera, los
+    # ficheros de incidentes no se tocan (queda lo publicado): cerrado por defecto.
+    de_incidentes = {n: d for n, d in generados.items() if n in puerta.LISTAS}
+    try:
+        if semilla is not None:
+            puerta.sembrar(almacen, ahora, semilla)
+        pasado = puerta.pasar(almacen, ahora, de_incidentes, base, apartados)
+        generados.update(pasado.ficheros)
+        registro.info(
+            "puerta de la publicación: %d fichas publicadas, %d versiones nuevas, %d sin pasar "
+            "(%d en su versión anterior), %d unidas, %d retiradas%s",
+            pasado.entradas, pasado.cambiadas, len(pasado.retenidas), len(pasado.sustituidas()),
+            len(pasado.unidas), len(pasado.retiradas),
+            "" if pasado.terminado else "; el control no terminó en esta pasada: nada cambia",
+        )  # fmt: skip
+    except Exception as error:
+        registro.exception("puerta de la publicación fallida: los incidentes quedan como estaban")
+        for nombre in de_incidentes:
+            del generados[nombre]
+            errores.append(f"{nombre}: puerta: {error!r}")
     for nombre, documento in generados.items():
         ruta = directorio / nombre
         anterior = ruta.read_bytes() if ruta.exists() else None

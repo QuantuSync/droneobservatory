@@ -43,6 +43,8 @@ export interface Pagina {
   imagen?: { ruta: string; alt: string };
   /** Datos que la página con el mapa pide nada más arrancar: se piden ya desde la cabecera. */
   precargas?: readonly string[];
+  /** La página no debe entrar en los buscadores (la de una ficha retirada). */
+  sinIndexar?: boolean;
 }
 
 export function paginaDePortada(idioma: Idioma): Pagina {
@@ -102,6 +104,7 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
     // La app instalable, con el nombre y la portada del idioma de la página (public/manifest*.webmanifest).
     `<link rel="manifest" href="${MANIFIESTOS[pagina.idioma]}">`,
     `<meta name="description" content="${descripcion}">`,
+    ...(pagina.sinIndexar === true ? [`<meta name="robots" content="noindex">`] : []),
     `<link rel="canonical" href="${url}">`,
     ...alternativas,
     `<meta property="og:type" content="website">`,

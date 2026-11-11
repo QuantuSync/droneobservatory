@@ -1066,11 +1066,63 @@ def fusionar(
         almacen.guardar_incidente(fundido, ahora, modelos)
         almacen.registrar_fusion(
             _instante(ahora, "minuto")["valor"], absorbido["id"], destino["id"], motivo, aportadas,
+            instantanea(almacen, destino, absorbido),
         )  # fmt: skip
         vivos[destino["id"]] = nuevo
         del vivos[absorbido["id"]]
         hechas += 1
     return hechas
+
+
+def instantanea(almacen: Almacen, destino: Documento, absorbido: Documento) -> Documento:
+    """La instantánea de una unión recién guardada, para `Almacen.registrar_fusion`: las dos
+    fichas como estaban justo antes y la que queda como ha quedado guardada (con lo que hayan
+    decidido las revisiones y el cerrojo al guardar)."""
+    return {
+        "destino": destino,
+        "absorbido": absorbido,
+        "despues": almacen.incidente(str(destino["id"])) or destino,
+    }
+
+
+# Lo que una unión le copia a la ficha que queda cuando le faltaba (`absorber`,
+# `recogida/revisados.completar`): el día, el fin, la respuesta, la presencia, las pruebas y el
+# cierre. Al deshacerla vuelve a su valor de antes.
+COPIADOS_AL_UNIR = ("tiempo", "respuesta", "presencia_dron", "pruebas", "consecuencias")
+
+
+def devolver_lo_copiado(destino: Documento, unida: Documento | None) -> list[str]:
+    """Quita de `destino` (lo modifica) lo que la unión le copió del absorbido: cada dato de
+    `COPIADOS_AL_UNIR` que la unión cambió vuelve a su valor de antes si sigue siendo el que la
+    unión puso; lo que cambió después por otra vía (una revisión, una fuente nueva) se respeta.
+    Devuelve los datos devueltos. Hasta el 10 de noviembre de 2026 deshacer una unión dejaba en
+    la ficha que queda el día y las pruebas del otro suceso."""
+    if not unida or not unida.get("destino") or not unida.get("despues"):
+        return []
+    antes, despues = unida["destino"], unida["despues"]
+    devueltos = []
+    for campo in COPIADOS_AL_UNIR:
+        if despues.get(campo) == antes.get(campo) or destino.get(campo) != despues.get(campo):
+            continue
+        if campo in antes:
+            destino[campo] = copy.deepcopy(antes[campo])
+        else:
+            destino.pop(campo, None)
+        devueltos.append(campo)
+    return devueltos
+
+
+def retiene_la_reapertura(almacen: Almacen, absorbido: Documento, destino: str) -> bool:
+    """El cerrojo, en «aplicar», retendría la reapertura de `absorbido` (deja de estar fundido en
+    `destino`) hecha por una regla: solo pasa la de un par que no se une (una separación, unos
+    distintos). La misma regla que `Almacen._cerrojo_reapertura`: lo que no va a pasar no se
+    intenta, y no deja cada hora un guardado que el cerrojo devuelve."""
+    from proceso import protegido
+
+    if protegido.modo() != protegido.APLICAR:
+        return False
+    propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
+    return not protegido.es_separacion(almacen, propio, destino)
 
 
 def retiene_la_union(almacen: Almacen, absorbido: Documento, destino: str) -> bool:
@@ -1127,7 +1179,18 @@ def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str])
                 *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
             )
         ):
-            revertir(almacen, fusion["absorbido"], ahora, modelos)
+            # Antes de intentarla se pregunta al cerrojo (como `fusionar` con las uniones): una
+            # reapertura que retendría no se intenta en cada recogida.
+            if retiene_la_reapertura(almacen, absorbido, str(fusion["destino"])):
+                continue
+            # Cada fusión, aislada: una que no se puede deshacer no corta las demás.
+            try:
+                revertir(almacen, fusion["absorbido"], ahora, modelos)
+            except Exception as error:
+                registro.warning(
+                    "fusión de %s sin deshacer: %s", fusion["absorbido"], str(error)[:200]
+                )
+                continue
             vueltos.append(fusion["absorbido"])
     return vueltos
 
@@ -1143,6 +1206,7 @@ def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: froz
     destino = almacen.incidente(fusion["destino"])
     if absorbido is None or destino is None:
         raise KeyError(absorbido_id)
+    unida = almacen.instantanea_de_fusion(absorbido_id)
     aportadas = set(fusion["fuentes"])
     destino["fuentes"] = [f for f in destino["fuentes"] if f["id"] not in aportadas]
     destino["afirmaciones"] = [
@@ -1158,6 +1222,14 @@ def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: froz
     pasos = [p for p in destino["estado"]["historial"] if p.get("fuente_id") not in aportadas]
     if pasos and len(pasos) < len(destino["estado"]["historial"]):
         destino["estado"] = {"actual": pasos[-1]["estado"], "historial": pasos}
+    # Lo que la unión le copió del absorbido (su día, su fin, su presencia, sus pruebas, su
+    # cierre) vuelve a como estaba antes de unirse.
+    devueltos = devolver_lo_copiado(destino, unida)
+    if devueltos:
+        registro.info(
+            "%s: al deshacer la unión de %s vuelve a su valor de antes: %s",
+            destino["id"], absorbido_id, ", ".join(devueltos),
+        )  # fmt: skip
     nivel = credibilidad_noticias(len(destino["fuentes"]))
     for fuente in destino["fuentes"]:
         fuente["credibilidad"] = nivel

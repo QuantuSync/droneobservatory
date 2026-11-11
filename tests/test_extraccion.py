@@ -441,7 +441,9 @@ def _copia(incidente: dict[str, Any], id_: str, horas: int, url: str) -> dict[st
     return copia
 
 
-def test_fusion_reversible_y_fusion_dudosa(almacen: Almacen) -> None:
+def test_fusion_reversible_y_fusion_dudosa(almacen: Almacen, cerrojo_en_observar: None) -> None:
+    # La mecánica de la regla de fusión: en «aplicar» el cerrojo no une ni reabre las fichas de
+    # ejemplo (son del nivel manual), y eso se prueba en tests/test_cerrojo.py.
     id_ = extraer_ejemplo(almacen)
     assert id_ is not None
     base = almacen.incidente(id_)
@@ -462,7 +464,7 @@ def test_fusion_reversible_y_fusion_dudosa(almacen: Almacen) -> None:
 
 
 def test_al_deshacer_una_fusion_la_respuesta_heredada_se_va_con_sus_fuentes(
-    almacen: Almacen,
+    almacen: Almacen, cerrojo_en_observar: None
 ) -> None:
     # EODI-2026-00281: la ficha de Tudora se quedaba con la patrulla del dron de Palanca, sin
     # origen, y la exportación no validaba.

@@ -377,6 +377,7 @@ CAMPOS_PUBLICOS_IMPACTO: frozenset[str] = frozenset(
         "lugar.nivel",
         "lugar.categoria",
         "lugar.localidad",
+        "lugar.localidad_latino",
         "lugar.punto",
         "lugar.punto.lat",
         "lugar.punto.lon",

@@ -18,7 +18,7 @@ import pytest
 from pytest import approx
 
 from almacen.base import Almacen
-from exportacion import publicar
+from exportacion import puerta
 from modelo import coste, ficha
 from proceso import extraccion
 from recogida import control_fichas, revisados
@@ -161,11 +161,14 @@ def test_la_publicacion_no_enlaza_a_una_ficha_retenida() -> None:
         {"id": "EODI-2025-00080", "separado_de": "EODI-2025-00066", "nota": nota},
         {"id": "EODI-2025-00444", "separado_de": "EODI-2025-00066", "nota": nota},
     ]}  # fmt: skip
-    limpio = publicar.sin_retenidos(incidente, frozenset({"EODI-2025-00444"}))
+    # Desde el 10 de noviembre de 2026 lo decide la puerta de la publicación con las fichas
+    # publicadas, no con la lista de retenidas: un enlace solo sale si su ficha está en la web.
+    publicadas = {"EODI-2025-00066", "EODI-2025-00080"}
+    limpio = puerta.sin_enlaces_rotos(incidente, publicadas)
     assert [r["id"] for r in limpio["relacionados"]] == ["EODI-2025-00080"]
     solo = {**incidente, "relacionados": incidente["relacionados"][1:]}
-    assert "relacionados" not in publicar.sin_retenidos(solo, frozenset({"EODI-2025-00444"}))
-    assert publicar.sin_retenidos(incidente, frozenset()) is incidente
+    assert "relacionados" not in puerta.sin_enlaces_rotos(solo, publicadas)
+    assert puerta.sin_enlaces_rotos(incidente, publicadas | {"EODI-2025-00444"}) is incidente
 
 
 def test_la_presencia_revisada_se_mantiene_si_el_extractor_cambia_de_frase() -> None:

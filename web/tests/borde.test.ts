@@ -1,5 +1,6 @@
 // La función del borde (../../api/borde.ts), a la que Vercel solo manda las fichas que no son un
-// fichero: un unido redirige en su idioma, un ataque de la capa de Ucrania que existe abre la
+// fichero: un unido redirige en su idioma, una ficha retirada responde con la página de su retirada
+// (410), un ataque de la capa de Ucrania que existe abre la
 // portada y lo demás da 404; y la comprobación de capacidad de Vercel avisa al pasar del 80 %.
 
 import { readFileSync } from "node:fs";
@@ -16,6 +17,15 @@ import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 const RUTAS: RutasBorde = {
   redirecciones: { "/EODI-2025-00296": "/EODI-2025-00295", "/en/EODI-2025-00296": "/en/EODI-2025-00295" },
   ataques: ["EODI-UA-2026-1014"],
+};
+const CON_RETIRADAS: RutasBorde = {
+  ...RUTAS,
+  retiradas: {
+    "/EODI-2026-00765": "/retiradas/EODI-2026-00765",
+    "/en/EODI-2026-00765": "/en/withdrawn/EODI-2026-00765",
+    // Unido y retirado a la vez: manda la redirección.
+    "/EODI-2025-00296": "/retiradas/EODI-2025-00296",
+  },
 };
 const ATAQUES = new Set(RUTAS.ataques);
 const vercel = JSON.parse(
@@ -40,6 +50,27 @@ describe("función del borde", () => {
 
   it("un incidente que no es un fichero ni un unido no existe", () => {
     expect(decidirBorde("/EODI-2099-00001", RUTAS, ATAQUES)).toEqual({ tipo: "no_existe" });
+  });
+
+  it("una ficha retirada responde con la página de su retirada, en su idioma", () => {
+    expect(decidirBorde("/EODI-2026-00765", CON_RETIRADAS, ATAQUES)).toEqual({
+      tipo: "retirada",
+      ruta: "/retiradas/EODI-2026-00765",
+    });
+    expect(decidirBorde("/en/EODI-2026-00765", CON_RETIRADAS, ATAQUES)).toEqual({
+      tipo: "retirada",
+      ruta: "/en/withdrawn/EODI-2026-00765",
+    });
+    // La redirección de un unido va antes; lo demás sigue igual.
+    expect(decidirBorde("/EODI-2025-00296", CON_RETIRADAS, ATAQUES)).toEqual({ tipo: "redirigir", destino: "/EODI-2025-00295" });
+    expect(decidirBorde("/EODI-UA-2026-1014", CON_RETIRADAS, ATAQUES)).toEqual({ tipo: "portada", ruta: "/" });
+    expect(decidirBorde("/EODI-2099-00001", CON_RETIRADAS, ATAQUES)).toEqual({ tipo: "no_existe" });
+    expect(decidirBorde("/toString", CON_RETIRADAS, ATAQUES)).toEqual({ tipo: "no_existe" });
+  });
+
+  it("con una lista sin retiradas (la de un despliegue anterior) una retirada no existe", () => {
+    expect(decidirBorde("/EODI-2026-00765", RUTAS, ATAQUES)).toEqual({ tipo: "no_existe" });
+    expect(decidirBorde("/en/EODI-2026-00765", RUTAS, ATAQUES)).toEqual({ tipo: "no_existe" });
   });
 
   it("solo llegan las fichas: las reescrituras de vercel.json y la ruta que reconstruye", () => {

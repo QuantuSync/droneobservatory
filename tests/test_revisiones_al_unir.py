@@ -14,7 +14,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
-from proceso import decidir, incidentes
+from proceso import decidir, incidentes, protegido
 from recogida import revisados
 from tests.test_parte_coincidente import LV, MOTIVO
 from tests.test_sucesos_mezclados import _fuente, _incidente
@@ -71,7 +71,9 @@ def letonia(monkeypatch: pytest.MonkeyPatch) -> Iterator[Almacen]:
     almacen.cerrar()
 
 
-def test_la_que_queda_toma_las_revisiones_de_la_absorbida(letonia: Almacen) -> None:
+def test_la_que_queda_toma_las_revisiones_de_la_absorbida(
+    letonia: Almacen, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Como el 6 de noviembre de 2026: 00746 dentro de 00760. La que queda enseña 1 dron y sin
     modelo, lo revisado con la cita de wp.pl, no 2 drones y el Geran."""
     assert revisados.unir_grupo(letonia, [NUEVA, MARTES], MOTIVO, LV, MODELOS, conserva=NUEVA) == 1
@@ -81,7 +83,9 @@ def test_la_que_queda_toma_las_revisiones_de_la_absorbida(letonia: Almacen) -> N
     assert nueva["drones"]["numero"] == {"min": 1, "max": 1}
     assert "modelo" not in nueva["drones"]
     assert decidir.revision_de(nueva, "drones") == REVISIONES_746["drones"]
-    # Y si la unión se deshace, la que vuelve las tiene otra vez como suyas.
+    # Y si la unión se deshace, la que vuelve las tiene otra vez como suyas. En «aplicar» el
+    # cerrojo solo deja reabrir un par que no se une (una separación o una revisión): aquí, lo es.
+    monkeypatch.setattr(protegido, "es_separacion", lambda *_: True)
     incidentes.revertir(letonia, MARTES, LV + timedelta(hours=1), MODELOS)
     vuelta = letonia.incidente(MARTES)
     assert vuelta is not None and "fusionado_en" not in vuelta

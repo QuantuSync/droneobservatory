@@ -116,10 +116,25 @@ def buckets_de_prueba(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
+def cerrojo_como_en_produccion(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Las pruebas corren con el cerrojo en «aplicar», como producción (docs/ciclo_de_vida.md),
+    diga lo que diga configuracion/cerrojo.json. Hasta el 10 de noviembre de 2026 iban en
+    «observar» mientras producción aplicaba, y los fallos de la primera semana de noviembre (lo
+    que el cerrojo retiene y otro paso vuelve a proponer) no se podían ver en ninguna prueba. La
+    que necesita «observar» lo pide con `cerrojo_en_observar`. Leer otro fichero sigue igual."""
+    from proceso import protegido
+
+    leer = protegido.modo
+
+    def modo(ruta: Path | None = None) -> str:
+        return protegido.APLICAR if ruta is None else leer(ruta)
+
+    monkeypatch.setattr(protegido, "modo", modo)
+
+
+@pytest.fixture
 def cerrojo_en_observar(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Las pruebas no dependen del modo del cerrojo de configuracion/cerrojo.json: van en
-    «observar» salvo las que piden «aplicar» (docs/cerrojo.md). Pasar a «aplicar» es un cambio de
-    una línea en ese fichero y no cambia ninguna prueba. Leer otro fichero sigue igual."""
+    """El cerrojo en «observar»: apunta lo que retendría y deja pasar la escritura."""
     from proceso import protegido
 
     leer = protegido.modo

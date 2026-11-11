@@ -217,6 +217,9 @@ def test_si_el_experto_ve_un_suceso_se_publica(almacen: Almacen) -> None:
 # --- Una ficha publicada: nada se retira sin el experto ---------------------------------------
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_una_publicada_que_no_es_suceso_la_retira_el_experto_en_dos_idiomas(
     almacen: Almacen,
 ) -> None:

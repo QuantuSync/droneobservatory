@@ -111,7 +111,10 @@ def test_un_articulo_de_las_dos_partes_no_separa(tmp_path: Path) -> None:
     assert mapa["gdelt-dnews"] == frozenset({(VIEJO, 1)})
 
 
-def test_la_union_de_la_regla_la_ve_la_auditoria_y_se_deshace(separada: dict[str, Any]) -> None:
+def test_la_union_de_la_regla_la_ve_la_auditoria_y_se_deshace(
+    separada: dict[str, Any], cerrojo_en_observar: None
+) -> None:
+    # La unión mala es de antes del cerrojo: en «aplicar» ya no se puede hacer (ni montar aquí).
     # La fusión 2438: la parte nueva (con su identificador, en el cursor de la separación)
     # fundida por la regla en la que conserva el de la ficha separada.
     almacen = _base(_alemana(), _nuremberg_griega())

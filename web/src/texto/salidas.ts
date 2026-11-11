@@ -1,11 +1,12 @@
-// Lo que el build escribe además de las páginas: el sitemap, llms.txt, la página 404 y las
-// redirecciones permanentes de los incidentes unidos a otro.
+// Lo que el build escribe además de las páginas: el sitemap, llms.txt, la página 404, las
+// redirecciones permanentes de los incidentes unidos a otro y la página de cada ficha retirada.
 
 import { escaparHtml } from "../cabecera.ts";
 import { cifras } from "../datos/derivar.ts";
-import type { Resumen } from "../datos/tipos.ts";
+import type { Resumen, Retirada } from "../datos/tipos.ts";
 import { fechaHora, textos } from "../i18n/index.ts";
 import { AUTOR_LINEA, CORREO_AUTOR, DESCARGAS, IDIOMA_POR_DEFECTO, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, rutaDeFicha, rutaDeIdioma } from "../sitio.ts";
+import type { Idioma } from "../sitio.ts";
 import { ULTIMA_ARCHIVADA } from "../datos/versionesArchivadas.ts";
 import { RUTAS_AVISOS, SERVIDOR_AVISOS, TEXTO_AVISOS, canales } from "../avisos.ts";
 import { e, html } from "./html.ts";
@@ -96,6 +97,58 @@ export function noEncontrada(): PaginaTexto {
     conMapa: false,
     modificada: "",
   };
+}
+
+/**
+ * Dirección del fichero con la página de una ficha retirada. No es la de la ficha: la de la ficha
+ * no es un fichero, y la función del borde responde en ella con esta página y el código 410.
+ */
+export function rutaDeRetirada(id: string, idioma: Idioma): string {
+  return idioma === "en" ? `/en/withdrawn/${id}` : `/retiradas/${id}`;
+}
+
+/**
+ * La página de una ficha retirada, en un idioma: qué ficha era, cuándo se retiró y por qué. Sus
+ * direcciones son las de la ficha (donde se sirve, con el código 410): el enlace al otro idioma y
+ * la dirección canónica apuntan a ellas. El motivo viene de los datos y entra como texto.
+ */
+export function retirada(id: string, detalle: Retirada, idioma: Idioma): PaginaTexto {
+  const tp = textosPagina(idioma);
+  const texto = tp.retirada.texto(fechaHora(detalle.fecha));
+  return {
+    idioma,
+    rutas: { es: rutaDeFicha(id, "es"), en: rutaDeFicha(id, "en") },
+    titulo: `${tp.retirada.titulo} · ${id} · ${NOMBRE}`,
+    descripcion: texto,
+    cuerpo: html(
+      e("h1", null, tp.retirada.titulo),
+      e("p", { class: "mono", "data-retirada": id }, id),
+      e("p", null, texto),
+      e("h2", null, tp.retirada.motivo),
+      e("p", { "data-motivo": "" }, detalle.motivo[idioma]),
+      e("p", null, e("a", { href: rutaDeIdioma(idioma) }, tp.retirada.volver)),
+    ),
+    estructurados: [],
+    conMapa: false,
+    modificada: "",
+    sinIndexar: true,
+  };
+}
+
+/**
+ * Las fichas retiradas que no están publicadas, en los dos idiomas: la dirección de la ficha y la
+ * de la página que la función del borde sirve en ella con el código 410.
+ */
+export function retiradas(
+  retirados: Readonly<Record<string, Retirada>>,
+  publicados: ReadonlySet<string>,
+): { source: string; destination: string }[] {
+  return Object.keys(retirados)
+    .filter((id) => !publicados.has(id))
+    .sort((a, b) => a.localeCompare(b))
+    .flatMap((id) =>
+      IDIOMAS.map((idioma) => ({ source: rutaDeFicha(id, idioma), destination: rutaDeRetirada(id, idioma) })),
+    );
 }
 
 /** llms.txt: qué es el observatorio, qué contiene, cómo leer los estados y dónde está todo. */

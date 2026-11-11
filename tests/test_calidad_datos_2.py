@@ -247,6 +247,9 @@ def test_rehacer_dos_veces_no_numera_de_mas(monkeypatch: pytest.MonkeyPatch) -> 
 # --- Identificadores estables al reconstruir -------------------------------------------------
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_reconstruir_conserva_el_identificador_y_retira_las_copias() -> None:
     almacen = Almacen.abrir()
     id_ = extraer_ejemplo(almacen)

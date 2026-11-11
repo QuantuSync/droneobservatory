@@ -248,3 +248,21 @@ def test_el_modelo_revisado_a_mano_sale_de_su_fuente(monkeypatch: pytest.MonkeyP
     assert exportado["drones"]["modelo"] == modelo
     marca = exportado["procedencia"]["drones.modelo"]
     assert (marca["origen"], marca["metodo"], marca["fuentes"]) == ("prensa", "regla", ["gdelt-1"])
+
+
+def test_el_dia_que_fija_el_filtro_sale_de_su_fuente_aunque_no_haya_noticias() -> None:
+    """EODI-2026-00777 (11 de noviembre de 2026): solo le quedaban dos notas del ejército letón y
+    una declaración; el día lo fijó el filtro de entrada con la frase de una de las notas y
+    «tiempo.inicio» se quedaba sin origen: la exportación semanal no validaba."""
+    documento = ejemplos.incidente_completo()
+    for datos in documento["fuentes"]:
+        datos.update(fiabilidad="A", es_autoridad=True)
+    assert "prensa" not in {origenes.origen_de_fuente(f) for f in documento["fuentes"]}
+    # Sin noticias, otros valores del ejemplo se quedan sin origen; el inicio ya no.
+    with pytest.raises(origenes.SinOrigen) as con_fuente:
+        exportar(documento)
+    assert "tiempo.inicio" not in str(con_fuente.value)
+    # Sin fuente en el origen del inicio, sigue sin origen: nada se relaja.
+    del documento["tiempo"]["origen_inicio"]["fuente_id"]
+    with pytest.raises(origenes.SinOrigen, match=r"tiempo\.inicio"):
+        exportar(documento)

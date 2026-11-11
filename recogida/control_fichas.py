@@ -519,6 +519,14 @@ def unir(
         return None
     if incidentes.revisiones_distintas(une["id"], conserva["id"]):
         return None
+    if incidentes.retiene_la_union(almacen, une, str(conserva["id"])):
+        # La unión que el cerrojo retendría no se intenta (como en la regla de fusión): antes se
+        # guardaba la que queda con las fuentes de la otra y el cerrojo la devolvía, en cada pasada.
+        registro.info(
+            "unión %s→%s sin hacer: el cerrojo la retendría (%s)",
+            une["id"], conserva["id"], motivo[:120],
+        )  # fmt: skip
+        return None
     nuevo, aportadas = incidentes.absorber(conserva, une, ahora)
     nuevo = completar(nuevo, [une])
     fundido = {**copy.deepcopy(une), "fusionado_en": conserva["id"]}
@@ -528,6 +536,7 @@ def unir(
     almacen.registrar_fusion(
         ahora.strftime("%Y-%m-%dT%H:%MZ"), une["id"], conserva["id"],
         incidentes.PREFIJO_REVISADA + PREFIJO_UNION + motivo, aportadas,
+        incidentes.instantanea(almacen, conserva, une),
     )  # fmt: skip
     return nuevo
 
@@ -553,24 +562,28 @@ def reaplicar_uniones(
             pares.setdefault((fusion["destino"], fusion["absorbido"]), None)
     rehechas = 0
     for (conserva_id, une_id), motivo in pares.items():
-        conserva = almacen.incidente(conserva_id)
-        une = almacen.incidente(une_id)
-        if conserva is None or une is None or not incidentes.activo(conserva):
-            continue
-        propio = {k: v for k, v in une.items() if k != "fusionado_en"}
-        if "fusionado_en" not in une:
-            if motivo is None or not incidentes.activo(une):
+        try:
+            conserva = almacen.incidente(conserva_id)
+            une = almacen.incidente(une_id)
+            if conserva is None or une is None or not incidentes.activo(conserva):
                 continue
-            if unir(almacen, conserva, propio, motivo, ahora, modelos) is not None:
+            propio = {k: v for k, v in une.items() if k != "fusionado_en"}
+            if "fusionado_en" not in une:
+                if motivo is None or not incidentes.activo(une):
+                    continue
+                if unir(almacen, conserva, propio, motivo, ahora, modelos) is not None:
+                    rehechas += 1
+                continue
+            if une["fusionado_en"] != conserva_id:
+                continue
+            tiene = {f["id"] for f in conserva["fuentes"]}
+            if any(f["id"] not in tiene for f in propio.get("fuentes", [])):
+                nuevo, _ = incidentes.absorber(conserva, propio, ahora)
+                almacen.guardar_incidente(nuevo, ahora, modelos)
                 rehechas += 1
-            continue
-        if une["fusionado_en"] != conserva_id:
-            continue
-        tiene = {f["id"] for f in conserva["fuentes"]}
-        if any(f["id"] not in tiene for f in propio.get("fuentes", [])):
-            nuevo, _ = incidentes.absorber(conserva, propio, ahora)
-            almacen.guardar_incidente(nuevo, ahora, modelos)
-            rehechas += 1
+        except Exception as error:
+            # Cada unión, aislada: una que no se puede rehacer no corta las demás ni el control.
+            registro.warning("unión %s→%s sin rehacer: %s", une_id, conserva_id, repr(error)[:200])
     return rehechas
 
 
@@ -595,59 +608,68 @@ def conservar_la_mas_antigua(
     corregidas: dict[str, Documento] = {}
     vigentes = {**decisiones}
     for clave in sorted(vigentes):
-        decision = vigentes[clave]
-        if not una_union(decision):
-            continue
-        nuevo_id, viejo_id = decision["conserva"], decision["une"]
-        if reglas.orden_registro(viejo_id) >= reglas.orden_registro(nuevo_id):
-            continue
-        conserva = almacen.incidente(nuevo_id)
-        une = almacen.incidente(viejo_id)
-        if (
-            conserva is None or une is None or not incidentes.activo(conserva)
-            or une.get("fusionado_en") != nuevo_id
-        ):  # fmt: skip
-            continue
-        otros = [
-            f for f in almacen.fusiones()
-            if not f["revertida"] and f["destino"] == nuevo_id and f["absorbido"] != viejo_id
-        ]  # fmt: skip
-        fecha = ahora.strftime("%Y-%m-%dT%H:%MZ")
-        queda = {**copy.deepcopy(conserva), "id": viejo_id}
-        altas = sorted((une["control"]["alta"], conserva["control"]["alta"]),
-                       key=lambda a: str(a["valor"]))  # fmt: skip
-        queda["control"]["alta"] = altas[0]
-        fundido = {**copy.deepcopy(conserva), "fusionado_en": viejo_id}
-        fundido.pop("episodio", None)
-        almacen.guardar_incidente(queda, ahora, modelos)
-        almacen.guardar_incidente(fundido, ahora, modelos)
-        propias = {f["id"] for f in une.get("fuentes", [])}
-        aportadas = [f["id"] for f in conserva["fuentes"] if f["id"] not in propias]
-        almacen.revertir_fusion(viejo_id)
-        almacen.registrar_fusion(
-            fecha, nuevo_id, viejo_id,
-            incidentes.PREFIJO_REVISADA + PREFIJO_UNION + str(decision.get("motivo_es", "")),
-            aportadas,
-        )  # fmt: skip
-        for fusion in otros:
-            otro = almacen.incidente(fusion["absorbido"])
-            if otro is None or otro.get("fusionado_en") != nuevo_id:
+        try:
+            decision = vigentes[clave]
+            if not una_union(decision):
                 continue
-            almacen.guardar_incidente({**otro, "fusionado_en": viejo_id}, ahora, modelos)
-            almacen.revertir_fusion(fusion["absorbido"])
+            nuevo_id, viejo_id = decision["conserva"], decision["une"]
+            if reglas.orden_registro(viejo_id) >= reglas.orden_registro(nuevo_id):
+                continue
+            conserva = almacen.incidente(nuevo_id)
+            une = almacen.incidente(viejo_id)
+            if (
+                conserva is None or une is None or not incidentes.activo(conserva)
+                or une.get("fusionado_en") != nuevo_id
+            ):  # fmt: skip
+                continue
+            otros = [
+                f for f in almacen.fusiones()
+                if not f["revertida"] and f["destino"] == nuevo_id and f["absorbido"] != viejo_id
+            ]  # fmt: skip
+            fecha = ahora.strftime("%Y-%m-%dT%H:%MZ")
+            queda = {**copy.deepcopy(conserva), "id": viejo_id}
+            altas = sorted((une["control"]["alta"], conserva["control"]["alta"]),
+                           key=lambda a: str(a["valor"]))  # fmt: skip
+            queda["control"]["alta"] = altas[0]
+            fundido = {**copy.deepcopy(conserva), "fusionado_en": viejo_id}
+            fundido.pop("episodio", None)
+            almacen.guardar_incidente(queda, ahora, modelos)
+            almacen.guardar_incidente(fundido, ahora, modelos)
+            propias = {f["id"] for f in une.get("fuentes", [])}
+            aportadas = [f["id"] for f in conserva["fuentes"] if f["id"] not in propias]
+            almacen.revertir_fusion(viejo_id)
             almacen.registrar_fusion(
-                fecha, fusion["absorbido"], viejo_id, fusion["motivo"], fusion["fuentes"]
-            )
-        nota = f"se conserva la ficha más antigua ({viejo_id}), no {nuevo_id}"
-        corregidas[clave] = {**decision, "conserva": viejo_id, "une": nuevo_id, "corregida": nota}
-        verificada = vigentes.get(reglas.clave_verificacion(nuevo_id))
-        if verificada is not None:
-            corregidas[reglas.clave_verificacion(viejo_id)] = {**verificada, "corregida": nota}
-        for otra, d in vigentes.items():
-            if otra != clave and d.get("conserva") == nuevo_id:
-                corregidas[otra] = {**d, "conserva": viejo_id, "corregida": nota}
-        vigentes.update(corregidas)
-        registro.info("control de fichas: %s (y %d unidas a ella)", nota, len(otros))
+                fecha, nuevo_id, viejo_id,
+                incidentes.PREFIJO_REVISADA + PREFIJO_UNION + str(decision.get("motivo_es", "")),
+                aportadas,
+            )  # fmt: skip
+            for fusion in otros:
+                otro = almacen.incidente(fusion["absorbido"])
+                if otro is None or otro.get("fusionado_en") != nuevo_id:
+                    continue
+                almacen.guardar_incidente({**otro, "fusionado_en": viejo_id}, ahora, modelos)
+                almacen.revertir_fusion(fusion["absorbido"])
+                almacen.registrar_fusion(
+                    fecha, fusion["absorbido"], viejo_id, fusion["motivo"], fusion["fuentes"]
+                )
+            nota = f"se conserva la ficha más antigua ({viejo_id}), no {nuevo_id}"
+            corregidas[clave] = {
+                **decision,
+                "conserva": viejo_id,
+                "une": nuevo_id,
+                "corregida": nota,
+            }
+            verificada = vigentes.get(reglas.clave_verificacion(nuevo_id))
+            if verificada is not None:
+                corregidas[reglas.clave_verificacion(viejo_id)] = {**verificada, "corregida": nota}
+            for otra, d in vigentes.items():
+                if otra != clave and d.get("conserva") == nuevo_id:
+                    corregidas[otra] = {**d, "conserva": viejo_id, "corregida": nota}
+            vigentes.update(corregidas)
+            registro.info("control de fichas: %s (y %d unidas a ella)", nota, len(otros))
+        except Exception as error:
+            # Cada unión, aislada: una que no se puede renumerar no para el control entero.
+            registro.warning("unión %s sin renumerar: %s", clave, repr(error)[:200])
     return corregidas
 
 
@@ -1192,51 +1214,56 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
     decisiones = {**ctx.decisiones, **ctx.nuevas}
     inicios = revisados.inicios_revisados()
     for incidente in _activos(ctx.almacen):
-        decision = decisiones.get(reglas.clave_verificacion(incidente["id"]))
-        if decision is not None and decision.get("espera_experto") and "datos" not in decision:
-            # Espera al experto: todavía no hay verificación que aplicar.
-            continue
-        if decision is None or decision.get("anulada"):
-            # Una verificación anulada al revisarla (su corrección no era buena) no se aplica;
-            # la ficha se vuelve a verificar cuando llegan fuentes nuevas.
-            continue
-        verificada = _verificada_vigente(decision, incidente)
-        conservar: set[str] = set()
-        if decision.get("huella") != reglas.huella_fuentes(incidente):
-            # Fuentes nuevas aún sin verificar: un valor que ninguna fuente daba solo se quita si
-            # es el mismo que se comprobó (lo nuevo puede traerlo).
-            actual, vista = reglas.vista(incidente), decision.get("vista", {})
-            conservar = {c for c in ("drones", "cierre", "duracion_min", "inicio")
-                         if actual.get(c) != vista.get(c)}  # fmt: skip
-        if _inicio_revisado_vigente(incidente, inicios.get(str(incidente["id"]))):
-            # La hora revisada a mano con su cita (incidentes_revisados.json, titulares.inicio)
-            # no la quita la verificación: el verificador puede no leer «entre las 07:00 y las
-            # 08:10» como la hora del suceso (EODI-2025-00365).
-            conservar |= {"inicio", "duracion_min"}
-        # Lo revisado a mano con su cita lo decide proceso/decidir.py: el control no lo corrige
-        # (EODI-2026-00134: «eine Drohne» frente a la revisión 1-2, cada hora).
-        conservar |= {"drones", "inicio"} & set(decidir.revisiones(incidente))
-        fuentes_regla, titular_regla = presencia.respaldo_cierre_de_pista(incidente)
-        enlaces = {f.get("enlace") or f["id"] for f in _publicas(incidente)}
-        correccion = reglas.aplicar(
-            incidente,
-            verificada,
-            bool(fuentes_regla or titular_regla),
-            ctx.nom,
-            frozenset(conservar),
-            completa=len(enlaces) <= peticiones.MAX_FUENTES,
-        )
-        if correccion.dudas:
-            ctx.resultado.dudas[incidente["id"]] = correccion.dudas
-        if correccion.rectificar is not None:
-            _a_rectificaciones(ctx.almacen, incidente, *correccion.rectificar)
-        if not correccion.cambios:
-            continue
-        # El titular lo decide proceso/decidir.py al guardar.
-        nuevo = incidentes.aplicar_reglas(correccion.incidente)
-        if decision.get("modelo"):
-            nuevo = anotar_modelos(nuevo, correccion.cambios, str(decision["modelo"]))
-        _guardar(ctx, incidente, nuevo, "; ".join(correccion.cambios))
+        try:
+            decision = decisiones.get(reglas.clave_verificacion(incidente["id"]))
+            if decision is not None and decision.get("espera_experto") and "datos" not in decision:
+                # Espera al experto: todavía no hay verificación que aplicar.
+                continue
+            if decision is None or decision.get("anulada"):
+                # Una verificación anulada al revisarla (su corrección no era buena) no se aplica;
+                # la ficha se vuelve a verificar cuando llegan fuentes nuevas.
+                continue
+            verificada = _verificada_vigente(decision, incidente)
+            conservar: set[str] = set()
+            if decision.get("huella") != reglas.huella_fuentes(incidente):
+                # Fuentes nuevas aún sin verificar: un valor que ninguna fuente daba solo se quita
+                # si es el mismo que se comprobó (lo nuevo puede traerlo).
+                actual, vista = reglas.vista(incidente), decision.get("vista", {})
+                conservar = {c for c in ("drones", "cierre", "duracion_min", "inicio")
+                             if actual.get(c) != vista.get(c)}  # fmt: skip
+            if _inicio_revisado_vigente(incidente, inicios.get(str(incidente["id"]))):
+                # La hora revisada a mano con su cita (incidentes_revisados.json, titulares.inicio)
+                # no la quita la verificación: el verificador puede no leer «entre las 07:00 y las
+                # 08:10» como la hora del suceso (EODI-2025-00365).
+                conservar |= {"inicio", "duracion_min"}
+            # Lo revisado a mano con su cita lo decide proceso/decidir.py: el control no lo corrige
+            # (EODI-2026-00134: «eine Drohne» frente a la revisión 1-2, cada hora).
+            conservar |= {"drones", "inicio"} & set(decidir.revisiones(incidente))
+            fuentes_regla, titular_regla = presencia.respaldo_cierre_de_pista(incidente)
+            enlaces = {f.get("enlace") or f["id"] for f in _publicas(incidente)}
+            correccion = reglas.aplicar(
+                incidente,
+                verificada,
+                bool(fuentes_regla or titular_regla),
+                ctx.nom,
+                frozenset(conservar),
+                completa=len(enlaces) <= peticiones.MAX_FUENTES,
+            )
+            if correccion.dudas:
+                ctx.resultado.dudas[incidente["id"]] = correccion.dudas
+            if correccion.rectificar is not None:
+                _a_rectificaciones(ctx.almacen, incidente, *correccion.rectificar)
+            if not correccion.cambios:
+                continue
+            # El titular lo decide proceso/decidir.py al guardar.
+            nuevo = incidentes.aplicar_reglas(correccion.incidente)
+            if decision.get("modelo"):
+                nuevo = anotar_modelos(nuevo, correccion.cambios, str(decision["modelo"]))
+            _guardar(ctx, incidente, nuevo, "; ".join(correccion.cambios))
+        except Exception as error:
+            # Cada ficha, aislada: la que falla se apunta y las demás siguen.
+            registro.exception("verificación de %s sin aplicar", incidente.get("id"))
+            ctx.resultado.errores.append(f"{incidente.get('id')}: verificación: {error!r}"[:200])
 
 
 def _a_rectificaciones(almacen: Almacen, incidente: Documento, fuente_id: str, frase: str) -> None:
@@ -1292,16 +1319,24 @@ def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -
     despues = {**despues, "control": {**despues["control"],
                                       "ultima_actualizacion": _instante(ctx.ahora)}}  # fmt: skip
     try:
-        ctx.almacen.guardar_incidente(despues, ctx.ahora, ctx.modelos)
+        escrito = ctx.almacen.guardar_incidente(despues, ctx.ahora, ctx.modelos)
     except DocumentoInvalido as error:
         ctx.resultado.errores.append(f"{antes['id']}: sin guardar: {str(error)[:200]}")
         return False
+    if not escrito:
+        # El cerrojo retuvo todo el cambio (queda apuntado como `retenido:`, una vez): no hay
+        # versión nueva, ni motivo, ni «corregido». Antes se daba por hecho, y lo que el control
+        # proponía cada hora y el cerrojo retenía cada hora dejaba cada hora un motivo y un
+        # «corregidos 1» (EODI-2026-00773, el cierre de media hora).
+        return False
+    # Lo que quedó de verdad: el cerrojo puede haber conservado parte de lo guardado.
+    quedo = ctx.almacen.incidente(antes["id"]) or despues
     campos = ("presencia_dron", "drones", "consecuencias", "tiempo", "lugar", "objetivo",
               "estado", "titulo", "tipo")  # fmt: skip
-    cambios = {c: antes.get(c) for c in campos if antes.get(c) != despues.get(c)}
+    cambios = {c: antes.get(c) for c in campos if antes.get(c) != quedo.get(c)}
     if cambios:
         ctx.almacen.anotar_motivo(TABLA_MOTIVOS, antes["id"], cambios,
-                                  {c: despues.get(c) for c in cambios},
+                                  {c: quedo.get(c) for c in cambios},
                                   f"{PREFIJO_UNION}{motivo}"[:1000])  # fmt: skip
     ctx.resultado.corregidos.setdefault(antes["id"], []).append(motivo)
     return True
@@ -1310,36 +1345,43 @@ def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -
 def reglas_deterministas(ctx: Contexto) -> None:
     """El lugar que nombra el titular y el estado sin fuente oficial, sin llamar a nada."""
     for incidente in _activos(ctx.almacen):
-        nuevo = incidente
-        motivos = []
-        sin_nombre = lugar_preciso.nota_sin_nombre(nuevo)
-        if sin_nombre is not None:
-            nuevo = sin_nombre
-            motivos.append("nota del lugar sin el nombre en otro idioma")
-        if ctx.nom is not None:
-            preciso = lugar_preciso.precisar(nuevo, ctx.nom, ctx.ahora)
-            if preciso is not None:
-                nuevo = preciso
-                motivos.append(f"lugar en {preciso['lugar']['suceso']}, la instalación de la ficha")
-        # Salvo la instalación revisada a mano (EODI-2025-00404, la cárcel de Mas d'Enric).
-        objetivo = nuevo.get("objetivo")
-        revisado = objetivo == revisados.objetivo_revisado(str(nuevo["id"]))
-        if incidentes.objetivo_es_la_localidad(objetivo, nuevo["lugar"]) and not revisado:
-            nuevo = {k: v for k, v in nuevo.items() if k != "objetivo"}
-            motivos.append(
-                "sin objetivo: «otra» con el nombre de la localidad no es una instalación"
-            )
-        sin_buque = incidentes.lugar_sin_buque(nuevo["lugar"], buques.textos_de(nuevo))
-        if sin_buque is not nuevo["lugar"]:
-            nuevo = {**nuevo, "lugar": sin_buque}
-            motivos.append(f"lugar {sin_buque['suceso']}: el nombre de un buque no es un lugar")
-        bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
-        if bajado is not None:
-            nuevo = bajado
-            motivos.append("estado sin fuente oficial: notificado")
-        if motivos:
-            nuevo = incidentes.aplicar_reglas(nuevo)
-            _guardar(ctx, incidente, nuevo, "; ".join(motivos))
+        try:
+            nuevo = incidente
+            motivos = []
+            sin_nombre = lugar_preciso.nota_sin_nombre(nuevo)
+            if sin_nombre is not None:
+                nuevo = sin_nombre
+                motivos.append("nota del lugar sin el nombre en otro idioma")
+            if ctx.nom is not None:
+                preciso = lugar_preciso.precisar(nuevo, ctx.nom, ctx.ahora)
+                if preciso is not None:
+                    nuevo = preciso
+                    motivos.append(
+                        f"lugar en {preciso['lugar']['suceso']}, la instalación de la ficha"
+                    )
+            # Salvo la instalación revisada a mano (EODI-2025-00404, la cárcel de Mas d'Enric).
+            objetivo = nuevo.get("objetivo")
+            revisado = objetivo == revisados.objetivo_revisado(str(nuevo["id"]))
+            if incidentes.objetivo_es_la_localidad(objetivo, nuevo["lugar"]) and not revisado:
+                nuevo = {k: v for k, v in nuevo.items() if k != "objetivo"}
+                motivos.append(
+                    "sin objetivo: «otra» con el nombre de la localidad no es una instalación"
+                )
+            sin_buque = incidentes.lugar_sin_buque(nuevo["lugar"], buques.textos_de(nuevo))
+            if sin_buque is not nuevo["lugar"]:
+                nuevo = {**nuevo, "lugar": sin_buque}
+                motivos.append(f"lugar {sin_buque['suceso']}: el nombre de un buque no es un lugar")
+            bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
+            if bajado is not None:
+                nuevo = bajado
+                motivos.append("estado sin fuente oficial: notificado")
+            if motivos:
+                nuevo = incidentes.aplicar_reglas(nuevo)
+                _guardar(ctx, incidente, nuevo, "; ".join(motivos))
+        except Exception as error:
+            # Cada ficha, aislada: la que falla se apunta y las demás siguen.
+            registro.exception("reglas de %s sin aplicar", incidente.get("id"))
+            ctx.resultado.errores.append(f"{incidente.get('id')}: reglas: {error!r}"[:200])
 
 
 # --- Citas ---------------------------------------------------------------------------------
@@ -1461,83 +1503,94 @@ def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
     activos = _activos(ctx.almacen)
     por_id = {d["id"]: d for d in activos}
     for clave, decision in ctx.decisiones.items():
-        if not clave.startswith("retrospectiva:"):
-            continue
-        documento = por_id.get(clave.removeprefix("retrospectiva:"))
-        if documento is not None:
-            nuevo = reglas.con_fecha_retrospectiva(documento, decision)
-            if nuevo is not documento:
-                ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
+        try:
+            if not clave.startswith("retrospectiva:"):
+                continue
+            documento = por_id.get(clave.removeprefix("retrospectiva:"))
+            if documento is not None:
+                nuevo = reglas.con_fecha_retrospectiva(documento, decision)
+                if nuevo is not documento:
+                    ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
+        except Exception as error:
+            # Cada ficha, aislada: la que falla se apunta y las demás siguen.
+            registro.exception("retrospectiva %s sin reponer", clave)
+            ctx.resultado.errores.append(f"{clave}: {error!r}"[:200])
     activos = _activos(ctx.almacen)
     for incidente in activos:
-        id_ = incidente["id"]
-        if id_ in vistos or (motivo := reglas.pide_fecha(incidente, activos)) is None:
-            continue
-        clave = reglas.clave_retrospectiva(id_)
-        huella = reglas.huella_fuentes(incidente)
-        previa = ctx.decisiones.get(clave) or {}
-        if previa.get("huella") == huella and (
-            previa.get("decision")
-            or "respuesta" in previa
-            or _leer(previa.get("espera_experto") or _iso(ctx.ahora)) > ctx.ahora
-        ):
-            continue
-        if ctx.llamador.parado:
-            break
-        candidatas = reglas.previas_del_sitio(incidente, activos)
-        fuentes = fuentes_de_ficha(ctx.almacen, incidente, {})
-        resumenes = [
-            {
-                "id": c["id"],
-                "fecha": c["tiempo"]["inicio"]["valor"][:10],
-                "titular": (c.get("titulo") or {}).get("es", ""),
-            }
-            for c in candidatas
-        ]
-        cuerpo = peticiones.cuerpo_retrospectiva(
-            reglas.vista(incidente), fuentes.bloques, resumenes
-        )
-        leida = ctx.llamador.llamar(
-            cuerpo,
-            peticiones.MAX_SALIDA_RETROSPECTIVA,
-            clave,
-            escalar=lambda _: [f"noticia_retrospectiva: {motivo}"],
-        )
-        base = {
-            "huella": huella,
-            "motivo": motivo,
-            "fecha": _iso(ctx.ahora),
-            "version": peticiones.VERSION_RETROSPECTIVA,
-        }
-        if leida is None or not ctx.llamador.ultimos_motivos:
-            # Sin el experto (tope, fallo o sin configurar) no se decide: la ficha sigue retenida.
-            if ctx.llamador.ultima_espera:
-                ctx.nuevas[clave] = {
-                    **base,
-                    "decision": None,
-                    "espera_experto": ctx.llamador.ultima_espera,
+        try:
+            id_ = incidente["id"]
+            if id_ in vistos or (motivo := reglas.pide_fecha(incidente, activos)) is None:
+                continue
+            clave = reglas.clave_retrospectiva(id_)
+            huella = reglas.huella_fuentes(incidente)
+            previa = ctx.decisiones.get(clave) or {}
+            if previa.get("huella") == huella and (
+                previa.get("decision")
+                or "respuesta" in previa
+                or _leer(previa.get("espera_experto") or _iso(ctx.ahora)) > ctx.ahora
+            ):
+                continue
+            if ctx.llamador.parado:
+                break
+            candidatas = reglas.previas_del_sitio(incidente, activos)
+            fuentes = fuentes_de_ficha(ctx.almacen, incidente, {})
+            resumenes = [
+                {
+                    "id": c["id"],
+                    "fecha": c["tiempo"]["inicio"]["valor"][:10],
+                    "titular": (c.get("titulo") or {}).get("es", ""),
                 }
-            continue
-        decidida = reglas.comprobar_retrospectiva(
-            leida, fuentes.comprobar, [c["id"] for c in candidatas], reglas.instante(incidente)
-        )
-        if decidida is None:
-            ctx.nuevas[clave] = {**base, "decision": None, "respuesta": leida}
-            ctx.resultado.dudas.setdefault(id_, []).append("retrospectiva sin comprobar")
-            continue
-        if decidida["decision"] == "mismo":
-            conserva, une = reglas.mas_antiguo(por_id[decidida["conserva"]], incidente)
-            if unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos):
-                ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
-                decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}
+                for c in candidatas
+            ]
+            cuerpo = peticiones.cuerpo_retrospectiva(
+                reglas.vista(incidente), fuentes.bloques, resumenes
+            )
+            leida = ctx.llamador.llamar(
+                cuerpo,
+                peticiones.MAX_SALIDA_RETROSPECTIVA,
+                clave,
+                escalar=lambda _: [f"noticia_retrospectiva: {motivo}"],
+            )
+            base = {
+                "huella": huella,
+                "motivo": motivo,
+                "fecha": _iso(ctx.ahora),
+                "version": peticiones.VERSION_RETROSPECTIVA,
+            }
+            if leida is None or not ctx.llamador.ultimos_motivos:
+                # Sin el experto (tope, fallo o sin configurar) no se decide: la ficha sigue
+                # retenida.
+                if ctx.llamador.ultima_espera:
+                    ctx.nuevas[clave] = {
+                        **base,
+                        "decision": None,
+                        "espera_experto": ctx.llamador.ultima_espera,
+                    }
+                continue
+            decidida = reglas.comprobar_retrospectiva(
+                leida, fuentes.comprobar, [c["id"] for c in candidatas], reglas.instante(incidente)
+            )
+            if decidida is None:
+                ctx.nuevas[clave] = {**base, "decision": None, "respuesta": leida}
+                ctx.resultado.dudas.setdefault(id_, []).append("retrospectiva sin comprobar")
+                continue
+            if decidida["decision"] == "mismo":
+                conserva, une = reglas.mas_antiguo(por_id[decidida["conserva"]], incidente)
+                if unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos):
+                    ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
+                    decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}
+                else:
+                    decidida = {**decidida, "propuesta": True}
             else:
-                decidida = {**decidida, "propuesta": True}
-        else:
-            nuevo = reglas.con_fecha_retrospectiva(incidente, decidida)
-            if nuevo is not incidente:
-                ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
-                ctx.resultado.corregidos.setdefault(id_, []).append("inicio")
-        ctx.nuevas[clave] = {**base, **decidida}
+                nuevo = reglas.con_fecha_retrospectiva(incidente, decidida)
+                if nuevo is not incidente:
+                    ctx.almacen.guardar_incidente(nuevo, ctx.ahora, ctx.modelos)
+                    ctx.resultado.corregidos.setdefault(id_, []).append("inicio")
+            ctx.nuevas[clave] = {**base, **decidida}
+        except Exception as error:
+            # Cada ficha, aislada: la que falla sigue retenida (sin decisión) y las demás siguen.
+            registro.exception("retrospectiva de %s sin decidir", incidente.get("id"))
+            ctx.resultado.errores.append(f"{incidente.get('id')}: retrospectiva: {error!r}"[:200])
 
 
 # --- Retención -----------------------------------------------------------------------------
@@ -1571,68 +1624,80 @@ def retener(
     }  # fmt: skip
     nuevos_retenidos: dict[str, Documento] = {}
     for incidente in activos:
-        id_ = incidente["id"]
-        if id_ in vistos:
-            continue
-        desde = retenidos.get(id_, {}).get("desde", _iso(ctx.ahora))
-        motivos = []
-        if id_ in pendientes_par:
-            motivos.append("posible duplicado sin decidir")
-        verificacion = decisiones.get(reglas.clave_verificacion(id_))
-        if verificar_nuevos and (
-            verificacion is None
-            or (verificacion.get("espera_experto") and "datos" not in verificacion)
-        ):
-            motivos.append("verificación pendiente")
-        if id_ in esperan:
-            motivos.append("espera al modelo experto")
-        # Una noticia que cuenta un suceso anterior no sale con la fecha de su publicación: se
-        # retiene hasta que el experto dé la fecha o la una a su ficha, sin el límite de 6 horas.
-        # La que solo comparte instalación con una ficha anterior (sin palabra del pasado) es
-        # casi siempre un suceso nuevo: espera al experto como mucho las 6 horas de siempre.
-        sin_fecha = fechas.retrospectiva(incidente) is not None
-        if reglas.pide_fecha(incidente, activos) is not None:
-            motivos.append(MOTIVO_RETROSPECTIVA)
-        if con_entrada:
-            from recogida import entrada
+        try:
+            id_ = incidente["id"]
+            if id_ in vistos:
+                continue
+            desde = retenidos.get(id_, {}).get("desde", _iso(ctx.ahora))
+            motivos = []
+            if id_ in pendientes_par:
+                motivos.append("posible duplicado sin decidir")
+            verificacion = decisiones.get(reglas.clave_verificacion(id_))
+            if verificar_nuevos and (
+                verificacion is None
+                or (verificacion.get("espera_experto") and "datos" not in verificacion)
+            ):
+                motivos.append("verificación pendiente")
+            if id_ in esperan:
+                motivos.append("espera al modelo experto")
+            # Una noticia que cuenta un suceso anterior no sale con la fecha de su publicación: se
+            # retiene hasta que el experto dé la fecha o la una a su ficha, sin el límite de 6
+            # horas. La que solo comparte instalación con una ficha anterior (sin palabra del
+            # pasado) es casi siempre un suceso nuevo: espera al experto como mucho las 6 horas de
+            # siempre.
+            sin_fecha = fechas.retrospectiva(incidente) is not None
+            if reglas.pide_fecha(incidente, activos) is not None:
+                motivos.append(MOTIVO_RETROSPECTIVA)
+            if con_entrada:
+                from recogida import entrada
 
-            filtro = entrada.motivo_retencion(decisiones.get(entrada.clave(id_)), incidente)
-            if filtro is not None:
-                motivos.append(filtro)
-        if (
-            con_entrada
-            and MOTIVO_RETROSPECTIVA in motivos
-            and set(motivos) <= {MOTIVO_RETROSPECTIVA, MOTIVO_ENTRADA_SIN_FECHA}
-            and ctx.ahora - _leer(desde) >= SALIDA_RETROSPECTIVA
-            and (nota := salir_de_la_retencion(ctx, incidente, activos, decisiones)) is not None
-        ):
-            if nota.startswith(NOTA_CON_FECHA):
-                # Sigue sin publicar hasta la pasada siguiente: el filtro de entrada vuelve a mirar
-                # la ficha con su fecha nueva (su decisión ya no vale).
-                nuevos_retenidos[id_] = {"desde": desde, "motivo": nota}
-                ctx.resultado.retenidos[id_] = nota
-            else:
+                filtro = entrada.motivo_retencion(decisiones.get(entrada.clave(id_)), incidente)
+                if filtro is not None:
+                    motivos.append(filtro)
+            if (
+                con_entrada
+                and MOTIVO_RETROSPECTIVA in motivos
+                and set(motivos) <= {MOTIVO_RETROSPECTIVA, MOTIVO_ENTRADA_SIN_FECHA}
+                and ctx.ahora - _leer(desde) >= SALIDA_RETROSPECTIVA
+                and (nota := salir_de_la_retencion(ctx, incidente, activos, decisiones)) is not None
+            ):
+                if nota.startswith(NOTA_CON_FECHA):
+                    # Sigue sin publicar hasta la pasada siguiente: el filtro de entrada vuelve a
+                    # mirar la ficha con su fecha nueva (su decisión ya no vale).
+                    nuevos_retenidos[id_] = {"desde": desde, "motivo": nota}
+                    ctx.resultado.retenidos[id_] = nota
+                else:
+                    ctx.resultado.liberados[id_] = nota
+                continue
+            if (
+                con_entrada
+                and motivos == [MOTIVO_ENTRADA_SIN_FECHA]
+                and ctx.ahora - _leer(desde) >= ESPERA
+                and resolver_sin_fecha(ctx, incidente)
+            ):
+                # Como la barrera de titulares: lo que el filtro retiene porque ninguna frase da la
+                # fecha del suceso no queda retenido para siempre (EODI-2026-00697, desde el 28/10).
+                ctx.resultado.liberados[id_] = "retirada a las 6 horas: ninguna frase da la fecha"
+                continue
+            sin_limite = con_entrada or id_ in esperan or sin_fecha
+            if motivos and (sin_limite or ctx.ahora - _leer(desde) < ESPERA):
+                nuevos_retenidos[id_] = {"desde": desde, "motivo": "; ".join(motivos)}
+                ctx.resultado.retenidos[id_] = "; ".join(motivos)
+                continue
+            vistos[id_] = _iso(ctx.ahora)
+            if id_ in retenidos:
+                nota = "a las 6 horas, con lo que hay" if motivos else "control pasado"
                 ctx.resultado.liberados[id_] = nota
-            continue
-        if (
-            con_entrada
-            and motivos == [MOTIVO_ENTRADA_SIN_FECHA]
-            and ctx.ahora - _leer(desde) >= ESPERA
-            and resolver_sin_fecha(ctx, incidente)
-        ):
-            # Como la barrera de titulares: lo que el filtro retiene porque ninguna frase da la
-            # fecha del suceso no queda retenido para siempre (EODI-2026-00697, desde el 28/10).
-            ctx.resultado.liberados[id_] = "retirada a las 6 horas: ninguna frase da la fecha"
-            continue
-        sin_limite = con_entrada or id_ in esperan or sin_fecha
-        if motivos and (sin_limite or ctx.ahora - _leer(desde) < ESPERA):
-            nuevos_retenidos[id_] = {"desde": desde, "motivo": "; ".join(motivos)}
-            ctx.resultado.retenidos[id_] = "; ".join(motivos)
-            continue
-        vistos[id_] = _iso(ctx.ahora)
-        if id_ in retenidos:
-            nota = "a las 6 horas, con lo que hay" if motivos else "control pasado"
-            ctx.resultado.liberados[id_] = nota
+        except Exception as error:
+            # Cada ficha, aislada. La que falla aquí no pasa: sigue retenida con su motivo, y las
+            # demás siguen (sin esto, el control no terminaba y la publicación entera no cambiaba).
+            registro.exception("retención de %s sin decidir", incidente.get("id"))
+            nota = f"fallo al decidir la retención: {error!r}"[:200]
+            if incidente["id"] not in vistos:
+                desde_ = retenidos.get(incidente["id"], {}).get("desde", _iso(ctx.ahora))
+                nuevos_retenidos[incidente["id"]] = {"desde": desde_, "motivo": nota}
+                ctx.resultado.retenidos[incidente["id"]] = nota
+            ctx.resultado.errores.append(f"{incidente.get('id')}: {nota}"[:200])
     # Lo retenido que ya no está activo (unido a otro o retirado) sale de la lista.
     return {**cursor, "vistos": vistos, "retenidos": nuevos_retenidos}
 
@@ -1745,7 +1810,9 @@ def resolver_sin_fecha(
 
 
 def retenidos(almacen: Almacen) -> frozenset[str]:
-    """Las fichas que la publicación no saca todavía."""
+    """Las fichas nuevas que el control retiene, con su motivo en el cursor. Ya no es el filtro de
+    la publicación (lo que no estaba aquí salía): la puerta publica solo lo que tiene el pase
+    (`vistos`, exportacion/puerta.py)."""
     cursor = almacen.cursor(CURSOR) or {}
     return frozenset(cursor.get("retenidos", {}))
 
@@ -1864,7 +1931,9 @@ def ejecutar(
         nuevo_cursor = retener(ctx, cursor, verificar_nuevos=True, con_entrada=True)
     else:
         nuevo_cursor = retener(ctx, cursor, verificar_nuevos=False)
-    almacen.guardar_cursor(CURSOR, nuevo_cursor)
+    # El pase de esta pasada (docs/ciclo_de_vida.md): la puerta de la publicación solo deja entrar
+    # versiones nuevas si el control llegó hasta aquí. Si falla antes, lo publicado no cambia.
+    almacen.guardar_cursor(CURSOR, {**nuevo_cursor, "pasada": _iso(ahora)})
     registro.info("control de fichas (%s): %s", alcance, resultado.resumen())
     return resultado
 
@@ -2830,7 +2899,7 @@ def cerrojo_del_dia(almacen: Almacen, ahora: datetime, auditoria: Documento) -> 
     """Lo que apuntó el cerrojo (proceso/protegido.py), para el resumen de las 08:00 y la
     vigilancia: los cambios retenidos de cada día («ficha dato»), los fallos del cerrojo en 24 horas
     y las fichas de las comprobaciones de protección de la auditoría."""
-    from exportacion import version_buena
+    from exportacion import puerta
     from proceso import protegido
 
     desde = coste.dia(ahora - timedelta(days=DIAS_AUDITORIA))
@@ -2861,10 +2930,12 @@ def cerrojo_del_dia(almacen: Almacen, ahora: datetime, auditoria: Documento) -> 
             f for f, n in seguidos.items() if n >= protegido.FALLOS_SEGUIDOS
         ),
         "proteccion": {c: ids[c] for c in protegido.AUDITORIA if ids.get(c)},
-        # La red de la publicación (exportacion/version_buena.py): lo que salió en su versión
-        # anterior en la última publicación y, por día, las fichas.
-        "version_anterior": (almacen.cursor(version_buena.CURSOR) or {}).get("sustituidas") or [],
-        "version_anterior_dias": (almacen.cursor(version_buena.CURSOR) or {}).get("dias") or {},
+        # La puerta de la publicación (exportacion/puerta.py): lo que salió en su versión
+        # anterior en la última publicación y, por día, las fichas; y las invariantes rotas.
+        "version_anterior": (almacen.cursor(puerta.CURSOR) or {}).get("sustituidas") or [],
+        "version_anterior_dias": (almacen.cursor(puerta.CURSOR) or {}).get("dias") or {},
+        "control_terminado": (almacen.cursor(puerta.CURSOR) or {}).get("terminado", True),
+        "invariantes": (almacen.cursor("invariantes") or {}).get("rotas") or {},
     }
 
 

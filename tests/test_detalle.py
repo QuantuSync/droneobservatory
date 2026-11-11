@@ -5,6 +5,8 @@ import copy
 from datetime import UTC, datetime
 from typing import Any
 
+import pytest
+
 from almacen.base import Almacen
 from esquema import Documento
 from exportacion import procedencia as origenes
@@ -154,6 +156,9 @@ def revisado(almacen: Almacen) -> Documento:
     return incidente
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_el_encuentro_aporta_sus_datos_y_su_fecha() -> None:
     almacen = base(heathrow())
     almacen.guardar_encuentro(encuentro(), AHORA)
@@ -184,6 +189,9 @@ def test_el_encuentro_aporta_sus_datos_y_su_fecha() -> None:
     assert incidente["drones"]["numero"] == antes["drones"]["numero"]
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_lo_interno_nuevo_no_sale_a_la_web() -> None:
     almacen = base(heathrow())
     almacen.guardar_encuentro(encuentro(), AHORA)
@@ -207,6 +215,9 @@ def test_aplicar_dos_veces_no_cambia_nada() -> None:
     assert len(almacen.historial("EODI-2025-00134")) == historial
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_rehacer_el_incidente_desde_su_ficha_conserva_lo_oficial() -> None:
     almacen = base(heathrow())
     almacen.guardar_encuentro(encuentro(), AHORA)
@@ -218,6 +229,9 @@ def test_rehacer_el_incidente_desde_su_ficha_conserva_lo_oficial() -> None:
     assert rehecho["estado"]["actual"] == "confirmado"
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_un_encuentro_fundido_lleva_lo_oficial_al_destino() -> None:
     almacen = base(heathrow())
     almacen.guardar_encuentro({**encuentro(), "incidente": "EODI-2025-00134"}, AHORA)
@@ -234,6 +248,9 @@ def exportado(incidente: Documento, almacen: Almacen) -> Documento:
     return origenes.exportar_incidente(incidente, origenes.Fichas.de(almacen))
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_altura_oficial_sube_el_incidente_a_nivel_a() -> None:
     almacen = base(heathrow())
     assert exportado(heathrow(), almacen)["nivel_detalle"] == "D"
@@ -245,6 +262,9 @@ def test_la_altura_oficial_sube_el_incidente_a_nivel_a() -> None:
     assert documento["nivel_detalle"] == "A"
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_sin_altura_la_hora_y_el_radio_oficiales_dan_nivel_b() -> None:
     almacen = base(heathrow())
     sin_altura = encuentro()
@@ -323,6 +343,9 @@ def test_presencia_con_confianza_baja_no_se_confirma() -> None:
     assert revisado(almacen)["presencia_dron"] == "no_confirmada"
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_un_desmentido_solo_lo_revierte_una_autoridad_igual_de_fiable() -> None:
     desmentido = heathrow()
     autoridad = {**noticia("politi-1"), "fiabilidad": "A", "es_autoridad": True, "credibilidad": 1}

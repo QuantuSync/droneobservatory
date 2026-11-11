@@ -30,7 +30,8 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
   // la región.
   const escrito = lugarDeImpacto(lugar, idioma) ?? region(impacto.region, idioma);
   const nombre = escrito.charAt(0).toUpperCase() + escrito.slice(1);
-  const localidad = lugar.localidad === undefined ? null : localidadDeImpacto(lugar.localidad, idioma);
+  const localidad =
+    lugar.localidad === undefined ? null : localidadDeImpacto(lugar.localidad, idioma, lugar.localidad_latino);
   const heridos = rango(impacto.heridos, idioma);
   const fallecidos = rango(impacto.fallecidos, idioma);
   const categorias = impacto.categorias_objetivo ?? [];

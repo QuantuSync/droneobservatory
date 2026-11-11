@@ -202,8 +202,14 @@ describe("todas las fichas, en español y en inglés", () => {
       for (const impacto of ucrania.impactos ?? []) {
         const nombre = lugarDeImpacto(impacto.lugar, idioma);
         if (nombre !== null && OTRO_ALFABETO.test(nombre)) malos.add(`${impacto.id}: ${nombre}`);
+        // La localidad de una instalación: con su nombre latino desde la recogida (`localidad_latino`)
+        // o el de la tabla. La que no tiene ninguno no se enseña (null): lo que nunca puede salir es
+        // el cirílico. Antes esta comprobación se ponía en rojo con cada localidad nueva hasta
+        // añadirla a mano a la tabla.
         const localidad = impacto.lugar.localidad;
-        if (localidad !== undefined && localidadDeImpacto(localidad, idioma) === null) malos.add(`${impacto.id}: ${localidad}`);
+        const escrita =
+          localidad === undefined ? null : localidadDeImpacto(localidad, idioma, impacto.lugar.localidad_latino);
+        if (escrita !== null && OTRO_ALFABETO.test(escrita)) malos.add(`${impacto.id}: ${escrita}`);
         for (const fuente of impacto.fuentes) {
           const medio = medioEscrito(fuente.medio, idioma, t.ficha.declaracionCitada);
           if (OTRO_ALFABETO.test(medio)) malos.add(`${impacto.id}: ${medio}`);

@@ -75,7 +75,7 @@ Problemas (cada uno con su frase):
   (proceso/extraccion.conservar_publicada): sigue publicada con su versión anterior.
 - **cerrojo_proteccion**: con el cerrojo en «aplicar», una ficha sale en una comprobación de
   protección de la auditoría (R, V, W, P, X);
-- **version_anterior**: la red de la publicación (exportacion/version_buena.py) ha sacado una
+- **version_anterior**: la red de la publicación (exportacion/puerta.py) ha sacado una
   ficha marcada en P, R, V, W o X en su última versión buena (o como en la publicación anterior,
   o la ha dejado fuera si nunca se publicó): la frase lleva la ficha, la comprobación y lo que
   cambia, datos de fichas ya publicadas;
@@ -342,7 +342,7 @@ def problemas_del_cerrojo(estado: dict[str, Any]) -> list[dict[str, str]]:
     """El cerrojo de lo decidido (proceso/protegido.py) ha fallado, o, con el cerrojo en «aplicar»,
     una ficha sale en una comprobación de protección de la auditoría: lo publicado no es lo
     decidido. En «observar» eso solo se apunta. Sin nada del servidor: el fichero es público. La
-    ficha que sale en su versión anterior (exportacion/version_buena.py) va con su identificador,
+    ficha que sale en su versión anterior (exportacion/puerta.py) va con su identificador,
     la comprobación y lo que cambia: son datos de fichas publicadas."""
     cerrojo = (estado or {}).get("cerrojo") or {}
     problemas = []
@@ -359,7 +359,7 @@ def problemas_del_cerrojo(estado: dict[str, Any]) -> list[dict[str, str]]:
             "seguidas: siguen publicadas con su versión anterior (control.json).",
         })  # fmt: skip
     if sustituidas := cerrojo.get("version_anterior") or []:
-        # La red de la publicación (exportacion/version_buena.py): la ficha, la comprobación y lo
+        # La red de la publicación (exportacion/puerta.py): la ficha, la comprobación y lo
         # que cambia. Son fichas publicadas, sin nada del servidor.
         partes = []
         for s in sustituidas[:MAX_VERSION_ANTERIOR]:

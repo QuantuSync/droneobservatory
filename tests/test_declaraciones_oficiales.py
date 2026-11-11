@@ -144,6 +144,9 @@ def test_la_duda_en_sueco_no_atribuye() -> None:
 # --- El lector ------------------------------------------------------------------------------
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_una_autoria_literal_en_la_pagina_oficial_atribuye_con_su_paso_y_su_fuente(
     carpeta: Path,
 ) -> None:
@@ -212,6 +215,9 @@ def test_una_autoridad_de_otro_pais_no_cambia_el_incidente(carpeta: Path) -> Non
     assert _incidente(almacen, id_) == antes
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_una_cita_de_prensa_no_atribuye_y_lleva_la_marca_de_declaracion_citada(
     carpeta: Path,
 ) -> None:
@@ -227,6 +233,9 @@ def test_una_cita_de_prensa_no_atribuye_y_lleva_la_marca_de_declaracion_citada(
     assert fuente["fiabilidad"] == "B"
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_se_aplica_al_incidente_en_que_esta_fundido(carpeta: Path) -> None:
     almacen, id_ = _almacen()
     fundido = {**_incidente(almacen, id_), "id": "EODI-2025-00999", "fusionado_en": id_}
@@ -238,6 +247,9 @@ def test_se_aplica_al_incidente_en_que_esta_fundido(carpeta: Path) -> None:
     assert "atribucion" not in _incidente(almacen, "EODI-2025-00999")
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_una_union_de_antes_devuelve_la_confirmacion_del_registro_unido(carpeta: Path) -> None:
     """EODI-2025-00122 (Palma, 19 de octubre de 2025): la EODI-2025-00160, confirmada por Aena, se
     unió en ella antes del 14 de octubre de 2026; la que quedó tenía la fuente y seguía
@@ -267,6 +279,9 @@ def test_una_union_de_antes_devuelve_la_confirmacion_del_registro_unido(carpeta:
     assert _incidente(almacen, "EODI-2025-00998") == nuevo
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_declaracion_del_unido_pasa_a_la_que_queda() -> None:
     """EODI-2026-00108 (Auvere): la noticia de cbsnews.com pasó al unirse EODI-2026-00333 (4 de
     octubre de 2026), pero la declaración de la KAPO que contaba se leyó después en el unido y no
@@ -315,6 +330,9 @@ def test_la_declaracion_del_unido_pasa_a_la_que_queda() -> None:
     assert oficiales.declaraciones_que_faltan(sin_noticia, unido) == []
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_autoria_vuelve_si_una_union_dejo_la_fuente_sin_atribucion(carpeta: Path) -> None:
     """EODI-2026-00211, atribuida por la Presidencia de Rumanía, se unió el 14 de octubre de 2026
     en la EODI-2026-00187: la que quedó recibió las fuentes oficiales, no la atribución."""

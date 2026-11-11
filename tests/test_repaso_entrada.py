@@ -75,6 +75,9 @@ def test_una_noticia_de_un_suceso_anterior_sin_su_dia_se_retira() -> None:
     assert hecho.retiradas == ["EODI-2026-00900"]
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_ficha_de_varios_sucesos_se_propone_separar_y_el_resumen_se_retira() -> None:
     ficha = _ficha("EODI-2025-00446", "BE", "2025-11-04T00:00Z",
                    frase="Drones were seen over Kleine-Brogel for three nights")  # fmt: skip

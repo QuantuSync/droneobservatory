@@ -525,6 +525,15 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             elif entrada in procedencia and "sin_respaldo" not in procedencia[entrada]:
                 valor.fuentes |= set(procedencia[entrada]["fuentes"])
                 valor.origenes.add(procedencia[entrada]["origen"])
+        if ruta == "tiempo.inicio" and not valor.origenes:
+            # El día que fija el filtro de entrada con la frase de una fuente (recogida/entrada.
+            # con_dia) sale de esa fuente, aunque sea oficial y la ficha no tenga ya noticias:
+            # EODI-2026-00777 (11 de noviembre de 2026), con dos notas del ejército letón y una
+            # declaración, se quedaba sin origen y la exportación semanal no validaba.
+            de_inicio = (documento.get("tiempo") or {}).get("origen_inicio") or {}
+            if de_inicio.get("fuente_id") in origen:
+                valor.fuentes.add(de_inicio["fuente_id"])
+                valor.origenes.add(origen[de_inicio["fuente_id"]])
         return valor if valor.origenes else None
 
     def de_parser(ruta: str) -> Documento | None:

@@ -105,6 +105,8 @@ export interface PaginaTexto {
   imagen?: { ruta: string; alt: string };
   /** Scripts de este sitio que necesita una página solo de texto (el botón de privacidad). */
   scripts?: readonly string[];
+  /** La página no debe entrar en los buscadores (la de una ficha retirada). */
+  sinIndexar?: boolean;
 }
 
 // ---------------------------------------------------------------------------------------------

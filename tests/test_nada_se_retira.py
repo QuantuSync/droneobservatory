@@ -162,6 +162,9 @@ def test_sin_senales_un_no_es_incidente_seguro_no_se_escala() -> None:
 # --- Una ficha publicada no se retira ni se rebaja sin el experto ------------------------------
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_retirar_una_ficha_publicada_lo_decide_el_experto(almacen: Almacen) -> None:
     peticion, id_ = _publicada(almacen)
     cliente = Cliente(_no_es(), _no_es())
@@ -205,6 +208,9 @@ def test_rebajar_la_presencia_de_una_ficha_publicada_se_escala(almacen: Almacen)
     _sigue_publicada(almacen, id_)
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_un_lote_del_base_no_retira_y_el_candidato_se_repite_con_el_experto(
     almacen: Almacen,
 ) -> None:
@@ -246,6 +252,9 @@ def test_una_ficha_del_base_que_no_valida_no_retira_la_publicada(almacen: Almace
     assert ultima["conservada"][0].startswith(f"publicada: {id_} retirada")
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_sin_experto_configurado_todo_sigue_como_antes(
     almacen: Almacen, monkeypatch: pytest.MonkeyPatch
 ) -> None:

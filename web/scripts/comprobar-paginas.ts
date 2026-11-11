@@ -1,6 +1,7 @@
 // Comprobación de lo que entrega la web a quien la pide sin ejecutar código, sobre web/dist
 // recién construido: cada tipo de página trae su contenido en el HTML, las cifras de la portada
-// son las del mapa, cada incidente publicado tiene su página y ninguno retirado o unido la tiene,
+// son las del mapa, cada incidente publicado tiene su página y ninguno retirado o unido la tiene
+// (el retirado tiene, aparte, la página que explica su retirada, fuera del sitemap),
 // los datos estructurados y el sitemap son válidos, no hay apartados ni menciones prohibidas, la
 // lista de la función del borde está bien y las redirecciones no pasan del 80 % de la capacidad
 // de Vercel.
@@ -17,10 +18,12 @@ import type { RutasBorde } from "../../api/borde.ts";
 import { capacidadesAlLimite, usoDeCapacidad } from "../src/seguridad/despliegue.ts";
 import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 import { cifras } from "../src/datos/derivar.ts";
-import type { IncidenteDetalle, Resumen } from "../src/datos/tipos.ts";
+import type { ColeccionIncidentes, IncidenteDetalle, Resumen } from "../src/datos/tipos.ts";
 import { fechaHora, numero } from "../src/i18n/index.ts";
 import { IDIOMAS, NOMBRE, imagenDeFicha, rutaDeFicha } from "../src/sitio.ts";
 import { direccionCompleta, RUTAS, rutasDeAnio, rutasDePais } from "../src/texto/paginas.ts";
+import { rutaDeRetirada } from "../src/texto/salidas.ts";
+import { textosPagina } from "../src/texto/textos.ts";
 import { ficheroDeRuta } from "./paginas.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -216,10 +219,15 @@ async function principal(): Promise<void> {
   const revisados = JSON.parse(await leer(join(WEB, "..", "configuracion", "incidentes_revisados.json"))) as {
     retirar?: { incidente: string }[];
   };
-  const coleccion = JSON.parse(await leer(join(DATOS, "incidentes.geojson"))) as { unidos?: Record<string, string> };
-  const fuera = [...(revisados.retirar ?? []).map((r) => r.incidente), ...Object.keys(coleccion.unidos ?? {})].filter(
-    (id) => !publicados.has(id),
-  );
+  const coleccion = JSON.parse(await leer(join(DATOS, "incidentes.geojson"))) as Pick<ColeccionIncidentes, "unidos" | "retirados">;
+  const retirados = Object.entries(coleccion.retirados ?? {}).filter(([id]) => !publicados.has(id));
+  const fuera = [
+    ...new Set([
+      ...(revisados.retirar ?? []).map((r) => r.incidente),
+      ...Object.keys(coleccion.unidos ?? {}),
+      ...retirados.map(([id]) => id),
+    ]),
+  ].filter((id) => !publicados.has(id));
   for (const id of fuera) {
     for (const idioma of IDIOMAS) {
       assert.ok(!(await existe(join(DIST, ficheroDeRuta(rutaDeFicha(id, idioma))))), `${id} tiene página`);
@@ -245,6 +253,27 @@ async function principal(): Promise<void> {
     if (!publicados.has((coleccion.unidos ?? {})[id] ?? "")) continue;
     for (const idioma of IDIOMAS) assert.ok(Object.hasOwn(borde.redirecciones, rutaDeFicha(id, idioma)), `${id} sin redirección`);
   }
+  // Cada ficha retirada tiene la página que explica su retirada en los dos idiomas (con su
+  // identificador y su motivo, sin la aplicación y fuera de los buscadores), está en la lista del
+  // borde, que la sirve en la dirección de la ficha con el código 410, y no sale en el sitemap.
+  const retiradasBorde = borde.retiradas ?? {};
+  for (const [id, detalle] of retirados) {
+    for (const idioma of IDIOMAS) {
+      const ruta = rutaDeRetirada(id, idioma);
+      assert.ok(await existe(join(DIST, ficheroDeRuta(ruta))), `${id} sin página de retirada (${idioma})`);
+      const html = await pagina(ruta);
+      const texto = bloqueDeTexto(html);
+      assert.ok(texto.includes(`<h1>${escaparHtml(textosPagina(idioma).retirada.titulo)}</h1>`), `${ruta}: título`);
+      assert.ok(texto.includes(id), `${ruta}: identificador`);
+      assert.ok(texto.includes(escaparHtml(detalle.motivo[idioma])), `${ruta}: motivo`);
+      assert.ok(html.includes(`<html lang="${idioma}"`), `${ruta}: idioma`);
+      assert.ok(html.includes('<meta name="robots" content="noindex">'), `${ruta}: sin noindex`);
+      assert.ok(!html.includes('<div id="root"'), `${ruta}: página de texto sin la aplicación`);
+      assert.equal(retiradasBorde[rutaDeFicha(id, idioma)], ruta, `${id} sin su retirada en el borde (${idioma})`);
+      assert.ok(!direcciones.includes(direccionCompleta(ruta)), `${ruta} en el sitemap`);
+    }
+  }
+  assert.equal(Object.keys(retiradasBorde).length, retirados.length * IDIOMAS.length, "retiradas del borde");
   const ucrania = JSON.parse(await leer(join(DATOS, "ucrania.json"))) as { ataques: { id: string }[] };
   assert.deepEqual(new Set(borde.ataques), new Set(ucrania.ataques.map((a) => a.id)), "ataques del borde");
 
@@ -272,7 +301,7 @@ async function principal(): Promise<void> {
   console.log(
     `páginas comprobadas: ${comprobadas.length} sin ejecutar código; sitemap con ${direcciones.length} ` +
       `direcciones; ${fuera.length} retirados o unidos sin página; ${redirecciones.length} redirecciones de ` +
-      `unidos en el borde; ${uso.map((u) => `${u.nombre} ${u.usadas}/${u.capacidad}`).join(", ")}`,
+      `unidos y ${Object.keys(retiradasBorde).length} páginas de retirada en el borde; ${uso.map((u) => `${u.nombre} ${u.usadas}/${u.capacidad}`).join(", ")}`,
   );
 }
 

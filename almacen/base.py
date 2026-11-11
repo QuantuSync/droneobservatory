@@ -4,6 +4,7 @@ import copy
 import json
 import logging
 import sqlite3
+from collections.abc import Iterable
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -164,6 +165,22 @@ CREATE TABLE IF NOT EXISTS fusiones (
     fuentes TEXT NOT NULL CHECK (json_valid(fuentes)),
     revertida INTEGER NOT NULL DEFAULT 0
 );
+-- Lo publicado (docs/ciclo_de_vida.md): una fila por ficha que ha salido alguna vez en la web. Es
+-- la única fuente de lo publicado: de aquí salen los ficheros de la web y los avisos. `entrada`
+-- es lo que sale, tal cual; `interno`, el documento de la base de esa misma versión. Una ficha
+-- unida o retirada conserva su fila, con adónde lleva su dirección o por qué se retiró.
+CREATE TABLE IF NOT EXISTS publicado (
+    id TEXT PRIMARY KEY,
+    estado TEXT NOT NULL CHECK (estado IN ('publicada', 'unida', 'retirada')),
+    fichero TEXT NOT NULL,
+    entrada TEXT NOT NULL CHECK (json_valid(entrada)),
+    interno TEXT NOT NULL CHECK (json_valid(interno)),
+    detalle TEXT NOT NULL CHECK (json_valid(detalle)),
+    primera TEXT NOT NULL,
+    fecha TEXT NOT NULL
+) WITHOUT ROWID;
+CREATE TRIGGER IF NOT EXISTS publicado_sin_delete BEFORE DELETE ON publicado
+BEGIN SELECT RAISE(ABORT, 'publicado: una dirección publicada no se borra'); END;
 -- Focos térmicos de NASA FIRMS (proceso/focos_termicos.py). La evaluación de cada impacto
 -- (id del incidente, o del ataque y la región: «EODI-UA-2025-0201/UA-30») es un documento
 -- con historial; los focos que han casado con un impacto, una fila por foco que no cambia.
@@ -412,6 +429,8 @@ ESQUEMA_SQL = _TABLAS + "".join(_TRIGGERS_POR_TABLA.format(t=t) for t in TABLAS_
 
 # Una traducción que sustituye a otra que no valía: «<huella>#<n>».
 SEPARADOR_TRADUCCION = "#"
+# El cursor del control de las fichas (recogida/control_fichas.CURSOR): las que lo han pasado.
+CURSOR_CONTROL = "control_fichas"
 
 
 class DocumentoInvalido(ValueError):
@@ -461,12 +480,23 @@ class Almacen:
         # El cerrojo (proceso/protegido.py): el último guardado, para deshacerlo si la unión que
         # venía detrás no se hace, y las uniones retenidas que ya no se anotan.
         self._ultimo_guardado: tuple[str, Documento | None] | None = None
+        # Las fichas que han pasado el control (su cursor), leídas una vez: `en_el_filtro`.
+        self._vistos: frozenset[str] | bool | None = None
         self._uniones_retenidas: set[tuple[str, str]] = set()
         self._reaperturas_retenidas: set[str] = set()
         # recursive_triggers hace que INSERT OR REPLACE dispare los triggers de DELETE.
         conexion.execute("PRAGMA recursive_triggers = ON")
         conexion.execute("PRAGMA foreign_keys = ON")
         conexion.executescript(ESQUEMA_SQL)
+        # La instantánea de cada unión (docs/ciclo_de_vida.md): una base anterior no tiene la
+        # columna, y las uniones que ya tiene se quedan sin ella (`instantanea_del_historial`).
+        columnas = {fila[1] for fila in conexion.execute("PRAGMA table_info(fusiones)")}
+        if "instantanea" not in columnas:
+            try:
+                conexion.execute("ALTER TABLE fusiones ADD COLUMN instantanea TEXT")
+            except sqlite3.OperationalError:
+                # Abierta en solo lectura (quien solo la lee): la añade la recogida siguiente.
+                registro.info("fusiones sin la columna de la instantánea: base de solo lectura")
         # Las fichas fundidas en otra ({absorbida: la que queda}): las revisiones a mano de la
         # absorbida pasan a la que queda (proceso/decidir.fijar_fusiones).
         self._fundido_en: dict[str, str] = {
@@ -528,12 +558,15 @@ class Almacen:
 
     def guardar_incidente(
         self, documento: Documento, ahora: datetime, vocabulario_modelos: frozenset[str]
-    ) -> None:
-        """Guarda la versión nueva del incidente. Las afirmaciones repetidas no se escriben, y una
-        versión igual a la guardada no deja cambio en el historial. Lo que rectificó una autoridad
-        oficial en la presencia del dron se conserva (proceso/rectificaciones.mantener). El estado
-        y la presencia los decide un solo sitio a partir de las pruebas (proceso/decidir.py)."""
-        from proceso import decidir
+    ) -> bool:
+        """Guarda la versión nueva del incidente y devuelve si escribió algo. Las afirmaciones
+        repetidas no se escriben, y una versión igual a la guardada no deja cambio en el historial;
+        tampoco la que solo cambia la fecha de su última actualización (docs/ciclo_de_vida.md: lo
+        que el control proponía cada hora y el cerrojo retenía cada hora dejaba una versión nueva
+        por hora, EODI-2026-00773). Lo que rectificó una autoridad oficial en la presencia del dron
+        se conserva (proceso/rectificaciones.mantener). El estado y la presencia los decide un solo
+        sitio a partir de las pruebas (proceso/decidir.py)."""
+        from proceso import decidir, invariantes
 
         guardado = self.incidente(documento["id"])
         entrada = rectificaciones.mantener(documento, guardado)
@@ -545,8 +578,10 @@ class Almacen:
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:
             raise DocumentoInvalido(errores)
-        self._escribir_incidente(documento)
         self._ultimo_guardado = (documento["id"], guardado)
+        if invariantes.dice_lo_mismo(guardado, documento):
+            return False
+        self._escribir_incidente(documento)
         self._con_las_revisiones_de_la_fundida(documento, guardado, ahora, vocabulario_modelos)
         # Lo que cambió la decisión queda en el historial con la regla que lo decide, solo si
         # cambia lo guardado (o, en el alta, lo que proponía el documento): un paso que vuelve a
@@ -562,6 +597,21 @@ class Almacen:
             from proceso import presencia
 
             presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas, confirmada))
+        return True
+
+    def en_el_filtro(self, id_: str) -> bool:
+        """La ficha es nueva y sigue en el filtro de entrada: el control ya lleva la cuenta de las
+        que han pasado (`vistos`), esta no está entre ellas y nunca ha salido en la web. Lo que el
+        cerrojo protege de una ficha publicada («con cita») no vale para ella: el filtro puede
+        corregirle el día, el lugar o una autoridad (docs/ciclo_de_vida.md). Sin cursor del control
+        (una base que no ha pasado por él) ninguna ficha está en el filtro."""
+        if self._vistos is None:
+            cursor = self.cursor(CURSOR_CONTROL) or {}
+            self._vistos = frozenset(cursor["vistos"]) if "vistos" in cursor else False
+        vistos = self._vistos
+        if not isinstance(vistos, frozenset) or id_ in vistos:
+            return False
+        return not self.esta_publicada(id_)
 
     def _con_las_revisiones_de_la_fundida(
         self, documento: Documento, guardado: Documento | None, ahora: datetime,
@@ -620,7 +670,10 @@ class Almacen:
         aplica = modo == protegido.APLICAR
         try:
             pasos = protegido.pila()
-            veredicto = protegido.juzgar(guardado, documento, pasos, self.texto_guardado)
+            veredicto = protegido.juzgar(
+                guardado, documento, pasos, self.texto_guardado,
+                publicada=not self.en_el_filtro(str(documento["id"])),
+            )  # fmt: skip
             for cambio, motivo in veredicto.permitidos:
                 self._apuntar_control(
                     f"{protegido.PREFIJO_PERMITIDO}{documento['id']}:{cambio.dato}:"
@@ -644,11 +697,45 @@ class Almacen:
                 resultado = protegido.conservar(documento, guardado, veredicto.retenidos)
                 if errores := validar_incidente(resultado, ahora, vocabulario_modelos):
                     raise ValueError(f"lo retenido no valida: {errores[:3]}")
+            resultado = self._cerrojo_vuelta(resultado, guardado, pasos, aplica, ahora)
             resultado = self._cerrojo_union(resultado, guardado, pasos, aplica, ahora)
             return self._cerrojo_reapertura(resultado, guardado, pasos, aplica, ahora)
         except Exception as error:
             self._fallo_del_cerrojo(documento, error, ahora)
             return copy.deepcopy(guardado) if aplica else documento
+
+    def _cerrojo_vuelta(
+        self, documento: Documento, guardado: Documento, pasos: list[str], aplica: bool,
+        ahora: datetime,
+    ) -> Documento:  # fmt: skip
+        """Una ficha retirada que deja de estarlo sin que nadie lo decida: la versión que rehace
+        una extracción o una reconstrucción sale sin `retirado` y la ficha volvía a la web. Solo
+        vuelve por una revisión a mano o la reextracción pedida a mano (`protegido.
+        por_reposicion`) o, si nunca llegó a salir en la web, con un artículo que la retirada no
+        tenía (la nota oficial que llega después de retirarla el filtro por falta de fecha). Si
+        no, con el cerrojo en «aplicar» sigue retirada, con la versión nueva debajo."""
+        from proceso import protegido
+
+        if "retirado" not in guardado or "retirado" in documento:
+            return documento
+        if protegido.por_reposicion(pasos):
+            return documento
+        id_ = str(documento["id"])
+        if not self.esta_publicada(id_) and protegido.fuentes_nuevas(guardado, documento):
+            return documento
+        fecha = str(((guardado["retirado"] or {}).get("fecha") or {}).get("valor") or "")
+        self._apuntar_control(
+            f"{protegido.PREFIJO_RETENIDO}{id_}:vuelta:{fecha}",
+            {"ficha": id_, "dato": "vuelta", "nivel": "retirada", "antes": True, "despues": False,
+             "modo": protegido.modo(), "quien": pasos[0] if pasos else "", "pila": pasos,
+             "fecha": _ahora_iso(ahora)},
+            ahora,
+        )  # fmt: skip
+        if not aplica:
+            return documento
+        resultado = {k: v for k, v in documento.items() if k != "episodio"}
+        resultado["retirado"] = copy.deepcopy(guardado["retirado"])
+        return resultado
 
     def _cerrojo_union(
         self, documento: Documento, guardado: Documento, pasos: list[str], aplica: bool,
@@ -1361,6 +1448,8 @@ class Almacen:
         return encontrados[0] if encontrados else None
 
     def guardar_cursor(self, fuente_id: str, documento: Documento) -> None:
+        if fuente_id == CURSOR_CONTROL:
+            self._vistos = None
         with self._conexion:
             self._conexion.execute(
                 "INSERT INTO cursores (fuente_id, documento) VALUES (?, ?) "
@@ -1788,19 +1877,57 @@ class Almacen:
         return cursor.rowcount > 0
 
     def registrar_fusion(
-        self, fecha: str, absorbido: str, destino: str, motivo: str, fuentes: list[str]
-    ) -> None:
+        self, fecha: str, absorbido: str, destino: str, motivo: str, fuentes: list[str],
+        instantanea: Documento | None = None,
+    ) -> None:  # fmt: skip
         """Anota una fusión con las fuentes que el absorbido aportó al destino (salvo la que el
-        cerrojo acaba de retener: esa no se ha hecho)."""
+        cerrojo acaba de retener: esa no se ha hecho). `instantanea`: las dos fichas justo antes
+        de unirse («absorbido», «destino») y la que queda justo después («despues»), para poder
+        deshacerla dejando todo como estaba (proceso/incidentes.revertir)."""
         if (absorbido, destino) in self._uniones_retenidas:
             self._uniones_retenidas.discard((absorbido, destino))
             return
         with self._conexion:
             self._conexion.execute(
-                "INSERT INTO fusiones (fecha, absorbido, destino, motivo, fuentes) "
-                "VALUES (?, ?, ?, ?, ?)",
-                (fecha, absorbido, destino, motivo, _json(fuentes)),
-            )
+                "INSERT INTO fusiones (fecha, absorbido, destino, motivo, fuentes, instantanea) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (fecha, absorbido, destino, motivo, _json(fuentes),
+                 _json(instantanea) if instantanea is not None else None),
+            )  # fmt: skip
+
+    def instantanea_de_fusion(self, absorbido: str) -> Documento | None:
+        """La instantánea de la unión vigente de `absorbido`: la que guardó la unión o, en las
+        anteriores al 10 de noviembre de 2026, la que se saca del historial de la ficha que queda
+        (la versión justo antes y justo después de recibir las fuentes aportadas). None si no hay
+        unión vigente o no se puede saber."""
+        fila = self._conexion.execute(
+            "SELECT destino, fuentes, instantanea FROM fusiones "
+            "WHERE absorbido = ? AND revertida = 0 ORDER BY id DESC LIMIT 1",
+            (absorbido,),
+        ).fetchone()
+        if fila is None:
+            return None
+        destino, fuentes, instantanea = fila
+        if instantanea:
+            guardada: Documento = json.loads(instantanea)
+            return guardada
+        aportadas = set(json.loads(fuentes))
+        if not aportadas:
+            return None
+        versiones = self._conexion.execute(
+            "SELECT anterior, nuevo FROM historial WHERE tabla = 'incidentes' "
+            "AND entidad_id = ? AND operacion = 'cambio' ORDER BY id DESC",
+            (destino,),
+        )
+        for anterior, nuevo in versiones:
+            if anterior is None:
+                continue
+            antes, despues = json.loads(anterior), json.loads(nuevo)
+            tenia = {f["id"] for f in antes.get("fuentes", [])}
+            tiene = {f["id"] for f in despues.get("fuentes", [])}
+            if aportadas <= tiene and not aportadas & tenia:
+                return {"destino": antes, "despues": despues}
+        return None
 
     def revertir_fusion(self, absorbido: str) -> None:
         """Da la fusión por revertida (salvo si el cerrojo acaba de retener la reapertura)."""
@@ -1814,6 +1941,7 @@ class Almacen:
             )
 
     def fusiones(self) -> list[Documento]:
+        """Las fusiones anotadas, sin su instantánea (`instantanea_de_fusion`)."""
         filas = self._conexion.execute(
             "SELECT fecha, absorbido, destino, motivo, fuentes, revertida FROM fusiones ORDER BY id"
         ).fetchall()
@@ -1822,6 +1950,82 @@ class Almacen:
              "fuentes": json.loads(fu), "revertida": bool(r)}
             for f, a, d, m, fu, r in filas
         ]  # fmt: skip
+
+    # --- Lo publicado (docs/ciclo_de_vida.md) ------------------------------------------------
+
+    def publicado(self) -> dict[str, Documento]:
+        """{ficha: fila} de lo publicado, sin el documento interno (`publicado_interno`)."""
+        filas = self._conexion.execute(
+            "SELECT id, estado, fichero, entrada, detalle, primera, fecha FROM publicado "
+            "ORDER BY id"
+        ).fetchall()
+        return {
+            str(id_): {"id": str(id_), "estado": estado, "fichero": fichero,
+                       "entrada": json.loads(entrada), "detalle": json.loads(detalle),
+                       "primera": primera, "fecha": fecha}
+            for id_, estado, fichero, entrada, detalle, primera, fecha in filas
+        }  # fmt: skip
+
+    def estados_publicados(self) -> dict[str, str]:
+        """{ficha: estado} de lo publicado, sin leer las entradas."""
+        filas = self._conexion.execute("SELECT id, estado FROM publicado").fetchall()
+        return {str(id_): str(estado) for id_, estado in filas}
+
+    def esta_publicada(self, id_: str) -> bool:
+        """La ficha ha salido alguna vez en la web (tiene dirección publicada)."""
+        fila = self._conexion.execute(
+            "SELECT 1 FROM publicado WHERE id = ? LIMIT 1", (id_,)
+        ).fetchone()
+        return fila is not None
+
+    def publicado_interno(self, ids: Iterable[str]) -> dict[str, Documento]:
+        """El documento interno de la versión publicada de esas fichas."""
+        resultado: dict[str, Documento] = {}
+        lista = sorted(set(ids))
+        for i in range(0, len(lista), 500):
+            trozo = lista[i : i + 500]
+            filas = self._conexion.execute(
+                f"SELECT id, interno FROM publicado WHERE id IN ({','.join('?' * len(trozo))})",
+                trozo,
+            ).fetchall()
+            resultado.update({str(id_): json.loads(interno) for id_, interno in filas})
+        return resultado
+
+    def guardar_publicado(
+        self, id_: str, estado: str, fichero: str, entrada: Documento, interno: Documento,
+        detalle: Documento, fecha: str,
+    ) -> bool:  # fmt: skip
+        """Pone la fila de la ficha en lo publicado. No toca una fila igual (la fecha es la del
+        último cambio) y conserva la fecha de la primera publicación. True si cambió algo."""
+        cursor = self._conexion.execute(
+            "INSERT INTO publicado "
+            "(id, estado, fichero, entrada, interno, detalle, primera, fecha) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+            "ON CONFLICT (id) DO UPDATE SET estado = excluded.estado, "
+            "fichero = excluded.fichero, "
+            "entrada = excluded.entrada, interno = excluded.interno, detalle = excluded.detalle, "
+            "fecha = excluded.fecha "
+            "WHERE publicado.estado IS NOT excluded.estado "
+            "OR publicado.fichero IS NOT excluded.fichero "
+            "OR publicado.entrada IS NOT excluded.entrada "
+            "OR publicado.interno IS NOT excluded.interno "
+            "OR publicado.detalle IS NOT excluded.detalle",
+            (id_, estado, fichero, _json(entrada), _json(interno), _json(detalle), fecha, fecha),
+        )
+        self._conexion.commit()
+        return cursor.rowcount > 0
+
+    def cambiar_estado_publicado(
+        self, id_: str, estado: str, detalle: Documento, fecha: str
+    ) -> bool:
+        """Cambia el estado de una fila (unida, retirada) sin tocar su última entrada publicada."""
+        cursor = self._conexion.execute(
+            "UPDATE publicado SET estado = ?, detalle = ?, fecha = ? WHERE id = ? "
+            "AND (estado IS NOT ? OR detalle IS NOT ?)",
+            (estado, _json(detalle), fecha, id_, estado, _json(detalle)),
+        )
+        self._conexion.commit()
+        return cursor.rowcount > 0
 
     def siguiente_id_incidente(self, anio: int) -> str:
         prefijo = f"EODI-{anio:04d}-"

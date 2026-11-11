@@ -3,12 +3,14 @@
 //
 // - un incidente unido a otro: redirección permanente (308) a la ficha del que lo absorbió, en
 //   su idioma;
+// - una ficha que estuvo publicada y se retiró: 410 con la página que explica la retirada, en su
+//   idioma;
 // - un ataque de la capa de Ucrania (/EODI-UA-AAAA-NNNN y /en/…): la portada con el mapa si
 //   existe; si no, 404 real con la página 404;
 // - cualquier otro /EODI-…: 404 real.
 //
 // La lista sale del build (web/scripts/paginas.ts escribe /rutas.json con los datos de ese
-// despliegue): una sola regla para todos los unidos en los dos idiomas, sin el tope de capacidad
+// despliegue): una sola regla para todos los unidos y retirados en los dos idiomas, sin el tope de capacidad
 // de las redirecciones masivas de Vercel, y sin coste para las fichas que existen, que nunca
 // llegan aquí. Sin import: el empaquetado de Vercel no sigue los ficheros .ts de web/. La
 // decisión (decidirBorde) la usan también el build, el servidor local y las pruebas de web/.
@@ -17,12 +19,16 @@
 export interface RutasBorde {
   /** Ruta de la ficha de un unido → ruta de la ficha del que lo absorbió, en los dos idiomas. */
   redirecciones: Record<string, string>;
+  /** Ruta de la ficha de un retirado → ruta de la página que explica su retirada, en los dos
+   *  idiomas. Opcional: la lista de un despliegue anterior no lo trae. */
+  retiradas?: Record<string, string>;
   /** Identificadores de los ataques publicados de la capa de Ucrania. */
   ataques: string[];
 }
 
 export type DecisionBorde =
   | { tipo: "redirigir"; destino: string }
+  | { tipo: "retirada"; ruta: string }
   | { tipo: "no_existe" }
   | { tipo: "portada"; ruta: string };
 
@@ -36,6 +42,9 @@ const CACHE = "public, max-age=0, s-maxage=3600";
 export function decidirBorde(ruta: string, rutas: RutasBorde, ataques: ReadonlySet<string>): DecisionBorde {
   const destino = Object.hasOwn(rutas.redirecciones, ruta) ? rutas.redirecciones[ruta] : undefined;
   if (destino !== undefined) return { tipo: "redirigir", destino };
+  const retiradas = rutas.retiradas ?? {};
+  const retirada = Object.hasOwn(retiradas, ruta) ? retiradas[ruta] : undefined;
+  if (retirada !== undefined) return { tipo: "retirada", ruta: retirada };
   const ataque = ATAQUE.exec(ruta);
   if (ataque?.[2] !== undefined && ataques.has(ataque[2])) {
     return { tipo: "portada", ruta: ataque[1] === "en" ? "/en" : "/" };
@@ -115,6 +124,7 @@ export async function GET(peticion: Request): Promise<Response> {
       headers: { Location: new URL(decision.destino, url).toString(), "Cache-Control": CACHE },
     });
   }
+  if (decision.tipo === "retirada") return pagina(peticion, url.origin, decision.ruta, 410);
   if (decision.tipo === "portada") return pagina(peticion, url.origin, decision.ruta, 200);
   return pagina(peticion, url.origin, "/404", 404);
 }

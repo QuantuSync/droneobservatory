@@ -60,6 +60,9 @@ def test_las_repuestas_tienen_su_fecha_con_cita() -> None:
         assert entrada["motivo"]["es"] and entrada["motivo"]["en"]
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_repuesta_sigue_en_retirar_y_no_se_vuelve_a_retirar(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

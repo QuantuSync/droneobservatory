@@ -393,6 +393,9 @@ def _motivos(almacen: Almacen, id_: str) -> list[str]:
     return [c["nuevo"]["motivo"] for c in cambios if "motivo" in (c["nuevo"] or {})]
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_correccion_retira_lo_guardado_sin_palabras_literales_con_su_motivo() -> None:
     almacen = Almacen.abrir()
     antes = _guardado("Rusia", "Prezydent oskarżyła Moskwę o prowokację")
@@ -418,6 +421,9 @@ def test_la_correccion_retira_lo_guardado_sin_palabras_literales_con_su_motivo()
     assert tipo_atribucion.aplicar(almacen, DESPUES + timedelta(hours=1), MODELOS) == {}
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_correccion_usa_el_motivo_revisado_y_deja_la_investigacion() -> None:
     almacen = Almacen.abrir()
     frase = "prüft die Bundesanwaltschaft einen möglichen Zusammenhang mit dem Drohnenvorfall"
@@ -434,6 +440,9 @@ def test_la_correccion_usa_el_motivo_revisado_y_deja_la_investigacion() -> None:
     assert [i["cita"] for i in nuevo["investigacion"]] == [frase]
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_correccion_devuelve_el_paso_que_la_primera_version_borro() -> None:
     almacen = Almacen.abrir()
     frase = "The drone entered Romanian territory from the Republic of Moldova"

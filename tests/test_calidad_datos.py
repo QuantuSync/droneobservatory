@@ -11,7 +11,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
-from exportacion import publicar
+from exportacion import publicar, puerta
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from modelo import cliente as cliente_servicio
 from modelo import coste, ficha
@@ -428,6 +428,8 @@ def test_se_publican_tres_ficheros(almacen: Almacen, tmp_path: Path) -> None:
     documento = ejemplos.incidente_minimo()
     documento["lugar"] = {"pais": "BE", "nivel": "region", "region": "Limburg"}
     almacen.guardar_incidente(documento, AHORA, MODELOS)
+    # Sin el pase del control no se publica nada (exportacion/puerta.py).
+    puerta.dar_pase(almacen, AHORA, [documento["id"]])
     publicar.publicar(almacen, AHORA, tmp_path)
     sin_punto = json.loads((tmp_path / publicar.SIN_UBICACION).read_text(encoding="utf-8"))
     (publicado,) = sin_punto["incidentes"]
@@ -440,6 +442,9 @@ def test_se_publican_tres_ficheros(almacen: Almacen, tmp_path: Path) -> None:
     assert mapa["features"] == []
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_una_ficha_que_ya_no_es_incidente_retira_el_suyo(almacen: Almacen) -> None:
     cand = candidato(almacen, LA_GUARDIA, "Dron que paralizó el aeropuerto de Ibiza")
     frase = "paralizó el aeropuerto de Ibiza durante 35 minutos"
@@ -490,10 +495,11 @@ def test_la_revision_cuenta_lo_que_cambia() -> None:
     }  # fmt: skip
 
 
-@pytest.mark.parametrize(("gastado", "cabe"), [(0.0, True), (4.0, False)])
+@pytest.mark.parametrize(("gastado", "cabe"), [(0.0, True), (0.4, False)])
 def test_el_lote_no_se_envia_si_no_cabe_en_el_limite(gastado: float, cabe: bool) -> None:
+    # El límite del modo «revision» es diario desde el 10 de noviembre de 2026: 0,50 USD.
     prevision = revision.Prevision(
-        muestra=10, medio_directo=0.004, restantes=1000, lote=2.0, gastado=gastado
+        muestra=10, medio_directo=0.004, restantes=100, lote=0.2, gastado=gastado
     )
     assert prevision.cabe is cabe
 

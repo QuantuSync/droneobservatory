@@ -21,6 +21,7 @@ def fuente(medio: str = "Diario", fiabilidad: str = "C", autoridad: bool = False
         "medio": medio,
         "fiabilidad": fiabilidad,
         "es_autoridad": autoridad,
+        "publica": True,
         "enlace": "https://ejemplo.org/noticia",
         "fecha": {"valor": "2026-10-10T08:30Z", "precision": "minuto"},
     }

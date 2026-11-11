@@ -201,11 +201,23 @@ def test_una_ficha_del_experto_que_no_valida(almacen: Almacen) -> None:
     _sigue(almacen, id_)
 
 
-def test_el_experto_que_dice_que_no_es_un_suceso_si_retira(almacen: Almacen) -> None:
+def test_el_experto_que_dice_que_no_es_un_suceso_si_retira(
+    almacen: Almacen, cerrojo_en_observar: None
+) -> None:
     peticion, id_ = _publicada(almacen)
     no_es = ficha_ejemplo(es_incidente=campo(False, "Drone strikes hit two ships", 0.8))
     assert _experto(almacen, peticion, no_es) is None
     assert "retirado" in _ficha(almacen, id_) and not _fallos(almacen)
+
+
+def test_el_veredicto_no_retira_la_ficha_que_cuenta_una_autoridad(almacen: Almacen) -> None:
+    """En «aplicar», como producción: la ficha de ejemplo la cuenta la policía, y una ficha así no
+    la retira una decisión automática (docs/cerrojo.md): se queda publicada y queda apuntado."""
+    peticion, id_ = _publicada(almacen)
+    no_es = ficha_ejemplo(es_incidente=campo(False, "Drone strikes hit two ships", 0.8))
+    assert _experto(almacen, peticion, no_es) is None
+    assert "retirado" not in _ficha(almacen, id_)
+    assert any(clave.startswith(f"retenido:{id_}:retirado") for clave in almacen.controles())
 
 
 def test_el_veredicto_de_las_fuentes_con_una_respuesta_ilegible_no_retira(

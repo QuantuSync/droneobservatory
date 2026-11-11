@@ -1458,6 +1458,53 @@ def conservar_decididos(
     return conservacion.incidente
 
 
+# La parte de una separación que ya se extrajo con su suceso: `parte:<candidato>` en el control.
+PREFIJO_PARTE = "parte:"
+
+
+def primera_de_la_parte(almacen: Almacen, candidato: Documento) -> bool:
+    """El candidato es la parte de una separación revisada (lleva su día y su descripción,
+    recogida/revisados._con_parte) y aún no se ha extraído con ellos. Esa extracción no está atada
+    a lo que decidía la ficha mezclada (docs/ciclo_de_vida.md): no se le conserva lo «decidido»
+    (proceso/decididos.py) ni el cerrojo le devuelve lo «decidido con cita»; lo revisado a mano
+    sí manda. Las siguientes, como cualquier otra ficha.
+
+    Una parte que ya tenía una extracción válida posterior a su separación (las separadas antes de
+    llevar esta cuenta) no es la primera: EODI-2026-00770, separada el 9 de noviembre de 2026 y
+    ya corregida, perdía la localidad y la región al volver a extraerse."""
+    desde = (candidato.get("parte") or {}).get("desde")
+    if not desde:
+        return False
+    clave = PREFIJO_PARTE + str(candidato["id"])
+    if (almacen.controles(clave).get(clave) or {}).get("desde") == desde:
+        return False
+    return not any(
+        e.get("valida") and str(e.get("fecha") or "")[:16] >= str(desde)[:16]
+        for e in almacen.extracciones(str(candidato["id"]))
+    )
+
+
+def anotar_parte_extraida(
+    almacen: Almacen, candidato: Documento, id_: str, ahora: datetime
+) -> None:
+    """Deja en el control que la parte ya se extrajo con su suceso."""
+    desde = (candidato.get("parte") or {}).get("desde")
+    almacen.guardar_controles(
+        {PREFIJO_PARTE + str(candidato["id"]): {
+            "desde": desde, "ficha": id_, "fecha": _fecha(ahora),
+        }},
+        _fecha(ahora),
+    )  # fmt: skip
+
+
+def guardar_parte_separada(
+    almacen: Almacen, incidente: Documento, ahora: datetime, modelos: frozenset[str]
+) -> None:
+    """Guarda la primera extracción de la parte de una separación. El cerrojo la reconoce por
+    este nombre (protegido.PARTE_SEPARADA)."""
+    almacen.guardar_incidente(incidente, ahora, modelos)
+
+
 def con_lo_revisado(
     almacen: Almacen, incidente: Documento, anterior: Documento, ahora: datetime
 ) -> Documento:
@@ -1561,6 +1608,8 @@ def _guardar_version(
         documento["motivos"] = [*documento["motivos"], f"ubicación: {ubicacion.motivo}"]
         return None
     existente = incidente_del_candidato(almacen, peticion.candidato["id"], vinculos)
+    # La primera extracción de la parte de una separación con su suceso (`primera_de_la_parte`).
+    de_parte = extraida and primera_de_la_parte(almacen, peticion.candidato)
     inicio = validada.valor("inicio") or peticion.candidato["inicio"]
     id_ = existente or almacen.siguiente_id_incidente(int(inicio[:4]))
     if vinculos is not None:
@@ -1594,7 +1643,7 @@ def _guardar_version(
         # confirmación de la autoridad citada en la revisión después de la bajada del filtro,
         # como en la ficha anterior.
         incidente = con_lo_revisado(almacen, incidente, anterior, ahora)
-        if extraida:
+        if extraida and not de_parte:
             incidente = conservar_decididos(almacen, incidente, anterior, ahora)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
         incidente = detalle.reaplicar(almacen, incidente)
@@ -1605,10 +1654,15 @@ def _guardar_version(
     incidente = presencia.aplicar(incidente)
     incidente = aplicar_reglas(incidente)
     try:
-        almacen.guardar_incidente(incidente, ahora, modelos)
+        if de_parte:
+            guardar_parte_separada(almacen, incidente, ahora, modelos)
+        else:
+            almacen.guardar_incidente(incidente, ahora, modelos)
     except DocumentoInvalido as error:
         documento["motivos"] = [*documento["motivos"], f"incidente no válido: {error}"]
         return None
+    if de_parte:
+        anotar_parte_extraida(almacen, peticion.candidato, id_, ahora)
     _ampliar_lugares(almacen, ubicacion)
     return id_
 
@@ -1778,9 +1832,7 @@ def extraer(
         critico_pendiente = bool(esperan_experto(almacen).get(candidato_id, {}).get("critico"))
         if sin_tope is not None and not critico_pendiente:
             continue
-        gastado = almacen.gastado(
-            modo.value, coste.dia(ahora) if modo is coste.Modo.HORARIO else None
-        )
+        gastado = almacen.gastado(modo.value, coste.dia_del_gasto(modo, ahora))
         previsto = coste.peor_caso(
             peticion.letras(), ficha.MAX_TOKENS_SALIDA, esfuerzo=ficha.ESFUERZO
         )
@@ -1851,8 +1903,10 @@ def extraer(
 def recortar_para_lote(
     almacen: Almacen, peticiones: list[Peticion], modo: coste.Modo = coste.Modo.HISTORICO
 ) -> tuple[list[Peticion], float]:
-    """Las peticiones que caben en lo que queda del límite del modo, en el peor caso."""
-    queda = coste.limite(modo) - almacen.gastado(modo.value)
+    """Las peticiones que caben en lo que queda del límite del modo, en el peor caso (en los modos
+    con límite diario, lo que queda de hoy)."""
+    hoy = coste.dia_del_gasto(modo, datetime.now(UTC))
+    queda = coste.limite(modo) - almacen.gastado(modo.value, hoy)
     elegidas: list[Peticion] = []
     previsto = 0.0
     for peticion in peticiones:

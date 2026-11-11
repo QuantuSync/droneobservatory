@@ -665,10 +665,16 @@ def _agrupar_en(
     resultado: Agrupacion, articulo: Articulo, sitio: Lugar, filtro_: Filtro, precision: str
 ) -> None:
     tipo = filtro_.tipo(articulo.titular, sitio)
+    # El candidato de la parte de una separación revisada está cerrado (docs/ciclo_de_vida.md):
+    # sus artículos los repartió una revisión, uno a uno. Un artículo nuevo del mismo sitio iba
+    # al candidato de una sola de las partes (la de inicio más reciente), fuera o no de su suceso.
+    # Ahora abre un candidato normal: su ficha pasa por el filtro de entrada, que la une a la
+    # parte de su suceso.
     encajan = [
         c
         for c in resultado.abiertos(articulo.fecha)
         if c.tipo == tipo
+        and not c.parte
         and mismo_sitio(c.lugar, sitio)
         and misma_ventana(c, articulo.fecha, precision)
     ]

@@ -354,11 +354,19 @@ export interface FeatureIncidente {
   properties: PropiedadesIncidente;
 }
 
+/** Una ficha que estuvo publicada y se retiró: cuándo (instante UTC) y por qué, en cada idioma. */
+export interface Retirada {
+  fecha: string;
+  motivo: { es: string; en: string };
+}
+
 export interface ColeccionIncidentes {
   type: "FeatureCollection";
   features: FeatureIncidente[];
   /** Identificador unido a otro -> incidente publicado que queda (la web redirige su dirección). */
   unidos?: Record<string, string>;
+  /** Identificador retirado -> su retirada (su dirección responde 410 con la página que lo explica). */
+  retirados?: Record<string, Retirada>;
 }
 
 /**
@@ -511,6 +519,8 @@ export interface ImpactoGuerra {
     nivel: "localidad" | "instalacion" | "comunidad" | "distrito";
     categoria?: CategoriaInstalacion;
     localidad?: string;
+    /** El nombre de esa localidad en alfabeto latino, si los datos lo traen. */
+    localidad_latino?: string;
     punto: { lat: number; lon: number };
     radio_km: number;
   };

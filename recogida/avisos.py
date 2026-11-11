@@ -15,8 +15,10 @@ país, en el servidor ntfy propio (configuracion/avisos.json). Se avisa, y nada 
 La capa de guerra de Ucrania y Rusia no avisa: sus ataques no son incidentes. Un incidente se
 avisa una sola vez: lo enviado queda en una base propia (avisos.sqlite, en $AVISOS_DATOS) y las
 actualizaciones posteriores no avisan. Solo cuentan los incidentes publicados (el enlace del aviso
-lleva a su página) cuyo suceso cae en las últimas `ventana_horas` (72): un incidente antiguo que
-llega tarde al registro no es un aviso. Sin base de avisos (la primera vez), todos los publicados
+lleva a su página), y el aviso se compone con la versión publicada de la ficha (la fila de la tabla
+`publicado`, docs/ciclo_de_vida.md), no con la que tenga la base en ese momento. Su suceso cae
+en las últimas `ventana_horas` (72): un incidente antiguo que llega tarde al registro no es un
+aviso. Sin base de avisos (la primera vez), todos los publicados
 se anotan como ya avisados y no se envía nada: los avisos empiezan desde ese momento.
 
 Avisos con retraso: un incidente que la barrera de titulares retuvo sin publicar
@@ -268,8 +270,11 @@ def _fuente(incidente: Documento, idioma: str = "es") -> str:
     del aviso con la regla de la web (proceso/autoridades.py): la tabla, la traducción que viaja
     con la ficha publicada (`autoridades`) o «una autoridad»."""
     from exportacion.procedencia import RANGO
+    from exportacion.proyeccion import fuente_publica
+    from proceso.estados import Capa
 
-    fuentes = incidente.get("fuentes", [])
+    # Solo las fuentes que la web enseña: el aviso no nombra una fuente interna.
+    fuentes = [f for f in incidente.get("fuentes", []) if fuente_publica(f, Capa.GENERAL)]
     if not fuentes:
         return SIN_FUENTE[idioma]
     elegida = min(fuentes, key=lambda f: RANGO.index(_origen(f)))
@@ -478,6 +483,81 @@ def documentos(base: Path, ids: Iterable[str]) -> dict[str, Documento]:
         return resultado
     finally:
         conexion.close()
+
+
+def publicados_internos(base: Path, ids: Iterable[str]) -> dict[str, Documento]:
+    """El documento interno de la versión publicada de esos incidentes (tabla `publicado`,
+    docs/ciclo_de_vida.md), leído sin escribir en la base: el aviso se compone con la misma versión
+    que enseña la web. El 9 de noviembre de 2026 el aviso de EODI-2026-00773 salió con los datos
+    que tenía la base, no con los publicados. Sin fila publicada no hay documento ni aviso."""
+    lista = sorted(ids)
+    if not lista:
+        return {}
+    conexion = sqlite3.connect(f"{base.resolve().as_uri()}?mode=ro", uri=True)
+    try:
+        resultado: dict[str, Documento] = {}
+        for i in range(0, len(lista), 500):
+            trozo = lista[i : i + 500]
+            filas = conexion.execute(
+                "SELECT id, interno FROM publicado WHERE estado = 'publicada' "
+                f"AND id IN ({','.join('?' * len(trozo))})",
+                trozo,
+            ).fetchall()
+            resultado.update({str(i_): json.loads(d) for i_, d in filas})
+        return resultado
+    except sqlite3.Error as error:
+        registro.error("lo publicado no se puede leer de la base: %s", str(error)[:200])
+        return {}
+    finally:
+        conexion.close()
+
+
+def entradas_publicadas(carpeta: Path) -> dict[str, Documento]:
+    """La entrada de cada ficha en los ficheros publicados."""
+    resultado: dict[str, Documento] = {}
+    mapa = carpeta / FICHEROS_PUBLICADOS[0]
+    if mapa.exists():
+        for rasgo in json.loads(mapa.read_text(encoding="utf-8")).get("features", []):
+            resultado[str(rasgo.get("id") or rasgo["properties"]["id"])] = rasgo
+    sin_punto = carpeta / FICHEROS_PUBLICADOS[1]
+    if sin_punto.exists():
+        for incidente in json.loads(sin_punto.read_text(encoding="utf-8")).get("incidentes", []):
+            resultado[str(incidente["id"])] = incidente
+    return resultado
+
+
+def con_lo_publicado(internos: dict[str, Documento], carpeta: Path) -> dict[str, Documento]:
+    """Cada documento con el inicio de su entrada publicada: la exportación lo pone de acuerdo con
+    el primer aviso (proceso/coherencia.coherente) y el mensaje dice el día que enseña la web, no
+    el de la base (EODI-2026-00777, 11 de noviembre de 2026: el 11 en la base, el 10 en la web)."""
+    entradas = entradas_publicadas(carpeta)
+    resultado: dict[str, Documento] = {}
+    for id_, interno in internos.items():
+        entrada = entradas.get(id_) or {}
+        inicio = (entrada.get("properties", entrada).get("tiempo") or {}).get("inicio")
+        if inicio and inicio != (interno.get("tiempo") or {}).get("inicio"):
+            interno = {**interno, "tiempo": {**(interno.get("tiempo") or {}), "inicio": inicio}}
+        resultado[id_] = interno
+    return resultado
+
+
+def distintos_de_lo_publicado(
+    internos: dict[str, Documento], carpeta: Path
+) -> dict[str, list[str]]:
+    """{ficha: datos} de los documentos cuyos datos de aviso no son los de su ficha publicada
+    (invariante I5, proceso/invariantes.aviso_distinto): de esas no sale aviso."""
+    from proceso import invariantes
+
+    entradas = entradas_publicadas(carpeta)
+    resultado: dict[str, list[str]] = {}
+    for id_, interno in internos.items():
+        entrada = entradas.get(id_)
+        distintos = (
+            ["sin entrada"] if entrada is None else invariantes.aviso_distinto(interno, entrada)
+        )
+        if distintos:
+            resultado[id_] = distintos
+    return resultado
 
 
 # Cursor de las separaciones revisadas a mano (recogida/revisados.CURSOR_SEPARAR).
@@ -701,7 +781,18 @@ def _por_enviar(
         incidente = internos.get(id_)
         if incidente is None:
             continue
-        aviso = clasificar(incidente, config, _instante(pendientes.get(id_)) or ahora)
+        desde = _instante(pendientes.get(id_))
+        if desde is not None and ahora - desde > timedelta(hours=config["ventana_horas"]):
+            # Un pendiente caduca: lleva esperando a la web más que la ventana de los avisos, y
+            # ya no es un aviso (antes se medía siempre desde su hora original y no caducaba).
+            registro.warning("aviso de %s caducado: esperaba a la web desde %s", id_, desde)
+            continue
+        try:
+            aviso = clasificar(incidente, config, desde or ahora)
+        except Exception as error:
+            # Cada ficha, aislada: la que falla no corta los avisos de las demás.
+            registro.exception("aviso de %s sin clasificar: %s", id_, str(error)[:200])
+            continue
         if aviso is None:
             continue
         hechos = enviados.temas(id_)
@@ -733,7 +824,15 @@ def _enviar_uno(
     """Envía el aviso a sus temas y anota cada uno. True si salió a todos."""
     completo = True
     for tema in envio.temas:
-        cuerpo = mensaje(envio.aviso, envio.incidente, config, tema)
+        try:
+            cuerpo = mensaje(envio.aviso, envio.incidente, config, tema)
+        except Exception as error:
+            # Un mensaje que no se puede componer no corta los demás avisos de la pasada.
+            pasada.fallidos += 1
+            pasada.error = f"sin componer: {type(error).__name__}: {error}"[:200]
+            registro.exception("aviso de %s a %s sin componer", envio.id, tema)
+            completo = False
+            continue
         try:
             enviar(cuerpo)
         except (urllib.error.URLError, OSError, ValueError) as error:
@@ -781,7 +880,12 @@ def pasar(
     if enviar is None:
         for envio in lista:
             for tema in envio.temas:
-                cuerpo = mensaje(envio.aviso, envio.incidente, config, tema)
+                try:
+                    cuerpo = mensaje(envio.aviso, envio.incidente, config, tema)
+                except Exception:
+                    registro.exception("ensayo: aviso de %s a %s sin componer", envio.id, tema)
+                    pasada.fallidos += 1
+                    continue
                 registro.info(
                     "ensayo: %s a %s: %s%s",
                     envio.id,
@@ -991,7 +1095,13 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
         return 0
 
     publicados = ids_publicados(args.publicacion)
-    internos = con_autoridades(documentos(args.base, publicados), args.publicacion)
+    # Con la versión publicada de cada ficha, no con la que tenga ahora la base.
+    internos = con_autoridades(publicados_internos(args.base, publicados), args.publicacion)
+    internos = con_lo_publicado(internos, args.publicacion)
+    distintos = distintos_de_lo_publicado(internos, args.publicacion)
+    for id_, datos in sorted(distintos.items()):
+        registro.error("%s sin aviso: sus datos no son los publicados (%s)", id_, ", ".join(datos))
+    internos = {k: v for k, v in internos.items() if k not in distintos}
     esperan = partes_sin_datos_propios(args.base) & set(internos)
     if esperan:
         registro.info("partes de una separación sin sus datos, sin aviso todavía: %s",

@@ -57,6 +57,7 @@ from almacen import remoto, sitio
 from almacen.base import Almacen
 from almacen.casa import VARIABLE_SIN_AVISOS, exigir_aislamiento
 from almacen.cifrado import abrir_cifrada
+from exportacion import puerta
 from exportacion.publicar import DIRECTORIO, modelos, publicar
 from proceso import (
     cruces,
@@ -317,6 +318,30 @@ def paso_detalle(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
     return leidas
 
 
+def paso_invariantes(
+    almacen: Almacen, ahora: datetime, ensayo: Path | None
+) -> dict[str, list[str]]:
+    """Comprueba las invariantes y devuelve las rotas. En la recogida real avisa de cada una nueva
+    por el tema privado; en el ensayo las deja en `invariantes.json` de su carpeta."""
+    import json
+
+    from proceso import invariantes
+
+    resultado = invariantes.comprobar(almacen, ahora)
+    invariantes.avisar(
+        almacen, ahora, resultado, visitas.avisador_privado if ensayo is None else None
+    )
+    registro.info(
+        "invariantes: %s",
+        ", ".join(f"{clave}={len(lista)}" for clave, lista in sorted(resultado.items())),
+    )
+    if ensayo is not None:
+        (ensayo / "invariantes.json").write_text(
+            json.dumps(resultado, ensure_ascii=False, indent=1), encoding="utf-8"
+        )
+    return invariantes.rotas(resultado)
+
+
 def ensayo_exportacion(almacen: Almacen, ahora: datetime, destino: Path) -> bool:
     """Genera la exportación semanal en `destino`, sin subirla (paso c2 de interno: fusiones)."""
     from exportacion import semanal
@@ -343,6 +368,11 @@ def principal(argumentos: list[str] | None = None) -> int:
     # sobre una copia local de la base, publica en una carpeta aparte y no sube nada.
     opciones.add_argument("--base", type=Path, help="db.age local en vez de la rama estado")
     opciones.add_argument("--ensayo", type=Path, help="carpeta donde publicar, sin subir la base")
+    # Varias recogidas de ensayo seguidas sobre la misma copia (docs/ciclo_de_vida.md): la base de
+    # trabajo queda como base de la copia del ensayo y la siguiente parte de lo que dejó esta.
+    opciones.add_argument(
+        "--conservar", action="store_true", help="en ensayo, deja la base en la copia del ensayo"
+    )
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     if args.ensayo is not None:
@@ -363,6 +393,12 @@ def principal(argumentos: list[str] | None = None) -> int:
         almacen = abierta
         antes = sitio.marca(almacen)
         paso = Pasos()
+        # La tabla de lo publicado se siembra lo primero (exportacion/puerta.sembrar; una vez, la
+        # migración): con ella vacía, una ficha unida hace tiempo, que el control no cuenta entre
+        # las vistas, parecería nueva en el filtro y el cerrojo no le guardaría lo «con cita».
+        sembradas = paso("siembra de lo publicado", puerta.sembrar, almacen, ahora, DIRECTORIO)
+        if sembradas:
+            registro.info("tabla de lo publicado sembrada: %d fichas", sembradas)
         # Suelo europeo fuera del continente: los incidentes guardados con el país de antes
         # (Gibraltar «GI», las bases británicas de Chipre en «CY») pasan a su país. Lo primero,
         # antes de que otro paso vuelva a guardar uno de ellos.
@@ -684,13 +720,20 @@ def principal(argumentos: list[str] | None = None) -> int:
         directorio = DIRECTORIO if args.ensayo is None else args.ensayo
         sin_generar: list[str] = []
         try:
+            # La tabla de lo publicado se llena la primera vez con lo que ya está publicado
+            # (exportacion/puerta.sembrar): en el ensayo, de la copia que le deja ensayo.sh.
             cambiados = (
-                publicar(almacen, ahora, fallidos=sin_generar)
+                publicar(almacen, ahora, fallidos=sin_generar, semilla=DIRECTORIO)
                 if args.ensayo is None
-                else publicar(almacen, ahora, args.ensayo, fallidos=sin_generar)
+                else publicar(almacen, ahora, args.ensayo, fallidos=sin_generar, semilla=DIRECTORIO)
             )
             if sin_generar:
                 paso.fallidos.append("ficheros publicados: " + "; ".join(sin_generar))
+            # Las invariantes del ciclo de vida (proceso/invariantes.py), con lo recién publicado:
+            # lo que se rompe queda apuntado y llega por el tema privado, nunca desde un ensayo.
+            rotas = paso("invariantes", paso_invariantes, almacen, ahora, args.ensayo)
+            if rotas and args.ensayo is not None:
+                revisados_fallidos.append("invariantes rotas: " + ", ".join(sorted(rotas)))
         except Exception:
             registro.exception("no se pudo generar ningún fichero publicado: no se publica")
             cambiados = None
@@ -712,7 +755,13 @@ def principal(argumentos: list[str] | None = None) -> int:
             # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
             paso("previsión", prevision.paso_horario, almacen, ahora, directorio)
         if args.ensayo is not None:
-            registro.info("ensayo: base sin subir")
+            if args.conservar and isinstance(almacen, sitio.AlmacenEnDisco):
+                registro.info(
+                    "ensayo: base de trabajo guardada en la copia del ensayo (%s), sin subir",
+                    sitio.guardar_disco(almacen),
+                )
+            else:
+                registro.info("ensayo: base sin subir")
             # La exportación semanal sobre la base que deja esta recogida, sin subir nada: un
             # campo nuevo sin regla de origen tiene que fallar aquí, antes de fusionar.
             if not ensayo_exportacion(almacen, ahora, args.ensayo / "exportacion"):

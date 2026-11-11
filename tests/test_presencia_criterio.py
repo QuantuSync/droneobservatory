@@ -307,6 +307,9 @@ def test_un_cierre_que_se_repite_no_se_funde_en_el_de_la_noche_anterior() -> Non
     assert incidentes.encajan(sabado, domingo)
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_revision_deshace_la_fusion_de_dos_cierres_de_noches_distintas() -> None:
     almacen = Almacen.abrir()
     sabado = lieja("EODI-2025-00092", "2025-11-08T19:00Z")

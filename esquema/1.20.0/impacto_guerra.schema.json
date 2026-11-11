@@ -39,6 +39,7 @@
           "enum": ["refineria", "deposito_combustible", "central", "subestacion", "aerodromo", "puerto", "militar", "ferrocarril", "industrial"]
         },
         "localidad": {"x-visibilidad": "publico", "description": "Localidad con que el mensaje nombra la instalación.", "type": "string", "minLength": 1},
+        "localidad_latino": {"x-visibilidad": "publico", "description": "Nombre de esa localidad en alfabeto latino, el del nomenclátor (desde el 10 de noviembre de 2026).", "type": "string", "minLength": 1},
         "punto": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.20.0:comun#/$defs/punto"},
         "radio_km": {"x-visibilidad": "publico", "description": "Radio del lugar. Hasta 50 km una localidad, una instalación o una comunidad; un distrito (nivel distrito, cuando el mensaje no nombra un lugar más concreto) lleva su radio real, hasta unos 105 km en los distritos de 2020.", "type": "number", "exclusiveMinimum": 0, "maximum": 150}
       }

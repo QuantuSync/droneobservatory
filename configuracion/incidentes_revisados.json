@@ -12782,6 +12782,18 @@
       "enlace": "https://www.news.de/lokales/860172805/polizei-einsatz-sachsen-leipzig-kriminalitaet-heute-am-09-11-2026/1/",
       "pais": "DE",
       "motivo": "la pista norte se cerró media hora, según la policía; el control de las fichas lo leía de la misma frase y el cerrojo lo retenía cada hora desde el 10 de noviembre de 2026"
+    },
+    {
+      "incidente": "EODI-2025-00446",
+      "campo": "titulo",
+      "valor": {
+        "es": "Vecinos avisan de seis drones sobre la base aérea de Kleine-Brogel",
+        "en": "Residents report six drones over Kleine-Brogel air base"
+      },
+      "cita": "Burgers spotten dinsdag zes drones boven militaire luchtmachtbasis van Kleine-Brogel",
+      "enlace": "https://hbvl.be/regio/limburg/peer/burgers-spotten-dinsdag-zes-drones-boven-militaire-luchtmachtbasis-van-kleine-brogel-niet-meer-zichtbaar-bij-aankomst-politiehelikopter/102524895.html",
+      "pais": "BE",
+      "motivo": "la ficha es solo del martes 4 de noviembre de 2025 y su titular decía «durante tres noches», que sale de un resumen de las noches anteriores (defence-ua.com, «For three nights in a row»), que tienen sus fichas (EODI-2025-00131 y EODI-2025-00080); del martes, las fuentes cuentan los seis drones que vieron los vecinos (revisado el 10 de noviembre de 2026)"
     }
   ]
 }
