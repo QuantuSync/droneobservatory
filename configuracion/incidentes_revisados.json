@@ -4805,8 +4805,8 @@
       "inicio": {
         "valor": "2026-10-13T00:00Z",
         "precision": "dia",
-        "cita": "Mehrere Piloten meldeten am Flughafen in Nürnberg die Sichtung von Drohnen.",
-        "motivo": "merkur.de (13 de octubre de 2026): «in der Nacht auf Dienstag (13. Oktober)»; el inicio decía el 12, el día anterior al que escribe la fuente"
+        "cita": "Eine mögliche Drohnensichtung hat in den frühen Morgenstunden zu Störungen auf dem Flughafen Nürnberg geführt.",
+        "motivo": "el suceso empezó la madrugada del martes 13 de octubre de 2026: schwaebische.de, publicada ese día a las 10:45, «in den frühen Morgenstunden»; infranken.de, «am frühen Dienstagmorgen»; merkur.de, «in der Nacht auf Dienstag (13. Oktober)». La noche hacia el martes ya era martes cuando avisaron los pilotos: el día es el 13, no la víspera"
       },
       "presencia": {
         "valor": "no_confirmada",
@@ -8062,6 +8062,15 @@
       "motivo": {
         "es": "Dos sucesos distintos en el aeropuerto de Hannover-Langenhagen: el piloto que avisó de un dron el 17 de febrero de 2026 y los aviones que tuvieron que desviarse (neuepresse.de y haz.de, publicadas ese día), y el dron de la noche del 10 al 11 de agosto de 2026 que cerró las pistas (sueddeutsche.de). La segunda búsqueda del 2 de noviembre de 2026 llevó la nota de agosto a la ficha de febrero y la regla de fusión las juntó.",
         "en": "Two different events at Hannover-Langenhagen airport: the pilot who reported a drone on 17 February 2026 and the aircraft that had to turn away (neuepresse.de and haz.de, published that day), and the drone of the night of 10 to 11 August 2026 that closed the runways (sueddeutsche.de). The second search of 2 November 2026 took the August article to the February record and the merge rule joined them."
+      }
+    },
+    {
+      "incidentes": ["EODI-2026-00522", "EODI-2026-00130"],
+      "separado_de": "EODI-2026-00130",
+      "origen": "revisado",
+      "motivo": {
+        "es": "Dos sucesos de dos países: el dron derribado sobre Estonia el martes 19 de mayo de 2026 y la alerta del miércoles 20 en Lituania («Lithuania's president and prime minister were taken to safe locations Wednesday and residents of Vilnius were told to take shelter», cbc.ca). La alerta de Lituania se sacó de la ficha de Estonia el 13 de octubre de 2026 y volvió a quedar unida a ella; su ficha es EODI-2026-00057.",
+        "en": "Two events in two countries: the drone shot down over Estonia on Tuesday 19 May 2026 and the alert in Lithuania on Wednesday 20 («Lithuania's president and prime minister were taken to safe locations Wednesday and residents of Vilnius were told to take shelter», cbc.ca). The Lithuanian alert was taken out of the Estonian record on 13 October 2026 and ended up merged into it again; its record is EODI-2026-00057."
       }
     }
   ],
