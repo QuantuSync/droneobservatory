@@ -1014,10 +1014,17 @@ def cambios_sin_permiso(
     cambios: Iterable[Documento],
     permitidos: frozenset[tuple[str, str, str]],
     actuales: dict[str, Documento] | None = None,
+    primeras: dict[str, str] | None = None,
 ) -> list[str]:
     """X: «<id> <dato>» de los cambios guardados a algo protegido sin justificación apuntada
     (`permitidos`: (ficha, dato, huella) de las claves `permitido:`). Con el cerrojo en «aplicar»
     debe ser una lista vacía; cualquier otra cosa es un agujero.
+
+    Con `primeras` ({ficha: desde cuándo está publicada}, `Almacen.primeras_publicaciones`), un
+    cambio hecho antes de que la ficha saliera en la web se mira como lo miró el cerrojo: solo lo
+    que fija una revisión (`candidatos` con `publicada` falso). Sin esto, la corrección del filtro
+    de entrada a una ficha nueva contaba como cambio sin permiso y la puerta no la dejaba salir
+    en 48 horas (EODI-2026-00778, 11 de noviembre de 2026).
 
     Con `actuales` ({ficha: documento de ahora}), solo cuenta lo que la ficha aún tiene: no un
     cambio que otro posterior ya deshizo (una revisión, el control: EODI-2026-00719 y 00022, 3/11),
@@ -1034,7 +1041,10 @@ def cambios_sin_permiso(
         if not anterior or not nuevo or "id" not in anterior:
             continue
         id_ = str(anterior["id"])
-        for propuesto in candidatos(anterior, nuevo):
+        publicada = primeras is None or (
+            id_ in primeras and str(cambio.get("fecha") or "9") >= primeras[id_]
+        )
+        for propuesto in candidatos(anterior, nuevo, publicada):
             marca = huella(propuesto.dato, nuevo)
             al_empezar.setdefault((id_, propuesto.dato), huella(propuesto.dato, anterior))
             if (id_, propuesto.dato, marca) in permitidos:

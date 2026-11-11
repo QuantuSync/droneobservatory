@@ -461,6 +461,8 @@ def test_la_auditoria_real_marca_un_cambio_sin_permiso(en_observar: None) -> Non
     almacen.guardar_incidente(ficha(ID), AHORA, VOCABULARIO_MODELOS)
     documento = almacen.incidente(ID)
     assert documento is not None
+    # La ficha ya ha salido en la web: de una que sigue en el filtro, X no cuenta lo «con cita».
+    almacen.guardar_publicado(ID, puerta.PUBLICADA, "incidentes.geojson", {"id": ID}, {}, {}, "x")
     almacen.guardar_incidente(version_mala(documento, "drones"), AHORA, VOCABULARIO_MODELOS)
     assert "X" in puerta.marcadas(almacen, datetime.now(UTC)).get(ID, [])
     # Deshecho el cambio (una revisión, el control), ya no deja la ficha en su versión anterior.

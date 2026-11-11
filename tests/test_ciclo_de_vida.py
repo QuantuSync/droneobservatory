@@ -157,6 +157,37 @@ def test_en_el_filtro_solo_se_protege_lo_que_fija_una_revision(
     assert queda["tiempo"]["inicio"] == nueva["tiempo"]["inicio"]
 
 
+def test_la_correccion_del_filtro_no_es_un_cambio_sin_permiso() -> None:
+    # EODI-2026-00778 (11 de noviembre de 2026): el filtro de entrada corrigió una ficha nueva, el
+    # cerrojo no retuvo nada (no estaba publicada) y la auditoría X lo contaba como cambio sin
+    # permiso: la puerta no la habría dejado salir en 48 horas.
+    almacen = base(ficha())
+    almacen.guardar_cursor("control_fichas", {"vistos": {}})
+    guardado = almacen.incidente(ID)
+    assert guardado is not None and almacen.en_el_filtro(ID)
+    almacen.guardar_incidente(version_mala(guardado, "inicio"), AHORA, VOCABULARIO_MODELOS)
+    cambios = almacen.cambios_desde("2000-01-01T00:00:00Z")
+    permitidos = protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO))
+    assert almacen.primeras_publicaciones() == {}
+    # Como se miraba antes (siempre como publicada), era una X; mirado como el cerrojo, no.
+    assert protegido.cambios_sin_permiso(cambios, permitidos) == [f"{ID} inicio"]
+    assert protegido.cambios_sin_permiso(cambios, permitidos, None, {}) == []
+    assert puerta.marcadas(almacen, AHORA) == {}
+    # Publicada después de ese cambio, sigue sin contar; publicada desde antes, sí.
+    despues = {ID: "2999-01-01T00:00:00Z"}
+    assert protegido.cambios_sin_permiso(cambios, permitidos, None, despues) == []
+    assert protegido.cambios_sin_permiso(cambios, permitidos, None, {ID: ""}) == [f"{ID} inicio"]
+
+
+def test_las_publicadas_al_sembrar_cuentan_desde_siempre() -> None:
+    almacen = base(ficha())
+    almacen.guardar_publicado(ID, puerta.PUBLICADA, "incidentes.geojson", {"id": ID}, {}, {}, "a")
+    almacen.guardar_publicado(
+        OTRA, puerta.PUBLICADA, "incidentes.geojson", {"id": OTRA}, {}, {}, "b"
+    )
+    assert almacen.primeras_publicaciones() == {ID: "", OTRA: "b"}
+
+
 # --- Unir y deshacer ----------------------------------------------------------------------
 
 
