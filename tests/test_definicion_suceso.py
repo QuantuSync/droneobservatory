@@ -576,3 +576,20 @@ def test_la_ficha_de_lituania_sale_de_la_retirada_y_se_une_a_la_publicada() -> N
     )
     assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == []
     assert invariantes.uniones_de_sucesos_distintos(almacen) == []
+
+
+def test_la_ficha_que_vuelve_de_una_union_deshecha_pasa_otra_vez_por_el_filtro() -> None:
+    """EODI-2026-00779 tiene en el filtro la decisión «unida» (a EODI-2026-00778). Al deshacerse
+    esa unión vuelve a estar activa con las mismas fuentes: tiene que pasar otra vez por el
+    filtro, que es quien la une a la ficha de su suceso."""
+    from recogida import entrada
+
+    kaunas = suelta("2026-00779")
+    decision = {
+        "decision": entrada.UNIDA, "huella": entrada.huella(kaunas),
+        "conserva": "EODI-2026-00778", "une": "EODI-2026-00779",
+    }  # fmt: skip
+    assert entrada.vigente(decision, kaunas)
+    assert entrada.pendiente(decision, kaunas, AHORA)
+    # Una que el filtro dejó publicar y no ha cambiado, no.
+    assert not entrada.pendiente({**decision, "decision": entrada.PUBLICAR}, kaunas, AHORA)

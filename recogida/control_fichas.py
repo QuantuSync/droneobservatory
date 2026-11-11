@@ -576,6 +576,10 @@ def reaplicar_uniones(
             if "fusionado_en" not in une:
                 if motivo is None or not incidentes.activo(une):
                     continue
+                if suceso.veredicto_en(almacen, conserva, propio).relacion == suceso.DISTINTOS:
+                    # La unión se deshizo porque la definición las da por sucesos distintos: no
+                    # se rehace ni se apunta cada hora como propuesta.
+                    continue
                 if unir(almacen, conserva, propio, motivo, ahora, modelos) is not None:
                     rehechas += 1
                 continue
