@@ -99,9 +99,13 @@ rectificaciones, reglas), aplica el cerrojo y valida. Desde ahora, además:
 
 ## Unir, separar y deshacer
 
-- **Unir.** La unión guarda la instantánea de las dos fichas antes de unirse y la de la que queda
+- **Unir.** Qué fichas son el mismo suceso, cuál queda y de dónde sale su fecha lo dice la
+  definición de suceso ([`definicion_suceso.md`](definicion_suceso.md), `proceso/suceso.py`). La
+  unión guarda la instantánea de las dos fichas antes de unirse y la de la que queda
   justo después (tabla `fusiones`). Antes de intentarla se pregunta al cerrojo si la retendría
   (también en `revisar_fusiones` y en las uniones del control): lo que no va a pasar no se intenta.
+  La regla de fusión no une sola dos fichas que ya tienen su página en la web: eso lo decide
+  quien lee las fuentes.
 - **Deshacer una unión.** La absorbida vuelve con sus fuentes. La que queda pierde las fuentes y
   afirmaciones que la unión le trajo, y cada dato que la unión le copió (el día, el fin, la
   respuesta, la presencia, las pruebas, el cierre, los pasos del estado) vuelve a su valor de
@@ -132,6 +136,7 @@ en la CI (sobre la base de prueba y sobre los casos reales de `tests/`).
 | I3 | ningún dato revisado a mano distinto de su revisión | queda la última versión buena |
 | I4 | ninguna versión nueva igual a la anterior salvo la fecha | se cuenta (no se puede publicar mal por esto) |
 | I5 | ningún aviso con datos distintos de lo publicado | el aviso no sale |
+| I6 | ninguna unión vigente entre fichas que la definición de suceso da por distintos ([`definicion_suceso.md`](definicion_suceso.md)) | se cuenta y se avisa: `revisar_fusiones` tenía que haberla deshecho |
 
 Cada rotura queda en el cursor `invariantes` y llega como aviso privado, una vez por ficha e
 invariante.

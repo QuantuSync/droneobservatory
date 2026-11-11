@@ -415,7 +415,7 @@ en aa.com.tr), J no la ve: se corrige con una cita revisada y la revisión del i
   de estado y de presencia. La comprobación L avisa de una ficha sin ninguna autoridad que tenga
   alguna unida con ella.
 - **Queda el identificador más antiguo.** Entre dos fichas publicadas, queda la de un año anterior
-  antes que la de más fuentes (`incidentes.destino_de`): EODI-2025-00199 (Bruselas, 5 de diciembre
+  antes que la de más fuentes (`suceso.destino_de`): EODI-2025-00199 (Bruselas, 5 de diciembre
   de 2025) se había quedado dentro de EODI-2026-00094.
 - **El lugar revisado fija el punto.** Una revisión del lugar con la localidad y sin el punto deja
   el nivel y el punto de esa localidad (la del nomenclátor, si es una sola) cuando el que tenía la
@@ -561,7 +561,7 @@ En cada recogida horaria, después de las noticias retrospectivas y antes de pub
 nueva (activa y aún no publicada) que no tiene una decisión vigente para sus fuentes y su inicio
 (`huella`) pasa por el filtro:
 
-1. **Conjunto de comparación, sin mirar la distancia** (`entrada.conjunto`): las fichas activas de
+1. **Conjunto de comparación, sin mirar la distancia** (`suceso.conjunto`): las fichas activas de
    su país con el inicio de 30 días antes a 3 días después de su inicio o de su primera noticia.
    Si la ficha es de mar, de frontera o con el lugar a nivel de país o de región, también las de
    los países del mismo mar o vecinos (`MARES`, `VECINOS`). Si son más de 40, las del mismo tipo y
@@ -571,7 +571,8 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
    mismo suceso que una del conjunto (su id o «ninguna»), si cuenta otro día (fecha y frase), y la
    frase de la fuente que da la fecha, el lugar y cada autoridad con su país (o «no»).
 3. **Lo que se hace con la respuesta** (`entrada.decidir`, que comprueba cada frase en su fuente):
-   - mismo suceso: se une antes de publicar (queda la más antigua, `mas_antiguo`);
+   - mismo suceso: se une antes de publicar (queda la que ya está publicada y, si lo están las
+     dos o ninguna, la más antigua: `suceso.queda`);
    - otro día con frase: la ficha toma ese día y vuelve a pasar por el filtro (como mucho una vez);
    - fecha sin frase y la ficha con fecha aproximada: no se publica;
    - lugar sin frase: el lugar baja a nivel de país;
@@ -582,34 +583,30 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
      presencia de EODI-2026-00694 cambió cuatro veces en un día (auditoría K);
    - si duda, o falta una frase, se le vuelve a preguntar una vez con las fuentes de las
      candidatas más cercanas (`MAX_CANDIDATAS_CONTEXTO`);
-   - **fechas firmes** (`fecha_firme`: el día sale de una frase, no de la publicación): dos fichas
+   - **fechas firmes** (`suceso.fecha_firme`: el día sale de una frase, no de la publicación): dos fichas
      con fechas firmes a más de 2 días (`DIAS_FIRMES`) no se unen; se le vuelve a preguntar con
      las fuentes de la otra y, si insiste, la ficha se retiene para una revisión. Tampoco se cambia
      un día firme por otro a más de 2 días. En la prueba del 28 de octubre de 2026 el experto unía
      el ataque a buques del 12 de octubre (EODI-2026-00512) al del 6 (00489), tras moverlo al 6 por
      «o săptămână după ce atacurile au dus la scufundarea», que no da ningún día.
-   - **lo que nunca es el mismo suceso** (`entrada.nunca_el_mismo`, desde el 11 de noviembre de
-     2026), diga lo que diga el experto: dos fichas de **países distintos** si alguna cita a una
-     autoridad de su país (cada país cuenta su suceso; sin autoridad de ninguno de los dos, como
-     un buque en el mar, sigue decidiendo el experto), y dos fichas con notas de **la misma
-     autoridad que da sus alertas por zonas, de zonas distintas y a horas distintas**
-     (`proceso/alertas_zona.py`). Lo descartado queda en la decisión (`mismo_descartado`, con su
-     regla) y la ficha sigue por el filtro como un suceso propio. La medida a las 24 horas
-     tampoco une esos pares.
-   - **la nota de la noche y sus alertas son el mismo suceso** (`entrada.resumen_de_la_misma_noche`,
-     desde el 11 de noviembre de 2026, por la tarde): antes de preguntar, si la ficha nueva es la
-     nota con la que una autoridad que da sus alertas por zonas cuenta una noche (no nombra
-     ninguna zona y habla de «la noche»: «Naktī uz 11. novembri Latvijas gaisa telpā ielidoja
-     trīs bezpilota lidaparāti») y hay una ficha activa del mismo país con las alertas de esa
-     noche (su zona y su hora), o al revés, se unen sin preguntar y queda la más antigua. Si el
-     experto había dado el par por distinto en el control, la regla lo decide de nuevo como
-     «mismo» (una decisión nueva del par, con `regla`): ni `unir` ni el cerrojo unen un par que
-     sigue dado por distinto. El experto dio por distintas EODI-2026-00777 (las alertas letonas
-     de la noche del 10 al 11) y EODI-2026-00784 (la nota de la mañana siguiente) porque una
-     nombraba municipios y la otra, el país; con el desacuerdo ya sin retención, salieron las dos.
-     Dos alertas de zonas y horas distintas siguen siendo dos sucesos.
+   - **lo que nunca es el mismo suceso** (`suceso.nunca_el_mismo`), diga lo que diga el experto:
+     lo que la definición de suceso da por distintos con una regla firme
+     ([`definicion_suceso.md`](definicion_suceso.md)): una revisión que las separó, o dos fichas
+     de **países distintos** si alguna cita a una autoridad de su país (cada país cuenta su
+     suceso; sin autoridad de ninguno de los dos, como un buque en el mar, sigue decidiendo el
+     experto). Lo descartado queda en la decisión (`mismo_descartado`, con su regla) y la ficha
+     sigue por el filtro como un suceso propio. La medida a las 24 horas tampoco une esos pares.
+     Del 11 de noviembre de 2026 a las 12:04 hasta la definición hubo además una regla de zonas
+     («dos alertas de la misma autoridad en zonas distintas y a horas distintas nunca son el
+     mismo suceso») que partió en dos la noche del 10 al 11 en Letonia: se quitó.
+   - **la nota de la noche y sus alertas son el mismo suceso**: ya no es cosa del filtro. La
+     une la regla de fusión en cuanto nace la ficha (`suceso.veredicto`, regla 3), aunque el
+     experto hubiera dado el par por distinto: ni el control ni el filtro llegan a verla. El
+     experto dio por distintas EODI-2026-00777 (las alertas letonas de la noche del 10 al 11) y
+     EODI-2026-00784 (la nota de la mañana siguiente) porque una nombraba municipios y la otra,
+     el país; con el desacuerdo ya sin retención, salieron las dos.
    - **sin desacuerdos sin salida**: el conjunto no lleva las fichas que el experto ya dio por
-     distintas de la nueva en el control (`incidentes.distintos_del_experto`). Ninguna unión las
+     distintas de la nueva en el control (`suceso.distintos_del_experto`). Ninguna unión las
      junta (`control_fichas.unir`), así que, cuando el filtro decía «el mismo» viendo solo una
      línea de la otra, la ficha quedaba retenida como «propuesta para revisar» y, con las mismas
      fuentes, para siempre. Vale la comparación del control, que leyó las fuentes de las dos: la
@@ -649,7 +646,7 @@ Lo publicado antes del filtro no pasó por él. El mismo 28 de octubre de 2026 s
 publicados duplicados, fechas de noticias retrospectivas y una autoridad de otro país. El repaso
 (`recogida/repaso_entrada.py`) pasa cada ficha publicada por el experto como si fuera nueva:
 
-- el conjunto de comparación es el del filtro (`entrada.conjunto`);
+- el conjunto de comparación es el del filtro (`suceso.conjunto`);
 - la pregunta es la del filtro, con dos preguntas más:
   - ¿junta varios sucesos de días o lugares distintos, o es un resumen?
   - ¿hay un error en el número de drones, el tipo, el estado o la presencia, con su frase?

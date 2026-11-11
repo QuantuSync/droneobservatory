@@ -1139,7 +1139,9 @@ export const es: Textos = {
           {
             parrafo: [
               "Un episodio une los incidentes de dos o más objetivos del mismo país en la " +
-                "misma noche, de 16:00 a 06:00 UTC. En el mapa van unidos por una línea fina.",
+                "misma noche, de 16:00 a 06:00 UTC, y los de países vecinos cuando son el " +
+                "mismo dron o la misma oleada a los dos lados de la frontera: cada país " +
+                "tiene su incidente. En el mapa van unidos por una línea fina.",
             ],
           },
         ],

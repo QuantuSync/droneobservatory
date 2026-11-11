@@ -1,5 +1,9 @@
 # Sucesos mezclados
 
+Qué es un suceso, y cuándo dos fichas cuentan el mismo, está en
+[`definicion_suceso.md`](definicion_suceso.md) (desde el 11 de noviembre de 2026). Este documento
+cuenta cómo se separa a mano una ficha que junta dos y cuáles se separaron.
+
 Un incidente publicado tiene que contar un solo suceso. El 13 de octubre de 2026 se vio que
 EODI-2026-00072 juntaba el cierre del aeropuerto de Vilna del domingo 13 de septiembre de 2026
 (un posible dron que resultó ser una bandada de pájaros) y el derribo de un dron llegado de
@@ -70,11 +74,11 @@ aplica una vez, antes del extractor (`recogida/revisados.separar`, cursor
   Europa) sale del incidente con un candidato anotado como «no es un suceso», sin formar otro;
 - una fusión anterior cuyas fuentes son todas de otra parte se deshace (las revisadas a mano no);
 - una parte que es el mismo suceso que otra ficha se une a ella con la regla de siempre para
-  elegir cuál queda (`proceso/incidentes.destino_de`); su enlace lleva a la que queda;
+  elegir cuál queda (`proceso/suceso.destino_de`); su enlace lleva a la que queda;
 - las fichas que quedan se enlazan entre sí: campo público `relacionados` (esquema 1.18.0), que
   la web enseña como «Suceso relacionado» / «Related incident» con la nota del motivo;
 - con `"distintos": true` en la entrada de `separar`, la regla de fusión no vuelve a juntar las
-  fichas enlazadas por esa separación (`incidentes.encajan`) y `incidentes.revisar_fusiones`
+  fichas enlazadas por esa separación (`suceso.encajan`) y `incidentes.revisar_fusiones`
   deshace la que ya lo hizo. Solo con la marca: sin ella, `relacionados` enlaza también la parte
   que coincide con otra ficha (`coincide_con`) y los registros de una misma parte, que sí deben
   estar juntos. Desde el 19 de octubre de 2026, por el desvío del 19/10/2025 en Fuerteventura
@@ -92,14 +96,14 @@ unión automática solo les juntó las fuentes de una), no hace falta repartir: 
 - si una está unida en la otra, la unión se deshace (`incidentes.revertir`): vuelve con las
   fuentes que aportó y la otra las pierde;
 - las dos se enlazan como sucesos relacionados;
-- ninguna unión automática las vuelve a juntar: la regla de fusión (`incidentes.encajan`,
-  `incidentes.pares_distintos`), el control de las fichas, la segunda lectura y el filtro de
-  entrada (`proceso/control_fichas.separados`), y toda unión hecha con
+- ninguna unión automática las vuelve a juntar: la regla de fusión (`suceso.encajan`,
+  `suceso.pares_distintos`), el control de las fichas, la segunda lectura y el filtro de
+  entrada (`proceso/suceso.separados`), y toda unión hecha con
   `recogida/control_fichas.unir` (control, filtro de entrada, medida a las 24 horas, repaso de
   entrada, retrospectivas, uniones que se rehacen tras volver a extraer).
 
 Lo mismo vale para los pares que el **experto** dio por distintos en el control de las fichas
-(decisión escalada, `incidentes.distintos_del_experto`): no se vuelven a comparar aunque lleguen
+(decisión escalada, `suceso.distintos_del_experto`): no se vuelven a comparar aunque lleguen
 fuentes nuevas, la regla de fusión no los junta y `unir` no los une. No se enlazan en la web (el
 motivo del control habla de «ficha A» y «ficha B», no es un texto público). Si alguien pide unir
 un par así (el experto en el repaso, el filtro de entrada), la unión no se hace: queda como
@@ -245,7 +249,7 @@ ejército letón): la fecha toma el primer día que nombra la frase y la regla d
 que contaba los dos (EODI-2026-00757). Se separa con `coincide_con`: el martes es EODI-2026-00746
 (el dron que cayó cerca de Tilža). Desde entonces una frase de las fuentes con dos días de la
 semana unidos por una conjunción que no caben en una noche (`proceso/fechas.dias_distintos`)
-marca la ficha: el filtro de entrada la retiene sin preguntar al experto y la auditoría la cuenta en
+marca la ficha (`suceso.dos_dias_sin_revisar`): el filtro de entrada la retiene sin preguntar al experto y la auditoría la cuenta en
 la letra **AA** hasta que una revisión (una separación, «distintos» o el inicio revisado) dice a
 qué día va cada cosa. Una fecha escrita en la frase («donderdag 15 januari») o dos días sueltos
 («le detuvieron el lunes… este miércoles») no cuentan. Medido en todo el registro publicado el 6

@@ -1134,7 +1134,9 @@ export const en: Textos = {
           {
             parrafo: [
               "An episode links the incidents at two or more targets in the same country " +
-                "during the same night, from 16:00 to 06:00 UTC. On the map they are joined " +
+                "during the same night, from 16:00 to 06:00 UTC, and those in neighbouring " +
+                "countries when they are the same drone or the same wave on both sides of " +
+                "the border: each country has its own incident. On the map they are joined " +
                 "by a thin line.",
             ],
           },

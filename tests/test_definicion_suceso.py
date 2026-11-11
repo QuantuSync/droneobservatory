@@ -179,7 +179,7 @@ def test_la_hague_y_flamanville_un_solo_suceso() -> None:
 
 def test_nuremberg_la_madrugada_del_martes() -> None:
     """EODI-2026-00515: «in der Nacht auf Dienstag (13. Oktober)» (merkur.de), «Am Flughafen
-    Nürnberg ist es am frühen Dienstagmorgen (13. Oktober)» (infranken.de), «in den frühen
+    Nürnberg ist es am frühen Dienstagmorgen (13.…» (infranken.de), «in den frühen
     Morgenstunden» (schwaebische.de). El suceso empezó la madrugada del martes 13 de octubre de
     2026: ese es su día. Una ficha de esa misma noche fechada por la víspera no es otro
     suceso."""
