@@ -754,6 +754,24 @@
       ],
       "conserva": "EODI-2026-00777",
       "motivo": "el mismo suceso: la noche del 10 al 11 de noviembre de 2026 en Letonia. EODI-2026-00777 son las alertas que las Fuerzas Armadas letonas fueron dando por municipios (Ludza, Krāslava, Augšdaugava, Balvi) y EODI-2026-00784 es su nota de la mañana siguiente, que cuenta esa misma noche alerta por alerta: «Ņemot vērā naktī uz 11. novembri izziņotos šūnu apraides paziņojumus, informējam par incidentu norises gaitu.» (mil.lv, 11 de noviembre de 2026). El control las dio por distintas porque una nombraba municipios y la otra, el país (revisado el 11 de noviembre de 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00140",
+        "EODI-2026-00218"
+      ],
+      "conserva": "EODI-2026-00140",
+      "motivo": "el mismo suceso: el dron derribado por cazas de la OTAN sobre Letonia el viernes 14 de agosto de 2026, en la región de Balvi. EODI-2026-00218 son las noticias del 20 de agosto con la conclusión de las Fuerzas Armadas letonas: «Die am 14. August im lettischen Luftraum abgeschossene Drohne war ukrainischen Ursprungs.» (diepresse.com, 20 de agosto de 2026). Desde el 13 de octubre estaba unida a una ficha de Tulcea, en Rumanía (EODI-2026-00230), por la regla de fusión; la definición de suceso la saca de ahí (otro país) y su suceso es el de EODI-2026-00140 (revisado el 11 de noviembre de 2026)",
+      "motivo_en": "the same event: the drone shot down by NATO fighter jets over Latvia on Friday 14 August 2026, in the Balvi region. EODI-2026-00218 holds the 20 August reports with the Latvian armed forces' finding: «Die am 14. August im lettischen Luftraum abgeschossene Drohne war ukrainischen Ursprungs.» (diepresse.com, 20 August 2026). Since 13 October it had been merged into a record for Tulcea, Romania (EODI-2026-00230), by the merge rule; the definition of an event takes it out (another country) and its event is that of EODI-2026-00140 (reviewed on 11 November 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00057",
+        "EODI-2026-00522"
+      ],
+      "conserva": "EODI-2026-00057",
+      "motivo": "el mismo suceso: la alerta por un dron sobre Lituania del miércoles 20 de mayo de 2026, con el aeropuerto de Vilna cerrado. EODI-2026-00522 es la nota de cbc.ca de ese día: «Lithuania's president and prime minister were taken to safe locations Wednesday and residents of Vilnius were told to take shelter» (20 de mayo de 2026). Estaba unida a la ficha del dron derribado sobre Estonia el martes 19 (EODI-2026-00130), que es otro suceso de otro país (revisado el 11 de noviembre de 2026)",
+      "motivo_en": "the same event: the drone alert over Lithuania on Wednesday 20 May 2026, with Vilnius airport closed. EODI-2026-00522 is the cbc.ca report of that day: «Lithuania's president and prime minister were taken to safe locations Wednesday and residents of Vilnius were told to take shelter» (20 May 2026). It had been merged into the record of the drone shot down over Estonia on Tuesday 19 (EODI-2026-00130), a different event in a different country (reviewed on 11 November 2026)"
     }
   ],
   "reextraer": [
