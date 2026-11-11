@@ -114,7 +114,7 @@ La batería está en `tests/test_definicion_suceso.py`, con las fichas reales
 | EODI-2026-00778 | el resumen «Latvia and Lithuania» | ningún suceso: cada país tiene el suyo |
 | EODI-2026-00777, 00784 (Letonia) | las alertas por municipios y la nota de la noche | el mismo suceso |
 | EODI-2026-00218, 00230 | el dron derribado sobre Letonia el 14 de agosto, dentro de una ficha de Tulcea (Rumanía) | sucesos distintos; el de Letonia es EODI-2026-00140 |
-| EODI-2026-00515 (Núremberg) | «in der Nacht auf Dienstag (13. Oktober)», «am frühen Dienstagmorgen (13. Oktober)» | la madrugada del martes 13 de octubre |
+| EODI-2026-00515 (Núremberg) | «in der Nacht auf Dienstag (13. Oktober)», «am frühen Dienstagmorgen», «in den frühen Morgenstunden» | la madrugada del martes 13 de octubre |
 | EODI-2026-00739, 00719 (Iași) | una revista de prensa del día siguiente | el mismo suceso, del sábado 31 de octubre |
 | EODI-2026-00262 y 00636, 00527 y 00263, 00160 (Moldavia, 30 de septiembre) | tres drones el mismo día, cada uno con su hora y su comunicado | tres sucesos; cada par citado, el mismo |
 | EODI-2026-00544 y 00698, 00541, 00538 (Sulina, 14 de octubre) | un blanco a las 17:38, el petrolero hacia las 20:00 y un dron a la 01:34 | tres sucesos |
