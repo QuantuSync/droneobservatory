@@ -750,34 +750,11 @@ def resumen_json(datos: Any) -> str:
 
 # --- Noticias retrospectivas ---------------------------------------------------------------
 
-# Hasta dónde se buscan fichas anteriores de la misma instalación para una noticia fechada por su
-# publicación: la ventana de los pares (30 o 48 horas) no casa una noticia de octubre sobre el
-# ataque de agosto en Leipzig (EODI-2026-00499 con 00134) ni el hallazgo de Wunstorf contado una
-# semana después (00666 con 00276).
-DIAS_RETROSPECTIVA = 400
-MAX_CANDIDATAS_RETROSPECTIVA = 6
 _FECHA_RETROSPECTIVA = re.compile(r"^(\d{4})-(\d{2})(?:-(\d{2}))?$")
 
 
 def clave_retrospectiva(id_: str) -> str:
     return f"retrospectiva:{id_}"
-
-
-def previas_del_sitio(incidente: Documento, activos: list[Documento]) -> list[Documento]:
-    """Las fichas anteriores del mismo sitio (la misma instalación, o el mismo lugar sin
-    instalación), con su fecha comprobada, de más reciente a más antigua, sin ventana de días: las
-    que una noticia retrospectiva puede contar otra vez."""
-    inicio = instante(incidente)
-    desde = inicio - timedelta(days=DIAS_RETROSPECTIVA)
-    previas = [
-        d
-        for d in activos
-        if d["id"] != incidente["id"]
-        and suceso.fecha_verificada(d)
-        and desde <= instante(d) < inicio - timedelta(days=1)
-        and suceso.mismo_sitio(incidente, d)
-    ]
-    return sorted(previas, key=instante, reverse=True)[:MAX_CANDIDATAS_RETROSPECTIVA]
 
 
 def pide_fecha(incidente: Documento, activos: list[Documento]) -> str | None:
@@ -794,7 +771,7 @@ def pide_fecha(incidente: Documento, activos: list[Documento]) -> str | None:
         or not (incidente.get("objetivo") or {}).get("nombre")
     ):
         return None
-    if previas := previas_del_sitio(incidente, activos):
+    if previas := suceso.previas_del_sitio(incidente, activos):
         return f"ficha anterior del mismo sitio: {previas[0]['id']}"
     return None
 

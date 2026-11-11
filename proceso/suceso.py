@@ -1054,6 +1054,30 @@ def nota_posterior(documento: Documento) -> bool:
     return (publicada - suceso).days >= DIAS_NOTA_POSTERIOR
 
 
+# Una noticia retrospectiva puede contar otra vez un suceso del mismo sitio de hasta estos días
+# atrás; se comparan como mucho estas fichas, las más recientes.
+DIAS_RETROSPECTIVA = 400
+MAX_CANDIDATAS_RETROSPECTIVA = 6
+
+
+def previas_del_sitio(incidente: Documento, activos: list[Documento]) -> list[Documento]:
+    """Las fichas anteriores del mismo sitio (la misma instalación, o el mismo lugar sin
+    instalación), con su fecha comprobada, de más reciente a más antigua, sin ventana de días: las
+    que una noticia sobre un suceso anterior puede contar otra vez. Quien lee las fuentes dice si
+    es una de ellas (se une a su ficha) o si no se sabe de cuándo es (no crea ficha)."""
+    inicio = instante(incidente)
+    desde = inicio - timedelta(days=DIAS_RETROSPECTIVA)
+    previas = [
+        d
+        for d in activos
+        if d["id"] != incidente["id"]
+        and fecha_verificada(d)
+        and desde <= instante(d) < inicio - timedelta(days=1)
+        and mismo_sitio(incidente, d)
+    ]
+    return sorted(previas, key=instante, reverse=True)[:MAX_CANDIDATAS_RETROSPECTIVA]
+
+
 def mismo_suceso_posterior(registrado: Documento, nota: Documento) -> bool:
     """`nota` es una nota posterior (nota_posterior) que cuenta el suceso de `registrado`: el mismo
     país y el mismo tipo, el mismo día (misma_ventana), y la nota no da un sitio distinto: o no

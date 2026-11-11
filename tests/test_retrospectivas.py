@@ -14,7 +14,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
-from proceso import auditoria_fichas, fechas
+from proceso import auditoria_fichas, fechas, suceso
 from proceso import control_fichas as reglas
 from recogida import control_fichas
 from tests import ejemplos
@@ -82,7 +82,7 @@ def test_la_noticia_sin_palabra_del_pasado_pregunta_si_hay_ficha_anterior_del_si
     assert reglas.pide_fecha(nueva, [nueva]) is None
     # Wunstorf: el hallazgo del 15 de septiembre está a 200 m del Fliegerhorst, sin su nombre.
     wunstorf, otra = _ficha(WUNSTORF), _ficha("EODI-2026-00666")
-    assert reglas.previas_del_sitio(otra, [wunstorf, otra]) == [wunstorf]
+    assert suceso.previas_del_sitio(otra, [wunstorf, otra]) == [wunstorf]
     assert reglas.pide_fecha(otra, [wunstorf, otra]) is not None
 
 
