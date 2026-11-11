@@ -622,6 +622,8 @@ def fusionar(
             otro["id"]: suceso.veredicto(otro, incidente, del_experto)
             for otro in vivos.values()
             if otro["id"] != incidente["id"]
+            # Las reglas que unen sin preguntar son todas del mismo país.
+            and otro["lugar"]["pais"] == incidente["lugar"]["pais"]
             and (otro["tiempo"]["inicio"]["valor"], otro["id"])
             < (incidente["tiempo"]["inicio"]["valor"], incidente["id"])
         }
