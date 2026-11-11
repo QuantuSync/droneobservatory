@@ -1,6 +1,7 @@
 // Servidor local de web/dist que imita lo que hace el despliegue: aplica las redirecciones, las
 // cabeceras y las reescrituras de ../vercel.json, después de los ficheros como Vercel, lo que
-// decide la función del borde (../api/borde.ts, con la lista /rutas.json del build) y las
+// decide la función del borde (../api/borde.ts, con la lista /rutas.json del build: también el
+// 410 de una ficha retirada) y las
 // direcciones sin extensión. Sirve además el
 // recorte de teselas de desarrollo (../data/teselas, fuera de git) con peticiones Range.
 // Sirve para comprobar en un navegador real la política de seguridad antes de desplegar.
@@ -133,6 +134,14 @@ const servidor = createServer((peticion, respuesta) => {
       const decision: DecisionBorde = decidirBorde(ruta, borde, ataques);
       if (decision.tipo === "redirigir") {
         respuesta.writeHead(308, { Location: decision.destino }).end();
+        return;
+      }
+      if (decision.tipo === "retirada") {
+        // La página que explica la retirada, con su código.
+        const retirada = await resolver(decision.ruta);
+        respuesta.writeHead(410, { "Content-Type": "text/html; charset=utf-8" });
+        if (retirada === null) respuesta.end("410");
+        else createReadStream(retirada).pipe(respuesta);
         return;
       }
       fichero = decision.tipo === "portada" ? await resolver(decision.ruta) : null;

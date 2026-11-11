@@ -132,6 +132,9 @@ def test_un_incidente_de_ultramar_llega_al_mapa_y_a_los_avisos(
     assert esperado in config["paises"]
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_los_incidentes_guardados_con_el_pais_de_antes_pasan_al_suyo(almacen: Almacen) -> None:
     from recogida import suelo_europeo
 

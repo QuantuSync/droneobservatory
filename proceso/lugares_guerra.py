@@ -287,8 +287,11 @@ class Lugar:
     nombre_latino: str | None = None
     raion: str | None = None
     hromada: str | None = None
-    # La localidad con que se nombró la instalación, si fue así.
+    # La localidad con que se nombró la instalación, si fue así, y su nombre en alfabeto latino
+    # (el del nomenclátor): la web no enseña el cirílico ni lo transcribe, y sin él cada localidad
+    # nueva había que añadirla a mano a una tabla de la web (docs/ciclo_de_vida.md).
     localidad: str | None = None
+    localidad_latino: str | None = None
     oaci: str | None = None
 
     def documento(self) -> dict[str, Any]:
@@ -305,6 +308,8 @@ class Lugar:
             documento["categoria"] = self.categoria
             if self.localidad:
                 documento["localidad"] = self.localidad
+            if self.localidad and self.localidad_latino:
+                documento["localidad_latino"] = self.localidad_latino
         return documento
 
 
@@ -681,7 +686,9 @@ def _km(a: Lugar, b: Lugar) -> float:
 def _con_localidad(instalacion: Lugar, localidad: Lugar | None) -> Lugar:
     if localidad is None:
         return instalacion
-    return replace(instalacion, localidad=localidad.nombre)
+    return replace(
+        instalacion, localidad=localidad.nombre, localidad_latino=localidad.nombre_latino
+    )
 
 
 def raiz_administrativa(nombre: str) -> str:

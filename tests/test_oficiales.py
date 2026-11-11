@@ -33,6 +33,9 @@ def test_leer_rss() -> None:
     assert notas[0].fecha == datetime(2025, 9, 23, 6, tzinfo=UTC)
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_nota_confirma_el_incidente_que_le_corresponde() -> None:
     almacen = Almacen.abrir()
     id_ = extraer_ejemplo(almacen)
@@ -276,6 +279,9 @@ def _sin_punto(almacen: Almacen, id_: str, nuevo: str | None = None) -> str:
     return str(copia["id"])
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_nota_se_enlaza_a_la_ficha_que_solo_tiene_el_pais() -> None:
     almacen = Almacen.abrir()
     id_ = _sin_punto(almacen, str(extraer_ejemplo(almacen)))
@@ -380,6 +386,9 @@ def test_la_nota_con_solo_el_dia_se_guarda_en_su_ficha() -> None:
     assert incidente["fuentes"][-1]["fecha"] == {"valor": "2025-09-23T00:00Z", "precision": "dia"}
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_nota_que_entro_como_articulo_y_esta_citada_se_enlaza_con_sus_citas() -> None:
     # EODI-2026-00704 (29 de octubre de 2026): el estado y las afirmaciones citaban el artículo de
     # la nota; al cambiarlo por la fuente oficial, la ficha no cumplía el esquema.

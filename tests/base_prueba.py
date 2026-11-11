@@ -193,6 +193,7 @@ def impactos() -> list[Documento]:
     instalacion.pop("enlace_ataque")
     instalacion["lugar"].update(
         nivel="instalacion", categoria="subestacion", localidad="Харків",
+        localidad_latino="Kharkiv",
     )  # fmt: skip
     return [localidad, instalacion]
 

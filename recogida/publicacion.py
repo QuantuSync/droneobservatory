@@ -217,13 +217,16 @@ def incidentes_publicados(carpeta: Path) -> dict[str, list[str]]:
 
 
 def redirigidos(carpeta: Path) -> set[str]:
-    """Los identificadores unidos a otro que la web redirige a la ficha que queda («unidos»)."""
+    """Los identificadores cuya dirección lleva a algo sin ser una ficha publicada: los unidos a
+    otro, que la web redirige a la ficha que queda («unidos»), y los retirados con su motivo, cuya
+    dirección explica la retirada («retirados», docs/ciclo_de_vida.md)."""
     redirigen: set[str] = set()
     for nombre in FICHEROS_INCIDENTES:
         ruta = carpeta / nombre
         if ruta.exists():
-            unidos = json.loads(ruta.read_text(encoding="utf-8")).get("unidos") or {}
-            redirigen |= {str(i) for i in unidos}
+            datos = json.loads(ruta.read_text(encoding="utf-8"))
+            redirigen |= {str(i) for i in datos.get("unidos") or {}}
+            redirigen |= {str(i) for i in datos.get("retirados") or {}}
     return redirigen
 
 

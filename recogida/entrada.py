@@ -602,7 +602,15 @@ def filtrar(ctx: control_fichas.Contexto, vistos: set[str], plazo: Plazo | None 
         previa = ctx.decision(clave(id_))
         if not pendiente(previa, actual, ctx.ahora):
             continue
-        decision = pasar(experto, actual, previa)
+        try:
+            decision = pasar(experto, actual, previa)
+        except Exception as error:
+            # Cada ficha, aislada (docs/ciclo_de_vida.md): la que falla se queda sin decisión, y
+            # sin decisión no se publica; las de detrás siguen. Antes, una que fallaba dejaba sin
+            # pasar por el filtro a todas las siguientes de esa hora.
+            registro.exception("filtro de entrada %s: falla y sigue retenida", id_)
+            ctx.resultado.errores.append(f"filtro de entrada {id_}: {repr(error)[:150]}")
+            continue
         ctx.nuevas[clave(id_)] = decision
         pasadas += 1
         registro.info("filtro de entrada %s: %s%s", id_, decision["decision"],
@@ -710,16 +718,23 @@ def medir(ctx: control_fichas.Contexto, publicadas: dict[str, str],
             continue
         if medidas >= MAX_MEDIDAS_POR_PASADA:
             break
-        elegidas = conjunto(incidente, activos)
-        fuentes = control_fichas.fuentes_de_ficha(ctx.almacen, incidente, {})
-        cuerpo = peticiones.cuerpo_medida(reglas.vista(incidente), fuentes.bloques,
-                                          list(autoridades_de(incidente)),
-                                          [resumen(c) for c in elegidas])  # fmt: skip
-        leida = experto.llamar(cuerpo, peticiones.MAX_SALIDA_MEDIDA, clave_medida(id_))
-        if leida is None:
-            break
-        errores = comprobar_medida(leida, fuentes.comprobar, [c["id"] for c in elegidas])
-        hechos = corregir_medida(ctx, incidente, errores, elegidas) if errores else []
+        try:
+            elegidas = conjunto(incidente, activos)
+            fuentes = control_fichas.fuentes_de_ficha(ctx.almacen, incidente, {})
+            cuerpo = peticiones.cuerpo_medida(reglas.vista(incidente), fuentes.bloques,
+                                              list(autoridades_de(incidente)),
+                                              [resumen(c) for c in elegidas])  # fmt: skip
+            leida = experto.llamar(cuerpo, peticiones.MAX_SALIDA_MEDIDA, clave_medida(id_))
+            if leida is None:
+                break
+            errores = comprobar_medida(leida, fuentes.comprobar, [c["id"] for c in elegidas])
+            hechos = corregir_medida(ctx, incidente, errores, elegidas) if errores else []
+        except Exception as error:
+            # Cada ficha, aislada: la medida de una que falla no corta las demás.
+            registro.exception("medida a las 24 horas %s: falla y se salta", id_)
+            ctx.resultado.errores.append(f"medida a las 24 horas {id_}: {repr(error)[:150]}")
+            activos = _activos(ctx.almacen)
+            continue
         ctx.nuevas[clave_medida(id_)] = {
             "version": peticiones.VERSION_MEDIDA, "fecha": _iso(ctx.ahora), "publicada": cuando,
             "errores": errores, "corregido": hechos, "motivo_es": leida.get("motivo_es", ""),

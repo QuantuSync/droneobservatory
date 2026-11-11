@@ -92,6 +92,9 @@ def test_el_control_no_vuelve_a_comparar_lo_que_el_experto_dio_por_distinto() ->
     assert control_fichas.pares_por_decidir(ctx, {VIEJO, NUEVO}) == []
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_union_hecha_se_deshace_y_quedan_relacionadas(revisados_distintos: None) -> None:
     almacen = _base(_nuremberg_alemana(), _nuremberg_griega())
     viejo, nuevo = almacen.incidente(VIEJO), almacen.incidente(NUEVO)

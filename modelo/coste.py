@@ -7,8 +7,10 @@ descuento de los lotes.
 Límites, compartidos por todo lo que llama al extractor:
 - 5 dólares para todo el histórico (modo «historico»);
 - 0,30 dólares al día para la recogida horaria (modo «horario»);
-- 5 dólares para la revisión de todo lo publicado con las reglas de calidad de los
-  datos (modo «revision», `python -m recogida.extractor revision`);
+- 0,50 dólares al día para las revisiones a mano que vuelven a extraer (modo «revision»: las
+  partes de una separación, `recogida/revisados.py`, y `python -m recogida.extractor revision`).
+  Hasta el 10 de noviembre de 2026 eran 5 dólares de por vida: al agotarse, las separaciones
+  habrían dejado de extraer sus partes para siempre;
 - 3 dólares para el histórico de las fuentes oficiales de detalle (modo «detalle»,
   `python -m recogida.detalle historico`), por lotes.
 - 0,20 dólares al día para los mensajes de la capa de guerra que el código no resuelve
@@ -82,7 +84,7 @@ from modelo import modelos
 DESCUENTO_LOTE = modelos.DESCUENTO_LOTE
 LIMITE_HISTORICO_USD = 5.00
 LIMITE_DIARIO_USD = 0.30
-LIMITE_REVISION_USD = 5.00
+LIMITE_REVISION_DIARIO_USD = 0.50
 # Histórico de las fuentes oficiales de detalle (respuestas parlamentarias, informes de
 # investigación, sentencias), procesado una sola vez por lotes: presupuesto propio, aparte del
 # límite diario. Lo nuevo de cada día entra en el límite diario de la recogida horaria.
@@ -476,7 +478,7 @@ def limite(modo: Modo) -> float:
     return {
         Modo.HORARIO: LIMITE_DIARIO_USD,
         Modo.HISTORICO: LIMITE_HISTORICO_USD,
-        Modo.REVISION: LIMITE_REVISION_USD,
+        Modo.REVISION: LIMITE_REVISION_DIARIO_USD,
         Modo.DETALLE: LIMITE_DETALLE_USD,
         Modo.GUERRA: LIMITE_GUERRA_DIARIO_USD,
         Modo.GUERRA_HISTORICO: LIMITE_GUERRA_HISTORICO_USD,
@@ -498,8 +500,18 @@ def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
     return modo in {
         Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA,
-        Modo.SEGUNDA_BUSQUEDA, Modo.ENTRADA,
+        Modo.SEGUNDA_BUSQUEDA, Modo.ENTRADA, Modo.REVISION,
     }  # fmt: skip
+
+
+# Los modos del extractor de noticias (proceso/extraccion.extraer) cuyo gasto se cuenta por día.
+EXTRACCION_POR_DIA = frozenset({Modo.HORARIO, Modo.REVISION})
+
+
+def dia_del_gasto(modo: Modo, ahora: datetime) -> str | None:
+    """El día (UTC) en que se cuenta lo gastado por el extractor de noticias en ese modo, o None
+    si su límite es de una sola vez."""
+    return dia(ahora) if modo in EXTRACCION_POR_DIA else None
 
 
 def limite_de_hoy(modo: Modo, mes: Mes | None = None) -> float:

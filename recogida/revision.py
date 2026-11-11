@@ -81,7 +81,7 @@ class Prevision:
 
     @property
     def cabe(self) -> bool:
-        return self.total <= coste.LIMITE_REVISION_USD
+        return self.total <= coste.LIMITE_REVISION_DIARIO_USD
 
 
 def estimar(
@@ -111,7 +111,8 @@ def estimar(
         medio_directo=medio,
         restantes=restantes,
         lote=medio * coste.DESCUENTO_LOTE * restantes,
-        gastado=almacen.gastado(coste.Modo.REVISION.value),
+        # El límite es diario: cuenta lo gastado hoy (UTC).
+        gastado=almacen.gastado(coste.Modo.REVISION.value, coste.dia(datetime.now(UTC))),
     )
 
 
@@ -367,7 +368,7 @@ def orden(
         if not prevision.cabe:
             registro.error(
                 "el lote no cabe en el límite: %.4f > %.2f USD; no se envía",
-                prevision.total, coste.LIMITE_REVISION_USD,
+                prevision.total, coste.LIMITE_REVISION_DIARIO_USD,
             )  # fmt: skip
             return 1
     pendientes = sorted(candidatos(almacen), key=lambda c: c["id"])

@@ -579,7 +579,15 @@ const coleccion = objeto(
     type: constante("FeatureCollection"),
     features: lista(featureIncidente),
   },
-  { unidos: diccionario(cadena(v.PATRON_ID_INCIDENTE), cadena(v.PATRON_ID_INCIDENTE)), licencia: licenciaPublicada },
+  {
+    unidos: diccionario(cadena(v.PATRON_ID_INCIDENTE), cadena(v.PATRON_ID_INCIDENTE)),
+    // Las fichas que estuvieron publicadas y se retiraron: cuándo y por qué, en los dos idiomas.
+    retirados: diccionario(
+      cadena(v.PATRON_ID_INCIDENTE),
+      objeto({ fecha: cadena(v.PATRON_INSTANTE), motivo: objeto({ es: cadena(), en: cadena() }) }),
+    ),
+    licencia: licenciaPublicada,
+  },
 );
 
 const regionAtaque = objeto(
@@ -709,6 +717,7 @@ const impactoGuerra = objeto(
         nombre_latino: cadena(),
         categoria: enumerado(v.CATEGORIAS_INSTALACION),
         localidad: cadena(),
+        localidad_latino: cadena(),
       },
     ),
     impacto: enumerado(v.TIPOS_IMPACTO),

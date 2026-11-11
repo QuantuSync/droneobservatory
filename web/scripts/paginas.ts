@@ -2,9 +2,9 @@
 // línea (la política de seguridad solo admite scripts de este sitio) y escribir todas las
 // páginas con su contenido en texto (src/texto/paginas.ts): la portada y cada incidente con el
 // mapa encima, y las listas, los países, la guerra en Ucrania, la metodología y la ayuda como
-// texto. Además, el sitemap, llms.txt, la página 404 y la lista que lee la función del borde
-// (../../api/borde.ts): las redirecciones de los incidentes unidos a otro y los ataques que
-// existen. Todo sale de los datos publicados: con cada actualización de los datos se
+// texto. Además, el sitemap, llms.txt, la página 404, la página de cada ficha retirada y la lista
+// que lee la función del borde (../../api/borde.ts): las redirecciones de los incidentes unidos a
+// otro, las fichas retiradas y los ataques que existen. Todo sale de los datos publicados: con cada actualización de los datos se
 // vuelve a construir la web y las páginas quedan al día.
 
 import { createHash } from "node:crypto";
@@ -25,7 +25,7 @@ import type { Idioma } from "../src/sitio.ts";
 import { e, html } from "../src/texto/html.ts";
 import { jsonLd, marco, paginas } from "../src/texto/paginas.ts";
 import type { PaginaTexto } from "../src/texto/paginas.ts";
-import { llmsTxt, noEncontrada, redirecciones, sitemap } from "../src/texto/salidas.ts";
+import { llmsTxt, noEncontrada, redirecciones, retirada, retiradas, rutaDeRetirada, sitemap } from "../src/texto/salidas.ts";
 import { escribirImagenes } from "./imagenes.ts";
 import { escribirQrAvisos } from "./qr-avisos.ts";
 
@@ -98,6 +98,7 @@ function cabeceraDe(pagina: PaginaTexto) {
     rutas: pagina.rutas,
     ...(pagina.imagen !== undefined ? { imagen: pagina.imagen } : {}),
     precargas: pagina.conMapa ? ["/datos/resumen.json", ...(ficha === undefined ? [] : [`/datos/incidentes/${ficha}.json`])] : [],
+    ...(pagina.sinIndexar === true ? { sinIndexar: true } : {}),
   };
 }
 
@@ -149,7 +150,7 @@ async function leerJson<T>(ruta: string): Promise<T> {
   return JSON.parse(await readFile(ruta, "utf-8")) as T;
 }
 
-/** Último paso del build: todas las páginas, el sitemap, llms.txt, la 404 y la lista del borde. */
+/** Último paso del build: las páginas, el sitemap, llms.txt, la 404, las retiradas y la lista del borde. */
 export async function terminarPaginas(carpeta: string): Promise<void> {
   const resumen = await leerJson<Resumen>(join(DATOS, "resumen.json"));
   const ucrania = await leerJson<ResumenUcrania>(join(DATOS, "ucrania-resumen.json"));
@@ -194,8 +195,23 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   // Lo que lee la función del borde: una regla para todos los unidos en los dos idiomas (sin
   // gastar capacidad de redirecciones de Vercel) y los ataques que existen (los demás, 404).
   const lista = redirecciones(coleccion.unidos ?? {}, publicados);
+  // Las fichas retiradas: su página en cada idioma, en una dirección aparte (la de la ficha no es
+  // un fichero: la función del borde responde en ella con esta página y el código 410). No van al
+  // sitemap.
+  const retirados = coleccion.retirados ?? {};
+  const listaRetiradas = retiradas(retirados, publicados);
+  for (const [id, detalle] of Object.entries(retirados)) {
+    if (publicados.has(id)) continue;
+    for (const idioma of IDIOMAS) {
+      const plantilla = plantillas.get(idioma);
+      if (plantilla === undefined) throw new Error(`sin portada en ${idioma}`);
+      const contenido = paginaSoloTexto(plantilla, retirada(id, detalle, idioma), resumen.actualizado);
+      await escribirPagina(carpeta, rutaDeRetirada(id, idioma), contenido);
+    }
+  }
   const borde: RutasBorde = {
     redirecciones: Object.fromEntries(lista.map((r) => [r.source, r.destination])),
+    retiradas: Object.fromEntries(listaRetiradas.map((r) => [r.source, r.destination])),
     ataques: ucrania.ataques.map((a) => a[0]),
   };
   await writeFile(join(carpeta, RUTA_LISTA_BORDE.slice(1)), JSON.stringify(borde), "utf-8");
@@ -207,7 +223,8 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   const fichas = resumen.incidentes.length * IDIOMAS.length;
   console.log(
     `páginas: ${todas.length} (${fichas} de incidentes) en ${IDIOMAS.length} idiomas; ` +
-      `${lista.length} redirecciones de incidentes unidos y ${borde.ataques.length} ataques en ` +
+      `${lista.length} redirecciones de incidentes unidos, ${listaRetiradas.length} páginas de fichas ` +
+      `retiradas y ${borde.ataques.length} ataques en ` +
       `${RUTA_LISTA_BORDE}; ejemplo ${rutaDeFicha(resumen.incidentes[0]?.id ?? "", "es")}`,
   );
 }

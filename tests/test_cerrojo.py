@@ -359,7 +359,10 @@ def _pasada(almacen: Almacen) -> None:
     almacen.registrar_fusion("2026-10-13T14:17Z", "EODI-2026-09601", "EODI-2026-09600", "x", [])
 
 
-def test_en_observar_la_base_queda_como_sin_cerrojo(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_en_observar_la_base_queda_como_sin_cerrojo(
+    monkeypatch: pytest.MonkeyPatch,
+    cerrojo_en_observar: None,
+) -> None:
     def montar() -> Almacen:
         almacen = base(ficha(), ficha("EODI-2026-09601"))
         distinto_del_experto(almacen, "EODI-2026-09600", "EODI-2026-09601")
@@ -377,8 +380,9 @@ def test_en_observar_la_base_queda_como_sin_cerrojo(monkeypatch: pytest.MonkeyPa
 
 
 def test_la_configuracion_tiene_un_modo_valido() -> None:
-    # Las pruebas van en «observar» (tests/conftest.py); el fichero dice el modo de verdad.
-    assert protegido.modo() == protegido.OBSERVAR
+    # Las pruebas van en «aplicar», como producción (tests/conftest.py); el fichero dice el modo
+    # de verdad.
+    assert protegido.modo() == protegido.APLICAR
     modo = json.loads(protegido.CONFIGURACION.read_text(encoding="utf-8"))["modo"]
     assert modo in (protegido.OBSERVAR, protegido.APLICAR)
     assert protegido.modo(protegido.CONFIGURACION) == modo
@@ -500,6 +504,7 @@ def test_una_regla_no_funde_una_ficha_manual(
 
 def test_en_observar_la_union_de_una_manual_se_apunta_y_no_cambia_nada(
     monkeypatch: pytest.MonkeyPatch,
+    cerrojo_en_observar: None,
 ) -> None:
     _manual(monkeypatch)
     almacen = _dos_fichas()
@@ -558,7 +563,10 @@ def test_la_regla_de_fusion_no_intenta_la_union_que_el_cerrojo_retiene(
     assert not almacen.controles("retenido:")
 
 
-def test_en_observar_la_regla_de_fusion_si_une_la_manual(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_en_observar_la_regla_de_fusion_si_une_la_manual(
+    monkeypatch: pytest.MonkeyPatch,
+    cerrojo_en_observar: None,
+) -> None:
     _manual(monkeypatch)
     almacen = _dos_fichas()
     assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS, frozenset({OTRA})) == 1
@@ -582,7 +590,7 @@ def test_una_regla_no_reabre_una_ficha_fundida(aplicar: None) -> None:
     assert [d["dato"] for d in apunte.values()] == ["reapertura"]
 
 
-def test_en_observar_la_reapertura_se_apunta_y_no_cambia_nada() -> None:
+def test_en_observar_la_reapertura_se_apunta_y_no_cambia_nada(cerrojo_en_observar: None) -> None:
     almacen = _fundida()
     incidentes.revertir(almacen, OTRA, AHORA, VOCABULARIO_MODELOS)
     assert "fusionado_en" not in (almacen.incidente(OTRA) or {})
@@ -677,6 +685,7 @@ def test_si_el_cerrojo_falla_en_aplicar_retiene_y_se_cuenta(
 
 def test_si_el_cerrojo_falla_en_observar_la_escritura_pasa_y_se_cuenta(
     monkeypatch: pytest.MonkeyPatch,
+    cerrojo_en_observar: None,
 ) -> None:
     monkeypatch.setattr(protegido, "modo", lambda: protegido.OBSERVAR)
     almacen = base(ficha())
@@ -752,6 +761,7 @@ def _cambios(almacen: Almacen) -> list[Documento]:
 
 def test_x_cuenta_lo_guardado_sin_permiso_y_vale_0_en_aplicar(
     monkeypatch: pytest.MonkeyPatch,
+    cerrojo_en_observar: None,
 ) -> None:
     observado = base(ficha())
     guardado = observado.incidente("EODI-2026-09600")
@@ -781,7 +791,7 @@ def test_x_no_cuenta_lo_permitido(aplicar: None) -> None:
     assert resultado["X"] == [] and "X" in auditoria_fichas.NOMBRES
 
 
-def test_el_estado_del_control_lleva_el_cerrojo() -> None:
+def test_el_estado_del_control_lleva_el_cerrojo(cerrojo_en_observar: None) -> None:
     almacen = base(ficha())
     guardado = almacen.incidente("EODI-2026-09600")
     assert guardado is not None
@@ -990,7 +1000,10 @@ def test_rehacer_no_deja_filas_revertidas_con_fichas_fundidas(
     assert almacen.controles(f"retenido:{fundida}:reapertura:{destino}")
 
 
-def test_rehacer_en_observar_abre_y_revierte(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_rehacer_en_observar_abre_y_revierte(
+    monkeypatch: pytest.MonkeyPatch,
+    cerrojo_en_observar: None,
+) -> None:
     from recogida import revision
 
     almacen, fundida, _ = _fundida_en_manual(monkeypatch)

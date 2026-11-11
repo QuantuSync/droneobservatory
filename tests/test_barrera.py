@@ -9,6 +9,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from almacen.base import Almacen
 from exportacion import geojson
 from proceso import cita_titular, incidentes
@@ -71,6 +73,9 @@ def _publicable(almacen: Almacen) -> bool:
 
 
 # --- La barrera ampliada ----------------------------------------------------------------------
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_cita_sin_lugar_y_titular_del_articulo_que_lo_nombra_publica() -> None:
     almacen = _base(_leknes(), (NRK, TITULAR + " ᐉ Nyheter fra NRK"))
     assert not _publicable(almacen)
@@ -131,6 +136,9 @@ def test_titular_limpio() -> None:
 
 
 # --- Resolución a las 6 horas -----------------------------------------------------------------
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_a_solo_respalda_el_pais_se_publica_a_nivel_de_pais() -> None:
     # Sin región en el lugar: «Troms» sitúa en Noruega, no en el aeropuerto de Leknes.
     almacen = _base(_leknes(region=False), (NRK, "Fem ulovlige droner tatt i Troms"))
@@ -159,6 +167,9 @@ def test_a_solo_respalda_el_pais_se_publica_a_nivel_de_pais() -> None:
     assert almacen.incidente(ID) == despues
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_a_vuelve_a_aplicarse_si_una_extraccion_nueva_lo_rehace() -> None:
     almacen = _base(_leknes(region=False), (NRK, "Fem ulovlige droner tatt i Troms"))
     barrera.revisar(almacen, ALTA, VOCABULARIO_MODELOS)
@@ -168,6 +179,9 @@ def test_a_vuelve_a_aplicarse_si_una_extraccion_nueva_lo_rehace() -> None:
     assert hecho.a_pais == [ID] and len(hecho.resoluciones) == 1 and _publicable(almacen)
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_b_ningun_texto_respalda_el_pais_se_descarta_con_el_motivo() -> None:
     almacen = _base(_leknes(), (NRK, "Tok fem ulovlige droner"))
     barrera.revisar(almacen, ALTA, VOCABULARIO_MODELOS)

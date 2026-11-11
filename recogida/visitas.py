@@ -815,7 +815,7 @@ def lineas_cerrojo(cerrojo: Documento | None) -> list[str]:
     fallidos = list(cerrojo.get("guardados_fallidos") or [])
     lineas.append(f"  Guardados fallidos de fichas publicadas: {len(fallidos)}")
     lineas += [f"  - {f}" for f in fallidos[:LIMITE]]
-    # La red de la publicación (exportacion/version_buena.py).
+    # La red de la publicación (exportacion/puerta.py).
     anteriores = list(cerrojo.get("version_anterior") or [])
     lineas.append(f"  Fichas publicadas en su versión anterior: {len(anteriores)}")
     lineas += [f"  - {f}" for f in anteriores[:LIMITE]]

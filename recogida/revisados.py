@@ -230,6 +230,7 @@ def unir_grupo(
         almacen.registrar_fusion(
             ahora.strftime("%Y-%m-%dT%H:%MZ"), fundido["id"], destino["id"],
             incidentes.PREFIJO_REVISADA + motivo, aportadas,
+            incidentes.instantanea(almacen, destino, vivos[fundido["id"]]),
         )  # fmt: skip
     return len(fundidos)
 
@@ -1577,15 +1578,23 @@ def unir_coincidentes(almacen: Almacen, ahora: datetime, modelos: frozenset[str]
     siguiente. Devuelve cuántos registros funde."""
     unidos = 0
     for revision in cargar().get("separar", []):
-        hecho = almacen.cursor(CURSOR_SEPARAR + revision["incidente"])
-        if hecho is None:
-            continue
-        queda = conservada(revision)
-        for n, (parte, entrada) in enumerate(zip(revision["partes"], hecho["partes"], strict=True)):
-            if not parte.get("es_suceso", True):
+        try:
+            hecho = almacen.cursor(CURSOR_SEPARAR + revision["incidente"])
+            if hecho is None:
                 continue
-            ids = _ids_de_parte(almacen, revision, entrada, n == queda)
-            unidos += _unir_coincidente(almacen, revision, parte, ids, ahora, modelos, n != queda)
+            queda = conservada(revision)
+            for n, (parte, entrada) in enumerate(
+                zip(revision["partes"], hecho["partes"], strict=True)
+            ):
+                if not parte.get("es_suceso", True):
+                    continue
+                ids = _ids_de_parte(almacen, revision, entrada, n == queda)
+                unidos += _unir_coincidente(
+                    almacen, revision, parte, ids, ahora, modelos, n != queda
+                )
+        except Exception:
+            # Cada separación, aislada: la que falla queda en el registro y no corta las demás.
+            registro.exception("separación de %s sin aplicar", revision.get("incidente"))
     return unidos
 
 
@@ -1692,23 +1701,29 @@ def separar(
                         "nota": nota,
                     }
     for par in cargar().get("distintos", []):
-        # Dos fichas que una revisión dio por sucesos distintos: relacionadas entre sí, y así
-        # ninguna unión automática las junta (incidentes.separados_por_revision). Si una ya está
-        # unida en la otra, la unión se deshace: vuelve con sus fuentes.
-        for id_ in par["incidentes"]:
-            documento = almacen.incidente(id_)
-            if documento is not None and documento.get("fusionado_en") in par["incidentes"]:
-                incidentes.revertir(almacen, id_, ahora, modelos)
-        vivos = [d["id"] for d in (_vivo(almacen, i) for i in par["incidentes"]) if d is not None]
-        if len(set(vivos)) != len(par["incidentes"]):
-            continue
-        nota = {"es": par["motivo"]["es"], "en": par["motivo"]["en"]}
-        for uno in vivos:
-            for otro in vivos:
-                if otro != uno:
-                    relaciones.setdefault(uno, {})[otro] = {
-                        "id": otro, "separado_de": par["separado_de"], "nota": nota,
-                    }  # fmt: skip
+        try:
+            # Dos fichas que una revisión dio por sucesos distintos: relacionadas entre sí, y así
+            # ninguna unión automática las junta (incidentes.separados_por_revision). Si una ya está
+            # unida en la otra, la unión se deshace: vuelve con sus fuentes.
+            for id_ in par["incidentes"]:
+                documento = almacen.incidente(id_)
+                if documento is not None and documento.get("fusionado_en") in par["incidentes"]:
+                    incidentes.revertir(almacen, id_, ahora, modelos)
+            vivos = [
+                d["id"] for d in (_vivo(almacen, i) for i in par["incidentes"]) if d is not None
+            ]
+            if len(set(vivos)) != len(par["incidentes"]):
+                continue
+            nota = {"es": par["motivo"]["es"], "en": par["motivo"]["en"]}
+            for uno in vivos:
+                for otro in vivos:
+                    if otro != uno:
+                        relaciones.setdefault(uno, {})[otro] = {
+                            "id": otro, "separado_de": par["separado_de"], "nota": nota,
+                        }  # fmt: skip
+        except Exception:
+            # Cada par, aislado: el que falla queda en el registro y no corta los demás.
+            registro.exception("distintos %s sin aplicar", par.get("incidentes"))
     hechos.relacionados = _enlazar(almacen, relaciones, ahora, modelos)
     registro.info("sucesos mezclados: %s", hechos.texto())
     return hechos

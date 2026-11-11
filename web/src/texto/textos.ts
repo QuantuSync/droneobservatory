@@ -126,6 +126,8 @@ export interface TextosPagina {
   metodologia: { titulo: string; descripcion: string; indice: string; citarConDoi: string };
   ayuda: { titulo: string; descripcion: string; atajos: string; tecla: string; accion: string };
   noEncontrada: { titulo: string; texto: string; volver: string };
+  /** La página de una ficha retirada; `texto` recibe la fecha de la retirada ya escrita. */
+  retirada: { titulo: string; texto: (fecha: string) => string; motivo: string; volver: string };
 }
 
 const ES: TextosPagina = {
@@ -299,6 +301,12 @@ const ES: TextosPagina = {
     texto: "Esta dirección no existe en el observatorio.",
     volver: "Ir a la portada",
   },
+  retirada: {
+    titulo: "Ficha retirada",
+    texto: (fecha) => `Esta ficha se publicó en el observatorio y se retiró el ${fecha}.`,
+    motivo: "Motivo",
+    volver: "Ir a la portada",
+  },
 };
 
 const EN: TextosPagina = {
@@ -469,6 +477,12 @@ const EN: TextosPagina = {
   noEncontrada: {
     titulo: "Page not found",
     texto: "This address does not exist in the observatory.",
+    volver: "Go to the home page",
+  },
+  retirada: {
+    titulo: "Record withdrawn",
+    texto: (fecha) => `This record was published by the observatory and was withdrawn on ${fecha}.`,
+    motivo: "Reason",
     volver: "Go to the home page",
   },
 };

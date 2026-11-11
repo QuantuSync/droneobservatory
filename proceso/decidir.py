@@ -377,6 +377,61 @@ def con_revisiones(id_: str) -> bool:
     return bool(_datos_revisados(id_))
 
 
+def distinto_de_su_revision(incidente: Documento) -> list[str]:
+    """Los datos de la ficha que una revisión a mano fija y que la ficha tiene con otro valor
+    (docs/ciclo_de_vida.md, invariante I3): lo que saldría distinto si se volviera a decidir. Una
+    ficha recién guardada no tiene ninguno; si lo tiene, algo escribió por fuera del guardado o la
+    revisión no se pudo aplicar."""
+    revisiones = _revisiones(incidente)
+    distintos: list[str] = []
+    decidido = copy.deepcopy(incidente)
+    for campo in ("lugar", "inicio", "cierre", "danos"):
+        if campo in revisiones:
+            _con_revision(decidido, campo, revisiones[campo])
+    if "lugar" in revisiones and decidido.get("lugar") != incidente.get("lugar"):
+        distintos.append("lugar")
+    if "inicio" in revisiones and (decidido.get("tiempo") or {}).get("inicio") != (
+        incidente.get("tiempo") or {}
+    ).get("inicio"):
+        distintos.append("inicio")
+    if "inicio" not in revisiones:
+        # El inicio revisado en «titulares» (el día o la hora que escribe una fuente, con su cita):
+        # el de EODI-2026-00622, el 18 de septiembre, que una relectura cambiaba por la fecha de
+        # publicación.
+        from recogida import revisados
+
+        fijado = revisados.inicios_revisados().get(str(incidente.get("id")))
+        inicio = (incidente.get("tiempo") or {}).get("inicio") or {}
+        if fijado is not None and any(
+            inicio.get(c) != fijado.get(c) for c in ("valor", "precision") if c in fijado
+        ):
+            distintos.append("inicio")
+    for campo in ("cierre", "danos"):
+        if campo in revisiones and (decidido.get("consecuencias") or {}).get(campo) != (
+            incidente.get("consecuencias") or {}
+        ).get(campo):
+            distintos.append(campo)
+    if "drones" in revisiones and decidir_drones(incidente) != (incidente.get("drones") or {}).get(
+        "numero"
+    ):
+        distintos.append("drones")
+    if "modelo" in revisiones and revisiones["modelo"]["valor"] != (
+        incidente.get("drones") or {}
+    ).get("modelo"):
+        distintos.append("modelo")
+    revisado = "titulo" in revisiones or str(incidente.get("id")) in _titulos_revisados()
+    if revisado and incidente.get("titulo") and decidir_titulo(incidente) != incidente["titulo"]:
+        distintos.append("titulo")
+    id_ = str(incidente.get("id"))
+    if (
+        id_ in _revisadas()
+        and not rectificaciones.pasos_de_valor(incidente)
+        and _revisadas()[id_] != incidente.get("presencia_dron")
+    ):
+        distintos.append("presencia_dron")
+    return distintos
+
+
 def revision_de(incidente: Documento, campo: str) -> Documento | None:
     """La revisión a mano de un dato de este incidente (la zona la lee proceso/zona.py)."""
     return _revisiones(incidente).get(campo)

@@ -7,6 +7,8 @@ import json
 from datetime import timedelta
 from typing import Any
 
+import pytest
+
 from almacen.base import Almacen
 from esquema import Documento
 from modelo import coste, ficha
@@ -308,6 +310,9 @@ def extraer_con_declaracion(almacen: Almacen) -> str:
     return id_
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_la_revision_confirma_la_presencia_de_lo_ya_guardado_con_su_fuente() -> None:
     almacen = Almacen.abrir()
     id_ = extraer_con_declaracion(almacen)

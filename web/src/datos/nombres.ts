@@ -202,10 +202,17 @@ export function lugarDeImpacto(
   return latino;
 }
 
-/** La localidad de una instalación de la capa de guerra; null si no se sabe escribir bien. */
-export function localidadDeImpacto(localidad: string, idioma: Idioma): string | null {
+/**
+ * La localidad de una instalación de la capa de guerra; null si no se sabe escribir bien. Con el
+ * nombre en alfabeto latino que traen los datos (`latino`) ya no hace falta que esté en la tabla:
+ * manda la tabla (nombres propios españoles e ingleses), después el latino de los datos.
+ */
+export function localidadDeImpacto(localidad: string, idioma: Idioma, latino?: string): string | null {
   const escrita = LOCALIDADES_GUERRA[localidad.normalize("NFC")];
   if (escrita !== undefined) return escrita[idioma];
+  if (latino !== undefined && /^[\p{Script=Latin}\p{Script=Common}\p{Script=Inherited}]+$/u.test(latino)) {
+    return EXONIMOS_GUERRA[latino]?.[idioma] ?? latino;
+  }
   return /^[\p{Script=Latin}\p{Script=Common}]+$/u.test(localidad) ? localidad : null;
 }
 

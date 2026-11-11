@@ -404,17 +404,32 @@ def _respaldado(guardado: Documento, dato: str) -> bool:
     return dato not in SEGUIDORES and _lo_dice_una_frase(guardado, dato)
 
 
-def candidatos(guardado: Documento, nuevo: Documento) -> list[Cambio]:
+def candidatos(guardado: Documento, nuevo: Documento, publicada: bool = True) -> list[Cambio]:
     """Los cambios de `nuevo` a lo protegido de `guardado`, antes de mirar si tienen
-    justificación. Solo de una ficha publicada: el alta y lo ya retirado o fundido no entran."""
+    justificación. El alta y lo ya retirado o fundido no entran.
+
+    Con `publicada` falso (una ficha nueva que sigue en el filtro de entrada,
+    `Almacen.en_el_filtro`) solo cuenta el nivel manual: lo que fija una revisión. Lo decidido
+    «con cita» se protege cuando la ficha ha salido; antes, el filtro corregía el día o el lugar y
+    el cerrojo se lo devolvía (EODI-2026-00728 y 00765, noviembre de 2026)."""
     if not incidentes.activo(guardado):
         return []
     manual = str(guardado["id"]) in fichas_manuales()
     cambios: dict[str, Cambio] = {}
     for dato in DATOS_MANUAL if manual else ():
         antes, despues = valor(guardado, dato), valor(nuevo, dato)
-        if _distinto(dato, antes, despues) and _respaldado(guardado, dato):
+        # En el filtro de entrada, solo lo que fija una revisión o la referencia: lo que «dice
+        # una frase» es justo lo que el filtro comprueba (EODI-2026-00728, del nivel manual: 3
+        # correcciones del filtro retenidas).
+        fijo = (
+            _respaldado(guardado, dato)
+            if publicada
+            else _fijado_a_mano(guardado, dato) or _fijado_en_referencia(guardado, dato)
+        )
+        if _distinto(dato, antes, despues) and fijo:
             cambios[dato] = Cambio(dato, MANUAL, antes, despues)
+    if not publicada:
+        return list(cambios.values())
     for dato in decididos.juicios(nuevo, guardado):
         if dato not in cambios and _lo_dice_una_frase(guardado, dato):
             cambios[dato] = Cambio(dato, CON_CITA, valor(guardado, dato), valor(nuevo, dato))
@@ -584,15 +599,65 @@ def pila() -> list[str]:
     return salida
 
 
+# Las funciones de `proceso/extraccion.py` que retiran una ficha (retirar, retirar_del_candidato,
+# retirar_por_veredicto): no son una extracción.
+RETIRAR = "proceso.extraccion.retirar"
+
+
 def por_revision(pasos: Iterable[str]) -> bool:
     """Guarda una revisión a mano (recogida/revisados.py), y no una extracción lanzada desde ella:
     la parte de una separación que rehace el extractor no es lo que dijo la revisión."""
     for paso in pasos:
+        if paso.startswith(RETIRAR):
+            # Quien retira no extrae: `extraccion.retirar` solo pone la marca que le piden. La
+            # revisión «reextraer» que retira la ficha que sigue mezclando dos sucesos lo hace
+            # con él, y el cerrojo la tomaba por una extracción: en «aplicar» no retiraba una
+            # ficha del nivel manual (se vio al pasar las pruebas a «aplicar», 10/11/2026).
+            continue
         if paso.startswith("proceso.extraccion."):
             return False
         if paso.startswith("recogida.revisados."):
             return True
     return False
+
+
+# Quién puede volver a publicar una ficha retirada además de una revisión a mano: la
+# reextracción de los retirados sin país, que se pide a mano (recogida/revision.py).
+DECISIONES_REPOSICION = ("recogida.revision.reextraer",)
+
+
+def por_reposicion(pasos: Iterable[str]) -> bool:
+    """Quien guarda puede volver a publicar una ficha retirada: una revisión a mano
+    (recogida/revisados.py, `_reponer`) o la reextracción pedida a mano."""
+    pasos = list(pasos)
+    return por_revision(pasos) or any(p.startswith(DECISIONES_REPOSICION) for p in pasos)
+
+
+# Deshacer una unión (proceso/incidentes.revertir): la ficha que queda pierde las fuentes de la
+# absorbida y lo que la unión le copió.
+DESHACER_UNION = "proceso.incidentes.revertir"
+
+
+def por_union_deshecha(pasos: Iterable[str]) -> bool:
+    """Guarda `incidentes.revertir`: lo que cambia en la ficha que queda es lo que la unión le
+    trajo, que se va con la absorbida. Sin esto el cerrojo le retenía la presencia, el estado o el
+    número de drones del otro suceso y, para sostenerlos, le devolvía las fuentes que citaban: la
+    unión quedaba deshecha a medias. Que la absorbida pueda volver lo decide aparte la reapertura
+    (una revisión, una separación)."""
+    return DESHACER_UNION in list(pasos)
+
+
+# La primera extracción de la parte de una separación con su día y su descripción
+# (proceso/extraccion.guardar_parte_separada).
+PARTE_SEPARADA = "proceso.extraccion.guardar_parte_separada"
+
+
+def por_parte_separada(pasos: Iterable[str]) -> bool:
+    """Guarda la primera extracción de la parte de una separación, hecha solo con su suceso. La
+    ficha mezclada tenía datos «decididos con cita» por frases que cuentan los dos sucesos, y el
+    cerrojo se los devolvía a la parte: EODI-2026-00770 (Leipzig/Halle) no podía dejar los dos
+    drones ni el titular del sábado y el domingo, y cada separación acababa en revisiones a mano."""
+    return PARTE_SEPARADA in list(pasos)
 
 
 def por_decision(pasos: Iterable[str]) -> bool:
@@ -613,18 +678,33 @@ def sin_publicar(pasos: Iterable[str]) -> bool:
 
 def juzgar(
     guardado: Documento, nuevo: Documento, pasos: list[str],
-    texto_de: Callable[[Documento], str],
+    texto_de: Callable[[Documento], str], publicada: bool = True,
 ) -> Veredicto:  # fmt: skip
-    """Reparte los cambios a lo protegido en retenidos y permitidos, dato a dato."""
+    """Reparte los cambios a lo protegido en retenidos y permitidos, dato a dato. `publicada`: la
+    ficha no está en el filtro de entrada (`candidatos`)."""
     veredicto = Veredicto()
-    pendientes = candidatos(guardado, nuevo)
+    pendientes = candidatos(guardado, nuevo, publicada)
     if not pendientes:
         return veredicto
     revision = por_revision(pasos)
     rectificada = rectificacion_nueva(guardado, nuevo)
+    deshecha = por_union_deshecha(pasos)
+    separada = por_parte_separada(pasos)
     justificados: set[str] = set()
 
     def razon(cambio: Cambio) -> str | None:
+        if (
+            separada
+            and cambio.dato not in (COHERENCIA, "retirado")
+            and not _fijado_a_mano(guardado, cambio.dato)
+        ):
+            # La primera extracción de la parte de una separación con su suceso: lo que la ficha
+            # mezclada tenía «decidido con cita» era de los dos sucesos. Lo revisado a mano, no.
+            return "separacion"
+        if deshecha:
+            # La ficha que queda devuelve lo que la unión le trajo. Si la reapertura de la
+            # absorbida no pasa (`Almacen._cerrojo_reapertura`), esta vuelve a como estaba.
+            return "union_deshecha"
         # La revisión del cierre fija si lo hubo: no da permiso para perder su duración. Ni la
         # del inicio para perder su fin (EODI-2026-00077, 3/11/2026: una reextracción le quitó el
         # fin y pasó como «revisión»).
@@ -678,6 +758,22 @@ def _tipo_guardado(resultado: Documento, guardado: Documento) -> None:
         resultado.pop("origen_demostrado_por", None)
 
 
+def _cierre_guardado(resultado: Documento, guardado: Documento) -> None:
+    """El cierre de `resultado`, como en la guardada: si no tenía ninguno, sin él. Con un cierre
+    nuevo retenido en una ficha sin cierre quedaba un cierre vacío, lo retenido no validaba y el
+    cerrojo se quedaba con la versión guardada entera: la unión que traía ese cierre dejaba a la
+    que queda sin las fuentes de la otra, y se reintentaba en cada pasada."""
+    if "cierre" in (guardado.get("consecuencias") or {}):
+        return
+    consecuencias = {
+        k: v for k, v in (resultado.get("consecuencias") or {}).items() if k != "cierre"
+    }
+    if consecuencias or "consecuencias" in guardado:
+        resultado["consecuencias"] = consecuencias
+    else:
+        resultado.pop("consecuencias", None)
+
+
 def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) -> Documento:
     """`nuevo` con el valor de `guardado` en cada dato retenido, con sus afirmaciones. Una retirada
     retenida deja la versión publicada entera."""
@@ -691,6 +787,7 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
         if dato in decididos.DATOS:
             decididos._poner(resultado, guardado, dato)
             if dato == "cierre":
+                _cierre_guardado(resultado, guardado)
                 # El tipo sigue al cierre: con cierre, «interrupción» (proceso/incidentes.con_tipo).
                 _tipo_guardado(resultado, guardado)
         elif dato == "estado":

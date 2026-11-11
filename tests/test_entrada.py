@@ -281,6 +281,11 @@ def test_la_autoridad_de_otro_pais_sin_frase_que_lo_diga_no_es_oficial() -> None
     frase = f"{consejo} a decis convocarea ambasadorului"
     nueva = _con_declaracion(BUQUE_689, consejo, frase)
     almacen = _base(nueva)
+    # Como en producción: el control lleva la cuenta de las fichas que han pasado, y esta, nueva,
+    # no está entre ellas. Con el cerrojo en «aplicar» el estado que daba la «autoridad» ya no
+    # vuelve a la ficha que sigue en el filtro (Almacen.en_el_filtro); antes el cerrojo se lo
+    # devolvía y salía confirmada con el valor que el filtro corregía.
+    almacen.guardar_cursor("control_fichas", {"vistos": {}})
     dia = "Two cargo ships were hit by drones overnight"
     autoridad = {"nombre": consejo, "pais": "MD", "fuente": 1, "frase": frase}
     cliente = Cliente([_respuesta(fecha_frase=dia, lugar_frase=dia, autoridades=[autoridad])] * 2)

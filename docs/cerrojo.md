@@ -116,33 +116,34 @@ Después de `rectificaciones.mantener` y de `decidir.aplicar`, y antes de valida
 
 El modo está en `configuracion/cerrojo.json`: `observar` solo apunta y no cambia nada de lo que se
 guarda; `aplicar` retiene. Un modo desconocido o el fichero ausente equivalen a `observar`.
-El 3 de noviembre de 2026 el cerrojo sigue en `observar`: la regla revisada y la red de la
-publicación están en main y el paso a `aplicar` es un PR aparte que solo cambia ese fichero.
+El cerrojo está en `aplicar` desde noviembre de 2026, y las pruebas corren en ese modo, como
+producción (`tests/conftest.py`).
 
 Para volver a `observar` basta un PR de una línea con `"modo": "observar"` en ese fichero. Se
 aplica en la recogida siguiente; no hay nada más que deshacer, porque `observar` deja la base
 como sin cerrojo.
 
-## La red de la publicación
+## La puerta de la publicación
 
-`exportacion/version_buena.py`, desde el 3 de noviembre de 2026. Antes de escribir
-`incidentes.geojson` e `incidentes_sin_ubicacion.json`, la publicación pasa la auditoría de
-protección: P, R, V, W y X. En X solo cuenta lo que la ficha aún tiene (ver «Cómo se vigila»).
-El registro dice «publicada en su versión buena», «publicada en su versión anterior» o «no
-publicada».
+Desde el 10 de noviembre de 2026 (`exportacion/puerta.py`, [`ciclo_de_vida.md`](ciclo_de_vida.md)).
+Sustituye a la red de la publicación del 3 de noviembre (`exportacion/version_buena.py`), que
+guardaba las versiones buenas en un fichero al lado de la publicación y, si la auditoría fallaba,
+dejaba salir lo de la base.
 
-Cada ficha marcada sale:
-- en su última versión buena, la última que se publicó sin marca (`versiones_buenas.json`, en una
-  carpeta al lado de la publicación que no se sube);
-- sin ella, como en la publicación anterior;
-- si nunca se publicó, no sale, y queda apuntada.
+Lo publicado es la tabla `publicado` de la base: una fila por ficha, con su entrada pública tal
+como sale. Antes de escribir `incidentes.geojson` e `incidentes_sin_ubicacion.json`, cada versión
+que propone la base pasa la auditoría de protección: P, R, V, W y X. En X solo cuenta lo que la
+ficha aún tiene (ver «Cómo se vigila»). La ficha marcada no entra: su fila no se toca.
 
-Nada de esto para la publicación: si la auditoría o la sustitución fallan, sale lo de la base.
+- Sale en su última versión buena: la fila que tenía.
+- Si nunca se publicó, no sale, y queda apuntada.
+- Si la auditoría no se puede hacer, ninguna versión nueva pasa: queda lo publicado. Lo que no
+  se puede comprobar no sale.
 
-Lo sustituido queda en el cursor `publicacion_buena` y en `control.json`
+Lo que no pasa queda en el cursor `publicacion_buena` y en `control.json`
 (`cerrojo.version_anterior`). La vigilancia abre la incidencia `version_anterior` con la ficha, la
 comprobación y lo que cambia, y el resumen diario cuenta «Fichas publicadas en su versión
-anterior: N».
+anterior: N». El registro dice «publicada en su versión buena» o «no publicada».
 
 ## El origen del lugar de una alerta
 
@@ -187,8 +188,8 @@ renumeraciones al azar con semilla fija, los cambios legítimos, que en `observa
 sin cerrojo, que un fallo del cerrojo no para la recogida y que, en `aplicar`, deja la
 ficha como estaba. `tests/test_retiradas_por_fallo.py`
 reproduce el camino de EODI-2026-00130 y EODI-2026-00302, cada camino de fallo y la retirada en los
-dos modos. `tests/test_version_buena.py` reproduce una ficha marcada en cada comprobación de la
-red de la publicación.
+dos modos. `tests/test_puerta.py` reproduce una ficha marcada en cada comprobación de la
+puerta de la publicación.
 
 La regla se midió el 3 de noviembre de 2026, antes de pasar a `aplicar`, con los cambios a datos
 protegidos de fichas publicadas desde el 1 de noviembre, clasificados leyendo la fuente:

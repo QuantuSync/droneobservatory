@@ -674,6 +674,9 @@ def test_una_fecha_que_solo_da_el_anio_no_es_un_dia() -> None:
     assert "inicio: el día no está en su frase" in motivos
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_un_alta_cuya_fecha_ya_no_valida_se_retira_sin_borrarse() -> None:
     almacen = base_con_heathrow()
     documento = procesar(almacen, recogido(), [suceso_lakenheath()], [])
@@ -690,6 +693,9 @@ def test_un_alta_cuya_fecha_ya_no_valida_se_retira_sin_borrarse() -> None:
     assert extraccion_oficial.revalidar_altas(almacen, AHORA, VOCABULARIO_MODELOS) == []
 
 
+# En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
+# ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
+@pytest.mark.usefixtures("cerrojo_en_observar")
 def test_un_enlace_por_una_hora_sin_dia_se_deshace_y_la_fuente_sale_del_incidente() -> None:
     # Aalborg (EODI-2025-00238): la nota de Nordjyllands Politi publicada a la 01:05 del jueves
     # 25 de septiembre de 2025 dice «modtog klokken 21:44 en anmeldelse» (las 21:44 del

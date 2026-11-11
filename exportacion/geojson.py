@@ -8,7 +8,7 @@ lleva además, en «unidos», a qué incidente publicado fue a parar cada identi
 """
 
 import logging
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from datetime import datetime
 
 from esquema import Documento
@@ -135,31 +135,59 @@ def sin_ubicacion(incidente: Documento) -> Documento | None:
 
 
 def publicables(
-    incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
+    incidentes: Iterable[Documento],
+    ahora: datetime,
+    vocabulario_modelos: frozenset[str],
+    apartados: dict[str, str] | None = None,
 ) -> list[Documento]:
     """Los incidentes que se publican, validados. Un punto fuera de su país no se publica:
-    queda en el registro de la ejecución con el motivo."""
+    queda en el registro de la ejecución con el motivo.
+
+    Con `apartados`, cada ficha va aislada (docs/ciclo_de_vida.md): la que no se puede publicar
+    queda apuntada ahí con su motivo y las demás siguen; la puerta de la publicación deja entonces
+    su última versión publicada. Sin él, una ficha que no valida para la exportación entera."""
     resultado = []
     for incidente in incidentes:
         # Un incidente fundido en otro sale dentro de aquel; uno retirado no sale.
         if "fusionado_en" in incidente or "retirado" in incidente:
             continue
-        # El titular no puede afirmar lo que sus citas publicadas no dicen: si ninguna lo
-        # respalda (y no está revisado y justificado a mano), no se publica hasta que se revise
-        # (proceso/cita_titular.py). Un parte de guerra solo no es autoridad sobre otro país.
-        publico = vista_publica(incidente)
-        if publico is not None and not cita_titular.publicable(publico):
-            registro.warning("%s no se publica: su cita no respalda el titular", incidente["id"])
+        try:
+            motivo = _no_publicable(incidente, ahora, vocabulario_modelos)
+        except Exception as error:
+            if apartados is None:
+                raise
+            motivo = f"no se pudo preparar: {error!r}"[:200]
+        if motivo is None:
+            resultado.append(incidente)
             continue
-        fuera = errores_ubicacion(incidente)
-        if fuera:
-            registro.warning("%s no se publica: %s", incidente.get("id"), fuera[0].mensaje)
-            continue
-        errores = validar_incidente(incidente, ahora, vocabulario_modelos)
-        if errores:
-            raise ExportacionInvalida(f"{incidente.get('id')}: {errores[0].mensaje}")
-        resultado.append(incidente)
+        if apartados is None and motivo.startswith(NO_VALIDA):
+            raise ExportacionInvalida(f"{incidente.get('id')}: {motivo.removeprefix(NO_VALIDA)}")
+        registro.warning("%s no se publica: %s", incidente.get("id"), motivo)
+        if apartados is not None:
+            apartados[str(incidente.get("id"))] = motivo
     return resultado
+
+
+NO_VALIDA = "no valida: "
+
+
+def _no_publicable(
+    incidente: Documento, ahora: datetime, vocabulario_modelos: frozenset[str]
+) -> str | None:
+    """Por qué no se publica el incidente tal como está, o None si se publica."""
+    # El titular no puede afirmar lo que sus citas publicadas no dicen: si ninguna lo
+    # respalda (y no está revisado y justificado a mano), no se publica hasta que se revise
+    # (proceso/cita_titular.py). Un parte de guerra solo no es autoridad sobre otro país.
+    publico = vista_publica(incidente)
+    if publico is not None and not cita_titular.publicable(publico):
+        return "su cita no respalda el titular"
+    fuera = errores_ubicacion(incidente)
+    if fuera:
+        return str(fuera[0].mensaje)
+    errores = validar_incidente(incidente, ahora, vocabulario_modelos)
+    if errores:
+        return f"{NO_VALIDA}{errores[0].mensaje}"
+    return None
 
 
 def unidos(incidentes: Iterable[Documento], publicados: set[str]) -> dict[str, str]:
@@ -177,16 +205,44 @@ def unidos(incidentes: Iterable[Documento], publicados: set[str]) -> dict[str, s
     return dict(sorted(resultado.items()))
 
 
+def _aislada(
+    incidente: Documento,
+    preparar: Callable[[Documento], Documento | None],
+    campos: frozenset[str],
+    apartados: dict[str, str] | None,
+) -> Documento | None:
+    """La entrada pública del incidente. Con `apartados`, la que falla o trae un campo fuera de
+    la lista queda apuntada y no sale, sin parar a las demás."""
+    if apartados is None:
+        return preparar(incidente)
+    try:
+        publicado = preparar(incidente)
+        if publicado is None:
+            apartados[str(incidente.get("id"))] = "ninguna de sus fuentes es pública"
+            return None
+        sobrantes = fuera_de_lista([publicado.get("properties", publicado)], campos)
+        if sobrantes:
+            raise ExportacionInvalida(f"campos fuera de la lista: {sobrantes}")
+    except Exception as error:
+        registro.exception("%s no se publica: su entrada no se pudo preparar", incidente.get("id"))
+        apartados[str(incidente.get("id"))] = f"no se pudo preparar: {error!r}"[:200]
+        return None
+    return publicado
+
+
 def exportar(
-    incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
+    incidentes: Iterable[Documento],
+    ahora: datetime,
+    vocabulario_modelos: frozenset[str],
+    apartados: dict[str, str] | None = None,
 ) -> Documento:
     incidentes = list(incidentes)
     features = []
-    validos = publicables(incidentes, ahora, vocabulario_modelos)
+    validos = publicables(incidentes, ahora, vocabulario_modelos, apartados)
     for incidente in validos:
         if "punto" not in incidente["lugar"]:
             continue
-        publicado = feature(incidente)
+        publicado = _aislada(incidente, feature, CAMPOS_PUBLICOS_INCIDENTE, apartados)
         if publicado is not None:
             features.append(publicado)
     coleccion: Documento = {
@@ -204,13 +260,22 @@ def exportar(
 
 
 def exportar_sin_ubicacion(
-    incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
+    incidentes: Iterable[Documento],
+    ahora: datetime,
+    vocabulario_modelos: frozenset[str],
+    apartados: dict[str, str] | None = None,
 ) -> Documento:
     """Los incidentes sin punto, con su país y, si se sabe, su región."""
     lista = [
         publicado
-        for incidente in publicables(incidentes, ahora, vocabulario_modelos)
-        if "punto" not in incidente["lugar"] and (publicado := sin_ubicacion(incidente)) is not None
+        for incidente in publicables(incidentes, ahora, vocabulario_modelos, apartados)
+        if "punto" not in incidente["lugar"]
+        and (
+            publicado := _aislada(
+                incidente, sin_ubicacion, CAMPOS_PUBLICOS_SIN_UBICACION, apartados
+            )
+        )
+        is not None
     ]
     sobrantes = fuera_de_lista(lista, CAMPOS_PUBLICOS_SIN_UBICACION)
     if sobrantes:
