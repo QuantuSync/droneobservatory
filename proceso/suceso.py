@@ -128,6 +128,8 @@ PRECISIONES_HORA = frozenset({"minuto", "hora"})
 APROXIMADA = "aproximada"
 # Hasta las 06:00 locales, una hora es aún de la noche que empezó la víspera.
 MADRUGADA = timedelta(hours=6)
+# Desde las 18:00 locales, una hora es ya de la noche que acaba la madrugada siguiente.
+HORA_TARDE = 18
 # Una nota que vuelve sobre un suceso ya pasado: la primera de sus noticias sale al menos estos
 # días después del día del suceso que escribe (nota_posterior).
 DIAS_NOTA_POSTERIOR = 2
@@ -243,21 +245,45 @@ def dia_local(momento: datetime, pais: str) -> date:
     return momento.astimezone(zona).date() if zona else momento.date()
 
 
-def _dias_de(instante_: Documento, pais: str) -> tuple[str, set[date]]:
+def con_hora(documento: Documento) -> bool:
+    """El inicio es una hora que escribe una fuente: con precisión de hora o de minuto, o una
+    hora aproximada con su día escrito (no la de publicación de la noticia ni un pasado sin día).
+    El sábado a las 19:20 y el domingo a las 8:15 de Leipzig/Halle (EODI-2026-00770 y
+    EODI-2026-00773) llevan su hora «aproximada»: tratadas como fechas de publicación («ese día o
+    la víspera») eran la misma jornada."""
+    inicio = documento["tiempo"]["inicio"]
+    if inicio["precision"] in PRECISIONES_HORA:
+        return True
+    return (
+        inicio["precision"] == APROXIMADA
+        and fecha_verificada(documento)
+        and not ventana_pasada(documento)
+    )
+
+
+def _dias_de(documento: Documento, pais: str, estricta: bool = False) -> tuple[str, set[date]]:
     """La clase de fecha («hora», «dia» o «publicacion») y sus días locales posibles. Un día
     es el que dice la fuente (si el extractor le puso hora, cuenta su fecha); con hora, su día
     local y, de madrugada, también la víspera, porque la prensa fecha una noche por su tarde;
-    con la fecha de publicación, ese día y el anterior."""
+    con la fecha de publicación, ese día y el anterior. Para lo que se pregunta (sin
+    `estricta`), una hora de la tarde-noche llega también a la madrugada del día siguiente: es
+    la misma noche (las alertas de Lituania desde las 23:00 del 10 de noviembre de 2026 y el
+    misil caído en Biržai la madrugada del 11)."""
+    instante_ = documento["tiempo"]["inicio"]
     momento = leer_instante(instante_)
-    precision = instante_["precision"]
-    if precision == "dia":
+    if instante_["precision"] == "dia":
         return "dia", {momento.date()}
     dia = dia_local(momento, pais)
-    if precision == APROXIMADA:
+    if not con_hora(documento):
         return "publicacion", {dia, dia - timedelta(days=1)}
+    dias = {dia}
     if dia != dia_local(momento - MADRUGADA, pais):
-        return "hora", {dia, dia - timedelta(days=1)}
-    return "hora", {dia}
+        dias.add(dia - timedelta(days=1))
+    zona = fechas.zona(pais)
+    hora_local = momento.astimezone(zona).hour if zona else momento.hour
+    if not estricta and hora_local >= HORA_TARDE:
+        dias.add(dia + timedelta(days=1))
+    return "hora", dias
 
 
 def ventana_pasada(documento: Documento) -> set[date]:
@@ -284,20 +310,15 @@ def misma_ventana(a: Documento, b: Documento, estricta: bool = False) -> bool:
     - Día con hora: la hora local cae ese día (o en la madrugada del siguiente).
     - Con la fecha de publicación: el suceso es de ese día o de la víspera.
     """
-    inicio_a, inicio_b = a["tiempo"]["inicio"], b["tiempo"]["inicio"]
-    ta, tb = leer_instante(inicio_a), leer_instante(inicio_b)
-    if inicio_a["precision"] in PRECISIONES_HORA and inicio_b["precision"] in PRECISIONES_HORA:
+    ta, tb = instante(a), instante(b)
+    if con_hora(a) and con_hora(b):
         return abs(tb - ta) < INICIOS_HORA and tb - ultima_actividad(a) <= SIN_ACTIVIDAD
-    if (
-        "fin" in a["tiempo"]
-        and inicio_b["precision"] in PRECISIONES_HORA
-        and tb - ultima_actividad(a) > SIN_ACTIVIDAD
-    ):
+    if "fin" in a["tiempo"] and con_hora(b) and tb - ultima_actividad(a) > SIN_ACTIVIDAD:
         # Con un fin conocido sí se miden las 12 horas sin actividad.
         return False
     pais = str(a["lugar"].get("pais", ""))
-    clase_a, dias_a = _dias_de(inicio_a, pais)
-    clase_b, dias_b = _dias_de(inicio_b, pais)
+    clase_a, dias_a = _dias_de(a, pais, estricta)
+    clase_b, dias_b = _dias_de(b, pais, estricta)
     if "fin" in a["tiempo"]:
         # Un suceso que pasa de medianoche abarca también el día de su fin.
         dias_a.add(dia_local(ultima_actividad(a), pais))
@@ -321,8 +342,7 @@ def misma_jornada(a: Documento, b: Documento, estricta: bool = False) -> bool:
 
 def _cerca_en_el_tiempo(a: Documento, b: Documento) -> bool:
     """Pueden ser de la misma jornada y hay que preguntarlo."""
-    precisiones = {a["tiempo"]["inicio"]["precision"], b["tiempo"]["inicio"]["precision"]}
-    if APROXIMADA not in precisiones:
+    if all(d["tiempo"]["inicio"]["precision"] == "dia" or con_hora(d) for d in (a, b)):
         # Dos fechas escritas: el mismo día local o la misma noche.
         return abs(instante(a) - instante(b)) <= VENTANA_PAR_ESCRITA and misma_jornada(a, b)
     if abs(instante(a) - instante(b)) <= VENTANA_PAR:
@@ -393,11 +413,28 @@ def noche_del_cierre(documento: Documento) -> date | None:
     return None
 
 
+def noches_del_cierre(documento: Documento) -> set[date]:
+    """Las noches (el día local de su tarde) en que pudo ser un cierre con el día sabido: con
+    hora, una sola (`noche_del_cierre`); con el día a secas, la que empieza ese día o la que
+    acaba en su madrugada, porque una noche se fecha por su tarde o por su madrugada («in der
+    Nacht auf Dienstag (13. Oktober)», «am frühen Dienstagmorgen»). Vacío si no hubo cierre o si
+    el día es el de la publicación."""
+    unica = noche_del_cierre(documento)
+    if unica is None:
+        return set()
+    if documento["tiempo"]["inicio"]["precision"] == "dia":
+        return {unica, unica - timedelta(days=1)}
+    return {unica}
+
+
 def cierres_de_noches_distintas(a: Documento, b: Documento) -> bool:
     """Dos cierres del mismo sitio en noches distintas son dos incidentes, aunque las noticias
-    del segundo salgan al día siguiente del primero (Lieja, 8 y 9 de noviembre de 2025)."""
-    noche_a, noche_b = noche_del_cierre(a), noche_del_cierre(b)
-    return noche_a is not None and noche_b is not None and noche_a != noche_b
+    del segundo salgan al día siguiente del primero (Lieja, 8 y 9 de noviembre de 2025). Con el
+    día a secas en alguno de los dos, solo si ninguna de sus noches posibles es la del otro: el
+    cierre de Kaunas fechado el 11 de noviembre de 2026 (EODI-2026-00779) es de la noche que
+    empezó el 10 a las 23:00 (EODI-2026-00792)."""
+    noches_a, noches_b = noches_del_cierre(a), noches_del_cierre(b)
+    return bool(noches_a) and bool(noches_b) and noches_a.isdisjoint(noches_b)
 
 
 def _cierre(documento: Documento) -> bool:
@@ -1029,7 +1066,9 @@ def mismo_suceso_posterior(registrado: Documento, nota: Documento) -> bool:
             return False
     if cierres_de_noches_distintas(registrado, nota):
         return False
-    return misma_jornada(registrado, nota)
+    # Se une sin preguntar: la misma jornada, no la de al lado (Lieja, los cierres del 8 y del 9
+    # de noviembre de 2025).
+    return misma_jornada(registrado, nota, estricta=True)
 
 
 # --- La ficha que queda -----------------------------------------------------------------------
@@ -1096,9 +1135,9 @@ def toma_el_tiempo(destino: Documento, absorbido: Documento) -> bool:
     if fecha_verificada(destino) or not fecha_verificada(absorbido):
         return False
     suyo = str(destino["lugar"].get("pais", ""))
-    _, del_destino = _dias_de(destino["tiempo"]["inicio"], suyo)
+    _, del_destino = _dias_de(destino, suyo, estricta=True)
     del_destino |= ventana_pasada(destino)
-    _, del_absorbido = _dias_de(absorbido["tiempo"]["inicio"], suyo)
+    _, del_absorbido = _dias_de(absorbido, suyo, estricta=True)
     return any(abs((d - o).days) <= 1 for d in del_destino for o in del_absorbido)
 
 
