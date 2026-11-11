@@ -93,6 +93,7 @@ from recogida import (
     guerra,
     luces,
     mediciones,
+    medios_publicos,
     nombres_wikidata,
     oficiales,
     prevision,
@@ -498,6 +499,12 @@ def principal(argumentos: list[str] | None = None) -> int:
         dirigidos = paso("artículos dirigidos", articulos_dirigidos.paso_horario, almacen, ahora)
         if dirigidos:
             registro.info("artículos dirigidos incorporados: %d", dirigidos)
+        # Medios públicos que se leen directamente donde las autoridades no dejan leer sus
+        # páginas (LRT en Lituania): sus notas de drones entran como artículos de su lugar
+        # (recogida/medios_publicos.py). Nunca son fuente oficial.
+        de_medios = paso("medios públicos", medios_publicos.paso_horario, almacen, ahora)
+        if de_medios:
+            registro.info("notas de medios públicos incorporadas: %d", de_medios)
         # Incidentes que juntaban sucesos distintos, revisados a mano (configuracion/
         # incidentes_revisados.json, separar): se reparten una vez, antes del extractor, y en
         # cada pasada se mantienen sus partes unidas a su ficha y enlazadas entre sí.

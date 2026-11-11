@@ -1,0 +1,826 @@
+{
+ "descripcion": "Fichas reales de la noche del 10 al 11 de noviembre de 2026, tal como estaban en la base: EODI-2026-00777 (alertas de las Fuerzas Armadas de Letonia en Krāslava, Ludza, Augšdaugava y Balvi, publicada), EODI-2026-00778 al darse de alta a las 02:17 UTC (el resumen de mirror.co.uk «Latvia and Lithuania») y EODI-2026-00779 al darse de alta a las 03:17 UTC (express.co.uk: el aeropuerto de Kaunas y el aviso del Centro Nacional de Gestión de Crisis de Lituania), con las decisiones del control: el par 00777|00778, que el experto dio por distinto, y las del filtro de entrada, que decía «el mismo que 00777» y dejó la 00778 retenida sin salida, y que unió la 00779 (Lituania) a la 00778 (Letonia).",
+ "EODI-2026-00777": {
+  "afirmaciones": [
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "valor": true
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "valor": {
+     "nivel": "localidad",
+     "nombre": "Krāslavas novads",
+     "pais": "LV",
+     "region": ""
+    }
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "valor": true
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "valor": "LV"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.5,
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "valor": "sobrevuelo"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-11-10T23:17Z"
+   },
+   "candidato": "CAND-20261110T0000-loc:458623-otro",
+   "huella_fuentes": "e01e6ef7c9eeb178c7d8b6f29ec3c87dc71c8e987c32d224dfc31cb3599359d1",
+   "modelos": {
+    "es_incidente": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-11-11T00:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-10T00:00Z"
+     },
+     "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-10T00:00Z"
+     },
+     "fuente_id": "gdelt-e01e6ef7c9eeb178-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://www.mil.lv/lv/zinas/papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-10T00:00Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "Nacionālie bruņotie spēki informē, ka 11. novembrī no plkst. 00.23 Latvijas gaisa telpā Krāslavas un Ludzas novados apdraudējuma līmenis samazināts uz iespējamu apdraudējumu.",
+    "id": "gdelt-e01e6ef7c9eeb178-declaracion-1",
+    "idioma": "lv",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Nacionālie bruņotie spēki (declaración oficial citada en Nacionālie bruņotie spēki)",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://www.mil.lv/lv/zinas/papildinats-plkst-0125-iespejams-apdraudejums-latvijas-gaisa-telpa-balvu-novada",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-11-11T00:00Z"
+    },
+    "fiabilidad": "A",
+    "frase_origen": "PAPILDINĀTS plkst. 01:25 - Iespējams apdraudējums Latvijas gaisa telpā Balvu novadā",
+    "id": "mil_lv-lv-zinas-papildinats-plkst-0125-iespejams-apdraudejums-latvijas-gaisa-telpa-balvu-novada",
+    "idioma": "lv",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Nacionālie bruņotie spēki",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "es_incidente",
+     "estado",
+     "lugar_suceso",
+     "objetivo_conocido",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://www.mil.lv/lv/zinas/papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "dia",
+     "valor": "2026-11-10T00:00Z"
+    },
+    "fiabilidad": "A",
+    "frase_origen": "PAPILDINĀTS 11.NOV plkst. 00.23 Iespējams apdraudējums Latvijas gaisa telpā Augšdaugavas un Krāslavas novados",
+    "id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "idioma": "lv",
+    "interna_fuera_de_ucrania": false,
+    "medio": "Nacionālie bruņotie spēki",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00777",
+  "lugar": {
+   "geocodificacion": "candidato",
+   "nivel": "localidad",
+   "pais": "LV",
+   "punto": {
+    "lat": 55.89514,
+    "lon": 27.16799
+   },
+   "radio_km": 3.0,
+   "suceso": "Krāslavas novads"
+  },
+  "objetivo": {
+   "categoria": "otra",
+   "nombre": "Krāslava"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-11-11T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+    "motivo": "filtro de entrada: «11. novembrī no plkst. 00.23»",
+    "tipo": "explicita"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "Possible airspace threat alert in Krāslava, Ludza and Augšdaugava districts",
+   "es": "Alerta de posible amenaza aérea en los distritos de Krāslava, Ludza y Augšdaugava"
+  },
+  "zona": {
+   "distancia_km": 7,
+   "grupo": "frontera",
+   "motivo": "cerca_de_la_frontera"
+  }
+ },
+ "EODI-2026-00778": {
+  "afirmaciones": [
+   {
+    "campo": "entrada_exterior",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": true
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": true
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": "2026-11-11"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": "dia"
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": {
+     "nivel": "pais",
+     "nombre": "Latvia",
+     "pais": "LV",
+     "region": ""
+    }
+   },
+   {
+    "campo": "medidas",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": [
+     "cazas"
+    ]
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": false
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": "LV"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "valor": "sobrevuelo"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-11-11T02:17Z"
+   },
+   "candidato": "CAND-20261111T0130-gkg:4:56.8500:26.2167:LV:Madona-militar",
+   "huella_fuentes": "b8bef16beb9201c07882fc17524eb7c8d1f4c176de094dafdd4b6632a0c99b52",
+   "modelos": {
+    "entrada_exterior": "claude-sonnet-5-5",
+    "es_incidente": "claude-sonnet-5-5",
+    "inicio": "claude-sonnet-5-5",
+    "inicio_precision": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "medidas": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-11-11T02:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "estado": {
+   "actual": "notificado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T01:30Z"
+     },
+     "fuente_id": "gdelt-b8bef16beb9201c0"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "entrada_exterior",
+     "es_incidente",
+     "inicio",
+     "inicio_precision",
+     "lugar_suceso",
+     "medidas",
+     "objetivo_conocido",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://mirror.co.uk/news/world-news/latvia-lithuania-drone-alert-warning-37864324",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-11T01:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "People living in Latvia and Lithuania have been told to seek safety after threats of unidentified drones entering their airspace.",
+    "id": "gdelt-b8bef16beb9201c0",
+    "idioma": "en",
+    "interna_fuera_de_ucrania": false,
+    "medio": "mirror.co.uk",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00778",
+  "lugar": {
+   "nivel": "pais",
+   "pais": "LV",
+   "suceso": "Latvia"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": true,
+   "evidencia": []
+  },
+  "respuesta": {
+   "medidas": [
+    "cazas"
+   ]
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-11-11T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "gdelt-b8bef16beb9201c0",
+    "motivo": "«wednesday» en una nota publicada el 2026-11-11 01:30 (hora local del medio)",
+    "tipo": "relativa"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "NATO fighter jets scrambled in Latvia and Lithuania over unidentified drones",
+   "es": "Cazas de la OTAN despegan en Letonia y Lituania ante drones no identificados"
+  },
+  "zona": {
+   "grupo": "frontera",
+   "motivo": "incursion_en_pais_fronterizo"
+  }
+ },
+ "EODI-2026-00779": {
+  "afirmaciones": [
+   {
+    "campo": "cierre",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "si"
+   },
+   {
+    "campo": "drones",
+    "confianza_extraccion": 0.5,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": {
+     "max": 10,
+     "min": 2
+    }
+   },
+   {
+    "campo": "entrada_exterior",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": true
+   },
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": true
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "2026-11-11"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "dia"
+   },
+   {
+    "campo": "lugar_nuevo",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": {
+     "categoria": "aeropuerto",
+     "lat": 54.964,
+     "lon": 24.085,
+     "nombre": "Kaunas Airport",
+     "pais": "LT"
+    }
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": {
+     "nivel": "instalacion",
+     "nombre": "Kaunas Airport",
+     "pais": "LT",
+     "region": "Kaunas"
+    }
+   },
+   {
+    "campo": "medidas",
+    "confianza_extraccion": 0.85,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": [
+     "cazas"
+    ]
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "aeropuerto"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": false
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "Kaunas Airport"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "LT"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "no_confirmada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "valor": "interrupcion_aeroportuaria"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "si"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-11-11T03:17Z"
+   },
+   "candidato": "CAND-20261111T0230-gkg:4:55.5000:25.6000:LT:Utena-militar",
+   "huella_fuentes": "6709a3651452bd4b3ab53f6f0cb00a660acd0b1927b3955db94037fd98d4db9c",
+   "modelos": {
+    "cierre": "claude-sonnet-5-5",
+    "drones": "claude-sonnet-5-5",
+    "entrada_exterior": "claude-sonnet-5-5",
+    "es_incidente": "claude-sonnet-5-5",
+    "inicio": "claude-sonnet-5-5",
+    "inicio_precision": "claude-sonnet-5-5",
+    "lugar_nuevo": "claude-sonnet-5-5",
+    "lugar_suceso": "claude-sonnet-5-5",
+    "medidas": "claude-sonnet-5-5",
+    "objetivo_categoria": "claude-sonnet-5-5",
+    "objetivo_conocido": "claude-sonnet-5-5",
+    "objetivo_nombre": "claude-sonnet-5-5",
+    "pais": "claude-sonnet-5-5",
+    "presencia_dron": "claude-sonnet-5-5",
+    "tipo": "claude-sonnet-5-5"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-11-11T03:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": {
+    "max": 10,
+    "min": 2
+   }
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T02:30Z"
+     },
+     "fuente_id": "gdelt-6709a3651452bd4b"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T02:30Z"
+     },
+     "fuente_id": "gdelt-6709a3651452bd4b-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "cierre",
+     "drones",
+     "entrada_exterior",
+     "es_incidente",
+     "inicio",
+     "inicio_precision",
+     "lugar_nuevo",
+     "lugar_suceso",
+     "medidas",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://express.co.uk/news/world/2265147/latvia-lithuania-issue-alert-drones",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-11T02:30Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Residents in parts of Latvia and Lithuania have been told to seek safety after unidentified drones entered the countries' airspaces.",
+    "id": "gdelt-6709a3651452bd4b",
+    "idioma": "en",
+    "interna_fuera_de_ucrania": false,
+    "medio": "express.co.uk",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://express.co.uk/news/world/2265147/latvia-lithuania-issue-alert-drones",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-11T02:30Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "Lithuania's National Crisis Management Centre's warning included Kaunas, the ⁠country's second city and home to around 300,000 people.",
+    "id": "gdelt-6709a3651452bd4b-declaracion-1",
+    "idioma": "en",
+    "interna_fuera_de_ucrania": false,
+    "medio": "National Crisis Management Centre (declaración oficial citada en express.co.uk)",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00779",
+  "lugar": {
+   "geocodificacion": "nomenclator",
+   "nivel": "instalacion",
+   "pais": "LT",
+   "punto": {
+    "lat": 54.96449,
+    "lon": 24.08659
+   },
+   "radio_km": 5.0,
+   "region": "Kaunas",
+   "suceso": "Kaunas Airport"
+  },
+  "objetivo": {
+   "categoria": "aeropuerto",
+   "nombre": "Kauno tarptautinis oro uostas",
+   "oaci": "EYKA"
+  },
+  "presencia_dron": "no_confirmada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": true,
+   "evidencia": []
+  },
+  "respuesta": {
+   "medidas": [
+    "cazas"
+   ]
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-11-11T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "gdelt-6709a3651452bd4b",
+    "motivo": "«wednesday» en una nota publicada el 2026-11-11 02:30 (hora local del medio)",
+    "tipo": "relativa"
+   }
+  },
+  "tipo": "interrupcion_aeroportuaria",
+  "titulo": {
+   "en": "Unidentified drones over Lithuania and Latvia prompt shelter warnings and Kaunas Airport suspension",
+   "es": "Drones no identificados sobre Lituania y Letonia: alerta a la población y suspensión de operaciones en el aeropuerto de Kaunas"
+  },
+  "zona": {
+   "distancia_km": 69,
+   "grupo": "frontera",
+   "motivo": "cerca_de_la_frontera"
+  }
+ },
+ "control": {
+  "par:EODI-2026-00777|EODI-2026-00778": {
+   "decision": "distinto",
+   "escalado": [
+    "duplicado_dudoso: mismo día y mismo sitio, pero separados"
+   ],
+   "fecha": "2026-11-11T02:17:03Z",
+   "huella": "529c4c708750b6cf1a4ea4483b9a93a9",
+   "mismo_dia": true,
+   "mismo_sitio": false,
+   "modelo": "claude-sonnet-5-5",
+   "motivo_en": "Card A is a general summary of alerts and fighter scrambles across Latvia and Lithuania on 11 November, while card B covers local alerts in the Krāslava, Ludza, Augšdaugava and Balvi districts, so A groups several events and locations without a specific one.",
+   "motivo_es": "La ficha A es un resumen general de alertas y despegues de cazas en Letonia y Lituania el 11 de noviembre, mientras que la ficha B cuenta alertas locales en los distritos de Krāslava, Ludza, Augšdaugava y Balvi, así que A agrupa varios sucesos y lugares sin uno concreto.",
+   "varios_sucesos": true,
+   "version": "control/4"
+  },
+  "entrada:EODI-2026-00779": {
+   "autoridades": {
+    "National Crisis Management Centre": "LT"
+   },
+   "autoridades_fuera": {},
+   "cambios": [],
+   "conjunto": 16,
+   "conserva": "EODI-2026-00778",
+   "decision": "unida",
+   "duda": false,
+   "dudosas": [],
+   "fecha": "2026-11-11T03:17:04Z",
+   "frase_fecha": [
+    "gdelt-6709a3651452bd4b",
+    "People across several regions were warned to take shelter on Wednesday"
+   ],
+   "frase_lugar": [
+    "gdelt-6709a3651452bd4b",
+    "Kaunas Airport also suspended operations, according to reports."
+   ],
+   "huella": "5549ea03551d1625|2026-11-11T00:00Z",
+   "mismo": "EODI-2026-00778",
+   "motivo_en": "Duplicate of EODI-2026-00778: the same drone alert over Latvia and Lithuania on 11 November 2026, with the Kaunas suspension being part of the same event.",
+   "motivo_es": "Duplicado de EODI-2026-00778: misma alerta por drones sobre Letonia y Lituania el 11 de noviembre de 2026, con el cierre de Kaunas como parte del mismo suceso.",
+   "motivo_mismo": "Es la misma alerta de la noche del 11 de noviembre de 2026 por drones no identificados sobre Letonia y Lituania, con cazas de la OTAN activados; la suspensión del aeropuerto de Kaunas es un detalle del mismo episodio.",
+   "une": "EODI-2026-00779",
+   "version": "entrada/1"
+  }
+ },
+ "entrada_00778": [
+  {
+   "autoridades": {},
+   "autoridades_fuera": {},
+   "cambios": [],
+   "conjunto": 17,
+   "decision": "retener",
+   "duda": false,
+   "dudosas": [],
+   "fecha": "2026-11-11T02:17:03Z",
+   "frase_fecha": [
+    "gdelt-b8bef16beb9201c0",
+    "People across several regions were warned to take shelter on Wednesday."
+   ],
+   "frase_lugar": [
+    "gdelt-b8bef16beb9201c0",
+    "People living in Latvia and Lithuania have been told to seek safety after threats of unidentified drones entering their airspace."
+   ],
+   "huella": "529c4c708750b6cf|2026-11-11T00:00Z",
+   "mismo": "EODI-2026-00777",
+   "motivo": "el mismo que EODI-2026-00777, dados por distintos: propuesta",
+   "motivo_en": "Duplicate of EODI-2026-00777: same Latvian drone alert on 11 November, reported by a UK outlet with less local detail.",
+   "motivo_es": "Duplicado de EODI-2026-00777: misma alerta por drones en Letonia el 11 de noviembre, contada por un medio británico con menos detalle.",
+   "motivo_mismo": "Es la misma alerta aérea en Letonia del miércoles 11 de noviembre de 2026 por drones no identificados, que la ficha existente registra con más detalle local (Krāslava y Ludza).",
+   "version": "entrada/1"
+  },
+  {
+   "autoridades": {
+    "National Crisis Management Centre": "LT"
+   },
+   "autoridades_fuera": {},
+   "cambios": [],
+   "conjunto": 15,
+   "decision": "retener",
+   "duda": false,
+   "dudosas": [],
+   "fecha": "2026-11-11T04:17:02Z",
+   "frase_fecha": [
+    "gdelt-6709a3651452bd4b",
+    "People across several regions were warned to take shelter on Wednesday"
+   ],
+   "frase_lugar": [
+    "gdelt-6709a3651452bd4b",
+    "Residents in parts of Latvia and Lithuania have been told to seek safety after unidentified drones entered the countries' airspaces."
+   ],
+   "huella": "f0c515a84c1d359c|2026-11-11T00:00Z",
+   "mismo": "EODI-2026-00777",
+   "motivo": "el mismo que EODI-2026-00777, dados por distintos: propuesta",
+   "motivo_en": "Duplicate of EODI-2026-00777: same night of 11 November 2026 and same drone alert episode in Latvia, reported with a wider regional scope.",
+   "motivo_es": "Duplicado de EODI-2026-00777: misma noche del 11 de noviembre de 2026 y mismo episodio de alerta por drones en Letonia, contado con alcance regional más amplio.",
+   "motivo_mismo": "Es la misma noche del 11 de noviembre de 2026: la alerta letona por posible amenaza aérea desde las 00:23 en Krāslava y Ludza coincide con la activación de cazas de la OTAN y los avisos de refugio en Letonia y Lituania por drones no identificados.",
+   "version": "entrada/1"
+  },
+  {
+   "autoridades": {
+    "National Crisis Management Centre": "LT"
+   },
+   "autoridades_fuera": {},
+   "cambios": [],
+   "conjunto": 15,
+   "decision": "retener",
+   "duda": false,
+   "dudosas": [],
+   "fecha": "2026-11-11T07:17:03Z",
+   "frase_fecha": [
+    "gdelt-6709a3651452bd4b",
+    "People across several regions were warned to take shelter on Wednesday"
+   ],
+   "frase_lugar": [
+    "gdelt-6709a3651452bd4b",
+    "Residents in parts of Latvia and Lithuania have been told to seek safety after unidentified drones entered the countries' airspaces."
+   ],
+   "huella": "c99fcbb7295ba865|2026-11-11T00:00Z",
+   "mismo": "EODI-2026-00777",
+   "motivo": "el mismo que EODI-2026-00777, dados por distintos: propuesta",
+   "motivo_en": "It is the same event as EODI-2026-00777: the drone alert in Latvia and Lithuania on the night of 11 November 2026.",
+   "motivo_es": "Es el mismo suceso que EODI-2026-00777: la alerta de la noche del 11-11-2026 por drones en Letonia y Lituania.",
+   "motivo_mismo": "Misma noche del 11-11-2026 y mismos drones que entraron desde Rusia o Bielorrusia en el espacio aéreo letón; la ficha 00777 recoge la alerta letona en Krāslava y Ludza a las 00.23 de ese día.",
+   "version": "entrada/1"
+  }
+ ],
+ "entrada_00777": {
+  "autoridades": {
+   "Nacionālie bruņotie spēki": "LV"
+  },
+  "autoridades_fuera": {},
+  "cambios": [
+   "día 2026-11-11: «11. novembrī no plkst. 00.23»"
+  ],
+  "conjunto": 16,
+  "decision": "publicar",
+  "duda": false,
+  "dudosas": [],
+  "fecha": "2026-11-11T00:17:03Z",
+  "frase_fecha": [
+   "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+   "11. novembrī no plkst. 00.23"
+  ],
+  "frase_lugar": [
+   "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+   "Latvijas gaisa telpā Krāslavas un Ludzas novados"
+  ],
+  "huella": "1a4ea4483b9a93a9|2026-11-11T00:00Z",
+  "motivo_en": "This is a new event on 2026-11-11 in Latvia; the existing Latvian records (Oct 18, Oct 22, Nov 1, Nov 3) are from different days.",
+  "motivo_es": "Es un suceso nuevo del 11-11-2026 en Letonia; las fichas letonas existentes (18-10, 22-10, 01-11, 03-11) son de otros días.",
+  "version": "entrada/1"
+ }
+}

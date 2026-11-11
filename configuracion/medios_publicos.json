@@ -1,0 +1,28 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Medios públicos nacionales que se leen directamente (recogida/medios_publicos.py), además de GDELT, en los países cuyas autoridades no publican sus alertas en una página que el servidor pueda leer. No son fuentes oficiales: sus notas entran como noticias de su lugar (fiabilidad de medio), y lo que diga una autoridad dentro de ellas lo saca el extractor como declaración citada. Lituania, desde el 11 de noviembre de 2026: las páginas del Centro Nacional de Gestión de Crisis, de las Fuerzas Armadas, del Ministerio de Defensa y de los Aeropuertos de Lituania responden 403 (comprobación de Cloudflare) al servidor, y LRT, la radiotelevisión pública, cuenta sus alertas con sus citas. Los campos son los de una página de configuracion/fuentes_oficiales.json: enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que se abren aunque no digan «dron» y zona la hora local del medio. Se leen respetando robots.txt y con la identificación del observatorio.",
+  "medios": [
+    {
+      "id": "lrt_en",
+      "medio": "lrt.lt",
+      "pais": "LT",
+      "idioma": "en",
+      "tipo": "pagina",
+      "zona": "Europe/Vilnius",
+      "url": "https://www.lrt.lt/en/news-in-english",
+      "enlace": "lrt\\.lt/en/news-in-english/\\d+/\\d+/[a-z0-9-]{10,}",
+      "titulos_genericos": "[Aa]ir alert|[Aa]ir raid|[Aa]irspace"
+    },
+    {
+      "id": "lrt_lt",
+      "medio": "lrt.lt",
+      "pais": "LT",
+      "idioma": "lt",
+      "tipo": "pagina",
+      "zona": "Europe/Vilnius",
+      "url": "https://www.lrt.lt/naujienos/lietuvoje",
+      "enlace": "lrt\\.lt/naujienos/lietuvoje/\\d+/\\d+/[a-z0-9-]{10,}",
+      "titulos_genericos": "[Oo]ro pavoj|[Oo]ro erdv"
+    }
+  ]
+}
