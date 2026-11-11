@@ -1009,6 +1009,13 @@ def dias_distintos(
                 continue
             dias = sorted({_ultimo(uno, hoy), _ultimo(otro, hoy)})
             separados = (dias[-1] - dias[0]).days
+            if (otro - uno) % DIAS_SEMANA == 1:
+                # El segundo es el día siguiente al primero: son seguidos aunque la nota salga
+                # el primero y el segundo, que aún no ha llegado, caiga en la semana anterior
+                # («Naktį iš antradienio į trečiadienį», publicada el martes por la noche: el
+                # miércoles salía seis días antes y la ficha de las alertas de Lituania del 10
+                # de noviembre de 2026 quedaba retenida por «dos días»).
+                separados = 1
             if separados > DIAS_MISMA_NOCHE:
                 return dias
             if separados == 1 and not (
