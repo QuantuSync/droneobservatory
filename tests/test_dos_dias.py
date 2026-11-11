@@ -188,3 +188,53 @@ def test_la_noche_del_martes_al_miercoles_contada_el_martes_es_una_noche() -> No
     dos = "Dronai pastebėti antradienį ir trečiadienį."
     assert len(fechas.dias_distintos(dos, MARTES_NOCHE, VILNA, "lt")) == 2
     assert len(fechas.dias_distintos(dos, MIERCOLES, VILNA, "lt")) == 2
+
+
+# «La noche hacia el 11» empieza el 10. La nota de las Fuerzas Armadas de Letonia sobre la noche
+# del 10 al 11 de noviembre de 2026 («Naktī uz 11. novembri…») daba una ficha del 11
+# (EODI-2026-00784), y las alertas de esa misma noche (EODI-2026-00777), otra del 10.
+NOCHES_HACIA = {
+    "lv": "Naktī uz 11. novembri Latvijas gaisa telpā ielidoja trīs bezpilota lidaparāti",
+    "lt": "Naktį į lapkričio 11-ąją į Lietuvos oro erdvę įskrido dronas",
+    "et": "Ööl vastu 11. novembrit sisenes Eesti õhuruumi droon",
+    "de": "In der Nacht zum 11. November drang eine Drohne in den Luftraum ein",
+    "en": "On the night into 11 November a drone entered the airspace",
+}
+
+
+def test_la_noche_hacia_una_fecha_escrita_empieza_la_vispera() -> None:
+    publicada = datetime(2026, 11, 11, 7, 0, tzinfo=UTC)
+    del_once = datetime(2026, 11, 11, tzinfo=UTC)
+    for idioma, frase in NOCHES_HACIA.items():
+        (lectura,) = fechas.leer(frase, publicada, RIGA, idioma)
+        assert (str(lectura.dia), lectura.hacia) == ("2026-11-10", True), idioma
+        # La ficha con el día 11 a secas pasa al 10.
+        resuelto = fechas.resolver(del_once, "dia", [frase], publicada, RIGA, RIGA, idioma)
+        assert (str(resuelto.valor.date()), resuelto.precision) == ("2026-11-10", "dia"), idioma
+        # Con hora, la madrugada del 11 sigue siendo de esa noche: no se toca.
+        madrugada = datetime(2026, 11, 11, 1, 18, tzinfo=UTC)
+        con_hora = fechas.resolver(madrugada, "minuto", [frase], publicada, RIGA, RIGA, idioma)
+        assert con_hora.valor == madrugada and not con_hora.corregido, idioma
+    # Con el día de la semana, igual que antes: «la noche hacia el miércoles» es la del martes.
+    for idioma, frase in (
+        ("lv", "Naktī uz trešdienu Latvijas gaisa telpā ielidoja drons"),
+        ("lt", "Naktį į trečiadienį į Lietuvos oro erdvę įskrido dronas"),
+        ("et", "Ööl vastu kolmapäeva sisenes Eesti õhuruumi droon"),
+    ):
+        resuelto = fechas.resolver(del_once, "dia", [frase], publicada, RIGA, RIGA, idioma)
+        assert str(resuelto.valor.date()) == "2026-11-10", idioma
+
+
+def test_una_fecha_escrita_sin_la_noche_hacia_no_cambia() -> None:
+    publicada = datetime(2026, 11, 11, 7, 0, tzinfo=UTC)
+    del_once = datetime(2026, 11, 11, tzinfo=UTC)
+    frase = (
+        "Nacionālie bruņotie spēki informē, ka 11. novembrī no plkst. 00.23 Latvijas gaisa telpā"
+    )
+    (lectura,) = fechas.leer(frase, publicada, RIGA, "lv")
+    assert (str(lectura.dia), lectura.hacia) == ("2026-11-11", False)
+    resuelto = fechas.resolver(del_once, "dia", [frase], publicada, RIGA, RIGA, "lv")
+    assert str(resuelto.valor.date()) == "2026-11-11" and not resuelto.corregido
+    # La noche hacia el 11 lejos de la fecha (otra frase de la nota) tampoco: tiene que ir junto.
+    lejos = "Naktī uz rītdienu gaidāms lietus, bet 11. novembrī ielidoja drons"
+    assert not fechas.leer(lejos, publicada, RIGA, "lv")[0].hacia

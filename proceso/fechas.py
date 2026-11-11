@@ -151,6 +151,10 @@ class Lectura:
     # El día local que dice la frase, al que se corrige una fecha que no casa.
     dia: date
     expresion: str
+    # «La noche hacia el 11» («naktī uz 11. novembri», «in der Nacht zum Freitag»): `dia` es la
+    # víspera, cuando empieza la noche. Una ficha con el día a secas lleva ese día, no el
+    # siguiente; con hora, la madrugada del siguiente sigue valiendo.
+    hacia: bool = False
 
 
 def _contiene(normal: str, expresion: str) -> int:
@@ -277,18 +281,54 @@ def leer(
     return lecturas if len({lec.dia for lec in lecturas}) == 1 else []
 
 
+# Palabras entre la marca de «la noche hacia» y la fecha: «naktī uz 11. novembri», «in der Nacht
+# zum Mittwoch, 11. November», «naktį į lapkričio 11-ąją».
+MAX_HASTA_LA_FECHA = 4
+
+
+def nombra_la_noche(frase: str, idioma: str) -> bool:
+    """La frase habla de una noche («naktī uz 11. novembri», «pagājušajā naktī», «in der
+    Nacht»), con el léxico de ese idioma."""
+    lx = lexicos().get(idioma)
+    if lx is None:
+        return False
+    normal = _normal(frase)
+    return any(_contiene(normal, forma) >= 0 for forma in (*lx.noches, *lx.noche_hacia))
+
+
+def _noche_hacia_la_fecha(palabras: list[str], lexico: list[Lexico], dia: date) -> bool:
+    """La frase dice «la noche hacia» justo antes de esa fecha escrita (su día y un mes)."""
+    for lx in lexico:
+        for marca in lx.noche_hacia:
+            trozos = marca.split()
+            for i in range(len(palabras) - len(trozos) + 1):
+                if palabras[i : i + len(trozos)] != trozos:
+                    continue
+                tras = palabras[i + len(trozos) : i + len(trozos) + MAX_HASTA_LA_FECHA]
+                numeros = [m for p in tras if (m := _NUMERO_DIA.match(p))]
+                if any(int(m[1]) == dia.day for m in numeros) and any(p in lx.meses for p in tras):
+                    return True
+    return False
+
+
 def _leer_con(
     frase: str, publicacion: datetime, zona_medio: ZoneInfo, lexico: list[Lexico]
 ) -> list[Lectura]:
     local = publicacion.astimezone(zona_medio)
     hoy = local.date()
     lecturas: list[Lectura] = []
-    for dia, texto in _explicitas(frase, lexico, hoy):
-        lecturas.append(Lectura(EXPLICITA, frozenset({dia, dia - timedelta(days=1)}), dia, texto))
-    if lecturas:
-        return lecturas
     normal = _normal(frase)
     palabras = normal.split()
+    for dia, texto in _explicitas(frase, lexico, hoy):
+        # «Naktī uz 11. novembri», «in der Nacht zum 11. November»: la noche hacia el 11 empieza
+        # el 10. La nota de las Fuerzas Armadas de Letonia sobre la noche del 10 al 11 de
+        # noviembre de 2026 daba una ficha del 11 (EODI-2026-00784) y la de sus alertas, del 10.
+        vispera = dia - timedelta(days=1)
+        hacia = _noche_hacia_la_fecha(palabras, lexico, dia)
+        primero = vispera if hacia else dia
+        lecturas.append(Lectura(EXPLICITA, frozenset({dia, vispera}), primero, texto, hacia))
+    if lecturas:
+        return lecturas
     for lx in lexico:
         dias = _dia_semana(palabras, normal, lx)
         hacia = any(_contiene(normal, m) >= 0 for m in lx.noche_hacia)
@@ -296,11 +336,12 @@ def _leer_con(
             fechas = [_ultimo(n, hoy) for n, _ in dias]
             primero = min(fechas)
             texto = " ".join(f for _, f in dias)
-            if len(dias) == 1 and hacia:
+            de_vispera = len(dias) == 1 and hacia
+            if de_vispera:
                 # «la noche hacia el viernes» empieza el jueves.
                 primero -= timedelta(days=1)
             admitidos = {primero, primero + timedelta(days=1), *fechas}
-            lecturas.append(Lectura(RELATIVA, frozenset(admitidos), primero, texto))
+            lecturas.append(Lectura(RELATIVA, frozenset(admitidos), primero, texto, de_vispera))
             continue
         desplazamientos, noches = _relativas(normal, lx)
         for desplazamiento, forma in desplazamientos:
@@ -500,7 +541,8 @@ def _admitido(
         return False
     if valor.date() > lectura.dia and precision in {"minuto", "hora"}:
         return valor.astimezone(zona_suceso).hour < HORA_FIN_MADRUGADA
-    return True
+    # «La noche hacia el 11» sin hora es del 10: el día a secas del 11 no casa y se corrige.
+    return not (lectura.hacia and valor.date() > lectura.dia)
 
 
 def resolver(
