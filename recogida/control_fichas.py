@@ -603,7 +603,8 @@ def una_union(decision: Documento) -> bool:
 def conservar_la_mas_antigua(
     almacen: Almacen, decisiones: dict[str, Documento], ahora: datetime, modelos: frozenset[str]
 ) -> dict[str, Documento]:
-    """Las uniones del control conservan la ficha más antigua (suceso.mas_antiguo). Las que
+    """Las uniones del control conservan la ficha que dice la definición (suceso.queda): la
+    publicada si solo lo está una y, si no, la más antigua. Las que
     conservaron la más nueva (hasta el 14 de octubre de 2026 se miraba la fecha de alta) cambian de
     número: la ficha publicada sigue igual (su lugar, sus fuentes y lo que el control verificó y
     corrigió, cada valor con su afirmación de origen) pero con el identificador de la más antigua;
@@ -619,6 +620,10 @@ def conservar_la_mas_antigua(
                 continue
             nuevo_id, viejo_id = decision["conserva"], decision["une"]
             if suceso.orden_registro(viejo_id) >= suceso.orden_registro(nuevo_id):
+                continue
+            if almacen.sale_en_la_web(nuevo_id) and not almacen.esta_publicada(viejo_id):
+                # La más antigua nunca salió en la web y la que queda está publicada: es lo que
+                # dice `suceso.queda`, no una unión al revés.
                 continue
             conserva = almacen.incidente(nuevo_id)
             une = almacen.incidente(viejo_id)
@@ -830,7 +835,7 @@ def peticion_par(ctx: Contexto, a: Documento, b: Documento, huella: str,
     cuerpo = peticiones.cuerpo_comparar(_ficha_par(a), fa.bloques, _ficha_par(b), fb.bloques)
     clave = reglas.clave_par(a["id"], b["id"])
     # La que se uniría a la otra, si ya está publicada: esa unión solo la decide el experto.
-    une = suceso.mas_antiguo(a, b)[1]["id"]
+    une = suceso.queda(a, b, ctx.almacen.sale_en_la_web)[1]["id"]
     une_publicada = une if une not in retenidos(ctx.almacen) else None
     # Crítico para el gasto del experto: la unión retiraría una publicada, o una de las dos es
     # un caso crítico.
@@ -937,7 +942,7 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
         # Ya unidos por otro par, o uno retirado entretanto: nada que unir.
         pass
     else:
-        conserva, une = suceso.mas_antiguo(a, b)
+        conserva, une = suceso.queda(a, b, ctx.almacen.sale_en_la_web)
         decision.update(conserva=conserva["id"], une=une["id"])
         try:
             hecha = unir(ctx.almacen, conserva, une, decision["motivo_es"], ctx.ahora, ctx.modelos)
@@ -1573,7 +1578,9 @@ def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
                 ctx.resultado.dudas.setdefault(id_, []).append("retrospectiva sin comprobar")
                 continue
             if decidida["decision"] == "mismo":
-                conserva, une = suceso.mas_antiguo(por_id[decidida["conserva"]], incidente)
+                conserva, une = suceso.queda(
+                    por_id[decidida["conserva"]], incidente, ctx.almacen.sale_en_la_web
+                )
                 if unir(ctx.almacen, conserva, une, decidida["motivo_es"], ctx.ahora, ctx.modelos):
                     ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
                     decidida = {**decidida, "conserva": conserva["id"], "une": une["id"]}

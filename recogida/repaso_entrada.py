@@ -898,7 +898,7 @@ def aplicar_una(ctx: control_fichas.Contexto, incidente: Documento, decision: Do
         if otra is None or not incidentes.activo(otra):
             hecho.sin_aplicar.append(f"{incidente['id']}: {decision['mismo']} ya no está activa")
             return False
-        conserva, une = suceso.mas_antiguo(otra, incidente)
+        conserva, une = suceso.queda(otra, incidente, ctx.almacen.sale_en_la_web)
         texto = f"repaso de entrada: {decision.get('motivo_mismo') or decision.get('motivo_es')}"
         if control_fichas.unir(ctx.almacen, conserva, une, texto[:300], ctx.ahora,
                                ctx.modelos) is None:  # fmt: skip

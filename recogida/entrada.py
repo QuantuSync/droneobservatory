@@ -412,7 +412,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                               decision["mismo_descartado"]["regla"])  # fmt: skip
         if "mismo" in decision:
             otra = next(c for c in elegidas if c["id"] == decision["mismo"])
-            conserva, une = suceso.mas_antiguo(otra, incidente)
+            conserva, une = suceso.queda(otra, incidente, ctx.almacen.sale_en_la_web)
             motivo = f"filtro de entrada: {decision.get('motivo_mismo') or decision['motivo_es']}"
             if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
                                    ctx.modelos) is None:  # fmt: skip
@@ -588,7 +588,7 @@ def corregir_medida(
             de_la_otra = (ctx.decision(clave(otra["id"])) or {}).get("autoridades") or {}
             if suceso.nunca_el_mismo(incidente, otra, suyas, de_la_otra) is not None:
                 continue
-            conserva, une = suceso.mas_antiguo(otra, incidente)
+            conserva, une = suceso.queda(otra, incidente, ctx.almacen.sale_en_la_web)
             motivo = "medida a las 24 horas: el mismo suceso"
             if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
                                    ctx.modelos) is None:  # fmt: skip

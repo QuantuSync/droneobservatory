@@ -1131,6 +1131,23 @@ def mas_antiguo(a: Documento, b: Documento) -> tuple[Documento, Documento]:
     return uno, otro
 
 
+def queda(
+    a: Documento, b: Documento, sale: Callable[[str], bool] | None = None
+) -> tuple[Documento, Documento]:
+    """(la que se conserva, la que se une) cuando lo decide quien lee las fuentes: la que tiene
+    su página en la web si solo la tiene una (`sale`: Almacen.sale_en_la_web), porque una ficha
+    publicada no se funde en una que nunca salió; si no, la más antigua (`mas_antiguo`).
+
+    Las fichas de Lituania de la noche del 10 al 11 de noviembre de 2026 que quedaron dentro de
+    una ficha retirada (EODI-2026-00779 y siguientes) tienen el número más bajo que la ficha
+    publicada de ese suceso (EODI-2026-00792): al volver se unen a ella, y no al revés."""
+    if sale is not None:
+        sale_a, sale_b = sale(str(a["id"])), sale(str(b["id"]))
+        if sale_a != sale_b:
+            return (a, b) if sale_a else (b, a)
+    return mas_antiguo(a, b)
+
+
 def toma_el_tiempo(destino: Documento, absorbido: Documento) -> bool:
     """La ficha que queda toma la fecha de la que se une: solo si a la suya le falta el día
     escrito por una fuente, la otra lo tiene y ese día puede ser el de su jornada (el suyo, la

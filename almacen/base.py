@@ -1986,6 +1986,14 @@ class Almacen:
         ).fetchone()
         return fila is not None
 
+    def sale_en_la_web(self, id_: str) -> bool:
+        """La ficha tiene ahora su página en la web: está publicada, no unida a otra ni
+        retirada."""
+        fila = self._conexion.execute(
+            "SELECT estado FROM publicado WHERE id = ? LIMIT 1", (id_,)
+        ).fetchone()
+        return fila is not None and fila[0] == "publicada"
+
     def publicado_interno(self, ids: Iterable[str]) -> dict[str, Documento]:
         """El documento interno de la versión publicada de esas fichas."""
         resultado: dict[str, Documento] = {}
