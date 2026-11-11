@@ -35,6 +35,8 @@ De ahí sale todo lo demás:
 
 **La ficha que queda** de una unión toma sus datos del suceso, no de la ficha con más fuentes:
 
+- **queda la que ya está publicada**; si lo están las dos o ninguna, la más antigua
+  (`suceso.queda`): una ficha con su página en la web no se funde en una que nunca salió;
 - el **país** es el del suceso; una ficha de otro país no se une, se enlaza;
 - la **fecha** es la del momento en que empieza: la hora, si alguna fuente la da; si solo se sabe
   «la noche hacia el X», la víspera. Una noticia sobre un suceso anterior, fechada por otro día,
@@ -65,11 +67,20 @@ Las reglas firmes, en su orden (la primera que habla, decide):
 4. **Lo que el experto dio por distinto** leyendo las fuentes de las dos no se vuelve a unir
    solo.
 5. **Dos cierres del mismo sitio en noches distintas**, o un cierre que las fuentes cuentan como
-   repetido, son dos sucesos.
+   repetido, son dos sucesos. Con hora, la noche es la de su tarde (la madrugada es de la noche
+   que empezó la víspera). Con el día a secas, la de ese día, y también la de la víspera si la
+   primera noticia de la ficha salió antes de la tarde de ese día: entonces el cierre fue de
+   madrugada.
 6. **El mismo sitio y la misma jornada**, sin nada de lo anterior, es el mismo suceso sin
    preguntar: con hora en las dos, inicios a menos de 6 horas; con día, el mismo día; con la
-   fecha de publicación, ese día o la víspera. Dos días seguidos sin hora pueden ser una noche o
-   dos sucesos: decide el experto.
+   fecha de publicación, ese día o la víspera. Una hora «aproximada» que escribe una fuente es
+   una hora, no una fecha de publicación. Dos días seguidos sin hora pueden ser una noche o dos
+   sucesos: decide el experto. Y la regla no une sola dos fichas que ya tienen su página en la
+   web: la unión que retira una ficha publicada la decide quien lee las fuentes.
+
+Para lo que se pregunta al experto la jornada es más ancha que para lo que se une solo: una hora
+de la tarde-noche llega a la madrugada del día siguiente, y dos días seguidos sin hora pueden ser
+la misma noche.
 
 Lo que no es firme lo decide el experto, y lo que decide se comprueba: un «mismo» que una regla
 firme da por distintos no se une.
@@ -85,19 +96,27 @@ firme da por distintos no se une.
 | Toda unión del control | no se hace si el veredicto es «distintos»: queda como propuesta | `recogida/control_fichas.unir` |
 | Dos días en una ficha | la ficha con una frase que da dos días que no son una noche cuenta dos sucesos: no se publica hasta que una revisión la separa | `suceso.dos_dias_sin_revisar` (filtro de entrada y letra AA) |
 | Cerrojo | no deja unir lo que la definición da por distintos por las reglas 1 y 4, y deja deshacer lo que da por distintos | `proceso/protegido.par_prohibido`, `es_separacion` |
-| Auditoría | letra **V**: uniones vigentes que el veredicto da por «distintos»; letra **AA**: dos días | `proceso/auditoria_fichas.py` |
+| Noticias de un suceso anterior | con qué fichas anteriores del mismo sitio se compara una noticia retrospectiva (`suceso.previas_del_sitio`) | `recogida/control_fichas.retrospectivas` |
+| Auditoría | letra **V**: uniones vigentes que el veredicto da por «distintos» por una regla que manda sobre quien leyó las fuentes (1, 2 y 4); letra **AA**: dos días | `proceso/auditoria_fichas.py` |
 | Invariantes | **I6**: ninguna unión vigente que `revisar_fusiones` tenía que haber deshecho | `proceso/invariantes.py` |
 | Episodios | varios objetivos de un país en una noche; el mismo episodio a los dos lados de una frontera | `suceso.episodios_calculados` |
 | Repaso de entrada (a mano) | lo que no puede ser el mismo al repasar una ficha publicada | `suceso.imposible_al_repasar` |
 
 ## El episodio transfronterizo
 
-Dos sucesos de países vecinos son el mismo episodio físico si son de la misma jornada y las
-fuentes de uno cuentan el paso al otro país (una frase suya lo nombra: «flew into Latvian
-airspace», «pasiekė Estiją») o los dos comparten una noticia. No se unen: se enlazan con el mismo
-`episodio`, aunque sus fichas solo digan el país. El dron de la noche del 10 al 11 de noviembre
-de 2026 cruzó Lituania (EODI-2026-00792), Letonia (EODI-2026-00777) y llegó a Estonia
-(EODI-2026-00801): tres sucesos, un episodio.
+Dos sucesos de países vecinos son el mismo episodio físico si en los dos son drones que entran
+desde fuera (`pruebas.entrada_exterior`), son de la misma jornada y las fuentes de uno cuentan el
+paso al otro país (una frase suya lo nombra: «flew into Latvian airspace», «pasiekė Estiją») o
+los dos comparten una noticia. No se unen: se enlazan con el mismo `episodio`, aunque sus fichas
+solo digan el país. El dron de la noche del 10 al 11 de noviembre de 2026 cruzó Lituania
+(EODI-2026-00792), Letonia (EODI-2026-00777) y llegó a Estonia (EODI-2026-00801): tres sucesos,
+un episodio.
+
+Que una noticia nombre el otro país no basta: las de un aeropuerto cerrado citan los de los
+países de al lado y no es el mismo episodio. Medido sobre el registro del 11 de noviembre de
+2026: con la frase sola salían 35 pares, 21 de ellos de aeropuertos y bases de países vecinos; con
+los drones que entran desde fuera en los dos, 14, todos de la misma oleada (Rumanía y Moldavia,
+Letonia y Estonia, Lituania y Letonia).
 
 ## Los casos reales
 
