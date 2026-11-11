@@ -220,7 +220,8 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       const datos = await publicados(pagina.request);
       for (const id of CORREGIDAS) {
         if (destino(datos, id) === null) {
-          expect((await pagina.request.get(ruta(id, idioma))).status(), `${id} retirada`).toBe(404);
+          // Retirada: 410 con su explicación si llegó a salir en la web; 404 si nunca salió.
+          expect([404, 410], `${id} retirada`).toContain((await pagina.request.get(ruta(id, idioma))).status());
           continue;
         }
         const ficha = await abrir(pagina, contexto, id, idioma, browserName === "chromium", tactil);

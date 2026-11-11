@@ -121,7 +121,8 @@ test.describe("Fichas del mar Negro y la 00248, como una persona", () => {
       const datos = await publicados(pagina.request);
       for (const id of MAR_NEGRO) {
         if (destino(datos, id) === null) {
-          expect((await pagina.request.get(ruta(id, idioma))).status(), `${id} retirada`).toBe(404);
+          // Retirada: 410 con su explicación si llegó a salir en la web; 404 si nunca salió.
+          expect([404, 410], `${id} retirada`).toContain((await pagina.request.get(ruta(id, idioma))).status());
           continue;
         }
         const ficha = await abrir(pagina, contexto, id, idioma, browserName === "chromium", tactil);
