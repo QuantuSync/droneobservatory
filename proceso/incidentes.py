@@ -651,7 +651,7 @@ def fusionar(
         if len(anteriores) != 1:
             continue
         destino, absorbido = suceso.destino_de(anteriores[0], incidente, publicados)
-        if almacen.esta_publicada(destino["id"]) and almacen.esta_publicada(absorbido["id"]):
+        if almacen.sale_en_la_web(destino["id"]) and almacen.sale_en_la_web(absorbido["id"]):
             # Las dos tienen su dirección en la web: la unión que retira una ficha publicada la
             # decide quien lee las fuentes (el control compara el par), no una regla. Sin esto,
             # un cambio en la regla o en un dato de una de las dos juntaría solas dos fichas que

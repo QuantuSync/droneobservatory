@@ -504,3 +504,77 @@ def test_la_union_de_otro_pais_se_deshace_sola_en_la_base() -> None:
     # Idempotente: otra pasada no hace nada, y la regla de fusión no las vuelve a juntar.
     assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == []
     assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 0
+
+
+# --- La ficha que queda -------------------------------------------------------------------------
+
+
+def test_lituania_queda_la_ficha_publicada_no_la_de_numero_mas_bajo() -> None:
+    """EODI-2026-00779 nunca salió en la web y EODI-2026-00792 es la ficha publicada de esa
+    noche: al unirse queda la publicada. Con la regla de antes («la más antigua») la 00792, con
+    sus avisos enviados y sus datos revisados, se habría fundido en la 00779."""
+    kaunas, lituania = suelta("2026-00779"), f("2026-00792")
+    conserva, une = suceso.queda(kaunas, lituania, {"EODI-2026-00792"}.__contains__)
+    assert (conserva["id"], une["id"]) == ("EODI-2026-00792", "EODI-2026-00779")
+    # Si salen las dos, o no se sabe, la más antigua.
+    assert suceso.queda(kaunas, lituania)[0]["id"] == "EODI-2026-00779"
+    assert suceso.queda(kaunas, lituania, lambda _: True)[0]["id"] == "EODI-2026-00779"
+
+
+def test_la_ficha_de_lituania_sale_de_la_retirada_y_se_une_a_la_publicada() -> None:
+    """El camino entero sobre una base: la ficha lituana está fundida por el control en el
+    resumen con el lugar en Letonia (retirado); `revisar_fusiones` la saca, quien lee las
+    fuentes la une a la ficha publicada de Lituania, y nada les da la vuelta después."""
+    from exportacion import puerta
+    from recogida import control_fichas as control
+
+    almacen = Almacen.abrir()
+    resumen = {**_completa(suelta("2026-00778")), "id": "EODI-2026-09778"}
+    kaunas = {**_completa(suelta("2026-00779")), "id": "EODI-2026-09779"}
+    lituania = {**_completa(f("2026-00792")), "id": "EODI-2026-09792"}
+    for ficha in (resumen, kaunas, lituania):
+        almacen.guardar_incidente(ficha, AHORA, VOCABULARIO_MODELOS)
+    almacen.guardar_publicado(
+        "EODI-2026-09792", puerta.PUBLICADA, "incidentes.geojson", {"id": "EODI-2026-09792"},
+        {}, {}, "x",
+    )  # fmt: skip
+    almacen.guardar_controles(
+        {"entrada:EODI-2026-09779": {"autoridades": DECIDIDAS["EODI-2026-00779"]}},
+        "2026-11-11T03:17:00Z",
+    )
+    assert control.unir(almacen, resumen, kaunas, "x", AHORA, VOCABULARIO_MODELOS) is None
+    # La unión del 11 de noviembre, hecha antes de la regla: se anota como estaba.
+    nuevo, aportadas = incidentes.absorber(resumen, kaunas, AHORA)
+    almacen.guardar_incidente(nuevo, AHORA, VOCABULARIO_MODELOS)
+    almacen.guardar_incidente(
+        {**kaunas, "fusionado_en": "EODI-2026-09778"}, AHORA, VOCABULARIO_MODELOS
+    )
+    almacen.registrar_fusion(
+        "2026-11-11T03:17Z", "EODI-2026-09779", "EODI-2026-09778",
+        suceso.PREFIJO_CONTROL + "filtro de entrada: Es la misma alerta", aportadas,
+        incidentes.instantanea(almacen, resumen, kaunas),
+    )  # fmt: skip
+
+    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == ["EODI-2026-09779"]
+    vuelta = almacen.incidente("EODI-2026-09779")
+    publicada = almacen.incidente("EODI-2026-09792")
+    assert vuelta is not None and publicada is not None and "fusionado_en" not in vuelta
+    conserva, une = suceso.queda(vuelta, publicada, almacen.sale_en_la_web)
+    assert conserva["id"] == "EODI-2026-09792"
+    assert control.unir(almacen, conserva, une, "la misma noche", AHORA, VOCABULARIO_MODELOS)
+    queda = almacen.incidente("EODI-2026-09792")
+    unida = almacen.incidente("EODI-2026-09779")
+    assert queda is not None and unida is not None
+    assert unida["fusionado_en"] == "EODI-2026-09792"
+    assert {n["id"] for n in kaunas["fuentes"]} <= {n["id"] for n in queda["fuentes"]}
+    # La renumeración de «la más antigua» no les da la vuelta, ni nada deshace la unión.
+    decision = {
+        "decision": "mismo", "conserva": "EODI-2026-09792", "une": "EODI-2026-09779",
+        "motivo_es": "la misma noche",
+    }  # fmt: skip
+    par = suceso.clave_par("EODI-2026-09779", "EODI-2026-09792")
+    assert (
+        control.conservar_la_mas_antigua(almacen, {par: decision}, AHORA, VOCABULARIO_MODELOS) == {}
+    )
+    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == []
+    assert invariantes.uniones_de_sucesos_distintos(almacen) == []
