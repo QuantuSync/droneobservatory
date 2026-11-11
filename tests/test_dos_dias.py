@@ -165,3 +165,26 @@ def test_la_retencion_por_dos_dias_se_revisa_al_enlazar_la_parte() -> None:
     assert not entrada.pendiente(decision, ficha, LUNES)
     enlazada = {**ficha, "relacionados": [{"id": "EODI-2026-00770"}]}
     assert entrada.pendiente(decision, enlazada, LUNES)
+
+
+# La noche del martes al miércoles contada el martes por la noche (LRT, alertas aéreas de
+# Lituania del 10 de noviembre de 2026): el miércoles aún no ha llegado. La ficha EODI-2026-00784
+# del ensayo quedó retenida por «una frase da dos días (2026-11-04, 2026-11-10)».
+VILNA = ZoneInfo("Europe/Vilnius")
+MARTES_NOCHE = datetime(2026, 11, 10, 20, 56, tzinfo=UTC)
+MIERCOLES = datetime(2026, 11, 11, 7, 18, tzinfo=UTC)
+
+
+def test_la_noche_del_martes_al_miercoles_contada_el_martes_es_una_noche() -> None:
+    frase = (
+        "Naktį iš antradienio į trečiadienį šalies gyventojus vienas po kito pasiekė skirtingi "
+        "oro pavojaus signalai dėl galimo drono Lietuvos teritorijoje."
+    )
+    for publicacion in (MARTES_NOCHE, MIERCOLES):
+        assert fechas.dias_distintos(frase, publicacion, VILNA, "lt") == []
+    ingles = "Air alerts were issued overnight from Tuesday into Wednesday and early Wednesday."
+    assert fechas.dias_distintos(ingles, MARTES_NOCHE, VILNA, "en") == []
+    # Sin la noche, dos días seguidos siguen siendo dos días, se cuente cuando se cuente.
+    dos = "Dronai pastebėti antradienį ir trečiadienį."
+    assert len(fechas.dias_distintos(dos, MARTES_NOCHE, VILNA, "lt")) == 2
+    assert len(fechas.dias_distintos(dos, MIERCOLES, VILNA, "lt")) == 2
