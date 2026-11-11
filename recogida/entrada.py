@@ -2,20 +2,15 @@
 «Filtro de entrada»).
 
 Ninguna ficha nueva se publica sin que el experto la haya comparado con todo lo que puede ser el
-mismo suceso, y sin que su fecha, su lugar y sus autoridades salgan de una frase de una fuente. El
-conjunto de comparación no se elige por distancia: todas las fichas activas del mismo país de los
-30 días anteriores a los 3 posteriores a su inicio y a su primera noticia; si el lugar es vago
-(mar, frontera, región o país), también las de los países vecinos y ribereños. Con la respuesta:
+mismo suceso, y sin que su fecha, su lugar y sus autoridades salgan de una frase de una fuente.
+Qué es el mismo suceso, con qué fichas se compara una nueva y qué no puede serlo diga lo que diga
+el experto lo dice la definición (proceso/suceso.py, docs/definicion_suceso.md): este módulo
+pregunta al experto con ella delante y hace lo que salga. Con la respuesta:
 
-- antes de preguntar: si la ficha es la nota-resumen de una autoridad que da sus alertas por
-  zonas y hay una ficha activa con las alertas de esa misma noche (o al revés), son el mismo
-  suceso y se unen sin más (`resumen_de_la_misma_noche`), aunque el experto diera el par por
-  distinto;
-- el mismo suceso que una de la lista: se une por el camino de las uniones del control, antes de
-  publicarse (queda la más antigua). Nunca con una ficha de otro país si alguna de las dos cita a
-  una autoridad del suyo, ni con la de otra alerta (otra zona y otra hora) de la misma autoridad
-  (`nunca_el_mismo`); y la lista no lleva las fichas que el experto ya dio por distintas de ella
-  en el control: ninguna unión las junta, así que preguntarlo solo dejaba la ficha sin salida;
+- el mismo suceso que una de la lista (`suceso.conjunto`): se une por el camino de las uniones
+  del control, antes de publicarse (queda la más antigua). Nunca si la definición las da por
+  sucesos distintos (`suceso.nunca_el_mismo`: otro país con una autoridad del suyo, una revisión
+  que las separó);
 - un suceso de otro día, con la frase que lo da: la ficha toma ese día y vuelve a pasar por el
   filtro con él;
 - la fecha sin frase: la ficha no se publica hasta que una fuente la dé;
@@ -44,28 +39,19 @@ from esquema import Documento
 from modelo import control, coste
 from modelo import entrada as peticiones
 from modelo.cliente import LlamadaFallida
-from proceso import (
-    alertas_zona,
-    auditoria_fichas,
-    autoridades,
-    fechas,
-    fronteras,
-    incidentes,
-    noticias,
-)
 from proceso import control_fichas as reglas
-from recogida import control_fichas, oficiales
+from proceso import (
+    fechas,
+    incidentes,
+    suceso,
+)
+from recogida import control_fichas
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
 
 PREFIJO = "entrada:"
 PREFIJO_MEDIDA = "medida:"
-DIAS_ANTES = 30
-DIAS_DESPUES = 3
-MAX_CONJUNTO = 40
-# Dos fichas con su día sacado de una frase y a más de estos días no se unen sin revisión.
-DIAS_FIRMES = 2
 MEDIDA_TRAS = timedelta(hours=24)
 # Las medidas no pasan de 7 días: lo publicado antes del filtro no se mide.
 MEDIDA_HASTA = timedelta(days=7)
@@ -78,35 +64,6 @@ PUBLICAR, UNIDA, RETENER, ESPERA = "publicar", "unida", "retener", "dudoso"
 # así vuelven a pasar por el filtro (`pendiente`), ya sin esa ficha en la lista.
 SIN_SALIDA = "dados por distintos: propuesta"
 SIN_UNIR = "el cerrojo retiene la unión o las dos tienen revisado a mano el mismo dato"
-FUERA_DE_PAIS = frozenset({"NATO", "OTAN", "EU", "UE"})
-
-# Los países que se miran también cuando el lugar es vago: los vecinos por tierra (y por un
-# estrecho) y los ribereños de cada mar.
-MARES: dict[str, frozenset[str]] = {
-    "negro": frozenset({"BG", "RO", "UA", "TR", "GE", "MD"}),
-    "baltico": frozenset({"SE", "FI", "EE", "LV", "LT", "PL", "DE", "DK", "RU"}),
-    "norte": frozenset({"GB", "NO", "DK", "DE", "NL", "BE", "FR"}),
-    "mediterraneo": frozenset(
-        {"ES", "FR", "MC", "IT", "MT", "SI", "HR", "BA", "ME", "AL", "GR", "TR", "CY"}
-    ),
-}
-VECINOS: dict[str, frozenset[str]] = {
-    p: frozenset(v.split())
-    for p, v in {
-        "PT": "ES", "ES": "PT FR AD", "FR": "ES AD MC IT CH DE LU BE GB",
-        "BE": "FR LU DE NL GB", "NL": "BE DE GB", "LU": "BE FR DE",
-        "DE": "DK NL BE LU FR CH AT CZ PL", "DK": "DE SE NO", "NO": "SE FI RU DK GB",
-        "SE": "NO FI DK", "FI": "SE NO RU EE", "EE": "LV RU FI", "LV": "EE LT BY RU",
-        "LT": "LV BY PL RU", "PL": "DE CZ SK UA BY LT RU", "CZ": "DE PL SK AT",
-        "SK": "CZ PL UA HU AT", "AT": "DE CZ SK HU SI IT CH LI", "CH": "DE FR IT AT LI",
-        "IT": "FR CH AT SI SM VA MT", "SI": "IT AT HU HR", "HR": "SI HU RS BA ME",
-        "HU": "AT SK UA RO RS HR SI", "RO": "HU UA MD BG RS", "MD": "RO UA",
-        "BG": "RO RS MK GR TR", "GR": "AL MK BG TR CY", "CY": "GR TR", "IE": "GB",
-        "GB": "IE FR BE NL NO", "UA": "PL SK HU RO MD BY RU", "RS": "HU RO BG MK ME BA HR",
-        "BA": "HR RS ME", "ME": "HR BA RS AL", "AL": "ME MK GR", "MK": "RS BG GR AL",
-        "MT": "IT", "TR": "BG GR GE", "GE": "TR RU", "BY": "PL LT LV UA RU",
-    }.items()
-}  # fmt: skip
 
 
 def clave(id_: str) -> str:
@@ -131,69 +88,6 @@ def _leer(texto: str) -> datetime:
 
 
 # --- El conjunto de comparación -----------------------------------------------------------
-
-
-def vago(incidente: Documento) -> bool:
-    """El lugar no sitúa el suceso en un país solo: el mar, una frontera, una región o el país."""
-    lugar = incidente["lugar"]
-    zona = incidente.get("zona") or {}
-    return (
-        lugar.get("nivel") in {"pais", "region"}
-        or "punto" not in lugar
-        or zona.get("grupo") == "frontera"
-    )
-
-
-def paises(incidente: Documento) -> frozenset[str]:
-    """El país de la ficha y, con el lugar vago, sus vecinos y los ribereños de sus mares."""
-    pais = str(incidente["lugar"]["pais"])
-    if not vago(incidente):
-        return frozenset({pais})
-    mares = [m for m in MARES.values() if pais in m]
-    return frozenset({pais}) | VECINOS.get(pais, frozenset()) | frozenset().union(*mares)
-
-
-def _referencias(incidente: Documento) -> list[datetime]:
-    return [reglas.instante(incidente), reglas.primera_noticia(incidente)]
-
-
-def conjunto(
-    incidente: Documento, activos: list[Documento],
-    distintos: frozenset[frozenset[str]] = frozenset(),
-) -> list[Documento]:  # fmt: skip
-    """Las fichas activas que pueden contar el mismo suceso, sin mirar la distancia: de sus
-    países (paises), de 30 días antes a 3 después de su inicio o de su primera noticia, salvo las
-    que una revisión separó y las que el experto ya dio por distintas de ella en el control
-    (`distintos`: incidentes.distintos_del_experto). Si son más de MAX_CONJUNTO, las del mismo
-    tipo y las más cercanas en el tiempo.
-
-    Un par que el experto dio por distinto comparando las fuentes de las dos no lo une nadie
-    (control_fichas.unir): si el filtro, que solo ve una línea de la otra, decía «el mismo», la
-    ficha quedaba retenida como «propuesta para revisar» y, con las mismas fuentes, para siempre
-    (EODI-2026-00778 frente a EODI-2026-00777, 11 de noviembre de 2026)."""
-    referencias = _referencias(incidente)
-    validos = paises(incidente)
-    elegidas = []
-    for otra in activos:
-        if otra["id"] == incidente["id"] or otra["lugar"]["pais"] not in validos:
-            continue
-        if frozenset((str(incidente["id"]), str(otra["id"]))) in distintos:
-            continue
-        momento = reglas.instante(otra)
-        if not any(
-            r - timedelta(days=DIAS_ANTES) <= momento <= r + timedelta(days=DIAS_DESPUES)
-            for r in referencias
-        ):
-            continue
-        if reglas.separados(incidente, otra):
-            continue
-        elegidas.append(otra)
-
-    def orden(otra: Documento) -> tuple[int, float, str]:
-        distancia = min(abs((reglas.instante(otra) - r).total_seconds()) for r in referencias)
-        return (0 if otra.get("tipo") == incidente.get("tipo") else 1, distancia, otra["id"])
-
-    return sorted(elegidas, key=orden)[:MAX_CONJUNTO]
 
 
 def resumen(otra: Documento) -> dict[str, Any]:
@@ -287,7 +181,7 @@ def decidir(
         _normal(str(a.get("nombre") or "")): a
         for a in respuesta.get("autoridades") or [] if isinstance(a, dict)
     }  # fmt: skip
-    validos = permitidos(incidente) | FUERA_DE_PAIS
+    validos = permitidos(incidente) | suceso.FUERA_DE_PAIS
     sin_publicar: dict[str, str] = {}
     paises_: dict[str, str] = {}
     for nombre in citadas:
@@ -301,47 +195,11 @@ def decidir(
             sin_publicar[nombre] = "ninguna frase la nombra con su país"
             continue
         paises_[nombre] = pais
-        if pais not in validos and not _pais_en_la_frase(pais, con_frase[1]):
+        if pais not in validos and not suceso.nombra_el_pais(pais, con_frase[1]):
             sin_publicar[nombre] = f"de otro país ({pais}) sin que la frase lo diga"
     decision["autoridades"] = paises_
     decision["autoridades_fuera"] = sin_publicar
     return decision
-
-
-def fecha_firme(incidente: Documento) -> bool:
-    """El inicio sale de una frase con su día (no es la fecha de publicación ni aproximado)."""
-    inicio = incidente["tiempo"]["inicio"]
-    origen = incidente["tiempo"].get("origen_inicio") or {}
-    con_dia = inicio.get("precision") in ("dia", "hora", "minuto")
-    return con_dia and origen.get("tipo") not in ("publicacion", None)
-
-
-def fecha_aproximada(incidente: Documento) -> bool:
-    """La fecha es la de publicación o aproximada: sin una frase que la dé, no se publica."""
-    origen = incidente["tiempo"].get("origen_inicio") or {}
-    return incidente["tiempo"]["inicio"].get("precision") == "aproximada" or (
-        origen.get("tipo") == "publicacion"
-    )
-
-
-def fechas_distintas(incidente: Documento, otra: Documento) -> str | None:
-    """Las dos fichas tienen fechas firmes a más de DIAS_FIRMES días: el texto de las dos fechas,
-    o None. Un mismo suceso con dos días firmes tan separados casi siempre son dos sucesos (en la
-    prueba del 28 de octubre de 2026, el ataque a buques frente a Bulgaria del 12 de octubre,
-    EODI-2026-00512, salía unido al del 6, EODI-2026-00489)."""
-    if not (fecha_firme(incidente) and fecha_firme(otra)):
-        return None
-    a, b = reglas.instante(incidente), reglas.instante(otra)
-    if abs((a - b).total_seconds()) <= DIAS_FIRMES * 86400:
-        return None
-    return f"{a.date().isoformat()} y {b.date().isoformat()}"
-
-
-def _pais_en_la_frase(pais: str, frase: str) -> bool:
-    """La frase nombra el país (el principio de su nombre en alguna lengua de Natural Earth:
-    «bulgar» vale para «Bulgarian officials»)."""
-    texto = noticias.normalizar(frase)
-    return any(n[:5] in texto for n in fronteras.nombres_del_pais(pais) if len(n) >= 5)
 
 
 def sin_frase(decision: dict[str, Any]) -> list[str]:
@@ -359,147 +217,12 @@ def sin_frase(decision: dict[str, Any]) -> list[str]:
 # --- Lo que nunca es el mismo suceso ------------------------------------------------------
 
 
-def paises_de_autoridades(incidente: Documento, decididas: dict[str, str]) -> frozenset[str]:
-    """Los países de las autoridades que cita la ficha: los que el filtro comprobó con su frase
-    (`decididas`: nombre -> país, de la decisión del filtro) y los de sus fuentes de autoridad
-    que se saben por la tabla o por la fuente oficial que las publica."""
-    paises_ = {str(p) for p in decididas.values() if p}
-    for fuente in incidente.get("fuentes", []):
-        if not fuente.get("es_autoridad") or fuente.get("publica", True) is False:
-            continue
-        pais = autoridades.pais_del_organismo(str(fuente.get("medio") or ""))
-        if pais:
-            paises_.add(pais)
-    return frozenset(paises_ - FUERA_DE_PAIS)
-
-
-def nunca_el_mismo(
-    incidente: Documento, otra: Documento, suyas: dict[str, str], de_la_otra: dict[str, str]
-) -> str | None:
-    """Por qué las dos fichas no pueden ser el mismo suceso diga lo que diga el experto, o None.
-
-    - Países distintos y alguna cita a una autoridad de su país: cada país cuenta su suceso. El
-      11 de noviembre de 2026 el filtro unió la ficha de Lituania (EODI-2026-00779: el aviso del
-      Centro Nacional de Gestión de Crisis y el aeropuerto de Kaunas) a la de un resumen con el
-      lugar en Letonia (EODI-2026-00778), y de Lituania no salió nada. Sin autoridad de ninguno de
-      los dos países (un buque en el mar, una frontera) sigue decidiendo el experto.
-    - El mismo país y notas de la misma autoridad que da sus alertas por zonas, de zonas
-      distintas y a horas distintas (proceso/alertas_zona.py): son dos alertas."""
-    pais, pais_otra = str(incidente["lugar"]["pais"]), str(otra["lugar"]["pais"])
-    if pais != pais_otra:
-        con_la_suya = pais in paises_de_autoridades(incidente, suyas)
-        if con_la_suya or pais_otra in paises_de_autoridades(otra, de_la_otra):
-            return (
-                f"países distintos ({pais} y {pais_otra}) con una autoridad del suyo: cada país "
-                "cuenta su suceso"
-            )
-        return None
-    for fuente in oficiales.fuentes():
-        regla = fuente.get("alertas_por_zona")
-        if not regla or fuente["pais"] != pais:
-            continue
-        propios = oficiales.titulos_de(incidente, fuente)
-        ajenos = oficiales.titulos_de(otra, fuente)
-        if alertas_zona.otra_alerta(propios, ajenos, pais, str(regla["hora"])):
-            return (
-                f"dos alertas de {fuente['medio']} en zonas distintas y a horas distintas: no "
-                "son el mismo suceso"
-            )
-    return None
-
-
-REGLA_RESUMEN = "resumen_de_la_misma_noche"
-MOTIVO_RESUMEN_EN = (
-    "The authority's summary note of the night and its zone alerts of that same night are the "
-    "same event."
-)
-# Dos fichas de la misma noche: sus días (el de cada una, sin hora) son el mismo o seguidos.
-DIAS_MISMA_NOCHE = 1
-
-
-def resumen_de_la_misma_noche(incidente: Documento, otra: Documento) -> str | None:
-    """Por qué las dos fichas son el mismo suceso sin preguntarlo, o None: una es la nota-resumen
-    de una autoridad que da sus alertas por zonas y la otra, las alertas de esa misma noche en el
-    mismo país. La nota-resumen no nombra una zona («Naktī uz 11. novembri Latvijas gaisa telpā
-    ielidoja trīs bezpilota lidaparāti»); las alertas, sí.
-
-    El 11 de noviembre de 2026 el experto dio por distintas la ficha de las alertas letonas de la
-    noche (EODI-2026-00777, municipios) y la de la nota con la que las Fuerzas Armadas contaron
-    esa misma noche a la mañana siguiente (EODI-2026-00784, el país), y salieron las dos. Dos
-    alertas de zonas y horas distintas siguen siendo dos sucesos (`nunca_el_mismo`)."""
-    pais = str(incidente["lugar"]["pais"])
-    if pais != str(otra["lugar"]["pais"]):
-        return None
-    dias = abs((reglas.instante(incidente).date() - reglas.instante(otra).date()).days)
-    if dias > DIAS_MISMA_NOCHE:
-        return None
-    for fuente in oficiales.fuentes():
-        regla = fuente.get("alertas_por_zona")
-        if not regla or fuente["pais"] != pais:
-            continue
-        textos = [" . ".join(oficiales.titulos_de(ficha, fuente)) for ficha in (incidente, otra)]
-        if not all(textos):
-            continue
-        for de_la_noche, de_las_alertas in (textos, textos[::-1]):
-            # La nota de la noche: no nombra ninguna zona y habla de «la noche». Las alertas:
-            # nombran su zona y escriben su hora.
-            if (
-                not alertas_zona.zonas(de_la_noche, pais)
-                and fechas.nombra_la_noche(de_la_noche, str(fuente["idioma"]))
-                and alertas_zona.zonas(de_las_alertas, pais)
-                and alertas_zona.horas(de_las_alertas, str(regla["hora"]))
-            ):
-                return (
-                    f"la nota de {fuente['medio']} que cuenta la noche y sus alertas por zonas "
-                    "de esa misma noche son el mismo suceso"
-                )
-    return None
-
-
-def unir_al_resumen(ctx: control_fichas.Contexto, incidente: Documento) -> dict[str, Any] | None:
-    """Une la ficha nueva a la activa que es su misma noche según `resumen_de_la_misma_noche`
-    (queda la más antigua). Si el experto había dado el par por distinto en el control, la regla
-    lo decide de nuevo como «mismo» (una decisión nueva del par, con su regla): ni `unir` ni el
-    cerrojo unen un par que sigue dado por distinto. Devuelve lo que se apunta en la decisión del
-    filtro, o None si no hay ninguna o la unión no se puede hacer (una revisión a mano o el
-    cerrojo: la decisión anterior del par se repone y sigue el filtro de siempre)."""
-    for otra in sorted(_activos(ctx.almacen), key=lambda d: str(d["id"])):
-        if otra["id"] == incidente["id"]:
-            continue
-        regla = resumen_de_la_misma_noche(incidente, otra)
-        if regla is None:
-            continue
-        conserva, une = reglas.mas_antiguo(otra, incidente)
-        clave_par = reglas.clave_par(str(conserva["id"]), str(une["id"]))
-        anterior = ctx.decision(clave_par)
-        del_par: Documento = {
-            "decision": "mismo", "regla": REGLA_RESUMEN, "fecha": _iso(ctx.ahora),
-            "conserva": conserva["id"], "une": une["id"], "motivo_es": regla,
-            "motivo_en": MOTIVO_RESUMEN_EN, "version": peticiones.VERSION_ENTRADA,
-        }  # fmt: skip
-        ctx.almacen.guardar_controles({clave_par: del_par}, _iso(ctx.ahora))
-        motivo = f"filtro de entrada: {regla}"
-        hecha = control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora, ctx.modelos)
-        if hecha is None:
-            if anterior is not None:
-                ctx.almacen.guardar_controles({clave_par: anterior}, _iso(ctx.ahora))
-            continue
-        ctx.nuevas[clave_par] = del_par
-        ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
-        return {
-            "decision": UNIDA, "conserva": conserva["id"], "une": une["id"],
-            "mismo": otra["id"], "motivo_mismo": regla, "regla": REGLA_RESUMEN,
-            "motivo_es": regla, "motivo_en": MOTIVO_RESUMEN_EN,
-        }  # fmt: skip
-    return None
-
-
 def sin_el_mismo_imposible(
     decision: dict[str, Any], incidente: Documento, otra: Documento, de_la_otra: dict[str, str]
 ) -> dict[str, Any]:
-    """La decisión sin el «mismo suceso» que una regla fija no deja unir (`nunca_el_mismo`); lo
-    descartado queda anotado con su regla."""
-    regla = nunca_el_mismo(incidente, otra, decision.get("autoridades") or {}, de_la_otra)
+    """La decisión sin el «mismo suceso» que la definición no deja unir (`suceso.nunca_el_mismo`:
+    una regla firme, diga lo que diga el experto); lo descartado queda anotado con su regla."""
+    regla = suceso.nunca_el_mismo(incidente, otra, decision.get("autoridades") or {}, de_la_otra)
     if regla is None:
         return decision
     resto = {k: v for k, v in decision.items() if k not in {"mismo", "motivo_mismo"}}
@@ -614,7 +337,7 @@ def preguntar(
     sus fuentes. Si duda, o si no da frase para la fecha, el lugar o una autoridad, se le vuelve a
     preguntar con las fuentes de las candidatas más cercanas."""
     almacen = experto.ctx.almacen
-    elegidas = conjunto(incidente, activos, incidentes.distintos_del_experto(almacen))
+    elegidas = suceso.conjunto(incidente, activos, suceso.distintos_del_experto(almacen))
     ids = [c["id"] for c in elegidas]
     fuentes = control_fichas.fuentes_de_ficha(almacen, incidente, _textos(incidente, experto.plazo))
     citadas = list(autoridades_de(incidente))
@@ -628,7 +351,7 @@ def preguntar(
     por_id = {c["id"]: c for c in elegidas}
 
     def choque(d: dict[str, Any]) -> str | None:
-        return fechas_distintas(incidente, por_id[d["mismo"]]) if "mismo" in d else None
+        return suceso.fechas_distintas(incidente, por_id[d["mismo"]]) if "mismo" in d else None
 
     if decision.get("duda") or sin_frase(decision) or decision.get("invalida") or choque(decision):
         dudosas = [*decision.get("dudosas", []), *([decision["mismo"]] if "mismo" in decision
@@ -660,18 +383,14 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
     clave_ = clave(incidente["id"])
     base: Documento = {"version": peticiones.VERSION_ENTRADA, "fecha": _iso(ctx.ahora)}
     cambios: list[str] = []
-    if auditoria_fichas.dos_dias_sin_revisar(incidente):
+    if suceso.dos_dias_sin_revisar(incidente):
         # Una frase da dos días («w niedzielę i wtorek»): son dos sucesos y la ficha tiene uno.
         # No se publica ni se pregunta: la separa una revisión (EODI-2026-00756).
-        frase, dias = fechas.frase_de_dos_dias(incidente) or ("", [])
+        frase, dias = suceso.varios_dias(incidente) or ("", [])
         return {**base, "huella": huella(incidente), "decision": RETENER, "cambios": cambios,
                 "dos_dias": True,
                 "motivo": f"una frase da dos días ({', '.join(map(str, dias))}): «{frase}»; "
                 "separar en dos fichas"}  # fmt: skip
-    del_resumen = unir_al_resumen(ctx, incidente)
-    if del_resumen is not None:
-        registro.info("filtro de entrada %s: %s", incidente["id"], del_resumen["motivo_mismo"])
-        return {**base, "huella": huella(incidente), **del_resumen, "cambios": cambios}
     for vuelta in range(2):
         activos = _activos(ctx.almacen)
         decision, elegidas, _ = preguntar(experto, incidente, activos, clave_)
@@ -693,7 +412,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                               decision["mismo_descartado"]["regla"])  # fmt: skip
         if "mismo" in decision:
             otra = next(c for c in elegidas if c["id"] == decision["mismo"])
-            conserva, une = reglas.mas_antiguo(otra, incidente)
+            conserva, une = suceso.mas_antiguo(otra, incidente)
             motivo = f"filtro de entrada: {decision.get('motivo_mismo') or decision['motivo_es']}"
             if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
                                    ctx.modelos) is None:  # fmt: skip
@@ -708,9 +427,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                     "une": une["id"], "cambios": cambios}  # fmt: skip
         if "otro_dia" in decision and vuelta == 0:
             dia = decision["otro_dia"]
-            nuevo_dia = datetime.strptime(dia["dia"], "%Y-%m-%d").replace(tzinfo=UTC)
-            distancia = abs((nuevo_dia - reglas.instante(incidente)).total_seconds())
-            if fecha_firme(incidente) and distancia > DIAS_FIRMES * 86400:
+            if suceso.otro_dia_lejano(incidente, dia["dia"]):
                 # Un día sacado de una frase no se cambia por otro lejano sin revisión (prueba del
                 # 28 de octubre de 2026: el 12 de octubre de EODI-2026-00512 pasaba al 6 por «o
                 # săptămână după ce atacurile au dus la scufundarea», que no da ningún día).
@@ -743,7 +460,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
             )
             actual = ctx.almacen.incidente(incidente["id"])
             base["huella"] = huella(actual) if actual else base["huella"]
-        if not decision.get("frase_fecha") and fecha_aproximada(incidente):
+        if not decision.get("frase_fecha") and suceso.fecha_aproximada(incidente):
             return {**base, **decision, "decision": RETENER, "cambios": cambios,
                     "motivo": "ninguna frase da la fecha del suceso"}  # fmt: skip
         return {**base, **decision, "decision": PUBLICAR, "cambios": cambios}
@@ -761,7 +478,7 @@ def pendiente(decision: Documento | None, incidente: Documento, ahora: datetime)
     if not vigente(decision, incidente):
         return True
     assert decision is not None
-    if decision.get("dos_dias") and not auditoria_fichas.dos_dias_sin_revisar(incidente):
+    if decision.get("dos_dias") and not suceso.dos_dias_sin_revisar(incidente):
         # Retenida por una frase con dos días y ya revisada: la parte de una separación que el
         # extractor de la horaria dio de alta antes de que la separación la enlazara
         # («relacionados») no cambia de huella y quedaba retenida para siempre.
@@ -869,9 +586,9 @@ def corregir_medida(
                 continue
             suyas = (ctx.decision(clave(incidente["id"])) or {}).get("autoridades") or {}
             de_la_otra = (ctx.decision(clave(otra["id"])) or {}).get("autoridades") or {}
-            if nunca_el_mismo(incidente, otra, suyas, de_la_otra) is not None:
+            if suceso.nunca_el_mismo(incidente, otra, suyas, de_la_otra) is not None:
                 continue
-            conserva, une = reglas.mas_antiguo(otra, incidente)
+            conserva, une = suceso.mas_antiguo(otra, incidente)
             motivo = "medida a las 24 horas: el mismo suceso"
             if control_fichas.unir(ctx.almacen, conserva, une, motivo, ctx.ahora,
                                    ctx.modelos) is None:  # fmt: skip
@@ -922,7 +639,9 @@ def medir(ctx: control_fichas.Contexto, publicadas: dict[str, str],
         if medidas >= MAX_MEDIDAS_POR_PASADA:
             break
         try:
-            elegidas = conjunto(incidente, activos, incidentes.distintos_del_experto(ctx.almacen))
+            elegidas = suceso.conjunto(
+                incidente, activos, suceso.distintos_del_experto(ctx.almacen)
+            )
             fuentes = control_fichas.fuentes_de_ficha(ctx.almacen, incidente, {})
             cuerpo = peticiones.cuerpo_medida(reglas.vista(incidente), fuentes.bloques,
                                               list(autoridades_de(incidente)),

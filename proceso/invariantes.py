@@ -7,6 +7,8 @@ corren en la puerta de la publicación (cada recogida), en el ensayo y en la CI.
 - I3: ningún dato revisado a mano distinto de su revisión.
 - I4: ninguna versión nueva igual a la anterior salvo la fecha.
 - I5: ningún aviso con datos distintos de lo publicado.
+- I6: ninguna unión vigente entre fichas que la definición de suceso da por distintos
+  (proceso/suceso.py): lo que `incidentes.revisar_fusiones` tenía que haber deshecho.
 
 `de_ficha` es lo que la puerta mira de cada versión antes de dejarla entrar (I3); `comprobar` las
 mira todas sobre la base y lo publicado, sin escribir nada. `avisar` manda por el tema privado,
@@ -23,8 +25,8 @@ from esquema import Documento
 
 registro = logging.getLogger(__name__)
 
-I1, I2, I3, I4, I5 = "I1", "I2", "I3", "I4", "I5"
-TODAS = (I1, I2, I3, I4, I5)
+I1, I2, I3, I4, I5, I6 = "I1", "I2", "I3", "I4", "I5", "I6"
+TODAS = (I1, I2, I3, I4, I5, I6)
 SIN_COMPROBAR = "invariantes"
 CURSOR = "invariantes"
 TITULO_AVISO = "EODI · Invariante rota"
@@ -121,6 +123,33 @@ def versiones_iguales(cambios: list[Documento]) -> list[str]:
     })  # fmt: skip
 
 
+def uniones_de_sucesos_distintos(almacen: Any) -> list[str]:
+    """I6: «absorbida→destino (regla)» de las uniones vigentes que la definición da por sucesos
+    distintos por una regla firme (países distintos con una autoridad del suyo, una revisión que
+    las separó, dos cierres de noches distintas): las que `incidentes.revisar_fusiones` deshace
+    sola en cada recogida. Si queda alguna es que no pudo (el cerrojo, un fallo): hay una ficha
+    de un suceso dentro de la de otro."""
+    from proceso import incidentes, suceso
+
+    decididas: dict[str, dict[str, str]] | None = None
+    rotas = []
+    for fusion in almacen.fusiones():
+        if fusion["revertida"]:
+            continue
+        absorbido = almacen.incidente(fusion["absorbido"])
+        destino = almacen.incidente(fusion["destino"])
+        if absorbido is None or destino is None:
+            continue
+        if absorbido.get("fusionado_en") != destino["id"]:
+            continue
+        if decididas is None:
+            decididas = suceso.autoridades_decididas(almacen)
+        dicho = incidentes.union_que_se_deshace(fusion, absorbido, destino, decididas)
+        if dicho is not None:
+            rotas.append(f"{fusion['absorbido']}→{fusion['destino']} ({dicho.regla})")
+    return sorted(set(rotas))
+
+
 def datos_del_aviso(documento: Documento) -> dict[str, Any]:
     """Lo que un aviso cuenta de una ficha (recogida/avisos.mensaje), de su documento interno o
     de su entrada publicada: el titular, el estado, el tipo, el país y el inicio."""
@@ -180,6 +209,7 @@ def comprobar(almacen: Any, ahora: datetime) -> dict[str, list[str]]:
             for i in publicadas
             if i in internos and (distintos := aviso_distinto(internos[i], filas[i]["entrada"]))
         ),
+        I6: uniones_de_sucesos_distintos(almacen),
     }
 
 
@@ -194,6 +224,7 @@ def texto_aviso(invariante: str, que: str) -> str:
         I3: "dato revisado a mano distinto de su revisión",
         I4: "versión nueva igual a la anterior salvo la fecha",
         I5: "aviso con datos distintos de lo publicado",
+        I6: "unión de dos fichas que la definición da por sucesos distintos",
     }
     return f"{invariante} ({nombres.get(invariante, invariante)}): {que}"
 

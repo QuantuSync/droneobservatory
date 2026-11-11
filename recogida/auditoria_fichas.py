@@ -14,7 +14,7 @@ from tempfile import TemporaryDirectory
 
 from almacen.base import Almacen
 from almacen.casa import casa
-from proceso import auditoria_fichas, incidentes, protegido
+from proceso import auditoria_fichas, protegido, suceso
 from recogida import revisados
 
 
@@ -42,8 +42,8 @@ def principal(argumentos: list[str] | None = None) -> int:
             almacen.incidentes(),
             almacen.cambios_desde(desde),
             almacen.copias_archivadas(),
-            incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
-            incidentes.uniones_a_mano(almacen),
+            suceso.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
+            suceso.uniones_a_mano(almacen),
             almacen.fechas_extraccion(desde),
             protegido.permitidos(almacen.controles(protegido.PREFIJO_PERMITIDO)),
             {

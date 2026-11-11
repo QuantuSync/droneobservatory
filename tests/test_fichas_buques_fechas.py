@@ -7,7 +7,7 @@ from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from proceso import buques, fechas, incidentes, nombres_lugar, titulares, zona
+from proceso import buques, fechas, incidentes, nombres_lugar, suceso, titulares, zona
 from proceso import control_fichas as reglas
 from recogida import segunda_busqueda
 
@@ -134,12 +134,12 @@ def test_la_nota_de_la_semana_pasada_cae_en_la_ventana_del_suceso_registrado() -
         "EODI-2026-00632", {"valor": "2026-10-18T00:00Z", "precision": "aproximada"},
         {"tipo": "publicacion", "motivo": motivo},
     )  # fmt: skip
-    assert incidentes.misma_ventana(registrado, nota)
+    assert suceso.misma_ventana(registrado, nota)
     sin_ventana = _aeropuerto(
         "EODI-2026-00632", {"valor": "2026-10-19T21:15Z", "precision": "aproximada"},
         {"tipo": "publicacion", "motivo": "fecha de publicación"},
     )  # fmt: skip
-    assert not incidentes.misma_ventana(registrado, sin_ventana)
+    assert not suceso.misma_ventana(registrado, sin_ventana)
 
 
 def test_el_control_encuentra_los_cuatro_fallos() -> None:

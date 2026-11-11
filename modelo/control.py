@@ -18,7 +18,9 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-VERSION = "control/4"
+from proceso.suceso import DEFINICION
+
+VERSION = "control/5"
 TEMPERATURA = 0.0
 # Esfuerzo de los modelos nuevos (el de antes no lo admite): decidir si dos fichas son el mismo
 # suceso es lo más difícil, verificar cada dato pide atención y traducir es mecánico.
@@ -118,30 +120,40 @@ ESQUEMA_TRADUCIR: dict[str, Any] = {
     },
 }
 
-INSTRUCCIONES_COMPARAR = """Eres el control de calidad del European Observatory of Drone \
+INSTRUCCIONES_COMPARAR = (
+    """Eres el control de calidad del European Observatory of Drone \
 Incidents. Recibes dos fichas de incidentes con drones del mismo país y de fechas cercanas, cada \
 una con sus fuentes (medio, fecha de publicación, idioma, titular y frase), en idiomas \
-distintos. Decide si cuentan el mismo suceso, es decir, el mismo hecho físico: el mismo dron o \
-los mismos drones, en el mismo sitio y el mismo día o la misma noche (la misma alerta, el mismo \
-cierre, el mismo derribo, el mismo ataque a un barco).
+distintos. Decide si cuentan el mismo suceso.
 
-- mismo_dia: las dos fichas cuentan algo ocurrido el mismo día o la misma noche (no el día en \
-que se publicó: una noticia posterior sobre ese hecho cuenta como ese día).
-- mismo_sitio: el mismo aeropuerto, la misma base, el mismo barco o la misma localidad. Que una \
-ficha diga solo el país o la zona (aguas búlgaras, la costa) y la otra el sitio con más detalle \
-(los puntos frente a la costa donde se atacó a cada barco) no las hace distintas; dos \
-aeropuertos, dos bases o dos localidades distintas que una ficha cuenta y la otra no, sí, aunque \
-sea la misma noche y la misma oleada de drones.
-- varios_sucesos: una de las dos fichas junta hechos de días o sitios distintos que la otra no \
-cuenta (un balance de varias noches frente a una de ellas, varios derribos frente a uno, varios \
-aeropuertos frente a uno) o no cuenta ninguno concreto. Si las dos cuentan el mismo conjunto (el \
-ataque de esa noche a dos barcos, los drones de esa noche sobre una base), es falso.
+"""
+    + DEFINICION
+    + """
+
+- mismo_dia: las dos fichas cuentan algo de la misma jornada: el mismo día o la misma noche, \
+aunque una la feche por su tarde y la otra por su madrugada (no el día en que se publicó: una \
+noticia posterior sobre ese hecho cuenta como ese día).
+- mismo_sitio: el mismo episodio físico en ese país: el mismo aeropuerto, la misma base, el \
+mismo barco o la misma localidad, o las zonas por las que pasaron esos mismos drones o por las \
+que la autoridad fue dando esa misma alerta. Que una ficha diga solo el país o la zona (aguas \
+búlgaras, la costa, el país entero) y la otra el sitio con más detalle (los puntos frente a la \
+costa donde se atacó a cada barco, los municipios de cada alerta) no las hace distintas. Dos \
+aeropuertos, dos bases o dos localidades con drones distintos que las fuentes cuentan por \
+separado (cada uno con su hora, su comunicado o su dron), sí, aunque sea la misma noche.
+- varios_sucesos: una de las dos fichas junta hechos de jornadas, de países o de drones \
+distintos que la otra no cuenta (un balance de varias noches frente a una de ellas, varios \
+derribos frente a uno, un resumen de dos países frente a uno de ellos) o no cuenta ninguno \
+concreto. Si las dos cuentan el mismo conjunto (el ataque de esa noche a dos barcos, los drones \
+de esa noche sobre una base), o una es la nota con la que la autoridad cuenta la noche entera y \
+la otra las alertas de esa misma noche, es falso.
 - decision: «mismo» solo si mismo_dia y mismo_sitio son ciertos y varios_sucesos es falso; \
-«distinto» si alguno de los dos es falso («de nuevo», «otra vez», «un segundo ataque», otro día, \
-otro sitio) o si una ficha resume varios sucesos; «dudoso» si las fuentes no permiten saberlo.
+«distinto» si alguno de los dos es falso («de nuevo», «otra vez», «un segundo ataque», otra \
+jornada, otros drones en otro sitio) o si una ficha resume varios sucesos; «dudoso» si las \
+fuentes no permiten saberlo.
 
 Decide solo por lo que dicen las fuentes. Escribe el motivo en una frase, en español \
 (motivo_es) y en inglés (motivo_en), con el dato que lo decide (el sitio, el día, la hora)."""
+)
 
 INSTRUCCIONES_VERIFICAR = """Eres el control de calidad del European Observatory of Drone \
 Incidents. Recibes la ficha de un incidente con drones y sus fuentes numeradas (medio, fecha, \
@@ -287,7 +299,7 @@ def leer(respuesta: dict[str, Any]) -> dict[str, Any]:
 # Una noticia que parece contar un suceso anterior (proceso/fechas.retrospectiva, o una ficha
 # más antigua de la misma instalación): ¿de qué fecha es el suceso y es el de alguna ficha ya
 # existente del mismo sitio, sin ventana de días? Va siempre al experto.
-VERSION_RETROSPECTIVA = "retrospectiva/1"
+VERSION_RETROSPECTIVA = "retrospectiva/2"
 ESFUERZO_RETROSPECTIVA = "high"
 MAX_SALIDA_RETROSPECTIVA = 500
 PRECISIONES_RETROSPECTIVA = ("dia", "mes", "")
@@ -327,8 +339,9 @@ año, el recuerdo de un ataque de hace semanas («im August», «last month», �
 - retrospectiva: true si las fuentes cuentan un suceso anterior a su publicación (de otro día, \
 no el de la noticia ni la víspera); false si cuentan algo de ese día o de la noche anterior.
 - misma_que: si es retrospectiva y el suceso que cuenta es el de una de las fichas publicadas \
-(el mismo hecho físico: el mismo dron o los mismos drones, en el mismo sitio y el mismo día), \
-su identificador exacto; si no, vacío. Ante la duda, vacío.
+(el mismo episodio físico: los mismos drones o la misma oleada, en el mismo país y en la misma \
+jornada, un día o una noche que cruza la medianoche), su identificador exacto; si no, vacío. \
+Ante la duda, vacío.
 - fecha: el día del suceso, AAAA-MM-DD, si una frase lo escribe; o el mes, AAAA-MM, si solo \
 escribe el mes; vacío si no lo escribe o no es retrospectiva. La fecha de publicación no es la \
 del suceso. precision: «dia», «mes» o vacío, según la fecha.

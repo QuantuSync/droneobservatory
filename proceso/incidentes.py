@@ -1,19 +1,13 @@
 """Incidentes europeos a partir de candidatos y fichas validadas; fusión y episodios.
 
 Reglas del diseño:
-- Fusión: mismo objetivo o puntos a menos de la suma de radios más 10 km; con
-  precisión de hora, inicios a menos de 6 horas; con precisión de día, el mismo día;
-  con una fecha aproximada (la de publicación), ese día o el anterior; más de 12 horas
-  sin actividad del suceso (su inicio y su fin, no la fecha de las noticias) es otro
-  incidente: la misma instalación dos noches seguidas son dos incidentes. Una fusión
-  dudosa (el incidente encaja con dos) no se hace. Toda fusión es
+- Qué es el mismo suceso lo dice proceso/suceso.py (docs/definicion_suceso.md) y nada de aquí
+  lo decide por su cuenta: este módulo construye la ficha, ejecuta las uniones que la
+  definición da por seguras (`fusionar`), deshace las que da por sucesos distintos
+  (`revisar_fusiones`) y guarda los episodios que calcula (`agrupar_episodios`).
+- Una fusión dudosa (el incidente encaja con dos) no se hace. Toda fusión es
   reversible: el absorbido queda en la base con `fusionado_en` y la tabla de
   fusiones anota qué fuentes aportó; el historial guarda cada cambio.
-- Un incidente sin punto (su lugar solo se sabe a nivel de país o de región) solo se
-  funde con otro sin punto del mismo país y con el mismo lugar del suceso.
-- Episodio: varios objetivos distintos del mismo país en una misma noche, todos con
-  punto; o de varios países si una misma fuente los cuenta. Un incidente sin punto
-  (ubicación dudosa) no entra en ningún episodio.
 - Estado: las noticias notifican; confirmar corresponde a una autoridad.
 - Tipo: si hay interrupción de aeropuerto, manda; es incursión cuando un dron militar
   o estatal entra desde fuera y lo demuestra una autoridad (el incidente está
@@ -26,24 +20,20 @@ Reglas del diseño:
 
 import copy
 import hashlib
-import json
 import logging
-import math
 import re
 from collections import defaultdict
-from datetime import UTC, date, datetime, timedelta
-from functools import cache
-from pathlib import Path
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import buques, cita_titular, fechas
+from proceso import buques, cita_titular, fechas, suceso
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
 from proceso.fronteras import nombres_del_pais
-from proceso.noticias import filtro, normalizar
+from proceso.noticias import normalizar
 from proceso.ubicacion import Ubicacion
 from proceso.validacion_ficha import Validada, leer_fecha
 
@@ -51,29 +41,10 @@ registro = logging.getLogger(__name__)
 
 MAX_PALABRAS_FRASE = 25
 DECIMALES = 5
-MARGEN_FUSION_KM = 10.0
-INICIOS_HORA = timedelta(hours=6)
-SIN_ACTIVIDAD = timedelta(hours=12)
-RADIO_TIERRA_KM = 6371.0
-# La noche de un episodio: de las 16:00 a las 06:00 UTC (17:00 a 07:00 en Europa central
-# en invierno, 18:00 a 08:00 en verano), cuando se producen casi todos los avistamientos.
-HORA_INICIO_NOCHE = 16
-HORA_FIN_NOCHE = 6
-MEDIODIA = 12
-PRECISIONES_HORA = frozenset({"minuto", "hora"})
-APROXIMADA = "aproximada"
 # Un suceso con drones no dura más de dos días: un fin más lejano es de otro.
 MAX_DURACION = timedelta(days=2)
 MAX_MOTIVO = 300
-# Hasta las 06:00 locales, una hora es aún de la noche que empezó la víspera.
-MADRUGADA = timedelta(hours=6)
-# Una nota que vuelve sobre un suceso ya pasado: la primera de sus noticias sale al menos estos días
-# después del día del suceso que escribe (nota_posterior).
-DIAS_NOTA_POSTERIOR = 2
-MOTIVO_NOTA_POSTERIOR = "nota posterior sobre un suceso ya registrado: mismo país, tipo y día"
 FIABILIDAD_NOTICIAS = "C"
-# «Varios objetivos»: dos o más.
-MIN_OBJETIVOS_EPISODIO = 2
 # Pruebas físicas de que el incidente consiste en el propio dron.
 PRUEBAS_FISICAS = frozenset({"explosion", "restos", "caida", "derribo", "recuperado"})
 RASTREO = "rastreo"
@@ -81,14 +52,17 @@ RASTREO = "rastreo"
 MODELOS_MILITARES = ("shahed", "geran", "gerbera")
 # Estados a los que solo lleva una autoridad.
 CONFIRMADOS = frozenset({Estado.CONFIRMADO, Estado.ATRIBUIDO})
+# Las reglas de la definición por las que dos fichas se unen sin leer sus fuentes.
+REGLAS_DE_FUSION = frozenset({suceso.REGLA_SITIO_Y_JORNADA, suceso.REGLA_RESUMEN})
+# Las reglas por las que una unión que hizo la regla de fusión se deshace sola.
+REGLAS_QUE_DESHACEN = frozenset({suceso.REGLA_REVISION, suceso.REGLA_PAISES, suceso.REGLA_CIERRES})
 
 
 def _instante(momento: datetime, precision: str) -> Documento:
     return {"valor": momento.astimezone(UTC).strftime("%Y-%m-%dT%H:%MZ"), "precision": precision}
 
 
-def _leer_instante(instante: Documento) -> datetime:
-    return datetime.strptime(instante["valor"], "%Y-%m-%dT%H:%MZ").replace(tzinfo=UTC)
+_leer_instante = suceso.leer_instante
 
 
 def _frase(texto: str) -> str:
@@ -114,11 +88,11 @@ def credibilidad_noticias(n: int) -> int:
 
 def nombres_del_suceso(ficha: Validada) -> list[str]:
     """El país y el lugar del suceso según la ficha: lo que la cita tiene que nombrar."""
-    suceso = ficha.valor("lugar_suceso")
+    del_suceso = ficha.valor("lugar_suceso")
     lugar = {
-        "suceso": suceso.get("nombre") if isinstance(suceso, dict) else None,
+        "suceso": del_suceso.get("nombre") if isinstance(del_suceso, dict) else None,
         "localidad": ficha.valor("localidad"),
-        "region": suceso.get("region") if isinstance(suceso, dict) else None,
+        "region": del_suceso.get("region") if isinstance(del_suceso, dict) else None,
     }
     return [
         *nombres_del_pais(ficha.pais or ""),
@@ -438,7 +412,7 @@ def construir(
     if (
         fin_ficha is not None
         and "T" in ficha.valor("fin")
-        and resolucion.precision in PRECISIONES_HORA
+        and resolucion.precision in suceso.PRECISIONES_HORA
         and timedelta(0) <= fin_ficha - resolucion.valor <= MAX_DURACION
         and _fin_con_frase(ficha, fin_ficha, resolucion.valor, articulos, enviadas, ubicacion)
     ):
@@ -521,348 +495,6 @@ def construir(
 # --- Fusión -------------------------------------------------------------------------
 
 
-def _distancia_km(a: Documento, b: Documento) -> float:
-    pa, pb = a["lugar"]["punto"], b["lugar"]["punto"]
-    f1, f2 = math.radians(pa["lat"]), math.radians(pb["lat"])
-    df, dl = f2 - f1, math.radians(pb["lon"] - pa["lon"])
-    h = math.sin(df / 2) ** 2 + math.cos(f1) * math.cos(f2) * math.sin(dl / 2) ** 2
-    return 2 * RADIO_TIERRA_KM * math.asin(math.sqrt(h))
-
-
-def con_punto(documento: Documento) -> bool:
-    return "punto" in documento["lugar"]
-
-
-def mismo_sitio(a: Documento, b: Documento) -> bool:
-    if a["lugar"]["pais"] != b["lugar"]["pais"]:
-        return False
-    if not con_punto(a) or not con_punto(b):
-        # Sin punto, solo dos sin punto con el mismo lugar del suceso.
-        sucesos = [normalizar(d["lugar"].get("suceso", "")) for d in (a, b)]
-        return not con_punto(a) and not con_punto(b) and bool(sucesos[0]) and len(set(sucesos)) == 1
-    oa, ob = a.get("objetivo", {}), b.get("objetivo", {})
-    if oa.get("nombre") and oa.get("nombre") == ob.get("nombre"):
-        return True
-    radios = float(a["lugar"]["radio_km"]) + float(b["lugar"]["radio_km"])
-    return _distancia_km(a, b) < radios + MARGEN_FUSION_KM
-
-
-def ultima_actividad(documento: Documento) -> datetime:
-    """El último momento del suceso: su fin, si se sabe, o su inicio. Las noticias no son
-    actividad: se siguen publicando un día entero después de un cierre."""
-    momentos = [_leer_instante(documento["tiempo"]["inicio"])]
-    if "fin" in documento["tiempo"]:
-        momentos.append(_leer_instante(documento["tiempo"]["fin"]))
-    return max(momentos)
-
-
-def _dia_local(momento: datetime, pais: str) -> date:
-    """El día local de una hora en UTC («la una de la madrugada en Galați» es el día anterior
-    en UTC)."""
-    zona = fechas.zona(pais)
-    return momento.astimezone(zona).date() if zona else momento.date()
-
-
-def _dias_de(instante: Documento, pais: str) -> tuple[str, set[date]]:
-    """La clase de fecha («hora», «dia» o «publicacion») y sus días locales posibles. Un día
-    es el que dice la fuente (si el extractor le puso hora, cuenta su fecha); con hora, su día
-    local y, de madrugada, también la víspera, porque la prensa fecha una noche por su tarde;
-    con la fecha de publicación, ese día y el anterior."""
-    momento = _leer_instante(instante)
-    precision = instante["precision"]
-    if precision == "dia":
-        return "dia", {momento.date()}
-    dia = _dia_local(momento, pais)
-    if precision == APROXIMADA:
-        return "publicacion", {dia, dia - timedelta(days=1)}
-    if dia != _dia_local(momento - MADRUGADA, pais):
-        return "hora", {dia, dia - timedelta(days=1)}
-    return "hora", {dia}
-
-
-def ventana_pasada(documento: Documento) -> set[date]:
-    """Los días en que puede caer un inicio de pasado sin día («la semana pasada»), leídos del
-    motivo de su origen (proceso/fechas.ventana_de_motivo); vacío si no lo es."""
-    origen = documento["tiempo"].get("origen_inicio") or {}
-    if documento["tiempo"]["inicio"]["precision"] != APROXIMADA:
-        return set()
-    ventana = fechas.ventana_de_motivo(str(origen.get("motivo") or ""))
-    if ventana is None:
-        return set()
-    desde, hasta = ventana
-    return {desde + timedelta(days=n) for n in range((hasta - desde).days + 1)}
-
-
-def misma_ventana(a: Documento, b: Documento) -> bool:
-    """`a` empezó antes o a la vez que `b`.
-
-    - Hora con hora: inicios a menos de 6 horas y sin 12 horas sin actividad del suceso.
-    - Día con día: el mismo o el siguiente; sin hora no se mide la actividad.
-    - Día con hora: la hora local cae ese día (o en la madrugada del siguiente).
-    - Con la fecha de publicación: el suceso es de ese día o de la víspera.
-    """
-    inicio_a, inicio_b = a["tiempo"]["inicio"], b["tiempo"]["inicio"]
-    ta, tb = _leer_instante(inicio_a), _leer_instante(inicio_b)
-    if inicio_a["precision"] in PRECISIONES_HORA and inicio_b["precision"] in PRECISIONES_HORA:
-        return abs(tb - ta) < INICIOS_HORA and tb - ultima_actividad(a) <= SIN_ACTIVIDAD
-    if (
-        "fin" in a["tiempo"]
-        and inicio_b["precision"] in PRECISIONES_HORA
-        and tb - ultima_actividad(a) > SIN_ACTIVIDAD
-    ):
-        # Con un fin conocido sí se miden las 12 horas sin actividad.
-        return False
-    pais = str(a["lugar"].get("pais", ""))
-    clase_a, dias_a = _dias_de(inicio_a, pais)
-    clase_b, dias_b = _dias_de(inicio_b, pais)
-    if "fin" in a["tiempo"]:
-        # Un suceso que pasa de medianoche abarca también el día de su fin.
-        dias_a.add(_dia_local(ultima_actividad(a), pais))
-    # Un pasado sin día («la semana pasada»): cualquier día de su ventana (proceso/fechas.py).
-    dias_a |= ventana_pasada(a)
-    dias_b |= ventana_pasada(b)
-    if clase_a == clase_b == "dia":
-        return abs((min(dias_b) - min(dias_a)).days) <= 1
-    return bool(dias_a & dias_b)
-
-
-def noche_del_cierre(documento: Documento) -> date | None:
-    """La noche (el día local de su tarde) de un cierre con el día sabido: con hora, la de la
-    hora local (la madrugada es de la noche anterior); con el día escrito, ese día. None si no
-    hubo cierre o si el día es el de la publicación."""
-    if (documento.get("consecuencias", {}).get("cierre") or {}).get("valor") != "si":
-        return None
-    inicio = documento["tiempo"]["inicio"]
-    momento = _leer_instante(inicio)
-    if inicio["precision"] == "dia":
-        return momento.date()
-    if inicio["precision"] in PRECISIONES_HORA:
-        return _dia_local(momento - MADRUGADA, str(documento["lugar"].get("pais", "")))
-    return None
-
-
-def cierres_de_noches_distintas(a: Documento, b: Documento) -> bool:
-    """Dos cierres del mismo sitio en noches distintas son dos incidentes, aunque las noticias
-    del segundo salgan al día siguiente del primero (Lieja, 8 y 9 de noviembre de 2025)."""
-    noche_a, noche_b = noche_del_cierre(a), noche_del_cierre(b)
-    return noche_a is not None and noche_b is not None and noche_a != noche_b
-
-
-def _cierre(documento: Documento) -> bool:
-    return (documento.get("consecuencias", {}).get("cierre") or {}).get("valor") == "si"
-
-
-def repite_un_cierre_anterior(anterior: Documento, posterior: Documento) -> bool:
-    """El posterior es otro cierre: sus fuentes dicen que se repite («opnieuw stilgelegd», «de
-    nouveau», «erneut») y se publican un día después de la noche del anterior. Vale aunque su
-    fecha sea la de publicación (Lieja: el cierre del domingo 9 de noviembre de 2025, contado
-    como «opnieuw», no es el del sábado 8)."""
-    # Con la fecha del suceso sabida decide la noche (cierres_de_noches_distintas): «igen» y
-    # «vėl» también dicen que se reabrió o que pasó en otro sitio.
-    if posterior["tiempo"]["inicio"]["precision"] != APROXIMADA:
-        return False
-    if not (_cierre(anterior) and _cierre(posterior)):
-        return False
-    noche = noche_del_cierre(anterior) or _leer_instante(anterior["tiempo"]["inicio"]).date()
-    pais = str(posterior["lugar"].get("pais", ""))
-    filtro_ = filtro()
-    return any(
-        filtro_.repite(str(fuente.get("frase_origen", "")))
-        and _dia_local(_leer_instante(fuente["fecha"]), pais) > noche
-        for fuente in posterior["fuentes"]
-        if not fuente.get("es_autoridad")
-    )
-
-
-REVISADOS = Path(__file__).resolve().parent.parent / "configuracion" / "incidentes_revisados.json"
-
-
-@cache
-def separaciones_distintas(ruta: Path = REVISADOS) -> frozenset[str]:
-    """Los incidentes separados a mano (sección `separar`) con `"distintos": true`: sus partes
-    son sucesos distintos que la regla de fusión no vuelve a juntar. Sin la marca, una parte
-    puede acabar con razón en la misma ficha que otra (la que coincide con otra ficha,
-    `coincide_con`, o dos registros de la misma parte)."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
-    return frozenset(e["incidente"] for e in datos.get("separar", []) if e.get("distintos"))
-
-
-@cache
-def pares_distintos(ruta: Path = REVISADOS) -> frozenset[frozenset[str]]:
-    """Los pares que una revisión dio por sucesos distintos sin separar ninguna ficha (sección
-    `distintos`): se enlazan como sucesos relacionados y ninguna unión automática los junta. El
-    29 de octubre de 2026 la regla unió EODI-2026-00538 (un blanco aéreo a las 17:38) en
-    EODI-2026-00541 (el petrolero, hacia las 20:00), que una revisión había dado por distintos sin
-    dejarlo escrito."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
-    return frozenset(frozenset(e["incidentes"]) for e in datos.get("distintos", []))
-
-
-def _articulo(fuente_id: str) -> str:
-    """El artículo de una fuente: una declaración citada en él («…-declaracion-2») es del mismo."""
-    return fuente_id.partition("-declaracion-")[0]
-
-
-@cache
-def partes_por_articulo(ruta: Path = REVISADOS) -> dict[str, frozenset[tuple[str, int]]]:
-    """Por artículo, la parte de una separación (sección `separar`, incidente y número de parte)
-    a la que pertenece. Solo cuentan las partes que son sucesos, y no los artículos que una
-    revisión puso en dos partes de la misma separación (cuentan los dos sucesos)."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
-    por_articulo: dict[str, set[tuple[str, int]]] = defaultdict(set)
-    for revision in datos.get("separar", []):
-        de_esta: dict[str, set[int]] = defaultdict(set)
-        for n, parte in enumerate(revision.get("partes", [])):
-            if parte.get("es_suceso", True):
-                for fuente in parte.get("fuentes", []):
-                    de_esta[_articulo(fuente)].add(n)
-        for articulo, partes in de_esta.items():
-            if len(partes) == 1:
-                por_articulo[articulo].add((revision["incidente"], next(iter(partes))))
-    return {a: frozenset(p) for a, p in por_articulo.items()}
-
-
-def partes_de_separacion(documento: Documento) -> frozenset[tuple[str, int]]:
-    """Las partes de separaciones revisadas de las que la ficha lleva algún artículo."""
-    mapa = partes_por_articulo()
-    return frozenset(
-        parte
-        for fuente in documento.get("fuentes", [])
-        for parte in mapa.get(_articulo(str(fuente.get("id", ""))), ())
-    )
-
-
-def de_partes_separadas(a: Documento, b: Documento) -> bool:
-    """Uno lleva un artículo de una parte de una separación revisada y el otro, uno de otra parte
-    de la misma: son sucesos distintos desde que nace la ficha de cada parte, con el identificador
-    que tenga y antes de que se enlacen como relacionados. El 30 de octubre de 2026 la parte del
-    29/10 de EODI-2025-00178 nació como EODI-2025-00472 y la regla la volvió a fundir en 00178 en
-    la misma recogida (fusión 2438), porque la separación no llevaba la marca «distintos»."""
-    partes_a = partes_de_separacion(a)
-    if not partes_a:
-        return False
-    partes_b = partes_de_separacion(b)
-    # Si comparten una parte de esa separación, cuentan al menos en parte el mismo suceso (dos
-    # registros de una parte, o una ficha que todavía junta varias): eso lo deciden las reglas.
-    return any(
-        {n for r, n in partes_a if r == revision}.isdisjoint(
-            {n for r, n in partes_b if r == revision}
-        )
-        for revision in {r for r, _ in partes_a} & {r for r, _ in partes_b}
-    )
-
-
-def separados_por_revision(a: Documento, b: Documento) -> bool:
-    """Uno lleva al otro entre sus sucesos relacionados por una separación marcada como de
-    sucesos distintos, o una revisión los dio por distintos (`pares_distintos`). El 19 de
-    octubre de 2026 la regla juntó otra vez el desvío del 19/10/2025 en Fuerteventura
-    (EODI-2025-00468), fechado por su publicación, con las esperas de la víspera
-    (EODI-2025-00397), de las que se separó."""
-    if frozenset((a["id"], b["id"])) in pares_distintos():
-        return True
-    distintas = separaciones_distintas()
-    return any(
-        r.get("id") == otro["id"] and r.get("separado_de") in distintas
-        for uno, otro in ((a, b), (b, a))
-        for r in uno.get("relacionados", [])
-    )
-
-
-def distintos_del_experto(almacen: Almacen) -> frozenset[frozenset[str]]:
-    """Los pares que el experto dio por sucesos distintos en el control de las fichas (decisión
-    escalada, no la que da el plazo de un dudoso): ninguna unión automática los junta; si más
-    tarde alguien quiere unirlos, queda como propuesta para revisar."""
-    return frozenset(
-        frozenset(clave.split(":", 1)[1].split("|"))
-        for clave, d in almacen.controles("par:").items()
-        if d.get("decision") == "distinto" and d.get("escalado") and not d.get("plazo")
-    )
-
-
-def uniones_a_mano(almacen: Almacen) -> frozenset[frozenset[str]]:
-    """Los pares de las fusiones vigentes revisadas a mano (recogida/revisados.py: `unir` y la
-    parte de una separación que coincide con otra ficha), no las del control de las fichas."""
-    return frozenset(
-        frozenset((f["absorbido"], f["destino"]))
-        for f in almacen.fusiones()
-        if not f["revertida"]
-        and f["motivo"].startswith(PREFIJO_REVISADA)
-        and not f["motivo"].startswith(PREFIJO_REVISADA + "control de fichas: ")
-    )
-
-
-def no_se_unen(a: Documento, b: Documento, del_experto: frozenset[frozenset[str]]) -> bool:
-    """Una revisión o el experto los dio por sucesos distintos."""
-    return separados_por_revision(a, b) or frozenset((a["id"], b["id"])) in del_experto
-
-
-def no_se_juntan(a: Documento, b: Documento, del_experto: frozenset[frozenset[str]]) -> bool:
-    """Para una unión nueva (la regla o el control): además de `no_se_unen`, las fichas de partes
-    distintas de una separación (`de_partes_separadas`). Las uniones ya hechas no se comparan así:
-    una ficha anterior a la separación puede llevar artículos de varias partes y estar bien unida
-    (EODI-2025-00172 en EODI-2025-00154, el cierre de Copenhague del 22/09/2025); esas las mira la
-    separación con sus propios registros (recogida/revisados._deshacer_entre_partes)."""
-    return no_se_unen(a, b, del_experto) or de_partes_separadas(a, b)
-
-
-def encajan(a: Documento, b: Documento) -> bool:
-    primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
-    return (
-        not separados_por_revision(a, b)
-        and not de_partes_separadas(a, b)
-        and mismo_sitio(a, b)
-        and not cierres_de_noches_distintas(a, b)
-        and not repite_un_cierre_anterior(primero, segundo)
-        and misma_ventana(primero, segundo)
-    )
-
-
-def nota_posterior(documento: Documento) -> bool:
-    """Vuelve sobre un suceso pasado: el día lo escribe una fuente (no es el de la publicación) y
-    la primera noticia sale días después («el archivo de la investigación de los drones del 9 al
-    10 de septiembre», publicado un año más tarde)."""
-    if not fecha_verificada(documento) or documento["tiempo"]["inicio"]["precision"] == APROXIMADA:
-        return False
-    suceso = _leer_instante(documento["tiempo"]["inicio"]).date()
-    publicada = datetime.strptime(primera_noticia(documento)[:10], "%Y-%m-%d").date()
-    return (publicada - suceso).days >= DIAS_NOTA_POSTERIOR
-
-
-def mismo_suceso_posterior(registrado: Documento, nota: Documento) -> bool:
-    """`nota` es una nota posterior (nota_posterior) que cuenta el suceso de `registrado`: el mismo
-    país y el mismo tipo, el mismo día (misma_ventana), y la nota no da un sitio distinto: o no
-    tiene punto (solo el país o la región, y entonces la misma región si las dos la dicen) o su
-    punto es el mismo sitio. La duda la resuelve quien llama: solo se une si hay un candidato."""
-    if not nota_posterior(nota) or nota_posterior(registrado):
-        return False
-    if registrado["lugar"]["pais"] != nota["lugar"]["pais"] or registrado["tipo"] != nota["tipo"]:
-        return False
-    if con_punto(nota):
-        if not con_punto(registrado) or not mismo_sitio(registrado, nota):
-            return False
-    else:
-        regiones = [normalizar(str(d["lugar"].get("region", ""))) for d in (registrado, nota)]
-        if all(regiones) and regiones[0] != regiones[1]:
-            return False
-    if cierres_de_noches_distintas(registrado, nota):
-        return False
-    primero, segundo = sorted(
-        (registrado, nota), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"])
-    )
-    return misma_ventana(primero, segundo)
-
-
-def todos_encajan(documentos: list[Documento]) -> bool:
-    """Cada par de la lista encaja (mismo sitio y misma ventana)."""
-    return all(encajan(a, b) for n, a in enumerate(documentos) for b in documentos[n + 1 :])
-
-
-def fecha_verificada(documento: Documento) -> bool:
-    """El día del inicio lo escribe una fuente (o lo da una autoridad o un parte)."""
-    origen = documento["tiempo"].get("origen_inicio", {}).get("tipo")
-    return origen in fechas.VERIFICADOS
-
-
 def absorber(
     destino: Documento, absorbido: Documento, ahora: datetime
 ) -> tuple[Documento, list[str]]:
@@ -888,8 +520,9 @@ def absorber(
         if a["fuente_id"] in en_destino and a not in propias
     ]  # fmt: skip
     # Lo que al destino le faltaba y el absorbido sabe. Un día escrito por una fuente manda
-    # sobre la fecha de publicación.
-    if not fecha_verificada(resultado) and fecha_verificada(absorbido):
+    # sobre la fecha de publicación, si puede ser el de la jornada del destino: la fecha sale
+    # del suceso, no de la ficha que llega (suceso.toma_el_tiempo).
+    if suceso.toma_el_tiempo(resultado, absorbido):
         resultado["tiempo"] = copy.deepcopy(absorbido["tiempo"])
     if "fin" not in resultado["tiempo"] and "fin" in absorbido["tiempo"]:
         fin = absorbido["tiempo"]["fin"]
@@ -955,48 +588,6 @@ def estado_con_el_absorbido(destino: Documento, absorbido: Documento) -> Documen
     return {"actual": nuevos[-1]["estado"], "historial": historial}
 
 
-CLASE_FECHA = {"minuto": 0, "hora": 0, "dia": 1, APROXIMADA: 2}
-
-
-def de_mejor_fecha(documentos: list[Documento]) -> list[Documento]:
-    """Los de la clase de fecha más precisa: con hora, con solo el día o con la de publicación."""
-    if len(documentos) < 2:
-        return documentos
-    clase = {d["id"]: CLASE_FECHA.get(d["tiempo"]["inicio"]["precision"], 2) for d in documentos}
-    mejor = min(clase.values())
-    return [d for d in documentos if clase[d["id"]] == mejor]
-
-
-def primera_noticia(documento: Documento) -> str:
-    """Cuándo se publicó la primera de sus fuentes."""
-    return min((f["fecha"]["valor"] for f in documento["fuentes"]), default="9999")
-
-
-def destino_de(
-    uno: Documento, otro: Documento, publicados: frozenset[str] = frozenset()
-) -> tuple[Documento, Documento]:
-    """(destino, absorbido) de dos incidentes que encajan. Queda el que ya estaba publicado si
-    solo lo estaba uno (su enlace sigue valiendo); si no, el de un año anterior (entre una
-    ficha de 2025 y una de 2026 queda la de 2025: EODI-2025-00199, Bruselas, se quedó dentro
-    de EODI-2026-00094 por tener esta más fuentes), después el que tiene más fuentes oficiales
-    leídas directamente, el de más fuentes, el que se conoció antes (su primera noticia salió
-    antes) y, a la par, el de número más bajo. Una noticia que vuelve semanas después sobre un
-    suceso no le quita su número: Copenhague sigue siendo el EODI-2025-00154, con las notas de
-    la policía y casi 300 noticias."""
-
-    def clave(d: Documento) -> tuple[bool, str, int, int, str, str]:
-        oficiales = sum(1 for f in d["fuentes"] if f["fiabilidad"] == "A" and f.get("es_autoridad"))
-        return (d["id"] not in publicados, d["id"][:9], -oficiales, -len(d["fuentes"]),
-                primera_noticia(d), d["id"])  # fmt: skip
-
-    primero, segundo = sorted((uno, otro), key=clave)
-    return primero, segundo
-
-
-# Motivo de las fusiones revisadas a mano (recogida/revisados.py).
-PREFIJO_REVISADA = "revisión: "
-
-
 def activo(documento: Documento) -> bool:
     """Ni fundido en otro ni retirado."""
     return "fusionado_en" not in documento and "retirado" not in documento
@@ -1008,7 +599,9 @@ def fusionar(
     modelos: frozenset[str],
     publicados: frozenset[str] | None = None,
 ) -> int:
-    """Funde los incidentes que encajan con uno solo anterior. Devuelve cuántas fusiones hace.
+    """Funde los incidentes que la definición da por el mismo suceso que uno solo anterior sin
+    tener que leer sus fuentes (suceso.veredicto: el mismo sitio y la misma jornada, o la nota de
+    una noche y sus alertas). Devuelve cuántas fusiones hace.
 
     `publicados`: los que estaban publicados antes (al rehacer todo, los activos de antes de
     deshacer las fusiones); por defecto, los dados de alta antes de esta ejecución."""
@@ -1020,41 +613,44 @@ def fusionar(
         marca = _instante(ahora, "minuto")["valor"]
         publicados = frozenset(i["id"] for i in activos if i["control"]["alta"]["valor"] < marca)
     vivos = {i["id"]: i for i in activos}
-    del_experto = distintos_del_experto(almacen)
+    del_experto = suceso.distintos_del_experto(almacen)
     hechas = 0
     for incidente in activos:
         if incidente["id"] not in vivos:
             continue
-        anteriores = [
-            otro
+        dichos = {
+            otro["id"]: suceso.veredicto(otro, incidente, del_experto)
             for otro in vivos.values()
             if otro["id"] != incidente["id"]
             and (otro["tiempo"]["inicio"]["valor"], otro["id"])
             < (incidente["tiempo"]["inicio"]["valor"], incidente["id"])
-            and encajan(otro, incidente)
-            and frozenset((otro["id"], incidente["id"])) not in del_experto
-        ]
+        }
+        anteriores = [
+            vivos[id_] for id_, dicho in dichos.items()
+            if dicho.relacion == suceso.MISMO and dicho.regla in REGLAS_DE_FUSION
+        ]  # fmt: skip
         # Dudosa si encaja con dos: no se hace. Una fecha de publicación no compite con una
         # escrita: entre los que encajan cuenta solo la mejor clase de fecha (hora, día,
         # publicación), y si de esa hay uno solo, es ese.
-        anteriores = de_mejor_fecha(anteriores)
-        if len(anteriores) > 1 and todos_encajan(anteriores):
+        anteriores = suceso.de_mejor_fecha(anteriores)
+        if len(anteriores) > 1 and suceso.todos_encajan(anteriores):
             # Si los anteriores encajan también entre sí, son un mismo suceso partido (noticias
-            # del mismo cierre fechadas en días seguidos): no hay duda, va al primero.
+            # del mismo cierre en dos fichas): no hay duda, va al primero.
             anteriores = anteriores[:1]
-        motivo = "mismo sitio y misma ventana"
-        if not anteriores and nota_posterior(incidente):
+        motivo = dichos[anteriores[0]["id"]].motivo if len(anteriores) == 1 else ""
+        if not anteriores and suceso.nota_posterior(incidente):
             # Una nota que vuelve semanas o meses después sobre un suceso ya registrado: se une a
             # él si es el único de ese país, tipo y día (si hay dos, no se sabe a cuál).
             anteriores = [
                 otro for otro in vivos.values()
-                if otro["id"] != incidente["id"] and mismo_suceso_posterior(otro, incidente)
-                and not no_se_juntan(otro, incidente, del_experto)
+                if otro["id"] != incidente["id"]
+                and suceso.mismo_suceso_posterior(otro, incidente)
+                and not suceso.no_se_juntan(otro, incidente, del_experto)
             ]  # fmt: skip
-            motivo = MOTIVO_NOTA_POSTERIOR
+            motivo = suceso.MOTIVO_NOTA_POSTERIOR
         if len(anteriores) != 1:
             continue
-        destino, absorbido = destino_de(anteriores[0], incidente, publicados)
+        destino, absorbido = suceso.destino_de(anteriores[0], incidente, publicados)
         if retiene_la_union(almacen, absorbido, destino["id"]):
             continue
         if revisiones_distintas(absorbido["id"], destino["id"]):
@@ -1158,27 +754,63 @@ def revisiones_distintas(absorbido: str, destino: str) -> list[str]:
     return distintos
 
 
+def union_que_se_deshace(
+    fusion: Documento, absorbido: Documento, destino: Documento,
+    decididas: dict[str, dict[str, str]],
+) -> suceso.Veredicto | None:  # fmt: skip
+    """El veredicto por el que una unión vigente se deshace sola, o None: la definición da las
+    dos fichas por sucesos distintos (suceso.veredicto) por una regla firme que no depende de
+    haber leído las fuentes.
+
+    - Las de la regla de fusión: una revisión que las separó, países distintos, dos cierres de
+      noches distintas o un cierre que se repite.
+    - Las que hizo el control leyendo las fuentes: solo países distintos (lo demás lo decidió
+      quien las leyó). El 11 de noviembre de 2026 el filtro unió cinco fichas de Lituania a un
+      resumen con el lugar en Letonia (EODI-2026-00778), y ahí siguieron.
+    - Las revisadas a mano (recogida/revisados.py), nunca: no las deshace una regla."""
+    motivo = str(fusion["motivo"])
+    del_control = motivo.startswith(suceso.PREFIJO_CONTROL)
+    if motivo.startswith(suceso.PREFIJO_REVISADA) and not del_control:
+        return None
+    propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
+    dicho = suceso.veredicto(
+        propio, destino, de_a=decididas.get(str(absorbido["id"])),
+        de_b=decididas.get(str(destino["id"])), vigente=True,
+    )  # fmt: skip
+    if dicho.relacion != suceso.DISTINTOS:
+        return None
+    reglas = {suceso.REGLA_PAISES} if del_control else REGLAS_QUE_DESHACEN
+    return dicho if dicho.regla in reglas else None
+
+
 def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
-    """Deshace las fusiones que las reglas de ahora ya no hacen (dos sucesos que una revisión
-    separó como distintos, dos cierres de noches distintas, un cierre que se repite): el
-    absorbido vuelve a publicarse con sus fuentes. Devuelve los absorbidos que vuelven."""
+    """Deshace las uniones vigentes que la definición da por sucesos distintos
+    (`union_que_se_deshace`): el absorbido vuelve con sus fuentes y pasa otra vez por el control
+    como cualquier ficha. Devuelve los absorbidos que vuelven."""
     vueltos = []
+    decididas: dict[str, dict[str, str]] | None = None
     for fusion in almacen.fusiones():
-        # Las revisadas a mano (recogida/revisados.py) no las deshace una regla.
-        if fusion["revertida"] or fusion["motivo"].startswith(PREFIJO_REVISADA):
+        if fusion["revertida"]:
+            continue
+        motivo = str(fusion["motivo"])
+        if motivo.startswith(suceso.PREFIJO_REVISADA) and not motivo.startswith(
+            suceso.PREFIJO_CONTROL
+        ):
             continue
         absorbido = almacen.incidente(fusion["absorbido"])
         destino = almacen.incidente(fusion["destino"])
         if absorbido is None or destino is None or "fusionado_en" not in absorbido:
             continue
-        propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
-        if (
-            separados_por_revision(propio, destino)
-            or cierres_de_noches_distintas(propio, destino)
-            or repite_un_cierre_anterior(
-                *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
-            )
-        ):
+        if absorbido["fusionado_en"] != destino["id"]:
+            continue
+        if decididas is None:
+            decididas = suceso.autoridades_decididas(almacen)
+        dicho = union_que_se_deshace(fusion, absorbido, destino, decididas)
+        if dicho is not None:
+            registro.info(
+                "unión %s→%s: la definición las da por sucesos distintos (%s: %s)",
+                fusion["absorbido"], fusion["destino"], dicho.regla, dicho.motivo,
+            )  # fmt: skip
             # Antes de intentarla se pregunta al cerrojo (como `fusionar` con las uniones): una
             # reapertura que retendría no se intenta en cada recogida.
             if retiene_la_reapertura(almacen, absorbido, str(fusion["destino"])):
@@ -1244,59 +876,6 @@ def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: froz
 # --- Episodios ----------------------------------------------------------------------
 
 
-def noche(documento: Documento) -> str | None:
-    """Fecha de la tarde de la noche del incidente, o None si no fue de noche o no se sabe."""
-    inicio = documento["tiempo"]["inicio"]
-    if inicio["precision"] not in PRECISIONES_HORA:
-        return None
-    momento = _leer_instante(inicio)
-    if HORA_FIN_NOCHE <= momento.hour < HORA_INICIO_NOCHE:
-        return None
-    return (momento - timedelta(hours=MEDIODIA)).date().isoformat()
-
-
-def _grupos_de_una_noche(miembros: list[Documento]) -> list[list[Documento]]:
-    """Grupos de una noche: los del mismo país, unidos a los de otro país con una fuente en
-    común (una noticia que cuenta los dos)."""
-    padre = {m["id"]: m["id"] for m in miembros}
-
-    def raiz(id_: str) -> str:
-        while padre[id_] != id_:
-            padre[id_] = padre[padre[id_]]
-            id_ = padre[id_]
-        return id_
-
-    def unir(a: str, b: str) -> None:
-        padre[raiz(a)] = raiz(b)
-
-    for i, uno in enumerate(miembros):
-        enlaces = {f["enlace"] for f in uno["fuentes"]}
-        for otro in miembros[i + 1 :]:
-            mismo_pais = uno["lugar"]["pais"] == otro["lugar"]["pais"]
-            if mismo_pais or enlaces & {f["enlace"] for f in otro["fuentes"]}:
-                unir(uno["id"], otro["id"])
-    grupos: dict[str, list[Documento]] = defaultdict(list)
-    for miembro in miembros:
-        grupos[raiz(miembro["id"])].append(miembro)
-    return list(grupos.values())
-
-
-def episodios_calculados(incidentes_: list[Documento]) -> list[tuple[str, list[Documento]]]:
-    """(noche, miembros) de cada episodio: incidentes activos, con punto y de noche."""
-    por_noche: dict[str, list[Documento]] = defaultdict(list)
-    for incidente in incidentes_:
-        fecha = noche(incidente)
-        if activo(incidente) and con_punto(incidente) and fecha is not None:
-            por_noche[fecha].append(incidente)
-    resultado = []
-    for fecha, miembros in sorted(por_noche.items()):
-        for grupo in _grupos_de_una_noche(sorted(miembros, key=lambda m: m["id"])):
-            objetivos = {m.get("objetivo", {}).get("nombre") or m["id"] for m in grupo}
-            if len(objetivos) >= MIN_OBJETIVOS_EPISODIO:
-                resultado.append((fecha, grupo))
-    return resultado
-
-
 def agrupar_episodios(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
     """Rehace los episodios con las reglas: los que dejan de serlo se deshacen (nada se
     borra: el episodio queda marcado) y sus incidentes pierden el enlace. Devuelve cuántos
@@ -1305,7 +884,7 @@ def agrupar_episodios(almacen: Almacen, ahora: datetime, modelos: frozenset[str]
     anteriores = {e["id"]: e for e in almacen.episodios()}
     asignado: dict[str, str] = {}
     usados: set[str] = set()
-    for fecha, miembros in episodios_calculados(todos):
+    for fecha, miembros in suceso.episodios_calculados(todos):
         ids = sorted(m["id"] for m in miembros)
         existentes = sorted(
             {m["episodio"] for m in miembros if "episodio" in m} - usados

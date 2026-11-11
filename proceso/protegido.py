@@ -54,7 +54,15 @@ from typing import Any
 
 from esquema import Documento
 from proceso import control_fichas as reglas
-from proceso import decididos, decidir, declaraciones, incidentes, rectificaciones, textos_dron
+from proceso import (
+    decididos,
+    decidir,
+    declaraciones,
+    incidentes,
+    rectificaciones,
+    suceso,
+    textos_dron,
+)
 
 RAIZ = Path(__file__).resolve().parent.parent
 CONFIGURACION = RAIZ / "configuracion" / "cerrojo.json"
@@ -296,7 +304,7 @@ def _fijado_en_referencia(guardado: Documento, dato: str) -> bool:
 @cache
 def fichas_manuales() -> frozenset[str]:
     """Las fichas revisadas a mano y las del conjunto de referencia."""
-    revisadas = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
+    revisadas = json.loads(suceso.REVISADOS.read_text(encoding="utf-8"))
     ids: set[str] = set()
     for seccion in revisadas.values():
         if isinstance(seccion, list):
@@ -897,19 +905,21 @@ def par_prohibido(
         return None
     propio = {k: v for k, v in uno.items() if k != "fusionado_en"}
     ajeno = {k: v for k, v in otro.items() if k != "fusionado_en"}
-    if incidentes.separados_por_revision(propio, ajeno):
-        return "revision"
-    if par in prohibidos:
-        return "prohibido"
-    if incidentes.de_partes_separadas(propio, ajeno):
-        return "partes"
-    return None
+    # Lo dice la definición (proceso/suceso.veredicto) con sus reglas en su orden: una revisión
+    # que las separó, lo que el experto dio por distinto (salvo la nota de una noche y sus
+    # alertas, que son el mismo suceso aunque lo dijera) y las partes de una separación. Los
+    # países y los cierres no se miran aquí, por grupos: los miran quien une (`unir`,
+    # `fusionar`) y quien deshace (`revisar_fusiones`) con las dos fichas delante.
+    dicho = suceso.veredicto(propio, ajeno, prohibidos)
+    if dicho.relacion != suceso.DISTINTOS:
+        return None
+    if dicho.regla == suceso.REGLA_REVISION:
+        return "revision" if suceso.separados_por_revision(propio, ajeno) else "partes"
+    return "prohibido" if dicho.regla == suceso.REGLA_EXPERTO else None
 
 
 def pares_a_mano(almacen: Any) -> list[frozenset[str]]:
-    datos = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
-    return [*incidentes.uniones_a_mano(almacen),
-            *(frozenset(g["registros"]) for g in datos.get("unir", []))]  # fmt: skip
+    return [*suceso.uniones_a_mano(almacen), *suceso.grupos_unidos_a_mano()]
 
 
 def union_prohibida(
@@ -925,7 +935,7 @@ def union_prohibida(
     propio, ajeno = grupos(str(absorbido["id"]), destino, enlaces)
     from recogida import revisados
 
-    prohibidos = incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen)
+    prohibidos = suceso.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen)
     a_mano = pares_a_mano(almacen)
     queda = almacen.incidente(destino)
     par = frozenset((str(absorbido["id"]), destino))
@@ -979,8 +989,14 @@ def es_separacion(almacen: Any, documento: Documento, destino: str) -> bool:
         return False
     from recogida import revisados
 
-    prohibidos = incidentes.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen)
-    return par_prohibido(documento, otro, prohibidos, ()) is not None
+    prohibidos = suceso.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen)
+    if par_prohibido(documento, otro, prohibidos, ()) is not None:
+        return True
+    # O la definición da las dos por sucesos distintos (otro país con una autoridad del suyo,
+    # dos cierres de noches distintas): deshacer esa unión es lo que toca.
+    propio = {k: v for k, v in documento.items() if k != "fusionado_en"}
+    dicho = suceso.veredicto_en(almacen, propio, otro, frozenset(), vigente=True)
+    return dicho.relacion == suceso.DISTINTOS
 
 
 # Los datos que se deducen de otros: el tipo sale del cierre, el lugar y el objetivo

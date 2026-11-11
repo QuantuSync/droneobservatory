@@ -1,12 +1,7 @@
 """Control de calidad de las fichas: la parte que no llama a nada (docs/control_fichas.md).
 
-- Pares candidatos a ser el mismo suceso: del mismo país; del mismo día o la misma noche si las
-  dos fechas las escribe una fuente (a 30 horas como mucho), o a 48 horas si alguna es la de
-  publicación; en el mismo sitio si los dos tienen punto (a 15 km más los radios; sin punto, solo
-  el país: el lugar aproximado cuenta) y del mismo tipo de sitio. Nunca los que una revisión
-  separó, ni dos cierres del mismo sitio en noches distintas. El 14 de octubre de 2026 una
-  primera versión, con 48 horas y 60 km para todo, unió derribos de días seguidos y sitios
-  distintos de una misma oleada: se deshizo.
+- Qué pares pueden ser el mismo suceso y cuál de las dos fichas queda no se decide aquí: lo
+  dice la definición (proceso/suceso.py: `candidatos`, `pares_candidatos`, `mas_antiguo`).
 - La verificación de una ficha: lo que dicen sus fuentes de cada dato, con la frase literal. Una
   frase que no está en el texto de su fuente no cuenta. Con lo que queda se corrige la ficha:
   la presencia no se queda confirmada si una fuente cuenta que no se encontró el dron, salvo que
@@ -23,7 +18,7 @@ import copy
 import hashlib
 import json
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any
@@ -37,6 +32,7 @@ from proceso import (
     fechas,
     incidentes,
     rectificaciones,
+    suceso,
 )
 from proceso.estados import RETIRADAS, Estado
 from proceso.fronteras import dentro_del_pais
@@ -64,12 +60,6 @@ from proceso.ubicacion import (
 )
 from proceso.validaciones import errores_presencia
 
-VENTANA_PAR = timedelta(hours=48)
-# Con las dos fechas escritas por una fuente: el mismo día o la misma noche.
-VENTANA_PAR_ESCRITA = timedelta(hours=30)
-MARGEN_PAR_KM = 15.0
-MARGEN_MISMO_SITIO_KM = 10.0
-CATEGORIAS_INSTALACION = frozenset(CATEGORIA_LUGAR.values())
 # Una presencia que no se queda confirmada, con la fuente que lo cuenta.
 NIEGAN = frozenset({"no_hallado", "desmentido"})
 _RANGO = re.compile(r"^\s*(\d{1,3})\s*(?:[-–]\s*(\d{1,3}))?\s*$")
@@ -121,63 +111,21 @@ FRASE_DE_CIERRE = re.compile(
 )
 
 
-def clave_par(a: str, b: str) -> str:
-    uno, otro = sorted((a, b))
-    return f"par:{uno}|{otro}"
-
-
 def clave_verificacion(id_: str) -> str:
     return f"verificacion:{id_}"
+
+
+# Ayudas de siempre para quien trabaja con pares: la clave de un par, el inicio de una ficha y
+# su primera noticia. Lo que decide algo de dos fichas está en proceso/suceso.py.
+clave_par = suceso.clave_par
+instante = suceso.instante
+primera_noticia = suceso.momento_primera_noticia
 
 
 def huella_fuentes(incidente: Documento) -> str:
     """Las fuentes del incidente: cambia cuando llega una nueva."""
     ids = sorted(f["id"] for f in incidente.get("fuentes", []))
     return hashlib.sha256("\n".join(ids).encode("utf-8")).hexdigest()[:16]
-
-
-def instante(incidente: Documento) -> datetime:
-    return incidentes._leer_instante(incidente["tiempo"]["inicio"])
-
-
-def primera_noticia(incidente: Documento) -> datetime:
-    return datetime.strptime(incidentes.primera_noticia(incidente)[:16], "%Y-%m-%dT%H:%M").replace(
-        tzinfo=instante(incidente).tzinfo
-    )
-
-
-def orden_registro(id_: str) -> tuple[int, int, str]:
-    """El orden en que se dio de alta un registro: su año y su número (EODI-2025-00243 va antes
-    que EODI-2025-00247). La fecha de alta guardada no sirve: cambia al reconstruir la base."""
-    partes = id_.split("-")
-    try:
-        return int(partes[1]), int(partes[2]), id_
-    except (IndexError, ValueError):
-        return 9999, 99999, id_
-
-
-def mas_antiguo(a: Documento, b: Documento) -> tuple[Documento, Documento]:
-    """(el que se conserva, el que se une): el más antiguo, el de número de registro menor. Hasta
-    el 14 de octubre de 2026 era el de fecha de alta más antigua, que cambia al reconstruir la
-    base: en Moldavia (28 de noviembre de 2025) quedó EODI-2025-00247 en vez de 00243."""
-    uno, otro = sorted((a, b), key=lambda d: orden_registro(d["id"]))
-    return uno, otro
-
-
-def _cerca_en_el_tiempo(a: Documento, b: Documento) -> bool:
-    precisiones = {a["tiempo"]["inicio"]["precision"], b["tiempo"]["inicio"]["precision"]}
-    if incidentes.APROXIMADA not in precisiones:
-        # Dos fechas escritas: el mismo día local o la misma noche (proceso/incidentes).
-        return abs(instante(a) - instante(b)) <= VENTANA_PAR_ESCRITA and (
-            incidentes.misma_ventana(*sorted((a, b), key=lambda d: d["tiempo"]["inicio"]["valor"]))
-        )
-    if abs(instante(a) - instante(b)) <= VENTANA_PAR:
-        return True
-    # Con la fecha de publicación, también la primera noticia.
-    return abs(primera_noticia(a) - primera_noticia(b)) <= VENTANA_PAR and (
-        incidentes.APROXIMADA
-        in {a["tiempo"]["inicio"]["precision"], b["tiempo"]["inicio"]["precision"]}
-    )
 
 
 def _punto(d: Documento) -> tuple[float, float] | None:
@@ -191,73 +139,6 @@ def _km(a: tuple[float, float], b: tuple[float, float]) -> float:
     uno = Lugar("", "", "", a[0], a[1], 0.0, "", (), ())
     otro = Lugar("", "", "", b[0], b[1], 0.0, "", (), ())
     return distancia_km(uno, otro)
-
-
-def _cerca_en_el_espacio(a: Documento, b: Documento) -> bool:
-    if a["lugar"]["pais"] != b["lugar"]["pais"]:
-        return False
-    pa, pb = _punto(a), _punto(b)
-    if pa is None or pb is None:
-        return True
-    radios = float(a["lugar"].get("radio_km", 0)) + float(b["lugar"].get("radio_km", 0))
-    return _km(pa, pb) <= radios + MARGEN_PAR_KM
-
-
-def _mismo_tipo_de_sitio(a: Documento, b: Documento) -> bool:
-    """Dos sitios de distinto tipo (un aeropuerto y una base) no son el mismo suceso, salvo que
-    estén juntos (aeropuertos de uso mixto)."""
-    ca = (a.get("objetivo") or {}).get("categoria")
-    cb = (b.get("objetivo") or {}).get("categoria")
-    if ca not in CATEGORIAS_INSTALACION or cb not in CATEGORIAS_INSTALACION or ca == cb:
-        return True
-    pa, pb = _punto(a), _punto(b)
-    return pa is not None and pb is not None and _km(pa, pb) <= MARGEN_MISMO_SITIO_KM
-
-
-def separados(a: Documento, b: Documento) -> bool:
-    """Una revisión los separó o los dio por distintos (sucesos relacionados) o son cierres de
-    noches distintas."""
-    relacionados = {r.get("id") for r in a.get("relacionados", [])} | {
-        r.get("id") for r in b.get("relacionados", [])
-    }
-    return (
-        a["id"] in relacionados
-        or b["id"] in relacionados
-        or incidentes.separados_por_revision(a, b)
-        or incidentes.de_partes_separadas(a, b)
-        or incidentes.cierres_de_noches_distintas(a, b)
-    )
-
-
-def candidatos(a: Documento, b: Documento) -> bool:
-    """Pueden ser el mismo suceso y lo tiene que decidir el control."""
-    return (
-        a["id"] != b["id"]
-        and _cerca_en_el_tiempo(a, b)
-        and _cerca_en_el_espacio(a, b)
-        and _mismo_tipo_de_sitio(a, b)
-        and not separados(a, b)
-    )
-
-
-def pares_candidatos(
-    activos: list[Documento], foco: set[str],
-    criterio: Callable[[Documento, Documento], bool] = candidatos,
-) -> list[tuple[Documento, Documento]]:  # fmt: skip
-    """Los pares de candidatos con al menos uno del foco, primero los más cercanos en el
-    tiempo. Con otro `criterio`, los pares que cumplen ese (la segunda lectura, con márgenes más
-    amplios: proceso/segunda_lectura.py)."""
-    pares: dict[str, tuple[Documento, Documento]] = {}
-    por_pais: dict[str, list[Documento]] = {}
-    for d in activos:
-        por_pais.setdefault(d["lugar"]["pais"], []).append(d)
-    for d in activos:
-        if d["id"] not in foco:
-            continue
-        for otro in por_pais.get(d["lugar"]["pais"], []):
-            if criterio(d, otro):
-                pares.setdefault(clave_par(d["id"], otro["id"]), (d, otro))
-    return sorted(pares.values(), key=lambda p: abs(instante(p[0]) - instante(p[1])))
 
 
 # --- Lo que ve el control de una ficha ----------------------------------------------------
@@ -573,7 +454,7 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
         c.respaldos["tiempo.inicio"] = (hora[1], hora[2])
     if origen in {"oficial", "parte", "medido"} or "inicio" in conservar:
         return
-    if inicio["precision"] in incidentes.PRECISIONES_HORA and hora is None:
+    if inicio["precision"] in suceso.PRECISIONES_HORA and hora is None:
         # El día local del lugar, no el de UTC (proceso/fechas.dia_local).
         valor = fechas.dia_local(inicio, d) + "T00:00Z"
         solo_dia = {**d, "tiempo": {**tiempo, "inicio": {"valor": valor, "precision": "dia"}}}
@@ -588,7 +469,7 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
         c.incidente = {**d, "tiempo": nuevo}
         c.cambios.append("hora -> solo el día: ninguna fuente da la hora")
         return
-    if inicio["precision"] == incidentes.APROXIMADA and dia is not None:
+    if inicio["precision"] == suceso.APROXIMADA and dia is not None:
         escrito = datetime.strptime(dia[0], "%Y-%m-%d").date()
         lectura = _dia_en_la_frase(d, dia[1], dia[2], escrito)
         if lectura is None:
@@ -745,7 +626,7 @@ def fallos_de_ficha(incidente: Documento) -> list[str]:
     tiempo = incidente.get("tiempo") or {}
     origen = tiempo.get("origen_inicio") or {}
     if (
-        (tiempo.get("inicio") or {}).get("precision") == incidentes.APROXIMADA
+        (tiempo.get("inicio") or {}).get("precision") == suceso.APROXIMADA
         and origen.get("tipo") == fechas.PUBLICACION
         and fechas.ventana_de_motivo(str(origen.get("motivo") or "")) is None
     ):
@@ -892,9 +773,9 @@ def previas_del_sitio(incidente: Documento, activos: list[Documento]) -> list[Do
         d
         for d in activos
         if d["id"] != incidente["id"]
-        and incidentes.fecha_verificada(d)
+        and suceso.fecha_verificada(d)
         and desde <= instante(d) < inicio - timedelta(days=1)
-        and incidentes.mismo_sitio(incidente, d)
+        and suceso.mismo_sitio(incidente, d)
     ]
     return sorted(previas, key=instante, reverse=True)[:MAX_CANDIDATAS_RETROSPECTIVA]
 
@@ -953,7 +834,7 @@ def comprobar_retrospectiva(
         return None
     if dia.date() >= publicacion.date():
         return None
-    precision = "dia" if m[3] else incidentes.APROXIMADA
+    precision = "dia" if m[3] else suceso.APROXIMADA
     inicio = {"valor": dia.strftime("%Y-%m-%dT00:00Z"), "precision": precision}
     return {
         "decision": "fecha",
@@ -982,9 +863,9 @@ def salida_retrospectiva(
         d
         for d in activos
         if d["id"] != incidente["id"]
-        and incidentes.fecha_verificada(d)
+        and suceso.fecha_verificada(d)
         and instante(d) < instante(incidente) - timedelta(days=1)
-        and incidentes.mismo_sitio(incidente, d)
+        and suceso.mismo_sitio(incidente, d)
     ]
     if (mes := fechas.mes_retrospectivo(incidente)) is not None:
         fuente_id, frase, dia = mes
@@ -998,7 +879,7 @@ def salida_retrospectiva(
                 "decision": "fecha",
                 "inicio": {
                     "valor": f"{dia.isoformat()}T00:00Z",
-                    "precision": incidentes.APROXIMADA,
+                    "precision": suceso.APROXIMADA,
                 },
                 "fuente_id": fuente_id,
                 "frase": frase,

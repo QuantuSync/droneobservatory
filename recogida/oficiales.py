@@ -57,7 +57,8 @@ from urllib.robotparser import RobotFileParser
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import alertas_zona, fechas, incidentes
+from proceso import fechas, incidentes
+from proceso import suceso as definicion
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.noticias import (
@@ -333,7 +334,7 @@ def mismo_dia(incidente: Documento, nota: Nota) -> bool:
         (incidente, de_la_nota), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"])
     )
     with contextlib.suppress(KeyError, ValueError):
-        if incidentes.misma_ventana(primero, segundo):
+        if definicion.misma_ventana(primero, segundo):
             return True
     fecha = nota.fecha if nota.fecha.tzinfo else nota.fecha.replace(tzinfo=UTC)
     return fechas.dia_escrito(
@@ -364,51 +365,23 @@ def nombra_la_ficha(incidente: Documento, nota: Nota) -> bool:
     )
 
 
-def titulos_de(incidente: Documento, fuente: Documento) -> list[str]:
-    """Lo que la ficha guarda de las notas de esa fuente oficial: el título de las enlazadas y
-    la frase de las que entraron como artículo de su página (antes de enlazarse) o como
-    declaración suya."""
-    prefijo = f"{fuente['id']}-"
-    sitio = urlsplit(str(fuente["url"])).netloc
-    return [
-        str(f.get("frase_origen") or "") for f in incidente["fuentes"]
-        if (str(f.get("id", "")).startswith(prefijo) and f.get("es_autoridad"))
-        or urlsplit(str(f.get("enlace") or "")).netloc == sitio
-    ]  # fmt: skip
-
-
-def otra_alerta(incidente: Documento, nota: Nota) -> bool:
-    """La nota es una alerta de otra zona y de otra hora que las de la misma autoridad que la
-    ficha ya tiene (proceso/alertas_zona.py; solo las fuentes con `alertas_por_zona`): es otro
-    suceso y no se enlaza a esa ficha. El 11 de noviembre de 2026, la alerta de Smiltene y
-    Gulbene de las 03.18 frente a la de Krāslava, Ludza y Balvi (EODI-2026-00777)."""
-    regla = nota.fuente.get("alertas_por_zona")
-    if not regla:
-        return False
-    propios = titulos_de(incidente, nota.fuente)
-    return bool(propios) and alertas_zona.otra_alerta(
-        propios, [nota.titulo], str(nota.fuente["pais"]), str(regla["hora"])
-    )
-
-
 def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
     """Las fichas activas del país de la nota que pueden ser su suceso: las que encajan con su
     sitio por la regla de fusión y, del mismo día y un tipo compatible, las que no tienen punto
     (solo el país o la región), las que la nota nombra (`nombra_la_ficha`) y, si la nota no
-    nombra un sitio que se sepa situar, todas. Nunca la ficha de otra alerta de la misma
-    autoridad (`otra_alerta`)."""
+    nombra un sitio que se sepa situar, todas. Las alertas que una autoridad va dando por
+    zonas en una misma noche son el mismo suceso (docs/definicion_suceso.md): la nota de otra
+    zona y otra hora va a la ficha que ya tiene las de esa noche."""
     punto = _punto(nota)
     resultado: list[Documento] = []
     for incidente in almacen.incidentes():
         if not incidentes.activo(incidente) or incidente["lugar"]["pais"] != nota.fuente["pais"]:
             continue
-        if otra_alerta(incidente, nota):
-            continue
-        por_sitio = punto is not None and incidentes.encajan(incidente, punto)
+        por_sitio = punto is not None and definicion.encajan(incidente, punto)
         por_dia = (
             (
                 punto is None
-                or not incidentes.con_punto(incidente)
+                or not definicion.con_punto(incidente)
                 or nombra_la_ficha(incidente, nota)
             )
             and tipo_compatible(incidente, nota)

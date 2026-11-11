@@ -4,7 +4,7 @@ Letonia, EODI-2026-00756 (5 de noviembre de 2026), y las frases que no lo son.""
 from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
-from proceso import auditoria_fichas, fechas
+from proceso import fechas, suceso
 
 RIGA = ZoneInfo("Europe/Riga")
 PUBLICACION = datetime(2026, 11, 5, 8, 15, tzinfo=UTC)
@@ -55,11 +55,11 @@ def _ficha(frase: str) -> dict[str, object]:
 
 def test_la_auditoria_marca_la_ficha_sin_revisar() -> None:
     frase = "W łotewską przestrzeń powietrzną wkroczyły w niedzielę i wtorek dwa drony."
-    assert auditoria_fichas.dos_dias_sin_revisar(_ficha(frase))
-    assert not auditoria_fichas.dos_dias_sin_revisar(_ficha("W niedzielę wleciał dron."))
+    assert suceso.dos_dias_sin_revisar(_ficha(frase))
+    assert not suceso.dos_dias_sin_revisar(_ficha("W niedzielę wleciał dron."))
     # Una parte nacida de una separación (con «relacionados») ya está revisada.
     separada = {**_ficha(frase), "relacionados": [{"id": "EODI-2026-00746"}]}
-    assert not auditoria_fichas.dos_dias_sin_revisar(separada)
+    assert not suceso.dos_dias_sin_revisar(separada)
 
 
 # Dos días seguidos (EODI-2026-00770, Leipzig/Halle, sábado 7 y domingo 8 de noviembre de 2026):
@@ -130,7 +130,7 @@ def test_la_auditoria_marca_leipzig() -> None:
             }
         ],
     }
-    assert auditoria_fichas.dos_dias_sin_revisar(ficha)
+    assert suceso.dos_dias_sin_revisar(ficha)
 
 
 def test_la_retencion_por_dos_dias_se_revisa_al_enlazar_la_parte() -> None:

@@ -12,7 +12,7 @@ fichas y de las rectificaciones). Aquí, sin llamadas:
   o el número de drones, o una ficha que parece resumir varios sucesos; siempre con una frase
   que esté, literal, en las citas que se mandaron (si no está, el hallazgo no cuenta);
 - los pares de posibles duplicados con márgenes más amplios que los del control
-  (proceso/control_fichas.pares_candidatos), sin los que el control ya compara ni los que una
+  (proceso/suceso.pares_candidatos), sin los que el control ya compara ni los que una
   revisión separó;
 - los titulares que el barrido diario de rectificaciones manda al modelo y cuáles elige.
 """
@@ -27,7 +27,7 @@ from jsonschema import Draft202012Validator
 
 from esquema import Documento
 from proceso import control_fichas as reglas
-from proceso import incidentes
+from proceso import suceso
 
 VERSION = "segunda/1"
 # Los datos de la ficha que se comprueban, con lo que significa cada uno para el modelo.
@@ -295,7 +295,7 @@ def hallazgos(
         elif (
             valoracion["valor"] == SIN_APOYO
             and campo in CLAVE_SIN_APOYO
-            and not (campo == "inicio" and valor.endswith(f"({incidentes.APROXIMADA})"))
+            and not (campo == "inicio" and valor.endswith(f"({suceso.APROXIMADA})"))
             and (not frase or en_las_citas(frase, citas))
         ):
             resultado.append(Hallazgo(campo, SIN_APOYO, "", valor))
@@ -390,7 +390,7 @@ def orden_lectura(fichas: dict[str, str], lecturas: dict[str, tuple[str, str]]) 
     """Los identificadores en el orden en que se leen: los nunca leídos (los más nuevos primero),
     los que cambiaron desde su última lectura y después la lectura más antigua. `fichas`: id ->
     huella; `lecturas`: id -> (huella, fecha de la lectura)."""
-    nunca = sorted((i for i in fichas if i not in lecturas), key=reglas.orden_registro,
+    nunca = sorted((i for i in fichas if i not in lecturas), key=suceso.orden_registro,
                    reverse=True)  # fmt: skip
     cambiadas = sorted(
         (i for i in fichas if i in lecturas and lecturas[i][0] != fichas[i]),
@@ -409,7 +409,7 @@ def orden_lectura(fichas: dict[str, str], lecturas: dict[str, tuple[str, str]]) 
 def cercanos(a: Documento, b: Documento, horas: float, km: float) -> bool:
     """Del mismo país, a `horas` como mucho (el suceso o la primera noticia), a `km` más los
     radios (sin punto, solo el país), del mismo tipo de sitio y que ninguna revisión separó; sin
-    los que ya compara el control (proceso/control_fichas.candidatos)."""
+    los que ya compara el control (proceso/suceso.candidatos)."""
     if a["id"] == b["id"] or a["lugar"]["pais"] != b["lugar"]["pais"]:
         return False
     ventana = timedelta(hours=horas)
@@ -424,9 +424,9 @@ def cercanos(a: Documento, b: Documento, horas: float, km: float) -> bool:
         if reglas._km(pa, pb) > radios + km:
             return False
     return (
-        reglas._mismo_tipo_de_sitio(a, b)
-        and not reglas.separados(a, b)
-        and not reglas.candidatos(a, b)
+        suceso._mismo_tipo_de_sitio(a, b)
+        and not suceso.separados(a, b)
+        and not suceso.candidatos(a, b)
     )
 
 
@@ -434,7 +434,7 @@ def pares_amplios(activos: list[Documento], horas: float, km: float,
                   ya_comparados: set[str]) -> list[tuple[Documento, Documento]]:  # fmt: skip
     """Los pares de posibles duplicados con márgenes más amplios, sin los que el control ya
     comparó (`ya_comparados`: claves `par:…`)."""
-    pares = reglas.pares_candidatos(
+    pares = suceso.pares_candidatos(
         activos, {d["id"] for d in activos}, lambda a, b: cercanos(a, b, horas, km)
     )
     return [p for p in pares if reglas.clave_par(p[0]["id"], p[1]["id"]) not in ya_comparados]

@@ -11,7 +11,7 @@ import pytest
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import declaraciones, incidentes, presencia, titulares
+from proceso import declaraciones, incidentes, presencia, suceso, titulares
 from proceso.noticias import Articulo, Candidato, filtro, nomenclator, repeticion
 from proceso.validaciones import errores_presencia, validar_incidente
 from recogida import criterio_presencia
@@ -280,13 +280,13 @@ def test_la_validacion_falla_si_la_fuente_oficial_atribuye_el_dron_y_no_esta_con
 def test_dos_cierres_del_mismo_sitio_en_noches_distintas_no_se_funden() -> None:
     sabado = lieja("EODI-2025-00092", "2025-11-08T19:00Z")
     domingo = lieja("EODI-2025-00400", "2025-11-09T19:00Z")
-    assert incidentes.cierres_de_noches_distintas(sabado, domingo)
-    assert not incidentes.encajan(sabado, domingo)
+    assert suceso.cierres_de_noches_distintas(sabado, domingo)
+    assert not suceso.encajan(sabado, domingo)
     # La misma noche (la madrugada es de la noche anterior), sí.
     madrugada = lieja("EODI-2025-00401", "2025-11-09T00:30Z")
-    assert incidentes.encajan(sabado, madrugada)
+    assert suceso.encajan(sabado, madrugada)
     # Con el día escrito, también noches distintas.
-    assert not incidentes.encajan(lieja("EODI-2025-00402", "2025-11-08T00:00Z", "dia"), domingo)
+    assert not suceso.encajan(lieja("EODI-2025-00402", "2025-11-08T00:00Z", "dia"), domingo)
 
 
 def test_un_cierre_que_se_repite_no_se_funde_en_el_de_la_noche_anterior() -> None:
@@ -300,11 +300,11 @@ def test_un_cierre_que_se_repite_no_se_funde_en_el_de_la_noche_anterior() -> Non
         frase_origen="Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone",
     )
     domingo["fuentes"][0]["fecha"] = ejemplos.instante("2025-11-09T19:30Z", "aproximada")
-    assert incidentes.repite_un_cierre_anterior(sabado, domingo)
-    assert not incidentes.encajan(sabado, domingo)
+    assert suceso.repite_un_cierre_anterior(sabado, domingo)
+    assert not suceso.encajan(sabado, domingo)
     # Sin palabra de repetición, la fecha de publicación casa con la víspera (como antes).
     domingo["fuentes"][0]["frase_origen"] = "Vliegverkeer luchthaven Luik stilgelegd na melding"
-    assert incidentes.encajan(sabado, domingo)
+    assert suceso.encajan(sabado, domingo)
 
 
 # En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una

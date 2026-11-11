@@ -128,7 +128,6 @@ import re
 from collections import Counter
 from collections.abc import Callable, Iterable
 from datetime import date, datetime, timedelta
-from functools import cache
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -146,6 +145,7 @@ from proceso import (
     nombres_lugar,
     noticias,
     rectificaciones,
+    suceso,
     textos_dron,
     titulares,
 )
@@ -617,36 +617,10 @@ def de_otro_pais(incidente: Documento, verificacion: Documento | None = None) ->
     )
 
 
-@cache
-def _fecha_revisada() -> frozenset[str]:
-    """Las fichas cuya fecha ya fijó una revisión: las de una separación (la ficha separada y
-    la que recibe una parte), las de «distintos» y las que tienen el inicio revisado con cita."""
-    datos = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
-    ids = {str(e["incidente"]) for e in datos.get("separar", [])}
-    ids |= {
-        str(p["coincide_con"])
-        for e in datos.get("separar", [])
-        for p in e.get("partes", [])
-        if p.get("coincide_con")
-    }
-    ids |= {str(i) for e in datos.get("distintos", []) for i in e.get("incidentes", [])}
-    ids |= {str(e["incidente"]) for e in datos.get("datos", []) if e.get("campo") == "inicio"}
-    return frozenset(ids)
-
-
-def dos_dias_sin_revisar(incidente: Documento) -> bool:
-    """Una frase de sus fuentes da dos días distintos («w niedzielę i wtorek»,
-    proceso/fechas.frase_de_dos_dias) y ninguna revisión ha dicho a qué día va cada cosa: una
-    ficha es un suceso de un día; hay que separarla (EODI-2026-00756, 1 y 3 de noviembre de
-    2026). Una parte nacida de una separación lleva «relacionados» y no cuenta."""
-    if incidente.get("relacionados") or str(incidente["id"]) in _fecha_revisada():
-        return False
-    return fechas.frase_de_dos_dias(incidente) is not None
-
-
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
-    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u, "AA": dos_dias_sin_revisar,
+    "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
+    "AA": suceso.dos_dias_sin_revisar,
 }  # fmt: skip
 
 
@@ -679,34 +653,21 @@ def autoridad_perdida(documentos: list[Documento]) -> list[str]:
     return sorted(salida)
 
 
-def _unidas_a_mano() -> list[frozenset[str]]:
-    datos = json.loads(incidentes.REVISADOS.read_text(encoding="utf-8"))
-    return [frozenset(g["registros"]) for g in datos.get("unir", [])]
-
-
 def uniones_marcadas(
     documentos: list[Documento],
     del_experto: frozenset[frozenset[str]] = frozenset(),
     a_mano: Iterable[frozenset[str]] = (),
 ) -> list[str]:
-    """Las uniones vigentes (absorbido→destino) entre fichas que una revisión dio por distintas
-    (separación con «distintos» o sección `distintos`) o que el experto dio por distintas en el
-    control, salvo las que una revisión unió a mano (sección `unir`, o `a_mano`: las fusiones
-    revisadas a mano de `incidentes.uniones_a_mano`) (V)."""
-    a_mano = [*_unidas_a_mano(), *a_mano]
-    por_id = {str(d["id"]): d for d in documentos}
-    salida = []
-    for documento in documentos:
-        destino = por_id.get(str(documento.get("fusionado_en")))
-        if destino is None:
-            continue
-        propio = {k: v for k, v in documento.items() if k != "fusionado_en"}
-        par = frozenset((str(documento["id"]), str(destino["id"])))
-        if any(par <= grupo for grupo in a_mano):
-            continue
-        if incidentes.no_se_unen(propio, destino, del_experto):
-            salida.append(f"{documento['id']}→{destino['id']}")
-    return sorted(salida)
+    """Las uniones vigentes (absorbido→destino) entre fichas que la definición da por sucesos
+    distintos (proceso/suceso.uniones_contrarias: una revisión las separó o las dio por
+    distintas, el experto las dio por distintas en el control, son de países distintos con una
+    autoridad del suyo o son dos cierres de noches distintas), salvo las que una revisión unió
+    a mano (sección `unir`, o `a_mano`: las fusiones revisadas a mano de
+    `suceso.uniones_a_mano`) (V)."""
+    return [
+        f"{absorbido}→{destino}"
+        for absorbido, destino, _ in suceso.uniones_contrarias(documentos, del_experto, a_mano)
+    ]
 
 
 HORAS_OSCILA = 48
@@ -850,8 +811,8 @@ def auditar(
     """Por comprobación, los identificadores de las fichas vigentes que la incumplen. `cambios`
     son los de las últimas 48 horas (`Almacen.cambios_desde`), para K y W; `copias`, las copias
     archivadas de los enlaces (`Almacen.copias_archivadas`), para Q; `del_experto`, los pares
-    que el experto dio por distintos (`incidentes.distintos_del_experto`) y las uniones hechas a
-    mano (`incidentes.uniones_a_mano`), para V; `extracciones`, las fechas de las extracciones de
+    que el experto dio por distintos (`suceso.distintos_del_experto`) y las uniones hechas a
+    mano (`suceso.uniones_a_mano`), para V; `extracciones`, las fechas de las extracciones de
     cada candidato en esas horas (`Almacen.fechas_extraccion`), para W; `permitidos`, los cambios
     que dejó pasar el cerrojo (`protegido.permitidos`), para X; `verificaciones`, la última
     verificación de cada ficha (`Almacen.controles("verificacion:")`, por identificador), para

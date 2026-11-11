@@ -16,7 +16,7 @@ from almacen.base import Almacen
 from exportacion import citas
 from modelo import coste
 from proceso import control_fichas as reglas
-from proceso import lugar_preciso, presencia
+from proceso import lugar_preciso, presencia, suceso
 from proceso.noticias import nomenclator
 from recogida import avisos, control_fichas, revisados, vigilancia, visitas
 from tests import ejemplos
@@ -492,21 +492,21 @@ def test_la_gran_ciudad_que_rodea_la_instalacion_no_es_otro_sitio() -> None:
 # --- Pares candidatos --------------------------------------------------------------------------
 def test_pares_candidatos_tambien_con_lugar_solo_de_pais() -> None:
     a, b = _nuremberg_alemana(), _nuremberg_griega()
-    assert reglas.candidatos(a, b)
+    assert suceso.candidatos(a, b)
     lejos = copy.deepcopy(b)
     lejos["tiempo"]["inicio"] = ejemplos.instante("2026-10-06T12:30Z", "dia")
     for f in lejos["fuentes"]:
         f["fecha"] = ejemplos.instante("2026-10-06T12:30Z", "aproximada")
-    assert not reglas.candidatos(a, lejos)
+    assert not suceso.candidatos(a, lejos)
     otro_pais = copy.deepcopy(b)
     otro_pais["lugar"]["pais"] = "AT"
-    assert not reglas.candidatos(a, otro_pais)
+    assert not suceso.candidatos(a, otro_pais)
 
 
 def test_separados_por_una_revision_no_son_candidatos() -> None:
     a, b = _nuremberg_alemana(), _nuremberg_griega()
     b["relacionados"] = [{"id": a["id"], "separado_de": a["id"], "nota": {"es": "x", "en": "x"}}]
-    assert not reglas.candidatos(a, b)
+    assert not suceso.candidatos(a, b)
 
 
 # --- El paso horario -------------------------------------------------------------------------
@@ -858,9 +858,9 @@ def test_dias_distintos_con_fecha_escrita_no_son_candidatos() -> None:
     a, b = _nuremberg_alemana(), _nuremberg_griega()
     a["tiempo"]["inicio"] = ejemplos.instante("2026-10-12T00:00Z", "dia")
     b["tiempo"]["inicio"] = ejemplos.instante("2026-10-13T20:00Z", "hora")
-    assert not reglas.candidatos(a, b)
+    assert not suceso.candidatos(a, b)
     b["tiempo"]["inicio"] = ejemplos.instante("2026-10-12T21:00Z", "hora")
-    assert reglas.candidatos(a, b)
+    assert suceso.candidatos(a, b)
 
 
 def test_no_se_anade_un_cierre_ni_una_duracion_sin_frase_de_cierre() -> None:
@@ -910,10 +910,10 @@ def test_se_conserva_el_numero_de_registro_menor_aunque_su_alta_sea_mas_nueva() 
     viejo, nuevo = _nuremberg_alemana(), _nuremberg_griega()
     viejo["control"]["alta"]["valor"] = "2026-10-14T05:00Z"
     nuevo["control"]["alta"]["valor"] = "2026-10-13T05:00Z"
-    conserva, une = reglas.mas_antiguo(nuevo, viejo)
+    conserva, une = suceso.mas_antiguo(nuevo, viejo)
     assert (conserva["id"], une["id"]) == ("EODI-2026-09515", "EODI-2026-09516")
-    assert reglas.orden_registro("EODI-2025-00243") < reglas.orden_registro("EODI-2025-00247")
-    assert reglas.orden_registro("EODI-2025-00999") < reglas.orden_registro("EODI-2026-00001")
+    assert suceso.orden_registro("EODI-2025-00243") < suceso.orden_registro("EODI-2025-00247")
+    assert suceso.orden_registro("EODI-2025-00999") < suceso.orden_registro("EODI-2026-00001")
 
 
 def test_una_union_que_conservo_la_mas_nueva_se_rehace_sobre_la_mas_antigua() -> None:

@@ -6,7 +6,7 @@ gobiernos en el parlamento, informes finales de investigación, cierres de inves
 policiales y sentencias), cada uno con los sucesos que cita y lo que dice de cada uno. Aquí:
 
 - **Cruce.** Un encuentro o un suceso citado coincide con un incidente si encajan por la regla
-  de fusión (proceso/incidentes.encajan: mismo sitio y misma ventana). Si encaja con uno solo,
+  de fusión (proceso/suceso.encajan: mismo sitio y misma ventana). Si encaja con uno solo,
   se enlaza; con varios, no.
 - **Aportación.** Lo que el registro oficial sabe del incidente entra con una fuente propia
   (fiabilidad A, autoridad, con su método), sus afirmaciones y sus valores, y el incidente
@@ -37,6 +37,7 @@ from typing import Any
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from proceso import declaraciones, incidentes, titulares
+from proceso import suceso as definicion
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.fronteras import dentro_del_pais
@@ -164,7 +165,7 @@ def coincidentes(almacen_incidentes: list[Documento], pseudo: Documento) -> list
     return sorted(
         i["id"] for i in almacen_incidentes
         if incidentes.activo(i) and i["lugar"]["pais"] == pseudo["lugar"]["pais"]
-        and incidentes.encajan(i, pseudo)
+        and definicion.encajan(i, pseudo)
     )  # fmt: skip
 
 

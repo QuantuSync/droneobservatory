@@ -14,7 +14,7 @@ import pytest
 from almacen.base import Almacen
 from modelo import coste
 from proceso import control_fichas as reglas
-from proceso import extraccion
+from proceso import extraccion, suceso
 from recogida import control_fichas, entrada, visitas
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
@@ -67,7 +67,7 @@ def test_el_conjunto_no_mira_la_distancia_ni_la_noche_partida() -> None:
     )
     rumana = _ficha("EODI-2026-00513", "RO", "2026-10-12T22:30Z", "minuto", punto=(44.17, 28.6),
                     nivel="localidad")  # fmt: skip
-    ids = [d["id"] for d in entrada.conjunto(BUQUE_689, [BUQUE_512, lejos, rumana, BUQUE_689])]
+    ids = [d["id"] for d in suceso.conjunto(BUQUE_689, [BUQUE_512, lejos, rumana, BUQUE_689])]
     # El mar entre dos países: también Rumanía; Francia, no; la propia, no.
     assert set(ids) == {"EODI-2026-00512", "EODI-2026-00513"}
 
@@ -76,21 +76,21 @@ def test_lugar_de_pais_mira_los_vecinos_y_el_preciso_solo_su_pais() -> None:
     pais = _ficha("EODI-2026-00700", "DE", "2026-10-20T00:00Z", nivel="pais")
     polaca = _ficha("EODI-2026-00701", "PL", "2026-10-19T00:00Z", punto=(52.2, 21.0),
                     nivel="localidad")  # fmt: skip
-    assert "PL" in entrada.paises(pais)
-    assert [d["id"] for d in entrada.conjunto(pais, [polaca])] == ["EODI-2026-00701"]
+    assert "PL" in suceso.paises(pais)
+    assert [d["id"] for d in suceso.conjunto(pais, [polaca])] == ["EODI-2026-00701"]
     preciso = _ficha("EODI-2026-00702", "DE", "2026-10-20T00:00Z", punto=(52.5, 13.4),
                      nivel="localidad")  # fmt: skip
     preciso["zona"] = {"grupo": "interior"}
-    assert entrada.paises(preciso) == frozenset({"DE"})
-    assert entrada.conjunto(preciso, [polaca]) == []
+    assert suceso.paises(preciso) == frozenset({"DE"})
+    assert suceso.conjunto(preciso, [polaca]) == []
 
 
 def test_una_retrospectiva_a_nueve_dias_tiene_la_ficha_del_suceso() -> None:
     # 00692 lleva la fecha de publicación (27/10); el derribo fue el 17/10.
-    assert not reglas.candidatos(SULINA_692, SULINA_582)
+    assert not suceso.candidatos(SULINA_692, SULINA_582)
     viejo = _ficha("EODI-2026-00300", "RO", "2026-09-01T00:00Z", punto=(45.16, 29.6),
                    nivel="localidad")  # fmt: skip
-    ids = [d["id"] for d in entrada.conjunto(SULINA_692, [SULINA_582, viejo])]
+    ids = [d["id"] for d in suceso.conjunto(SULINA_692, [SULINA_582, viejo])]
     assert ids == ["EODI-2026-00582"]
 
 
@@ -100,8 +100,8 @@ def test_con_mas_de_cuarenta_primero_el_mismo_tipo_y_lo_mas_cercano() -> None:
                tipo="incursion" if n % 2 else "sobrevuelo")
         for n in range(60)
     ]  # fmt: skip
-    elegidas = entrada.conjunto(SULINA_692, otras)
-    assert len(elegidas) == entrada.MAX_CONJUNTO == 40
+    elegidas = suceso.conjunto(SULINA_692, otras)
+    assert len(elegidas) == suceso.MAX_CONJUNTO == 40
     assert all(d["tipo"] == "sobrevuelo" for d in elegidas[:30])
 
 
@@ -237,8 +237,8 @@ def test_dos_fechas_firmes_distintas_no_se_unen_sin_revision() -> None:
     seguida = almacen.incidente("EODI-2026-00512")
     assert seguida is not None and seguida["tiempo"]["inicio"]["valor"].startswith("2026-10-12")
     # A dos días o menos, o con una de las fechas sin frase, se une como siempre.
-    assert entrada.fechas_distintas(doce, seis) is not None
-    assert entrada.fechas_distintas(doce, BUQUE_689) is None
+    assert suceso.fechas_distintas(doce, seis) is not None
+    assert suceso.fechas_distintas(doce, BUQUE_689) is None
 
 
 def test_sin_frase_de_la_fecha_no_se_publica_y_el_lugar_queda_en_el_pais() -> None:
@@ -446,10 +446,10 @@ def test_las_fichas_sin_punto_ni_hora_del_mismo_dia_entran_en_el_conjunto() -> N
                             "suceso": "nord-estul țării"}  # fmt: skip
     lejos = _ficha("EODI-2026-00100", "RO", "2026-08-01T00:00Z", frase="Tulcea")
     assert "punto" not in iasi["lugar"]
-    ids = {o["id"] for o in entrada.conjunto(bacau, [iasi, otra_region, lejos, bacau])}
+    ids = {o["id"] for o in suceso.conjunto(bacau, [iasi, otra_region, lejos, bacau])}
     assert ids == {"EODI-2026-00719", "EODI-2026-00741"}
     # Y al revés: la de Iasi ve a las otras dos del mismo día.
-    assert {o["id"] for o in entrada.conjunto(iasi, [iasi, bacau, otra_region])} == {
+    assert {o["id"] for o in suceso.conjunto(iasi, [iasi, bacau, otra_region])} == {
         "EODI-2026-00727",
         "EODI-2026-00741",
     }

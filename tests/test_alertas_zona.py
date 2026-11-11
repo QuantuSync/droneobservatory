@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from proceso import alertas_zona
+from proceso import alertas_zona, suceso
 from proceso.noticias import filtro
 from recogida import oficiales, paginas_oficiales
 
@@ -123,45 +123,41 @@ def test_zonas_y_horas_de_un_titulo() -> None:
     assert alertas_zona.horas("PAPILDINĀTS 11.NOV plkst. 00.23 Iespējams", _hora()) == {23}
 
 
-def test_otra_zona_y_otra_hora_es_otra_alerta() -> None:
-    de_la_ficha = oficiales.titulos_de(F777, _mil_lv())
+def test_las_notas_que_guarda_la_ficha_de_la_autoridad() -> None:
+    de_la_ficha = suceso.notas_de(F777, _mil_lv())
     assert len(de_la_ficha) == 3  # las de las 00.23 y las 01.25, y la frase de la primera
-    for nombre in (SMILTENE, ANULADA_SMILTENE):
-        assert alertas_zona.otra_alerta(de_la_ficha, [TITULOS[nombre]], "LV", _hora())
-    # La nota que anula la de Balvi no escribe la hora ni una zona del nomenclátor: no dice nada.
-    assert not alertas_zona.otra_alerta(de_la_ficha, [TITULOS[ANULADA_BALVI]], "LV", _hora())
-    # La misma zona a otra hora (la anulación de las 00.35) es la misma alerta.
-    anulada = "Atcelti iespējamie Latvijas gaisa telpas apdraudējumi Ludzas, Augšdaugavas un " \
-              "Krāslavas novados plkst. 03.35"  # fmt: skip
-    assert not alertas_zona.otra_alerta(de_la_ficha, [anulada], "LV", _hora())
-    # Otra zona a menos de una hora es la alerta que se amplía al municipio vecino.
-    ampliada = "PAPILDINĀTS plkst. 00:50 Gaisa telpas apdraudējums Smiltenes novadā"
-    assert not alertas_zona.otra_alerta(de_la_ficha, [ampliada], "LV", _hora())
-    # A medianoche el reloj da la vuelta: las 23.25 y las 00.23 están a 58 minutos.
-    ludza = "Izsludināts gaisa telpas apdraudējums Ludzas novadā plkst. 23.25"
-    solo_kraslava = ["plkst. 00.23 Iespējams apdraudējums Krāslavas novadā"]
-    assert not alertas_zona.otra_alerta(solo_kraslava, [ludza], "LV", _hora())
+    assert alertas_zona.zonas(" . ".join(de_la_ficha), "LV")
+    assert alertas_zona.horas(" . ".join(de_la_ficha), _hora())
 
 
-def test_la_alerta_de_smiltene_no_se_enlaza_a_la_ficha_de_kraslava() -> None:
-    """Con la regla anterior la nota de las 03.18 era de EODI-2026-00777 por ser otra nota de la
-    misma autoridad el mismo día. Ahora no encuentra ficha y entra como suceso propio."""
+def test_la_alerta_de_smiltene_es_de_la_ficha_de_esa_noche() -> None:
+    """Las alertas que una autoridad va dando por zonas en una noche son el mismo suceso
+    (docs/definicion_suceso.md). Del 11 de noviembre de 2026 a las 11:41 hasta la definición
+    hubo una regla («otra zona y otra hora es otra alerta») por la que la nota de las 03.18 no
+    era de EODI-2026-00777 y entraba como suceso propio: la misma noche de Letonia, en dos."""
     base: Any = _Base(F777)
-    assert oficiales.otra_alerta(F777, _nota(SMILTENE))
-    assert oficiales.posibles(base, _nota(SMILTENE)) == []
-    assert oficiales.posibles(base, _nota(ANULADA_SMILTENE)) == []
-    assert oficiales.lugar_de_candidato(_nota(SMILTENE)) == "loc:455406"  # Smiltene
-    # La que anula la de Balvi sigue siendo de la ficha, como antes.
+    ids = [i["id"] for i in oficiales.posibles(base, _nota(SMILTENE))]
+    assert ids == ["EODI-2026-00777"]
     assert [i["id"] for i in oficiales.posibles(base, _nota(ANULADA_BALVI))] == ["EODI-2026-00777"]
+    # Y nada en la definición las da por sucesos distintos: no hay regla de zonas.
+    smiltene = {
+        **F777,
+        "id": "EODI-2026-09790",
+        "fuentes": [
+            {
+                **F777["fuentes"][0],
+                "id": "gdelt-smiltene",
+                "es_autoridad": False,
+                "enlace": f"https://www.mil.lv/lv/zinas/{SMILTENE}",
+                "frase_origen": TITULOS[SMILTENE],
+            }
+        ],
+    }
+    assert suceso.nunca_el_mismo(smiltene, F777) is None
 
 
-def test_la_regla_solo_vale_para_las_fuentes_que_la_piden() -> None:
-    sin_regla = {k: v for k, v in _mil_lv().items() if k != "alertas_por_zona"}
-    nota = _nota(SMILTENE)
-    otra = oficiales.Nota(
-        sin_regla, nota.id, nota.titulo, nota.enlace, nota.fecha, nota.texto, nota.precision
-    )
-    assert not oficiales.otra_alerta(F777, otra)
+def test_las_fuentes_que_dan_sus_alertas_por_zonas() -> None:
     assert [f["id"] for f in oficiales.fuentes() if f.get("alertas_por_zona")] == [
         "mil_lv", "mod_lv",
     ]  # fmt: skip
+    assert [f["id"] for f in suceso._fuentes_por_zonas()] == ["mil_lv", "mod_lv"]

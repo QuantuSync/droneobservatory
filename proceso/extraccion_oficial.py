@@ -30,6 +30,7 @@ from esquema import Documento
 from modelo import coste, ficha, ficha_oficial
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import detalle, extraccion, fechas, incidentes
+from proceso import suceso as definicion
 from proceso.extraccion import Parada, Servicio, ServicioLotes, prefijos_genericos
 from proceso.fronteras import paises
 from proceso.validacion_oficial import Suceso, dia_en_frase, validar_cifra, validar_suceso
@@ -209,7 +210,7 @@ def cruzar(
     sin_punto = ubicacion.sitio is None
     hallados = [
         i["id"] for i in activos
-        if i["lugar"]["pais"] == pseudo["lugar"]["pais"] and incidentes.encajan(i, pseudo)
+        if i["lugar"]["pais"] == pseudo["lugar"]["pais"] and definicion.encajan(i, pseudo)
     ]  # fmt: skip
     if len(hallados) == 1:
         return {**resultado, "cruce": "existente", "incidente": hallados[0]}

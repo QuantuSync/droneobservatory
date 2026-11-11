@@ -13,7 +13,7 @@ de `configuracion/fechas.json`:
   semana pasada», «letzte Woche», «hace unos días»): no es la fecha de publicación. El inicio es
   aproximado, la víspera de la nota como muy tarde, y su motivo dice la ventana en que cae
   (pasado_de, ventana_de_motivo): la fusión lo compara con los incidentes del mismo sitio en esa
-  ventana (proceso/incidentes.misma_ventana), y un artículo que cuenta un suceso ya registrado se
+  ventana (proceso/suceso.misma_ventana), y un artículo que cuenta un suceso ya registrado se
   une a él como fuente nueva. El 19 de octubre de 2026 una nota de nordbayern.de («Erst letzte
   Woche…») sobre el aeropuerto de Núremberg del 13 de octubre salió como incidente nuevo del 19.
 - **Sin día**: la frase no escribe ningún día (solo una hora, o nada). Una fecha sin día

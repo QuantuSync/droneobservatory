@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
-from proceso import incidentes
+from proceso import incidentes, suceso
 from recogida import revisados
 from tests import ejemplos
 
@@ -175,18 +175,18 @@ def test_lo_que_una_revision_separo_como_distinto_no_lo_vuelve_a_juntar_la_regla
     for documento, pareja in ((vispera, otro), (otro, vispera)):
         documento["relacionados"] = [{"id": pareja["id"], "separado_de": "EODI-2025-00397",
                                       "nota": {"es": "separados", "en": "separated"}}]  # fmt: skip
-    monkeypatch.setattr(incidentes, "separaciones_distintas", lambda: frozenset())
-    assert incidentes.encajan(vispera, otro)
-    monkeypatch.setattr(incidentes, "separaciones_distintas",
+    monkeypatch.setattr(suceso, "separaciones_distintas", lambda: frozenset())
+    assert suceso.encajan(vispera, otro)
+    monkeypatch.setattr(suceso, "separaciones_distintas",
                         lambda: frozenset({"EODI-2025-00397"}))  # fmt: skip
-    assert not incidentes.encajan(vispera, otro)
+    assert not suceso.encajan(vispera, otro)
     for documento in (vispera, otro):
         almacen.guardar_incidente(documento, AHORA, MODELOS)
     assert incidentes.fusionar(almacen, AHORA, MODELOS) == 0
     # La fusión que ya se hizo se deshace.
-    monkeypatch.setattr(incidentes, "separaciones_distintas", lambda: frozenset())
+    monkeypatch.setattr(suceso, "separaciones_distintas", lambda: frozenset())
     assert incidentes.fusionar(almacen, AHORA, MODELOS) == 1
-    monkeypatch.setattr(incidentes, "separaciones_distintas",
+    monkeypatch.setattr(suceso, "separaciones_distintas",
                         lambda: frozenset({"EODI-2025-00397"}))  # fmt: skip
     assert incidentes.revisar_fusiones(almacen, AHORA, MODELOS) == ["EODI-2025-00468"]
 
@@ -195,7 +195,7 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
     # Fuerteventura y, desde el 19 de octubre de 2026, las ocho que la regla de fusión había vuelto
     # a juntar (Kleine-Brogel, Volkel, Moldavia, Rumanía, Aalborg, Palanca y Hîrbovăț) y, desde
     # el 20, los tres drones de Moldavia del 30 de septiembre de 2026 (EODI-2026-00263).
-    assert incidentes.separaciones_distintas() == frozenset(
+    assert suceso.separaciones_distintas() == frozenset(
         {
             "EODI-2025-00397",
             "EODI-2025-00131",
