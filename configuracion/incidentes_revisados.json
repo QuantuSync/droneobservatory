@@ -4387,24 +4387,6 @@
         "categoria": "policia",
         "afirma": "drones"
       }
-    },
-    {
-      "incidente": "EODI-2026-00792",
-      "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
-      "medio": "lrt.lt",
-      "fecha": "2026-11-11",
-      "idioma": "en",
-      "frase": "The initial airport closure took place in Vilnius, followed by Kaunas. As the situation escalated and the drones entered, the airspace was closed again",
-      "comprobada": {
-        "fecha": "2026-11-11",
-        "en": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled (original)"
-      },
-      "declaracion": {
-        "autoridad": "Nacionalinis krizių valdymo centras",
-        "pais": "LT",
-        "categoria": "gobierno",
-        "afirma": "drones"
-      }
     }
   ],
   "titulares": [
@@ -12909,15 +12891,6 @@
       "enlace": "https://hbvl.be/regio/limburg/peer/burgers-spotten-dinsdag-zes-drones-boven-militaire-luchtmachtbasis-van-kleine-brogel-niet-meer-zichtbaar-bij-aankomst-politiehelikopter/102524895.html",
       "pais": "BE",
       "motivo": "la ficha es solo del martes 4 de noviembre de 2025 y su titular decía «durante tres noches», que sale de un resumen de las noches anteriores (defence-ua.com, «For three nights in a row»), que tienen sus fichas (EODI-2025-00131 y EODI-2025-00080); del martes, las fuentes cuentan los seis drones que vieron los vecinos (revisado el 10 de noviembre de 2026)"
-    },
-    {
-      "incidente": "EODI-2026-00792",
-      "campo": "cierre",
-      "valor": "si",
-      "cita": "The initial airport closure took place in Vilnius, followed by Kaunas. As the situation escalated and the drones entered, the airspace was closed again",
-      "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
-      "pais": "LT",
-      "motivo": "los aeropuertos de Vilna y Kaunas cerraron dos veces la noche del 10 al 11 de noviembre de 2026, la segunda al entrar los drones, según el jefe del Centro Nacional de Gestión de Crisis, Vilmantas Vitkauskas, a LRT; la ficha no lo recogía (revisado el 11 de noviembre de 2026)"
     },
     {
       "incidente": "EODI-2026-00792",
