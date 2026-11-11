@@ -12,7 +12,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
-from proceso import auditoria_fichas, control_fichas, incidentes, invariantes, suceso
+from proceso import auditoria_fichas, incidentes, invariantes, suceso
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
 
@@ -399,9 +399,7 @@ def test_leipzig_la_noticia_de_noviembre_es_del_suceso_de_agosto() -> None:
     noticia, agosto = suelta("2026-00765"), f("2026-00134")
     assert suceso.mismo_sitio(noticia, agosto)
     assert suceso.fecha_aproximada(noticia)
-    assert [d["id"] for d in control_fichas.previas_del_sitio(noticia, [agosto])] == [
-        "EODI-2026-00134"
-    ]
+    assert [d["id"] for d in suceso.previas_del_sitio(noticia, [agosto])] == ["EODI-2026-00134"]
     assert dicho(noticia, agosto).relacion != suceso.DISTINTOS
     assert "retirado" in f("2026-00765")
 

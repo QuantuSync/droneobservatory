@@ -1535,7 +1535,7 @@ def retrospectivas(ctx: Contexto, vistos: set[str]) -> None:
                 continue
             if ctx.llamador.parado:
                 break
-            candidatas = reglas.previas_del_sitio(incidente, activos)
+            candidatas = suceso.previas_del_sitio(incidente, activos)
             fuentes = fuentes_de_ficha(ctx.almacen, incidente, {})
             resumenes = [
                 {
