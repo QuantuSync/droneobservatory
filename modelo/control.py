@@ -142,10 +142,12 @@ aeropuertos, dos bases o dos localidades con drones distintos que las fuentes cu
 separado (cada uno con su hora, su comunicado o su dron), sí, aunque sea la misma noche.
 - varios_sucesos: una de las dos fichas junta hechos de jornadas, de países o de drones \
 distintos que la otra no cuenta (un balance de varias noches frente a una de ellas, varios \
-derribos frente a uno, un resumen de dos países frente a uno de ellos) o no cuenta ninguno \
-concreto. Si las dos cuentan el mismo conjunto (el ataque de esa noche a dos barcos, los drones \
-de esa noche sobre una base), o una es la nota con la que la autoridad cuenta la noche entera y \
-la otra las alertas de esa misma noche, es falso.
+derribos frente a uno) o no cuenta ninguno concreto. Si las dos cuentan el mismo conjunto (el \
+ataque de esa noche a dos barcos, los drones de esa noche sobre una base), o una es la nota con \
+la que la autoridad cuenta la noche entera y la otra las alertas de esa misma noche, es falso. \
+También es falso si el lugar y el día de las dos fichas son del mismo país y de la misma \
+jornada, aunque una noticia de una de ellas hable además del país vecino (un titular «Letonia y \
+Lituania» en una ficha de Lituania): cada ficha cuenta lo de su país.
 - decision: «mismo» solo si mismo_dia y mismo_sitio son ciertos y varios_sucesos es falso; \
 «distinto» si alguno de los dos es falso («de nuevo», «otra vez», «un segundo ataque», otra \
 jornada, otros drones en otro sitio) o si una ficha resume varios sucesos; «dudoso» si las \

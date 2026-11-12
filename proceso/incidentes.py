@@ -885,15 +885,73 @@ def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: froz
 # --- Episodios ----------------------------------------------------------------------
 
 
+def sin_las_fuentes_de_sus_unidas(
+    todos: list[Documento], fusiones: list[Documento]
+) -> frozenset[str]:
+    """Las fichas activas a las que les falta entera alguna de las fichas unidas a ellas: la
+    extracción las acaba de rehacer con las noticias de su candidato y el control todavía no les
+    ha devuelto las fuentes de las unidas (`control_fichas.reaplicar_uniones`, más adelante en la
+    misma recogida)."""
+    por_id = {str(d["id"]): d for d in todos}
+    faltan: set[str] = set()
+    for fusion in fusiones:
+        destino = por_id.get(str(fusion["destino"]))
+        absorbido = por_id.get(str(fusion["absorbido"]))
+        if fusion["revertida"] or not fusion["fuentes"] or destino is None or absorbido is None:
+            continue
+        if not activo(destino) or absorbido.get("fusionado_en") != destino["id"]:
+            continue
+        if not {f["id"] for f in destino["fuentes"]} & set(fusion["fuentes"]):
+            faltan.add(str(destino["id"]))
+    return frozenset(faltan)
+
+
+def _quietos(
+    todos: list[Documento], grupos: list[tuple[str, list[Documento]]], incompletas: frozenset[str]
+) -> tuple[set[str], set[str]]:
+    """(fichas, episodios) que esta vez no se tocan: las fichas incompletas, los episodios que ya
+    tenían, las demás fichas de esos episodios y las de los grupos calculados con alguna de ellas
+    (hasta que no cambie nada)."""
+    quietas: set[str] = set(incompletas)
+    episodios: set[str] = set()
+    while True:
+        tamano = (len(quietas), len(episodios))
+        episodios |= {str(d["episodio"]) for d in todos if d["id"] in quietas and "episodio" in d}
+        quietas |= {str(d["id"]) for d in todos if d.get("episodio") in episodios}
+        for _, miembros in grupos:
+            ids = {str(m["id"]) for m in miembros}
+            if ids & quietas:
+                quietas |= ids
+        if (len(quietas), len(episodios)) == tamano:
+            return quietas, episodios
+
+
 def agrupar_episodios(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
     """Rehace los episodios con las reglas: los que dejan de serlo se deshacen (nada se
     borra: el episodio queda marcado) y sus incidentes pierden el enlace. Devuelve cuántos
-    incidentes cambian de episodio."""
+    incidentes cambian de episodio.
+
+    Una ficha que acaba de volver a extraerse y aún no tiene las fuentes de sus unidas
+    (`sin_las_fuentes_de_sus_unidas`) no dice todavía a qué episodio pertenece: ni ella ni las
+    de su episodio cambian hasta la recogida siguiente. En la reproducción del 31 de octubre de
+    2026 (12 de noviembre), EODI-2026-00719, con 2 de sus 42 fuentes, recibió su episodio en ese
+    momento y, al guardarse, su presencia revisada pasó de confirmada a no confirmada."""
     todos = almacen.incidentes()
     anteriores = {e["id"]: e for e in almacen.episodios()}
     asignado: dict[str, str] = {}
-    usados: set[str] = set()
-    for fecha, miembros in suceso.episodios_calculados(todos):
+    grupos = suceso.episodios_calculados(todos)
+    quietas, episodios_quietos = _quietos(
+        todos, grupos, sin_las_fuentes_de_sus_unidas(todos, almacen.fusiones())
+    )
+    if quietas:
+        registro.info(
+            "episodios: %d fichas esperan a recuperar las fuentes de sus unidas (%s)",
+            len(quietas), ", ".join(sorted(quietas)[:8]),
+        )  # fmt: skip
+    usados: set[str] = set(episodios_quietos)
+    for fecha, miembros in grupos:
+        if {str(m["id"]) for m in miembros} & quietas:
+            continue
         ids = sorted(m["id"] for m in miembros)
         existentes = sorted(
             {m["episodio"] for m in miembros if "episodio" in m} - usados
@@ -917,7 +975,7 @@ def agrupar_episodios(almacen: Almacen, ahora: datetime, modelos: frozenset[str]
     cambios = 0
     for incidente in todos:
         nuevo = asignado.get(incidente["id"])
-        if incidente.get("episodio") == nuevo:
+        if incidente.get("episodio") == nuevo or incidente["id"] in quietas:
             continue
         documento = {k: v for k, v in incidente.items() if k != "episodio"}
         if nuevo is not None:

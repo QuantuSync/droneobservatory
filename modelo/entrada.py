@@ -102,7 +102,11 @@ la nueva según esa definición (los mismos drones, el mismo derribo, el mismo b
 cierre del mismo aeropuerto la misma noche, la misma alerta de esa noche en ese país); «ninguna» \
 si no es ninguna. La de otro país solo si es el mismo hecho y el país de una de las dos está \
 mal (un buque en el mar entre dos países); nunca si es el mismo dron al otro lado de la \
-frontera, que es el suceso de ese otro país. motivo_mismo: por qué, en una frase.
+frontera, que es el suceso de ese otro país. Si la ficha nueva solo vuelve sobre sucesos ya \
+registrados en la lista (una reacción, las medidas que se toman después, un balance de varias \
+noches) y no cuenta ningún suceso nuevo con su día, es la ficha de la lista del suceso del que \
+más habla (si habla de varios por igual, el más reciente), no «ninguna». motivo_mismo: por \
+qué, en una frase.
 - otro_dia: true si las fuentes cuentan un suceso de un día distinto del de la ficha (no la \
 noche anterior a la publicación: eso es el mismo día del suceso). fecha_suceso: el día del \
 suceso, AAAA-MM-DD, que dan las fuentes (vacío si ninguna lo da).

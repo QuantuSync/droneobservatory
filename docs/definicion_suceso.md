@@ -31,7 +31,7 @@ De ahí sale todo lo demás:
 | El mismo dron a los dos lados de una frontera | dos sucesos, uno por país, enlazados por un `episodio` |
 | El mismo sitio en dos días o en dos noches («de nuevo», «otra vez», el sábado y el domingo) | dos sucesos |
 | En la misma jornada y el mismo país, drones distintos en sitios u horas distintos que las fuentes cuentan por separado (otro dron horas después, otro aeropuerto, otro barco) | sucesos distintos, enlazados por un `episodio` si son varios objetivos de una noche |
-| Una ficha que junta varios de esos (un balance de varias noches, un resumen de dos países) | ninguno: se separa o se retira |
+| Una noticia que cuenta varios de esos (un balance de varias noches, un resumen de dos países) | ningún suceso nuevo: cada uno de los que cuenta es el suyo. La ficha hecha con una noticia así es del suceso de su país y su jornada (el mismo que el de otra ficha de ese país y esa jornada); si no cuenta ninguno con su día, se une al suceso del que más habla; si junta dos de verdad, se separa o se retira |
 
 **La ficha que queda** de una unión toma sus datos del suceso, no de la ficha con más fuentes:
 
