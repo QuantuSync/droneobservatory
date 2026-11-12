@@ -98,7 +98,7 @@ firme da por distintos no se une.
 | Cerrojo | no deja unir lo que la definición da por distintos por las reglas 1 y 4, y deja deshacer lo que da por distintos | `proceso/protegido.par_prohibido`, `es_separacion` |
 | Noticias de un suceso anterior | con qué fichas anteriores del mismo sitio se compara una noticia retrospectiva (`suceso.previas_del_sitio`) | `recogida/control_fichas.retrospectivas` |
 | Auditoría | letra **V**: uniones vigentes que el veredicto da por «distintos» por una regla que manda sobre quien leyó las fuentes (1, 2 y 4); letra **AA**: dos días | `proceso/auditoria_fichas.py` |
-| Invariantes | **I6**: ninguna unión vigente que `revisar_fusiones` tenía que haber deshecho | `proceso/invariantes.py` |
+| Invariantes | **I6**: ninguna unión vigente que `revisar_fusiones` tenía que haber deshecho; **I7**: ninguna dirección publicada lleva a una ficha de otro suceso | `proceso/invariantes.py` |
 | Episodios | varios objetivos de un país en una noche; el mismo episodio a los dos lados de una frontera | `suceso.episodios_calculados` |
 | Repaso de entrada (a mano) | lo que no puede ser el mismo al repasar una ficha publicada | `suceso.imposible_al_repasar` |
 

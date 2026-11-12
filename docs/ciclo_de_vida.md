@@ -41,7 +41,11 @@ así. Las reglas de qué está protegido no cambian: siguen en [`cerrojo.md`](ce
   llena una vez con lo que ya estaba publicado (`puerta.sembrar`), lo primero de la recogida:
   antes de eso ninguna ficha se guarda, para que una ya publicada no parezca nueva.
 - **Unida.** Fundida en otra (`fusionado_en`). Su fila pasa a «unida» cuando la ficha que queda
-  está publicada; hasta entonces sigue saliendo como estaba.
+  está publicada; hasta entonces sigue saliendo como estaba. Su dirección lleva siempre a la
+  ficha de su unión vigente: la puerta vuelve a mirar las filas unidas en cada publicación y, si
+  la ficha cambió de unión (una se deshizo y se unió a otra) o la que quedaba se unió a su vez,
+  pone el destino al día. Mientras la ficha de la unión nueva no esté publicada, la dirección
+  sigue llevando adonde llevaba (no a un 404) y la invariante I7 lo dice.
 - **Retirada.** Con `retirado` en la base por una decisión explícita. Su fila pasa a «retirada»
   con su fecha y su motivo en español y en inglés (el de la retirada si está escrito en los dos
   idiomas; el de una regla interna no se publica: sale un motivo general). Una ficha retirada no
@@ -137,6 +141,7 @@ en la CI (sobre la base de prueba y sobre los casos reales de `tests/`).
 | I4 | ninguna versión nueva igual a la anterior salvo la fecha | se cuenta (no se puede publicar mal por esto) |
 | I5 | ningún aviso con datos distintos de lo publicado | el aviso no sale |
 | I6 | ninguna unión vigente entre fichas que la definición de suceso da por distintos ([`definicion_suceso.md`](definicion_suceso.md)) | se cuenta y se avisa: `revisar_fusiones` tenía que haberla deshecho |
+| I7 | ninguna dirección publicada lleva a una ficha de otro suceso: la de una ficha unida lleva a una ficha de su unión vigente, que no es de otro país (con una autoridad del suyo) ni la separó de ella una revisión | se cuenta y se avisa: la puerta tenía que haber puesto la fila al día |
 
 Cada rotura queda en el cursor `invariantes` y llega como aviso privado, una vez por ficha e
 invariante.
@@ -158,6 +163,7 @@ ese mismo paso.
 | una ficha fallaba y cortaba a las de detrás | cada elemento, aislado |
 | una ficha retirada volvía al reextraerse | retirada firme |
 | dirección de una ficha unida a otra no publicada, o retirada, en 404 | estados de `publicado` |
+| dirección de una ficha que cambió de unión y seguía llevando a la ficha anterior, de otro suceso (00218, 00522) | las filas unidas se ponen al día con su unión vigente; I7 |
 
 ## Cómo se prueba
 

@@ -9,6 +9,8 @@ corren en la puerta de la publicación (cada recogida), en el ensayo y en la CI.
 - I5: ningún aviso con datos distintos de lo publicado.
 - I6: ninguna unión vigente entre fichas que la definición de suceso da por distintos
   (proceso/suceso.py): lo que `incidentes.revisar_fusiones` tenía que haber deshecho.
+- I7: ninguna dirección publicada lleva a una ficha de otro suceso: la de una ficha unida lleva a
+  una ficha de su unión vigente, y esa no es de otro país ni la separó de ella una revisión.
 
 `de_ficha` es lo que la puerta mira de cada versión antes de dejarla entrar (I3); `comprobar` las
 mira todas sobre la base y lo publicado, sin escribir nada. `avisar` manda por el tema privado,
@@ -25,8 +27,8 @@ from esquema import Documento
 
 registro = logging.getLogger(__name__)
 
-I1, I2, I3, I4, I5, I6 = "I1", "I2", "I3", "I4", "I5", "I6"
-TODAS = (I1, I2, I3, I4, I5, I6)
+I1, I2, I3, I4, I5, I6, I7 = "I1", "I2", "I3", "I4", "I5", "I6", "I7"
+TODAS = (I1, I2, I3, I4, I5, I6, I7)
 SIN_COMPROBAR = "invariantes"
 CURSOR = "invariantes"
 TITULO_AVISO = "EODI · Invariante rota"
@@ -150,6 +152,81 @@ def uniones_de_sucesos_distintos(almacen: Any) -> list[str]:
     return sorted(set(rotas))
 
 
+# Las reglas firmes de la definición que valen también entre una ficha unida y la última de su
+# cadena de uniones (no solo entre las dos de cada unión, que es I6): el país y lo que separó una
+# revisión. La jornada de una ficha unida no se mira aquí: su fecha es la que tenía antes de
+# unirse, muchas veces la de publicación de una noticia posterior (medido el 12 de noviembre de
+# 2026: 104 de 654 unidas tienen otra jornada que la ficha que queda, y las leídas están bien
+# unidas); las noches distintas de dos cierres las mira I6 en cada unión.
+REGLAS_DE_OTRO_SUCESO = frozenset({"paises_distintos", "revision"})
+
+
+def _cadena(id_: str, destino: dict[str, str]) -> list[str]:
+    """Las fichas por las que pasa la unión vigente de `id_`, hasta la que queda."""
+    cadena: list[str] = []
+    actual = id_
+    while actual in destino and destino[actual] not in cadena and destino[actual] != id_:
+        actual = destino[actual]
+        cadena.append(actual)
+    return cadena
+
+
+def direcciones_a_otro_suceso(
+    almacen: Any, filas: dict[str, Documento], base: dict[str, Documento]
+) -> list[str]:
+    """I7: «unida→adonde lleva (por qué)» de las direcciones publicadas que llevan a una ficha de
+    otro suceso. Se mira adónde lleva cada ficha unida, en su fila y en lo que se publica
+    (`puerta.direcciones`):
+
+    - a una ficha que no es de su unión vigente: la unieron a otra, o volvió a estar suelta, y su
+      dirección sigue llevando a la anterior (EODI-2026-00218 y EODI-2026-00522, el 12 de
+      noviembre de 2026);
+    - a una ficha que la definición da por otro suceso por una regla firme (otro país con una
+      autoridad del suyo, o una revisión que las dio por distintas), salvo que alguna unión de la
+      cadena sea una revisión a mano, que manda."""
+    from exportacion import puerta
+    from proceso import suceso
+
+    unidos, _ = puerta.direcciones(filas, base)
+    destino = {i: str(d["fusionado_en"]) for i, d in base.items() if "fusionado_en" in d}
+    a_mano: set[str] | None = None
+    decididas: dict[str, dict[str, str]] | None = None
+    rotas: list[str] = []
+    for id_, fila in sorted(filas.items()):
+        if fila["estado"] != puerta.UNIDA or id_ not in base:
+            continue
+        cadena = _cadena(id_, destino)
+        llevan = {str(fila["detalle"].get("destino") or ""), unidos.get(id_, "")} - {""}
+        for adonde in sorted(llevan):
+            if adonde not in cadena:
+                vigente = cadena[-1] if cadena else "ninguna"
+                rotas.append(f"{id_}→{adonde} (su unión vigente es {vigente})")
+                continue
+            otra = base.get(adonde)
+            if otra is None:
+                continue
+            if a_mano is None:
+                a_mano = {
+                    str(f["absorbido"])
+                    for f in almacen.fusiones()
+                    if not f["revertida"]
+                    and str(f["motivo"]).startswith(suceso.PREFIJO_REVISADA)
+                    and not str(f["motivo"]).startswith(suceso.PREFIJO_CONTROL)
+                }
+            tramo = [id_, *cadena[: cadena.index(adonde)]]
+            if any(t in a_mano for t in tramo):
+                continue
+            if decididas is None:
+                decididas = suceso.autoridades_decididas(almacen)
+            propia = {k: v for k, v in base[id_].items() if k != "fusionado_en"}
+            dicho = suceso.veredicto(
+                propia, otra, de_a=decididas.get(id_), de_b=decididas.get(adonde), vigente=True
+            )
+            if dicho.relacion == suceso.DISTINTOS and dicho.regla in REGLAS_DE_OTRO_SUCESO:
+                rotas.append(f"{id_}→{adonde} ({dicho.regla})")
+    return rotas
+
+
 def datos_del_aviso(documento: Documento) -> dict[str, Any]:
     """Lo que un aviso cuenta de una ficha (recogida/avisos.mensaje), de su documento interno o
     de su entrada publicada: el titular, el estado, el tipo, el país y el inicio."""
@@ -210,6 +287,7 @@ def comprobar(almacen: Any, ahora: datetime) -> dict[str, list[str]]:
             if i in internos and (distintos := aviso_distinto(internos[i], filas[i]["entrada"]))
         ),
         I6: uniones_de_sucesos_distintos(almacen),
+        I7: direcciones_a_otro_suceso(almacen, filas, base),
     }
 
 
@@ -225,6 +303,7 @@ def texto_aviso(invariante: str, que: str) -> str:
         I4: "versión nueva igual a la anterior salvo la fecha",
         I5: "aviso con datos distintos de lo publicado",
         I6: "unión de dos fichas que la definición da por sucesos distintos",
+        I7: "dirección publicada que lleva a una ficha de otro suceso",
     }
     return f"{invariante} ({nombres.get(invariante, invariante)}): {que}"
 

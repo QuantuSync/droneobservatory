@@ -12,7 +12,9 @@ Cerrada por defecto. La versión de una ficha que la base propone entra solo si:
 Si no, su fila no se toca: sigue saliendo su última versión buena y, si nunca salió, no sale.
 Una ficha publicada que se une pasa a «unida» cuando la que queda está publicada; una que se
 retira, a «retirada» con su motivo. Ninguna fila se borra: toda dirección publicada lleva a una
-ficha, a la que queda o a la explicación de su retirada.
+ficha, a la que queda o a la explicación de su retirada. El destino de una fila unida sale siempre
+de su unión vigente: si la ficha cambia de unión (se deshace una y se une a otra), la fila se pone
+al día en esa misma publicación.
 
 Sustituye a la lista de retenidos del control como filtro de la publicación (lo que no estaba en
 la lista salía: si el control fallaba, las fichas nuevas de esa hora se publicaban sin filtro) y a
@@ -326,20 +328,35 @@ def _sin_candidata(
     pase: Pase,
     fecha: str,
 ) -> None:
-    """Las filas publicadas cuya ficha ya no da una entrada: unida, retirada o que no se puede
-    publicar como está. Las dos primeras cambian de estado (con el control terminado); la tercera
-    se queda como estaba."""
+    """Las filas cuya ficha no da una entrada: unida, retirada o que no se puede publicar como
+    está. Las dos primeras cambian de estado (con el control terminado); la tercera se queda como
+    estaba.
+
+    Una fila ya «unida» se vuelve a mirar en cada publicación: su destino es el final de la unión
+    vigente de la ficha, no el que tenía cuando se unió. EODI-2026-00218 y EODI-2026-00522 (12 de
+    noviembre de 2026) salieron de la ficha en que estaban (EODI-2026-00230, de Rumanía, y
+    EODI-2026-00130, de Estonia) y se unieron a la de su suceso (EODI-2026-00140 y
+    EODI-2026-00057), y sus filas siguieron diciendo el destino antiguo: solo se miraban las
+    filas publicadas."""
     destino = {i: str(d["fusionado_en"]) for i, d in base.items() if "fusionado_en" in d}
     pendientes: list[tuple[str, str]] = []
     for id_, fila in sorted(filas.items()):
-        if id_ in candidatas or fila["estado"] != PUBLICADA:
+        if id_ in candidatas or fila["estado"] not in (PUBLICADA, UNIDA):
             continue
         interno = base.get(id_)
         if interno is None:
             continue
+        unida = fila["estado"] == UNIDA
+        if unida and "retirado" not in interno:
+            if "fusionado_en" not in interno:
+                # Vuelve a estar activa y no da una entrada: su fila no cambia hasta que la dé.
+                continue
+            if final_de(id_, destino) == str(fila["detalle"].get("destino") or ""):
+                continue
         if not pase.terminado:
-            resultado.retenidas.append({"id": id_, "comprobaciones": [SIN_CONTROL],
-                                        "origen": BUENA, "diferencias": {}})  # fmt: skip
+            if not unida:
+                resultado.retenidas.append({"id": id_, "comprobaciones": [SIN_CONTROL],
+                                            "origen": BUENA, "diferencias": {}})  # fmt: skip
         elif "retirado" in interno:
             detalle = detalle_de_retirada(interno["retirado"], fecha)
             almacen.cambiar_estado_publicado(id_, RETIRADA, detalle, fecha)
@@ -355,7 +372,8 @@ def _sin_candidata(
             })  # fmt: skip
     for id_, final in pendientes:
         # La dirección de una ficha unida solo redirige a una ficha que está publicada; si la que
-        # queda aún no lo está (nueva, sin pase), la unida sigue saliendo como estaba.
+        # queda aún no lo está (nueva, sin pase), la unida sigue saliendo como estaba (y la que
+        # ya redirigía, redirigiendo adonde lo hacía).
         queda = filas.get(final)
         if queda is not None and queda["estado"] == PUBLICADA:
             almacen.cambiar_estado_publicado(id_, UNIDA, {"destino": final}, fecha)
@@ -391,13 +409,17 @@ def direcciones(
     filas: dict[str, Documento], base: dict[str, Documento]
 ) -> tuple[dict[str, str], dict[str, Documento]]:
     """Adónde lleva cada dirección que no es una ficha publicada: ({unida: la que queda},
-    {retirada: {fecha, motivo}}). Las unidas salen de la base (también las de antes de existir la
-    tabla) y de las filas; una cadena que acaba en una retirada explica esa retirada."""
+    {retirada: {fecha, motivo}}). El destino de una unida sale de su unión vigente en la base
+    (también las de antes de existir la tabla); el de la fila solo vale si la base ya no la
+    tiene unida o si su unión vigente aún no acaba en una ficha publicada (la que queda es nueva
+    y no tiene el pase): hasta entonces la dirección sigue llevando adonde llevaba, no a un 404.
+    Una cadena que acaba en una retirada explica esa retirada."""
     publicadas = {i for i, f in filas.items() if f["estado"] == PUBLICADA}
-    destino = {i: str(d["fusionado_en"]) for i, d in base.items() if "fusionado_en" in d}
-    for id_, fila in filas.items():
-        if fila["estado"] == UNIDA and id_ not in destino:
-            destino[id_] = str(fila["detalle"].get("destino") or "")
+    vigente = {i: str(d["fusionado_en"]) for i, d in base.items() if "fusionado_en" in d}
+    de_la_fila = {
+        i: str(f["detalle"].get("destino") or "") for i, f in filas.items() if f["estado"] == UNIDA
+    }
+    destino = {**de_la_fila, **vigente}
     unidos: dict[str, str] = {}
     retirados: dict[str, Documento] = {
         i: dict(f["detalle"]) for i, f in filas.items() if f["estado"] == RETIRADA
@@ -410,6 +432,10 @@ def direcciones(
             unidos[origen] = final
         elif final in retirados and origen in filas:
             retirados[origen] = dict(retirados[final])
+        elif origen in de_la_fila:
+            anterior = final_de(de_la_fila[origen], destino)
+            if anterior in publicadas:
+                unidos[origen] = anterior
     return dict(sorted(unidos.items())), dict(sorted(retirados.items()))
 
 

@@ -667,3 +667,158 @@ def test_el_resumen_cuenta_las_fichas_en_su_version_anterior() -> None:
     )
     assert "  Fichas publicadas en su versión anterior: 1" in lineas
     assert f"  - {ID}" in lineas
+
+
+# --- Ninguna dirección lleva a otro suceso (I7) -------------------------------------------
+
+TERCERA = "EODI-2026-09602"
+
+
+def _tres_publicadas(directorio: Path) -> Almacen:
+    """ID, OTRA y TERCERA publicadas, y después ID unida a OTRA (su dirección redirige allí)."""
+    almacen = _base(BUENO)
+    for id_ in (OTRA, TERCERA):
+        almacen.guardar_incidente(_con_cierre(_minima(id_), BUENO), AHORA, VOCABULARIO_MODELOS)
+    puerta.dar_pase(almacen, AHORA, [OTRA, TERCERA])
+    publicar.publicar(almacen, AHORA, directorio)
+    _unir(almacen, ID, OTRA)
+    publicar.publicar(almacen, AHORA, directorio)
+    assert _mapa(directorio)["unidos"] == {ID: OTRA}
+    assert almacen.publicado()[ID]["detalle"] == {"destino": OTRA}
+    return almacen
+
+
+def test_la_redireccion_de_una_unida_sale_de_su_union_vigente(
+    tmp_path: Path, sin_marcas: None
+) -> None:
+    # EODI-2026-00218 (12/11/2026): salió de EODI-2026-00230 (Tulcea) y se unió a EODI-2026-00140
+    # (Letonia), y su fila siguió diciendo «destino 00230»: las filas unidas no se volvían a mirar.
+    almacen = _tres_publicadas(tmp_path)
+    _unir(almacen, ID, TERCERA)
+    publicar.publicar(almacen, AHORA, tmp_path)
+    assert _mapa(tmp_path)["unidos"] == {ID: TERCERA}
+    assert almacen.publicado()[ID]["detalle"] == {"destino": TERCERA}
+    assert almacen.estados_publicados()[ID] == puerta.UNIDA
+    assert invariantes.rotas(invariantes.comprobar(almacen, AHORA)) == {}
+    # Y no se vuelve a escribir en la publicación siguiente.
+    fecha = almacen.publicado()[ID]["fecha"]
+    publicar.publicar(almacen, AHORA + timedelta(hours=1), tmp_path)
+    assert almacen.publicado()[ID]["fecha"] == fecha
+
+
+def test_una_cadena_de_uniones_redirige_a_la_ultima(tmp_path: Path, sin_marcas: None) -> None:
+    # La ficha a la que estaba unida se une a su vez a otra: la dirección lleva a la que queda.
+    almacen = _tres_publicadas(tmp_path)
+    _unir(almacen, OTRA, TERCERA)
+    publicar.publicar(almacen, AHORA, tmp_path)
+    assert _mapa(tmp_path)["unidos"] == {ID: TERCERA, OTRA: TERCERA}
+    assert almacen.publicado()[ID]["detalle"] == {"destino": TERCERA}
+    assert invariantes.rotas(invariantes.comprobar(almacen, AHORA)) == {}
+
+
+def test_la_unida_que_cambia_a_una_sin_publicar_sigue_redirigiendo(
+    tmp_path: Path, sin_marcas: None
+) -> None:
+    # Mientras la ficha de su unión nueva no tenga el pase, la dirección no da 404: lleva adonde
+    # llevaba, y la invariante lo dice. Cuando la nueva se publica, lleva a ella.
+    almacen = _tres_publicadas(tmp_path)
+    nueva = "EODI-2026-09603"
+    almacen.guardar_incidente(_con_cierre(_minima(nueva), BUENO), AHORA, VOCABULARIO_MODELOS)
+    _unir(almacen, ID, nueva)
+    publicar.publicar(almacen, AHORA, tmp_path)
+    assert _mapa(tmp_path)["unidos"] == {ID: OTRA}
+    retenidas = (almacen.cursor(puerta.CURSOR) or {})["sustituidas"]
+    assert [r["comprobaciones"] for r in retenidas] == [[puerta.UNIDA_A_NO_PUBLICADA]]
+    rotas = invariantes.comprobar(almacen, AHORA)
+    assert rotas[invariantes.I2] == []
+    assert rotas[invariantes.I7] == [f"{ID}→{OTRA} (su unión vigente es {nueva})"]
+    puerta.dar_pase(almacen, AHORA, [nueva])
+    publicar.publicar(almacen, AHORA, tmp_path)
+    assert _mapa(tmp_path)["unidos"] == {ID: nueva}
+    assert invariantes.rotas(invariantes.comprobar(almacen, AHORA)) == {}
+
+
+def test_la_unida_que_se_retira_explica_su_retirada(tmp_path: Path, sin_marcas: None) -> None:
+    almacen = _tres_publicadas(tmp_path)
+    documento = almacen.incidente(ID)
+    assert documento is not None
+    retirado = {
+        "fecha": ejemplos.instante("2026-10-13T14:17Z"),
+        "motivo": "No es un suceso: la nota cuenta un simulacro.",
+        "motivo_en": "Not an event: the article reports a drill.",
+    }
+    sin_union = {k: v for k, v in documento.items() if k != "fusionado_en"}
+    almacen.conexion.execute(
+        "UPDATE incidentes SET documento = ? WHERE id = ?",
+        (json.dumps({**sin_union, "retirado": retirado}), ID),
+    )
+    publicar.publicar(almacen, AHORA, tmp_path)
+    assert almacen.estados_publicados()[ID] == puerta.RETIRADA
+    assert "unidos" not in _mapa(tmp_path) and ID in _mapa(tmp_path)["retirados"]
+    assert invariantes.rotas(invariantes.comprobar(almacen, AHORA)) == {}
+
+
+def _filas(**destinos: str) -> dict[str, Documento]:
+    """Filas de lo publicado: las fichas de `destinos`, unidas a su valor; las demás que salen
+    como valor, publicadas."""
+    filas: dict[str, Documento] = {}
+    for id_ in {*destinos.values()} - {*destinos}:
+        filas[id_] = {"id": id_, "estado": puerta.PUBLICADA, "fichero": publicar.INCIDENTES,
+                      "entrada": {"id": id_}, "detalle": {}}  # fmt: skip
+    for id_, destino in destinos.items():
+        filas[id_] = {"id": id_, "estado": puerta.UNIDA, "fichero": publicar.INCIDENTES,
+                      "entrada": {"id": id_}, "detalle": {"destino": destino}}  # fmt: skip
+    return filas
+
+
+def test_i7_una_fila_con_el_destino_de_una_union_anterior_se_ve() -> None:
+    almacen = Almacen.abrir()
+    base = {
+        ID: {**_minima(ID), "fusionado_en": TERCERA},
+        OTRA: _minima(OTRA),
+        TERCERA: _minima(TERCERA),
+    }
+    filas = {**_filas(**{ID: OTRA}), **_filas(**{"x": TERCERA})}
+    del filas["x"]
+    assert invariantes.direcciones_a_otro_suceso(almacen, filas, base) == [
+        f"{ID}→{OTRA} (su unión vigente es {TERCERA})"
+    ]
+    # Con la fila al día, nada.
+    filas[ID]["detalle"] = {"destino": TERCERA}
+    assert invariantes.direcciones_a_otro_suceso(almacen, filas, base) == []
+    # Una ficha que volvió a estar suelta y cuya dirección sigue llevando a la otra.
+    base[ID] = _minima(ID)
+    assert invariantes.direcciones_a_otro_suceso(almacen, filas, base) == [
+        f"{ID}→{TERCERA} (su unión vigente es ninguna)"
+    ]
+
+
+def test_i7_una_direccion_que_lleva_a_una_ficha_de_otro_pais_se_ve(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A través de una cadena: cada unión por separado puede no decir nada (I6) y la dirección
+    # acabar en la ficha de otro país.
+    from proceso import suceso
+
+    almacen = Almacen.abrir()
+    letona = _minima(ID)
+    letona["lugar"] = {"pais": "LV", "nivel": "region", "region": "Balvi"}
+    base = {
+        ID: {**letona, "fusionado_en": OTRA},
+        OTRA: {**_minima(OTRA), "fusionado_en": TERCERA},
+        TERCERA: _minima(TERCERA),
+    }
+    filas = _filas(**{ID: TERCERA, OTRA: TERCERA})
+    # Sin una autoridad de su país, el país de una de las dos puede estar mal: no es firme.
+    assert invariantes.direcciones_a_otro_suceso(almacen, filas, base) == []
+    monkeypatch.setattr(suceso, "pais_firme", lambda ficha, *_: suceso.pais(ficha) == "LV")
+    assert invariantes.direcciones_a_otro_suceso(almacen, filas, base) == [
+        f"{ID}→{TERCERA} (paises_distintos)"
+    ]
+    # Una unión revisada a mano manda: no la contradice una regla.
+    monkeypatch.setattr(
+        almacen, "fusiones",
+        lambda: [{"absorbido": ID, "destino": OTRA, "revertida": False,
+                  "motivo": suceso.PREFIJO_REVISADA + "el mismo suceso"}],
+    )  # fmt: skip
+    assert invariantes.direcciones_a_otro_suceso(almacen, filas, base) == []
