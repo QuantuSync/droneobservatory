@@ -10998,6 +10998,48 @@
           ]
         }
       ]
+    },
+    {
+      "incidente": "EODI-2026-00801",
+      "motivo": {
+        "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio.",
+        "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-10",
+          "pais": "LT",
+          "descripcion": "La noche del 10 al 11 de noviembre de 2026 entran drones en el espacio aéreo de Lituania, con alertas aéreas y cazas de la OTAN",
+          "coincide_con": "EODI-2026-00792",
+          "fuentes": [
+            "gdelt-9711a285c6a1abff",
+            "gdelt-a5af0683e0ec1c30"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-10",
+          "pais": "LV",
+          "descripcion": "La noche del 10 al 11 de noviembre de 2026 entran drones en el espacio aéreo de Letonia, con alertas de las Fuerzas Armadas",
+          "coincide_con": "EODI-2026-00777",
+          "fuentes": [
+            "gdelt-9711a285c6a1abff",
+            "gdelt-a5af0683e0ec1c30"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-11",
+          "pais": "EE",
+          "descripcion": "La madrugada del miércoles 11 de noviembre de 2026 entran drones en el espacio aéreo de Estonia, con alertas de amenaza aérea y cazas de la OTAN",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-9711a285c6a1abff",
+            "gdelt-a5af0683e0ec1c30"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
