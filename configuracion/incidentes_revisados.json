@@ -772,6 +772,19 @@
       "conserva": "EODI-2026-00057",
       "motivo": "el mismo suceso: la alerta por un dron sobre Lituania del miércoles 20 de mayo de 2026, con el aeropuerto de Vilna cerrado. EODI-2026-00522 es la nota de cbc.ca de ese día: «Lithuania's president and prime minister were taken to safe locations Wednesday and residents of Vilnius were told to take shelter» (20 de mayo de 2026). Estaba unida a la ficha del dron derribado sobre Estonia el martes 19 (EODI-2026-00130), que es otro suceso de otro país (revisado el 11 de noviembre de 2026)",
       "motivo_en": "the same event: the drone alert over Lithuania on Wednesday 20 May 2026, with Vilnius airport closed. EODI-2026-00522 is the cbc.ca report of that day: «Lithuania's president and prime minister were taken to safe locations Wednesday and residents of Vilnius were told to take shelter» (20 May 2026). It had been merged into the record of the drone shot down over Estonia on Tuesday 19 (EODI-2026-00130), a different event in a different country (reviewed on 11 November 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00792",
+        "EODI-2026-00779",
+        "EODI-2026-00783",
+        "EODI-2026-00785",
+        "EODI-2026-00786",
+        "EODI-2026-00787"
+      ],
+      "conserva": "EODI-2026-00792",
+      "motivo": "el mismo suceso: los drones que entraron en Lituania la noche del 10 al 11 de noviembre de 2026, con las alertas por zonas, los cazas de la OTAN y el cierre del aeropuerto de Kaunas. Las cinco fichas lo cuentan con noticias de esa noche: «Lithuania's National Crisis Management Centre's warning included Kaunas» (express.co.uk, EODI-2026-00779); «Drone incursions prompted yellow and red air alerts across large parts of Lithuania overnight, with NATO fighter jets scrambled on both occasions» (lrt.lt, EODI-2026-00783); «Incursioni di droni hanno fatto scattare allarmi aerei gialli e rossi in ampie zone della Lituania durante la notte» (spotandweb.it, EODI-2026-00785, y la misma nota en ilfattonisseno.it, EODI-2026-00787); «Premjeras: nepavykus numušti drono, prie Biržų rastos NATO naikintuvo paleistos raketos nuolaužos.» (15min.lt, EODI-2026-00786). Estaban unidas a EODI-2026-00778, un resumen de Letonia y Lituania con el lugar en Letonia, ya retirado; la definición de suceso las saca de ahí (otro país) y su suceso es el de EODI-2026-00792 (revisado el 12 de noviembre de 2026)",
+      "motivo_en": "the same event: the drones that entered Lithuania on the night of 10 to 11 November 2026, with the zone alerts, the NATO fighter jets and the closure of Kaunas airport. The five records tell it with reports of that night: «Lithuania's National Crisis Management Centre's warning included Kaunas» (express.co.uk, EODI-2026-00779); «Drone incursions prompted yellow and red air alerts across large parts of Lithuania overnight, with NATO fighter jets scrambled on both occasions» (lrt.lt, EODI-2026-00783); «Incursioni di droni hanno fatto scattare allarmi aerei gialli e rossi in ampie zone della Lituania durante la notte» (spotandweb.it, EODI-2026-00785, and the same report in ilfattonisseno.it, EODI-2026-00787); «Premjeras: nepavykus numušti drono, prie Biržų rastos NATO naikintuvo paleistos raketos nuolaužos.» (15min.lt, EODI-2026-00786). They had been merged into EODI-2026-00778, a summary of Latvia and Lithuania located in Latvia, now withdrawn; the definition of an event takes them out (another country) and their event is that of EODI-2026-00792 (reviewed on 12 November 2026)"
     }
   ],
   "reextraer": [
