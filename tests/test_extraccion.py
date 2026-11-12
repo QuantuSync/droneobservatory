@@ -313,7 +313,9 @@ def test_primeras_frases_de_los_parrafos_utiles() -> None:
         "<footer><p>Pie de página con suficientes palabras para parecer un párrafo</p></footer>"
     )
     assert primeras_frases(html) == TEXTO
-    assert len(primeras_frases("<p>" + "Una frase larga de prueba. " * 60 + "</p>")) <= 600
+    larga = "<p>" + "Una frase larga de prueba. " * 200 + "</p>"
+    assert 2900 < len(primeras_frases(larga)) <= 3000
+    assert 500 < len(primeras_frases(larga, 600)) <= 600
 
 
 # --- Validación -----------------------------------------------------------------------

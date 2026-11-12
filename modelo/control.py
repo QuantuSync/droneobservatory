@@ -18,6 +18,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
+from modelo import paginas
 from proceso.suceso import DEFINICION
 
 VERSION = "control/5"
@@ -34,6 +35,11 @@ MAX_SALIDA_VERIFICAR = 1200
 MAX_SALIDA_TRADUCIR = 8000
 # Letras de cada texto que se mandan: el titular entero y las primeras frases.
 MAX_LETRAS_TEXTO = 700
+# Para verificar los datos de una ficha y para fechar una noticia posterior hace falta lo mismo
+# que leyó el extractor (modelo/paginas.py: hasta 3.000 letras de la nota), con sitio para la
+# frase guardada de la fuente: un dato sacado de más abajo de las 700 primeras letras no tendría
+# su frase delante al verificarlo.
+MAX_LETRAS_COMPLETO = paginas.MAX_LETRAS + 300
 MAX_FUENTES = 6
 DECISIONES = ("mismo", "distinto", "dudoso")
 PRESENCIAS = ("confirmada", "posible", "no_hallado", "desmentido", "sin_dato")
@@ -209,16 +215,20 @@ con su cargo delante, como lo da el nombre («el primer ministro Donald Tusk»).
 
 @dataclass(frozen=True)
 class FuenteControl:
-    """Una fuente como la ve el control: titular y primeras frases (o la frase guardada)."""
+    """Una fuente como la ve el control: titular y primeras frases (o la frase guardada). Con
+    `completo`, además, todo lo que se leyó de la nota, para lo que tiene que ver los datos."""
 
     medio: str
     fecha: str
     idioma: str
     titular: str
     texto: str
+    completo: str = ""
 
-    def bloque(self, numero: int) -> str:
+    def bloque(self, numero: int, completo: bool = False) -> str:
         texto = self.texto[:MAX_LETRAS_TEXTO]
+        if completo and self.completo:
+            texto = self.completo[:MAX_LETRAS_COMPLETO]
         cuerpo = f" Texto: {texto}" if texto else ""
         return (
             f"Fuente {numero} ({self.medio}, {self.fecha}, {self.idioma or '?'}). "
@@ -259,7 +269,7 @@ def cuerpo_comparar(
 
 def cuerpo_verificar(ficha: dict[str, Any], fuentes: list[FuenteControl]) -> dict[str, Any]:
     partes = ["Ficha:", resumen_ficha(ficha), "Fuentes:"]
-    partes += [f.bloque(i) for i, f in enumerate(fuentes[:MAX_FUENTES], 1)]
+    partes += [f.bloque(i, completo=True) for i, f in enumerate(fuentes[:MAX_FUENTES], 1)]
     return _cuerpo(INSTRUCCIONES_VERIFICAR, ESQUEMA_VERIFICAR, "\n".join(partes),
                    MAX_SALIDA_VERIFICAR, ESFUERZO_VERIFICAR)  # fmt: skip
 
@@ -355,7 +365,7 @@ respalda la fecha o la retrospectiva (0 y vacío si no hay ninguna).
 def cuerpo_retrospectiva(ficha: dict[str, Any], fuentes: list[FuenteControl],
                          candidatas: list[dict[str, Any]]) -> dict[str, Any]:  # fmt: skip
     partes = ["Ficha nueva:", resumen_ficha(ficha), "Fuentes:"]
-    partes += [f.bloque(i) for i, f in enumerate(fuentes[:MAX_FUENTES], 1)]
+    partes += [f.bloque(i, completo=True) for i, f in enumerate(fuentes[:MAX_FUENTES], 1)]
     partes += ["", "Fichas publicadas del mismo sitio:"]
     partes += [resumen_ficha(c) for c in candidatas] or ["(ninguna)"]
     return _cuerpo(INSTRUCCIONES_RETROSPECTIVA, ESQUEMA_RETROSPECTIVA, "\n".join(partes),

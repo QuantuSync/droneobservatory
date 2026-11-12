@@ -167,7 +167,10 @@ def preparar_todas(
                 # Sin la página, el titular basta para esa fuente.
                 registro.warning("página sin leer (%s): %r", url, error)
                 texto = ""
-            fuentes.append(replace(f, texto=texto))
+            # Lo que `preparar` dejó en el texto sin la página es la pista de un artículo
+            # dirigido (la frase que encontró la segunda lectura): sigue delante de lo leído.
+            # Hasta el 12 de noviembre de 2026 se sustituía por la página y se perdía.
+            fuentes.append(replace(f, texto=extraccion.con_pista(texto, f.texto)))
         return replace(peticion, fuentes=fuentes)
 
     with ThreadPoolExecutor(HILOS) as hilos:
