@@ -186,7 +186,8 @@ def test_el_ultimo_fallo_dice_que_paso_en_el_ultimo_intento() -> None:
     with pytest.raises(DescargaFallida):
         descargador.texto("https://lento.ejemplo/canal", lambda _t: True)
     assert descargador.ultimo_fallo == (
-        "https://lento.ejemplo/canal: error de red: TimeoutError (sin respuesta en 30 s)"
+        "https://lento.ejemplo/canal: error de red: TimeoutError (sin respuesta), sin respuesta "
+        "en 30 s"
     )
 
     def con_503(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
@@ -214,3 +215,21 @@ def test_con_otros_limites_es_el_mismo_visitante() -> None:
     breve.texto("https://sitio.ejemplo/b", lambda _t: True)
     assert dormidas == [3] and pedidas == [30.0, 10.0]
     assert descargador.recuentos["peticiones"] == 2
+
+
+def test_el_motivo_de_un_error_de_red_dice_su_razon() -> None:
+    import urllib.error
+
+    from recogida.descarga import motivo_de_red
+
+    rechazada = urllib.error.URLError(ConnectionRefusedError(111, "Connection refused"))
+    assert motivo_de_red(rechazada, 12) == (
+        "error de red: URLError ([Errno 111] Connection refused)"
+    )
+    al_conectar = urllib.error.URLError(TimeoutError("timed out"))
+    assert motivo_de_red(al_conectar, 12) == (
+        "error de red: URLError (timed out), sin respuesta en 12 s"
+    )
+    assert motivo_de_red(ConnectionResetError(104, "Connection reset by peer"), 12) == (
+        "error de red: ConnectionResetError ([Errno 104] Connection reset by peer)"
+    )

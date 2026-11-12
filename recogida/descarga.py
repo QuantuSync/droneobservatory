@@ -76,6 +76,25 @@ def transporte_urllib(url: str, cabeceras: dict[str, str], limite_s: float) -> R
         return error.code, dict(error.headers or {}), b""
 
 
+def motivo_de_red(error: BaseException, limite_s: float) -> str:
+    """Lo que pasó en una petición que no llegó a responder: la clase del error y su razón.
+    `URLError` solo envuelve la razón (conexión rechazada o cortada, nombre sin resolver, tiempo
+    de espera al conectar): sin ella, el 12 de noviembre de 2026 el corte de lgs decía «error de
+    red: URLError» y nada más."""
+    razon = getattr(error, "reason", None)
+    detalle = " ".join(str(razon if razon is not None else error).split())[:80]
+    motivo = f"error de red: {type(error).__name__}"
+    if detalle:
+        motivo += f" ({detalle})"
+    if (
+        isinstance(error, TimeoutError)
+        or isinstance(razon, TimeoutError)
+        or ("timed out" in detalle.lower())
+    ):
+        motivo += f", sin respuesta en {limite_s:.0f} s"
+    return motivo
+
+
 def _retry_after(cabeceras: dict[str, str]) -> float | None:
     valor = {k.lower(): v for k, v in cabeceras.items()}.get("retry-after")
     if valor is None or not valor.strip().isdigit():
@@ -194,9 +213,7 @@ class Descargador:
             try:
                 codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, limite)
             except (OSError, TimeoutError) as error:
-                motivo = f"error de red: {type(error).__name__}"
-                if isinstance(error, TimeoutError):
-                    motivo += f" (sin respuesta en {limite:.0f} s)"
+                motivo = motivo_de_red(error, limite)
             else:
                 if codigo == 200:
                     if valido(cuerpo):

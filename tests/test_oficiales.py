@@ -178,7 +178,7 @@ def test_una_fuente_que_se_cuelga_no_impide_leer_las_demas(
     # El corte dice qué pasó en el último intento, no solo que se agotó el tope.
     assert recuentos.fallidas["caida"] == (
         "cortada al agotar su tope de 45 s (último intento: https://caida.ejemplo/rss: error de "
-        "red: TimeoutError (sin respuesta en 12 s))"
+        "red: TimeoutError (sin respuesta), sin respuesta en 12 s)"
     )
     assert recuentos.tiempos["caida"] > 30 and recuentos.tiempos["sana"] < 1
 
