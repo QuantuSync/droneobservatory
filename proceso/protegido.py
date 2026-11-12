@@ -62,6 +62,7 @@ from proceso import (
     rectificaciones,
     suceso,
     textos_dron,
+    validaciones,
 )
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -758,12 +759,49 @@ def juzgar(
     return veredicto
 
 
+VUELOS_AFECTADOS = ("vuelos_desviados", "vuelos_cancelados", "vuelos_retrasados")
+
+
 def _tipo_guardado(resultado: Documento, guardado: Documento) -> None:
     resultado["tipo"] = guardado.get("tipo")
     if "origen_demostrado_por" in guardado:
         resultado["origen_demostrado_por"] = guardado["origen_demostrado_por"]
     else:
         resultado.pop("origen_demostrado_por", None)
+    _vuelos_guardados(resultado, guardado)
+
+
+def _vuelos_guardados(resultado: Documento, guardado: Documento) -> None:
+    """Con el tipo retenido, los vuelos afectados se quedan también como en la guardada si los
+    de la versión nueva harían del suceso una interrupción aeroportuaria (`validaciones.
+    errores_tipo`: con vuelos afectados manda ese tipo). Sin esto lo retenido no validaba y el
+    cerrojo se quedaba con la versión guardada entera y apuntaba un fallo: el 12 de noviembre de
+    2026, al leerse la nota de EODI-2026-00792 hasta más abajo («only three flights at Vilnius
+    Airport were affected»), la ficha traía tres vuelos retrasados y su tipo, «incursión», estaba
+    retenido. El tipo y los vuelos cambian juntos cuando alguien puede decidirlo."""
+    if resultado.get("tipo") == "interrupcion_aeroportuaria":
+        return
+    if not any(
+        e.mensaje.startswith("hay interrupción") for e in validaciones.errores_tipo(resultado)
+    ):
+        return
+    nuevas = dict(resultado.get("consecuencias") or {})
+    guardadas = guardado.get("consecuencias") or {}
+    for campo in VUELOS_AFECTADOS:
+        if campo in guardadas:
+            nuevas[campo] = copy.deepcopy(guardadas[campo])
+        else:
+            nuevas.pop(campo, None)
+    if nuevas or "consecuencias" in guardado:
+        resultado["consecuencias"] = nuevas
+    else:
+        resultado.pop("consecuencias", None)
+    fuentes = {f.get("id") for f in resultado.get("fuentes", [])}
+    resultado["afirmaciones"] = [
+        *(a for a in resultado.get("afirmaciones", []) if a.get("campo") not in VUELOS_AFECTADOS),
+        *(copy.deepcopy(a) for a in guardado.get("afirmaciones", [])
+          if a.get("campo") in VUELOS_AFECTADOS and a.get("fuente_id") in fuentes),
+    ]  # fmt: skip
 
 
 def _cierre_guardado(resultado: Documento, guardado: Documento) -> None:

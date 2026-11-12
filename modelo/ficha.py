@@ -25,11 +25,16 @@ from dataclasses import dataclass
 from typing import Any
 
 from proceso.noticias import sin_acentos
+from proceso.suceso import PAIS_DEL_RESUMEN
 from proceso.territorios import pais_padre
 
 VERSION = "ficha/5"
-# Una ficha con todos los datos ocupa unos 900 tokens; 1500 dejan margen sin pagar de más.
-MAX_TOKENS_SALIDA = 1500
+# Una ficha con todos los datos ocupa unos 900 tokens. Eran 1500 mientras se leían las 600
+# primeras letras de cada nota; con la nota seguida (modelo/paginas.py) hay más declaraciones y
+# más frases que copiar, y el 12 de noviembre de 2026 una ficha con tres notas largas de LRT
+# (EODI-2026-00795) se cortó en el máximo y se perdió la lectura entera. Es un máximo: solo se
+# paga lo que se escribe.
+MAX_TOKENS_SALIDA = 2500
 # Extraer no es redactar: con temperatura 0, la misma noticia da la misma ficha. Con la de
 # por defecto, dos llamadas sobre la misma nota de Anenii Noi dieron fichas distintas.
 TEMPERATURA = 0.0
@@ -136,10 +141,12 @@ ESQUEMA: dict[str, Any] = {
 # Fichas guardadas antes de las declaraciones: se leen igual, sin ellas.
 _OBLIGATORIAS = frozenset({"datos", "titulo_es", "titulo_en"})
 
-INSTRUCCIONES = """Eres el extractor del Observatorio Europeo de Incidentes con Drones. Recibes \
+INSTRUCCIONES = (
+    """Eres el extractor del Observatorio Europeo de Incidentes con Drones. Recibes \
 las fuentes de un posible incidente con drones en Europa: para cada una, el medio, la fecha de \
-publicación, el titular y las primeras frases. Devuelve una ficha con los hechos que dicen las \
-fuentes, sin añadir nada que no digan.
+publicación, el titular y el texto de la nota desde su principio (entera si es corta; sus \
+primeras 3.000 letras si es larga). Devuelve una ficha con los hechos que dicen las fuentes, sin \
+añadir nada que no digan.
 
 Qué es un incidente: un dron visto, detectado, derribado o caído en Europa (fuera de Ucrania y \
 de Rusia) cerca de un aeropuerto, una base militar, una central, un puerto u otra \
@@ -150,6 +157,15 @@ Tampoco los artículos que no cuentan un suceso concreto: contenido patrocinado 
 publicidad, opinión, análisis, explicativos («cómo funciona…»), entrevistas y resúmenes \
 generales que no dan la fecha y el lugar de un suceso. Si la página marca una fuente como uno \
 de ellos, solo es incidente si esa fuente cuenta un suceso concreto con su fecha y su lugar.
+
+La ficha es de un solo suceso: el que cuentan el titular y el principio de las fuentes. El resto \
+del texto sirve para completar ese mismo suceso (la hora, el sitio exacto, el cierre, las \
+cifras, lo que dicen las autoridades). Una nota larga cuenta a menudo, además, otros sucesos: \
+antecedentes («el mes pasado», «la semana pasada», «el 18 de octubre»), lo que pasó otra noche o \
+en otro país, o los titulares de otras noticias que el medio enlaza o añade al final. De esos \
+otros sucesos no sale ningún dato de la ficha (ni la fecha, ni el lugar, ni el número de drones, \
+ni el cierre, ni la evidencia, ni la presencia, ni las declaraciones) ni nada del título. Si no \
+está claro que una frase hable del suceso de la ficha, no la uses.
 
 La ficha es una lista de datos. Incluye solo los datos que alguna fuente dice; el dato \
 es_incidente va siempre. Cada dato tiene:
@@ -174,12 +190,20 @@ sobrevuelo. Un avistamiento sin esa demostración nunca es incursión.
 - inicio: cuándo empezó el incidente (no cuándo se publicó), en UTC, como AAAA-MM-DDTHH:MM o \
 AAAA-MM-DD. Si la fuente solo sitúa el suceso en un pasado sin día («la semana pasada», \
 «hace unos días»), pon el día de la publicación y, como frase, la que lo dice: no es un suceso \
-nuevo de ese día. Convierte la hora local del país a UTC. inicio_precision: minuto si la fuente da \
+nuevo de ese día. Si nombra un día dentro de un periodo («el fin de semana del 1 de \
+noviembre»), ese día. Convierte la hora local del país a UTC. inicio_precision: minuto si la \
+fuente da \
 la hora exacta, hora si da una hora aproximada o una franja corta, dia si solo da el día o \
 dice anoche, ayer, el lunes. fin: cuándo acabó, con el mismo formato.
 - lugar_suceso: dónde ocurrió el suceso (donde se vio, cayó, explotó o fue derribado el dron), \
 no otro lugar que nombre la noticia (la capital desde la que habla un ministro, el país de \
-origen del dron, la sede del medio). Va siempre que es_incidente es true, como «nombre; nivel; \
+origen del dron, la sede del medio). Es el sitio más concreto que alguna fuente dé para este \
+suceso, esté al principio o más abajo: si el principio dice el país y más abajo la localidad \
+donde cayó o donde se intentó derribar, es la localidad. Si el dron recorre varios sitios, el \
+lugar es donde pasó lo principal (donde cayó, explotó, se le disparó o se hallaron sus restos); \
+el punto por el que entró, un sitio por el que solo pasó o el pueblo de un testigo no lo son: \
+si no hay otro, pon el país (o la región, solo si la fuente la nombra). Va siempre que \
+es_incidente es true, como «nombre; nivel; \
 país; región»: nombre, copiado de la frase tal como lo escribe la fuente (no el nombre del \
 objetivo conocido si la fuente lo llama de otra forma); nivel, instalacion (aeropuerto, base, \
 central, puerto), localidad (ciudad, pueblo, municipio, distrito), region (provincia, región, \
@@ -190,14 +214,24 @@ o una aeronave nunca es el lugar: si el suceso es en el mar, el lugar es la zona
 da la fuente («mar Negro», «zona económica exclusiva de Bulgaria») o la costa o el puerto más \
 cercano que nombre, con nivel region.
 - pais: código ISO 3166-1 alfa-2 del país donde ocurrió el suceso, aunque sea otro que el del \
-objetivo conocido. localidad: ciudad o municipio donde ocurrió.
+objetivo conocido. """
+    # De qué país es la ficha de un resumen de varios países lo dice la definición de suceso.
+    + PAIS_DEL_RESUMEN
+    + """ localidad: la ciudad, el municipio o el distrito en que está el \
+lugar_suceso, como lo escribe la fuente; es el mismo sitio, nunca otro. Ponla siempre que \
+alguna fuente la nombre cuando lugar_suceso es un sitio más pequeño dentro de ella (una aldea, \
+un barrio, una instalación): con lugar_suceso «Eiminiškių kaimas», localidad «Biržų rajonas». \
+Si lugar_suceso es el país o una región, no pongas localidad: el punto por el que entró el \
+dron, un sitio por el que pasó o una de las ciudades en alerta no son la localidad del suceso.
 - objetivo_conocido: true si el incidente ocurre en el objetivo conocido que se te indica; \
 false si ocurre en otro sitio. objetivo_categoria (aeropuerto, base_militar, puerto, energia, \
 presa, estadio, industrial, gubernamental u otra) y objetivo_nombre: la instalación afectada.
 - lugar_nuevo: solo si objetivo_conocido es false y la fuente nombra la instalación, como \
 «nombre; categoría; país; latitud; longitud», con coordenadas aproximadas en grados \
 decimales. Si no sabes dónde está, no lo incluyas.
-- drones: número de drones como «N» o «mínimo-máximo» («varios» es 2-10; «un enjambre», 5-50).
+- drones: número de drones como «N» o «mínimo-máximo» («varios» es 2-10; «un enjambre», 5-50). \
+Solo los de este suceso en el país de la ficha: los que se detectaron en otro país y no \
+entraron no cuentan.
 - presencia_dron: confirmada solo si una autoridad (gestor aeroportuario, gestor de navegación \
 aérea, policía, fuerzas armadas, ministerio, gobierno, fiscalía, autoridad de aviación civil) dice \
 que lo que se vio, detectó, derribó o causó el efecto era un dron o varios; no hacen falta restos, \
@@ -216,7 +250,10 @@ fuera (desde otro país o desde el mar).
 recuperó el aparato).
 - cierre: si solo si la fuente dice que se cerró o se paralizó un aeropuerto o el espacio \
 aéreo; no si dice que no se cerró o que las operaciones siguieron con normalidad. Si la fuente \
-no habla de cierre, no incluyas el dato. cierre_minutos: cuánto duró, en minutos, como «N» o \
+no habla de cierre, no incluyas el dato. Un cierre que la fuente atribuye a otra causa (globos, \
+niebla, otro suceso) no es de esta ficha ni hace el tipo interrupcion_aeroportuaria; sí el que \
+atribuye a los drones, aunque antes hubiera otro («al entrar los drones se volvió a cerrar»). \
+cierre_minutos: cuánto duró, en minutos, como «N» o \
 «mínimo-máximo».
 - vuelos_desviados, vuelos_cancelados, vuelos_retrasados: «N» o «mínimo-máximo».
 - modelo_dron: el modelo o tipo que nombra la fuente (Shahed, Gerbera, DJI Mavic).
@@ -344,7 +381,25 @@ schießen Militärdrohne über Estland ab.
 Datos esperados: pais «EE»; lugar_suceso «Estland; pais; EE;» (solo se sabe el país); \
 objetivo_conocido «false»; dron_estatal «true» (militar); entrada_exterior «true» (llegó desde \
 Ucrania); evidencia «derribo»; tipo «incursion».
+
+Ejemplo 9 (una nota larga que cuenta además otro suceso).
+Objetivo conocido: Liepna (otra, LV).
+Fuente 1 (bnn-news.com, 2026-11-09T09:15Z, en). Titular: Why did Latvia's military fail to shoot \
+down the drone? Defence minister explains failure. Texto: Following the failure to shoot down \
+one of the drones that entered Latvian airspace last week, procedures have been reviewed, \
+Defence Minister Raivis Melnis said on Monday. The minister acknowledged that the drone had \
+been detected and was being followed by an interceptor drone. The State Police reported \
+receiving information on Saturday morning about suspected drone debris found in a forest in \
+Liepna Parish. According to the NBS, information was received on the 18th of October about an \
+explosion-like sound in Liepna Parish.
+Datos esperados: el suceso es el del titular y el principio, el dron que no se pudo derribar la \
+semana anterior: inicio «2026-11-09» con precisión «dia» y la frase «entered Latvian airspace \
+last week» (un pasado sin día); pais «LV»; lugar_suceso «Latvia; pais; LV;»; drones «1»; \
+objetivo_conocido «false»; presencia_dron «confirmada» (el ministro da por hecho el dron). Los \
+restos de Liepna y el ruido del 18 de octubre son otro suceso que la nota añade: ni su fecha, \
+ni su lugar, ni la evidencia «restos» entran en la ficha ni en el título.
 """
+)
 
 
 @dataclass(frozen=True)

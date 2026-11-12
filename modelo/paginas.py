@@ -39,29 +39,52 @@ _IGNORAR = frozenset({"script", "style", "noscript", "nav", "header", "footer", 
 _FRASE = re.compile(r"(?<=[.!?])\s+")
 
 
+# Un párrafo que es casi todo él un enlace no es texto de la nota: es el titular de otra noticia
+# (las listas de «más noticias» que algunos medios meten como párrafos dentro del artículo). Con
+# 600 letras apenas entraban; con 3.000, la página de b92.net de la noche del 10 al 11 de
+# noviembre de 2026 (EODI-2026-00782) era su primera frase y una ristra de titulares de otras
+# noticias, y la ficha salió con el lugar y la presencia de uno de ellos.
+PARTE_ENLACE = 0.8
+
+
+def _letras(texto: str) -> int:
+    return len("".join(texto.split()))
+
+
 class _Parrafos(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.parrafos: list[str] = []
         self._ignorar = 0
         self._actual: list[str] | None = None
+        self._en_enlace = False
+        self._letras_enlace = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         if tag in _IGNORAR:
             self._ignorar += 1
+        elif tag == "a":
+            self._en_enlace = True
         elif tag == "p" and not self._ignorar:
             self._actual = []
+            self._letras_enlace = 0
 
     def handle_endtag(self, tag: str) -> None:
         if tag in _IGNORAR and self._ignorar:
             self._ignorar -= 1
+        elif tag == "a":
+            self._en_enlace = False
         elif tag == "p" and self._actual is not None:
-            self.parrafos.append(" ".join("".join(self._actual).split()))
+            texto = " ".join("".join(self._actual).split())
+            if self._letras_enlace < PARTE_ENLACE * _letras(texto):
+                self.parrafos.append(texto)
             self._actual = None
 
     def handle_data(self, data: str) -> None:
         if self._actual is not None and not self._ignorar:
             self._actual.append(data)
+            if self._en_enlace:
+                self._letras_enlace += _letras(data)
 
 
 def _hasta(frases: list[str], max_letras: int) -> str:

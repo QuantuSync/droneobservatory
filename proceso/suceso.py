@@ -88,6 +88,21 @@ class Veredicto:
 
 # --- La definición, para quien lee las fuentes ------------------------------------------------
 
+# De qué país es la ficha hecha con una noticia que cuenta varios países a la vez. Lo dice aquí
+# la definición y lo usan igual quien hace la ficha (las instrucciones del extractor,
+# modelo/ficha.py) y quien pregunta si dos fichas son el mismo suceso (`DEFINICION`). El 12 de
+# noviembre de 2026 un mismo despacho sobre las alertas de la noche del 10 al 11 en Lituania,
+# Letonia y Estonia (lo único concreto: Kaunas) dio en una nota una ficha de Lituania, que se
+# unió a la suya (EODI-2026-00820), y en otra una ficha de Letonia, el país con el que se había
+# buscado la noticia, que quedó como suceso nuevo (EODI-2026-00807).
+PAIS_DEL_RESUMEN = (
+    "Si una noticia cuenta a la vez lo de varios países (un resumen de las alertas de una noche "
+    "en Lituania, Letonia y Estonia), la ficha hecha con ella es del país del que la noticia da "
+    "el dato más concreto (la ciudad en alerta, el aeropuerto cerrado), no del país con el que "
+    "se buscó la noticia ni del de su objetivo conocido; si no da ninguno, del primero que "
+    "nombra."
+)
+
 DEFINICION = (
     "Qué es un suceso (la misma definición en todo el observatorio): un episodio físico, es "
     "decir, los mismos drones o la misma oleada, en un país y en una jornada (un día, o una "
@@ -109,7 +124,7 @@ DEFINICION = (
     "resumen de dos países) no es un suceso nuevo: cada uno de los que cuenta es el suyo. La "
     "ficha hecha con una noticia así es del suceso de su país y de su jornada (el lugar y el día "
     "de la ficha), el mismo que el de otra ficha de ese país y esa jornada, aunque la noticia "
-    "hable también del país vecino o de otra noche."
+    "hable también del país vecino o de otra noche. " + PAIS_DEL_RESUMEN
 )
 # --- Lo que mide el sitio y la jornada --------------------------------------------------------
 

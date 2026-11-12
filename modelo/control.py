@@ -165,10 +165,18 @@ Decide solo por lo que dicen las fuentes. Escribe el motivo en una frase, en esp
 
 INSTRUCCIONES_VERIFICAR = """Eres el control de calidad del European Observatory of Drone \
 Incidents. Recibes la ficha de un incidente con drones y sus fuentes numeradas (medio, fecha, \
-idioma, titular y primeras frases). Para cada dato, di lo que dicen las fuentes, con el número \
+idioma, titular y el texto de la nota desde su principio). Para cada dato, di lo que dicen las \
+fuentes, con el número \
 de la fuente y la frase copiada literalmente de su titular o de su texto (sin traducir, sin \
 cambiar nada, 25 palabras como máximo). Si ninguna fuente lo dice, el valor es «sin_dato» (o \
 vacío en los textos), la fuente 0 y la frase vacía. No deduzcas nada.
+
+Los datos son los del suceso de la ficha: el que cuentan el titular de la ficha y el titular y \
+el principio de sus fuentes. Una nota larga cuenta a menudo, además, otros sucesos \
+(antecedentes, otra noche, \
+otro país, los titulares de otras noticias que el medio enlaza o añade al final): de esos no se \
+toma ningún dato. El día en que se halló algo, se investigó o se habló del suceso no es el día \
+del suceso. Si no está claro que una frase hable del suceso de la ficha, no la uses.
 
 - presencia: «confirmada» si una autoridad (policía, ejército, ministerio, aeropuerto, control \
 aéreo, fiscalía) da por hecho que hubo un dron o actúa por él; «posible» si se habla de un \
@@ -179,9 +187,11 @@ que era otra cosa (un globo, pájaros); «desmentido» si una autoridad niega qu
 - drones: cuántos drones dice una fuente, como «N» o «mínimo-máximo», solo si da un número o una \
 cantidad escrita («dos drones», «varios drones», «un enjambre»: «2», «2-10», «5-50»). Un plural \
 sin cantidad («drones vistos») o el número de pilotos, de vuelos o de testigos no es un número \
-de drones: vacío.
+de drones: vacío. Los drones que se detectaron en otro país y no entraron en el de la ficha no \
+cuentan.
 - cierre: «si» si una fuente dice que se cerró o se paró el aeropuerto, una pista o el espacio \
-aéreo, o que se suspendieron o desviaron los vuelos; «no» si dice que siguió abierto.
+aéreo, o que se suspendieron o desviaron los vuelos; «no» si dice que siguió abierto. Un cierre \
+que la fuente atribuye a otra causa (globos, niebla, otro suceso) no es de esta ficha.
 - duracion_min: cuántos minutos estuvo cerrado o parado el aeropuerto, la pista o el espacio \
 aéreo, solo si una fuente lo dice de ese cierre («cerrado durante una hora»: «60»; cerrado de \
 las 6:10 a las 7:00: «50»). No el tiempo que un avión esperó o dio vueltas, ni el retraso de un \
@@ -194,7 +204,10 @@ unos días» tampoco dan el día.
 «06:00»; «entre las 2 y las 4 de la madrugada»: «02:00»).
 - lugar: el sitio más concreto donde ocurrió el suceso según las fuentes (el aeropuerto, la \
 base, el puerto, la ciudad), con su nivel. No el sitio de una reacción, de una rueda de prensa \
-ni de un aeropuerto al que se desviaron vuelos. El nombre de un buque, un vehículo o una \
+ni de un aeropuerto al que se desviaron vuelos. Si el dron recorrió varios sitios, donde pasó \
+lo principal (donde cayó, explotó, se le disparó o se hallaron sus restos), no el punto por el \
+que entró, ni un sitio por el que solo pasó, ni el pueblo de un testigo. El nombre de un buque, \
+un vehículo o una \
 aeronave no es un lugar: en el mar, la zona marítima que da la fuente (nivel region). Los \
 nombres de las instalaciones, tal como los escribe la fuente, sin traducir."""
 

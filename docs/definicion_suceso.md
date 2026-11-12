@@ -32,6 +32,7 @@ De ahí sale todo lo demás:
 | El mismo sitio en dos días o en dos noches («de nuevo», «otra vez», el sábado y el domingo) | dos sucesos |
 | En la misma jornada y el mismo país, drones distintos en sitios u horas distintos que las fuentes cuentan por separado (otro dron horas después, otro aeropuerto, otro barco) | sucesos distintos, enlazados por un `episodio` si son varios objetivos de una noche |
 | Una noticia que cuenta varios de esos (un balance de varias noches, un resumen de dos países) | ningún suceso nuevo: cada uno de los que cuenta es el suyo. La ficha hecha con una noticia así es del suceso de su país y su jornada (el mismo que el de otra ficha de ese país y esa jornada); si no cuenta ninguno con su día, se une al suceso del que más habla; si junta dos de verdad, se separa o se retira |
+| Una noticia que cuenta a la vez varios países (el resumen de las alertas de una noche en Lituania, Letonia y Estonia) | la ficha hecha con ella es del país del que la noticia da el dato más concreto (la ciudad en alerta, el aeropuerto cerrado), no del país con el que se buscó ni del de su objetivo conocido; si no da ninguno, del primero que nombra. Es `suceso.PAIS_DEL_RESUMEN`: lo llevan con las mismas palabras las instrucciones del extractor (`modelo/ficha.py`) y la `DEFINICION` de quien compara fichas. Un mismo despacho dio una ficha de Lituania, unida a la suya (EODI-2026-00820), y otra de Letonia, que quedó como suceso nuevo (EODI-2026-00807) |
 
 **La ficha que queda** de una unión toma sus datos del suceso, no de la ficha con más fuentes:
 

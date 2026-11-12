@@ -214,6 +214,46 @@ desde el origen ([`proceso/no_es_suceso.py`](../proceso/no_es_suceso.py)):
   nombraba el dron). La verificación del control y la retrospectiva reciben ese mismo texto; la
   comparación de dos fichas y el filtro de entrada, el principio (600 letras), como antes. El
   gasto se estima con el máximo de lo que se manda (`paginas.MAX_LETRAS`).
+- **Leer más texto no cambia de qué suceso es la ficha.** Una nota larga cuenta a menudo otros
+  sucesos más abajo (antecedentes, otra noche, otro país) y, leída entera, el modelo los mezclaba.
+  Lo que salió al leer contra su fuente las diferencias de una reproducción de tres días (9 a 11
+  de noviembre de 2026), con su arreglo y su prueba fija en `tests/test_notas_largas.py`:
+  - *Un solo suceso por ficha*: el del titular y el principio de las fuentes; el resto del texto
+    solo completa ese suceso, y de los demás no sale ningún dato ni nada del título. La nota de
+    bnn-news de EODI-2026-00817 (el ministro explica un derribo fallido «la semana pasada» y, más
+    abajo, se cuentan unos restos hallados en Liepna, de un objeto del 18 de octubre) salió como
+    «restos de un dron en Liepna tras fallar su derribo», con el día del hallazgo. Va de ejemplo
+    en las instrucciones del extractor (ejemplo 9); la verificación del control lleva la misma
+    regla, y que el día de un hallazgo o de una investigación no es el del suceso.
+  - *El lugar más concreto del suceso*, esté al principio o más abajo; no el punto por el que
+    entró el dron, ni un sitio por el que solo pasó (Druskininkai y Kaunas, en la noche de
+    Lituania), ni el pueblo de un testigo (Panevėžys); sin sitio del suceso, el país. El
+    municipio (`localidad`) va siempre que la fuente lo nombre, aunque el sitio sea una aldea
+    que no se sabe situar: sin él, EODI-2026-00795 quedó sin punto. Se probó además «si la
+    fuente da varios sitios, la región que los contiene» y se quitó: la ficha de La Hague y
+    Flamanville perdía su instalación.
+  - *Un resumen de varios países* (las alertas de una noche en Lituania, Letonia y Estonia) es
+    del país del que da el dato más concreto, no del país del candidato. La regla es de la
+    definición de suceso (`proceso/suceso.PAIS_DEL_RESUMEN`, docs/definicion_suceso.md) y el
+    extractor la toma de allí, igual que quien compara dos fichas: el mismo despacho dio
+    en una nota Kaunas (y se unió a la ficha de Lituania) y en otra «Letonia», y esa quedó
+    suelta (EODI-2026-00807).
+  - *Un cierre que la fuente atribuye a otra causa* (globos, niebla) no es de la ficha ni la
+    hace interrupción aeroportuaria; sí el que atribuye a los drones, aunque antes hubiera otro.
+  - *Los drones que se vieron en otro país y no entraron no cuentan* (los tres que se siguieron
+    en Bielorrusia esa noche).
+  - *Los titulares de otras noticias no son texto de la nota*: un párrafo que es casi todo él un
+    enlace (`paginas.PARTE_ENLACE`, el 80 % de sus letras) no se lee. La página de b92.net de
+    EODI-2026-00782 era su primera frase y una ristra de titulares de otras noticias.
+  - *«Parish» no es París*: los términos de `configuracion/paises_atribucion.json` son comienzos
+    de palabra, y «Liepna Parish» casaba con «paris»; la validación daba la frase por francesa y
+    quitaba la fecha, el lugar y la evidencia. Ahora es la palabra entera («paris$»). Y «viena»
+    («una», en lituano) casaba con Viena: se ha quitado de la lista (quedan «wien», «vienna»,
+    «vienne», «wiedeń»).
+  - *El máximo de salida de la ficha* pasa de 1.500 a 2.500 tokens (más el margen del
+    razonamiento): con tres notas largas una respuesta se cortó y la lectura se perdió entera
+    (EODI-2026-00795). Es un máximo; el peor caso de una llamada pasa de 0,006 a 0,007 USD con
+    el modelo base.
 - Al descargar cada fuente se leen, además de sus primeras frases, **las marcas de su página**
   (`modelo/paginas.marcas`): tipo, sección y etiquetas del artículo (`og:type`,
   `article:section`, `article:tag`, `keywords`…) y el tipo y la sección de sus datos estructurados
