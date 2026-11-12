@@ -407,12 +407,17 @@ def fuentes_de_ficha(
         principal = next((f for f in fuentes if "-declaracion-" not in f["id"]), fuentes[0])
         titular = titulares_.get(enlace) or str(principal.get("frase_origen", ""))
         frases = " ".join(dict.fromkeys(str(f.get("frase_origen", "")) for f in fuentes))
-        texto = " ".join(t for t in (textos.get(enlace, ""), frases) if t)
+        leido = textos.get(enlace, "")
+        # Para comparar fichas, el principio de la nota, como siempre; para verificar los datos
+        # y fechar una noticia posterior, todo lo que leyó el extractor (modelo/paginas.py).
+        texto = " ".join(t for t in (paginas.principio(leido), frases) if t)
+        completo = " ".join(t for t in (leido, frases) if t)
         bloques.append(peticiones.FuenteControl(
             medio=str(principal.get("medio", "")), fecha=principal["fecha"]["valor"][:16],
             idioma=str(principal.get("idioma") or ""), titular=titular, texto=texto,
+            completo=completo,
         ))  # fmt: skip
-        comprobar.append((principal["id"], f"{titular} {texto}"))
+        comprobar.append((principal["id"], f"{titular} {completo}"))
     return FuentesDeFicha(bloques, comprobar)
 
 

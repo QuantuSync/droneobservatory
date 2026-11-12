@@ -110,8 +110,8 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    como distintos. Ante la duda, el control no une: un duplicado que se le escapa se corrige a
    mano en `incidentes_revisados.json`; una unión mal hecha mezcla dos sucesos.
 5. **Cada dato con su fuente** (llamada «verificar»). Las fichas nuevas o con fuentes nuevas se
-   comprueban con sus fuentes (titular y primeras frases, como las lee el extractor, solo en
-   memoria): para la presencia del dron, el número de drones, el cierre y su duración, el día, la
+   comprueban con sus fuentes (el titular y la nota seguida hasta 3.000 letras, como las lee
+   el extractor, `modelo/paginas.py`; solo en memoria): para la presencia del dron, el número de drones, el cierre y su duración, el día, la
    hora y el lugar, qué dice cada fuente con la frase literal. **Una frase que no está, literal,
    en el texto de su fuente no cuenta.** Con lo que queda:
    - si una fuente dice que no se encontró el dron, que no se vio ninguno o que era otra cosa, la

@@ -518,6 +518,13 @@ def objetivo_de(almacen: Almacen, candidato: Documento, nom: Nomenclator) -> Obj
     return Objetivo(**vocabulario[id_lugar])
 
 
+def con_pista(texto: str, pista: str) -> str:
+    """El texto leído de una fuente con su pista delante, si no la trae ya."""
+    if pista and normalizar(pista) not in normalizar(texto):
+        return f"{pista} … {texto}".strip(" …")
+    return texto
+
+
 def preparar(
     almacen: Almacen,
     candidato: Documento,
@@ -533,12 +540,9 @@ def preparar(
     fuentes = []
     for a in elegidas:
         pagina = paginas.leer_pagina(descargador, a["url"]) if descargador else paginas.Pagina("")
-        texto = pagina.texto
         # La frase literal de la página que encontró la segunda lectura (una declaración más
         # abajo de las primeras frases): va delante para que la lea la extracción.
-        pista = str((dirigidos.get(a["url"]) or {}).get("frase") or "")
-        if pista and normalizar(pista) not in normalizar(texto):
-            texto = f"{pista} … {texto}".strip(" …")
+        texto = con_pista(pagina.texto, str((dirigidos.get(a["url"]) or {}).get("frase") or ""))
         fuentes.append(no_es_suceso.con_aviso(ficha.FuenteTexto(
             medio=a["medio"], fecha=a["fecha"], idioma=a.get("idioma"), titular=a["titular"],
             texto=texto, url=a["url"], marcas=pagina.marcas,

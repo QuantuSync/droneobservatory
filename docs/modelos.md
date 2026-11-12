@@ -202,6 +202,18 @@ contenido de socio de delfi.lt (sección `projektai/pulsas`) sobre cómo actúa 
 la OTAN, sin ningún suceso concreto; se retiró a mano en el PR #242. Ahora el control lo impide
 desde el origen ([`proceso/no_es_suceso.py`](../proceso/no_es_suceso.py)):
 
+- **Qué se lee de cada fuente** (`modelo/paginas.py`, desde el 12 de noviembre de 2026): la
+  nota seguida, desde el principio, hasta 3.000 letras (frases enteras). Antes eran las 600
+  primeras y los datos de más abajo no llegaban al modelo: el cierre de los aeropuertos de Vilna y
+  Kaunas de EODI-2026-00792 está en el párrafo 10 de la nota de LRT (prueba fija:
+  `tests/test_notas_largas.py`). Medido ese día sobre las 399 fichas publicadas: 358 tenían alguna
+  fuente cortada; la mediana de una nota es de 2.000 letras y el percentil 90, de 5.200, así que
+  con 3.000 se lee entera en torno a dos de cada tres. Se lee seguido y no eligiendo frases
+  sueltas de más abajo: se probó, y una frase sin las de su alrededor se lee mal (un hallazgo de
+  restos salió como suceso nuevo porque la frase que lo ataba a un suceso de semanas antes no
+  nombraba el dron). La verificación del control y la retrospectiva reciben ese mismo texto; la
+  comparación de dos fichas y el filtro de entrada, el principio (600 letras), como antes. El
+  gasto se estima con el máximo de lo que se manda (`paginas.MAX_LETRAS`).
 - Al descargar cada fuente se leen, además de sus primeras frases, **las marcas de su página**
   (`modelo/paginas.marcas`): tipo, sección y etiquetas del artículo (`og:type`,
   `article:section`, `article:tag`, `keywords`…) y el tipo y la sección de sus datos estructurados
