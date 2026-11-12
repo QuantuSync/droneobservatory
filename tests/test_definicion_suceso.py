@@ -596,3 +596,25 @@ def test_la_ficha_que_vuelve_de_una_union_deshecha_pasa_otra_vez_por_el_filtro()
     assert entrada.pendiente(decision, kaunas, AHORA)
     # Una que el filtro dejó publicar y no ha cambiado, no.
     assert not entrada.pendiente({**decision, "decision": entrada.PUBLICAR}, kaunas, AHORA)
+
+
+def test_la_ficha_de_los_tres_paises_balticos_se_reparte_entre_las_de_cada_pais() -> None:
+    """EODI-2026-00801 («Posibles drones entran en el espacio aéreo de Lituania, Letonia y
+    Estonia y activan cazas de la OTAN», publicada el 11 de noviembre de 2026) juntaba tres
+    sucesos de tres países y repetía EODI-2026-00792 y EODI-2026-00777: «Vários drones […]
+    entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta
+    quarta-feira» (executivedigest.sapo.pt). Sus dos noticias van a la ficha de cada país: la de
+    Lituania, la de Letonia y una propia de Estonia; las tres, un mismo episodio."""
+    revisiones = json.loads(suceso.REVISADOS.read_text(encoding="utf-8"))
+    (separacion,) = [s for s in revisiones["separar"] if s["incidente"] == "EODI-2026-00801"]
+    partes = {p["pais"]: p for p in separacion["partes"]}
+    assert all(p["es_suceso"] for p in partes.values())
+    assert {pais: p["coincide_con"] for pais, p in partes.items()} == {
+        "LT": "EODI-2026-00792", "LV": "EODI-2026-00777", "EE": None,
+    }  # fmt: skip
+    suyas = {fuente["id"] for fuente in f("2026-00801")["fuentes"]}
+    assert all(set(p["fuentes"]) == suyas for p in partes.values())
+    # Cada país, su suceso: ninguna de las tres fichas se une a otra, y son un episodio.
+    lituania, letonia = f("2026-00792"), f("2026-00777")
+    assert dicho(lituania, letonia).relacion == suceso.DISTINTOS
+    assert suceso.mismo_episodio_transfronterizo(lituania, letonia)
