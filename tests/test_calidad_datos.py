@@ -421,40 +421,21 @@ def test_un_episodio_que_deja_de_serlo_se_deshace(almacen: Almacen) -> None:
     assert all("episodio" not in i for i in almacen.incidentes())
 
 
-def test_una_ficha_sin_las_fuentes_de_sus_unidas_no_cambia_de_episodio(almacen: Almacen) -> None:
-    """La extracción acaba de rehacer la ficha con las noticias de su candidato y el control
-    todavía no le ha devuelto las de la ficha unida a ella: lo que tiene no dice a qué episodio
-    pertenece. Ni ella ni la otra de su episodio cambian hasta que las recupera."""
+def test_en_la_recogida_horaria_los_episodios_esperan_al_control(almacen: Almacen) -> None:
+    """La extracción rehace una ficha con las noticias de su candidato y hasta el control no
+    recupera las de las fichas unidas a ella. El paso del extractor de la recogida horaria une lo
+    que une la regla y deja los episodios para después del control (recogida/horaria.py)."""
+    from recogida import extractor
+
     base = ejemplos.incidente_minimo()
-    uno, otro = (de_noche(base, f"EODI-2025-0001{n}", 45.18 + n, 26.0) for n in (0, 1))
-    unida = de_noche(base, "EODI-2025-00012", 45.18, 26.0)
-    unida["fusionado_en"] = uno["id"]
-    de_la_unida = {
-        **unida["fuentes"][0], "id": "noticia-de-la-unida", "enlace": "https://medio.ro/unida"
-    }  # fmt: skip
-    completa = {**uno, "fuentes": [*uno["fuentes"], de_la_unida]}
-    for documento in (completa, otro, unida):
-        almacen.guardar_incidente(documento, AHORA, MODELOS)
-    almacen.registrar_fusion(
-        "2025-11-05T00:00Z", unida["id"], uno["id"], "prueba", [de_la_unida["id"]]
-    )
-    assert incidentes.agrupar_episodios(almacen, AHORA, MODELOS) == 2
-    (episodio,) = almacen.episodios()
-    # Vuelve a extraerse: sin las fuentes de la unida y, de momento, sin punto.
-    rehecha = {**uno, "lugar": {"pais": "RO", "nivel": "pais"}, "episodio": episodio["id"]}
-    almacen.guardar_incidente(rehecha, AHORA, MODELOS)
-    assert incidentes.sin_las_fuentes_de_sus_unidas(almacen.incidentes(), almacen.fusiones()) == {
-        uno["id"]
-    }
-    assert incidentes.agrupar_episodios(almacen, AHORA, MODELOS) == 0
-    assert almacen.episodios() == [episodio]
-    assert all(
-        i.get("episodio") == episodio["id"] for i in almacen.incidentes() if i["id"] != unida["id"]
-    )
-    # Ya no le falta nada (aquí, porque la unión se deshace): sin punto, el episodio se deshace.
-    almacen.revertir_fusion(unida["id"])
-    assert incidentes.agrupar_episodios(almacen, AHORA, MODELOS) == 2
-    assert "deshecho" in almacen.episodios()[0]
+    for n in (0, 1):
+        almacen.guardar_incidente(
+            de_noche(base, f"EODI-2025-0001{n}", 45.18 + n, 26.0), AHORA, MODELOS
+        )
+    assert extractor.ordenar(almacen, AHORA, episodios=False) == (0, 0)
+    assert almacen.episodios() == []
+    assert extractor.ordenar(almacen, AHORA) == (0, 2)
+    assert len(almacen.episodios()) == 1
 
 
 # --- Publicación ---------------------------------------------------------------------------
