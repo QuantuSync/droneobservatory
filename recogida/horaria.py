@@ -538,7 +538,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Un fallo inesperado del paso deja los candidatos pendientes y la ejecución con
         # aviso, pero no impide publicar lo demás.
         try:
-            resultado = extractor.horaria(almacen, ahora, plazo=Plazo(extractor.TOPE_S))
+            resultado = extractor.horaria(
+                almacen, ahora, plazo=Plazo(extractor.TOPE_S), episodios=False
+            )
         except Exception:
             registro.exception("extractor fallido: los candidatos quedan pendientes")
             salida = SALIDA_AVISO
@@ -687,6 +689,15 @@ def principal(argumentos: list[str] | None = None) -> int:
         control = paso(
             "control de fichas", control_fichas.paso_horario, almacen, ahora, modelos(almacen)
         )
+        # Los episodios, con las fichas ya completas. La extracción rehace una ficha con las
+        # noticias de su candidato y hasta el control no recupera las de las fichas unidas a
+        # ella: con 2 de sus 42 fuentes, EODI-2026-00719 recibió ahí su episodio y, al guardarse,
+        # su presencia revisada pasó de confirmada a no confirmada (reproducción del 12 de
+        # noviembre de 2026).
+        cambios_de_episodio = paso(
+            "episodios", incidentes.agrupar_episodios, almacen, ahora, modelos(almacen)
+        )
+        registro.info("episodios: %s fichas cambian de episodio", cambios_de_episodio)
         # Incursiones en países fronterizos enlazadas con el ataque de su noche, en los dos
         # sentidos, con incidentes y partes ya rehechos.
         try:

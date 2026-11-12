@@ -247,11 +247,13 @@ def modelos_base() -> frozenset[str]:
     return cargar_vocabulario_modelos()
 
 
-def ordenar(almacen: Almacen, ahora: datetime) -> tuple[int, int]:
+def ordenar(almacen: Almacen, ahora: datetime, episodios: bool = True) -> tuple[int, int]:
+    """Las uniones de la regla y los episodios. Sin `episodios`, solo las uniones: en la recogida
+    horaria los episodios se calculan después del control de las fichas (recogida/horaria.py)."""
     modelos = extraccion.modelos_validos(almacen, modelos_base())
     return (
         incidentes.fusionar(almacen, ahora, modelos),
-        incidentes.agrupar_episodios(almacen, ahora, modelos),
+        incidentes.agrupar_episodios(almacen, ahora, modelos) if episodios else 0,
     )
 
 
@@ -304,8 +306,10 @@ def horaria(
     ahora: datetime,
     fabrica: Callable[[servicio.Configuracion], extraccion.Servicio] = servicio.Cliente,
     plazo: Plazo | None = None,
+    episodios: bool = True,
 ) -> Resultado:
-    """Paso del extractor en la ejecución horaria. Sin configuración no hace nada."""
+    """Paso del extractor en la ejecución horaria. Sin configuración no hace nada. Con
+    `episodios` falso no calcula los episodios: lo hace quien llama, después del control."""
     try:
         configuracion = servicio.configuracion()
     except servicio.ClienteNoConfigurado as error:
@@ -370,7 +374,7 @@ def horaria(
             almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO,
             modelos_base(), plazo,
         )  # fmt: skip
-    fusiones, episodios = ordenar(almacen, ahora)
+    fusiones, cambios_de_episodio = ordenar(almacen, ahora, episodios)
     sin_llamada = len(candidatos) - len(extraidas.incidentes)
     return Resultado(
         candidatos=len(candidatos),
@@ -378,7 +382,7 @@ def horaria(
         publicados=sum(i is not None for i in extraidas.incidentes),
         pendientes=sin_llamada,
         fusiones=fusiones,
-        episodios=episodios,
+        episodios=cambios_de_episodio,
         parada=extraidas.parada,
         en_rojo=avisar(almacen, ahora, extraidas, sin_llamada),
         escalados=len(extraidas.escalados),
