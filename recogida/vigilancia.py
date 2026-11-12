@@ -87,7 +87,11 @@ Problemas (cada uno con su frase):
   experto (su tope y la reserva crítica agotados, o el experto fallando): se reintenta en cada
   recogida y, mientras no pasen 6 horas, solo sale en el resumen diario;
 - **mapa_parado**: hay incidentes de Europa con punto dados de alta después del último cambio de
-  incidentes.geojson y ese cambio tiene más de 24 horas: lo nuevo no llega al mapa.
+  incidentes.geojson y ese cambio tiene más de 24 horas: lo nuevo no llega al mapa;
+- **medios_publicos**: un medio público que se lee como fuente (LRT, recogida/medios_publicos.py)
+  lleva más de 3 horas sin leerse (recogida/vigilancia_fuentes.py, de `fuentes.json`). Las fuentes
+  oficiales en la misma situación van como aviso (`fuentes_oficiales`): al responsable le llega
+  además su aviso privado.
 
 Avisos (se ven, no son fallo): los problemas en observación, la última recogida falló pero aún no
 van 3 seguidas, la última recogida terminó con avisos (código 2) y por qué (las
@@ -119,7 +123,7 @@ from typing import Any
 
 from almacen import reserva
 from almacen.casa import casa
-from recogida import almacen_publico, visitas
+from recogida import almacen_publico, vigilancia_fuentes, visitas
 from recogida import avisos as avisos_ntfy
 
 registro = logging.getLogger("vigilancia")
@@ -144,7 +148,7 @@ GRACIA = timedelta(minutes=30)
 SIN_GRACIA = frozenset({
     "publicacion", "recogida", "visitas_privadas", "prueba_restauracion", "base_solo_disco",
     "barrera_resoluciones", "barrera_atascada", "mapa_parado", "control_fichas",
-    "version_anterior", "resumen",
+    "version_anterior", "resumen", "medios_publicos",
 })  # fmt: skip
 # El resumen diario sin enviar a su hora límite (visitas.HORA_LIMITE_RESUMEN) también se avisa, una
 # vez por día, al tema privado del responsable: la incidencia sola llega por correo.
@@ -588,6 +592,9 @@ def componer(
     problemas += problemas_de_la_barrera(estado_barrera, ahora)
     for id_, desde in estado_barrera.get("retenidos", {}).items():
         detalle.append(f"barrera: {id_} retenido desde {desde}")
+    estado_fuentes = _leer_json(secretos / vigilancia_fuentes.FICHERO)
+    problemas += vigilancia_fuentes.problemas(estado_fuentes, ahora)
+    avisos += vigilancia_fuentes.avisos(estado_fuentes, ahora)
     estado_control = _leer_json(secretos / CONTROL)
     problemas += problemas_del_control(estado_control)
     problemas += problemas_del_experto(estado_control, ahora)

@@ -506,7 +506,7 @@ def test_el_resumen_cuenta_las_fuentes_oficiales_en_pausa(
     assert visitas.oficiales_en_pausa_del_dia(diario) == fallidas
     datos = dataclasses.replace(_datos(goatcounter, tmp_path), oficiales_en_pausa=fallidas)
     assert (
-        "Fuentes oficiales que fallan en recogidas seguidas (en pausa desde 3): mod_lv (22 "
+        "Fuentes oficiales que fallan en recogidas seguidas (un intento breve desde 3): mod_lv (22 "
         "seguidas), aesa (3 seguidas), mod_md (2 seguidas), lfv" in visitas.texto_resumen(datos)
     )
 

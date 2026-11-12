@@ -1087,7 +1087,7 @@ def texto_resumen(d: Datos) -> str:
             for id_, n in sorted(d.oficiales_en_pausa.items(), key=lambda par: -par[1])
         ]
         lineas.append(
-            "  Fuentes oficiales que fallan en recogidas seguidas (en pausa desde 3): "
+            "  Fuentes oficiales que fallan en recogidas seguidas (un intento breve desde 3): "
             f"{', '.join(fuentes[:LIMITE])}"
         )
     if d.resueltos:
