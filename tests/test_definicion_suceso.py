@@ -146,7 +146,10 @@ def test_el_cierre_de_madrugada_es_de_la_noche_de_la_vispera() -> None:
     assert suceso.noches_del_cierre(kaunas) == {date(2026, 11, 10), date(2026, 11, 11)}
     assert suceso.noches_del_cierre(lituania) == {date(2026, 11, 10)}
     assert not suceso.cierres_de_noches_distintas(kaunas, lituania)
-    assert dicho(kaunas, lituania).relacion == suceso.EXPERTO
+    # Sin la revisión que las une a mano (12 de noviembre), lo decide quien lee las fuentes.
+    assert dicho({**kaunas, "id": "EODI-2026-09779"}, lituania).relacion == suceso.EXPERTO
+    assert dicho(kaunas, lituania).regla == suceso.REGLA_REVISION
+    assert dicho(kaunas, lituania).relacion == suceso.MISMO
     # El cierre del día siguiente por la tarde, con sus noticias de esa tarde, sí es otra noche.
     tarde = copy.deepcopy(kaunas)
     for fuente in tarde["fuentes"]:
