@@ -524,11 +524,18 @@ def absorber(
     # del suceso, no de la ficha que llega (suceso.toma_el_tiempo).
     if suceso.toma_el_tiempo(resultado, absorbido):
         resultado["tiempo"] = copy.deepcopy(absorbido["tiempo"])
+    # El fin de la que llega, como al extraer: solo si el inicio de la que queda tiene hora y la
+    # duración que sale cabe en un suceso. Con el inicio en el día a secas (las 00:00) y un fin a
+    # las 22:00 de la ficha unida, EODI-2026-00792 habría publicado 22 horas de duración (ensayo
+    # del 12 de noviembre de 2026).
     if "fin" not in resultado["tiempo"] and "fin" in absorbido["tiempo"]:
         fin = absorbido["tiempo"]["fin"]
-        if fin["valor"] >= resultado["tiempo"]["inicio"]["valor"]:
+        inicio = _leer_instante(resultado["tiempo"]["inicio"])
+        if (
+            resultado["tiempo"]["inicio"]["precision"] in suceso.PRECISIONES_HORA
+            and timedelta(0) <= _leer_instante(fin) - inicio <= MAX_DURACION
+        ):
             resultado["tiempo"]["fin"] = fin
-            inicio = _leer_instante(resultado["tiempo"]["inicio"])
             resultado["tiempo"]["duracion_min"] = (
                 int((_leer_instante(fin) - inicio).total_seconds()) // 60
             )
