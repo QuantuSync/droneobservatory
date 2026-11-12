@@ -2,14 +2,21 @@
 del 10 al 11 de noviembre de 2026, leídas desde el servidor el 11 y recortadas a lo que usa el
 lector. Y el canal de las Fuerzas de Defensa de Estonia, de ese mismo día."""
 
-from datetime import UTC, datetime
+import json
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
 from proceso import autoridades
 from proceso.noticias import filtro
-from recogida import extractor, medios_publicos, oficiales, paginas_oficiales
+from recogida import (
+    extractor,
+    medios_publicos,
+    oficiales,
+    paginas_oficiales,
+    vigilancia_fuentes,
+)
 from recogida.descarga import Descargador, Respuesta
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -126,6 +133,95 @@ def test_el_robots_del_medio_se_respeta_y_un_medio_caido_no_corta_el_otro() -> N
 
     otro = Almacen.abrir()
     assert medios_publicos.paso_horario(otro, AHORA, _descargador(_SinIngles())) == 1
+
+
+class _Caido(_Sitio):
+    """LRT en inglés responde 503 mientras `caido`; lo demás, como siempre."""
+
+    caido = True
+
+    def __call__(self, url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        if self.caido and url == "https://www.lrt.lt/en/news-in-english":
+            return 503, {}, b""
+        return super().__call__(url, cabeceras, limite_s)
+
+
+def test_un_medio_que_no_se_lee_queda_apuntado_con_desde_cuando_y_se_avisa_una_vez() -> None:
+    # Donde se lee un medio público no hay otra fuente del país: si deja de leerse tiene que
+    # verse (el 11 de noviembre de 2026 solo quedaba una línea en el registro de la recogida).
+    almacen = Almacen.abrir()
+    sitio = _Caido()
+    avisos: list[str] = []
+    for hora in range(3):
+        medios_publicos.paso_horario(
+            almacen, AHORA + timedelta(hours=hora), _descargador(sitio), avisar=avisos.append
+        )
+    estado = medios_publicos.fallos(almacen)
+    assert list(estado) == ["lrt_en"]
+    assert estado["lrt_en"]["fallos_seguidos"] == 3
+    assert estado["lrt_en"]["primer_fallo"] == "2026-11-11T08:17:00Z"
+    assert "código 503" in estado["lrt_en"]["motivo"]
+    assert avisos == []
+    # A la cuarta hora lleva más de tres sin leerse: un aviso, y solo uno.
+    for hora in range(3, 7):
+        medios_publicos.paso_horario(
+            almacen, AHORA + timedelta(hours=hora), _descargador(sitio), avisar=avisos.append
+        )
+    assert len(avisos) == 1
+    assert avisos[0].startswith(
+        "El medio público lrt.lt (LT) (lrt_en) no se lee desde hace más de 3 horas: falla desde "
+        "el 2026-11-11 08:17 UTC"
+    )
+    # Vuelve a leerse: deja de tener estado.
+    sitio.caido = False
+    medios_publicos.paso_horario(almacen, AHORA + timedelta(hours=7), _descargador(sitio))
+    assert medios_publicos.fallos(almacen) == {}
+
+
+def test_un_medio_vetado_por_su_robots_cuenta_como_sin_leer() -> None:
+    almacen = Almacen.abrir()
+    vetado = _Sitio("User-agent: *\nDisallow: /en/\n")
+    medios_publicos.paso_horario(almacen, AHORA, _descargador(vetado))
+    assert medios_publicos.fallos(almacen)["lrt_en"]["motivo"] == "su robots.txt no deja leerlo"
+
+
+def test_si_todos_se_leen_no_se_escribe_su_estado() -> None:
+    almacen = Almacen.abrir()
+    medios_publicos.paso_horario(almacen, AHORA, _descargador(_Sitio()))
+    assert almacen.cursor(medios_publicos.CURSOR_FALLOS) is None
+
+
+def test_el_estado_de_las_fuentes_llega_a_la_vigilancia(tmp_path: Path) -> None:
+    almacen = Almacen.abrir()
+    sitio = _Caido()
+    for hora in range(2):
+        medios_publicos.paso_horario(almacen, AHORA + timedelta(hours=hora), _descargador(sitio))
+    almacen.guardar_cursor(
+        oficiales.CURSOR_FALLOS,
+        {"fuentes": {"lgs": {"fallos_seguidos": 5, "primer_fallo": "2026-11-11T04:17:00Z",
+                             "motivo": "cortada al agotar su tope de 45 s"}}},
+    )  # fmt: skip
+    ruta = tmp_path / "eodi" / vigilancia_fuentes.FICHERO
+    ahora = AHORA + timedelta(hours=1)
+    vigilancia_fuentes.escribir(ruta, almacen, ahora)
+    estado = json.loads(ruta.read_text(encoding="utf-8"))
+    assert estado["fecha"] == "2026-11-11T09:17:00Z"
+    assert list(estado["medios_publicos"]) == ["lrt_en"] and list(estado["oficiales"]) == ["lgs"]
+    # Una hora sin leer LRT no es un problema; la fuente oficial lleva cinco y se ve como aviso.
+    assert vigilancia_fuentes.problemas(estado, ahora) == []
+    (aviso,) = vigilancia_fuentes.avisos(estado, ahora)
+    assert (
+        aviso["id"] == "fuentes_oficiales" and "lgs desde el 2026-11-11 04:17 UTC" in aviso["frase"]
+    )
+    # Con más de tres horas, el medio público es un problema (abre incidencia).
+    tarde = AHORA + timedelta(hours=3, minutes=5)
+    estado["fecha"] = "2026-11-11T11:17:00Z"
+    (problema,) = vigilancia_fuentes.problemas(estado, tarde)
+    assert problema["id"] == "medios_publicos"
+    assert "lrt_en desde el 2026-11-11 08:17 UTC (2 recogidas seguidas" in problema["frase"]
+    # Un fichero viejo (la recogida parada, que tiene su propio aviso) no dice nada de ahora.
+    assert vigilancia_fuentes.problemas(estado, tarde + timedelta(hours=6)) == []
+    assert vigilancia_fuentes.avisos({}, tarde) == []
 
 
 def test_el_canal_de_las_fuerzas_de_defensa_de_estonia() -> None:

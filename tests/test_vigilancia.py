@@ -458,3 +458,31 @@ def test_memoria_solo_avisa_por_la_propia() -> None:
     [problema] = vigilancia.problemas_de_memoria({"pico_bytes": 4 * gb, "tope_bytes": 5 * gb})
     assert problema["id"] == "memoria_recogida"
     assert "80 %" in problema["frase"]
+
+
+def test_un_medio_publico_sin_leer_mas_de_3_horas_es_un_problema(tmp_path: Path) -> None:
+    # fuentes.json lo deja la recogida (recogida/vigilancia_fuentes.py): LRT es la única fuente
+    # de Lituania; una fuente oficial en la misma situación se ve como aviso.
+    secretos, datos = preparar(tmp_path, AHORA, AHORA)
+    desde = _iso(AHORA - timedelta(hours=4))
+    (secretos / "fuentes.json").write_text(
+        json.dumps({
+            "fecha": _iso(AHORA - timedelta(minutes=30)),
+            "medios_publicos": {
+                "lrt_en": {"fallos_seguidos": 5, "primer_fallo": desde, "motivo": "código 503"}
+            },
+            "oficiales": {
+                "lgs": {"fallos_seguidos": 5, "primer_fallo": desde, "motivo": "cortada"},
+                "mil_lv": {"fallos_seguidos": 1, "primer_fallo": _iso(AHORA), "motivo": "cortada"},
+            },
+        }),
+        encoding="utf-8",
+    )  # fmt: skip
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, Sistema(0, AHORA - timedelta(minutes=10), []),
+        lambda: AHORA,
+    )  # fmt: skip
+    problema = next(p for p in salud["problemas"] if p["id"] == "medios_publicos")
+    assert "lrt_en desde el" in problema["frase"] and "código 503" in problema["frase"]
+    aviso = next(a for a in salud["avisos"] if a["id"] == "fuentes_oficiales")
+    assert "lgs desde el" in aviso["frase"] and "mil_lv" not in aviso["frase"]

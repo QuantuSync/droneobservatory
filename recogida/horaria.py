@@ -106,6 +106,7 @@ from recogida import (
     suelo_europeo,
     tipo_atribucion,
     tipo_dron,
+    vigilancia_fuentes,
     visitas,
 )
 from recogida.cache import CachePaginas
@@ -472,12 +473,12 @@ def principal(argumentos: list[str] | None = None) -> int:
             ),
         )
         # Confirmaciones oficiales de los incidentes que ya hay. Cada fuente tiene su tope y la
-        # que falla 3 recogidas seguidas se pausa (no es un aviso); si no da tiempo a leer todas,
-        # se avisa. El aviso de una fuente que lleva 7 días en pausa va al responsable, nunca
-        # desde un ensayo.
+        # que falla 3 recogidas seguidas se sigue probando con un intento breve (no es un aviso
+        # de la recogida); si no da tiempo a leer todas, se avisa. El aviso de una fuente que
+        # lleva más de 3 horas sin leerse va al responsable, nunca desde un ensayo.
         avisar = (
             None if args.ensayo is not None
-            else visitas.avisador_privado("EODI · Fuente oficial en pausa")
+            else visitas.avisador_privado("EODI · Fuente sin leer")
         )  # fmt: skip
         confirmaciones = paso(
             "confirmaciones oficiales",
@@ -502,9 +503,17 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Medios públicos que se leen directamente donde las autoridades no dejan leer sus
         # páginas (LRT en Lituania): sus notas de drones entran como artículos de su lugar
         # (recogida/medios_publicos.py). Nunca son fuente oficial.
-        de_medios = paso("medios públicos", medios_publicos.paso_horario, almacen, ahora)
+        de_medios = paso(
+            "medios públicos",
+            lambda: medios_publicos.paso_horario(almacen, ahora, avisar=avisar),
+        )
         if de_medios:
             registro.info("notas de medios públicos incorporadas: %d", de_medios)
+        # Qué fuentes vienen fallando y desde cuándo, para la vigilancia (fuentes.json).
+        destino_fuentes = (
+            control_fichas.RUTA_ESTADO_DEFECTO.parent if args.ensayo is None else args.ensayo
+        ) / vigilancia_fuentes.FICHERO
+        paso("estado de las fuentes", vigilancia_fuentes.escribir, destino_fuentes, almacen, ahora)
         # Incidentes que juntaban sucesos distintos, revisados a mano (configuracion/
         # incidentes_revisados.json, separar): se reparten una vez, antes del extractor, y en
         # cada pasada se mantienen sus partes unidas a su ficha y enlazadas entre sí.

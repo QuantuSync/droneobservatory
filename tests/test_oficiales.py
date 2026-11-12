@@ -175,15 +175,62 @@ def test_una_fuente_que_se_cuelga_no_impide_leer_las_demas(
     assert (recuentos.notas, recuentos.sin_leer, recuentos.bloqueadas) == (2, 0, 1)
     assert list(recuentos.fallidas) == ["caida"]
     assert "oficiales: fuente caida falló: cortada al agotar su tope de 45 s" in caplog.text
+    # El corte dice qué pasó en el último intento, no solo que se agotó el tope.
+    assert recuentos.fallidas["caida"] == (
+        "cortada al agotar su tope de 45 s (último intento: https://caida.ejemplo/rss: error de "
+        "red: TimeoutError (sin respuesta en 12 s))"
+    )
+    assert recuentos.tiempos["caida"] > 30 and recuentos.tiempos["sana"] < 1
 
 
-def test_tres_fallos_seguidos_ponen_la_fuente_en_pausa_y_a_las_6_horas_se_prueba(
+class Intermitente(Sitios):
+    """La fuente caída se cuelga solo en sus primeras `cuelgues` peticiones."""
+
+    def __init__(self, reloj: Reloj, cuelgues: int) -> None:
+        super().__init__(reloj)
+        self.cuelgues = cuelgues
+
+    def __call__(self, url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        if "caida" in url and self.cuelgues > 0:
+            self.cuelgues -= 1
+            return super().__call__(url, cabeceras, limite_s)
+        return super().__call__(url.replace("caida", "ya-responde"), cabeceras, limite_s)
+
+
+@pytest.mark.parametrize("cuelgues", [1, 2])
+def test_una_peticion_colgada_no_agota_el_tope_de_la_fuente(
+    monkeypatch: pytest.MonkeyPatch, cuelgues: int
+) -> None:
+    # lgs, del 11 al 12 de noviembre de 2026: con 30 s por petición dentro de un tope de 45, una
+    # sola petición colgada (el robots.txt o el canal) dejaba la fuente sin leer esa hora, y a la
+    # tercera hora seguida, seis horas sin leerse. Ahora cabe otro intento.
+    monkeypatch.setattr(oficiales, "fuentes", lambda: (CAIDA,))
+    reloj = Reloj()
+    recuentos = oficiales.ejecutar(
+        Almacen.abrir(), AHORA, MODELOS, _descargador(Intermitente(reloj, cuelgues), reloj),
+        Plazo(oficiales.TOPE_S, reloj), reloj=reloj,
+    )  # fmt: skip
+    assert (recuentos.fallidas, recuentos.notas) == ({}, 2)
+    assert reloj.ahora < oficiales.TOPE_FUENTE_S
+
+
+def test_los_tiempos_de_una_fuente_salen_de_su_configuracion() -> None:
+    assert oficiales.limites(FUENTE, breve=False) == (
+        oficiales.TOPE_FUENTE_S, oficiales.LIMITE_PETICION_S, oficiales.REINTENTOS_PETICION,
+    )  # fmt: skip
+    lenta = {**FUENTE, "tope_s": 70, "limite_s": 20, "reintentos": 1}
+    assert oficiales.limites(lenta, breve=False) == (70.0, 20.0, 1)
+    # Con la fuente fallando: un solo intento, y breve.
+    assert oficiales.limites(lenta, breve=True) == (70.0, oficiales.LIMITE_BREVE_S, 0)
+
+
+def test_una_fuente_que_falla_se_sigue_probando_cada_hora_la_ultima_y_con_un_intento(
     monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
     monkeypatch.setattr(oficiales, "fuentes", lambda: (CAIDA, SANA))
     almacen = Almacen.abrir()
     reloj = Reloj()
-    sitios = Sitios(reloj, codigo=403)
+    sitios = Sitios(reloj)
 
     def pasada(ahora: datetime) -> oficiales.Recuentos:
         return oficiales.ejecutar(
@@ -194,63 +241,120 @@ def test_tres_fallos_seguidos_ponen_la_fuente_en_pausa_y_a_las_6_horas_se_prueba
     for hora in range(3):
         recuentos = pasada(AHORA + timedelta(hours=hora))
         assert recuentos.fallidas.keys() == {"caida"}
-        assert recuentos.en_pausa == []
-    estado = oficiales.pausas(almacen)["caida"]
-    assert estado["fallos_seguidos"] == 3
-    assert estado["pausa_hasta"] == "2025-09-24T20:00:00Z"
-    assert "en pausa 6 h" in caplog.text
-    # En pausa no se pide nada, no es un fallo y la sana se lee.
-    sitios.pedidas.clear()
-    recuentos = pasada(AHORA + timedelta(hours=5))
-    assert recuentos.en_pausa == ["caida"]
-    assert (recuentos.sin_leer, recuentos.bloqueadas, recuentos.notas) == (0, 0, 2)
-    assert not [u for u in sitios.pedidas if "caida" in u]
-    # Pasadas las 6 horas se vuelve a probar: si falla, otras 6 horas.
-    recuentos = pasada(AHORA + timedelta(hours=8))
-    assert recuentos.fallidas.keys() == {"caida"}
-    assert oficiales.pausas(almacen)["caida"]["pausa_hasta"] == "2025-09-25T02:00:00Z"
-    # Si responde, sale de la pausa y empieza de cero.
+        assert recuentos.en_breve == []
+    estado = oficiales.fallos(almacen)["caida"]
+    assert (estado["fallos_seguidos"], estado["primer_fallo"]) == (3, "2025-09-24T12:00:00Z")
+    assert "pausa_hasta" not in estado
+    assert "se sigue probando con un intento breve" in caplog.text
+    # Desde la cuarta se sigue pidiendo en cada recogida (nunca queda sin probar), después de
+    # las que responden y con un intento por petición: tarda menos de la mitad de su tope.
+    for hora in range(3, 9):
+        sitios.pedidas.clear()
+        antes = reloj.ahora
+        recuentos = pasada(AHORA + timedelta(hours=hora))
+        assert recuentos.en_breve == ["caida"] and recuentos.fallidas.keys() == {"caida"}
+        assert (recuentos.sin_leer, recuentos.notas) == (0, 2)
+        de_la_caida = [u for u in sitios.pedidas if "caida" in u]
+        assert de_la_caida == ["https://caida.ejemplo/robots.txt", "https://caida.ejemplo/rss"]
+        assert sitios.pedidas.index(de_la_caida[0]) > sitios.pedidas.index(SANA["url"])
+        assert reloj.ahora - antes <= 2 * oficiales.LIMITE_BREVE_S + 1
+    assert oficiales.fallos(almacen)["caida"]["fallos_seguidos"] == 9
+    # En cuanto responde, se lee entera y empieza de cero.
     monkeypatch.setattr(oficiales, "fuentes", lambda: ({**SANA, "id": "caida"}, SANA))
-    recuentos = pasada(AHORA + timedelta(hours=15))
-    assert recuentos.fallidas == {}
-    assert oficiales.pausas(almacen) == {}
+    recuentos = pasada(AHORA + timedelta(hours=9))
+    assert (recuentos.fallidas, recuentos.notas) == ({}, 4)
+    assert oficiales.fallos(almacen) == {}
 
 
-def test_una_fuente_en_pausa_7_dias_se_avisa_una_sola_vez(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_una_fuente_con_mas_de_3_horas_sin_leerse_se_avisa_una_sola_vez(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(oficiales, "fuentes", lambda: (CAIDA, SANA))
+    almacen = Almacen.abrir()
+    reloj = Reloj()
+    sitios = Sitios(reloj, codigo=503)
+    avisos: list[str] = []
+
+    def pasada(hora: int) -> None:
+        oficiales.ejecutar(
+            almacen, AHORA + timedelta(hours=hora), MODELOS, _descargador(sitios, reloj),
+            avisar=avisos.append, reloj=reloj,
+        )  # fmt: skip
+
+    # Falla a las 12:00, 13:00 y 14:00: aún no van 3 horas desde el primer fallo.
+    for hora in range(3):
+        pasada(hora)
+        assert avisos == []
+    # A las 15:00 lleva más de 3 horas sin leerse (la última lectura buena fue antes de las 12).
+    for hora in range(3, 30):
+        pasada(hora)
+    assert len(avisos) == 1
+    assert avisos[0].startswith(
+        "La fuente oficial Københavns Politi (DK) (caida) no se lee desde hace más de 3 horas: "
+        "falla desde el 2025-09-24 12:00 UTC (3 h, 4 recogidas seguidas). Último motivo: "
+    )
+    assert "código 503" in avisos[0] and avisos[0].endswith("Se sigue probando en cada recogida.")
+    # Vuelve, y otra racha se avisa otra vez.
+    sitios.codigo = None
+    monkeypatch.setattr(oficiales, "fuentes", lambda: ({**SANA, "id": "caida"}, SANA))
+    pasada(30)
+    assert oficiales.fallos(almacen) == {}
+    monkeypatch.setattr(oficiales, "fuentes", lambda: (CAIDA, SANA))
+    sitios.codigo = 503
+    for hora in range(31, 36):
+        pasada(hora)
+    assert len(avisos) == 2
+
+
+def test_sin_quien_avise_la_fuente_no_se_da_por_avisada(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Un ensayo o un equipo sin el token: el aviso sale en la primera recogida que pueda darlo.
     monkeypatch.setattr(oficiales, "fuentes", lambda: (CAIDA,))
     almacen = Almacen.abrir()
     reloj = Reloj()
-    sitios = Sitios(reloj, codigo=403)
+    sitios = Sitios(reloj, codigo=503)
     avisos: list[str] = []
-    ahora = AHORA
-    for _ in range(40):
+    for hora in range(6):
         oficiales.ejecutar(
-            almacen, ahora, MODELOS, _descargador(sitios, reloj), avisar=avisos.append,
+            almacen, AHORA + timedelta(hours=hora), MODELOS, _descargador(sitios, reloj),
             reloj=reloj,
         )  # fmt: skip
-        ahora += timedelta(hours=6, minutes=1)
-    # La pausa empezó en la tercera pasada; 7 días son 28 pausas de 6 horas.
+    assert "avisada" not in oficiales.fallos(almacen)["caida"]
+    oficiales.ejecutar(
+        almacen, AHORA + timedelta(hours=6), MODELOS, _descargador(sitios, reloj),
+        avisar=avisos.append, reloj=reloj,
+    )  # fmt: skip
     assert len(avisos) == 1
-    assert avisos[0].startswith("La fuente oficial caida lleva en pausa desde el 2025-09-25")
 
 
-def test_una_fuente_en_pausa_no_es_un_aviso_de_la_recogida(
+def test_una_recogida_sin_fallos_no_escribe_el_estado_de_las_fuentes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    # Lo que mira la recogida horaria para el código 2 y el estado de las oficiales.
+    monkeypatch.setattr(oficiales, "fuentes", lambda: (SANA,))
+    almacen = Almacen.abrir()
+    reloj = Reloj()
+    oficiales.ejecutar(almacen, AHORA, MODELOS, _descargador(Sitios(reloj), reloj), reloj=reloj)
+    assert almacen.cursor(oficiales.CURSOR_FALLOS) is None
+
+
+def test_el_estado_de_una_pausa_anterior_se_sigue_probando(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Lo que había en producción el 12 de noviembre de 2026: lgs con tres fallos y en pausa.
     monkeypatch.setattr(oficiales, "fuentes", lambda: (CAIDA, SANA))
     almacen = Almacen.abrir()
-    hasta = (AHORA + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    hasta = (AHORA + timedelta(hours=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
     almacen.guardar_cursor(
-        oficiales.CURSOR_PAUSAS,
-        {"fuentes": {"caida": {"fallos_seguidos": 3, "pausa_hasta": hasta, "motivo": "x"}}},
-    )
+        oficiales.CURSOR_FALLOS,
+        {"fuentes": {"caida": {"fallos_seguidos": 3, "pausa_hasta": hasta, "motivo": "x",
+                               "ultimo_fallo": "2025-09-24T11:00:00Z"}}},
+    )  # fmt: skip
     reloj = Reloj()
+    sitios = Sitios(reloj)
     recuentos = oficiales.ejecutar(
-        almacen, AHORA, MODELOS, _descargador(Sitios(reloj), reloj), reloj=reloj
+        almacen, AHORA, MODELOS, _descargador(sitios, reloj), reloj=reloj
     )
-    assert recuentos.en_pausa == ["caida"]
-    assert (recuentos.sin_leer, recuentos.bloqueadas) == (0, 0)
+    assert recuentos.en_breve == ["caida"] and [u for u in sitios.pedidas if "caida" in u]
+    estado = oficiales.fallos(almacen)["caida"]
+    assert (estado["fallos_seguidos"], estado["primer_fallo"]) == (4, "2025-09-24T11:00:00Z")
+    assert "pausa_hasta" not in estado
 
 
 # --- Notas de un suceso con ficha sin punto, con varias posibles o sin ficha ---------------

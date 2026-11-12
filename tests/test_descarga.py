@@ -174,3 +174,43 @@ def test_contenido_en_bruto_y_404_sin_reintentos() -> None:
     with pytest.raises(NoEncontrado):
         d.contenido("https://ejemplo.org/b.zip", lambda c: True)
     assert len(transporte.pedidas) == 2
+
+
+def test_el_ultimo_fallo_dice_que_paso_en_el_ultimo_intento() -> None:
+    # Quien corta un paso por su tope puede decir por qué no llegó la página.
+    def colgado(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        raise TimeoutError("sin respuesta")
+
+    descargador = Descargador(colgado, dormir=lambda _s: None, pausa_minima_s=0, reintentos=1)
+    assert descargador.ultimo_fallo == ""
+    with pytest.raises(DescargaFallida):
+        descargador.texto("https://lento.ejemplo/canal", lambda _t: True)
+    assert descargador.ultimo_fallo == (
+        "https://lento.ejemplo/canal: error de red: TimeoutError (sin respuesta en 30 s)"
+    )
+
+    def con_503(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        return 503, {}, b""
+
+    otro = Descargador(con_503, dormir=lambda _s: None, pausa_minima_s=0, reintentos=0)
+    with pytest.raises(DescargaFallida):
+        otro.texto("https://lento.ejemplo/canal", lambda _t: True)
+    assert otro.ultimo_fallo == "https://lento.ejemplo/canal: código 503"
+
+
+def test_con_otros_limites_es_el_mismo_visitante() -> None:
+    # La pausa entre peticiones al mismo sitio y los recuentos se comparten.
+    dormidas: list[float] = []
+    pedidas: list[float] = []
+
+    def sitio(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        pedidas.append(limite_s)
+        return 200, {}, b"<p>hola</p>"
+
+    descargador = Descargador(sitio, dormir=dormidas.append, reloj=lambda: 0.0, pausa_minima_s=3)
+    breve = descargador.con_limites(0, 10.0)
+    assert (breve.reintentos, breve.limite_s) == (0, 10.0)
+    descargador.texto("https://sitio.ejemplo/a", lambda _t: True)
+    breve.texto("https://sitio.ejemplo/b", lambda _t: True)
+    assert dormidas == [3] and pedidas == [30.0, 10.0]
+    assert descargador.recuentos["peticiones"] == 2

@@ -116,15 +116,22 @@ class Descargador:
         self._pausas = pausas_por_sitio or {}
         self._ultima: dict[str, float] = {}
         self.recuentos: Counter[str] = Counter()
+        # El último intento que no salió («dirección: motivo»), para que quien corta un paso por
+        # su tope pueda decir por qué no llegó (un tiempo de espera, un 503, otro contenido).
+        self.ultimo_fallo = ""
 
     def con_limites(self, reintentos: int, limite_s: float) -> "Descargador":
         """Otro descargador con el mismo transporte, la misma identificación y el mismo plazo,
-        pero con otros reintentos y otro tiempo límite (para sitios que suelen no responder)."""
+        pero con otros reintentos y otro tiempo límite (para sitios que suelen no responder). La
+        pausa entre peticiones al mismo sitio y los recuentos son los mismos: es el mismo
+        visitante."""
         otro = Descargador(
             self._transporte, self._dormir, self._reloj, self._pausa_minima_s, self._pausas,
             reintentos, self._espera_inicial_s, None, limite_s, self.plazo, self.tope_diario,
         )  # fmt: skip
         otro._cabeceras = self._cabeceras
+        otro._ultima = self._ultima
+        otro.recuentos = self.recuentos
         return otro
 
     def con_transporte(self, transporte: Transporte) -> "Descargador":
@@ -132,14 +139,19 @@ class Descargador:
         lector_delegado.py): la misma pausa, los mismos reintentos y la misma comprobación."""
         otro = self.con_limites(self._reintentos, self._limite_s)
         otro._transporte = transporte
-        # La misma cuenta de la pausa por sitio y los mismos recuentos.
-        otro._ultima = self._ultima
-        otro.recuentos = self.recuentos
         return otro
 
     @property
     def transporte(self) -> Transporte:
         return self._transporte
+
+    @property
+    def limite_s(self) -> float:
+        return self._limite_s
+
+    @property
+    def reintentos(self) -> int:
+        return self._reintentos
 
     def _dentro_del_plazo(self, espera_s: float = 0.0) -> None:
         if self.plazo is not None:
@@ -183,6 +195,8 @@ class Descargador:
                 codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, limite)
             except (OSError, TimeoutError) as error:
                 motivo = f"error de red: {type(error).__name__}"
+                if isinstance(error, TimeoutError):
+                    motivo += f" (sin respuesta en {limite:.0f} s)"
             else:
                 if codigo == 200:
                     if valido(cuerpo):
@@ -196,6 +210,7 @@ class Descargador:
                     raise NoEncontrado(f"{url}: código {codigo}")
                 else:
                     raise DescargaFallida(f"{url}: código {codigo}")
+            self.ultimo_fallo = f"{url}: {motivo}"
             sin_tope = self.tope_diario is not None and not self.tope_diario.permite(sitio)
             if intento < self._reintentos and sin_tope:
                 self.recuentos["tope_diario"] += 1
