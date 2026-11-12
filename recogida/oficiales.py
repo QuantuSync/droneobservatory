@@ -221,13 +221,16 @@ def robots(descargador: Descargador, url: str) -> RobotFileParser:
     la fuente (se sigue como si no lo hubiera, como hasta ahora)."""
     partes = urlsplit(url)
     lector = RobotFileParser()
-    unico = descargador.con_limites(0, descargador.limite_s)
+    # Quien no trae un descargador de verdad (el barrido del catálogo, con el suyo) pide como pida.
+    propio = isinstance(descargador, Descargador)
+    unico = descargador.con_limites(0, descargador.limite_s) if propio else descargador
     try:
         texto = unico.texto(f"{partes.scheme}://{partes.netloc}/robots.txt", lambda _: True)
     except DescargaFallida:
         texto = ""
     finally:
-        descargador.ultimo_fallo = unico.ultimo_fallo or descargador.ultimo_fallo
+        if propio:
+            descargador.ultimo_fallo = unico.ultimo_fallo or descargador.ultimo_fallo
     lector.parse(texto.splitlines())
     return lector
 
