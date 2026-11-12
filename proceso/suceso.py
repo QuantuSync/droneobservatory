@@ -105,8 +105,11 @@ DEFINICION = (
     "noches distintas, «de nuevo», «otra vez», «un segundo ataque»), salvo la noche que cruza "
     "la medianoche; y, en la misma jornada y el mismo país, drones distintos en sitios u horas "
     "distintos que las fuentes cuentan por separado (otro dron horas después, otro aeropuerto, "
-    "otro barco). Una ficha que junta varios de esos (un balance de varias noches, un resumen "
-    "de dos países) no es ninguno de ellos."
+    "otro barco). Una noticia que cuenta varios de esos (un balance de varias noches, un "
+    "resumen de dos países) no es un suceso nuevo: cada uno de los que cuenta es el suyo. La "
+    "ficha hecha con una noticia así es del suceso de su país y de su jornada (el lugar y el día "
+    "de la ficha), el mismo que el de otra ficha de ese país y esa jornada, aunque la noticia "
+    "hable también del país vecino o de otra noche."
 )
 # --- Lo que mide el sitio y la jornada --------------------------------------------------------
 
