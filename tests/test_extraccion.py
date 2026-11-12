@@ -313,7 +313,9 @@ def test_primeras_frases_de_los_parrafos_utiles() -> None:
         "<footer><p>Pie de página con suficientes palabras para parecer un párrafo</p></footer>"
     )
     assert primeras_frases(html) == TEXTO
-    assert len(primeras_frases("<p>" + "Una frase larga de prueba. " * 60 + "</p>")) <= 600
+    larga = "<p>" + "Una frase larga de prueba. " * 200 + "</p>"
+    assert 2900 < len(primeras_frases(larga)) <= 3000
+    assert 500 < len(primeras_frases(larga, 600)) <= 600
 
 
 # --- Validación -----------------------------------------------------------------------
@@ -566,7 +568,10 @@ def test_el_limite_diario_detiene_las_llamadas(almacen: Almacen) -> None:
 def test_el_limite_diario_no_se_puede_superar(almacen: Almacen) -> None:
     candidato = candidato_con_articulos(almacen)
     peticion = extraccion.preparar(almacen, candidato, None)
-    casi = coste.LIMITE_DIARIO_USD - 0.02
+    # Queda sitio para una llamada y parte de otra (el peor caso de una, con el modelo de la
+    # prueba, es de unos 0,02 USD).
+    previsto = coste.peor_caso(peticion.letras(), ficha.MAX_TOKENS_SALIDA, esfuerzo=ficha.ESFUERZO)
+    casi = coste.LIMITE_DIARIO_USD - previsto * 1.5
     almacen.registrar_llamada({
         "fecha": "2025-09-24T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": casi,
