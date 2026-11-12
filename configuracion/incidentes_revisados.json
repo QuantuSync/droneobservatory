@@ -12927,6 +12927,84 @@
       "enlace": "https://www.mil.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
       "pais": "LV",
       "motivo": "tres drones entraron esa noche en el espacio aéreo de Letonia, según las Fuerzas Armadas: dos cruzaron uno o dos minutos la frontera oriental y el tercero entró desde Lituania y siguió hacia Estonia (revisado el 11 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00012",
+      "campo": "cierre",
+      "valor": {
+        "valor": "si",
+        "minutos": {
+          "min": 45,
+          "max": 45
+        }
+      },
+      "cita": "Nach einer Drohnensichtung mussten am Freitagnachmittag am Flughafen München Franz Josef Strauß beide Start- und Landebahnen für etwa 45 Minuten gesperrt werden.",
+      "enlace": "https://tips.at/nachrichten/linz-land/blaulicht/683331-fluege-nach-drohnensichtung-am-flughafen-muenchen-zur-zwischenlandung-nach-hoersching-umgeleitet",
+      "pais": "DE",
+      "motivo": "las dos pistas del aeropuerto de Múnich se cerraron unos 45 minutos el viernes 2 de mayo de 2025 por la tarde; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00069",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Også retur-avgangen som skulle gått i kveld fra Brønnøysund til Bodø er kansellert, fordi flyplassen er stengt, sier Srithara.",
+      "enlace": "https://aftenposten.no/norge/i/935V9r/vg-fly-omdirigert-etter-droneobservasjon-ved-broennoeysund-lufthavn",
+      "pais": "NO",
+      "motivo": "el aeropuerto de Brønnøysund quedó cerrado y se canceló también la salida de vuelta a Bodø; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00112",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Aeroportul din Vilnius va fi închis „până la ora 04:30 (01:30 GMT)”, duminică, din cauza unei „posibile serii de baloane în apropiere”",
+      "enlace": "https://stirileprotv.ro/stiri/international/dupa-incidentele-cu-drona-din-germania-aeroportul-din-vilnius-a-fost-inchis-din-cauza-unor-baloane-suspecte.html",
+      "pais": "LT",
+      "motivo": "el aeropuerto de Vilna anunció su cierre hasta las 04:30 del domingo 5 de octubre de 2025; el titular de la ficha ya lo decía y el dato no; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2025-00369",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Zračna luka Dubrovnik zbog tog je incidenta bila zatvorena neko vrijeme, dva zrakoplova koja su trebala sletjeti preusmjerena su u Zračnu luku Split.",
+      "enlace": "https://vijesti.hrt.hr/hrvatska/dubrovnik-dron-onemogucilo-slijetanje-zrakoplova-u-zracnu-luku-12116591",
+      "pais": "HR",
+      "motivo": "el aeropuerto de Dubrovnik estuvo cerrado un tiempo por el dron y dos aviones se desviaron a Split; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00002",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Passengers and staff were instructed to leave the terminal building, with airport operations temporarily suspended to ensure public safety.",
+      "enlace": "https://chroniclelive.co.uk/news/world-news/paphos-airport-evacuated-after-drone-33514792",
+      "pais": "CY",
+      "motivo": "las operaciones del aeropuerto de Pafos se suspendieron mientras se evacuaba la terminal; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00065",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Aus Sicherheitsgründen musste der Flugbetrieb vorübergehend komplett eingestellt werden.",
+      "enlace": "https://bild.de/news/drohnensichtung-flughafen-muenchen-komplett-gesperrt-6a1a92b6d70f69bc713daf3d",
+      "pais": "DE",
+      "motivo": "el aeropuerto de Múnich paró todas sus operaciones el sábado 30 de mayo de 2026; el titular de la ficha ya lo decía y el dato no; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00070",
+      "campo": "cierre",
+      "valor": "si",
+      "cita": "Nærheten gjorde at luftrommet rundt flyplassen ble stengt.",
+      "enlace": "https://smp.no/nyheter/n/Pdv8W5/drone-observert-ved-bergen-lufthavn-flere-fly-paavirket",
+      "pais": "NO",
+      "motivo": "el espacio aéreo en torno al aeropuerto de Bergen se cerró por la cercanía del dron; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00146",
+      "campo": "cierre",
+      "valor": "no",
+      "cita": "Er werden geen vluchten geannuleerd en het luchtruim hoefde niet te worden gesloten.",
+      "enlace": "https://bladna.nl/drone-steekt-grens-toch-krijgt-luchthaven-melilla-last,72967.html",
+      "pais": "ES",
+      "motivo": "en Melilla no se canceló ningún vuelo ni hizo falta cerrar el espacio aéreo: hubo retrasos; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
     }
   ]
 }
