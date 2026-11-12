@@ -360,6 +360,21 @@ def test_entre_una_ficha_de_2025_y_una_de_2026_queda_la_de_2025() -> None:
     assert definicion.destino_de(nueva, antigua, solo_nueva)[0]["id"] == "EODI-2026-00094"
 
 
+def test_el_fin_de_la_ficha_unida_solo_vale_si_el_inicio_tiene_hora() -> None:
+    """EODI-2026-00792 (Lituania, la noche del 10 al 11 de noviembre de 2026): su inicio era el
+    día 10 a secas y una de las fichas unidas a ella traía un fin a las 22:00. La duración, medida
+    desde las 00:00, salía de 22 horas. Como al extraer, el fin solo vale con hora en el inicio."""
+    absorbido = inc("EODI-2025-00002", "2025-10-02T21:00Z", "hora")
+    absorbido["tiempo"]["fin"] = {"valor": "2025-10-02T22:00Z", "precision": "minuto"}
+    del_dia = inc("EODI-2025-00001", "2025-10-02T00:00Z", "dia")
+    nuevo, _ = incidentes.absorber(del_dia, absorbido, AHORA)
+    assert "fin" not in nuevo["tiempo"] and "duracion_min" not in nuevo["tiempo"]
+    con_hora = inc("EODI-2025-00001", "2025-10-02T20:30Z", "hora")
+    nuevo, _ = incidentes.absorber(con_hora, absorbido, AHORA)
+    assert nuevo["tiempo"]["fin"]["valor"] == "2025-10-02T22:00Z"
+    assert nuevo["tiempo"]["duracion_min"] == 90
+
+
 def test_lo_que_hereda_el_destino_lleva_su_afirmacion_aunque_compartan_fuente() -> None:
     destino = inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto")
     absorbido = inc("EODI-2025-00002", "2025-10-02T21:00Z", "hora")
