@@ -280,6 +280,7 @@ def corregir(
         except Exception as error:
             registro.warning("coherencia de %s sin mirar: %s", id_, repr(error)[:200])
             continue
+        hallazgos = sin_lo_revisado(ficha, hallazgos)
         if not hallazgos:
             continue
         clave = CLAVE + id_
@@ -494,6 +495,20 @@ def _aplicar(
         return aplicar(ficha, quedan, respuesta, comprobar)
 
     return rehacer
+
+
+def sin_lo_revisado(
+    ficha: Documento, hallazgos: list[correccion.Hallazgo]
+) -> list[correccion.Hallazgo]:
+    """Los hallazgos sin los de un dato que fija una revisión a mano (proceso/protegido): la
+    revisión manda. Si no, la corrección y la revisión se turnaban cada hora (EODI-2026-00747,
+    con el lugar revisado a mano, en el ensayo del 14/11)."""
+    from proceso import protegido
+
+    return [
+        h for h in hallazgos
+        if not any(protegido._fijado_a_mano(ficha, dato) for dato in DATOS_DE[h.comprobacion])
+    ]  # fmt: skip
 
 
 def sin_lo_protegido(
