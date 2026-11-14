@@ -12,7 +12,7 @@ from almacen.base import Almacen
 from exportacion.citas import huella_texto
 from modelo import coste, ficha, modelos
 from proceso import escalado, extraccion
-from recogida import control_fichas, visitas
+from recogida import control_fichas, entrada, visitas
 from tests import test_control_fichas as tcf
 from tests.ejemplos import VOCABULARIO_MODELOS as MODELOS_CONTROL
 from tests.test_extraccion import (
@@ -551,7 +551,12 @@ def test_un_par_viejo_que_esperaba_vuelve_en_la_recogida_sin_esperar_a_la_madrug
     assert almacen.controles("par:")[clave]["decision"] == "mismo"
 
 
-def test_un_par_critico_sin_tope_ni_reserva_espera_y_retiene_la_ficha_nueva() -> None:
+def test_un_par_critico_sin_tope_ni_reserva_espera_y_retiene_la_ficha_nueva(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # El par de Núremberg es el mismo suceso por la definición (mismo sitio y jornada) y el filtro
+    # lo uniría sin preguntar (entrada.unir_por_la_definicion); aquí se prueba la espera.
+    monkeypatch.setattr(entrada, "unir_por_la_definicion", lambda *a: None)
     almacen = _par_de_nuremberg_con_gasto(
         coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD
     )

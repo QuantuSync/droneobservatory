@@ -93,6 +93,17 @@ def publicar(
     publicado está vacía se llena antes con los ficheros de esa carpeta (la migración, una vez:
     exportacion/puerta.sembrar)."""
     directorio.mkdir(parents=True, exist_ok=True)
+    # El candado (exportacion/puerta.candado): antes de generar nada, cada suceso en una sola
+    # ficha. Si falla, la puerta sigue sin dejar entrar una ficha del mismo suceso que otra
+    # publicada (I8).
+    try:
+        hecho = puerta.candado(almacen, ahora, modelos(almacen))
+        registro.info(
+            "candado: %d uniones deshechas, %d fichas unidas a la publicada de su suceso, "
+            "%d sin poder unirse", len(hecho.deshechas), len(hecho.unidas), len(hecho.sin_unir),
+        )  # fmt: skip
+    except Exception:
+        registro.exception("candado sin pasar: la puerta para lo que sea del mismo suceso")
     incidentes, ataques = con_focos(
         almacen.incidentes(), almacen.ataques_ucrania(), almacen.focos_termicos()
     )

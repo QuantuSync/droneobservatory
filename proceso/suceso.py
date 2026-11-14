@@ -12,6 +12,8 @@ audita o comprueba fichas pregunta aquí:
   (el filtro de entrada, la medida, el repaso y la comparación de pares del control).
 - `conjunto` y `previas_del_sitio`: con qué fichas se compara una nueva, y con cuáles una
   noticia sobre un suceso anterior.
+- `del_mismo_suceso`: las fichas que la definición da por el mismo suceso que una (el candado de
+  la publicación, I8, y el filtro de entrada antes de preguntar).
 - `varios_dias`: la ficha que cuenta dos días que no son una noche (dos sucesos en una ficha).
 - `queda`, `destino_de` y `toma_el_tiempo`: qué ficha queda de una unión y de dónde sale su
   fecha.
@@ -27,10 +29,14 @@ Las reglas firmes, en su orden (la primera que habla, decide):
    dos puede estar mal y lo decide el experto.
 3. La nota con la que una autoridad cuenta una noche y sus alertas por zonas de esa noche, en
    el mismo país, son el mismo suceso, aunque el experto dijera otra cosa.
-4. Lo que el experto dio por distinto leyendo las fuentes de las dos no se vuelve a unir solo.
-5. Dos cierres del mismo sitio en noches distintas, o un cierre que las fuentes cuentan como
+4. La misma incursión del país (`misma_incursion`): drones que entran desde fuera en el mismo
+   país y la misma jornada, y una de las dos sin un sitio propio que la distinga, son el mismo
+   suceso, aunque el experto dijera otra cosa.
+5. Lo que el experto dio por distinto leyendo las fuentes de las dos no se vuelve a unir solo,
+   mientras las dos tengan la fecha con que lo decidió (`distintos_en`).
+6. Dos cierres del mismo sitio en noches distintas, o un cierre que las fuentes cuentan como
    repetido, son dos sucesos (`noches_del_cierre`).
-6. El mismo sitio y la misma jornada sin nada de lo anterior es el mismo suceso sin preguntar
+7. El mismo sitio y la misma jornada sin nada de lo anterior es el mismo suceso sin preguntar
    (la regla de fusión): con hora, inicios a menos de 6 horas; con día, el mismo día. Dos días
    seguidos sin hora pueden ser una noche o dos sucesos: decide el experto. Y la regla no une
    sola dos fichas que ya tienen su página en la web (proceso/incidentes.fusionar).
@@ -66,6 +72,7 @@ MISMO, DISTINTOS, EXPERTO, AJENAS = "mismo", "distintos", "experto", "ajenas"
 REGLA_REVISION = "revision"
 REGLA_PAISES = "paises_distintos"
 REGLA_RESUMEN = "resumen_de_la_misma_noche"
+REGLA_INCURSION = "misma_incursion_del_pais"
 REGLA_EXPERTO = "experto"
 REGLA_CIERRES = "cierres_de_noches_distintas"
 REGLA_SITIO_Y_JORNADA = "mismo_sitio_y_jornada"
@@ -572,24 +579,46 @@ def separados_por_revision(a: Documento, b: Documento) -> bool:
     )
 
 
-def distintos_en(decisiones: dict[str, Documento]) -> frozenset[frozenset[str]]:
+def inicios_del_par(a: Documento, b: Documento) -> dict[str, str]:
+    """{ficha: inicio} de las dos fichas de un par, tal como estaban al decidirlo."""
+    return {str(d["id"]): str(d["tiempo"]["inicio"]["valor"]) for d in (a, b)}
+
+
+def distintos_en(
+    decisiones: dict[str, Documento], inicio_de: Callable[[str], str | None] | None = None
+) -> frozenset[frozenset[str]]:
     """Los pares que el experto dio por sucesos distintos, de las decisiones del control
-    («par:<a>|<b>»): la decisión escalada, no la que da el plazo de un dudoso."""
-    return frozenset(
-        frozenset(clave.split(":", 1)[1].split("|"))
-        for clave, d in decisiones.items()
-        if clave.startswith("par:")
-        and d.get("decision") == "distinto"
-        and d.get("escalado")
-        and not d.get("plazo")
-    )
+    («par:<a>|<b>»): la decisión escalada, no la que da el plazo de un dudoso. Con `inicio_de`
+    (el inicio de ahora de cada ficha), no cuenta la decisión tomada con otra fecha de alguna de
+    las dos (`inicios`): el 13 de noviembre de 2026 el experto dio por distinta EODI-2026-00817
+    cuando aún tenía la fecha de publicación (el 13) y el filtro le puso después el día 11, el de
+    EODI-2026-00814; su «distinto» siguió valiendo."""
+    salida = set()
+    for clave, d in decisiones.items():
+        if not (
+            clave.startswith("par:")
+            and d.get("decision") == "distinto"
+            and d.get("escalado")
+            and not d.get("plazo")
+        ):
+            continue
+        inicios = d.get("inicios") or {}
+        if inicio_de is not None and any(inicio_de(i) != v for i, v in inicios.items()):
+            continue
+        salida.add(frozenset(clave.split(":", 1)[1].split("|")))
+    return frozenset(salida)
 
 
 def distintos_del_experto(almacen: "Almacen") -> frozenset[frozenset[str]]:
-    """Los pares que el experto dio por sucesos distintos en el control de las fichas: ninguna
-    unión automática los junta; si más tarde alguien quiere unirlos, queda como propuesta para
-    revisar."""
-    return distintos_en(almacen.controles("par:"))
+    """Los pares que el experto dio por sucesos distintos en el control de las fichas, con las
+    fechas que tienen ahora: ninguna unión automática los junta; si más tarde alguien quiere
+    unirlos, queda como propuesta para revisar."""
+
+    def inicio_de(id_: str) -> str | None:
+        ficha = almacen.incidente(id_)
+        return None if ficha is None else str(ficha["tiempo"]["inicio"]["valor"])
+
+    return distintos_en(almacen.controles("par:"), inicio_de)
 
 
 def autoridades_decididas(almacen: "Almacen", *ids: str) -> dict[str, dict[str, str]]:
@@ -836,6 +865,43 @@ def resumen_de_la_misma_noche(incidente: Documento, otra: Documento) -> str | No
     return None
 
 
+# --- La misma incursión del país --------------------------------------------------------------
+
+MOTIVO_INCURSION = (
+    "drones que entran desde fuera en el mismo país y en la misma jornada, y una de las dos sin "
+    "un sitio propio que la distinga: la misma incursión"
+)
+
+
+def sin_sitio_propio(documento: Documento) -> bool:
+    """La ficha no sitúa el suceso en ningún sitio del país: solo dice el país."""
+    return not con_punto(documento) or documento["lugar"].get("nivel") == "pais"
+
+
+def misma_incursion(a: Documento, b: Documento) -> bool:
+    """Las dos cuentan drones que entran desde fuera (`entra_de_fuera`) en el mismo país y en la
+    misma jornada (la estricta, la de unir sin preguntar), y al menos una no tiene un sitio
+    propio que la distinga de la otra; con hora en las dos, a menos de INICIOS_HORA.
+
+    La definición dice que el dron o la oleada que recorre un país en una noche es un suceso, y
+    que dos sucesos de la misma jornada y el mismo país se distinguen por el sitio o la hora que
+    dan sus fuentes: una ficha que solo dice el país no da nada que la distinga. El 13 de
+    noviembre de 2026 el experto dio por distinta de EODI-2026-00814 (Estonia, 11 de noviembre)
+    la entrada en Estonia de EODI-2026-00817, leyendo «la madrugada del miércoles 12» cuando el
+    miércoles era el 11; y EODI-2026-00818 contaba, como «last week», la noche del 10 al 11 en
+    Lituania que ya era EODI-2026-00792. Se publicaron las dos.
+
+    Si una ficha sin sitio casa así con varias de su país (varios drones en sitios distintos esa
+    jornada), no se sabe con cuál: quien llama lo resuelve (`del_mismo_suceso` da todas)."""
+    if pais(a) != pais(b) or not (entra_de_fuera(a) and entra_de_fuera(b)):
+        return False
+    if not (sin_sitio_propio(a) or sin_sitio_propio(b)):
+        return False
+    if con_hora(a) and con_hora(b) and abs(instante(a) - instante(b)) >= INICIOS_HORA:
+        return False
+    return misma_jornada(a, b, estricta=True)
+
+
 # --- El veredicto de dos fichas ---------------------------------------------------------------
 
 
@@ -905,6 +971,10 @@ def veredicto(
     de_la_noche = resumen_de_la_misma_noche(a, b)
     if de_la_noche is not None:
         return Veredicto(MISMO, REGLA_RESUMEN, de_la_noche)
+    if misma_incursion(a, b) and not cierres_de_noches_distintas(a, b):
+        # Va antes que lo que el experto dio por distinto: la definición manda sobre una lectura
+        # que no distingue nada que la ficha diga (EODI-2026-00817 y EODI-2026-00814).
+        return Veredicto(MISMO, REGLA_INCURSION, MOTIVO_INCURSION)
     if par in del_experto:
         return Veredicto(DISTINTOS, REGLA_EXPERTO, "el experto las dio por sucesos distintos")
     if pais(a) == pais(b):
@@ -1017,7 +1087,13 @@ def conjunto(
     for otra in activos:
         if otra["id"] == incidente["id"] or otra["lugar"]["pais"] not in validos:
             continue
-        if frozenset((str(incidente["id"]), str(otra["id"]))) in distintos:
+        if (
+            frozenset((str(incidente["id"]), str(otra["id"]))) in distintos
+            and veredicto(incidente, otra).relacion != MISMO
+        ):
+            # Lo que el experto dio por distinto sale de la lista, salvo que la definición diga
+            # que es el mismo suceso: entonces manda la definición y el filtro la ve
+            # (EODI-2026-00817 se publicó sin ver a EODI-2026-00814).
             continue
         momento = instante(otra)
         if not any(
@@ -1034,6 +1110,42 @@ def conjunto(
         return (0 if otra.get("tipo") == incidente.get("tipo") else 1, distancia, otra["id"])
 
     return sorted(elegidas, key=orden)[:MAX_CONJUNTO]
+
+
+# Para buscar el mismo suceso de una ficha: las de su país con el inicio a menos de estos días (la
+# ventana más ancha de un pasado sin día, «hace unos días» o «la semana pasada», cabe de sobra).
+DIAS_MISMO_SUCESO = 16
+
+
+def del_mismo_suceso(
+    ficha: Documento, otras: Iterable[Documento],
+    del_experto: frozenset[frozenset[str]] = frozenset(),
+    decididas: dict[str, dict[str, str]] | None = None,
+) -> list[tuple[Documento, Veredicto]]:  # fmt: skip
+    """Las fichas de `otras` (activas) que la definición da por el mismo suceso que `ficha`, con
+    su veredicto, primero las de número más bajo. Lo que pregunta el candado de la publicación
+    (I8: ninguna ficha se publica si hay otra publicada del mismo suceso) y el filtro de entrada
+    antes de preguntar al experto. Una revisión que las unió también cuenta, aunque sean de otro
+    país."""
+    decididas = decididas or {}
+    suyo = pais(ficha)
+    momento = instante(ficha)
+    margen = timedelta(days=DIAS_MISMO_SUCESO)
+    salida = []
+    for otra in otras:
+        if otra["id"] == ficha["id"] or not _activa(otra):
+            continue
+        par = frozenset((str(ficha["id"]), str(otra["id"])))
+        a_mano = any(par <= grupo for grupo in grupos_unidos_a_mano())
+        if not a_mano and (pais(otra) != suyo or abs(instante(otra) - momento) > margen):
+            continue
+        dicho = veredicto(
+            ficha, otra, del_experto, decididas.get(str(ficha["id"])),
+            decididas.get(str(otra["id"])),
+        )  # fmt: skip
+        if dicho.relacion == MISMO:
+            salida.append((otra, dicho))
+    return sorted(salida, key=lambda par: orden_registro(str(par[0]["id"])))
 
 
 # --- La noticia sobre un suceso anterior ------------------------------------------------------

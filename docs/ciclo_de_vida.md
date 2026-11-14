@@ -140,11 +140,18 @@ en la CI (sobre la base de prueba y sobre los casos reales de `tests/`).
 | I3 | ningún dato revisado a mano distinto de su revisión | queda la última versión buena |
 | I4 | ninguna versión nueva igual a la anterior salvo la fecha | se cuenta (no se puede publicar mal por esto) |
 | I5 | ningún aviso con datos distintos de lo publicado | el aviso no sale |
-| I6 | ninguna unión vigente entre fichas que la definición de suceso da por distintos ([`definicion_suceso.md`](definicion_suceso.md)) | se cuenta y se avisa: `revisar_fusiones` tenía que haberla deshecho |
+| I6 | ninguna unión vigente entre fichas que la definición de suceso da por distintos ([`definicion_suceso.md`](definicion_suceso.md)) | el candado de la publicación la deshace (cada suceso vuelve a su ficha); si no puede, se cuenta y se avisa |
 | I7 | ninguna dirección publicada lleva a una ficha de otro suceso: la de una ficha unida lleva a una ficha de su unión vigente, que no es de otro país (con una autoridad del suyo) ni la separó de ella una revisión | se cuenta y se avisa: la puerta tenía que haber puesto la fila al día |
+| I8 | ningún suceso en dos fichas: ninguna ficha se publica si hay otra publicada del mismo suceso según la definición (`suceso.del_mismo_suceso`) | el candado la une a la publicada, con su cita (su dirección redirige a la que queda); si no puede unirse sola (varias candidatas, el cerrojo), la puerta no la publica y se avisa |
 
 Cada rotura queda en el cursor `invariantes` y llega como aviso privado, una vez por ficha e
 invariante.
+
+**El candado** (`exportacion/puerta.candado`, desde el 14 de noviembre de 2026) corre en cada
+publicación antes de generar nada: deshace las uniones que I6 aún ve y une cada ficha activa a la
+publicada de su mismo suceso por el camino de las uniones del control (queda la publicada; si lo
+están las dos, la más antigua). Después, la puerta comprueba lo mismo por su cuenta: una ficha
+sin publicar del mismo suceso que una publicada no entra.
 
 El inicio que dice un aviso es el de la entrada publicada: la exportación lo pone de acuerdo con
 el primer aviso (`proceso/coherencia.py`) y puede no ser el de la base. I5 compara después de
@@ -164,6 +171,7 @@ ese mismo paso.
 | una ficha retirada volvía al reextraerse | retirada firme |
 | dirección de una ficha unida a otra no publicada, o retirada, en 404 | estados de `publicado` |
 | dirección de una ficha que cambió de unión y seguía llevando a la ficha anterior, de otro suceso (00218, 00522) | las filas unidas se ponen al día con su unión vigente; I7 |
+| el mismo suceso publicado dos veces porque el experto lo dio por distinto (00817 y 00814) o por una fecha mal leída (00818 y 00792) | la definición manda sobre el experto (la misma incursión del país); el candado y I8 |
 
 ## Cómo se prueba
 

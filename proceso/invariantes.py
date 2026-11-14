@@ -11,6 +11,10 @@ corren en la puerta de la publicación (cada recogida), en el ensayo y en la CI.
   (proceso/suceso.py): lo que `incidentes.revisar_fusiones` tenía que haber deshecho.
 - I7: ninguna dirección publicada lleva a una ficha de otro suceso: la de una ficha unida lleva a
   una ficha de su unión vigente, y esa no es de otro país ni la separó de ella una revisión.
+- I8: ningún suceso en dos fichas: ninguna ficha publicada al lado de otra publicada que la
+  definición da por el mismo suceso (proceso/suceso.del_mismo_suceso), y ninguna ficha con el
+  pase del control parada por el candado de la publicación porque no se pudo unir a la suya
+  (exportacion/puerta.candado).
 
 `de_ficha` es lo que la puerta mira de cada versión antes de dejarla entrar (I3); `comprobar` las
 mira todas sobre la base y lo publicado, sin escribir nada. `avisar` manda por el tema privado,
@@ -27,8 +31,8 @@ from esquema import Documento
 
 registro = logging.getLogger(__name__)
 
-I1, I2, I3, I4, I5, I6, I7 = "I1", "I2", "I3", "I4", "I5", "I6", "I7"
-TODAS = (I1, I2, I3, I4, I5, I6, I7)
+I1, I2, I3, I4, I5, I6, I7, I8 = "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8"
+TODAS = (I1, I2, I3, I4, I5, I6, I7, I8)
 SIN_COMPROBAR = "invariantes"
 CURSOR = "invariantes"
 TITULO_AVISO = "EODI · Invariante rota"
@@ -227,6 +231,36 @@ def direcciones_a_otro_suceso(
     return rotas
 
 
+def mismo_suceso_en_dos_fichas(
+    almacen: Any, filas: dict[str, Documento], vistos: frozenset[str] | set[str]
+) -> list[str]:
+    """I8: «una=otra (regla)» de cada par de fichas publicadas que la definición da por el mismo
+    suceso, y «ficha parada: el mismo suceso que otra» de las fichas activas que tienen el pase
+    del control y no se publican porque hay una publicada de su suceso y no se pudieron unir
+    (exportacion/puerta.candado). EODI-2026-00817 y EODI-2026-00814 (Estonia, 11 de noviembre
+    de 2026) estuvieron publicadas a la vez."""
+    from exportacion import puerta
+    from proceso import incidentes, suceso
+
+    publicadas = puerta.publicadas_activas(almacen, filas)
+    del_experto = suceso.distintos_del_experto(almacen)
+    decididas = suceso.autoridades_decididas(almacen)
+    rotas: set[str] = set()
+    for id_, ficha in sorted(publicadas.items()):
+        for otra, dicho in puerta.mismo_suceso_publicado(ficha, publicadas, del_experto, decididas):
+            uno, dos = sorted((id_, str(otra["id"])), key=suceso.orden_registro)
+            rotas.add(f"{uno}={dos} ({dicho.regla})")
+    for ficha in almacen.incidentes():
+        id_ = str(ficha["id"])
+        if id_ in publicadas or id_ not in vistos or not incidentes.activo(ficha):
+            continue
+        mismos = puerta.mismo_suceso_publicado(ficha, publicadas, del_experto, decididas)
+        if mismos:
+            otras = ", ".join(str(o["id"]) for o, _ in mismos)
+            rotas.add(f"{id_} parada: el mismo suceso que {otras}")
+    return sorted(rotas)
+
+
 def datos_del_aviso(documento: Documento) -> dict[str, Any]:
     """Lo que un aviso cuenta de una ficha (recogida/avisos.mensaje), de su documento interno o
     de su entrada publicada: el titular, el estado, el tipo, el país y el inicio."""
@@ -288,6 +322,7 @@ def comprobar(almacen: Any, ahora: datetime) -> dict[str, list[str]]:
         ),
         I6: uniones_de_sucesos_distintos(almacen),
         I7: direcciones_a_otro_suceso(almacen, filas, base),
+        I8: mismo_suceso_en_dos_fichas(almacen, filas, pase.vistos),
     }
 
 
@@ -304,6 +339,7 @@ def texto_aviso(invariante: str, que: str) -> str:
         I5: "aviso con datos distintos de lo publicado",
         I6: "unión de dos fichas que la definición da por sucesos distintos",
         I7: "dirección publicada que lleva a una ficha de otro suceso",
+        I8: "el mismo suceso en dos fichas",
     }
     return f"{invariante} ({nombres.get(invariante, invariante)}): {que}"
 

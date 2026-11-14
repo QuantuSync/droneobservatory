@@ -18,7 +18,7 @@ from modelo import coste
 from proceso import control_fichas as reglas
 from proceso import lugar_preciso, presencia, suceso
 from proceso.noticias import nomenclator
-from recogida import avisos, control_fichas, revisados, vigilancia, visitas
+from recogida import avisos, control_fichas, entrada, revisados, vigilancia, visitas
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
 
@@ -564,7 +564,10 @@ def test_lo_distinto_no_se_une() -> None:
     assert griega is not None and "fusionado_en" not in griega
 
 
-def test_lo_nuevo_sin_decision_no_sale_por_tiempo() -> None:
+def test_lo_nuevo_sin_decision_no_sale_por_tiempo(monkeypatch: pytest.MonkeyPatch) -> None:
+    # El par de Núremberg es el mismo suceso por la definición (mismo sitio y jornada) y el filtro
+    # lo uniría sin preguntar (entrada.unir_por_la_definicion); aquí se prueba la espera.
+    monkeypatch.setattr(entrada, "unir_por_la_definicion", lambda *a: None)
     # Hasta el 28 de octubre de 2026 salía a las 6 horas con lo que hubiera; ahora, sin decisión
     # del filtro de entrada (aquí sin servicio), no sale nunca.
     almacen = _base(_nuremberg_alemana())

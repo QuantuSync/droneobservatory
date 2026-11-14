@@ -164,6 +164,29 @@ def _sin_descargas(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(control_fichas, "descargar", lambda enlaces, plazo: {})
 
 
+_UNIR_POR_LA_DEFINICION = entrada.unir_por_la_definicion
+
+
+@pytest.fixture(autouse=True)
+def _sin_unir_por_la_definicion(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Las fichas de estos casos llevan números reales y algunas las une una revisión del
+    fichero real (configuracion/incidentes_revisados.json): con ella, la definición las une antes
+    de preguntar al experto (`entrada.unir_por_la_definicion`). Aquí se prueba lo que hace el
+    filtro con la respuesta del experto; ese paso se prueba aparte."""
+    monkeypatch.setattr(entrada, "unir_por_la_definicion", lambda *a: None)
+
+
+def test_una_revision_que_las_une_manda_sin_preguntar(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(entrada, "unir_por_la_definicion", _UNIR_POR_LA_DEFINICION)
+    almacen = _base(BUQUE_512, BUQUE_689)
+    cliente = Cliente([_respuesta()])
+    ctx = _contexto(almacen, cliente)
+    assert entrada.filtrar(ctx, {"EODI-2026-00512"}) == 1
+    decision = ctx.nuevas[entrada.clave("EODI-2026-00689")]
+    assert decision["decision"] == entrada.UNIDA and decision["regla"] == suceso.REGLA_REVISION
+    assert cliente.pedidas == []
+
+
 def _base(*fichas: dict[str, Any]) -> Almacen:
     almacen = Almacen.abrir()
     for ficha in fichas:

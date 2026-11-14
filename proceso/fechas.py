@@ -619,8 +619,15 @@ def _pasados() -> tuple[tuple[str, str], ...]:
 def pasado_de(frase: str, publicacion: datetime, zona_medio: ZoneInfo
               ) -> tuple[date, date, str] | None:  # fmt: skip
     """(desde, hasta, expresión) si la frase sitúa el suceso en un pasado sin día respecto a la
-    publicación: «la semana pasada», la semana natural anterior (con el domingo de antes);
-    «hace unos días», de DIAS_PASADO días antes a la víspera. None si no."""
+    publicación: «la semana pasada», desde la semana natural anterior (con el domingo de antes)
+    hasta la víspera de la nota; «hace unos días», de DIAS_PASADO días antes a la víspera. None
+    si no.
+
+    «La semana pasada» llega hasta la víspera y no se queda en el domingo: la prensa la usa
+    también por «estos días». La nota de lrt.lt del viernes 13 de noviembre de 2026 («Last week,
+    NATO fighter jets tried twice to shoot down a stray drone») contaba la noche del martes 10 al
+    miércoles 11 (EODI-2026-00792); con la semana natural la ficha salió fechada el 8
+    (EODI-2026-00818) y no casó con su suceso."""
     normal = _normal(frase)
     hoy = publicacion.astimezone(zona_medio).date()
     for expresion, clase in _pasados():
@@ -628,7 +635,8 @@ def pasado_de(frase: str, publicacion: datetime, zona_medio: ZoneInfo
             continue
         if clase == "semana":
             lunes = hoy - timedelta(days=hoy.weekday() + DIAS_SEMANA)
-            return lunes - timedelta(days=1), lunes + timedelta(days=DIAS_SEMANA - 1), expresion
+            hasta = max(hoy - timedelta(days=1), lunes + timedelta(days=DIAS_SEMANA - 1))
+            return lunes - timedelta(days=1), hasta, expresion
         return hoy - timedelta(days=DIAS_PASADO), hoy - timedelta(days=1), expresion
     return None
 

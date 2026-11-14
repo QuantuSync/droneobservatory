@@ -1,0 +1,1448 @@
+{
+ "descripcion": "Las fichas reales de EODI-2026-00817 y EODI-2026-00818 (el mismo suceso publicado dos veces el 13 de noviembre de 2026) y las de su suceso, de la base de producción del 14 de noviembre de 2026 a las 09:50 UTC, recortadas a lo que mira proceso/suceso.py, con las decisiones del control de sus pares y del filtro de entrada. fuentes_en_la_base: cuántas tenía.",
+ "fichas": {
+  "EODI-2026-00814": {
+   "id": "EODI-2026-00814",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Possible drones enter Estonian airspace, prompting NATO jets to scramble",
+    "es": "Posibles drones entran en el espacio aéreo de Estonia y activan cazas de la OTAN"
+   },
+   "lugar": {
+    "nivel": "pais",
+    "pais": "EE",
+    "suceso": "Estónia"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-11-11T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-9711a285c6a1abff",
+     "motivo": "«quarta feira» en una nota publicada el 2026-11-11 12:30 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "episodio": "EODI-EP-2026-0011",
+   "relacionados": [
+    {
+     "id": "EODI-2026-00777",
+     "nota": {
+      "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode.",
+      "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio."
+     },
+     "separado_de": "EODI-2026-00801"
+    },
+    {
+     "id": "EODI-2026-00792",
+     "nota": {
+      "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode.",
+      "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio."
+     },
+     "separado_de": "EODI-2026-00801"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-11T12:30Z"
+      },
+      "fuente_id": "gdelt-9711a285c6a1abff"
+     }
+    ]
+   },
+   "presencia_dron": "no_confirmada",
+   "drones": {
+    "numero": "desconocido"
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-9711a285c6a1abff",
+     "medio": "executivedigest.sapo.pt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:30Z"
+     },
+     "frase_origen": "Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://executivedigest.sapo.pt/drones-entram-no-espaco-aereo-dos-tres-paises-balticos-e-obrigam-a-ativar-cacas-da-nato",
+     "fiabilidad": "C",
+     "idioma": "pt"
+    },
+    {
+     "id": "gdelt-a5af0683e0ec1c30",
+     "medio": "portalb.mk",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:00Z"
+     },
+     "frase_origen": "dronë të paidentifikuar që kishin hyrë nga Rusia ose Bjellorusia fqinje",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://portalb.mk/nato-aktivizoi-avionet-luftarake-pasi-dronet-hyne-ne-hapesiren-ajrore-te-vendeve-baltike",
+     "fiabilidad": "C",
+     "idioma": "sq"
+    }
+   ],
+   "fuentes_en_la_base": 2,
+   "control": {
+    "alta": {
+     "precision": "minuto",
+     "valor": "2026-11-12T10:17Z"
+    }
+   }
+  },
+  "EODI-2026-00817": {
+   "id": "EODI-2026-00817",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Possible drone briefly enters Estonian airspace after Ukrainian strike in the Gulf of Finland",
+    "es": "Un posible dron entra brevemente en el espacio aéreo de Estonia tras un ataque ucraniano en el golfo de Finlandia"
+   },
+   "lugar": {
+    "nivel": "pais",
+    "pais": "EE",
+    "suceso": "Estonia"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-11-11T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-934179ff51da2d24",
+     "motivo": "filtro de entrada: «uzbrukums noticis trešdienas agrās rīta stundās»",
+     "tipo": "explicita"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "episodio": "EODI-EP-2026-0011",
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-13T08:15Z"
+      },
+      "fuente_id": "gdelt-e15eaf5ead166967"
+     }
+    ]
+   },
+   "presencia_dron": "no_confirmada",
+   "drones": {
+    "numero": "desconocido"
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-e15eaf5ead166967",
+     "medio": "adevarul.ro",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-13T08:15Z"
+     },
+     "frase_origen": "un aparat fără pilot a pătruns pentru scurt timp în spațiul aerian al Estoniei",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://adevarul.ro/stiri-externe/europa/tensiune-extrema-in-marea-baltica-ucraina-a-lovit-2571166.html",
+     "fiabilidad": "C",
+     "idioma": "ro"
+    },
+    {
+     "id": "gdelt-934179ff51da2d24",
+     "medio": "la.lv",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-13T11:15Z"
+     },
+     "frase_origen": "Ukrainas drons trāpa Krievijas karakuģim Baltijas jūrā; Igaunija skaidro, kāpēc NATO to nenotrieca",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://la.lv/ukrainas-drons-trapa-krievijas-karakugim-baltijas-jura-igaunija-skaidro-kapec-nato-to-nenotrieca",
+     "fiabilidad": "C",
+     "idioma": "lv"
+    }
+   ],
+   "fuentes_en_la_base": 2,
+   "control": {
+    "alta": {
+     "precision": "minuto",
+     "valor": "2026-11-13T12:17Z"
+    }
+   }
+  },
+  "EODI-2026-00792": {
+   "id": "EODI-2026-00792",
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drones over Lithuania trigger air alerts and NATO jets scrambled",
+    "es": "Drones sobre Lituania activan alertas aéreas y salen cazas de la OTAN"
+   },
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LT",
+    "suceso": "Lituania"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-11-10T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-501739ac1835d441",
+     "motivo": "«antradien treciadien» en una nota publicada el 2026-11-11 20:05 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "rastreo"
+    ]
+   },
+   "episodio": "EODI-EP-2026-0011",
+   "relacionados": [
+    {
+     "id": "EODI-2026-00777",
+     "nota": {
+      "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode.",
+      "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio."
+     },
+     "separado_de": "EODI-2026-00801"
+    },
+    {
+     "id": "EODI-2026-00814",
+     "nota": {
+      "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode.",
+      "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio."
+     },
+     "separado_de": "EODI-2026-00801"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "si"
+    }
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-11T10:15Z"
+      },
+      "fuente_id": "gdelt-0de6d1c1046075ce"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-11T10:15Z"
+      },
+      "fuente_id": "gdelt-0de6d1c1046075ce-declaracion-1"
+     }
+    ]
+   },
+   "presencia_dron": "confirmada",
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-2b874e0ad864a6be",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-10T20:56Z"
+     },
+     "frase_origen": "Naktį iš antradienio į trečiadienį šalies gyventojus vienas po kito pasiekė skirtingi oro pavojaus signalai dėl galimo drono Lietuvos teritorijoje.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3007328/oro-pavojus-atsaukiamas-visoje-lietuvoje",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "revisada-b81937798794ffe1-declaracion-1",
+     "medio": "Nacionalinis krizių valdymo centras (declaración oficial citada en lrt.lt)",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "The initial airport closure took place in Vilnius, followed by Kaunas. As the situation escalated and the drones entered, the airspace was closed again",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-6709a3651452bd4b",
+     "medio": "express.co.uk",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T02:30Z"
+     },
+     "frase_origen": "Residents in parts of Latvia and Lithuania have been told to seek safety after unidentified drones entered the countries' airspaces.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://express.co.uk/news/world/2265147/latvia-lithuania-issue-alert-drones",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-6709a3651452bd4b-declaracion-1",
+     "medio": "National Crisis Management Centre (declaración oficial citada en express.co.uk)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T02:30Z"
+     },
+     "frase_origen": "Lithuania's National Crisis Management Centre's warning included Kaunas, the ⁠country's second city and home to around 300,000 people.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://express.co.uk/news/world/2265147/latvia-lithuania-issue-alert-drones",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-a5a8629592bdac75",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T05:13Z"
+     },
+     "frase_origen": "Anot jo, planas „Skydas“ yra įvestas Eiminiškių kaime.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111017/birzieciai-apie-naktini-drono-incidenta-mate-ir-fiksavo-blyksni-girdejo-stipru-garsa",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-a5a8629592bdac75-declaracion-1",
+     "medio": "Policijos departamentas (declaración oficial citada en lrt.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T05:13Z"
+     },
+     "frase_origen": "Naktį, 3.55 val. įvestas planas „Skydas“.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111017/birzieciai-apie-naktini-drono-incidenta-mate-ir-fiksavo-blyksni-girdejo-stipru-garsa",
+     "fiabilidad": "B",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-4dd9e293ece15fd4",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T05:31Z"
+     },
+     "frase_origen": "Drone incursions prompted yellow and red air alerts across large parts of Lithuania overnight",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-4dd9e293ece15fd4-declaracion-1",
+     "medio": "Lithuanian officials (declaración oficial citada en lrt.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T05:31Z"
+     },
+     "frase_origen": "but the drones were not shot down and flew into Latvian airspace, Lithuanian officials said Wednesday",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-dcb2e8c3fb805cfb",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T07:45Z"
+     },
+     "frase_origen": "Drone incursions prompted yellow and red air alerts across large parts of Lithuania overnight, with NATO fighter jets scrambled on both occasions",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-dcb2e8c3fb805cfb-declaracion-1",
+     "medio": "Lithuanian officials (declaración oficial citada en lrt.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T07:45Z"
+     },
+     "frase_origen": "the drones were not shot down and flew into Latvian airspace, Lithuanian officials said Wednesday",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://lrt.lt/en/news-in-english/19/3111025/drone-incursions-trigger-air-alerts-across-lithuania-nato-jets-scrambled",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-b93235a7dbd51aa3",
+     "medio": "15min.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T08:15Z"
+     },
+     "frase_origen": "prie Biržų rastos NATO naikintuvo paleistos raketos nuolaužos",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://15min.lt/naujiena/aktualu/lietuva/premjeras-nepavykus-numusti-drono-prie-birzu-rastos-nato-naikintuvo-paleistos-raketos-nuolauzos-56-2803320",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-b93235a7dbd51aa3-declaracion-1",
+     "medio": "Gobierno de Lituania (declaración oficial citada en 15min.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T08:15Z"
+     },
+     "frase_origen": "Premjeras: nepavykus numušti drono, prie Biržų rastos NATO naikintuvo paleistos raketos nuolaužos.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://15min.lt/naujiena/aktualu/lietuva/premjeras-nepavykus-numusti-drono-prie-birzu-rastos-nato-naikintuvo-paleistos-raketos-nuolauzos-56-2803320",
+     "fiabilidad": "B",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-bd3c8da8168c1242",
+     "medio": "spotandweb.it",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T08:15Z"
+     },
+     "frase_origen": "Incursioni di droni hanno fatto scattare allarmi aerei gialli e rossi in ampie zone della Lituania durante la notte",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://spotandweb.it/news/933539/incursioni-di-droni-in-lituania-scatta-lallarme-decollano-i-jet-della-nato.html",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-bd3c8da8168c1242-declaracion-1",
+     "medio": "Autoridades lituanas (declaración oficial citada en spotandweb.it)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T08:15Z"
+     },
+     "frase_origen": "Ma i droni non sono stati abbattuti e sono poi usciti dallo spazio aereo lettone, hanno dichiarato le autorità lituane.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://spotandweb.it/news/933539/incursioni-di-droni-in-lituania-scatta-lallarme-decollano-i-jet-della-nato.html",
+     "fiabilidad": "B",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-fcede77ae70a2b69",
+     "medio": "adnkronos.com",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T08:30Z"
+     },
+     "frase_origen": "Allarme rosso incursione droni in Lituania, decollano due volte i jet Nato: cosa succede",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://adnkronos.com/internazionale/esteri/droni-lituania-nato_2eDVtdl3COzxYZ0GdcUwb4",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-51644e5edf79832e",
+     "medio": "ilfattonisseno.it",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:00Z"
+     },
+     "frase_origen": "Incursioni di droni hanno fatto scattare allarmi aerei gialli e rossi in ampie zone della Lituania",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://ilfattonisseno.it/2026/11/incursioni-di-droni-in-lituania-scatta-lallarme-decollano-i-jet-della-nato",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-51644e5edf79832e-declaracion-1",
+     "medio": "autorità lituane (declaración oficial citada en ilfattonisseno.it)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:00Z"
+     },
+     "frase_origen": "Ma i droni non sono stati abbattuti e sono poi usciti dallo spazio aereo lettone, hanno dichiarato le autorità lituane.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://ilfattonisseno.it/2026/11/incursioni-di-droni-in-lituania-scatta-lallarme-decollano-i-jet-della-nato",
+     "fiabilidad": "B",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-6e30bd9d2fec8833",
+     "medio": "news.az",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:00Z"
+     },
+     "frase_origen": "At least one drone entered Lithuanian airspace before flying into Latvia, officials said Wednesday, public broadcaster LRT reports.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://news.az/news/nato-jets-scrambled-after-suspected-drone-incursions-over-lithuania",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-6e30bd9d2fec8833-declaracion-1",
+     "medio": "Lithuanian officials (declaración oficial citada en news.az)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:00Z"
+     },
+     "frase_origen": "At least one drone entered Lithuanian airspace before flying into Latvia, officials said Wednesday, public broadcaster LRT reports.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://news.az/news/nato-jets-scrambled-after-suspected-drone-incursions-over-lithuania",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-c7fd2b3557134614",
+     "medio": "siol.net",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:00Z"
+     },
+     "frase_origen": "Potem ko so v zračni prostor Latvije in Litve vstopili droni neznanega izvora, so oblasti delu prebivalcev odredile evakuacijo",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://siol.net/novice/svet/v-zracni-prostor-nata-vstopili-droni-v-dveh-clanicah-prizgali-alarm-705998",
+     "fiabilidad": "C",
+     "idioma": "sl"
+    },
+    {
+     "id": "gdelt-403799a4b00a73e0",
+     "medio": "respublika.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:15Z"
+     },
+     "frase_origen": "vienas dronas iš Baltarusijos pateko į Lietuvos oro erdvę, perskrido dalį šalies ir ties Pasvaliu ją paliko",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/nakti-i-lietuva-is-baltarusijos-iskrido-dronas-jo-paieskai-pasitelkti-nato-naikintuvai",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-403799a4b00a73e0-declaracion-1",
+     "medio": "Nacionalinio krizių valdymo centro (NKVC) (declaración oficial citada en respublika.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:15Z"
+     },
+     "frase_origen": "vienas dronas iš Baltarusijos pateko į Lietuvos oro erdvę, perskrido dalį šalies ir ties Pasvaliu ją paliko, pranešė Nacionalinio krizių valdymo centro (NKVC) vadovas Vilmantas",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/nakti-i-lietuva-is-baltarusijos-iskrido-dronas-jo-paieskai-pasitelkti-nato-naikintuvai",
+     "fiabilidad": "B",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-7e064ead2d3f8877",
+     "medio": "aa.com.tr",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:15Z"
+     },
+     "frase_origen": "NATO fighter jets were scrambled twice overnight after suspected drone incursions triggered air alerts across large parts of Lithuania",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://aa.com.tr/en/europe/nato-jets-scrambled-after-drone-incursions-trigger-air-alerts-in-lithuania/4119828",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-4edbc891c0bae6a5",
+     "medio": "viveresanbenedetto.it",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:45Z"
+     },
+     "frase_origen": "Incursioni di droni hanno fatto scattare allarmi aerei gialli e rossi in ampie zone della Lituania",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://viveresanbenedetto.it/altrigiornali/14/206025-2026",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-4edbc891c0bae6a5-declaracion-1",
+     "medio": "autorità lituane (declaración oficial citada en viveresanbenedetto.it)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T09:45Z"
+     },
+     "frase_origen": "Ma i droni non sono stati abbattuti e sono poi usciti dallo spazio aereo lettone, hanno dichiarato le autorità lituane.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://viveresanbenedetto.it/altrigiornali/14/206025-2026",
+     "fiabilidad": "B",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-0de6d1c1046075ce",
+     "medio": "bursa.ro",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T10:15Z"
+     },
+     "frase_origen": "Incursiunile cu drone au declanşat alerte aeriene galbene şi roşii în mare parte din Lituania",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://bursa.ro/lituania-incursiuni-cu-drone-au-declansat-alerte-aeriene-iar-avioanele-nato-au-fost-ridicate-de-la-sol-86100164",
+     "fiabilidad": "C",
+     "idioma": "ro"
+    },
+    {
+     "id": "gdelt-0de6d1c1046075ce-declaracion-1",
+     "medio": "Oficialii lituanieni (según LRT) (declaración oficial citada en bursa.ro)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T10:15Z"
+     },
+     "frase_origen": "dronele nu au fost doborâte şi au zburat în spaţiul aerian leton, au declarat miercuri oficialii lituanieni",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://bursa.ro/lituania-incursiuni-cu-drone-au-declansat-alerte-aeriene-iar-avioanele-nato-au-fost-ridicate-de-la-sol-86100164",
+     "fiabilidad": "B",
+     "idioma": "ro"
+    },
+    {
+     "id": "gdelt-0775f2758995e5f3",
+     "medio": "zazoom.it",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:00Z"
+     },
+     "frase_origen": "Droni nei cieli dei Paesi Baltici scatta l' allarme | i caccia Nato tentano di abbatterli",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://zazoom.it/2026-11-11/droni-nei-cieli-dei-paesi-baltici-scatta-lallarme-i-caccia-nato-tentano-di-abbatterli/19915045",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-973da2459d322538",
+     "medio": "novinky.cz",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:00Z"
+     },
+     "frase_origen": "Stíhačky NATO se dvakrát pokusily sestřelit dron nad Litvou, selhaly",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://novinky.cz/clanek/valka-na-ukrajine-stihacky-nato-se-dvakrat-pokusily-sestrelit-dron-nad-litvou-selhaly-40608054",
+     "fiabilidad": "C",
+     "idioma": "cs"
+    },
+    {
+     "id": "gdelt-9711a285c6a1abff",
+     "medio": "executivedigest.sapo.pt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:30Z"
+     },
+     "frase_origen": "Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://executivedigest.sapo.pt/drones-entram-no-espaco-aereo-dos-tres-paises-balticos-e-obrigam-a-ativar-cacas-da-nato",
+     "fiabilidad": "C",
+     "idioma": "pt"
+    },
+    {
+     "id": "gdelt-01b1f7a383fa92ce",
+     "medio": "delfi.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:45Z"
+     },
+     "frase_origen": "Šiąnakt dronas perskrido Lietuvą, Latviją ir pasiekė Estiją.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://delfi.lt/news/ringas/politics/dainius-gaizauskas-vienas-dronas-trys-nato-valstybes-ir-ne-viena-jo-nenumuse-120332501",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-817ba95903187b81",
+     "medio": "euronews.com",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:45Z"
+     },
+     "frase_origen": "Des avions de chasse de l'OTAN ont tenté à deux reprises, sans succès, d'abattre un drone au-dessus du nord de la Lituanie durant la nuit",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://fr.euronews.com/2026/11/11/otan-des-avions-chasseurs-echouent-a-abattre-un-drone-en-lituanie-alerte-dans-les-pays-bal",
+     "fiabilidad": "C",
+     "idioma": "fr"
+    },
+    {
+     "id": "gdelt-b55dc075239a5bfa",
+     "medio": "euronews.com",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:45Z"
+     },
+     "frase_origen": "Lituânia: caças da NATO falham abate de drone que sobrevoa Estados Bálticos",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://pt.euronews.com/2026/11/11/lituania-cacas-da-nato-falham-abate-de-drone-que-sobrevoa-estados-balticos",
+     "fiabilidad": "C",
+     "idioma": "pt"
+    },
+    {
+     "id": "gdelt-dce8eff7eb6ccdd8",
+     "medio": "diariosur.es",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:30Z"
+     },
+     "frase_origen": "Letonia y Lituania han activado sucesivas alertas de seguridad este miércoles de madrugada",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://diariosur.es/internacional/europa/veian-destellos-cielo-escuchabamos-rugir-cazas-otan-20261111134549-ntrc.html",
+     "fiabilidad": "C",
+     "idioma": "es"
+    },
+    {
+     "id": "gdelt-b60549e7e27d7617",
+     "medio": "zazoom.it",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:00Z"
+     },
+     "frase_origen": "Droni nei cieli della Nato allarme nei Paesi baltici | caccia alleati tentano di abbattere un velivolo",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://zazoom.it/2026-11-11/droni-nei-cieli-della-nato-allarme-nei-paesi-baltici-caccia-alleati-tentano-di-abbattere-un-velivolo/19915422",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-9c97ce4f132c30b5",
+     "medio": "strettoweb.com",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:15Z"
+     },
+     "frase_origen": "Allarme rosso in Lituania, droni violano lo spazio aereo NATO: caccia tentano di abbatterli, paura nei Paesi Baltici",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://strettoweb.com/2026/11/allarme-rosso-in-lituania-droni-violano-lo-spazio-aereo-nato-caccia-tentano-di-abbatterli-paura-nei-paesi-baltici/2176053",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-186a26bba33c673e",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:20Z"
+     },
+     "frase_origen": "Naktį į Lietuvos erdvę įskridusį droną NATO oro gynybos misijos naikintuvai bandė numušti du kartus",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111371/sodybos-kameros-vaizdo-irase-galima-drono-persekiotos-raketos-sprogimo-akimirka",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-186a26bba33c673e-declaracion-2",
+     "medio": "Lietuvos kariuomenė (declaración oficial citada en lrt.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:20Z"
+     },
+     "frase_origen": "Pasak kariuomenės, Lietuvos oro erdvę kirtusio drono iš pradžių nebuvo galima naikinti, nes jis skrido virš urbanizuotos teritorijos.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111371/sodybos-kameros-vaizdo-irase-galima-drono-persekiotos-raketos-sprogimo-akimirka",
+     "fiabilidad": "B",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-fe2f63c813f9e52c",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:20Z"
+     },
+     "frase_origen": "Sodybos kameros vaizdo įraše – galima droną persekiojusios raketos sprogimo akimirka",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111371/sodybos-kameros-vaizdo-irase-galima-drona-persekiojusios-raketos-sprogimo-akimirka",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-7dc40ef4f040096a",
+     "medio": "onalert.gr",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T15:15Z"
+     },
+     "frase_origen": "το οποίο παραβίασε τον εναέριο χώρο της Λιθουανίας προερχόμενο από τη Λευκορωσία",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://onalert.gr/kosmos/lithouania-maxitika-tou-nato-apetyxan-dyo-fores-na-katarripsoun-drone-apo-ti-leykorosia/832907",
+     "fiabilidad": "C",
+     "idioma": "el"
+    },
+    {
+     "id": "gdelt-7dc40ef4f040096a-declaracion-1",
+     "medio": "Giedrius Premeneckas, jefe del Estado Mayor de Defensa de Lituania (declaración oficial citada en onalert.gr)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T15:15Z"
+     },
+     "frase_origen": "Την είδηση μετέδωσε το λιθουανικό Delfi, επικαλούμενο ενημέρωση από τον Υποναύαρχο Giedrius Premeneckas, Αρχηγό του Επιτελείου Άμυνας των λιθουανικών Ενόπλων Δυνάμεων.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://onalert.gr/kosmos/lithouania-maxitika-tou-nato-apetyxan-dyo-fores-na-katarripsoun-drone-apo-ti-leykorosia/832907",
+     "fiabilidad": "B",
+     "idioma": "el"
+    },
+    {
+     "id": "gdelt-59358bc1b6725ff5",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T15:50Z"
+     },
+     "frase_origen": "Baltijos šalių oro erdvę saugantys naikintuvai į Lietuvą įskridusį droną persekiojo nuo Kauno.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111357/dali-lebeniskieciu-is-lovu-isverte-drono-gaudynes-apsirengem-ziurejom-kas-cia-darosi",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-f727d80df98d5636",
+     "medio": "delfi.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T18:00Z"
+     },
+     "frase_origen": "An unidentified flying object, believed to be a drone, crossed Lithuanian airspace overnight into Wednesday.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://delfi.lt/en/politics/drone-crossed-lithuanian-airspace-at-night-120332657",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-f727d80df98d5636-declaracion-1",
+     "medio": "Lithuanian Armed Forces (declaración oficial citada en delfi.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T18:00Z"
+     },
+     "frase_origen": "According to the Lithuanian Armed Forces and the Air Force, an air defence mission was underway.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://delfi.lt/en/politics/drone-crossed-lithuanian-airspace-at-night-120332657",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-f727d80df98d5636-declaracion-2",
+     "medio": "Ministry of National Defence (declaración oficial citada en delfi.lt)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T18:00Z"
+     },
+     "frase_origen": "Minister of National Defence Robertas Kaunas says the unmanned aerial vehicle (UAV) may have been knocked off course by Russian electronic warfare measures.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://delfi.lt/en/politics/drone-crossed-lithuanian-airspace-at-night-120332657",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-501739ac1835d441",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T18:05Z"
+     },
+     "frase_origen": "Naktį iš antradienio į trečiadienį į Lietuvos teritoriją įskridus dronui, kai kurių Lietuvos regionų gyventojai į telefonus gavo oro pavojaus signalus",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/naujienos/lietuvoje/2/3111152/nakti-danguje-skrendant-dronui-seima-su-vaiku-ieskojo-priedangos-ko-daryti-nereikia",
+     "fiabilidad": "C",
+     "idioma": "lt"
+    },
+    {
+     "id": "gdelt-ef1886f8847bd835",
+     "medio": "tg24.sky.it",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T19:15Z"
+     },
+     "frase_origen": "Paesi Baltici, droni nei cieli di Lituania Estonia e Lettonia: decollati jet Nato",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://tg24.sky.it/mondo/2026/11/11/lituania-droni-paesi-baltici-nato",
+     "fiabilidad": "C",
+     "idioma": "it"
+    },
+    {
+     "id": "gdelt-31926060c52c2613",
+     "medio": "euronews.com",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-12T11:30Z"
+     },
+     "frase_origen": "In der Nacht haben NATO-Kampfjets zweimal vergeblich versucht, eine Drohne über Nordlitauen abzuschießen.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://de.euronews.com/2026/11/12/drohne-entkommt-nato-kampfjets-unruhige-nacht-uber-baltikum",
+     "fiabilidad": "C",
+     "idioma": "de"
+    }
+   ],
+   "fuentes_en_la_base": 48,
+   "control": {
+    "alta": {
+     "precision": "minuto",
+     "valor": "2026-11-11T11:17Z"
+    }
+   }
+  },
+  "EODI-2026-00818": {
+   "id": "EODI-2026-00818",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "NATO jets try to shoot down a possible drone that entered Lithuanian airspace",
+    "es": "Cazas de la OTAN intentan derribar un posible dron que entró en el espacio aéreo de Lituania"
+   },
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LT",
+    "suceso": "Lithuania"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-11-08T00:00Z"
+    },
+    "origen_inicio": {
+     "corregido": true,
+     "fuente_id": "gdelt-febe0f27800ec404",
+     "motivo": "«last week» en una nota publicada el 2026-11-13 17:30 (hora local del medio): suceso anterior a la publicación, entre el 2026-11-01 y el 2026-11-08",
+     "tipo": "publicacion"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-13T15:30Z"
+      },
+      "fuente_id": "gdelt-febe0f27800ec404"
+     }
+    ]
+   },
+   "presencia_dron": "no_confirmada",
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-febe0f27800ec404",
+     "medio": "lrt.lt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-13T15:30Z"
+     },
+     "frase_origen": "NATO fighter jets tried twice to shoot down a stray drone that entered Lithuanian airspace, unsuccessfully.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://www.lrt.lt/en/news-in-english/19/3113313/expensive-missiles-cheap-drones-cost-effectiveness-of-protecting-lithuania-s-airspace",
+     "fiabilidad": "C",
+     "idioma": "en"
+    }
+   ],
+   "fuentes_en_la_base": 1,
+   "control": {
+    "alta": {
+     "precision": "minuto",
+     "valor": "2026-11-13T16:17Z"
+    }
+   }
+  },
+  "EODI-2026-00777": {
+   "id": "EODI-2026-00777",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Possible airspace threat alert in Krāslava, Ludza and Augšdaugava districts",
+    "es": "Alerta de posible amenaza aérea en los distritos de Krāslava, Ludza y Augšdaugava"
+   },
+   "lugar": {
+    "geocodificacion": "candidato",
+    "nivel": "localidad",
+    "pais": "LV",
+    "punto": {
+     "lat": 55.89514,
+     "lon": 27.16799
+    },
+    "radio_km": 3.0,
+    "suceso": "Krāslavas novads"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-11-10T00:00Z"
+    },
+    "origen_inicio": {
+     "motivo": "la primera alerta fue el martes 10 de noviembre de 2026 hacia las 23.30 (hora de Letonia), en Ludza, según las Fuerzas Armadas; «naktī uz 11. novembri» es la noche que empieza el 10, y la ficha tenía ",
+     "tipo": "explicita"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "episodio": "EODI-EP-2026-0011",
+   "relacionados": [
+    {
+     "id": "EODI-2026-00792",
+     "nota": {
+      "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode.",
+      "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio."
+     },
+     "separado_de": "EODI-2026-00801"
+    },
+    {
+     "id": "EODI-2026-00814",
+     "nota": {
+      "en": "It merged three events in three countries on the night of 10 to 11 November 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Each country has its own event: Lithuania's is EODI-2026-00792 and Latvia's is EODI-2026-00777, which this record repeated; Estonia's had no record. The three are one episode.",
+      "es": "Juntaba tres sucesos de tres países de la noche del 10 al 11 de noviembre de 2026: «Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a madrugada desta quarta-feira» (executivedigest.sapo.pt). Cada país tiene su suceso: el de Lituania es EODI-2026-00792 y el de Letonia, EODI-2026-00777, que esta ficha repetía; el de Estonia no tenía ficha. Los tres son un mismo episodio."
+     },
+     "separado_de": "EODI-2026-00801"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "objetivo": {
+    "categoria": "otra",
+    "nombre": "Krāslava"
+   },
+   "zona": {
+    "distancia_km": 7,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-10T00:00Z"
+      },
+      "fuente_id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-11-10T00:00Z"
+      },
+      "fuente_id": "gdelt-e01e6ef7c9eeb178-declaracion-1"
+     }
+    ]
+   },
+   "presencia_dron": "confirmada",
+   "drones": {
+    "numero": {
+     "max": 3,
+     "min": 3
+    }
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-e01e6ef7c9eeb178-declaracion-1",
+     "medio": "Nacionālie bruņotie spēki (declaración oficial citada en Nacionālie bruņotie spēki)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-10T00:00Z"
+     },
+     "frase_origen": "Nacionālie bruņotie spēki informē, ka 11. novembrī no plkst. 00.23 Latvijas gaisa telpā Krāslavas un Ludzas novados apdraudējuma līmenis samazināts uz iespējamu apdraudējumu.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mil.lv/lv/zinas/papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+     "fiabilidad": "B",
+     "idioma": "lv"
+    },
+    {
+     "id": "mil_lv-s-papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+     "medio": "Nacionālie bruņotie spēki",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-11-10T00:00Z"
+     },
+     "frase_origen": "PAPILDINĀTS 11.NOV plkst. 00.23 Iespējams apdraudējums Latvijas gaisa telpā Augšdaugavas un Krāslavas novados",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mil.lv/lv/zinas/papildinats-11nov-plkst-0023-iespejams-apdraudejums-latvijas-gaisa-telpa-augsdaugavas-un",
+     "fiabilidad": "A",
+     "idioma": "lv"
+    },
+    {
+     "id": "gdelt-699a583e2c99589d-declaracion-1",
+     "medio": "Nacionālie bruņotie spēki (declaración oficial citada en Nacionālie bruņotie spēki)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "Naktī uz 11. novembri Latvijas gaisa telpā ielidoja trīs bezpilota lidaparāti, no kuriem divi īslaicīgi (1-2 minūtes) šķērsoja valsts Austrumu robežu",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mil.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+     "fiabilidad": "B",
+     "idioma": "lv"
+    },
+    {
+     "id": "gdelt-c4faa2af4109c612-declaracion-2",
+     "medio": "Aizsardzības ministrija (declaración oficial citada en Aizsardzības ministrija)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "Naktī uz 11. novembri Latvijas gaisa telpā ielidoja trīs bezpilota lidaparāti, no kuriem divi īslaicīgi (1-2 minūtes) šķērsoja valsts Austrumu robežu",
+     "es_autoridad": false,
+     "publica": false,
+     "enlace": "https://www.mod.gov.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+     "fiabilidad": "C",
+     "idioma": "lv"
+    },
+    {
+     "id": "mil_lv-lv-zinas-nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+     "medio": "Nacionālie bruņotie spēki",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "Naktī uz 11. novembri Latvijas gaisa telpā ielidojuši trīs bezpilota lidaparāti",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mil.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+     "fiabilidad": "A",
+     "idioma": "lv"
+    },
+    {
+     "id": "mil_lv-lv-zinas-papildinats-plkst-0125-iespejams-apdraudejums-latvijas-gaisa-telpa-balvu-novada",
+     "medio": "Nacionālie bruņotie spēki",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "PAPILDINĀTS plkst. 01:25 - Iespējams apdraudējums Latvijas gaisa telpā Balvu novadā",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mil.lv/lv/zinas/papildinats-plkst-0125-iespejams-apdraudejums-latvijas-gaisa-telpa-balvu-novada",
+     "fiabilidad": "A",
+     "idioma": "lv"
+    },
+    {
+     "id": "mil_lv-papildinats-plkst-0318-gaisa-telpas-apdraudejums-izsludinats-smiltenes-un-gulbenes-novados",
+     "medio": "Nacionālie bruņotie spēki",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "PAPILDINĀTS plkst. 03:18 – Gaisa telpas apdraudējums izsludināts Smiltenes un Gulbenes novados; Apdraudējums atcelts Cēsu novadā",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mil.lv/lv/zinas/papildinats-plkst-0318-gaisa-telpas-apdraudejums-izsludinats-smiltenes-un-gulbenes-novados",
+     "fiabilidad": "A",
+     "idioma": "lv"
+    },
+    {
+     "id": "mod_lv-lv-zinas-nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+     "medio": "Aizsardzības ministrija",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-11-11T00:00Z"
+     },
+     "frase_origen": "Naktī uz 11. novembri Latvijas gaisa telpā ielidojuši trīs bezpilota lidaparāti",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://www.mod.gov.lv/lv/zinas/nakti-uz-11-novembri-latvijas-gaisa-telpa-ielidojusi-tris-bezpilota-lidaparati",
+     "fiabilidad": "A",
+     "idioma": "lv"
+    },
+    {
+     "id": "gdelt-9711a285c6a1abff",
+     "medio": "executivedigest.sapo.pt",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T12:30Z"
+     },
+     "frase_origen": "Vários drones que se dirigiam para o porto petrolífero russo de Ust-Luga entraram no espaço aéreo da Lituânia, da Letónia e da Estónia durante a",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://executivedigest.sapo.pt/drones-entram-no-espaco-aereo-dos-tres-paises-balticos-e-obrigam-a-ativar-cacas-da-nato",
+     "fiabilidad": "C",
+     "idioma": "pt"
+    },
+    {
+     "id": "gdelt-70d6bff1b3b2ce06",
+     "medio": "bnn-news.com",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:45Z"
+     },
+     "frase_origen": "The military recalled that three unmanned aerial vehicles entered Latvian airspace during the night of the 11th of November.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://bnn-news.com/social/appropriate-operational-conditions-were-not-met-latvian-armed-forces-explain-why-drone-was-not-shot-down-gddgxcc",
+     "fiabilidad": "C",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-70d6bff1b3b2ce06-declaracion-1",
+     "medio": "Nacionālie bruņotie spēki (NBS) (declaración oficial citada en bnn-news.com)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:45Z"
+     },
+     "frase_origen": "The military recalled that three unmanned aerial vehicles entered Latvian airspace during the night of the 11th of November.",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://bnn-news.com/social/appropriate-operational-conditions-were-not-met-latvian-armed-forces-explain-why-drone-was-not-shot-down-gddgxcc",
+     "fiabilidad": "B",
+     "idioma": "en"
+    },
+    {
+     "id": "gdelt-dd13e3fae8181b6e",
+     "medio": "la.lv",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:45Z"
+     },
+     "frase_origen": "Otrdien ap plkst. 23.30 gaisa telpas apdraudējums izsludināts Ludzas novadā saistībā ar divu bezpilota lidaparātu īslaicīgu ielidošanu Latvijas gaisa telpā.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://la.lv/nbs-atklaj-kapec-nato-iznicinataji-nakti-virs-latvijas-nespeja-notriekt-dronu",
+     "fiabilidad": "C",
+     "idioma": "lv"
+    },
+    {
+     "id": "gdelt-dd13e3fae8181b6e-declaracion-1",
+     "medio": "Nacionālie bruņotie spēki (declaración oficial citada en la.lv)",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T13:45Z"
+     },
+     "frase_origen": "Aizvadītajā naktī Latvijas gaisa telpā ielidojušo dronu pavadīja NATO iznīcinātāji, taču to nebija iespējams notriekt",
+     "es_autoridad": true,
+     "publica": true,
+     "enlace": "https://la.lv/nbs-atklaj-kapec-nato-iznicinataji-nakti-virs-latvijas-nespeja-notriekt-dronu",
+     "fiabilidad": "B",
+     "idioma": "lv"
+    },
+    {
+     "id": "gdelt-a5af0683e0ec1c30",
+     "medio": "portalb.mk",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-11T14:00Z"
+     },
+     "frase_origen": "kërcënimeve nga dronë të paidentifikuar që kishin hyrë nga Rusia ose Bjellorusia fqinje",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://portalb.mk/nato-aktivizoi-avionet-luftarake-pasi-dronet-hyne-ne-hapesiren-ajrore-te-vendeve-baltike",
+     "fiabilidad": "C",
+     "idioma": "sq"
+    },
+    {
+     "id": "gdelt-9c889e4656d38d6d",
+     "medio": "wiadomosci.onet.pl",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-12T03:00Z"
+     },
+     "frase_origen": "W środę trzy bezzałogowce naruszyły łotewską przestrzeń powietrzną.",
+     "es_autoridad": false,
+     "publica": true,
+     "enlace": "https://wiadomosci.onet.pl/swiat/trzy-drony-wlecialy-nad-lotwe-nato-poderwalo-mysliwce/bd9769j",
+     "fiabilidad": "C",
+     "idioma": "pl"
+    }
+   ],
+   "fuentes_en_la_base": 15,
+   "control": {
+    "alta": {
+     "precision": "minuto",
+     "valor": "2026-11-10T23:17Z"
+    }
+   }
+  }
+ },
+ "pares": {
+  "par:EODI-2026-00814|EODI-2026-00817": {
+   "decision": "distinto",
+   "escalado": [
+    "publicada: la unión retira EODI-2026-00817"
+   ],
+   "fecha": "2026-11-13T12:17:03Z",
+   "huella": "f9d9cfbcb9201dbf619d3d4a94417820",
+   "mismo_dia": false,
+   "mismo_sitio": true,
+   "modelo": "claude-sonnet-5-5",
+   "motivo_en": "Ficha A covers a brief drone entry into Estonian airspace after the Ukrainian strike on a ship in the Gulf of Finland, reported on 13 November (strike in the early hours of Wednesday 12 November), while B covers drones entering the Baltic states in the early hours of 11 November: different days.",
+   "motivo_es": "La ficha A cuenta una entrada breve de un dron en el espacio aéreo de Estonia tras el ataque ucraniano al buque del golfo de Finlandia, publicada el 13 de noviembre (ataque en la madrugada del miércoles 12), mientras que la B cuenta los drones que entraron en los países bálticos en la madrugada del 11 de noviembre: son jornadas distintas.",
+   "varios_sucesos": false,
+   "version": "control/5"
+  },
+  "par:EODI-2026-00792|EODI-2026-00818": {
+   "decision": "distinto",
+   "fecha": "2026-11-14T01:47:08Z",
+   "huella": "5258b7391faf8200bc33d54599c10daf",
+   "mismo_dia": false,
+   "mismo_sitio": true,
+   "modelo": "claude-haiku-5-5",
+   "motivo_en": "B's source (13 Nov) places the failed interception attempts 'last week', around 2-8 November, while A covers the night of 10-11 November; B also describes a drone that crossed into Poland and returned to Lithuania, whereas A says the drones flew into Latvian airspace.",
+   "motivo_es": "La fuente de B (13 nov) sitúa el intento de derribo en «la semana pasada», es decir, en torno al 2-8 de noviembre, mientras que A trata la noche del 10 al 11 de noviembre; además, B describe un dron que entró desde Bielorrusia, cruzó a Polonia y volvió a Lituania, mientras que A dice que los drones salieron hacia Letonia.",
+   "varios_sucesos": false,
+   "version": "control/5"
+  }
+ },
+ "entrada": {
+  "EODI-2026-00777": {
+   "decision": "publicar",
+   "duda": false,
+   "dudosas": [],
+   "autoridades": {
+    "Nacionālie bruņotie spēki": "LV"
+   },
+   "motivo_es": "Es un suceso nuevo del 11-11-2026 en Letonia; las fichas letonas existentes (18-10, 22-10, 01-11, 03-11) son de otros días."
+  },
+  "EODI-2026-00792": {
+   "decision": "publicar",
+   "duda": true,
+   "dudosas": [
+    "EODI-2026-00784",
+    "EODI-2026-00777"
+   ],
+   "autoridades": {
+    "Oficialii lituanieni": "LT"
+   },
+   "motivo_es": "Incidente lituano distinto en lugar y hechos; posible relación con los drones que entraron en Letonia esa noche, pero no hay prueba directa de que sean los mismos."
+  },
+  "EODI-2026-00814": {
+   "decision": "publicar",
+   "duda": false,
+   "dudosas": [],
+   "autoridades": {},
+   "motivo_es": "Suceso nuevo en Estonia el 2026-11-11; la ficha finlandesa del mismo día es de otro país y no cuenta como el mismo suceso."
+  },
+  "EODI-2026-00817": {
+   "decision": "publicar",
+   "duda": false,
+   "dudosas": [],
+   "autoridades": {},
+   "motivo_es": "Suceso nuevo de Estonia del miércoles 11 de noviembre; la ficha finlandesa del golfo de Finlandia es de otro país y no cuenta como el mismo suceso."
+  },
+  "EODI-2026-00818": {
+   "decision": "publicar",
+   "duda": true,
+   "dudosas": [
+    "EODI-2026-00792"
+   ],
+   "autoridades": {},
+   "motivo_es": "Parece un suceso lituano distinto del de la noche del 10 al 11 de noviembre, porque la nota habla de «la semana pasada» y de otro recorrido del dron; hay duda por si es una nota tardía sobre el mismo."
+  }
+ }
+}
