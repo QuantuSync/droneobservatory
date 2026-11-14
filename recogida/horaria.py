@@ -761,6 +761,12 @@ def principal(argumentos: list[str] | None = None) -> int:
             rotas = paso("invariantes", paso_invariantes, almacen, ahora, args.ensayo)
             if rotas and args.ensayo is not None:
                 revisados_fallidos.append("invariantes rotas: " + ", ".join(sorted(rotas)))
+            # Las notas de alerta oficiales que llevan más de 2 horas sin ficha ni descarte con
+            # motivo: aviso privado, nunca desde un ensayo (recogida/oficiales.sin_salida).
+            paso(
+                "notas oficiales sin salida", oficiales.avisar_sin_salida, almacen, ahora,
+                visitas.avisador_privado if args.ensayo is None else None,
+            )  # fmt: skip
         except Exception:
             registro.exception("no se pudo generar ningún fichero publicado: no se publica")
             cambiados = None

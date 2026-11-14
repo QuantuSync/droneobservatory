@@ -554,11 +554,24 @@ def autoridades_de_otro_pais(incidente: Documento) -> list[str]:
     país distinto al de la ficha sin una frase que nombre ese país: la de sus fuentes (la
     declaración, el medio o la fuente de quien atribuye o investiga) o, si no tiene ninguna
     propia, la de cualquier fuente de la ficha."""
+    return list(fuentes_de_otro_pais(incidente))
+
+
+def fuentes_de_otro_pais(incidente: Documento) -> dict[str, list[str]]:
+    """Como `autoridades_de_otro_pais`, cada una con los identificadores de sus fuentes (la
+    declaración, o la de quien atribuye o investiga): lo que quita la puerta (letra Y)."""
     pais_ficha = (incidente.get("lugar") or {}).get("pais")
     if not pais_ficha:
-        return []
+        return {}
+    # Solo las fuentes que enseña la web: una declaración que dejó de ser oficial y pública (la
+    # corrección de esta letra, recogida/control_fichas.sin_autoridades_de_otro_pais) no cuenta.
+    visibles = [
+        f for f in incidente.get("fuentes") or []
+        if isinstance(f, dict) and f.get("publica", True) and f.get("fiabilidad") not in {"E", "F"}
+    ]  # fmt: skip
     documento = autoridades.con_pais(json.loads(json.dumps(
-        {c: incidente.get(c) for c in ("lugar", "fuentes", "atribucion", "investigacion")}
+        {**{c: incidente.get(c) for c in ("lugar", "atribucion", "investigacion")},
+         "fuentes": visibles}
     )))  # fmt: skip
     fuentes = [f for f in documento.get("fuentes") or [] if isinstance(f, dict)]
     frases = {str(f.get("id")): str(f.get("frase_origen") or "") for f in fuentes}
@@ -570,14 +583,14 @@ def autoridades_de_otro_pais(incidente: Documento) -> list[str]:
     for entrada in [documento.get("atribucion") or {}, *(documento.get("investigacion") or [])]:
         if isinstance(entrada, dict) and entrada.get("autoridad"):
             propias.setdefault(str(entrada["autoridad"]), []).append(str(entrada.get("fuente_id")))
-    malas = []
+    malas: dict[str, list[str]] = {}
     for nombre, _ in autoridades.nombres(documento):
         pais = autoridades.pais_escrito(nombre)
         if pais is None or pais == pais_ficha:
             continue
         suyas = [frases.get(i, "") for i in propias.get(nombre, [])] or list(frases.values())
         if not any(atribucion.menciona(frase, pais) for frase in suyas if frase):
-            malas.append(nombre)
+            malas[nombre] = list(propias.get(nombre, []))
     return malas
 
 

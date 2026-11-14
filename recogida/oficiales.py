@@ -592,6 +592,81 @@ def candidatos(almacen: Almacen) -> set[str]:
             for c in entrada.get("candidatos", [])}  # fmt: skip
 
 
+# Una nota de alerta oficial tiene que acabar en una ficha o en un descarte con motivo (una
+# extracción de su candidato, que guarda los motivos) antes de estas horas; si no, aviso privado.
+# El 13 de noviembre de 2026 notas de mil.lv y del MApN tardaron horas en tener ficha.
+HORAS_SALIDA = timedelta(hours=2)
+# Solo las notas que entraron en estos días (el cursor guarda todas).
+DIAS_SALIDA = 7
+TITULO_SIN_SALIDA = "EODI · Nota oficial sin ficha ni descarte"
+
+
+def sin_salida(almacen: Almacen, ahora: datetime) -> list[str]:
+    """Las notas oficiales sin ficha que entraron hace más de HORAS_SALIDA (y menos de
+    DIAS_SALIDA días) y no tienen salida: ninguna ficha las lleva como fuente y ningún candidato
+    suyo se ha extraído desde que entraron (la extracción guarda la ficha o el descarte con su
+    motivo). Sin escribir nada."""
+    cursor = almacen.cursor(CURSOR_SIN_FICHA) or {}
+    desde = (ahora - timedelta(days=DIAS_SALIDA)).strftime("%Y-%m-%dT%H:%MZ")
+    hasta = (ahora - HORAS_SALIDA).strftime("%Y-%m-%dT%H:%MZ")
+    pendientes = {
+        enlace: entrada for enlace, entrada in cursor.items()
+        if isinstance(entrada, dict) and desde <= str(entrada.get("entrado", "")) <= hasta
+    }  # fmt: skip
+    if not pendientes:
+        return []
+    en_fichas = {
+        str(fuente.get("enlace")) for ficha in almacen.incidentes()
+        for fuente in ficha.get("fuentes", [])
+    }  # fmt: skip
+    salida = []
+    for enlace, entrada in sorted(pendientes.items()):
+        if enlace in en_fichas:
+            continue
+        entrado = str(entrada["entrado"]).replace("Z", "")
+        extraido = any(
+            str(e.get("fecha", ""))[:16] >= entrado[:16]
+            for c in entrada.get("candidatos", [])
+            for e in almacen.extracciones(c)
+        )
+        if not extraido:
+            salida.append(enlace)
+    return salida
+
+
+def avisar_sin_salida(
+    almacen: Almacen,
+    ahora: datetime,
+    avisador: Callable[[str], Callable[[str], None] | None] | None,
+) -> list[str]:
+    """Avisa por el tema privado, una vez por nota, de las que siguen sin salida
+    (`sin_salida`); lo avisado queda en la entrada del cursor. Sin quien avise (ensayo, fuera
+    del servidor) solo lo registra. Devuelve las notas sin salida."""
+    notas = sin_salida(almacen, ahora)
+    if not notas:
+        return notas
+    cursor = dict(almacen.cursor(CURSOR_SIN_FICHA) or {})
+    nuevas = [n for n in notas if not cursor[n].get("avisada")]
+    for nota in notas:
+        registro.error("oficiales: nota de alerta sin ficha ni descarte en %s: %s",
+                       HORAS_SALIDA, nota)  # fmt: skip
+    avisar = avisador(TITULO_SIN_SALIDA) if avisador is not None and nuevas else None
+    if avisar is None:
+        return notas
+    for nota in nuevas:
+        try:
+            avisar(
+                f"La nota oficial {nota} entró hace más de 2 horas y no tiene ficha ni descarte "
+                f"con motivo (candidatos: {', '.join(cursor[nota].get('candidatos', []))})."
+            )
+        except Exception:
+            registro.exception("oficiales: no se pudo avisar de %s", nota)
+            continue
+        cursor[nota] = {**cursor[nota], "avisada": ahora.strftime("%Y-%m-%dT%H:%MZ")}
+    almacen.guardar_cursor(CURSOR_SIN_FICHA, cursor)
+    return notas
+
+
 @cache
 def _mayor_localidad(pais: str) -> str | None:
     """La localidad de mayor radio del país (casi siempre, la capital)."""

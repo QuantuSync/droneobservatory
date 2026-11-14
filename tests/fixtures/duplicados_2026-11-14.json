@@ -1368,6 +1368,77 @@
      "valor": "2026-11-10T23:17Z"
     }
    }
+  },
+  "EODI-2026-00819": {
+   "id": "EODI-2026-00819",
+   "titulo": {
+    "en": "Plane aborts landing at Warsaw airport over unidentified drone",
+    "es": "Avión aborta el aterrizaje en el aeropuerto de Varsovia por un dron no identificado"
+   },
+   "lugar": {
+    "geocodificacion": "localidad",
+    "localidad": "Varsovia",
+    "nivel": "localidad",
+    "pais": "PL",
+    "punto": {
+     "lat": 52.22977,
+     "lon": 21.01178
+    },
+    "radio_km": 20.0,
+    "region": "Mazovia",
+    "suceso": "варшавском аэропорту имени Шопена"
+   },
+   "objetivo": {
+    "categoria": "otra",
+    "nombre": "Warsaw"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-11-13T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-51315f74167f123a",
+     "motivo": "«13 ноября» en una nota publicada el 2026-11-13 18:15 (hora local del medio)",
+     "tipo": "explicita"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "fuentes": [
+    {
+     "id": "gdelt-51315f74167f123a",
+     "medio": "charter97.org",
+     "idioma": "ru",
+     "enlace": "https://charter97.org/ru/news/2026/11/13/705454",
+     "frase_origen": "В варшавском аэропорту имени Шопена произошел опасный инцидент.",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-13T17:15Z"
+     }
+    },
+    {
+     "id": "gdelt-f05eaca11af6e8c9",
+     "medio": "eurointegration.com.ua",
+     "idioma": "uk",
+     "enlace": "https://eurointegration.com.ua/news/2026/11/13/7249975",
+     "frase_origen": "У варшавському аеропорту літак перервав посадку через дрон",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-13T20:15Z"
+     }
+    },
+    {
+     "id": "gdelt-6ba90ceea51c76d9",
+     "medio": "tsn.ua",
+     "idioma": "uk",
+     "enlace": "https://tsn.ua/svit/za-sekundy-do-pryzemlennia-litak-rizko-nabrav-vysotu-shcho-pobachyv-pilot-3216439.html",
+     "frase_origen": "Під час приземлення в аеропорту імені Шопена у Польщі пілот літака раптово ввімкнув двигуни на повну потужність і знову злетів угору.",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-13T21:45Z"
+     }
+    }
+   ]
   }
  },
  "pares": {
