@@ -96,6 +96,122 @@ def _iso(ahora: datetime) -> str:
     return ahora.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+# --- El candado: un suceso, una ficha publicada (I8) ------------------------------------------
+
+CURSOR_CANDADO = "candado"
+MISMO_SUCESO = "I8"
+# La cita de la ficha que se une: la frase de su primera fuente pública, recortada.
+MAX_CITA = 200
+
+
+@dataclass
+class Candado:
+    """Lo que hizo el candado antes de una publicación."""
+
+    deshechas: list[str] = field(default_factory=list)
+    unidas: list[str] = field(default_factory=list)
+    sin_unir: dict[str, str] = field(default_factory=dict)
+
+
+def _cita(ficha: Documento) -> str:
+    """La frase de la primera fuente pública de la ficha, con su medio: la cita de la unión."""
+    for fuente in sorted(ficha.get("fuentes", []), key=lambda f: str(f["fecha"]["valor"])):
+        frase = " ".join(str(fuente.get("frase_origen") or "").split())
+        if frase and fuente.get("publica", True) is not False:
+            return f"«{frase[:MAX_CITA]}» ({fuente.get('medio') or fuente.get('id')})"
+    return ""
+
+
+def publicadas_activas(almacen: Almacen, filas: dict[str, Documento] | None = None
+                       ) -> dict[str, Documento]:  # fmt: skip
+    """{id: documento} de las fichas activas cuya fila está publicada."""
+    from proceso import incidentes
+
+    filas = almacen.publicado() if filas is None else filas
+    salida = {}
+    for id_, fila in filas.items():
+        if fila["estado"] != PUBLICADA:
+            continue
+        documento = almacen.incidente(id_)
+        if documento is not None and incidentes.activo(documento):
+            salida[id_] = documento
+    return salida
+
+
+def mismo_suceso_publicado(
+    ficha: Documento, publicadas: dict[str, Documento],
+    del_experto: frozenset[frozenset[str]], decididas: dict[str, dict[str, str]],
+) -> list[tuple[Documento, suceso.Veredicto]]:  # fmt: skip
+    """Las fichas publicadas (sin ella) que la definición da por el mismo suceso que `ficha`."""
+    otras = [d for i, d in publicadas.items() if i != ficha["id"]]
+    return suceso.del_mismo_suceso(ficha, otras, del_experto, decididas)
+
+
+def candado(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Candado:
+    """Antes de generar lo que se publica (docs/ciclo_de_vida.md, I6 e I8):
+
+    - las uniones vigentes que la definición da por sucesos distintos y que la revisión de las
+      fusiones no pudo deshacer (I6: el cerrojo, un fallo) se deshacen aquí: cada suceso vuelve a
+      su ficha y pasa por el control como cualquier otra;
+    - ninguna ficha activa se queda al lado de una publicada del mismo suceso
+      (`suceso.del_mismo_suceso`): se une a ella, con su cita, por el camino de las uniones del
+      control (`recogida/control_fichas.unir`; queda la publicada, o la más antigua si lo están
+      las dos). Si son varias, o la unión no se puede hacer, no se une: la puerta no la publica
+      (`pasar`) y la invariante I8 avisa por el tema privado.
+
+    Cada unión y cada reapertura, aislada: una que falla no corta las demás."""
+    from proceso import incidentes, invariantes
+    from recogida import control_fichas
+
+    hecho = Candado()
+    for rota in invariantes.uniones_de_sucesos_distintos(almacen):
+        absorbido = rota.split("→", 1)[0]
+        try:
+            incidentes.revertir(almacen, absorbido, ahora, modelos)
+            hecho.deshechas.append(rota)
+            registro.warning("candado: unión deshecha (I6) %s", rota)
+        except Exception as error:
+            registro.warning("candado: unión sin deshacer %s: %s", rota, str(error)[:200])
+    publicadas = publicadas_activas(almacen)
+    del_experto = suceso.distintos_del_experto(almacen)
+    decididas = suceso.autoridades_decididas(almacen)
+    activas = sorted(
+        (d for d in almacen.incidentes() if incidentes.activo(d)),
+        key=lambda d: suceso.orden_registro(str(d["id"])),
+    )
+    for ficha in activas:
+        id_ = str(ficha["id"])
+        actual = almacen.incidente(id_)
+        if actual is None or not incidentes.activo(actual):
+            continue
+        try:
+            mismos = mismo_suceso_publicado(actual, publicadas, del_experto, decididas)
+            if not mismos:
+                continue
+            if len(mismos) > 1:
+                hecho.sin_unir[id_] = "el mismo suceso que varias publicadas: " + ", ".join(
+                    str(m["id"]) for m, _ in mismos
+                )
+                continue
+            otra, dicho = mismos[0]
+            conserva, une = suceso.queda(otra, actual, almacen.sale_en_la_web)
+            motivo = (
+                f"candado de la publicación (I8), {dicho.regla}: {dicho.motivo}. {_cita(une)}"
+            ).strip()
+            nuevo = control_fichas.unir(almacen, conserva, une, motivo, ahora, modelos)
+            if nuevo is None:
+                hecho.sin_unir[id_] = f"el mismo suceso que {otra['id']}, sin poder unirse"
+                continue
+            hecho.unidas.append(f"{une['id']}→{conserva['id']}")
+            registro.warning("candado: %s→%s (%s)", une["id"], conserva["id"], dicho.regla)
+            publicadas.pop(str(une["id"]), None)
+            if str(conserva["id"]) in publicadas:
+                publicadas[str(conserva["id"])] = nuevo
+        except Exception as error:
+            registro.warning("candado: %s sin mirar: %s", id_, str(error)[:200])
+    return hecho
+
+
 @dataclass(frozen=True)
 class Pase:
     """El pase del control de las fichas: las que ya pasó (`vistos`) y si terminó en esta pasada."""
@@ -282,6 +398,12 @@ def pasar(
     candidatas = {
         _id(e): (nombre, e) for nombre, d in generados.items() for e in _entradas(d, nombre)
     }
+    # El candado (I8), por su cuenta: una ficha que no está publicada no entra si hay otra
+    # publicada del mismo suceso. Lo normal es que el candado de antes ya la haya unido; si no
+    # pudo, aquí se para.
+    publicadas = {i: d for i, d in base.items() if (filas.get(i) or {}).get("estado") == PUBLICADA}
+    del_experto: frozenset[frozenset[str]] | None = None
+    decididas: dict[str, dict[str, str]] = {}
     for id_, (nombre, entrada) in sorted(candidatas.items()):
         interno = base.get(id_)
         fila = filas.get(id_)
@@ -289,6 +411,12 @@ def pasar(
             continue
         try:
             motivos = _motivos_de_ficha(id_, interno, pase, marcas)
+            if fila is None or fila["estado"] != PUBLICADA:
+                if del_experto is None:
+                    del_experto = suceso.distintos_del_experto(almacen)
+                    decididas = suceso.autoridades_decididas(almacen)
+                if mismo_suceso_publicado(interno, publicadas, del_experto, decididas):
+                    motivos.append(MISMO_SUCESO)
             if not motivos:
                 if almacen.guardar_publicado(id_, PUBLICADA, nombre, entrada, interno, {}, fecha):
                     resultado.cambiadas += 1

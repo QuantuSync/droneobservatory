@@ -21,7 +21,7 @@ from almacen.base import Almacen
 from exportacion import puerta
 from modelo import coste, ficha
 from proceso import extraccion
-from recogida import control_fichas, revisados
+from recogida import control_fichas, entrada, revisados
 from tests import test_control_fichas as tcf
 from tests import test_modelos as tm
 from tests.ejemplos import VOCABULARIO_MODELOS as MODELOS_CONTROL
@@ -53,7 +53,12 @@ def _gasto(
     })  # fmt: skip
 
 
-def test_un_par_que_ya_no_esta_en_juego_no_retiene_ni_espera() -> None:
+def test_un_par_que_ya_no_esta_en_juego_no_retiene_ni_espera(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # El par de Núremberg es el mismo suceso por la definición (mismo sitio y jornada) y el filtro
+    # lo uniría sin preguntar (entrada.unir_por_la_definicion); aquí se prueba la espera.
+    monkeypatch.setattr(entrada, "unir_por_la_definicion", lambda *a: None)
     # Como EODI-2025-00438|00444: el par crítico espera al experto sin tope ni reserva y retiene
     # la ficha nueva; después la regla de fusión une la otra a ella.
     almacen = tm._par_de_nuremberg_con_gasto(

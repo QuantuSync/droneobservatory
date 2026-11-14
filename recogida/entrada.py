@@ -377,6 +377,32 @@ def _activos(almacen: Almacen) -> list[Documento]:
     return [i for i in almacen.incidentes() if incidentes.activo(i)]
 
 
+def unir_por_la_definicion(
+    ctx: control_fichas.Contexto, incidente: Documento, activos: list[Documento]
+) -> Documento | None:
+    """Si la definición da la ficha por el mismo suceso que una sola de las activas
+    (`suceso.del_mismo_suceso`), se une a ella sin preguntar al experto: lo que él diga no
+    cambia una regla firme. Devuelve lo que se guarda de la decisión, o None si no hay una sola o
+    la unión no se pudo hacer (el cerrojo): entonces pregunta el experto como siempre, y si
+    sale, la para el candado de la publicación (I8)."""
+    almacen = ctx.almacen
+    mismos = suceso.del_mismo_suceso(
+        incidente, activos, suceso.distintos_del_experto(almacen),
+        suceso.autoridades_decididas(almacen),
+    )  # fmt: skip
+    if len(mismos) != 1:
+        return None
+    otra, dicho = mismos[0]
+    conserva, une = suceso.queda(otra, incidente, almacen.sale_en_la_web)
+    motivo = f"filtro de entrada, por la definición de suceso ({dicho.regla}): {dicho.motivo}"
+    if control_fichas.unir(almacen, conserva, une, motivo, ctx.ahora, ctx.modelos) is None:
+        return None
+    ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
+    registro.info("filtro de entrada %s: %s", incidente["id"], motivo)
+    return {"decision": UNIDA, "conserva": conserva["id"], "une": une["id"],
+            "regla": dicho.regla, "motivo_es": motivo[:300]}  # fmt: skip
+
+
 def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> Documento:
     """Pasa una ficha nueva por el filtro y devuelve la decisión que se guarda."""
     ctx = experto.ctx
@@ -393,6 +419,10 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
                 "separar en dos fichas"}  # fmt: skip
     for vuelta in range(2):
         activos = _activos(ctx.almacen)
+        base["huella"] = huella(incidente)
+        por_la_definicion = unir_por_la_definicion(ctx, incidente, activos)
+        if por_la_definicion is not None:
+            return {**base, **por_la_definicion, "cambios": cambios}
         decision, elegidas, _ = preguntar(experto, incidente, activos, clave_)
         base["huella"] = huella(incidente)
         base["conjunto"] = len(elegidas)

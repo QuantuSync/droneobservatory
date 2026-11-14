@@ -704,8 +704,14 @@ class Contexto:
 
     @property
     def del_experto(self) -> frozenset[frozenset[str]]:
-        """Los pares que el experto dio por distintos (suceso.distintos_en)."""
-        return suceso.distintos_en(self.decisiones)
+        """Los pares que el experto dio por distintos con las fechas que tienen ahora las dos
+        (suceso.distintos_en)."""
+
+        def inicio_de(id_: str) -> str | None:
+            ficha = self.almacen.incidente(id_)
+            return None if ficha is None else str(ficha["tiempo"]["inicio"]["valor"])
+
+        return suceso.distintos_en(self.decisiones, inicio_de)
 
     def decision(self, clave: str) -> Documento | None:
         return self.nuevas.get(clave) or self.decisiones.get(clave)
@@ -803,9 +809,17 @@ def pares_por_decidir(
                 # El experto los dio por distintos: no se vuelven a comparar aunque lleguen
                 # fuentes nuevas (EODI-2026-00538 y 00541, 29 de octubre de 2026).
                 continue
-            if previa["decision"] in {"mismo", "distinto"} and (
-                previa.get("huella") == huella or not revisar_decididos
+            otra_fecha = bool(previa.get("inicios")) and previa["inicios"] != (
+                suceso.inicios_del_par(a, b)
+            )
+            if (
+                previa["decision"] in {"mismo", "distinto"}
+                and (previa.get("huella") == huella or not revisar_decididos)
+                and not otra_fecha
             ):
+                # Decidido con las mismas fuentes; si una de las dos cambió de fecha desde
+                # entonces, se vuelve a comparar (EODI-2026-00817: el 13 cuando se decidió, el 11
+                # después).
                 continue
             if previa["decision"] == "dudoso" and previa.get("espera_experto"):
                 # Espera al experto: no se resuelve solo a las 6 horas; se vuelve a comparar
@@ -937,6 +951,10 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
         decision["modelo"] = ctx.llamador.ultimo_modelo
     if ctx.llamador.ultimos_motivos:
         decision["escalado"] = ctx.llamador.ultimos_motivos
+    if a is not None and b is not None:
+        # Las fechas que tenían las dos al decidir: si una cambia, lo que el experto dio por
+        # distinto deja de valer (suceso.distintos_en).
+        decision["inicios"] = suceso.inicios_del_par(a, b)
     if decision["decision"] == "dudoso":
         decision["desde"] = (previa or {}).get("desde", _iso(ctx.ahora))
         ctx.resultado.dudosos.append(clave)

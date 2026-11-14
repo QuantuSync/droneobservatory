@@ -64,14 +64,20 @@ Las reglas firmes, en su orden (la primera que habla, decide):
 3. **La nota de una noche y sus alertas.** La nota con la que una autoridad que da sus alertas
    por zonas cuenta una noche y las alertas de esa noche, en el mismo país, son el mismo suceso,
    aunque el experto dijera otra cosa.
-4. **Lo que el experto dio por distinto** leyendo las fuentes de las dos no se vuelve a unir
-   solo.
-5. **Dos cierres del mismo sitio en noches distintas**, o un cierre que las fuentes cuentan como
+4. **La misma incursión del país.** Dos fichas de drones que entran desde fuera en el mismo
+   país y la misma jornada, cuando al menos una solo dice el país (no tiene un sitio propio que
+   la distinga), son el mismo suceso, aunque el experto dijera otra cosa; con hora en las dos, a
+   menos de 6 horas, y salvo dos cierres de noches distintas (regla 6). Si una ficha así casa con varias de su país, no se sabe con cuál: no se une
+   sola (desde el 14 de noviembre de 2026: EODI-2026-00817 y EODI-2026-00814).
+5. **Lo que el experto dio por distinto** leyendo las fuentes de las dos no se vuelve a unir
+   solo, mientras las dos tengan la fecha que tenían al decidirlo: si una cambia, su «distinto»
+   deja de valer y el par se vuelve a comparar.
+6. **Dos cierres del mismo sitio en noches distintas**, o un cierre que las fuentes cuentan como
    repetido, son dos sucesos. Con hora, la noche es la de su tarde (la madrugada es de la noche
    que empezó la víspera). Con el día a secas, la de ese día, y también la de la víspera si la
    primera noticia de la ficha salió antes de la tarde de ese día: entonces el cierre fue de
    madrugada.
-6. **El mismo sitio y la misma jornada**, sin nada de lo anterior, es el mismo suceso sin
+7. **El mismo sitio y la misma jornada**, sin nada de lo anterior, es el mismo suceso sin
    preguntar: con hora en las dos, inicios a menos de 6 horas; con día, el mismo día; con la
    fecha de publicación, ese día o la víspera. Una hora «aproximada» que escribe una fuente es
    una hora, no una fecha de publicación. Dos días seguidos sin hora pueden ser una noche o dos
@@ -89,16 +95,17 @@ firme da por distintos no se une.
 
 | Paso | Qué pregunta | Dónde |
 |---|---|---|
-| Regla de fusión | une lo que el veredicto da por «mismo» (reglas 3 y 6) con una sola ficha anterior | `proceso/incidentes.fusionar` |
-| Uniones vigentes | deshace las que el veredicto da por «distintos» (reglas 1, 2 y 5; de las que hizo el control, solo la 2) | `proceso/incidentes.revisar_fusiones` |
+| Regla de fusión | une lo que el veredicto da por «mismo» (reglas 3, 4 y 7) con una sola ficha anterior | `proceso/incidentes.fusionar` |
+| Uniones vigentes | deshace las que el veredicto da por «distintos» (reglas 1, 2 y 6; de las que hizo el control, solo la 2) | `proceso/incidentes.revisar_fusiones` |
 | Control: pares | compara con el experto los pares «experto» del mismo país (`suceso.pares_candidatos`) | `recogida/control_fichas.comparar_pares` |
-| Filtro de entrada y medida | con qué fichas se compara una nueva (`suceso.conjunto`); un «mismo» del experto no vale si es «distintos» (`suceso.nunca_el_mismo`) | `recogida/entrada.py` |
+| Filtro de entrada y medida | si la definición la da por el mismo suceso que una sola activa, se une sin preguntar (`suceso.del_mismo_suceso`); si no, con qué fichas se compara (`suceso.conjunto`: lo que el experto dio por distinto sale de la lista salvo que la definición diga «mismo»); un «mismo» del experto no vale si es «distintos» (`suceso.nunca_el_mismo`) | `recogida/entrada.py` |
+| Candado de la publicación (I8) | ninguna ficha se publica si hay otra publicada del mismo suceso: se une a ella con su cita, o no se publica y se avisa | `exportacion/puerta.candado`, `puerta.pasar` |
 | Toda unión del control | no se hace si el veredicto es «distintos»: queda como propuesta | `recogida/control_fichas.unir` |
 | Dos días en una ficha | la ficha con una frase que da dos días que no son una noche cuenta dos sucesos: no se publica hasta que una revisión la separa | `suceso.dos_dias_sin_revisar` (filtro de entrada y letra AA) |
-| Cerrojo | no deja unir lo que la definición da por distintos por las reglas 1 y 4, y deja deshacer lo que da por distintos | `proceso/protegido.par_prohibido`, `es_separacion` |
+| Cerrojo | no deja unir lo que la definición da por distintos por las reglas 1 y 5, y deja deshacer lo que da por distintos | `proceso/protegido.par_prohibido`, `es_separacion` |
 | Noticias de un suceso anterior | con qué fichas anteriores del mismo sitio se compara una noticia retrospectiva (`suceso.previas_del_sitio`) | `recogida/control_fichas.retrospectivas` |
-| Auditoría | letra **V**: uniones vigentes que el veredicto da por «distintos» por una regla que manda sobre quien leyó las fuentes (1, 2 y 4); letra **AA**: dos días | `proceso/auditoria_fichas.py` |
-| Invariantes | **I6**: ninguna unión vigente que `revisar_fusiones` tenía que haber deshecho; **I7**: ninguna dirección publicada lleva a una ficha de otro suceso | `proceso/invariantes.py` |
+| Auditoría | letra **V**: uniones vigentes que el veredicto da por «distintos» por una regla que manda sobre quien leyó las fuentes (1, 2 y 5); letra **AA**: dos días | `proceso/auditoria_fichas.py` |
+| Invariantes | **I6**: ninguna unión vigente que `revisar_fusiones` tenía que haber deshecho; **I7**: ninguna dirección publicada lleva a una ficha de otro suceso; **I8**: ningún suceso en dos fichas | `proceso/invariantes.py` |
 | Episodios | varios objetivos de un país en una noche; el mismo episodio a los dos lados de una frontera | `suceso.episodios_calculados` |
 | Repaso de entrada (a mano) | lo que no puede ser el mismo al repasar una ficha publicada | `suceso.imposible_al_repasar` |
 

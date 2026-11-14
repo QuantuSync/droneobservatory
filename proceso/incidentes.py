@@ -53,7 +53,9 @@ MODELOS_MILITARES = ("shahed", "geran", "gerbera")
 # Estados a los que solo lleva una autoridad.
 CONFIRMADOS = frozenset({Estado.CONFIRMADO, Estado.ATRIBUIDO})
 # Las reglas de la definición por las que dos fichas se unen sin leer sus fuentes.
-REGLAS_DE_FUSION = frozenset({suceso.REGLA_SITIO_Y_JORNADA, suceso.REGLA_RESUMEN})
+REGLAS_DE_FUSION = frozenset(
+    {suceso.REGLA_SITIO_Y_JORNADA, suceso.REGLA_RESUMEN, suceso.REGLA_INCURSION}
+)
 # Las reglas por las que una unión que hizo la regla de fusión se deshace sola.
 REGLAS_QUE_DESHACEN = frozenset({suceso.REGLA_REVISION, suceso.REGLA_PAISES, suceso.REGLA_CIERRES})
 
