@@ -279,3 +279,18 @@ def test_una_nota_oficial_reciente_o_con_ficha_no_avisa() -> None:
     ficha["fuentes"][0]["enlace"] = enlace
     almacen.guardar_incidente(ficha, AHORA, VOCABULARIO_MODELOS)
     assert oficiales.sin_salida(almacen, AHORA) == []
+
+
+def test_con_un_sitio_en_una_de_las_dos_no_es_la_misma_incursion() -> None:
+    # Ensayo del 14 de noviembre de 2026: con «una de las dos sin sitio» la regla unía la segunda
+    # dron de Moldavia del 31 de octubre (Viișoara, EODI-2026-00728) con la de Plopi (00716). Con
+    # un sitio en una de las dos, decide el experto.
+    con_sitio = f(ESTONIA_BIS, "EODI-2026-09817")
+    con_sitio["lugar"] = {**con_sitio["lugar"], "nivel": "localidad", "localidad": "Narva"}
+    assert not suceso.misma_incursion(f(ESTONIA), con_sitio)
+    assert suceso.misma_incursion(f(ESTONIA), f(ESTONIA_BIS, "EODI-2026-09817"))
+
+
+def test_los_dos_cierres_de_munich_son_distintos_por_revision() -> None:
+    # El candado los unía por el mismo sitio y la misma jornada; una revisión los separa.
+    assert frozenset({"EODI-2025-00055", "EODI-2025-00083"}) in suceso.pares_distintos()
