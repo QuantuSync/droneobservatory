@@ -12647,6 +12647,24 @@
       "motivo": "el aeropuerto de I\u0061\u0219i cerró su espacio aéreo por la alerta, no porque el dron fuera hacia él; ninguna fuente dice a qué se dirigía (revisado el 3 de noviembre de 2026)"
     },
     {
+      "incidente": "EODI-2026-00327",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "region",
+        "region": "Tulcea",
+        "suceso": "județul Tulcea",
+        "punto": {
+          "lat": 45.2,
+          "lon": 28.7
+        },
+        "radio_km": 50.0
+      },
+      "cita": "heading towards the northern part of Tulcea County",
+      "enlace": "https://protv.md/international/alerta-la-granita-o-drona-a-patruns-pentru-scurt-timp-in-spatiul-aerian-al-romaniei-armata-a-ridicat-avioane-de-lupta-mesaj-ro-alert-in-tulcea-pentru-a-doua-zi-la-rand---2751750.html",
+      "pais": "RO",
+      "motivo": "el Ministerio de Defensa rumano solo dice que el dron iba hacia el norte del distrito de Tulcea; la ficha lo ponía en la ciudad de Tulcea (5 km). Lo encontró la relectura de coherencia del ensayo del 14/11/2026, que el cerrojo no dejaba aplicar porque el punto llevaba esa frase (revisado el 14 de noviembre de 2026)"
+    },
+    {
       "incidente": "EODI-2026-00725",
       "campo": "cierre",
       "valor": "desconocido",
