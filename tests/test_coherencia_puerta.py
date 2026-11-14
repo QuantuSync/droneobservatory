@@ -133,6 +133,19 @@ def test_con_los_drones_protegidos_el_lugar_se_corrige(monkeypatch: pytest.Monke
     assert "Lithuanian coast" in guardada["titulo"]["es"]
 
 
+def test_lo_revisado_a_mano_no_se_corrige(monkeypatch: pytest.MonkeyPatch) -> None:
+    # EODI-2026-00747 en el ensayo: su lugar lo fija una revisión a mano; la corrección lo bajaba
+    # al país y la revisión lo devolvía, cada hora.
+    from proceso import protegido
+
+    monkeypatch.setattr(protegido, "_fijado_a_mano", lambda ficha, dato: dato == "lugar")
+    almacen = _base(_lituana())
+    cliente = Cliente([])
+    resumen, ctx = _corregir(almacen, cliente)
+    assert resumen.releidas == 0 and resumen.corregidas == [] and cliente.pedidas == []
+    assert correccion.CLAVE + "EODI-2026-09901" not in ctx.nuevas
+
+
 def test_una_region_sin_frase_literal_baja_al_pais() -> None:
     almacen = _base(_lituana())
     # La frase no está en la fuente: no cuenta.
