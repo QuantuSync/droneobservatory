@@ -69,6 +69,7 @@ from proceso import (
     periodos,
     presencia,
     solapes,
+    suceso,
     zona,
     zonas_lanzamiento,
 )
@@ -81,6 +82,7 @@ from recogida import (
     busqueda_dirigida,
     catalogo_vivo,
     control_fichas,
+    correccion,
     criterio_presencia,
     declaraciones_oficiales,
     deduccion,
@@ -393,6 +395,9 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.error("no hay base en la rama %s: ejecuta antes el histórico", remoto.RAMA)
             return 1
         almacen = abierta
+        # Las revisiones automáticas de la base (proceso/suceso.CURSOR_AUTOMATICAS), con las
+        # del archivo, para toda la pasada.
+        suceso.cargar_automaticas(almacen)
         antes = sitio.marca(almacen)
         paso = Pasos()
         # La tabla de lo publicado se siembra lo primero (exportacion/puerta.sembrar; una vez, la
@@ -762,9 +767,17 @@ def principal(argumentos: list[str] | None = None) -> int:
             if rotas and args.ensayo is not None:
                 revisados_fallidos.append("invariantes rotas: " + ", ".join(sorted(rotas)))
             # Las notas de alerta oficiales que llevan más de 2 horas sin ficha ni descarte con
-            # motivo: aviso privado, nunca desde un ensayo (recogida/oficiales.sin_salida).
+            # motivo: sus candidatos se repiten con el experto en la extracción de la hora
+            # siguiente (también en un ensayo, sobre su copia) y, si tras él siguen sin salida,
+            # aviso privado, nunca desde un ensayo (recogida/oficiales.avisar_sin_salida).
             paso(
                 "notas oficiales sin salida", oficiales.avisar_sin_salida, almacen, ahora,
+                visitas.avisador_privado if args.ensayo is None else None,
+            )  # fmt: skip
+            # Las fichas que la coherencia de la puerta no pudo releer en más de una recogida
+            # (sin servicio o sin cupo): aviso privado, una vez, nunca desde un ensayo.
+            paso(
+                "coherencia sin relectura", correccion.avisar_pendientes, almacen, ahora,
                 visitas.avisador_privado if args.ensayo is None else None,
             )  # fmt: skip
         except Exception:

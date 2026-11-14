@@ -462,7 +462,7 @@ así que nunca casaba con la ficha del suceso. Así entraron EODI-2026-00663 («
   anterior (casi siempre un suceso nuevo) esperaba como mucho 6 horas (hasta el 28 de octubre de
   2026; ahora la decide el filtro de entrada).
 - **Salida a las 12 horas** (desde el 9 de noviembre de 2026, `SALIDA_RETROSPECTIVA`,
-  `proceso/control_fichas.salida_retrospectiva`): la que sigue sin fecha respaldada (el experto
+  `proceso/suceso.salida_retrospectiva`): la que sigue sin fecha respaldada (el experto
   respondió sin una fecha comprobada y, con las mismas fuentes, no se le vuelve a preguntar) ya no
   queda retenida para siempre. Si la frase literal de una fuente da el mes
   (`fechas.mes_retrospectivo`) y ninguna ficha del mismo sitio es de ese mes, toma el día 1 de ese

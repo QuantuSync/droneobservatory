@@ -38,7 +38,6 @@ from proceso.estados import RETIRADAS, Estado
 from proceso.fronteras import dentro_del_pais
 from proceso.noticias import (
     Nomenclator,
-    distancia_km,
     localidades_declinadas,
     lugares_en,
     normalizar,
@@ -126,19 +125,6 @@ def huella_fuentes(incidente: Documento) -> str:
     """Las fuentes del incidente: cambia cuando llega una nueva."""
     ids = sorted(f["id"] for f in incidente.get("fuentes", []))
     return hashlib.sha256("\n".join(ids).encode("utf-8")).hexdigest()[:16]
-
-
-def _punto(d: Documento) -> tuple[float, float] | None:
-    punto = d["lugar"].get("punto")
-    return (float(punto["lat"]), float(punto["lon"])) if punto else None
-
-
-def _km(a: tuple[float, float], b: tuple[float, float]) -> float:
-    from proceso.noticias import Lugar
-
-    uno = Lugar("", "", "", a[0], a[1], 0.0, "", (), ())
-    otro = Lugar("", "", "", b[0], b[1], 0.0, "", (), ())
-    return distancia_km(uno, otro)
 
 
 # --- Lo que ve el control de una ficha ----------------------------------------------------
@@ -328,36 +314,6 @@ def _presencia(c: Correccion, v: Verificada) -> None:
         c.cambios.append(f"presencia no confirmada: «{frase}»")
 
 
-def dia_de_otro_suceso(incidente: Documento, fuente_id: str) -> str | None:
-    """El día que esa fuente da al suceso que cuenta, si es otro que el de la ficha (su
-    afirmación «inicio»); None si coincide o no lo da. Una nota sobre otro suceso del mismo país
-    no da el número de drones de este: promptmedia.ro (5 de noviembre de 2026) contaba «incidentul
-    din seara de 31 octombrie» (EODI-2026-00719) y el control puso sus dos drones en
-    EODI-2026-00743, la noche del 1 al 2 de noviembre."""
-    from datetime import date
-
-    from proceso import cruces
-
-    valor = str(((incidente.get("tiempo") or {}).get("inicio") or {}).get("valor") or "")[:10]
-    if not valor:
-        return None
-    dia = date.fromisoformat(valor)
-    # Los días de su suceso: los de su noche si el día salió de una noche («În noaptea de 1 spre 2
-    # noiembrie»: el 1 y el 2); si no, la víspera, el día y el siguiente (una noche, la hora UTC).
-    if cruces.dia_de_una_noche(incidente):
-        suyos = {dia, dia + timedelta(days=1)}
-    else:
-        suyos = {dia - timedelta(days=1), dia, dia + timedelta(days=1)}
-    dias = {
-        str(a["valor"])[:10]
-        for a in incidente.get("afirmaciones", [])
-        if a.get("campo") == "inicio" and a.get("fuente_id") == fuente_id and a.get("valor")
-    }
-    if any(date.fromisoformat(d) in suyos for d in dias):
-        return None
-    return min(dias) if dias else None
-
-
 def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
     d = c.incidente
     actual = (d.get("drones") or {}).get("numero", "desconocido")
@@ -368,7 +324,7 @@ def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
     if (
         dato is not None
         and dato[0] != actual
-        and (otro := dia_de_otro_suceso(d, dato[1])) is not None
+        and (otro := suceso.dia_de_otro_suceso(d, dato[1])) is not None
     ):
         # La fuente del número cuenta un suceso de otro día: no cambia el que hay.
         c.dudas.append(f"drones: «{dato[2]}» es de una fuente que da otro día ({otro})")
@@ -820,52 +776,6 @@ def comprobar_retrospectiva(
         "frase": " ".join(frase.split()),
         **motivos,
     }
-
-
-def salida_retrospectiva(
-    incidente: Documento, activos: list[Documento], previa: dict[str, Any] | None
-) -> dict[str, Any] | None:
-    """La salida de una noticia retrospectiva que sigue sin fecha respaldada al cumplir su plazo
-    (recogida/control_fichas.SALIDA_RETROSPECTIVA), sin preguntar más al experto:
-
-    - {"decision": "fecha", ...} (lo de comprobar_retrospectiva): la frase literal de una fuente
-      da el mes y ninguna ficha del mismo sitio es de ese mes; sale con el día 1, «aproximada»;
-    - {"decision": "retirar", "previas": [ids]}: es un suceso anterior (lo dice una palabra de sus
-      fuentes o el experto) pero no se sabe cuál ni cuándo; no se publica (EODI-2026-00765: la
-      búsqueda del 6/11/2026 de los autores del intento de atentado de agosto en el aeropuerto de
-      Leipzig/Halle, con dos fichas de agosto allí);
-    - None: nadie ha dicho todavía que sea un suceso anterior (el experto no respondió, por el tope
-      o un fallo, que nunca retiran: PR 382); sigue retenida y el resumen diario la señala."""
-    previas = [
-        d
-        for d in activos
-        if d["id"] != incidente["id"]
-        and suceso.fecha_verificada(d)
-        and instante(d) < instante(incidente) - timedelta(days=1)
-        and suceso.mismo_sitio(incidente, d)
-    ]
-    if (mes := fechas.mes_retrospectivo(incidente)) is not None:
-        fuente_id, frase, dia = mes
-        del_mes = sorted(
-            d["id"]
-            for d in previas
-            if (instante(d).year, instante(d).month) == (dia.year, dia.month)
-        )
-        if not del_mes:
-            return {
-                "decision": "fecha",
-                "inicio": {
-                    "valor": f"{dia.isoformat()}T00:00Z",
-                    "precision": suceso.APROXIMADA,
-                },
-                "fuente_id": fuente_id,
-                "frase": frase,
-            }
-        return {"decision": "retirar", "previas": del_mes}
-    respuesta = (previa or {}).get("respuesta") or {}
-    if fechas.retrospectiva(incidente) is None and respuesta.get("retrospectiva") is not True:
-        return None
-    return {"decision": "retirar", "previas": sorted(d["id"] for d in previas)}
 
 
 def con_fecha_retrospectiva(incidente: Documento, decision: dict[str, Any]) -> Documento:

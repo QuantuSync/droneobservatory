@@ -50,7 +50,7 @@ from modelo import control as peticiones
 from modelo import coste, secundario
 from modelo.cliente import LlamadaFallida
 from proceso import control_fichas as reglas
-from proceso import incidentes
+from proceso import incidentes, suceso
 from proceso import segunda_lectura as lectura
 from recogida import control_fichas, rectificaciones
 from recogida.plazo import Plazo, TiempoAgotado
@@ -397,7 +397,7 @@ def comparar_pares(principal: Almacen, propia: Propia, lector: Lector, ahora: da
     margen = configuracion()["pares"]
     ya = set(principal.controles("par:"))
     vistos = 0
-    for a, b in lectura.pares_amplios(fichas, float(margen["horas"]), float(margen["km"]), ya):
+    for a, b in suceso.pares_amplios(fichas, float(margen["horas"]), float(margen["km"]), ya):
         if lector.parado or vistos >= maximo:
             return
         la, lb = leidas.get(a["id"]), leidas.get(b["id"])

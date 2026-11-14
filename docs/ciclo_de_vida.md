@@ -81,6 +81,33 @@ filas publicadas. `unidos` sale de las filas unidas y `retirados` (campo nuevo, 
 retiradas: identificador, fecha y motivo. La web sirve la dirección de una retirada con esa
 explicación.
 
+### Coherencia en la puerta
+
+Desde el 14 de noviembre de 2026, cada hora, dentro del control de las fichas (después del filtro
+de entrada), cada ficha activa pasa por las comprobaciones de `proceso/correccion.py`. Lo que sus
+frases no sostienen **se corrige, no se retiene** (`recogida/correccion.py`):
+
+| Comprobación | Hallazgo | Corrección |
+|---|---|---|
+| a) un suceso | una frase da dos días (`suceso.dos_dias_sin_revisar`) | la relectura dice qué fuentes son de cada día: revisión automática `separar` (en la base), que hace en la recogida siguiente el mismo paso que las revisadas a mano; si es una sola jornada, revisión automática `una_jornada` |
+| b) fecha | a más de un día de la noche de su episodio | el día que da una frase literal |
+| c) lugar | punto fuera del país, o ninguna frase nombra el sitio (ni el nomenclátor junto al punto ni una palabra propia del nombre) | el sitio si una frase lo da; si no, la región que nombra una frase o el país, con el titular a ese nivel |
+| d) drones | el número no lo da ninguna fuente pública (sin afirmación) | el que da una frase con la palabra dron; si no, «sin dato» |
+| f) titular | nombra otro país del alcance y no el suyo | se rehace con los datos de la ficha |
+
+La relectura la hace el experto con el texto de las fuentes (`modelo/coherencia.py`), con cupo
+propio (modo `coherencia`, 1 USD al día), como mucho 40 fichas y 5 minutos por pasada. Solo vale
+lo que sostiene una frase copiada literalmente de una fuente. Sin relectura (sin servicio, sin
+cupo) se corrige lo seguro: el lugar baja al país y los drones quedan «sin dato». La fecha y las
+dos jornadas esperan a la relectura: la ficha nueva con dos días sigue retenida por el filtro de
+entrada como mucho una recogida, y si pasa más de una sin relectura sale un aviso privado
+(«Coherencia sin relectura», una vez por ficha). Cada decisión se guarda (`coherencia:<id>`) con
+la huella de lo que miró: una ficha que no cambia no se relee.
+
+Las revisiones automáticas viven en la base (cursor `revisados:automaticas`) y no en
+`configuracion/incidentes_revisados.json`: todos los lectores de revisiones
+(`proceso/suceso.revisiones`, `recogida/revisados.cargar`) las suman a las del archivo.
+
 ## Los avisos
 
 `recogida/avisos.py` compone cada aviso con el documento interno que guarda la fila de `publicado`,
@@ -172,6 +199,7 @@ ese mismo paso.
 | dirección de una ficha unida a otra no publicada, o retirada, en 404 | estados de `publicado` |
 | dirección de una ficha que cambió de unión y seguía llevando a la ficha anterior, de otro suceso (00218, 00522) | las filas unidas se ponen al día con su unión vigente; I7 |
 | el mismo suceso publicado dos veces porque el experto lo dio por distinto (00817 y 00814) o por una fecha mal leída (00818 y 00792) | la definición manda sobre el experto (la misma incursión del país); el candado y I8 |
+| una ficha con algo que sus frases no sostienen (el lugar, los drones, dos días, otro país en el titular) se retenía o se publicaba igual | la coherencia en la puerta la corrige con la relectura |
 
 ## Cómo se prueba
 

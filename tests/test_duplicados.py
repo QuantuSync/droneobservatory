@@ -256,16 +256,123 @@ def _nota_sin_ficha(almacen: Almacen, entrado: str) -> str:
 
 
 def test_una_nota_oficial_sin_salida_en_dos_horas_avisa_una_vez() -> None:
+    from proceso import escalado, extraccion
     from recogida import oficiales
 
     almacen = Almacen.abrir()
+    almacen.guardar_candidato({"id": "cand-prueba", "articulos": []})
     enlace = _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
     avisos: list[str] = []
-    assert oficiales.avisar_sin_salida(almacen, AHORA, lambda titulo: avisos.append) == [enlace]
+    # A las 2 horas sin salida: sus candidatos se repiten con el experto (crítico, con revisión,
+    # ya vencida para la extracción de la hora siguiente) y aún no se avisa.
+    assert oficiales.avisar_sin_salida(almacen, AHORA, lambda titulo: avisos.append) == []
+    assert avisos == []
+    espera = extraccion.esperan_experto(almacen)["cand-prueba"]
+    assert espera["revision"] and espera["critico"]
+    assert espera["motivos"][0].startswith(escalado.MOTIVO_NOTA_OFICIAL)
+    assert escalado.es_critico(espera["motivos"]) and escalado.escala(espera["motivos"])
+    assert extraccion.en_revision(almacen) == {"cand-prueba"}
+    assert not extraccion.espera_experto(almacen, "cand-prueba", AHORA)
+    pedido = (almacen.cursor(oficiales.CURSOR_SIN_FICHA) or {})[enlace]["experto_pedido"]
+    assert pedido == "2026-11-14T10:17Z"
+    # Pedido una sola vez: la recogida siguiente dentro de la hora no escribe nada.
+    antes = (almacen.cursor(oficiales.CURSOR_SIN_FICHA), extraccion.esperan_experto(almacen))
+    media_hora = datetime(2026, 11, 14, 10, 47, tzinfo=UTC)
+    assert oficiales.avisar_sin_salida(almacen, media_hora, lambda titulo: avisos.append) == []
+    assert (
+        almacen.cursor(oficiales.CURSOR_SIN_FICHA),
+        extraccion.esperan_experto(almacen),
+    ) == antes
+    # Una hora después, sin salida tras el experto: un aviso, una sola vez.
+    hora = datetime(2026, 11, 14, 11, 17, tzinfo=UTC)
+    assert oficiales.avisar_sin_salida(almacen, hora, lambda titulo: avisos.append) == [enlace]
     assert len(avisos) == 1 and enlace in avisos[0]
-    # Avisada una vez: la siguiente recogida la registra pero no vuelve a avisar.
-    assert oficiales.avisar_sin_salida(almacen, AHORA, lambda titulo: avisos.append) == [enlace]
+    assert oficiales.avisar_sin_salida(almacen, hora, lambda titulo: avisos.append) == [enlace]
     assert len(avisos) == 1
+    assert (almacen.cursor(oficiales.CURSOR_SIN_FICHA) or {})[enlace]["experto_pedido"] == pedido
+
+
+def test_una_nota_oficial_en_ensayo_pide_el_experto_y_no_avisa() -> None:
+    from proceso import extraccion
+    from recogida import oficiales
+
+    almacen = Almacen.abrir()
+    almacen.guardar_candidato({"id": "cand-prueba", "articulos": []})
+    enlace = _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
+    assert oficiales.avisar_sin_salida(almacen, AHORA, None) == []
+    assert extraccion.en_revision(almacen) == {"cand-prueba"}
+    hora = datetime(2026, 11, 14, 11, 17, tzinfo=UTC)
+    assert oficiales.avisar_sin_salida(almacen, hora, None) == [enlace]
+    # Sin quien avise, nada se marca como avisado y las recogidas siguientes no cambian nada.
+    cursor = almacen.cursor(oficiales.CURSOR_SIN_FICHA) or {}
+    assert "avisada" not in cursor[enlace]
+    assert oficiales.avisar_sin_salida(almacen, hora, None) == [enlace]
+    assert almacen.cursor(oficiales.CURSOR_SIN_FICHA) == cursor
+
+
+def test_una_extraccion_escalada_sin_salida_da_ya_su_oportunidad_al_experto() -> None:
+    from recogida import oficiales
+
+    almacen = Almacen.abrir()
+    almacen.guardar_candidato({"id": "cand-prueba", "articulos": []})
+    enlace = _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
+    assert oficiales.avisar_sin_salida(almacen, AHORA, None) == []
+    # El experto la extrajo a los 20 minutos sin ficha ni descarte con motivo: no hay que
+    # esperar a que pase la hora.
+    almacen.guardar_extraccion(
+        "cand-prueba", "2026-11-14T10:37Z", "v", "h", False,
+        {"motivos": [], "campos": {}, "incidente": None, "escalado": ["nota_oficial_sin_salida"]},
+    )  # fmt: skip
+    avisos: list[str] = []
+    despues = datetime(2026, 11, 14, 10, 40, tzinfo=UTC)
+    assert oficiales.avisar_sin_salida(almacen, despues, lambda titulo: avisos.append) == [enlace]
+    assert len(avisos) == 1
+
+
+def test_un_descarte_con_motivo_o_una_ficha_es_la_salida_de_la_nota() -> None:
+    from proceso import extraccion
+    from recogida import oficiales
+
+    almacen = Almacen.abrir()
+    almacen.guardar_candidato({"id": "cand-prueba", "articulos": []})
+    enlace = _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
+    # Una extracción de antes de que la nota entrara no cuenta.
+    almacen.guardar_extraccion(
+        "cand-prueba", "2026-11-14T07:00Z", "v", "h", False,
+        {"motivos": ["no es un incidente"], "campos": {}, "incidente": None},
+    )  # fmt: skip
+    # Ni una de después sin ficha y sin motivo.
+    almacen.guardar_extraccion(
+        "cand-prueba", "2026-11-14T08:00Z", "v", "h", False,
+        {"motivos": [], "campos": {}, "incidente": None},
+    )  # fmt: skip
+    assert oficiales.sin_salida(almacen, AHORA) == [enlace]
+    # El descarte del base con su motivo (o la ficha que dice que no es un incidente) es salida.
+    almacen.guardar_extraccion(
+        "cand-prueba", "2026-11-14T09:00Z", "v", "h", False,
+        {"motivos": [], "campos": {}, "incidente": None,
+         "ficha": {"es_incidente": {"valor": False}}},
+    )  # fmt: skip
+    assert oficiales.sin_salida(almacen, AHORA) == []
+    avisos: list[str] = []
+    hora = datetime(2026, 11, 14, 11, 17, tzinfo=UTC)
+    assert oficiales.avisar_sin_salida(almacen, hora, lambda titulo: avisos.append) == []
+    assert avisos == [] and extraccion.esperan_experto(almacen) == {}
+
+
+def test_un_descarte_con_motivos_tras_la_entrada_es_salida() -> None:
+    from proceso import extraccion
+    from recogida import oficiales
+
+    almacen = Almacen.abrir()
+    almacen.guardar_candidato({"id": "cand-prueba", "articulos": []})
+    _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
+    almacen.guardar_extraccion(
+        "cand-prueba", "2026-11-14T08:50Z", "v", "h", False,
+        {"motivos": ["no_es_suceso: comunicado de ejercicios"], "campos": {}, "incidente": None},
+    )  # fmt: skip
+    assert oficiales.avisar_sin_salida(almacen, AHORA, None) == []
+    assert extraccion.esperan_experto(almacen) == {}
 
 
 def test_una_nota_oficial_reciente_o_con_ficha_no_avisa() -> None:

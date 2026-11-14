@@ -1798,7 +1798,7 @@ def resume_varios_sucesos(decisiones: dict[str, Documento], id_: str) -> bool:
 
 MOTIVO_RETROSPECTIVA = "fecha del suceso sin respaldar (noticia retrospectiva)"
 # Plazo de una noticia retrospectiva sin fecha respaldada antes de su salida sin el experto
-# (reglas.salida_retrospectiva). Antes del 9 de noviembre de 2026 no tenía ninguno: EODI-2026-00765
+# (suceso.salida_retrospectiva). Antes del 9 de noviembre de 2026 no tenía ninguno: EODI-2026-00765
 # siguió retenida desde el 6/11 porque el experto respondió tres veces «sin fecha» y, con la misma
 # huella, no se le vuelve a preguntar. Con la pasada horaria, sale antes de 24 horas aunque una
 # hora falle.
@@ -1829,10 +1829,10 @@ def salir_de_la_retencion(
     ctx: Contexto, incidente: Documento, activos: list[Documento], decisiones: dict[str, Documento]
 ) -> str | None:
     """La salida de una noticia retrospectiva al cumplir SALIDA_RETROSPECTIVA sin fecha respaldada
-    (reglas.salida_retrospectiva): toma el mes que da la frase literal de una fuente o se retira
+    (suceso.salida_retrospectiva): toma el mes que da la frase literal de una fuente o se retira
     sin haber salido en la web. Devuelve la nota de lo hecho, o None si sigue retenida."""
     previa = decisiones.get(reglas.clave_retrospectiva(incidente["id"]))
-    salida = reglas.salida_retrospectiva(incidente, activos, previa)
+    salida = suceso.salida_retrospectiva(incidente, activos, previa)
     if salida is None:
         return None
     if salida["decision"] == "fecha":
@@ -1919,6 +1919,7 @@ def ejecutar(
                 "vistos": {**cursor["vistos"], **dict.fromkeys(quedan, _iso(ahora))},
             }
             vistos |= quedan
+    suceso.cargar_automaticas(almacen)
     reaplicar_uniones(almacen, ctx.decisiones, ahora, modelos)
     reglas_deterministas(ctx)
     activos = _activos(almacen)
@@ -1969,6 +1970,19 @@ def ejecutar(
         except Exception as error:
             registro.warning("filtro de entrada: %s", repr(error)[:300])
             resultado.errores.append(f"filtro de entrada: {repr(error)[:150]}")
+        finally:
+            almacen.guardar_controles(ctx.nuevas, _iso(ahora))
+        ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
+        ctx.nuevas = {}
+        # La coherencia de la puerta (recogida/correccion.py): lo que sus frases no sostienen se
+        # corrige con la relectura del experto (cupo «coherencia»), no se retiene.
+        from recogida import correccion
+
+        try:
+            correccion.corregir(ctx, Plazo(correccion.TOPE_S))
+        except Exception as error:
+            registro.warning("coherencia en la puerta: %s", repr(error)[:300])
+            resultado.errores.append(f"coherencia en la puerta: {repr(error)[:150]}")
         finally:
             almacen.guardar_controles(ctx.nuevas, _iso(ahora))
         ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}

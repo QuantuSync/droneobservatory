@@ -84,8 +84,15 @@ SENALES_CRITICAS = frozenset(
 # Un caso crítico que va directo al experto porque el tope de su modo ya no deja llamar al base
 # (modelo/coste.py: lo crítico no espera por los topes normales).
 CRITICO_SIN_BASE = "critico_sin_base"
+# Una nota de alerta oficial (mil.lv, mod.gov.lv, mil_ee, MApN…) que lleva HORAS_SALIDA sin ficha
+# ni descarte con motivo se repite con el experto (recogida/oficiales.pedir_experto). Es crítico:
+# las fuentes son ministerios de Defensa de la OTAN y la nota tiene un plazo (2 horas y una
+# recogida más); sin la reserva crítica, un tope del experto agotado la haría esperar al día
+# siguiente.
+MOTIVO_NOTA_OFICIAL = "nota_oficial_sin_salida"
 MOTIVOS_CRITICOS = (
     "critico", "publicada", "contradiccion: presencia", "contradiccion: cierre",
+    MOTIVO_NOTA_OFICIAL,
     *(f"senal: {s}" for s in sorted(SENALES_CRITICAS | {"incursion"})),
 )  # fmt: skip
 # Los motivos que no hacen esperar al experto (por su comienzo): si no tiene margen, vale el base.

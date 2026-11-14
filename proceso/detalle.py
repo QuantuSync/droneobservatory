@@ -161,14 +161,6 @@ def pseudo_encuentro(encuentro: Documento) -> Documento | None:
     }
 
 
-def coincidentes(almacen_incidentes: list[Documento], pseudo: Documento) -> list[str]:
-    return sorted(
-        i["id"] for i in almacen_incidentes
-        if incidentes.activo(i) and i["lugar"]["pais"] == pseudo["lugar"]["pais"]
-        and definicion.encajan(i, pseudo)
-    )  # fmt: skip
-
-
 def _destino(almacen: Almacen, id_: str) -> str:
     """El incidente vivo: si se fundió en otro, el otro."""
     vistos = set()
@@ -194,7 +186,7 @@ def cruzar_encuentros(almacen: Almacen, ahora: datetime) -> int:
         pseudo = pseudo_encuentro(encuentro)
         if pseudo is None:
             continue
-        hallados = coincidentes(activos, pseudo)
+        hallados = definicion.coincidentes(activos, pseudo)
         if len(hallados) == 1:
             almacen.guardar_encuentro({**encuentro, "incidente": hallados[0]}, ahora)
             enlazados += 1

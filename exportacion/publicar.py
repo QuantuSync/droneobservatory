@@ -33,7 +33,7 @@ from exportacion.citas import Pendientes, con_traducciones, enriquecer_incidente
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
-from proceso import autoridades, impactos_guerra, rectificaciones
+from proceso import autoridades, impactos_guerra, rectificaciones, suceso
 from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.focos_termicos import con_focos
 from proceso.luces import con_luces
@@ -97,6 +97,7 @@ def publicar(
     # ficha. Si falla, la puerta sigue sin dejar entrar una ficha del mismo suceso que otra
     # publicada (I8).
     try:
+        suceso.cargar_automaticas(almacen)
         hecho = puerta.candado(almacen, ahora, modelos(almacen))
         registro.info(
             "candado: %d uniones deshechas, %d fichas unidas a la publicada de su suceso, "

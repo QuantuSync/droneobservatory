@@ -271,13 +271,17 @@ def _instante_de(incidente: Documento) -> Documento:
 
 
 class Experto:
-    """Las llamadas del filtro: siempre al experto, con el cupo del modo «entrada»."""
+    """Las llamadas del filtro: siempre al experto, con el cupo del modo «entrada» (o el que se
+    le dé: la coherencia de la puerta usa el suyo)."""
 
-    def __init__(self, ctx: control_fichas.Contexto, plazo: Plazo) -> None:
+    def __init__(
+        self, ctx: control_fichas.Contexto, plazo: Plazo, modo: coste.Modo = coste.Modo.ENTRADA
+    ) -> None:
         self.ctx = ctx
         self.plazo = plazo
+        self.modo = modo
         self.llamador = control_fichas.Llamador(
-            ctx.almacen, ctx.llamador.fabrica, coste.Modo.ENTRADA, ctx.ahora, plazo, ctx.resultado
+            ctx.almacen, ctx.llamador.fabrica, modo, ctx.ahora, plazo, ctx.resultado
         )
         self.motivo_espera = ""
 
@@ -299,10 +303,8 @@ class Experto:
             previsto = coste.peor_caso(control.letras(cuerpo), max_salida,
                                        modelo=str(getattr(cliente, "modelo", "")),
                                        esfuerzo=esfuerzo)  # fmt: skip
-            gastado = almacen.gastado_experto_en(coste.Modo.ENTRADA.value, coste.dia(ahora))
-            coste.comprobar_cupo(
-                gastado, previsto, coste.Modo.ENTRADA, coste.del_mes(almacen, ahora)
-            )
+            gastado = almacen.gastado_experto_en(self.modo.value, coste.dia(ahora))
+            coste.comprobar_cupo(gastado, previsto, self.modo, coste.del_mes(almacen, ahora))
             self.plazo.comprobar()
             respuesta = cliente.mensaje(cuerpo)
         except coste.LimiteGasto as error:

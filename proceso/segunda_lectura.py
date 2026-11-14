@@ -11,16 +11,15 @@ fichas y de las rectificaciones). Aquí, sin llamadas:
 - qué hallazgo cuenta: un dato «contradicho», o «sin apoyo» en el lugar, la fecha, la presencia
   o el número de drones, o una ficha que parece resumir varios sucesos; siempre con una frase
   que esté, literal, en las citas que se mandaron (si no está, el hallazgo no cuenta);
-- los pares de posibles duplicados con márgenes más amplios que los del control
-  (proceso/suceso.pares_candidatos), sin los que el control ya compara ni los que una
-  revisión separó;
+- (los pares de posibles duplicados con márgenes más amplios que los del control, sin los que
+  el control ya compara ni los que una revisión separó, están desde el 14 de noviembre de 2026
+  en la definición de suceso: proceso/suceso.pares_amplios);
 - los titulares que el barrido diario de rectificaciones manda al modelo y cuáles elige.
 """
 
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import timedelta
 from typing import Any
 
 from jsonschema import Draft202012Validator
@@ -401,40 +400,3 @@ def orden_lectura(fichas: dict[str, str], lecturas: dict[str, tuple[str, str]]) 
         key=lambda i: lecturas[i][1],
     )
     return [*nunca, *cambiadas, *iguales]
-
-
-# --- Posibles duplicados -------------------------------------------------------------------
-
-
-def cercanos(a: Documento, b: Documento, horas: float, km: float) -> bool:
-    """Del mismo país, a `horas` como mucho (el suceso o la primera noticia), a `km` más los
-    radios (sin punto, solo el país), del mismo tipo de sitio y que ninguna revisión separó; sin
-    los que ya compara el control (proceso/suceso.candidatos)."""
-    if a["id"] == b["id"] or a["lugar"]["pais"] != b["lugar"]["pais"]:
-        return False
-    ventana = timedelta(hours=horas)
-    if (
-        abs(reglas.instante(a) - reglas.instante(b)) > ventana
-        and abs(reglas.primera_noticia(a) - reglas.primera_noticia(b)) > ventana
-    ):
-        return False
-    pa, pb = reglas._punto(a), reglas._punto(b)
-    if pa is not None and pb is not None:
-        radios = float(a["lugar"].get("radio_km", 0)) + float(b["lugar"].get("radio_km", 0))
-        if reglas._km(pa, pb) > radios + km:
-            return False
-    return (
-        suceso._mismo_tipo_de_sitio(a, b)
-        and not suceso.separados(a, b)
-        and not suceso.candidatos(a, b)
-    )
-
-
-def pares_amplios(activos: list[Documento], horas: float, km: float,
-                  ya_comparados: set[str]) -> list[tuple[Documento, Documento]]:  # fmt: skip
-    """Los pares de posibles duplicados con márgenes más amplios, sin los que el control ya
-    comparó (`ya_comparados`: claves `par:…`)."""
-    pares = suceso.pares_candidatos(
-        activos, {d["id"] for d in activos}, lambda a, b: cercanos(a, b, horas, km)
-    )
-    return [p for p in pares if reglas.clave_par(p[0]["id"], p[1]["id"]) not in ya_comparados]

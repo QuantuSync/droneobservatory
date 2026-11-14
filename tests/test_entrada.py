@@ -385,7 +385,7 @@ def test_el_cupo_de_entrada_es_aparte_del_experto() -> None:
     assert cliente.pedidas == []
     assert coste.limite(coste.Modo.ENTRADA) == 3.00
     assert coste.TOPE_MENSUAL_USD == 150.00
-    assert coste.REPARTO_MENSUAL_USD[coste.Modo.ENTRADA] == 90.00
+    assert coste.REPARTO_MENSUAL_USD[coste.Modo.ENTRADA] == 84.00
 
 
 def test_la_medida_a_las_24_horas_une_el_duplicado_y_lo_cuenta() -> None:

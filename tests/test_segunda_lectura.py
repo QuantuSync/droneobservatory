@@ -224,15 +224,15 @@ def test_pares_con_margenes_amplios() -> None:
     b["tiempo"] = {"inicio": ejemplos.instante("2025-09-24T20:00Z", "hora")}
     # A 48 horas: el control no los compara (el mismo día o la misma noche); la segunda lectura sí.
     assert not suceso.candidatos(a, b)
-    assert len(lectura.pares_amplios([a, b], 72, 30, set())) == 1
-    assert lectura.pares_amplios([a, b], 72, 30, {f"par:{ID}|EODI-2025-00160"}) == []
+    assert len(suceso.pares_amplios([a, b], 72, 30, set())) == 1
+    assert suceso.pares_amplios([a, b], 72, 30, {f"par:{ID}|EODI-2025-00160"}) == []
     b["relacionados"] = [{"id": ID}]
-    assert lectura.pares_amplios([a, b], 72, 30, set()) == []
+    assert suceso.pares_amplios([a, b], 72, 30, set()) == []
     # Dos cierres del mismo sitio en noches distintas son dos sucesos (regla del control).
     b.pop("relacionados")
     a["consecuencias"] = b["consecuencias"] = {"cierre": {"valor": "si"}}
     a["tipo"] = b["tipo"] = "interrupcion_aeroportuaria"
-    assert lectura.pares_amplios([a, b], 72, 30, set()) == []
+    assert suceso.pares_amplios([a, b], 72, 30, set()) == []
 
 
 # --- La pasada -----------------------------------------------------------------------------
