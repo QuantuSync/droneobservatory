@@ -868,20 +868,20 @@ def resumen_de_la_misma_noche(incidente: Documento, otra: Documento) -> str | No
 # --- La misma incursión del país --------------------------------------------------------------
 
 MOTIVO_INCURSION = (
-    "drones que entran desde fuera en el mismo país y en la misma jornada, y una de las dos sin "
-    "un sitio propio que la distinga: la misma incursión"
+    "drones que entran desde fuera en el mismo país y en la misma jornada, y las dos solo dicen "
+    "el país: nada las distingue, la misma incursión"
 )
 
 
-def sin_sitio_propio(documento: Documento) -> bool:
+def solo_el_pais(documento: Documento) -> bool:
     """La ficha no sitúa el suceso en ningún sitio del país: solo dice el país."""
-    return not con_punto(documento) or documento["lugar"].get("nivel") == "pais"
+    return bool(documento["lugar"].get("nivel") == "pais")
 
 
 def misma_incursion(a: Documento, b: Documento) -> bool:
     """Las dos cuentan drones que entran desde fuera (`entra_de_fuera`) en el mismo país y en la
-    misma jornada (la estricta, la de unir sin preguntar), y al menos una no tiene un sitio
-    propio que la distinga de la otra; con hora en las dos, a menos de INICIOS_HORA.
+    misma jornada (la estricta, la de unir sin preguntar), y las dos solo dicen el país
+    (`solo_el_pais`); con hora en las dos, a menos de INICIOS_HORA.
 
     La definición dice que el dron o la oleada que recorre un país en una noche es un suceso, y
     que dos sucesos de la misma jornada y el mismo país se distinguen por el sitio o la hora que
@@ -891,11 +891,19 @@ def misma_incursion(a: Documento, b: Documento) -> bool:
     miércoles era el 11; y EODI-2026-00818 contaba, como «last week», la noche del 10 al 11 en
     Lituania que ya era EODI-2026-00792. Se publicaron las dos.
 
-    Si una ficha sin sitio casa así con varias de su país (varios drones en sitios distintos esa
-    jornada), no se sabe con cuál: quien llama lo resuelve (`del_mismo_suceso` da todas)."""
+    Con un sitio en una de las dos (una región, una localidad, una instalación) no vale: en el
+    ensayo del 14 de noviembre de 2026 la regla con «una de las dos sin sitio» unía sucesos
+    distintos del mismo día, que sus fuentes separan por el sitio o por la noche: la segunda
+    dron de Moldavia del 31 de octubre («cea de-a doua dronă», Viișoara, EODI-2026-00728) con la
+    de Plopi (00716), las cuatro de la noche del 15 al 16 (00566) con la de Ștefan Vodă de la
+    noche anterior (00542) y la alerta de la mañana del 14 en Tulcea (00532) con las de Sulina
+    de esa noche (00541, 00698). Eso lo decide el experto.
+
+    Si una ficha casa así con varias de su país, no se sabe con cuál: quien llama lo resuelve
+    (`del_mismo_suceso` da todas)."""
     if pais(a) != pais(b) or not (entra_de_fuera(a) and entra_de_fuera(b)):
         return False
-    if not (sin_sitio_propio(a) or sin_sitio_propio(b)):
+    if not (solo_el_pais(a) and solo_el_pais(b)):
         return False
     if con_hora(a) and con_hora(b) and abs(instante(a) - instante(b)) >= INICIOS_HORA:
         return False

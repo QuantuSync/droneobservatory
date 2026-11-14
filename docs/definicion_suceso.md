@@ -65,10 +65,14 @@ Las reglas firmes, en su orden (la primera que habla, decide):
    por zonas cuenta una noche y las alertas de esa noche, en el mismo país, son el mismo suceso,
    aunque el experto dijera otra cosa.
 4. **La misma incursión del país.** Dos fichas de drones que entran desde fuera en el mismo
-   país y la misma jornada, cuando al menos una solo dice el país (no tiene un sitio propio que
-   la distinga), son el mismo suceso, aunque el experto dijera otra cosa; con hora en las dos, a
-   menos de 6 horas, y salvo dos cierres de noches distintas (regla 6). Si una ficha así casa con varias de su país, no se sabe con cuál: no se une
-   sola (desde el 14 de noviembre de 2026: EODI-2026-00817 y EODI-2026-00814).
+   país y la misma jornada, cuando las dos solo dicen el país (nada las distingue), son el
+   mismo suceso, aunque el experto dijera otra cosa; con hora en las dos, a menos de 6 horas, y
+   salvo dos cierres de noches distintas (regla 6). Si una ficha así casa con varias de su país,
+   no se sabe con cuál: no se une sola (desde el 14 de noviembre de 2026: EODI-2026-00817 y
+   EODI-2026-00814). Con un sitio en una de las dos no vale: en el ensayo de ese día unía sucesos
+   que sus fuentes separan por el sitio o por la noche (EODI-2026-00728 «cea de-a doua dronă» y
+   00716 en Moldavia el 31 de octubre; 00566 y 00542; 00532 y las de Sulina): eso lo decide el
+   experto.
 5. **Lo que el experto dio por distinto** leyendo las fuentes de las dos no se vuelve a unir
    solo, mientras las dos tengan la fecha que tenían al decidirlo: si una cambia, su «distinto»
    deja de valer y el par se vuelve a comparar.
