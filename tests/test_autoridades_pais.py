@@ -342,3 +342,28 @@ def test_el_trayecto_por_otro_pais_no_hace_la_frase_de_otro_pais() -> None:
     assert (
         atribucion.de_otro_pais("Două drone au pătruns în spațiul aerian al României", "MD") == "RO"
     )
+
+
+def test_la_puerta_quita_la_autoridad_de_otro_pais_sin_cita() -> None:
+    # Desde el 14 de noviembre de 2026 la letra Y se corrige (recogida/control_fichas
+    # .sin_autoridades_de_otro_pais): la declaración rumana sin frase que nombre Rumanía en una
+    # ficha de Moldavia deja de ser oficial y la auditoría no la cuenta.
+    from recogida import control_fichas
+
+    mala = ficha_728()
+    mala["fuentes"][1]["medio"] = (
+        "Ministerul Apărării Naționale (declaración oficial citada en timpul.md)"
+    )
+    mala["fuentes"][1]["id"] = "revisada-prueba-declaracion-1"
+    mala["fuentes"][1].update(es_autoridad=True, publica=True)
+    instante = {"valor": "2026-11-14T10:17Z", "precision": "minuto"}
+    mala["estado"]["historial"] = [
+        {"estado": "notificado", "fecha": instante, "fuente_id": "gdelt-6d7a568da0829a3b"},
+        {"estado": "confirmado", "fecha": instante, "fuente_id": "revisada-prueba-declaracion-1"},
+    ]
+    nueva, cambios = control_fichas.sin_autoridades_de_otro_pais(mala, instante)
+    assert cambios and cambios[0].startswith("autoridad de otro país sin cita (Y)")
+    assert nueva["fuentes"][1]["es_autoridad"] is False
+    assert auditoria_fichas.de_otro_pais(nueva) == []
+    # La de su país, o la de otro con su cita, se queda como estaba.
+    assert control_fichas.sin_autoridades_de_otro_pais(ficha_728(), instante) == (ficha_728(), [])

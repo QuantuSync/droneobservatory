@@ -232,3 +232,50 @@ def test_la_puerta_no_publica_una_ficha_nueva_de_un_suceso_ya_publicado() -> Non
         almacen, almacen.publicado(), {"EODI-2026-09818"}
     )
     assert rotas == ["EODI-2026-09818 parada: el mismo suceso que EODI-2026-09792"]
+
+
+def test_el_aeropuerto_chopin_de_varsovia_se_reconoce_en_ruso() -> None:
+    # La letra B de la auditoría del 14 de noviembre: «В варшавском аэропорту имени Шопена» no
+    # casaba con ningún nombre del aeropuerto (solo «Шопена» declinado lo nombra) y «Warsaw
+    # airport» casa con Modlin, a más de su radio de la ficha.
+    from proceso import objetivo_del_titular
+
+    nombrado = objetivo_del_titular.objetivo_nombrado(f("EODI-2026-00819"))
+    assert nombrado == {"categoria": "aeropuerto", "nombre": "Lotnisko Chopina", "oaci": "EPWA"}
+
+
+def _nota_sin_ficha(almacen: Almacen, entrado: str) -> str:
+    from recogida import oficiales
+
+    enlace = "https://www.mil.lv/lv/zinas/nota-de-prueba"
+    almacen.guardar_cursor(
+        oficiales.CURSOR_SIN_FICHA,
+        {enlace: {"entrado": entrado, "fuente": "mil_lv", "candidatos": ["cand-prueba"]}},
+    )
+    return enlace
+
+
+def test_una_nota_oficial_sin_salida_en_dos_horas_avisa_una_vez() -> None:
+    from recogida import oficiales
+
+    almacen = Almacen.abrir()
+    enlace = _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
+    avisos: list[str] = []
+    assert oficiales.avisar_sin_salida(almacen, AHORA, lambda titulo: avisos.append) == [enlace]
+    assert len(avisos) == 1 and enlace in avisos[0]
+    # Avisada una vez: la siguiente recogida la registra pero no vuelve a avisar.
+    assert oficiales.avisar_sin_salida(almacen, AHORA, lambda titulo: avisos.append) == [enlace]
+    assert len(avisos) == 1
+
+
+def test_una_nota_oficial_reciente_o_con_ficha_no_avisa() -> None:
+    from recogida import oficiales
+
+    almacen = Almacen.abrir()
+    _nota_sin_ficha(almacen, "2026-11-14T09:00Z")  # 1 h 17 min: aún dentro del plazo
+    assert oficiales.sin_salida(almacen, AHORA) == []
+    enlace = _nota_sin_ficha(almacen, "2026-11-14T07:50Z")
+    ficha = _completa(f(ESTONIA, "EODI-2026-09814"))
+    ficha["fuentes"][0]["enlace"] = enlace
+    almacen.guardar_incidente(ficha, AHORA, VOCABULARIO_MODELOS)
+    assert oficiales.sin_salida(almacen, AHORA) == []

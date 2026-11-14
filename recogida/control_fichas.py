@@ -1367,6 +1367,42 @@ def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -
     return True
 
 
+def sin_autoridades_de_otro_pais(
+    incidente: Documento, instante_: Documento
+) -> tuple[Documento, list[str]]:
+    """La letra Y de la auditoría corregida en vez de señalada: las autoridades de otro país sin
+    una frase que lo nombre (proceso/auditoria_fichas.fuentes_de_otro_pais) dejan de ser
+    oficiales sus declaraciones, y se quitan quien atribuye el origen y quien investiga si son
+    ellas. Devuelve la ficha y los cambios (vacío si no cambia)."""
+    from proceso import auditoria_fichas
+
+    malas = auditoria_fichas.fuentes_de_otro_pais(incidente)
+    if not malas:
+        return incidente, []
+    ids = {i for lista in malas.values() for i in lista}
+    nuevo, cambios = reglas.declaraciones_no_oficiales(incidente, ids, instante_)
+    escrito = autoridades.con_pais(copy.deepcopy(
+        {c: nuevo.get(c) for c in ("lugar", "fuentes", "atribucion", "investigacion")}
+    ))  # fmt: skip
+    if (escrito.get("atribucion") or {}).get("autoridad") in malas:
+        nuevo = {k: v for k, v in nuevo.items() if k != "atribucion"}
+        cambios.append("sin atribución del origen: autoridad de otro país sin cita")
+    investigacion = nuevo.get("investigacion") or []
+    escritas = escrito.get("investigacion") or []
+    quedan = [
+        entrada for entrada, vista in zip(investigacion, escritas, strict=False)
+        if not (isinstance(vista, dict) and vista.get("autoridad") in malas)
+    ]  # fmt: skip
+    if len(quedan) != len(investigacion):
+        nuevo = {**nuevo, "investigacion": quedan} if quedan else {
+            k: v for k, v in nuevo.items() if k != "investigacion"
+        }  # fmt: skip
+        cambios.append("sin investigación de una autoridad de otro país sin cita")
+    if cambios:
+        cambios.insert(0, f"autoridad de otro país sin cita (Y): {', '.join(sorted(malas))}")
+    return nuevo, cambios
+
+
 def reglas_deterministas(ctx: Contexto) -> None:
     """El lugar que nombra el titular y el estado sin fuente oficial, sin llamar a nada."""
     for incidente in _activos(ctx.almacen):
@@ -1396,6 +1432,8 @@ def reglas_deterministas(ctx: Contexto) -> None:
             if sin_buque is not nuevo["lugar"]:
                 nuevo = {**nuevo, "lugar": sin_buque}
                 motivos.append(f"lugar {sin_buque['suceso']}: el nombre de un buque no es un lugar")
+            nuevo, de_otro_pais = sin_autoridades_de_otro_pais(nuevo, _instante(ctx.ahora))
+            motivos += de_otro_pais
             bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
             if bajado is not None:
                 nuevo = bajado
