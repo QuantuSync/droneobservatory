@@ -96,6 +96,43 @@ def test_sin_frase_del_sitio_baja_a_la_region_que_nombra_una_frase() -> None:
     assert resumen.releidas == 0
 
 
+def test_lo_que_el_cerrojo_protege_no_se_corrige_a_medias(monkeypatch: pytest.MonkeyPatch) -> None:
+    # EODI-2026-00747 en el ensayo del 14/11: el cerrojo retuvo el lugar con su cita y el
+    # titular bajó solo al país. Ahora, la corrección entera o nada.
+    monkeypatch.setattr(correccion, "protegidos_por_el_cerrojo", lambda *a: ["lugar"])
+    almacen = _base(_lituana())
+    ficha = almacen.incidente("EODI-2026-09901")
+    assert ficha is not None
+    resumen, ctx = _corregir(almacen, Cliente([_respuesta()]))
+    assert resumen.protegidas == ["EODI-2026-09901"] and resumen.corregidas == []
+    guardada = almacen.incidente("EODI-2026-09901")
+    assert guardada is not None and guardada["titulo"] == ficha["titulo"]
+    assert guardada["lugar"]["nivel"] == "localidad"
+    assert ctx.nuevas[correccion.CLAVE + "EODI-2026-09901"]["protegidos"] == ["lugar"]
+
+
+def test_con_los_drones_protegidos_el_lugar_se_corrige(monkeypatch: pytest.MonkeyPatch) -> None:
+    # EODI-2026-00725 en el ensayo: el número de drones tiene su cita; el lugar baja a la región
+    # que nombra la frase, con su titular.
+    def protegidos(almacen: Any, antes: dict[str, Any], nuevo: dict[str, Any]) -> list[str]:
+        return ["drones"] if antes.get("drones") != nuevo.get("drones") else []
+
+    monkeypatch.setattr(correccion, "protegidos_por_el_cerrojo", protegidos)
+    frase = "Drones were seen over the Lithuanian coast"
+    ficha = _lituana(frase=frase)
+    ficha["drones"] = {"numero": {"min": 1, "max": 1}}
+    almacen = _base(ficha)
+    cliente = Cliente([_respuesta(lugar={"sostenido": False, "nivel": "region",
+                                         "region": "Lithuanian coast", "frase": frase,
+                                         "fuente": 1})])  # fmt: skip
+    resumen, _ = _corregir(almacen, cliente)
+    assert resumen.protegidas == resumen.corregidas == ["EODI-2026-09901"]
+    guardada = almacen.incidente("EODI-2026-09901")
+    assert guardada is not None and guardada["drones"]["numero"] == {"min": 1, "max": 1}
+    assert guardada["lugar"]["region"] == "Lithuanian coast"
+    assert "Lithuanian coast" in guardada["titulo"]["es"]
+
+
 def test_una_region_sin_frase_literal_baja_al_pais() -> None:
     almacen = _base(_lituana())
     # La frase no está en la fuente: no cuenta.

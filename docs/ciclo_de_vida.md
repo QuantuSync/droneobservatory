@@ -104,6 +104,10 @@ entrada como mucho una recogida, y si pasa más de una sin relectura sale un avi
 («Coherencia sin relectura», una vez por ficha). Cada decisión se guarda (`coherencia:<id>`) con
 la huella de lo que miró: una ficha que no cambia no se relee.
 
+Lo publicado con su cita manda: antes de guardar se pregunta al cerrojo (`proceso/protegido.py`),
+y la comprobación que cambiaría un dato que el cerrojo protege no se aplica; las demás, sí. Una
+corrección no queda a medias (el titular no baja al país si el lugar se queda en su región).
+
 Las revisiones automáticas viven en la base (cursor `revisados:automaticas`) y no en
 `configuracion/incidentes_revisados.json`: todos los lectores de revisiones
 (`proceso/suceso.revisiones`, `recogida/revisados.cargar`) las suman a las del archivo.
