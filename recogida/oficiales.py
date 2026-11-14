@@ -593,22 +593,39 @@ def candidatos(almacen: Almacen) -> set[str]:
 
 
 # Una nota de alerta oficial tiene que acabar en una ficha o en un descarte con motivo (una
-# extracción de su candidato, que guarda los motivos) antes de estas horas; si no, aviso privado.
-# El 13 de noviembre de 2026 notas de mil.lv y del MApN tardaron horas en tener ficha.
+# extracción de su candidato, que guarda los motivos) antes de estas horas; si no, sus candidatos
+# se repiten con el experto (pedir_experto) y, si tras su oportunidad sigue sin salida, aviso
+# privado. El 13 de noviembre de 2026 notas de mil.lv y del MApN tardaron horas en tener ficha.
 HORAS_SALIDA = timedelta(hours=2)
+# La oportunidad del experto: al menos una recogida horaria después de pedirlo.
+HORAS_EXPERTO = timedelta(hours=1)
 # Solo las notas que entraron en estos días (el cursor guarda todas).
 DIAS_SALIDA = 7
 TITULO_SIN_SALIDA = "EODI · Nota oficial sin ficha ni descarte"
 
 
+def _minuto(momento: datetime) -> str:
+    return momento.strftime("%Y-%m-%dT%H:%MZ")
+
+
+def es_salida(extraccion: Documento) -> bool:
+    """La extracción es una salida de la nota: deja una ficha (`incidente`) o un descarte con
+    motivo (sus `motivos`, o la ficha que dice que no es un incidente: «no es un incidente» es la
+    razón con que proceso/extraccion._sin_ficha la retira)."""
+    if extraccion.get("incidente") or extraccion.get("motivos"):
+        return True
+    leida = extraccion.get("ficha") or extraccion.get("ficha_base") or {}
+    return isinstance(leida, dict) and (leida.get("es_incidente") or {}).get("valor") is False
+
+
 def sin_salida(almacen: Almacen, ahora: datetime) -> list[str]:
     """Las notas oficiales sin ficha que entraron hace más de HORAS_SALIDA (y menos de
-    DIAS_SALIDA días) y no tienen salida: ninguna ficha las lleva como fuente y ningún candidato
-    suyo se ha extraído desde que entraron (la extracción guarda la ficha o el descarte con su
-    motivo). Sin escribir nada."""
+    DIAS_SALIDA días) y no tienen salida: ninguna ficha las lleva como fuente y ninguna extracción
+    de un candidato suyo desde que entraron deja ficha o descarte con motivo (es_salida). Sin
+    escribir nada."""
     cursor = almacen.cursor(CURSOR_SIN_FICHA) or {}
-    desde = (ahora - timedelta(days=DIAS_SALIDA)).strftime("%Y-%m-%dT%H:%MZ")
-    hasta = (ahora - HORAS_SALIDA).strftime("%Y-%m-%dT%H:%MZ")
+    desde = _minuto(ahora - timedelta(days=DIAS_SALIDA))
+    hasta = _minuto(ahora - HORAS_SALIDA)
     pendientes = {
         enlace: entrada for enlace, entrada in cursor.items()
         if isinstance(entrada, dict) and desde <= str(entrada.get("entrado", "")) <= hasta
@@ -625,7 +642,7 @@ def sin_salida(almacen: Almacen, ahora: datetime) -> list[str]:
             continue
         entrado = str(entrada["entrado"]).replace("Z", "")
         extraido = any(
-            str(e.get("fecha", ""))[:16] >= entrado[:16]
+            str(e.get("fecha", ""))[:16] >= entrado[:16] and es_salida(e)
             for c in entrada.get("candidatos", [])
             for e in almacen.extracciones(c)
         )
@@ -634,22 +651,75 @@ def sin_salida(almacen: Almacen, ahora: datetime) -> list[str]:
     return salida
 
 
+def pedir_experto(almacen: Almacen, ahora: datetime, notas: list[str] | None = None) -> list[str]:
+    """A las notas sin salida (`sin_salida`, o `notas`) a las que aún no se les pidió: sus
+    candidatos se repiten con el experto en la extracción de la hora siguiente (esperan_experto
+    con `revision`, que escala siempre, y crítico: escalado.MOTIVO_NOTA_OFICIAL). Una sola vez por
+    nota: la hora queda en `experto_pedido` de su entrada del cursor. Solo escribe si pide algo.
+    Devuelve las notas a las que se les ha pedido ahora."""
+    from proceso import escalado, extraccion
+
+    notas = sin_salida(almacen, ahora) if notas is None else notas
+    cursor = dict(almacen.cursor(CURSOR_SIN_FICHA) or {})
+    nuevas = [n for n in notas if not cursor[n].get("experto_pedido")]
+    if not nuevas:
+        return []
+    existentes = {c["id"] for c in almacen.candidatos()}
+    for nota in nuevas:
+        motivo = f"{escalado.MOTIVO_NOTA_OFICIAL}: {nota}"[:300]
+        for candidato_id in cursor[nota].get("candidatos", []):
+            if candidato_id not in existentes:
+                continue
+            espera = extraccion.esperan_experto(almacen).get(candidato_id, {})
+            anteriores = [m for m in espera.get("motivos", []) if m != motivo]
+            # Desde hace ESPERA_FALLO_EXPERTO: la espera ya ha vencido y la extracción de la hora
+            # siguiente lo lleva (recogida/extractor: en_revision).
+            extraccion.anotar_espera(
+                almacen, candidato_id, [motivo, *anteriores],
+                ahora - extraccion.ESPERA_FALLO_EXPERTO, False, revision=True, critico=True,
+            )  # fmt: skip
+        cursor[nota] = {**cursor[nota], "experto_pedido": _minuto(ahora)}
+        registro.warning("oficiales: nota de alerta sin salida en %s; al experto: %s",
+                         HORAS_SALIDA, nota)  # fmt: skip
+    almacen.guardar_cursor(CURSOR_SIN_FICHA, cursor)
+    return nuevas
+
+
+def _tuvo_experto(almacen: Almacen, entrada: dict[str, Any], ahora: datetime) -> bool:
+    """El experto pedido para la nota tuvo su oportunidad: pasó HORAS_EXPERTO desde que se pidió
+    o ya hay una extracción escalada de un candidato suyo desde entonces."""
+    pedido = str(entrada.get("experto_pedido") or "")
+    if not pedido:
+        return False
+    if pedido <= _minuto(ahora - HORAS_EXPERTO):
+        return True
+    return any(
+        str(e.get("fecha", ""))[:16] >= pedido.replace("Z", "")[:16] and e.get("escalado")
+        for c in entrada.get("candidatos", [])
+        for e in almacen.extracciones(c)
+    )
+
+
 def avisar_sin_salida(
     almacen: Almacen,
     ahora: datetime,
     avisador: Callable[[str], Callable[[str], None] | None] | None,
 ) -> list[str]:
-    """Avisa por el tema privado, una vez por nota, de las que siguen sin salida
-    (`sin_salida`); lo avisado queda en la entrada del cursor. Sin quien avise (ensayo, fuera
-    del servidor) solo lo registra. Devuelve las notas sin salida."""
+    """Las notas sin salida (`sin_salida`): a las nuevas se les pide el experto (`pedir_experto`,
+    también en un ensayo, que trabaja sobre una copia); de las que siguen sin salida tras su
+    oportunidad (`_tuvo_experto`) se avisa por el tema privado, una vez por nota, y lo avisado
+    queda en la entrada del cursor. Sin quien avise (ensayo, fuera del servidor) solo lo registra.
+    Devuelve las notas sin salida tras el experto."""
     notas = sin_salida(almacen, ahora)
     if not notas:
         return notas
+    pedir_experto(almacen, ahora, notas)
     cursor = dict(almacen.cursor(CURSOR_SIN_FICHA) or {})
+    notas = [n for n in notas if _tuvo_experto(almacen, cursor[n], ahora)]
     nuevas = [n for n in notas if not cursor[n].get("avisada")]
     for nota in notas:
-        registro.error("oficiales: nota de alerta sin ficha ni descarte en %s: %s",
-                       HORAS_SALIDA, nota)  # fmt: skip
+        registro.error("oficiales: nota de alerta sin ficha ni descarte tras el experto: %s",
+                       nota)  # fmt: skip
     avisar = avisador(TITULO_SIN_SALIDA) if avisador is not None and nuevas else None
     if avisar is None:
         return notas
@@ -657,12 +727,13 @@ def avisar_sin_salida(
         try:
             avisar(
                 f"La nota oficial {nota} entró hace más de 2 horas y no tiene ficha ni descarte "
-                f"con motivo (candidatos: {', '.join(cursor[nota].get('candidatos', []))})."
+                "con motivo, tampoco tras pedir el modelo experto "
+                f"(candidatos: {', '.join(cursor[nota].get('candidatos', []))})."
             )
         except Exception:
             registro.exception("oficiales: no se pudo avisar de %s", nota)
             continue
-        cursor[nota] = {**cursor[nota], "avisada": ahora.strftime("%Y-%m-%dT%H:%MZ")}
+        cursor[nota] = {**cursor[nota], "avisada": _minuto(ahora)}
     almacen.guardar_cursor(CURSOR_SIN_FICHA, cursor)
     return notas
 

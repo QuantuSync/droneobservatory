@@ -64,7 +64,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from almacen.casa import envio_desactivado
-from proceso import autoridades, nombres_lugar
+from proceso import autoridades, nombres_lugar, suceso
 
 registro = logging.getLogger("avisos")
 
@@ -574,6 +574,11 @@ def partes_sin_datos_propios(base: Path) -> set[str]:
 
     conexion = sqlite3.connect(f"{base.resolve().as_uri()}?mode=ro", uri=True)
     try:
+        # Con las separaciones automáticas de la base (proceso/suceso.CURSOR_AUTOMATICAS).
+        fila = conexion.execute(
+            "SELECT documento FROM cursores WHERE fuente_id = ?", (suceso.CURSOR_AUTOMATICAS,)
+        ).fetchone()
+        suceso.fijar_automaticas(json.loads(fila[0]) if fila else None)
         revisiones = {str(r["incidente"]): r for r in revisados.cargar().get("separar", [])}
         cursores = conexion.execute(
             "SELECT fuente_id, documento FROM cursores WHERE fuente_id LIKE ?",

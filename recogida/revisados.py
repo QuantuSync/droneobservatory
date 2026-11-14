@@ -52,10 +52,15 @@ RUTA_PUNTO = Path(__file__).resolve().parent.parent / "configuracion" / "punto_p
 CURSOR = "revisados:"
 
 
-@cache
 def cargar(ruta: Path = RUTA) -> dict[str, Any]:
-    datos: dict[str, Any] = json.loads(ruta.read_text(encoding="utf-8"))
-    return datos
+    """Las revisiones del archivo y las automáticas de la base (proceso/suceso.revisiones), leídas
+    una vez por versión de las automáticas."""
+    return _cargar(ruta, suceso.version_automaticas())
+
+
+@cache
+def _cargar(ruta: Path, version: int) -> dict[str, Any]:
+    return suceso.revisiones(ruta)
 
 
 def _vivo(almacen: Almacen, id_: str) -> Documento | None:

@@ -6,7 +6,7 @@ proceso/cruces.dia_de_una_noche)."""
 from typing import Any
 
 from proceso import control_fichas as reglas
-from proceso import cruces
+from proceso import cruces, suceso
 
 DOS_DRONES = "când două drone au pătruns neautorizat în spațiul aerian al României"
 
@@ -50,7 +50,7 @@ NOCHE_1_2 = "control de fichas: «În noaptea de 1 spre 2 noiembrie»"
 
 def test_los_drones_de_una_nota_de_otro_dia_no_se_toman() -> None:
     ficha = _ficha(NOCHE_1_2)
-    assert reglas.dia_de_otro_suceso(ficha, "prompt") == "2026-10-31"
+    assert suceso.dia_de_otro_suceso(ficha, "prompt") == "2026-10-31"
     verificada = reglas.Verificada({"drones": ({"min": 2, "max": 2}, "prompt", DOS_DRONES)})
     corregida = reglas.aplicar(ficha, verificada, True, None)
     assert corregida.incidente["drones"]["numero"] == "desconocido"
@@ -61,7 +61,7 @@ def test_los_drones_de_una_nota_del_mismo_suceso_si() -> None:
     # La nota que da el día de la noche (el 1 o el 2) cuenta este suceso.
     ficha = _ficha(NOCHE_1_2)
     ficha["afirmaciones"][0]["valor"] = "2026-11-02"
-    assert reglas.dia_de_otro_suceso(ficha, "prompt") is None
+    assert suceso.dia_de_otro_suceso(ficha, "prompt") is None
     verificada = reglas.Verificada({"drones": ({"min": 2, "max": 2}, "prompt", DOS_DRONES)})
     corregida = reglas.aplicar(ficha, verificada, True, None)
     assert corregida.incidente["drones"]["numero"] == {"min": 2, "max": 2}

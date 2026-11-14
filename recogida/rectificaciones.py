@@ -43,7 +43,7 @@ from modelo import coste, modelos
 from modelo import rectificacion as peticion
 from modelo.cliente import LlamadaFallida
 from modelo.control import RespuestaInvalida, leer, letras
-from proceso import rectificaciones
+from proceso import rectificaciones, suceso
 from proceso.incidentes import activo
 from proceso.presencia import TABLA_MOTIVOS
 from recogida import revisados
@@ -414,35 +414,6 @@ def revisar(almacen: Almacen, experto: Experto, propuestas: list[Propuesta], aho
 # --- Búsqueda mensual ---------------------------------------------------------------------
 
 
-def _nombres(incidente: Documento) -> list[str]:
-    """Cómo pueden nombrar las noticias el lugar del incidente."""
-    nombres = incidente.get("nombres") or {}
-    candidatos = [
-        (incidente.get("objetivo") or {}).get("nombre"),
-        (incidente.get("objetivo") or {}).get("oaci"),
-        incidente["lugar"].get("localidad"),
-        *((nombres.get("objetivo") or {}).values()),
-        *((nombres.get("localidad") or {}).values()),
-    ]
-    return sorted({str(n).casefold() for n in candidatos if n and len(str(n)) >= 4})
-
-
-def nombran_el_lugar(incidente: Documento, articulos: list[Documento],
-                     dias_desde_el_suceso: int) -> list[Documento]:  # fmt: skip
-    """Los artículos posteriores al suceso (desde `dias_desde_el_suceso` días después) que no son
-    fuentes del incidente y nombran su lugar en el titular (la selección del barrido; la reutiliza
-    la búsqueda de declaraciones de la segunda lectura)."""
-    inicio = _leer(incidente["tiempo"]["inicio"]["valor"])
-    nombres = _nombres(incidente)
-    tiene = {f.get("enlace") for f in incidente["fuentes"]}
-    posterior = (inicio + timedelta(dias_desde_el_suceso)).strftime("%Y-%m-%dT%H:%M")
-    return [
-        a for a in articulos
-        if a["fecha"] >= posterior and a["url"] not in tiene
-        and any(n in str(a["titular"]).casefold() for n in nombres)
-    ]  # fmt: skip
-
-
 def titulares_mensuales(
     almacen: Almacen, ahora: datetime, desde: str,
     presencias: frozenset[str] = frozenset({"confirmada"}), dias: int = DIAS_MENSUAL,
@@ -466,7 +437,7 @@ def titulares_mensuales(
         inicio = _leer(incidente["tiempo"]["inicio"]["valor"])
         if inicio > limite:
             continue
-        elegidos = nombran_el_lugar(incidente, articulos, DIAS_DESDE_EL_SUCESO)
+        elegidos = suceso.nombran_el_lugar(incidente, articulos, DIAS_DESDE_EL_SUCESO)
         if elegidos:
             resultado[incidente["id"]] = elegidos[-peticion.MAX_TITULARES :]
     return resultado

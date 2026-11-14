@@ -157,6 +157,11 @@ LIMITE_CONTROL_EXPERTO_DIARIO_USD = 0.25
 # (recogida/entrada.py), desde el 28 de octubre de 2026: aparte del tope normal del experto, de su
 # reserva crítica y del control; dentro de su parte del mes.
 LIMITE_ENTRADA_DIARIO_USD = 3.00
+# Cupo propio del experto en la relectura de coherencia de la puerta (recogida/correccion.py), desde
+# el 14 de noviembre de 2026: las fichas cuyas frases no sostienen el lugar, el número de drones o
+# el día. El primer día relee todo el registro (34 fichas medidas, unos 0,02 USD cada una); luego,
+# solo lo nuevo o lo que cambia. Dentro de su parte del mes (6 USD, de los 90 del filtro).
+LIMITE_COHERENCIA_DIARIO_USD = 1.00
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
@@ -197,6 +202,7 @@ class Modo(StrEnum):
     REPASO_EXPERTO = "repaso_experto"
     ENTRADA = "entrada"
     REPASO_ENTRADA = "repaso_entrada"
+    COHERENCIA = "coherencia"
 
 
 # Lo que le toca a cada uno del tope mensual (suman TOPE_MENSUAL_USD). «otros»: lo que no es de
@@ -209,7 +215,8 @@ class Modo(StrEnum):
 # desde el 20 de octubre: el experto, 40 (1,50 al día y la reserva crítica de lo que pase); la
 # recogida horaria, 4 (0,13 al día); el control, 6 (su base y su cupo del experto); la segunda
 # búsqueda, 6 (20 casos al día); otros, 3,50 (las sesiones). Desde el 28 de octubre de 2026, 150
-# USD: lo mismo y 90 para el filtro de entrada (3 al día durante 30 días).
+# USD: lo mismo y 90 para el filtro de entrada (3 al día durante 30 días); desde el 14 de noviembre
+# de 2026, 84 para el filtro y 6 para la relectura de coherencia de la puerta.
 REPARTO_MENSUAL_USD: dict[str, float] = {
     EXPERTO: 40.00,
     Modo.HORARIO: 4.00,
@@ -217,7 +224,8 @@ REPARTO_MENSUAL_USD: dict[str, float] = {
     Modo.GUERRA: 0.20,
     Modo.RECTIFICACIONES: 0.30,
     Modo.SEGUNDA_BUSQUEDA: 6.00,
-    Modo.ENTRADA: 90.00,
+    Modo.ENTRADA: 84.00,
+    Modo.COHERENCIA: 6.00,
     OTROS: 3.50,
 }
 # Los modos de cada día que paran al llegar al tope mensual. La recogida horaria sigue con el
@@ -493,6 +501,7 @@ def limite(modo: Modo) -> float:
         Modo.REPASO_EXPERTO: LIMITE_REPASO_EXPERTO_USD,
         Modo.ENTRADA: LIMITE_ENTRADA_DIARIO_USD,
         Modo.REPASO_ENTRADA: LIMITE_REPASO_ENTRADA_USD,
+        Modo.COHERENCIA: LIMITE_COHERENCIA_DIARIO_USD,
     }[modo]
 
 
@@ -500,7 +509,7 @@ def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
     return modo in {
         Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA,
-        Modo.SEGUNDA_BUSQUEDA, Modo.ENTRADA, Modo.REVISION,
+        Modo.SEGUNDA_BUSQUEDA, Modo.ENTRADA, Modo.REVISION, Modo.COHERENCIA,
     }  # fmt: skip
 
 

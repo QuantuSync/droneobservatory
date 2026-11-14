@@ -44,6 +44,22 @@ Las reglas firmes, en su orden (la primera que habla, decide):
 Lo que este módulo no hace: leer el día de una frase (proceso/fechas.py), ejecutar una unión o
 deshacerla (proceso/incidentes.py, recogida/control_fichas.py, recogida/revisados.py) ni agrupar
 artículos en candidatos antes de que haya ficha (proceso/noticias.py).
+
+También viven aquí, desde el 14 de noviembre de 2026, los comparadores de fichas que estaban en
+otros módulos: `cercanos` y `pares_amplios` (los márgenes amplios de la segunda lectura),
+`dia_de_otro_suceso` y `salida_retrospectiva` (del control de las fichas), `nombran_el_lugar`
+(los titulares posteriores que nombran el sitio de una ficha: las rectificaciones y la segunda
+búsqueda) y `coincidentes` (las fichas con las que encaja un encuentro: proceso/detalle.py).
+
+Quedan fuera, a propósito, otros que comparan pero no deciden sobre dos fichas:
+
+- `proceso/noticias.mismo_sitio` y `misma_ventana` (y sus réplicas, como la de la calidad de
+  los datos de GDELT, recogida/calidad._destino) agrupan ARTÍCULOS en candidatos, no fichas;
+  además este módulo importa proceso/noticias, y traerlos aquí haría un ciclo.
+- `recogida/oficiales.posibles` y `recogida/control_fichas.pares_de_grupos` dependen del estado
+  de la capa de recogida y solo proponen candidatos: toda ficha nueva pasa después por el filtro
+  de entrada (`entrada.unir_por_la_definicion`) y por el candado de la publicación
+  (`exportacion/puerta.candado`, invariante I8), que preguntan aquí.
 """
 
 import json
@@ -54,7 +70,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from functools import cache
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
 
 from esquema import Documento
@@ -479,6 +495,49 @@ REVISADOS = Path(__file__).resolve().parent.parent / "configuracion" / "incident
 # hizo el control leyendo las fuentes (recogida/control_fichas.unir).
 PREFIJO_REVISADA = "revisión: "
 PREFIJO_CONTROL = PREFIJO_REVISADA + "control de fichas: "
+# Las revisiones automáticas (desde el 14 de noviembre de 2026): las separaciones que decide la
+# coherencia de la puerta (recogida/correccion.py) con la frase de cada día. Se guardan en la
+# base (cursor CURSOR_AUTOMATICAS, secciones como las del archivo) y cada lector de revisiones
+# las suma a las del archivo: la separación la hace el mismo paso que las revisadas a mano.
+CURSOR_AUTOMATICAS = "revisados:automaticas"
+_automaticas: dict[str, list[Documento]] = {}
+_version = [0]
+
+
+def version_automaticas() -> int:
+    """Cambia cada vez que se fijan las revisiones automáticas (para las cachés de fuera)."""
+    return _version[0]
+
+
+def revisiones(ruta: Path = REVISADOS) -> dict[str, Any]:
+    """Las revisiones del archivo y, si es el de siempre, las automáticas cargadas."""
+    datos: dict[str, Any] = json.loads(ruta.read_text(encoding="utf-8"))
+    if ruta == REVISADOS:
+        for seccion, entradas in _automaticas.items():
+            ya = {str(e.get("incidente")) for e in datos.get(seccion, [])}
+            datos[seccion] = [
+                *datos.get(seccion, []),
+                *(e for e in entradas if str(e.get("incidente")) not in ya),
+            ]
+    return datos
+
+
+def fijar_automaticas(datos: dict[str, Any] | None) -> None:
+    """Pone las revisiones automáticas (las de la base) y vacía lo que se leyó antes."""
+    _automaticas.clear()
+    _version[0] += 1
+    for seccion, entradas in (datos or {}).items():
+        if isinstance(entradas, list):
+            _automaticas[seccion] = [dict(e) for e in entradas if isinstance(e, dict)]
+    for lector in (separaciones_distintas, pares_distintos, grupos_unidos_a_mano,
+                   partes_por_articulo, _fecha_revisada):  # fmt: skip
+        # Una prueba puede haber puesto otro lector en su lugar (sin caché).
+        getattr(lector, "cache_clear", lambda: None)()
+
+
+def cargar_automaticas(almacen: Any) -> None:
+    """Las revisiones automáticas de la base, para esta pasada."""
+    fijar_automaticas(almacen.cursor(CURSOR_AUTOMATICAS))
 
 
 @cache
@@ -487,7 +546,7 @@ def separaciones_distintas(ruta: Path = REVISADOS) -> frozenset[str]:
     son sucesos distintos que la regla de fusión no vuelve a juntar. Sin la marca, una parte
     puede acabar con razón en la misma ficha que otra (la que coincide con otra ficha,
     `coincide_con`, o dos registros de la misma parte)."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    datos = revisiones(ruta)
     return frozenset(e["incidente"] for e in datos.get("separar", []) if e.get("distintos"))
 
 
@@ -498,14 +557,14 @@ def pares_distintos(ruta: Path = REVISADOS) -> frozenset[frozenset[str]]:
     29 de octubre de 2026 la regla unió EODI-2026-00538 (un blanco aéreo a las 17:38) en
     EODI-2026-00541 (el petrolero, hacia las 20:00), que una revisión había dado por distintos sin
     dejarlo escrito."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    datos = revisiones(ruta)
     return frozenset(frozenset(e["incidentes"]) for e in datos.get("distintos", []))
 
 
 @cache
 def grupos_unidos_a_mano(ruta: Path = REVISADOS) -> tuple[frozenset[str], ...]:
     """Los grupos de fichas que una revisión unió a mano (sección `unir`)."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    datos = revisiones(ruta)
     return tuple(frozenset(g["registros"]) for g in datos.get("unir", []))
 
 
@@ -519,7 +578,7 @@ def partes_por_articulo(ruta: Path = REVISADOS) -> dict[str, frozenset[tuple[str
     """Por artículo, la parte de una separación (sección `separar`, incidente y número de parte)
     a la que pertenece. Solo cuentan las partes que son sucesos, y no los artículos que una
     revisión puso en dos partes de la misma separación (cuentan los dos sucesos)."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    datos = revisiones(ruta)
     por_articulo: dict[str, set[tuple[str, int]]] = defaultdict(set)
     for revision in datos.get("separar", []):
         de_esta: dict[str, set[int]] = defaultdict(set)
@@ -1311,7 +1370,7 @@ def toma_el_tiempo(destino: Documento, absorbido: Documento) -> bool:
 def _fecha_revisada(ruta: Path = REVISADOS) -> frozenset[str]:
     """Las fichas cuya fecha ya fijó una revisión: las de una separación (la ficha separada y
     la que recibe una parte), las de «distintos» y las que tienen el inicio revisado con cita."""
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    datos = revisiones(ruta)
     ids = {str(e["incidente"]) for e in datos.get("separar", [])}
     ids |= {
         str(p["coincide_con"])
@@ -1321,6 +1380,8 @@ def _fecha_revisada(ruta: Path = REVISADOS) -> frozenset[str]:
     }
     ids |= {str(i) for e in datos.get("distintos", []) for i in e.get("incidentes", [])}
     ids |= {str(e["incidente"]) for e in datos.get("datos", []) if e.get("campo") == "inicio"}
+    # Las que la coherencia de la puerta releyó y son de una sola jornada (automáticas).
+    ids |= {str(e["incidente"]) for e in datos.get("una_jornada", [])}
     return frozenset(ids)
 
 
@@ -1542,3 +1603,162 @@ def episodios_calculados(incidentes_: list[Documento]) -> list[tuple[str, list[D
         resultado[ya[0]] = (noche_, sorted([*miembros, *nuevos], key=lambda m: m["id"]))
         en_alguno |= {m["id"]: ya[0] for m in nuevos}
     return resultado
+
+
+# --- Comparadores que vivían en otros módulos -------------------------------------------------
+# Desde el 14 de noviembre de 2026 viven aquí: lo único que decide si dos fichas cuentan el mismo
+# suceso es la definición.
+
+
+def cercanos(a: Documento, b: Documento, horas: float, km: float) -> bool:
+    """Del mismo país, a `horas` como mucho (el suceso o la primera noticia), a `km` más los
+    radios (sin punto, solo el país), del mismo tipo de sitio y que ninguna revisión separó; sin
+    los que ya compara el control (`candidatos`). Los márgenes amplios de la segunda lectura
+    (proceso/segunda_lectura.py).
+
+    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
+    if a["id"] == b["id"] or a["lugar"]["pais"] != b["lugar"]["pais"]:
+        return False
+    ventana = timedelta(hours=horas)
+    if (
+        abs(instante(a) - instante(b)) > ventana
+        and abs(momento_primera_noticia(a) - momento_primera_noticia(b)) > ventana
+    ):
+        return False
+    if a["lugar"].get("punto") and b["lugar"].get("punto"):
+        radios = float(a["lugar"].get("radio_km", 0)) + float(b["lugar"].get("radio_km", 0))
+        if _distancia_km(a, b) > radios + km:
+            return False
+    return _mismo_tipo_de_sitio(a, b) and not separados(a, b) and not candidatos(a, b)
+
+
+def pares_amplios(activos: list[Documento], horas: float, km: float,
+                  ya_comparados: set[str]) -> list[tuple[Documento, Documento]]:  # fmt: skip
+    """Los pares de posibles duplicados con márgenes más amplios, sin los que el control ya
+    comparó (`ya_comparados`: claves `par:…`).
+
+    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
+    pares = pares_candidatos(
+        activos, {d["id"] for d in activos}, lambda a, b: cercanos(a, b, horas, km)
+    )
+    return [p for p in pares if clave_par(p[0]["id"], p[1]["id"]) not in ya_comparados]
+
+
+def dia_de_otro_suceso(incidente: Documento, fuente_id: str) -> str | None:
+    """El día que esa fuente da al suceso que cuenta, si es otro que el de la ficha (su
+    afirmación «inicio»); None si coincide o no lo da. Una nota sobre otro suceso del mismo país
+    no da el número de drones de este: promptmedia.ro (5 de noviembre de 2026) contaba «incidentul
+    din seara de 31 octombrie» (EODI-2026-00719) y el control puso sus dos drones en
+    EODI-2026-00743, la noche del 1 al 2 de noviembre.
+
+    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
+    from proceso import cruces
+
+    valor = str(((incidente.get("tiempo") or {}).get("inicio") or {}).get("valor") or "")[:10]
+    if not valor:
+        return None
+    dia = date.fromisoformat(valor)
+    # Los días de su suceso: los de su noche si el día salió de una noche («În noaptea de 1 spre 2
+    # noiembrie»: el 1 y el 2); si no, la víspera, el día y el siguiente (una noche, la hora UTC).
+    if cruces.dia_de_una_noche(incidente):
+        suyos = {dia, dia + timedelta(days=1)}
+    else:
+        suyos = {dia - timedelta(days=1), dia, dia + timedelta(days=1)}
+    dias = {
+        str(a["valor"])[:10]
+        for a in incidente.get("afirmaciones", [])
+        if a.get("campo") == "inicio" and a.get("fuente_id") == fuente_id and a.get("valor")
+    }
+    if any(date.fromisoformat(d) in suyos for d in dias):
+        return None
+    return min(dias) if dias else None
+
+
+def salida_retrospectiva(
+    incidente: Documento, activos: list[Documento], previa: dict[str, Any] | None
+) -> dict[str, Any] | None:
+    """La salida de una noticia retrospectiva que sigue sin fecha respaldada al cumplir su plazo
+    (recogida/control_fichas.SALIDA_RETROSPECTIVA), sin preguntar más al experto:
+
+    - {"decision": "fecha", ...} (lo de proceso/control_fichas.comprobar_retrospectiva): la frase
+      literal de una fuente da el mes y ninguna ficha del mismo sitio es de ese mes; sale con el
+      día 1, «aproximada»;
+    - {"decision": "retirar", "previas": [ids]}: es un suceso anterior (lo dice una palabra de sus
+      fuentes o el experto) pero no se sabe cuál ni cuándo; no se publica (EODI-2026-00765: la
+      búsqueda del 6/11/2026 de los autores del intento de atentado de agosto en el aeropuerto de
+      Leipzig/Halle, con dos fichas de agosto allí);
+    - None: nadie ha dicho todavía que sea un suceso anterior (el experto no respondió, por el tope
+      o un fallo, que nunca retiran: PR 382); sigue retenida y el resumen diario la señala.
+
+    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
+    previas = [
+        d
+        for d in activos
+        if d["id"] != incidente["id"]
+        and fecha_verificada(d)
+        and instante(d) < instante(incidente) - timedelta(days=1)
+        and mismo_sitio(incidente, d)
+    ]
+    if (mes := fechas.mes_retrospectivo(incidente)) is not None:
+        fuente_id, frase, dia = mes
+        del_mes = sorted(
+            d["id"]
+            for d in previas
+            if (instante(d).year, instante(d).month) == (dia.year, dia.month)
+        )
+        if not del_mes:
+            return {
+                "decision": "fecha",
+                "inicio": {"valor": f"{dia.isoformat()}T00:00Z", "precision": APROXIMADA},
+                "fuente_id": fuente_id,
+                "frase": frase,
+            }
+        return {"decision": "retirar", "previas": del_mes}
+    respuesta = (previa or {}).get("respuesta") or {}
+    if fechas.retrospectiva(incidente) is None and respuesta.get("retrospectiva") is not True:
+        return None
+    return {"decision": "retirar", "previas": sorted(d["id"] for d in previas)}
+
+
+def _nombres_del_lugar(incidente: Documento) -> list[str]:
+    """Cómo pueden nombrar las noticias el lugar del incidente."""
+    nombres = incidente.get("nombres") or {}
+    posibles = [
+        (incidente.get("objetivo") or {}).get("nombre"),
+        (incidente.get("objetivo") or {}).get("oaci"),
+        incidente["lugar"].get("localidad"),
+        *((nombres.get("objetivo") or {}).values()),
+        *((nombres.get("localidad") or {}).values()),
+    ]
+    return sorted({str(n).casefold() for n in posibles if n and len(str(n)) >= 4})
+
+
+def nombran_el_lugar(incidente: Documento, articulos: list[Documento],
+                     dias_desde_el_suceso: int) -> list[Documento]:  # fmt: skip
+    """Los artículos posteriores al suceso (desde `dias_desde_el_suceso` días después) que no son
+    fuentes del incidente y nombran su lugar en el titular (la selección del barrido de
+    rectificaciones, recogida/rectificaciones.py; la reutiliza la búsqueda de declaraciones de la
+    segunda lectura).
+
+    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
+    inicio = datetime.fromisoformat(incidente["tiempo"]["inicio"]["valor"].replace("Z", "+00:00"))
+    nombres = _nombres_del_lugar(incidente)
+    tiene = {f.get("enlace") for f in incidente["fuentes"]}
+    posterior = (inicio + timedelta(dias_desde_el_suceso)).strftime("%Y-%m-%dT%H:%M")
+    return [
+        a for a in articulos
+        if a["fecha"] >= posterior and a["url"] not in tiene
+        and any(n in str(a["titular"]).casefold() for n in nombres)
+    ]  # fmt: skip
+
+
+def coincidentes(almacen_incidentes: list[Documento], pseudo: Documento) -> list[str]:
+    """Las fichas activas del país de `pseudo` (un encuentro con la forma mínima de una ficha:
+    proceso/detalle.pseudo_encuentro) que encajan con él (`encajan`).
+
+    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
+    return sorted(
+        i["id"] for i in almacen_incidentes
+        if _activa(i) and i["lugar"]["pais"] == pseudo["lugar"]["pais"]
+        and encajan(i, pseudo)
+    )  # fmt: skip

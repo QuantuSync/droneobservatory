@@ -31,11 +31,11 @@ from typing import Any
 from almacen.base import Almacen
 from esquema import Documento
 from modelo import coste, paginas
-from proceso import extraccion
+from proceso import extraccion, suceso
 from proceso import segunda_busqueda as busqueda
 from proceso.incidentes import huella
 from proceso.noticias import nomenclator
-from recogida import articulos_dirigidos, control_fichas, rectificaciones
+from recogida import articulos_dirigidos, control_fichas
 from recogida.descarga import Descargador, DescargaFallida
 
 registro = logging.getLogger(__name__)
@@ -221,7 +221,7 @@ def otros_articulos(principal: Almacen, incidente: Documento,
                     articulos: list[Documento]) -> list[Documento]:  # fmt: skip
     """Las noticias posteriores que nombran el lugar del incidente (la selección del barrido de
     rectificaciones), las primeras después del suceso."""
-    return rectificaciones.nombran_el_lugar(incidente, articulos, 0)[: busqueda.MAX_TEXTOS]
+    return suceso.nombran_el_lugar(incidente, articulos, 0)[: busqueda.MAX_TEXTOS]
 
 
 def buscar(principal: Almacen, propia: Any, lector: Any, ahora: datetime, fichas: list[Documento],
