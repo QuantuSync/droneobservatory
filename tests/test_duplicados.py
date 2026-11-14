@@ -294,3 +294,20 @@ def test_con_un_sitio_en_una_de_las_dos_no_es_la_misma_incursion() -> None:
 def test_los_dos_cierres_de_munich_son_distintos_por_revision() -> None:
     # El candado los unía por el mismo sitio y la misma jornada; una revisión los separa.
     assert frozenset({"EODI-2025-00055", "EODI-2025-00083"}) in suceso.pares_distintos()
+
+
+def test_la_revision_pone_el_objetivo_aunque_nada_mas_cambie() -> None:
+    from recogida import revisados
+
+    ficha = {**ejemplos.incidente_minimo(), "id": "EODI-2026-00819"}
+    ficha["objetivo"] = {"categoria": "otra", "nombre": "Warsaw"}
+    revision = next(
+        r for r in revisados.cargar()["titulares"] if r["incidente"] == "EODI-2026-00819"
+    )
+    instante = {"valor": "2026-11-14T10:17Z", "precision": "minuto"}
+    nueva = revisados.con_titular(ficha, revision, instante)
+    assert nueva["objetivo"] == {
+        "categoria": "aeropuerto",
+        "nombre": "Lotnisko Chopina",
+        "oaci": "EPWA",
+    }

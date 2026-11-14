@@ -516,8 +516,14 @@ def _fuente_de_la_presencia(incidente: Documento, presencia: Documento) -> str |
 
 
 def con_titular(incidente: Documento, revision: Documento, instante: Documento) -> Documento:
-    """El titular revisado y, si la revisión lo dice, la presencia y el estado con su cita."""
+    """El titular revisado y, si la revisión lo dice, la presencia y el estado con su cita, y la
+    instalación (`objetivo`). La instalación revisada solo la ponía decidir_objetivo al guardar la
+    ficha por otro motivo: la de EODI-2026-00819 (el aeropuerto Chopin de Varsovia, letra B de
+    la auditoría del 14 de noviembre de 2026) se quedaba sin poner."""
     resultado = copy.deepcopy(incidente)
+    objetivo = revision.get("objetivo")
+    if objetivo and resultado.get("objetivo") != objetivo:
+        resultado["objetivo"] = dict(objetivo)
     fuentes = {f["frase_origen"]: f["id"] for f in resultado["fuentes"]}
     presencia = revision.get("presencia")
     if presencia and resultado.get("presencia_dron") != presencia["valor"]:
