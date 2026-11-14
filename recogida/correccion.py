@@ -56,6 +56,7 @@ class Resumen:
     sin_relectura: list[str] = field(default_factory=list)
     pendientes: list[str] = field(default_factory=list)
     separar: list[str] = field(default_factory=list)
+    protegidas: list[str] = field(default_factory=list)
 
 
 def huella(ficha: Documento) -> str:
@@ -96,7 +97,7 @@ def a_region(ficha: Documento, region: str) -> Documento:
     """La ficha situada solo en una región de su país, con el titular de su país."""
     nuevo = barrera.a_nivel_de_pais(ficha)
     nuevo["lugar"] = {**nuevo["lugar"], "nivel": "region", "region": region, "suceso": region}
-    return nuevo
+    return titulo_rehecho(nuevo)
 
 
 def sin_drones(ficha: Documento) -> Documento:
@@ -287,11 +288,9 @@ def corregir(
             continue
         letras = {h.comprobacion for h in hallazgos}
         respuesta: dict[str, Any] | None = None
-        partes: list[dict[str, Any]] = []
         if letras == {correccion.TITULAR}:
             # El titular se rehace con los datos de la ficha: no hace falta leer las fuentes.
-            cambios: list[str] = []
-            nuevo = con_titular(ficha, letras, cambios)
+            rehacer = _con_titular(ficha)
         else:
             if resumen.releidas >= MAX_RELECTURAS or plazo.agotado():
                 resumen.pendientes.append(id_)
@@ -311,16 +310,23 @@ def corregir(
                     or relector.motivo.startswith("cupo")
                 ):
                     continue
-                nuevo, cambios = lo_seguro(ficha, hallazgos)
+                nuevo, cambios, protegidos, _ = sin_lo_protegido(
+                    almacen, ficha, hallazgos, _lo_seguro(ficha)
+                )
+                if protegidos:
+                    resumen.protegidas.append(id_)
                 if nuevo != ficha and control_fichas._guardar(
                     ctx, ficha, nuevo, f"{MOTIVO} (sin relectura): {'; '.join(cambios)}"[:600]
                 ):
                     resumen.corregidas.append(id_)
                 continue
             resumen.releidas += 1
-            nuevo, cambios, partes = aplicar(ficha, hallazgos, respuesta, comprobar)
+            rehacer = _aplicar(ficha, respuesta, comprobar)
+        nuevo, cambios, protegidos, partes = sin_lo_protegido(almacen, ficha, hallazgos, rehacer)
         motivo = f"{MOTIVO}: " + "; ".join(cambios) if cambios else MOTIVO
         guardada = False
+        if protegidos:
+            resumen.protegidas.append(id_)
         if nuevo != ficha:
             guardada = control_fichas._guardar(ctx, ficha, nuevo, motivo[:600])
             if guardada:
@@ -340,13 +346,14 @@ def corregir(
             "guardada": guardada,
             "relectura": respuesta is not None,
             "partes": partes,
+            **({"protegidos": protegidos} if protegidos else {}),
         }
     anotar_pendientes(almacen, resumen, ctx.ahora)
     registro.info(
         "coherencia en la puerta: miradas %d, releídas %d, corregidas %s, sin relectura %s, "
-        "pendientes %s, para separar %s",
+        "pendientes %s, para separar %s, protegidas por el cerrojo %s",
         resumen.miradas, resumen.releidas, resumen.corregidas, resumen.sin_relectura,
-        resumen.pendientes, resumen.separar,
+        resumen.pendientes, resumen.separar, resumen.protegidas,
     )  # fmt: skip
     return resumen
 
@@ -432,6 +439,80 @@ def una_jornada(almacen: Any, ficha: Documento, respuesta: dict[str, Any], ahora
         "dia": str(dia.get("valor") or ""),
         "frase": str(dia.get("frase") or "")[:300],
     })  # fmt: skip
+
+
+# Los pasos con que guarda la corrección (control_fichas._guardar desde corregir): el cerrojo
+# los mira para las revisiones a mano y las retiradas, que aquí no hay.
+PASOS_GUARDADO = ["recogida.control_fichas._guardar", "recogida.correccion.corregir"]
+
+
+def protegidos_por_el_cerrojo(almacen: Any, antes: Documento, nuevo: Documento) -> list[str]:
+    """Los datos que el cerrojo (proceso/protegido.py) no dejaría cambiar: lo publicado con cita
+    que ninguna fuente nueva desmiente. Vacío si no retendría nada (o si solo observa)."""
+    from proceso import protegido
+
+    if protegido.modo() != protegido.APLICAR:
+        return []
+    veredicto = protegido.juzgar(
+        antes, nuevo, PASOS_GUARDADO, almacen.texto_guardado,
+        publicada=not almacen.en_el_filtro(str(antes["id"])),
+    )  # fmt: skip
+    return sorted({c.dato for c in veredicto.retenidos})
+
+
+# Lo que cambia cada corrección (los datos del cerrojo, proceso/protegido.DATOS_MANUAL).
+DATOS_DE = {
+    correccion.LUGAR: {"lugar", "objetivo", "titulo"},
+    correccion.DRONES: {"drones"},
+    correccion.FECHA: {"inicio"},
+    correccion.UN_SUCESO: {"inicio"},
+    correccion.TITULAR: {"titulo"},
+}
+Rehacer = Callable[[list[correccion.Hallazgo]], tuple[Documento, list[str], list[dict[str, Any]]]]
+
+
+def _con_titular(ficha: Documento) -> Rehacer:
+    def rehacer(quedan: list[correccion.Hallazgo]) -> tuple[Documento, list[str], list[Documento]]:
+        cambios: list[str] = []
+        return con_titular(ficha, {h.comprobacion for h in quedan}, cambios), cambios, []
+
+    return rehacer
+
+
+def _lo_seguro(ficha: Documento) -> Rehacer:
+    def rehacer(quedan: list[correccion.Hallazgo]) -> tuple[Documento, list[str], list[Documento]]:
+        nuevo, cambios = lo_seguro(ficha, quedan)
+        return nuevo, cambios, []
+
+    return rehacer
+
+
+def _aplicar(
+    ficha: Documento, respuesta: dict[str, Any], comprobar: list[tuple[str, str]]
+) -> Rehacer:
+    def rehacer(quedan: list[correccion.Hallazgo]) -> tuple[Documento, list[str], list[Documento]]:
+        return aplicar(ficha, quedan, respuesta, comprobar)
+
+    return rehacer
+
+
+def sin_lo_protegido(
+    almacen: Any, ficha: Documento, hallazgos: list[correccion.Hallazgo], rehacer: Rehacer
+) -> tuple[Documento, list[str], list[str], list[dict[str, Any]]]:
+    """La corrección sin lo que el cerrojo protege: lo publicado con su cita manda y, si retiene
+    un dato, la comprobación que lo cambia no se aplica entera (con el lugar retenido en su
+    región, el titular bajaba solo al país: EODI-2026-00747 en el ensayo del 14/11). Las demás,
+    sí. Devuelve la ficha, sus cambios, los datos protegidos y las partes."""
+    nuevo, cambios, partes = rehacer(hallazgos)
+    protegidos = protegidos_por_el_cerrojo(almacen, ficha, nuevo) if nuevo != ficha else []
+    if not protegidos:
+        return nuevo, cambios, [], partes
+    quitar = {letra for letra, datos in DATOS_DE.items() if datos & set(protegidos)}
+    quedan = [h for h in hallazgos if h.comprobacion not in quitar]
+    nuevo, cambios, partes = rehacer(quedan) if quedan else (ficha, [], [])
+    if nuevo != ficha and protegidos_por_el_cerrojo(almacen, ficha, nuevo):
+        return ficha, [], protegidos, []
+    return nuevo, cambios, protegidos, partes
 
 
 def pendiente_desde(almacen: Any, id_: str) -> datetime | None:
