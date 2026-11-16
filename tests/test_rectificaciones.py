@@ -666,3 +666,24 @@ def test_el_quien_de_la_semilla_sale_de_la_tabla_de_hoy() -> None:
         _con_semilla(viejo, "tv2.dk"),
     ):
         assert rectificaciones.con_quien_de_hoy(otro) is otro
+
+
+def test_el_quien_de_la_semilla_fuera_de_la_tabla_sale_de_su_traduccion() -> None:
+    # EODI-2026-00847: «Autoritatea Aeronautică Civilă (AAC)» no está en la tabla; la semilla se
+    # guardó con «una autoridad» antes de que llegara la traducción de su nombre (la misma que la
+    # web enseña en `autoridades`). Al publicar se escribe con ella.
+    generico = {"es": "una autoridad", "en": "an authority"}
+    nombre = "Autoritatea Aeronautică Civilă (AAC)"
+    d = _con_semilla(generico, f"{nombre} (declaración oficial citada en news.yam.md)")
+    traducida = {
+        "es": "la Autoridad Aeronáutica Civil (AAC)",
+        "en": "the Civil Aviation Authority (AAC)",
+    }
+    nuevo = rectificaciones.con_quien_de_hoy(d, {nombre: traducida}.get)
+    assert nuevo["presencia_historial"][0]["quien"] == traducida
+    assert d["presencia_historial"][0]["quien"] == generico
+    # Sin traducción, o en el paso de una rectificación, se queda como se guardó.
+    assert rectificaciones.con_quien_de_hoy(d, lambda _: None) is d
+    revisado = _con_semilla(generico, f"{nombre} (declaración oficial citada en news.yam.md)",
+                            "rectificacion:revisada:x")  # fmt: skip
+    assert rectificaciones.con_quien_de_hoy(revisado, {nombre: traducida}.get) is revisado
