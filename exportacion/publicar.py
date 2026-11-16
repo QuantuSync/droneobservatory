@@ -29,7 +29,12 @@ from pathlib import Path
 from almacen.base import Almacen
 from esquema import Documento
 from exportacion import puerta
-from exportacion.citas import Pendientes, con_traducciones, enriquecer_incidentes
+from exportacion.citas import (
+    Pendientes,
+    con_traducciones,
+    enriquecer_incidentes,
+    traduccion,
+)
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
@@ -129,13 +134,17 @@ def publicar(
     # Las autoridades que se escriben igual en varios países, con el suyo («Ministerul Apărării
     # (MD)»): la web, los avisos y el «quién» del historial escriben así el de la ficha.
     incidentes = [autoridades.con_pais(i) for i in incidentes]
-    # El «quién» del primer paso del historial de presencia, con la tabla de autoridades de hoy.
-    incidentes = [rectificaciones.con_quien_de_hoy(i) for i in incidentes]
+    traducciones = almacen.traducciones()
+    # El «quién» del primer paso del historial de presencia, con la tabla de autoridades de hoy o
+    # la traducción guardada de su nombre.
+    incidentes = [
+        rectificaciones.con_quien_de_hoy(i, lambda n: traduccion(n, traducciones))
+        for i in incidentes
+    ]
     verificaciones = {
         clave.removeprefix("verificacion:"): decision
         for clave, decision in almacen.controles("verificacion:").items()
     }
-    traducciones = almacen.traducciones()
     pendientes = Pendientes()
 
     def con_citas(documento: Documento, clave: str) -> Documento:

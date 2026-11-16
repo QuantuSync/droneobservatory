@@ -177,6 +177,37 @@ def test_la_coherencia_corrige_00847_y_sale_en_la_web(tmp_path: Path) -> None:
     assert ID not in resumen.corregidas and almacen.incidente(ID) == antes
 
 
+def test_sale_con_el_nombre_de_su_traduccion_aunque_llegue_despues(tmp_path: Path) -> None:
+    # En el ensayo del 16/11, una fuente nueva rehízo la ficha con «Autoritatea Aeronautică Civilă
+    # (AAC)», aún sin traducción: el paso se guardó con «una autoridad». La web lo escribe con la
+    # traducción en cuanto la hay (rectificaciones.con_quien_de_hoy).
+    almacen = Almacen.abrir()
+    ficha = _ficha()
+    nombre = "Autoritatea Aeronautică Civilă (AAC)"
+    for fuente in ficha["fuentes"]:
+        if fuente["id"] == AAC:
+            fuente["medio"] = f"{nombre} (declaración oficial citada en news.yam.md)"
+    almacen.guardar_incidente(ficha, AHORA, VOCABULARIO_MODELOS)
+    puerta.dar_pase(almacen, AHORA, [ID])
+    assert ID in _corregir(almacen).corregidas
+    guardada = almacen.incidente(ID)
+    assert guardada is not None
+    assert guardada["presencia_historial"][0]["quien"] == {
+        "es": "una autoridad",
+        "en": "an authority",
+    }
+    traducida = {
+        "es": "la Autoridad Aeronáutica Civil (AAC)",
+        "en": "the Civil Aviation Authority (AAC)",
+    }
+    almacen.guardar_traducciones({citas.huella_texto(nombre): {**traducida, "idioma": "ro"}},
+                                 "2026-11-16T06:30:00Z")  # fmt: skip
+    publicar.publicar(almacen, AHORA, tmp_path)
+    entrada = almacen.publicado()[ID]["entrada"]
+    propiedades = entrada.get("properties", entrada)
+    assert propiedades["presencia_historial"][0]["quien"] == traducida
+
+
 def test_lo_revisado_a_mano_no_se_corrige(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(protegido, "_fijado_a_mano", lambda ficha, dato: dato == "presencia_dron")
     almacen = _base()

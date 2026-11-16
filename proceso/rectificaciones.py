@@ -30,6 +30,7 @@ extracción o una regla traigan otro.
 import copy
 import json
 import re
+from collections.abc import Callable
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -118,14 +119,20 @@ def semilla(
     return paso
 
 
-def con_quien_de_hoy(incidente: Documento) -> Documento:
+def con_quien_de_hoy(
+    incidente: Documento, traduccion_de: Callable[[str], Documento | None] | None = None
+) -> Documento:
     """El incidente con el «quién» del primer paso del historial escrito con la tabla de
     autoridades de hoy, al publicar. La semilla guarda el nombre que daba la tabla el día en que
     se creó el historial, y una corrección posterior de la tabla no le llegaba (EODI-2025-00228:
     «la unidad de aviones de transporte…» después de que el PR 330 lo cambiara por «el Ala de
     Transporte Aéreo de Aalborg…»). Solo se reescribe la semilla (el paso sin `revision`) cuya
-    fuente es la declaración de una autoridad que está en la tabla; el «quién» revisado a mano o
-    el de una rectificación se queda como se guardó. Devuelve el mismo incidente si no cambia."""
+    fuente es la declaración de una autoridad que está en la tabla o, desde el 16 de noviembre
+    de 2026, cuyo nombre tiene traducción guardada (`traduccion_de`: nombre -> {es, en}, la misma
+    que la web enseña en `autoridades`): sin ella, la semilla de una autoridad fuera de la tabla
+    se quedaba en «una autoridad» (EODI-2026-00847, «Autoritatea Aeronautică Civilă (AAC)»;
+    EODI-2026-00108, «Estonia's Internal Security Service»). El «quién» revisado a mano o el de
+    una rectificación se queda como se guardó. Devuelve el mismo incidente si no cambia."""
     historial = incidente.get("presencia_historial") or []
     fuentes = {f["id"]: f for f in incidente.get("fuentes", [])}
     cambiado = None
@@ -134,9 +141,15 @@ def con_quien_de_hoy(incidente: Documento) -> Documento:
         if "revision" in paso or not paso.get("quien") or fuente is None:
             continue
         declaracion = autoridades.DECLARACION.match(str(fuente.get("medio", "")))
-        if declaracion is None or not autoridades.en_tabla(declaracion.group(1)):
+        if declaracion is None:
             continue
-        quien = _quien(fuente)
+        if autoridades.en_tabla(declaracion.group(1)):
+            quien = _quien(fuente)
+        else:
+            traducida = traduccion_de(declaracion.group(1)) if traduccion_de else None
+            if not traducida:
+                continue
+            quien = {"es": str(traducida["es"]), "en": str(traducida["en"])}
         if quien != paso["quien"]:
             cambiado = cambiado or [dict(p) for p in historial]
             cambiado[posicion]["quien"] = quien
