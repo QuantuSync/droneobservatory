@@ -499,6 +499,11 @@ def _p(incidente: Documento) -> bool:
     )
 
 
+# P, con nombre propio: la coherencia la corrige en las fichas que nunca se han publicado
+# (proceso/correccion.presencia_sin_quien).
+presencia_rebajada_sin_cierre = _p
+
+
 def sin_fuente_legible(incidente: Documento, copias: dict[str, Documento]) -> bool:
     """Q: todas sus fuentes tienen el original caído y ninguna tiene copia archivada (`copias`,
     lo vigente de cada enlace: Almacen.copias_archivadas)."""

@@ -5,7 +5,9 @@ Cerrada por defecto. La versión de una ficha que la base propone entra solo si:
 
 - el control de las fichas terminó en esta pasada (`pase_del_control`);
 - la ficha tiene el pase del control: está entre las vistas (recogida/control_fichas.retener);
-- la auditoría de protección no la marca (P, R, V, W o X: `proceso/protegido.AUDITORIA`);
+- la auditoría de protección no la marca (P, R, V, W o X: `proceso/protegido.AUDITORIA`), si
+  ya se ha publicado alguna vez (en una que nunca ha salido, lo que marcan lo corrige antes la
+  coherencia: recogida/correccion.sin_publicar);
 - cumple las invariantes de ficha (proceso/invariantes.py);
 - su entrada pública se pudo generar y valida (exportacion/geojson.py, `apartados`).
 
@@ -348,10 +350,18 @@ class Resultado:
 
 
 def _motivos_de_ficha(
-    id_: str, interno: Documento, pase: Pase, marcas: dict[str, list[str]] | None
-) -> list[str]:
-    """Por qué la versión de la base de esa ficha no entra en lo publicado (vacío si entra)."""
-    from proceso import invariantes
+    id_: str, interno: Documento, pase: Pase, marcas: dict[str, list[str]] | None,
+    nunca_publicada: bool = False,
+) -> list[str]:  # fmt: skip
+    """Por qué la versión de la base de esa ficha no entra en lo publicado (vacío si entra).
+
+    Las comprobaciones de protección (P, R, V, W, X) guardan lo publicado: a una ficha publicada
+    la dejan en su última versión buena. Una ficha que nunca se ha publicado no tiene versión
+    que guardar, y frenarla era dejar fuera de la web un suceso (EODI-2026-00847, Chișinău, 11
+    recogidas el 15 y 16 de noviembre de 2026, por la P): lo que marcan lo corrige antes la
+    coherencia (recogida/correccion.sin_publicar) y la ficha sale. El control, el pase, la
+    auditoría que no se pudo hacer, las invariantes y el candado siguen frenándola."""
+    from proceso import invariantes, protegido
 
     motivos: list[str] = []
     if not pase.terminado:
@@ -360,6 +370,8 @@ def _motivos_de_ficha(
         motivos.append(SIN_PASE)
     if marcas is None:
         motivos.append(SIN_AUDITORIA)
+    elif nunca_publicada:
+        motivos += [m for m in marcas.get(id_, []) if m not in protegido.AUDITORIA]
     else:
         motivos += marcas.get(id_, [])
     try:
@@ -410,7 +422,7 @@ def pasar(
         if interno is None:
             continue
         try:
-            motivos = _motivos_de_ficha(id_, interno, pase, marcas)
+            motivos = _motivos_de_ficha(id_, interno, pase, marcas, fila is None)
             if fila is None or fila["estado"] != PUBLICADA:
                 if del_experto is None:
                     del_experto = suceso.distintos_del_experto(almacen)

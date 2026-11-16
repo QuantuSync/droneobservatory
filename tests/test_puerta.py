@@ -188,16 +188,16 @@ def test_la_ficha_marcada_sale_en_su_ultima_version_buena(
     assert (almacen.cursor(puerta.CURSOR) or {})["sustituidas"] == []
 
 
-def test_la_marcada_que_nunca_se_publico_no_sale_y_se_apunta(
+def test_la_marcada_que_nunca_se_publico_sale(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # Desde el 16/11/2026 (EODI-2026-00847): no hay versión publicada que guardar; lo que marca
+    # la auditoría lo corrige antes la coherencia (tests/test_p_nunca_publicada.py).
     almacen = _base(BUENO)
     monkeypatch.setattr(puerta, "marcadas", lambda *_: {ID: ["W"]})
     publicar.publicar(almacen, AHORA, tmp_path)
-    assert _publicadas(tmp_path) == {}
-    (retenida,) = (almacen.cursor(puerta.CURSOR) or {})["sustituidas"]
-    assert retenida["origen"] == puerta.NINGUNA
-    assert puerta.linea(retenida)[0] == f"{ID} no publicada"
+    assert _minutos(_publicadas(tmp_path)[ID]) == BUENO
+    assert (almacen.cursor(puerta.CURSOR) or {})["sustituidas"] == []
 
 
 def test_una_ficha_que_no_valida_no_para_a_las_demas(

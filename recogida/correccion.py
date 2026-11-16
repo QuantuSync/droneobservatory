@@ -42,6 +42,7 @@ CLAVE = "coherencia:"
 TOPE_S = 300
 MAX_RELECTURAS = 40
 MOTIVO = "coherencia en la puerta"
+MOTIVO_SIN_PUBLICAR = "coherencia en la puerta (nunca publicada)"
 # Las que esperan la relectura y, pasada una recogida, el aviso privado (una vez por ficha).
 CURSOR_PENDIENTES = "coherencia:pendientes"
 ESPERA_AVISO = timedelta(minutes=50)
@@ -57,6 +58,8 @@ class Resumen:
     pendientes: list[str] = field(default_factory=list)
     separar: list[str] = field(default_factory=list)
     protegidas: list[str] = field(default_factory=list)
+    # Uniones (V) deshechas en fichas que nunca se han publicado: «absorbida→destino».
+    deshechas: list[str] = field(default_factory=list)
 
 
 def huella(ficha: Documento) -> str:
@@ -260,12 +263,101 @@ class Relector:
         return self.experto.motivo_espera
 
 
+def sin_publicar(ctx: control_fichas.Contexto, resumen: Resumen) -> None:
+    """Las comprobaciones de protección de la auditoría (P, R, V, W, X) sobre una ficha que nunca
+    se ha publicado no la frenan en la puerta (exportacion/puerta.pasar): no hay versión
+    publicada que proteger. Lo que marcan se corrige aquí, antes de la puerta, como el resto de
+    la coherencia:
+
+    - P, la presencia rebajada sin quién ni cuándo: el paso de la autoridad que lo declara con
+      una frase literal o, sin ella, «no confirmada» (`correccion.presencia_sin_quien`);
+    - V, la ficha que absorbió otra que una revisión o el experto dieron por distinta: la unión
+      se deshace (`incidentes.revertir`, como el candado con I6; el cerrojo lo deja porque el
+      par no se une, `protegido.es_separacion`) y cada suceso pasa por el control con su ficha;
+    - W, un dato decidido perdido al volver a extraer: el lugar, los drones y el día los mira la
+      coherencia de siempre con sus frases (c, d, b);
+    - X y R, lo que fija una revisión a mano o el conjunto de referencia: la revisión manda y la
+      invariante I3 sigue frenando la versión que se aparta de ella.
+
+    Lo que fija una revisión a mano no se corrige (la revisión manda). Sobre una ficha ya
+    publicada nada cambia: la red de la puerta la deja en su última versión buena."""
+    from proceso import auditoria_fichas, incidentes, protegido
+    from recogida import revisados
+
+    almacen = ctx.almacen
+    activas = sorted(
+        control_fichas._activos(almacen), key=lambda d: suceso.orden_registro(str(d["id"]))
+    )
+    traducciones: dict[str, Documento] | None = None
+    for ficha in activas:
+        id_ = str(ficha["id"])
+        if almacen.esta_publicada(id_) or protegido._fijado_a_mano(ficha, "presencia_dron"):
+            continue
+        try:
+            if not auditoria_fichas.presencia_rebajada_sin_cierre(ficha):
+                continue
+            if traducciones is None:
+                traducciones = almacen.traducciones()
+            hecho = correccion.presencia_sin_quien(
+                ficha, almacen.texto_guardado, nombres_traducidos(ficha, traducciones)
+            )
+            if hecho is None:
+                continue
+            nuevo, cambio = hecho
+            if control_fichas._guardar(ctx, ficha, nuevo, f"{MOTIVO_SIN_PUBLICAR}: {cambio}"[:600]):
+                resumen.corregidas.append(id_)
+                registro.info("coherencia en la puerta: %s (nunca publicada): %s", id_, cambio)
+        except Exception as error:
+            registro.warning("coherencia de %s (nunca publicada) sin corregir: %s", id_,
+                             repr(error)[:200])  # fmt: skip
+    try:
+        uniones = auditoria_fichas.uniones_marcadas(
+            list(almacen.incidentes()),
+            suceso.distintos_del_experto(almacen) | revisados.pares_de_partes(almacen),
+            suceso.uniones_a_mano(almacen),
+        )
+    except Exception as error:
+        registro.warning("coherencia: uniones marcadas sin mirar: %s", repr(error)[:200])
+        uniones = []
+    for union in uniones:
+        absorbido, _, destino = union.partition("→")
+        if almacen.esta_publicada(destino):
+            continue
+        try:
+            incidentes.revertir(almacen, absorbido, ctx.ahora, ctx.modelos)
+            resumen.deshechas.append(union)
+            registro.warning("coherencia en la puerta: unión deshecha (V, nunca publicada) %s",
+                             union)  # fmt: skip
+        except Exception as error:
+            registro.warning("coherencia: unión %s sin deshacer: %s", union, repr(error)[:200])
+
+
+def nombres_traducidos(ficha: Documento, traducciones: dict[str, Documento]) -> dict[str, Any]:
+    """{nombre: {es, en}} de las autoridades de la ficha con traducción guardada (las que la web
+    enseña en `autoridades`, exportacion/citas.con_autoridades): «AAC» es «la AAC»."""
+    from exportacion import citas
+    from proceso import autoridades
+
+    salida: dict[str, Any] = {}
+    for fuente in ficha.get("fuentes", []):
+        medio = str(fuente.get("medio") or "")
+        declaracion = autoridades.DECLARACION.match(medio)
+        nombre = declaracion.group(1) if declaracion else medio
+        hecha = citas.traduccion(nombre, traducciones) if nombre else None
+        if hecha is not None:
+            salida[nombre] = hecha
+    return salida
+
+
 def corregir(
     ctx: control_fichas.Contexto, plazo: Plazo, relector: Relector | None = None
 ) -> Resumen:
-    """La pasada de la hora: comprueba cada ficha activa y corrige las que lo necesitan."""
+    """La pasada de la hora: comprueba cada ficha activa y corrige las que lo necesitan. Antes,
+    lo que la auditoría de protección marca en las fichas que nunca se han publicado
+    (`sin_publicar`)."""
     almacen = ctx.almacen
     resumen = Resumen()
+    sin_publicar(ctx, resumen)
     nom = nomenclator()
     de_episodio = noches(almacen)
     relector = relector or Relector(ctx, plazo)
@@ -352,9 +444,9 @@ def corregir(
     anotar_pendientes(almacen, resumen, ctx.ahora)
     registro.info(
         "coherencia en la puerta: miradas %d, releídas %d, corregidas %s, sin relectura %s, "
-        "pendientes %s, para separar %s, protegidas por el cerrojo %s",
+        "pendientes %s, para separar %s, protegidas por el cerrojo %s, uniones deshechas %s",
         resumen.miradas, resumen.releidas, resumen.corregidas, resumen.sin_relectura,
-        resumen.pendientes, resumen.separar, resumen.protegidas,
+        resumen.pendientes, resumen.separar, resumen.protegidas, resumen.deshechas,
     )  # fmt: skip
     return resumen
 

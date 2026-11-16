@@ -62,12 +62,14 @@ candidata de cada ficha activa. Una versión entra en `publicado` solo si se cum
 |---|---|
 | el control de las fichas terminó en esta pasada | ninguna ficha cambia en lo publicado |
 | la ficha tiene el pase del control (filtro de entrada, verificación, duplicados) | la nueva no sale; la publicada queda como estaba |
-| la auditoría de protección no la marca (P, R, V, W, X) | queda su última versión buena |
+| la auditoría de protección no la marca (P, R, V, W, X), si ya se publicó alguna vez | queda su última versión buena |
 | cumple las invariantes de ficha (abajo) | queda su última versión buena |
 | su entrada pública se puede generar y valida | queda su última versión buena |
 
 «Queda como estaba» es literal: la fila de `publicado` no se toca. Una ficha que nunca salió no
-sale. Lo que la puerta no deja pasar queda en el cursor `puerta` (ficha, condición y qué
+sale, salvo por la auditoría de protección: esas comprobaciones guardan lo publicado y, en una
+ficha que nunca ha salido, lo que marcan lo corrige antes la coherencia (abajo, «Fichas que nunca
+se han publicado») y la ficha sale. Lo que la puerta no deja pasar queda en el cursor `puerta` (ficha, condición y qué
 cambiaba), en `control.json` y en el resumen diario; una invariante rota manda además un aviso
 privado.
 
@@ -107,6 +109,27 @@ la huella de lo que miró: una ficha que no cambia no se relee.
 Lo publicado con su cita manda: antes de guardar se pregunta al cerrojo (`proceso/protegido.py`),
 y la comprobación que cambiaría un dato que el cerrojo protege no se aplica; las demás, sí. Una
 corrección no queda a medias (el titular no baja al país si el lugar se queda en su región).
+
+#### Fichas que nunca se han publicado
+
+Desde el 16 de noviembre de 2026 (`recogida/correccion.sin_publicar`, antes de las comprobaciones
+de arriba). La auditoría de protección (P, R, V, W, X) guarda lo publicado: en una ficha publicada,
+la puerta deja su última versión buena. Una ficha que nunca ha salido no tiene versión que guardar,
+y frenarla dejaba un suceso fuera de la web: EODI-2026-00847 (Chișinău, 15 de noviembre de 2026,
+«Alertă falsă cu drone deasupra Chișinăului!», descartada por la autoridad de aviación civil
+moldava) estuvo 11 recogidas sin salir por la P. Ahora la puerta no la frena por esas letras y la
+coherencia corrige lo que marcan:
+
+| Letra | En una ficha que nunca se ha publicado |
+|---|---|
+| P, presencia rebajada sin quién ni cuándo | si una autoridad de la ficha la declara (fuente de autoridad que respalda la presencia, con su frase literal en lo guardado del artículo), el historial empieza con ese paso: valor, fecha, fuente y quién; si no, la presencia queda «no confirmada» y el titular la sigue (`proceso/correccion.presencia_sin_quien`) |
+| V, unión de fichas que una revisión o el experto dieron por distintas | la unión se deshace (`incidentes.revertir`, como el candado con I6) y cada suceso pasa por el control con su ficha |
+| W, dato decidido perdido al volver a extraer | el lugar, los drones y el día los mira la coherencia de arriba con sus frases |
+| X y R, lo que fija una revisión a mano o la referencia | la revisión manda: la invariante I3 sigue frenando la versión que se aparta de ella |
+
+Lo que fija una revisión a mano no se corrige. El control, el pase, la auditoría que no se pudo
+hacer, las invariantes y el candado siguen frenando también a estas fichas. La vigilancia sigue
+avisando si una ficha queda en una comprobación de protección.
 
 Las revisiones automáticas viven en la base (cursor `revisados:automaticas`) y no en
 `configuracion/incidentes_revisados.json`: todos los lectores de revisiones
