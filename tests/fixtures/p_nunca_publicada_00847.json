@@ -1,0 +1,218 @@
+{
+ "nota": "EODI-2026-00847 tal como estaba en la base el 16/11/2026 (Chișinău, 15/11/2026): descartada por la extracción con la declaración de la AAC dentro de la noticia, sin historial de la presencia. La puerta la dejó fuera de la web 11 recogidas por la P. «titular» es lo guardado de su artículo (Almacen.texto_guardado).",
+ "ficha": {
+  "afirmaciones": [
+   {
+    "campo": "es_incidente",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": true
+   },
+   {
+    "campo": "inicio",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "2026-11-15"
+   },
+   {
+    "campo": "inicio_precision",
+    "confianza_extraccion": 0.8,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "dia"
+   },
+   {
+    "campo": "lugar_suceso",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": {
+     "nivel": "localidad",
+     "nombre": "Chișinău",
+     "pais": "MD",
+     "region": ""
+    }
+   },
+   {
+    "campo": "objetivo_categoria",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "otra"
+   },
+   {
+    "campo": "objetivo_conocido",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": true
+   },
+   {
+    "campo": "objetivo_nombre",
+    "confianza_extraccion": 0.6,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "Chișinău"
+   },
+   {
+    "campo": "pais",
+    "confianza_extraccion": 0.9,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "MD"
+   },
+   {
+    "campo": "presencia_dron",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "descartada"
+   },
+   {
+    "campo": "tipo",
+    "confianza_extraccion": 0.7,
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "valor": "sobrevuelo"
+   }
+  ],
+  "consecuencias": {
+   "cierre": {
+    "valor": "desconocido"
+   }
+  },
+  "control": {
+   "alta": {
+    "precision": "minuto",
+    "valor": "2026-11-15T20:17Z"
+   },
+   "candidato": "CAND-20261115T2000-gkg:4:47.0056:28.8575:MD:Chisinau-avistamiento",
+   "huella_fuentes": "62a57fa6030c68ada82c05fc2a72f6104dba01d4c2dc02caa3585775601f34cf",
+   "modelos": {
+    "es_incidente": "modelo-base",
+    "inicio": "modelo-base",
+    "inicio_precision": "modelo-base",
+    "lugar_suceso": "modelo-base",
+    "objetivo_categoria": "modelo-base",
+    "objetivo_conocido": "modelo-base",
+    "objetivo_nombre": "modelo-base",
+    "pais": "modelo-base",
+    "presencia_dron": "modelo-base",
+    "tipo": "modelo-base"
+   },
+   "ultima_actualizacion": {
+    "precision": "minuto",
+    "valor": "2026-11-15T20:17Z"
+   },
+   "version_extractor": "ficha/5"
+  },
+  "drones": {
+   "numero": "desconocido"
+  },
+  "estado": {
+   "actual": "confirmado",
+   "historial": [
+    {
+     "estado": "notificado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-15T20:00Z"
+     },
+     "fuente_id": "gdelt-62a57fa6030c68ad"
+    },
+    {
+     "estado": "confirmado",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-11-15T20:00Z"
+     },
+     "fuente_id": "gdelt-62a57fa6030c68ad-declaracion-1"
+    }
+   ]
+  },
+  "fuentes": [
+   {
+    "campos_respaldados": [
+     "es_incidente",
+     "inicio",
+     "inicio_precision",
+     "lugar_suceso",
+     "objetivo_categoria",
+     "objetivo_conocido",
+     "objetivo_nombre",
+     "pais",
+     "presencia_dron",
+     "tipo"
+    ],
+    "credibilidad": 3,
+    "enlace": "https://news.yam.md/ro/story/86462447",
+    "es_autoridad": false,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-15T20:00Z"
+    },
+    "fiabilidad": "C",
+    "frase_origen": "Alertă falsă cu drone deasupra Chișinăului!",
+    "id": "gdelt-62a57fa6030c68ad",
+    "idioma": "ro",
+    "interna_fuera_de_ucrania": false,
+    "medio": "news.yam.md",
+    "publica": true,
+    "replicas": 0
+   },
+   {
+    "campos_respaldados": [
+     "estado",
+     "presencia_dron"
+    ],
+    "credibilidad": 1,
+    "enlace": "https://news.yam.md/ro/story/86462447",
+    "es_autoridad": true,
+    "fecha": {
+     "precision": "aproximada",
+     "valor": "2026-11-15T20:00Z"
+    },
+    "fiabilidad": "B",
+    "frase_origen": "AAC explică ce au observat, de fapt, oamenii pe cerul Capitalei",
+    "id": "gdelt-62a57fa6030c68ad-declaracion-1",
+    "idioma": "ro",
+    "interna_fuera_de_ucrania": false,
+    "medio": "AAC (declaración oficial citada en news.yam.md)",
+    "publica": true,
+    "replicas": 0
+   }
+  ],
+  "id": "EODI-2026-00847",
+  "lugar": {
+   "geocodificacion": "localidad",
+   "nivel": "localidad",
+   "pais": "MD",
+   "punto": {
+    "lat": 47.00902,
+    "lon": 28.85938
+   },
+   "radio_km": 10.0,
+   "suceso": "Chișinău"
+  },
+  "presencia_dron": "descartada",
+  "pruebas": {
+   "dron_estatal": false,
+   "entrada_exterior": false,
+   "evidencia": []
+  },
+  "tiempo": {
+   "inicio": {
+    "precision": "dia",
+    "valor": "2026-11-15T00:00Z"
+   },
+   "origen_inicio": {
+    "fuente_id": "gdelt-62a57fa6030c68ad",
+    "motivo": "«in aceasta seara» en una nota publicada el 2026-11-15 22:00 (hora local del medio)",
+    "tipo": "relativa"
+   }
+  },
+  "tipo": "sobrevuelo",
+  "titulo": {
+   "en": "False drone alert over Chisinau",
+   "es": "Falsa alerta por supuestos drones sobre Chisináu"
+  },
+  "zona": {
+   "distancia_km": 48,
+   "grupo": "frontera",
+   "motivo": "cerca_de_la_frontera"
+  }
+ },
+ "titular": "Alertă falsă cu drone deasupra Chișinăului! AAC explică ce au observat, de fapt, oamenii pe cerul Capitalei"
+}

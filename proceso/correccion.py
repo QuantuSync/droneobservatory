@@ -16,12 +16,15 @@ el titular del artículo. Los nombres se comparan sin tildes ni mayúsculas y po
 cuatro primeras letras de cada palabra larga, menos las tres últimas), para que «варшавском»
 nombre «Варшава» y «Rēzeknes» nombre «Rēzekne»."""
 
+import copy
 import math
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date, timedelta
 
 from esquema import Documento
-from proceso import fronteras, suceso
+from proceso import autoridades, fronteras, rectificaciones, suceso, titulares
+from proceso import control_fichas as reglas
 from proceso.noticias import (
     Nomenclator,
     localidades_declinadas,
@@ -217,6 +220,106 @@ def titulo_de_otro_pais(ficha: Documento) -> str | None:
         if otro != pais and nombrado(otro):
             return otro
     return None
+
+
+def quien_de(fuente: Documento, traducidas: autoridades.Traducidas | None = None) -> Documento:
+    """Quién declara la fuente, en español y en inglés: la tabla de autoridades, la traducción
+    guardada de su nombre (`traducidas`, nombre -> {es, en}: las mismas que la web enseña en
+    `autoridades`) o «una autoridad»."""
+    medio = str(fuente.get("medio", ""))
+    return {i: autoridades.de_la_fuente(medio, i, traducidas) for i in ("es", "en")}
+
+
+def _autoridad_de_la_presencia(
+    ficha: Documento, texto_de: Callable[[Documento], str],
+    traducidas: autoridades.Traducidas | None = None,
+) -> Documento | None:  # fmt: skip
+    """La declaración de una autoridad que da la presencia de la ficha: una fuente pública de
+    autoridad que respalda la presencia (`campos_respaldados` o una afirmación con ese valor), con
+    un nombre que la web pueda escribir y cuya frase está, literal, en lo guardado de su artículo
+    (`texto_de`, Almacen.texto_guardado). La más temprana, o None."""
+    valor = ficha.get("presencia_dron")
+    afirmadas = {
+        str(a.get("fuente_id")) for a in ficha.get("afirmaciones", [])
+        if a.get("campo") == "presencia_dron" and a.get("valor") == valor
+    }  # fmt: skip
+    validas = []
+    for fuente in publicas(ficha):
+        if not fuente.get("es_autoridad"):
+            continue
+        if (
+            "presencia_dron" not in (fuente.get("campos_respaldados") or [])
+            and str(fuente.get("id")) not in afirmadas
+        ):
+            continue
+        quien = quien_de(fuente, traducidas)
+        if not quien["es"].strip() or not quien["en"].strip():
+            continue
+        if not reglas.frase_valida(str(fuente.get("frase_origen") or ""), texto_de(fuente)):
+            continue
+        validas.append(fuente)
+    return min(validas, key=rectificaciones._fecha_clave) if validas else None
+
+
+def presencia_sin_quien(
+    ficha: Documento, texto_de: Callable[[Documento], str],
+    traducidas: autoridades.Traducidas | None = None,
+) -> tuple[Documento, str] | None:  # fmt: skip
+    """P) La presencia rebajada (no acreditada o descartada) sin un paso del historial que diga
+    qué autoridad la rebajó y cuándo (la letra P de la auditoría). Para una ficha que nunca se ha
+    publicado (recogida/correccion.sin_publicar), la ficha corregida y lo que cambia, o None si
+    no hay nada que corregir aquí:
+
+    - si una autoridad de la ficha lo declara con una frase literal
+      (`_autoridad_de_la_presencia`), el historial empieza con ese paso: el valor, la fecha y la
+      fuente de la declaración y quién la hace (como la semilla de una rectificación,
+      `rectificaciones.semilla`), con su nombre escrito como en la web (`quien_de`), y la
+      afirmación de la presencia con esa fuente;
+    - si no, ninguna autoridad la rebaja: la presencia queda «no confirmada» (lo que cuentan la
+      prensa o los testigos, docs/rectificaciones.md) sin las afirmaciones rebajadas, y el titular
+      sigue a la presencia (`titulares.ajustar_incidente`).
+
+    Una ficha con historial (una rectificación o una revisión a mano) no se toca aquí: el
+    historial solo crece y la revisión manda (EODI-2026-00847, Chișinău, 15 de noviembre de
+    2026: descartada por la extracción con la declaración de la AAC dentro de la noticia, sin
+    historial; la puerta la dejó fuera de la web 11 recogidas)."""
+    from proceso import auditoria_fichas
+
+    valor = ficha.get("presencia_dron")
+    if valor not in rectificaciones.RECTIFICADOS or ficha.get("presencia_historial"):
+        return None
+    if not auditoria_fichas.presencia_rebajada_sin_cierre(ficha):
+        return None
+    nuevo = copy.deepcopy(ficha)
+    autoridad = _autoridad_de_la_presencia(ficha, texto_de, traducidas)
+    if autoridad is not None:
+        quien = quien_de(autoridad, traducidas)
+        nuevo["presencia_historial"] = [{
+            "valor": valor,
+            "fecha": copy.deepcopy(autoridad["fecha"]),
+            "fuente_id": autoridad["id"],
+            "quien": quien,
+        }]  # fmt: skip
+        afirmacion = {
+            "campo": "presencia_dron", "valor": valor, "fuente_id": autoridad["id"],
+            "confianza_extraccion": rectificaciones.CONFIANZA_RECTIFICACION,
+        }  # fmt: skip
+        if not any(
+            a.get("campo") == "presencia_dron" and a.get("valor") == valor
+            and a.get("fuente_id") == autoridad["id"]
+            for a in nuevo.get("afirmaciones", [])
+        ):  # fmt: skip
+            nuevo["afirmaciones"] = [*nuevo.get("afirmaciones", []), afirmacion]
+        frase = " ".join(str(autoridad.get("frase_origen") or "").split())
+        return nuevo, f"presencia {valor} declarada por {quien['es']} («{frase[:120]}»)"
+    nuevo["presencia_dron"] = rectificaciones.NO_CONFIRMADA
+    rebajadas = rectificaciones.RECTIFICADOS
+    nuevo["afirmaciones"] = [
+        a for a in nuevo.get("afirmaciones", [])
+        if not (a.get("campo") == "presencia_dron" and a.get("valor") in rebajadas)
+    ]  # fmt: skip
+    nuevo = titulares.ajustar_incidente(nuevo)
+    return nuevo, f"presencia {valor} sin autoridad que la declare: no confirmada"
 
 
 def hallazgos(

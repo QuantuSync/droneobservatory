@@ -136,7 +136,11 @@ que propone la base pasa la auditoría de protección: P, R, V, W y X. En X solo
 ficha aún tiene (ver «Cómo se vigila»). La ficha marcada no entra: su fila no se toca.
 
 - Sale en su última versión buena: la fila que tenía.
-- Si nunca se publicó, no sale, y queda apuntada.
+- Si nunca se publicó, no hay versión que guardar: desde el 16 de noviembre de 2026 no la frenan
+  estas comprobaciones; lo que marcan lo corrige antes la coherencia
+  ([`ciclo_de_vida.md`](ciclo_de_vida.md), «Fichas que nunca se han publicado») y la ficha sale.
+  Antes no salía: EODI-2026-00847 estuvo 11 recogidas fuera de la web por la P. El cerrojo
+  protege lo mismo que antes.
 - Si la auditoría no se puede hacer, ninguna versión nueva pasa: queda lo publicado. Lo que no
   se puede comprobar no sale.
 
