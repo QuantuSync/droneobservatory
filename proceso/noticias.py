@@ -196,9 +196,21 @@ def configuracion(ruta: Path = DIRECTORIO / "gdelt.json") -> dict[str, Any]:
     return datos
 
 
+@cache
+def solo_dron() -> re.Pattern[str]:
+    """Las palabras que nombran un dron (palabras_dron), sin los objetivos aéreos de un radar
+    («ținte aeriene»): lo que mira si una frase o una declaración habla de drones."""
+    palabras = [p for lista in configuracion()["palabras_dron"].values() for p in lista]
+    return re.compile(r"(?<![\w])(?:" + _alternativas(palabras, prefijo=True) + ")", re.IGNORECASE)
+
+
 def filtro(config: dict[str, Any] | None = None) -> Filtro:
+    """El filtro de entrada de titulares y notas. Su `dron` casa también con los objetivos aéreos
+    de un radar («ținte aeriene», configuracion/gdelt.json): la alerta rumana de la noche del 16 al
+    17 de noviembre de 2026 no entró porque ningún titular ni la nota del MApN decía «dronă»."""
     config = config or configuracion()
     palabras = [p for lista in config["palabras_dron"].values() for p in lista]
+    palabras += [p for lista in config.get("objetivos_aereos", {}).values() for p in lista]
     frontera = r"(?<![\w])(?:"
     return Filtro(
         dron=re.compile(frontera + _alternativas(palabras, prefijo=True) + ")", re.IGNORECASE),

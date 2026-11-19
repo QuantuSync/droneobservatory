@@ -166,6 +166,19 @@ def test_las_tintas_aereas_rumanas_son_de_dron() -> None:
     assert dron.search("MApN: Alertă RO-ALERT în Tulcea, după detectarea unor ţinte aeriene")
     assert dron.search("Țintă aeriană detectată la sud-est de Insula Șerpilor")
     assert not dron.search("Ținta a fost atinsă")
+    # Dejan entrar la noticia, pero no nombran un dron: la presencia sigue «no confirmada»
+    # (EODI-2026-00650 perdía el «posible» en el ensayo del 19 de noviembre de 2026).
+    from proceso import declaraciones, pasajes
+
+    frase = (
+        "Sistemul de supraveghere radar al Ministerului Apărării Naţionale a detectat un grup de "
+        "ţinte aeriene la nord-est de localitatea Vâlcove, în spaţiul aerian al Ucrainei."
+    )
+    assert not declaraciones.atribuye_dron(frase)
+    assert not declaraciones.habla_de_drones(frase)
+    # El extractor sí recibe ese pasaje: es lo que cuenta la alerta.
+    assert pasajes.habla_de_drones(frase)
+    assert declaraciones.habla_de_drones("a fost detectată o dronă")
 
 
 def test_la_alerta_del_16_al_17_entra_como_articulo_dirigido() -> None:
