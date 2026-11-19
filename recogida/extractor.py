@@ -132,7 +132,10 @@ def preparar_todas(
     """Peticiones con las páginas descargadas en paralelo; el orden se conserva.
 
     La base solo se lee en este hilo: los demás solo descargan. Un candidato que no se puede
-    preparar se aparta (con `ahora`, queda anotado) y los demás siguen.
+    preparar se aparta (con `ahora`, queda anotado) y los demás siguen. Lo preparado sin página
+    es la pista de la fuente (la frase de un artículo dirigido, el texto de una nota oficial sin
+    ficha): va delante de la página descargada. Hasta el 19 de noviembre de 2026 la página la
+    sustituía y la nota del MApN del 17/11 llegaba al extractor sin su texto.
     """
     momento = ahora or datetime.now(UTC)
     sin_texto = []
@@ -167,7 +170,7 @@ def preparar_todas(
                 # Sin la página, el titular basta para esa fuente.
                 registro.warning("página sin leer (%s): %r", url, error)
                 texto = ""
-            fuentes.append(replace(f, texto=texto))
+            fuentes.append(replace(f, texto=extraccion.con_pista(f.texto, texto)))
         return replace(peticion, fuentes=fuentes)
 
     with ThreadPoolExecutor(HILOS) as hilos:

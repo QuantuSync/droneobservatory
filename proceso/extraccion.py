@@ -548,8 +548,7 @@ def preparar(
             or (notas.get(a["url"]) or {}).get("texto")
             or ""
         )
-        if pista and normalizar(pista) not in normalizar(texto):
-            texto = f"{pista} … {texto}".strip(" …")
+        texto = con_pista(pista, texto)
         fuentes.append(no_es_suceso.con_aviso(ficha.FuenteTexto(
             medio=a["medio"], fecha=a["fecha"], idioma=a.get("idioma"), titular=a["titular"],
             texto=texto, url=a["url"], marcas=pagina.marcas,
@@ -562,6 +561,14 @@ def preparar(
         fuentes=fuentes,
         huella=huella(candidato["articulos"]),
     )
+
+
+def con_pista(pista: str, texto: str) -> str:
+    """El texto de la página con la pista delante (la frase de un artículo dirigido o el texto
+    de una nota oficial sin ficha), si la página no la trae ya."""
+    if pista and normalizar(pista) not in normalizar(texto):
+        return f"{pista} … {texto}".strip(" …")
+    return texto
 
 
 # --- Respuesta ----------------------------------------------------------------------
