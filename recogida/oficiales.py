@@ -407,14 +407,17 @@ def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
     zonas en una misma noche son el mismo suceso (docs/definicion_suceso.md): la nota de otra
     zona y otra hora va a la ficha que ya tiene las de esa noche.
 
-    Una nota que no nombra un dron (solo «ținte aeriene», objetivos de un radar) no va a una
-    ficha solo por el día ni por tener otra nota de la misma autoridad: tiene que nombrar su
-    localidad o encajar con su sitio. Si no, entra como nota sin
-    ficha (`a_entrada`) y el filtro de entrada decide con la definición de suceso. En el ensayo
+    Una nota que solo habla de objetivos de un radar («ținte aeriene»), sin nombrar un dron, no
+    va a una ficha solo por el día ni por tener otra nota de la misma autoridad: tiene que nombrar
+    su localidad o encajar con su sitio. Si no, entra como nota sin ficha (`a_entrada`) y el
+    filtro de entrada decide con la definición de suceso. En el ensayo
     del 19 de noviembre de 2026, la nota del MApN del 17/11 sobre 11 objetivos junto a Vâlcove e
     Ismail iba a EODI-2026-00849 (drones a la deriva frente a Mangalia del 16/11)."""
     punto = _punto(nota)
-    nombra_dron = solo_dron().search(f"{nota.titulo} {nota.texto}") is not None
+    texto = f"{nota.titulo} {nota.texto}"
+    # Solo objetivos de un radar: casa con el filtro de entrada por «ținte aeriene» y no nombra un
+    # dron. Las alertas por zonas (mil.lv: «gaisa telpas apdraudējums») no son esto.
+    solo_objetivos = filtro().dron.search(texto) is not None and solo_dron().search(texto) is None
     resultado: list[Documento] = []
     for incidente in almacen.incidentes():
         if not incidentes.activo(incidente) or incidente["lugar"]["pais"] != nota.fuente["pais"]:
@@ -426,7 +429,7 @@ def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
                 or not definicion.con_punto(incidente)
                 or nombra_la_ficha(incidente, nota)
             )
-            and (nombra_dron or nombra_su_localidad(incidente, nota))
+            and (not solo_objetivos or nombra_su_localidad(incidente, nota))
             and tipo_compatible(incidente, nota)
             and mismo_dia(incidente, nota)
         )
