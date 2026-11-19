@@ -95,6 +95,20 @@ coherencia de la puerta. Nunca se retira por un fallo (sin servicio, sin respues
 Cada retirada lleva su motivo en su página y se avisa una vez por el tema privado («Retirada tras
 una recogida retenida»), nunca desde un ensayo.
 
+### Alertas por objetivos aéreos
+
+Desde el 19 de noviembre de 2026, lo que un radar militar da como «objetivos aéreos» sin decir que
+sean drones («ținte aeriene» del MApN) deja entrar el titular, la nota oficial y el pasaje que lo
+cuenta (`objetivos_aereos` de `configuracion/gdelt.json`), pero no nombra un dron: las
+declaraciones y la presencia del dron miran solo `palabras_dron` (`noticias.solo_dron`). El
+extractor da por incidente la alerta a la población o la salida de cazas por drones u objetivos
+aéreos junto a la frontera aunque no entren, con el dron «no confirmado» si ninguna autoridad dice
+que lo fuera. Y una nota oficial que no nombra un dron no se enlaza a una ficha solo por ser del
+mismo día o por tener ya otra nota de la misma autoridad: tiene que nombrar su localidad o encajar
+con su sitio; si no, entra como nota sin ficha y la decide el filtro de entrada. La alerta rumana
+de la noche del 16 al 17 de noviembre de 2026 (11 objetivos junto a Vâlcove e Ismail, RO-Alert en
+el norte de Tulcea) no entró porque ningún titular ni la nota del MApN decían «dronă».
+
 ### Coherencia en la puerta
 
 Desde el 14 de noviembre de 2026, cada hora, dentro del control de las fichas (después del filtro
