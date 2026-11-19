@@ -250,3 +250,30 @@ def test_la_revision_de_lo_publicado_acepta_byala_en_una_ficha_bulgara() -> None
     assert nombres_lugar.problemas({"titulo": titulo, "lugar": {"pais": "BG"}}) == []
     en_polonia = nombres_lugar.problemas({"titulo": titulo, "lugar": {"pais": "PL"}})
     assert any("Bielsko-Biała" in p for p in en_polonia)
+
+
+def test_la_recogida_no_pierde_el_texto_de_la_nota_al_leer_la_pagina() -> None:
+    """recogida/extractor.preparar_todas descarga las páginas en paralelo: el texto de la página
+    sustituía lo preparado, y con él el texto de la nota (y la frase de un artículo dirigido)."""
+    from typing import cast
+
+    from almacen.base import Almacen
+    from recogida import extractor, oficiales
+    from recogida.descarga import Descargador
+    from tests.test_oficiales import AHORA, FUENTE, NOTA_PAIS
+
+    class Menu:
+        def texto(self, _url: str, *_: object, **__: object) -> str:
+            frase = "Ministrul apărării naționale, la o serie de reuniuni."
+            return f"<html><body><p>{frase}</p></body></html>"
+
+    almacen = Almacen.abrir()
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    assert oficiales.a_entrada(almacen, nota, AHORA)
+    candidatos = [c for c in almacen.candidatos() if nota.enlace in c["articulos"]]
+    (peticion,) = extractor.preparar_todas(
+        almacen, candidatos, lambda: cast(Descargador, Menu()), AHORA
+    )
+    (fuente,) = [f for f in peticion.fuentes if f.url == nota.enlace]
+    assert fuente.texto.startswith(nota.texto.strip())
+    assert "reuniuni" in fuente.texto
