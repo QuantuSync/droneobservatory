@@ -76,6 +76,7 @@ from proceso.noticias import (
     lugar_del_suceso,
     lugares_en,
     nomenclator,
+    solo_dron,
     titular_normalizado,
 )
 from recogida import lector_delegado, navegador, paginas_oficiales
@@ -376,15 +377,20 @@ def _normal(texto: str) -> str:
     )
 
 
+def nombra_su_localidad(incidente: Documento, nota: Nota) -> bool:
+    """La nota nombra la localidad de la ficha."""
+    localidad = str(incidente["lugar"].get("localidad") or "").strip()
+    return bool(localidad) and bool(
+        re.search(rf"\b{re.escape(_normal(localidad))}\b", _normal(f"{nota.titulo}. {nota.texto}"))
+    )
+
+
 def nombra_la_ficha(incidente: Documento, nota: Nota) -> bool:
     """La nota nombra la localidad de la ficha, o la ficha ya tiene otra nota de la misma
     autoridad (la primera nota y su actualización). Las del MApN del 17 de octubre de 2026: el
     sitio que lee la regla es la base de Borcea, de donde despegaron los F-16, a 200 km de la
     ficha de Sulina (EODI-2026-00582); la actualización escribe «la sud-est de Sulina»."""
-    localidad = str(incidente["lugar"].get("localidad") or "").strip()
-    if localidad and re.search(
-        rf"\b{re.escape(_normal(localidad))}\b", _normal(f"{nota.titulo}. {nota.texto}")
-    ):
+    if nombra_su_localidad(incidente, nota):
         return True
     prefijo = f"{nota.fuente['id']}-"
     return any(
@@ -399,8 +405,16 @@ def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
     (solo el país o la región), las que la nota nombra (`nombra_la_ficha`) y, si la nota no
     nombra un sitio que se sepa situar, todas. Las alertas que una autoridad va dando por
     zonas en una misma noche son el mismo suceso (docs/definicion_suceso.md): la nota de otra
-    zona y otra hora va a la ficha que ya tiene las de esa noche."""
+    zona y otra hora va a la ficha que ya tiene las de esa noche.
+
+    Una nota que no nombra un dron (solo «ținte aeriene», objetivos de un radar) no va a una
+    ficha solo por el día ni por tener otra nota de la misma autoridad: tiene que nombrar su
+    localidad o encajar con su sitio. Si no, entra como nota sin
+    ficha (`a_entrada`) y el filtro de entrada decide con la definición de suceso. En el ensayo
+    del 19 de noviembre de 2026, la nota del MApN del 17/11 sobre 11 objetivos junto a Vâlcove e
+    Ismail iba a EODI-2026-00849 (drones a la deriva frente a Mangalia del 16/11)."""
     punto = _punto(nota)
+    nombra_dron = solo_dron().search(f"{nota.titulo} {nota.texto}") is not None
     resultado: list[Documento] = []
     for incidente in almacen.incidentes():
         if not incidentes.activo(incidente) or incidente["lugar"]["pais"] != nota.fuente["pais"]:
@@ -412,6 +426,7 @@ def posibles(almacen: Almacen, nota: Nota) -> list[Documento]:
                 or not definicion.con_punto(incidente)
                 or nombra_la_ficha(incidente, nota)
             )
+            and (nombra_dron or nombra_su_localidad(incidente, nota))
             and tipo_compatible(incidente, nota)
             and mismo_dia(incidente, nota)
         )

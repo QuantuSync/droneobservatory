@@ -190,3 +190,24 @@ def test_la_alerta_del_16_al_17_entra_como_articulo_dirigido() -> None:
     assert articulo["lugar"] in nomenclator().lugares
     publicada = datetime.fromisoformat(articulo["fecha"].replace("Z", "+00:00"))
     assert publicada >= datetime(2026, 11, 16, 22, 7, tzinfo=UTC)  # tras el fin de la alerta
+
+
+def test_la_nota_sin_dron_no_se_enlaza_solo_por_el_dia() -> None:
+    """La nota del MApN del 17/11 (11 objetivos aéreos junto a Vâlcove e Ismail) iba, en el ensayo,
+    a la ficha rumana sin punto del día anterior (EODI-2026-00849, drones a la deriva): una nota que
+    no nombra un dron solo se enlaza si nombra la localidad de la ficha o encaja con su sitio."""
+    from almacen.base import Almacen
+    from recogida import oficiales
+    from tests.test_extraccion import extraer_ejemplo
+    from tests.test_oficiales import FUENTE, NOTA_PAIS, _sin_punto
+
+    almacen = Almacen.abrir()
+    id_ = _sin_punto(almacen, str(extraer_ejemplo(almacen)))
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    radar = oficiales.Nota(
+        nota.fuente, nota.id, "Informație de presă", nota.enlace, nota.fecha,
+        "Sistemul de supraveghere radar a detectat 11 ținte aeriene în spațiul aerian al Ucrainei.",
+    )  # fmt: skip
+    assert id_ in [i["id"] for i in oficiales.posibles(almacen, nota)]
+    assert oficiales.posibles(almacen, radar) == []
+    assert oficiales.suceso(radar)
