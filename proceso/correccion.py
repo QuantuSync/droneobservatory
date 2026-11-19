@@ -9,7 +9,8 @@ hallazgos); la corrección y la relectura con el modelo grande están en recogid
   mira la auditoría (letras F, J, S y Z).
 - c) El lugar está en el país de la ficha y lo nombra una frase de sus fuentes.
 - d) El número de drones lo da una fuente de la ficha (una afirmación con su fuente).
-- f) El titular no nombra otro país que el de la ficha.
+- f) El titular no nombra otro país que el de la ficha, ni una localidad de otro país que no
+  nombre ninguna frase de sus fuentes (el titular tal como lo enseña la web).
 
 Las frases que cuentan son las de las fuentes públicas (las que enseña la web): `frase_origen` y
 el titular del artículo. Los nombres se comparan sin tildes ni mayúsculas y por su raíz (las
@@ -21,12 +22,16 @@ import math
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date, timedelta
+from functools import cache
 
 from esquema import Documento
-from proceso import autoridades, fronteras, rectificaciones, suceso, titulares
+from proceso import autoridades, fechas, fronteras, rectificaciones, suceso, titulares
 from proceso import control_fichas as reglas
 from proceso.noticias import (
     Nomenclator,
+    _grupos,
+    _mayusculas,
+    generico,
     localidades_declinadas,
     lugares_en,
     nomenclator,
@@ -222,6 +227,76 @@ def titulo_de_otro_pais(ficha: Documento) -> str | None:
     return None
 
 
+# Un nombre de localidad de otro país en un titular: como mínimo estas letras (menos son siglas y
+# palabras sueltas).
+MIN_LETRAS_LOCALIDAD = 5
+
+
+@cache
+def _calendario() -> frozenset[str]:
+    """Los meses y los días de la semana de todos los léxicos de fechas («March» no es la
+    localidad inglesa en «el 8 de marzo»)."""
+    salida: set[str] = set()
+    for lx in fechas.lexicos().values():
+        salida.update(lx.meses)
+        salida.update(forma for forma, _ in lx.dias)
+    return frozenset(salida)
+
+
+def localidad_de_otro_pais(ficha: Documento, nom: Nomenclator | None = None) -> str | None:
+    """f) El titular, tal como lo enseña la web (nombres_lugar.titulo_corregido), nombra con
+    mayúscula una localidad que solo es de otro país, por su nombre propio (no por uno de sus alias:
+    «Canal» no es Canale), y que ninguna frase de sus fuentes nombra: su nombre, o None. «frente a
+    Bielsko-Biała» en una ficha de Bulgaria (EODI-2026-00862, 19 de noviembre de 2026): la fuente
+    decía Byala, en la costa búlgara. No cuentan la primera palabra
+    del titular (siempre va con mayúscula), las palabras corrientes («Vecinos», «Tres»), los
+    nombres que también son de un lugar del país de la ficha, ni un nombre de otro país que dice
+    una fuente («un dron de Kaliningrado»)."""
+    from proceso import nombres_lugar
+
+    pais = str((ficha.get("lugar") or {}).get("pais") or "")
+    if not pais:
+        return None
+    nom = nom or nomenclator()
+    normalizadas: list[str] | None = None
+    for idioma, titulo in nombres_lugar.titulo_corregido(ficha).items():
+        if idioma not in ("es", "en") or not isinstance(titulo, str):
+            continue
+        normal = normalizar(titulo)
+        primera = normal.split()[0] if normal else ""
+        mayusculas = _mayusculas(titulo)
+        for grupo in _grupos(normal):
+            ids = nom.localidades.get(grupo, ())
+            if (
+                len(ids) != 1
+                or grupo.split()[0] not in mayusculas
+                or grupo == primera
+                or len(grupo) < MIN_LETRAS_LOCALIDAD
+                or generico(grupo)
+                or grupo in nombres_lugar.nombres_del_pais(pais)
+            ):
+                continue
+            sitio = nom.lugares.get(ids[0])
+            if (
+                sitio is None
+                or sitio.pais == pais
+                or normalizar(sitio.nombre) != grupo
+                or grupo in _calendario()
+            ):
+                continue
+            normalizadas = frases(ficha) if normalizadas is None else normalizadas
+            if any(nombra(f, grupo) or nombra(f, sitio.nombre) for f in normalizadas):
+                continue
+            return str(sitio.nombre)
+    return None
+
+
+def titulo_ajeno(ficha: Documento, nom: Nomenclator | None = None) -> str | None:
+    """f) Lo que el titular nombra de otro país sin respaldo: el país (`titulo_de_otro_pais`) o la
+    localidad (`localidad_de_otro_pais`), o None."""
+    return titulo_de_otro_pais(ficha) or localidad_de_otro_pais(ficha, nom)
+
+
 def quien_de(fuente: Documento, traducidas: autoridades.Traducidas | None = None) -> Documento:
     """Quién declara la fuente, en español y en inglés: la tabla de autoridades, la traducción
     guardada de su nombre (`traducidas`, nombre -> {es, en}: las mismas que la web enseña en
@@ -345,4 +420,8 @@ def hallazgos(
     otro = titulo_de_otro_pais(ficha)
     if otro is not None:
         salida.append(Hallazgo(TITULAR, f"el titular nombra otro país ({otro})"))
+    elif (ajena := localidad_de_otro_pais(ficha, nom)) is not None:
+        salida.append(
+            Hallazgo(TITULAR, f"el titular nombra un lugar de otro país sin frase ({ajena})")
+        )
     return salida

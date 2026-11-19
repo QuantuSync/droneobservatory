@@ -93,26 +93,37 @@ def test_00765_sin_fecha_se_retira_nombrando_las_fichas_del_sitio() -> None:
     assert "No es un suceso nuevo" in queda["retirado"]["motivo"]
     assert f"{AGOSTO_26}, {ATAQUE}" in queda["retirado"]["motivo"]
     assert ATAQUE in queda["retirado"]["motivo_en"]
-    assert "12 horas" in resultado.liberados[ID]
+    assert resultado.liberados[ID] == "retirada: noticia retrospectiva sin fecha"
     # Lo demás no se toca.
     assert all(d.get("retirado") is None for d in almacen.incidentes() if d["id"] != ID)
 
 
-def test_antes_del_plazo_sigue_retenida() -> None:
+def test_antes_de_una_recogida_sigue_retenida() -> None:
+    # Hasta el 19 de noviembre de 2026 el plazo era de 12 horas; ahora, una recogida.
     almacen = _base(_ficha(), _ataque(), _ficha(AGOSTO_26))
-    hace_poco = (AHORA - timedelta(hours=11)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    hace_poco = (AHORA - timedelta(minutes=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
     nuevo, _ = _retener(almacen, hace_poco)
     assert nuevo["retenidos"][ID]["motivo"] == control_fichas.MOTIVO_RETROSPECTIVA
     queda = almacen.incidente(ID)
     assert queda is not None and not queda.get("retirado")
+    # Tras una recogida, sale de la retención: aquí se retira con su motivo.
+    almacen = _base(_ficha(), _ataque(), _ficha(AGOSTO_26))
+    hace_una = (AHORA - timedelta(minutes=61)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    nuevo, resultado = _retener(almacen, hace_una)
+    assert ID not in nuevo["retenidos"]
+    queda = almacen.incidente(ID)
+    assert queda is not None and queda.get("retirado")
+    assert resultado.liberados[ID].startswith("retirada")
 
 
 def test_sin_respuesta_del_experto_un_fallo_no_retira() -> None:
     # Ni una palabra de sus fuentes ni el experto dicen que sea un suceso anterior: solo comparte
-    # aeropuerto. Sigue retenida (y el resumen diario la señala a las 24 horas).
+    # aeropuerto (casi siempre un suceso nuevo). Hasta el 19 de noviembre de 2026 seguía retenida
+    # sin límite; ahora, tras una recogida, sale con lo que tiene. Nunca se retira por un fallo.
     almacen = _base(_ficha(), _ataque(), _ficha(AGOSTO_26), respuesta=False)
-    nuevo, _ = _retener(almacen)
-    assert ID in nuevo["retenidos"]
+    nuevo, resultado = _retener(almacen)
+    assert ID not in nuevo["retenidos"] and ID in nuevo["vistos"]
+    assert resultado.liberados[ID].startswith(control_fichas.NOTA_SALE)
     queda = almacen.incidente(ID)
     assert queda is not None and not queda.get("retirado")
 

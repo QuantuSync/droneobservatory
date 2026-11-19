@@ -163,8 +163,13 @@ def test_sin_fecha_respaldada_no_se_publica_ni_a_las_seis_horas() -> None:
     _ejecutar(almacen, ahora + timedelta(hours=1))
     assert control_fichas.retenidos(almacen) >= {"EODI-2026-00663", "EODI-2026-00499"}
     tarde = _ejecutar(almacen, ahora + timedelta(hours=8))
-    # Sin el experto, ninguna sale: tampoco la que solo comparte el aeropuerto (hasta el 28 de
-    # octubre de 2026 salía a las 6 horas; ahora espera al filtro de entrada).
-    assert "EODI-2026-00663" in tarde.retenidos
-    assert "EODI-2026-00663" in control_fichas.retenidos(almacen)
-    assert "EODI-2026-00499" in tarde.retenidos and not tarde.liberados
+    # Sin el experto, tras una recogida (desde el 19 de noviembre de 2026; antes esperaban sin
+    # límite): la que cuenta un suceso anterior del sitio sin fecha se retira con su motivo, nunca
+    # se publica con la fecha de su noticia; la que solo comparte el aeropuerto sale.
+    assert control_fichas.retenidos(almacen) == frozenset()
+    retirada = almacen.incidente("EODI-2026-00663")
+    assert retirada is not None and retirada.get("retirado")
+    assert tarde.liberados["EODI-2026-00663"].startswith("retirada")
+    sale = almacen.incidente("EODI-2026-00499")
+    assert sale is not None and not sale.get("retirado")
+    assert tarde.liberados["EODI-2026-00499"].startswith(control_fichas.NOTA_SALE)

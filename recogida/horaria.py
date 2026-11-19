@@ -774,6 +774,12 @@ def principal(argumentos: list[str] | None = None) -> int:
                 "notas oficiales sin salida", oficiales.avisar_sin_salida, almacen, ahora,
                 visitas.avisador_privado if args.ensayo is None else None,
             )  # fmt: skip
+            # Las fichas nuevas retiradas tras una recogida retenidas (control_fichas.retener):
+            # aviso privado, una vez, nunca desde un ensayo.
+            paso(
+                "retiradas tras una recogida", control_fichas.avisar_retiradas, almacen, ahora,
+                visitas.avisador_privado if args.ensayo is None else None,
+            )  # fmt: skip
             # Las fichas que la coherencia de la puerta no pudo releer en más de una recogida
             # (sin servicio o sin cupo): aviso privado, una vez, nunca desde un ensayo.
             paso(

@@ -143,8 +143,9 @@ def titulo_rehecho(ficha: Documento) -> Documento:
 
 
 def con_titular(ficha: Documento, letras: set[str], cambios: list[str]) -> Documento:
-    """f) Si el titular sigue nombrando otro país (lo que no arregló bajar el lugar), se rehace."""
-    if correccion.TITULAR not in letras or correccion.titulo_de_otro_pais(ficha) is None:
+    """f) Si el titular sigue nombrando otro país o una localidad de otro país sin frase (lo que no
+    arregló bajar el lugar), se rehace con los datos de la ficha."""
+    if correccion.TITULAR not in letras or correccion.titulo_ajeno(ficha) is None:
         return ficha
     nuevo = titulo_rehecho(ficha)
     cambios.append(f"titular rehecho con su país: «{nuevo['titulo'].get('es', '')}»")

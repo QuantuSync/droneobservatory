@@ -1665,9 +1665,10 @@ def retener(
     ctx: Contexto, cursor: Documento, verificar_nuevos: bool, con_entrada: bool = False
 ) -> Documento:
     """Las fichas nuevas que aún no han pasado el control se retienen. Con el filtro de entrada
-    (recogida/entrada.py, `con_entrada`), hasta que decida, sin límite de tiempo: sin decisión no
-    sale ninguna (desde el 28 de octubre de 2026; antes salían a las 6 horas con lo que hubiera).
-    Sin él (el repaso), como mucho 6 horas. Devuelve el cursor nuevo."""
+    (recogida/entrada.py, `con_entrada`), como mucho una recogida (UNA_RECOGIDA): después salen
+    unidas a su suceso, corregidas o retiradas con su motivo (`salida_tras_una_recogida`, desde el
+    19 de noviembre de 2026; antes, sin límite: EODI-2026-00844 llevaba 87 horas). Sin él (el
+    repaso), como mucho 6 horas. Devuelve el cursor nuevo."""
     vistos: dict[str, str] = dict(cursor.get("vistos", {}))
     retenidos: dict[str, Documento] = dict(cursor.get("retenidos", {}))
     decisiones = {**ctx.decisiones, **ctx.nuevas}
@@ -1732,7 +1733,7 @@ def retener(
                     nuevos_retenidos[id_] = {"desde": desde, "motivo": nota}
                     ctx.resultado.retenidos[id_] = nota
                 else:
-                    ctx.resultado.liberados[id_] = nota
+                    ctx.resultado.liberados[id_] = _retirada(ctx, incidente, nota)
                 continue
             if (
                 con_entrada
@@ -1742,7 +1743,20 @@ def retener(
             ):
                 # Como la barrera de titulares: lo que el filtro retiene porque ninguna frase da la
                 # fecha del suceso no queda retenido para siempre (EODI-2026-00697, desde el 28/10).
-                ctx.resultado.liberados[id_] = "retirada a las 6 horas: ninguna frase da la fecha"
+                ctx.resultado.liberados[id_] = _retirada(
+                    ctx, incidente, "retirada a las 6 horas: ninguna frase da la fecha"
+                )
+                continue
+            if (
+                con_entrada
+                and motivos
+                and ctx.ahora - _leer(desde) >= UNA_RECOGIDA
+                and (nota := salida_tras_una_recogida(ctx, incidente, activos, decisiones, motivos))
+                is not None
+            ):
+                ctx.resultado.liberados[id_] = nota
+                if nota.startswith(NOTA_SALE):
+                    vistos[id_] = _iso(ctx.ahora)
                 continue
             sin_limite = con_entrada or id_ in esperan or sin_fecha
             if motivos and (sin_limite or ctx.ahora - _leer(desde) < ESPERA):
@@ -1844,9 +1858,7 @@ def salir_de_la_retencion(
         return f"{NOTA_CON_FECHA}: {salida['inicio']['valor'][:7]} («{salida['frase'][:80]}»)"
     if not resolver_sin_fecha(ctx, incidente, _motivo_retrospectiva(salida["previas"])):
         return None
-    return "retirada: noticia retrospectiva sin fecha a las " + (
-        f"{int(SALIDA_RETROSPECTIVA.total_seconds() // 3600)} horas"
-    )
+    return "retirada: noticia retrospectiva sin fecha"
 
 
 def resolver_sin_fecha(
@@ -1872,6 +1884,119 @@ def resolver_sin_fecha(
     ctx.almacen.anotar_motivo(TABLA_MOTIVOS, incidente["id"], {"retirado": None},
                               {"retirado": nuevo["retirado"]}, motivo)  # fmt: skip
     return True
+
+
+# Lo que una ficha nueva puede estar retenida por el filtro de entrada: una recogida (la
+# horaria pasa cada hora; 50 minutos dejan margen a una que empieza antes).
+UNA_RECOGIDA = timedelta(minutes=50)
+# Comienzo de la nota de las que salen a la web con lo que tienen (las demás se unen o se retiran).
+NOTA_SALE = "sale"
+CURSOR_RETIRADAS = "control_fichas:retiradas_tras_una_recogida"
+TITULO_RETIRADAS = "EODI · Retirada tras una recogida retenida"
+MOTIVO_DUPLICADO = (
+    "Duplicada: cuenta el mismo suceso que {otra}, y la unión necesita una revisión (el cerrojo "
+    "la retiene o las dos tienen revisado a mano el mismo dato)."
+)
+MOTIVO_DUPLICADO_EN = (
+    "Duplicate: it reports the same event as {otra}, and merging them needs a review (the lock "
+    "holds the merge or both have the same field reviewed by hand)."
+)
+
+
+def salida_tras_una_recogida(
+    ctx: Contexto, incidente: Documento, activos: list[Documento],
+    decisiones: dict[str, Documento], motivos: list[str],
+) -> str | None:  # fmt: skip
+    """Ninguna ficha queda retenida más de una recogida (encargo del 19 de noviembre de 2026):
+    después, en este orden,
+
+    1. se une a la ficha activa que la definición da por su mismo suceso, si es una sola
+       (suceso.del_mismo_suceso: también el relato de un suceso anterior);
+    2. una noticia retrospectiva toma la fecha que da su fuente o se retira
+       (`salir_de_la_retencion`);
+    3. si el filtro de entrada dio otro día y no lo aplicó (lejos de una fecha firme), lo toma;
+    4. el mismo suceso que otra sin poder unirse se retira como duplicada, con su motivo;
+    5. sin frase que dé la fecha, se retira como no verificable (`resolver_sin_fecha`);
+    6. lo demás sale con lo que tiene: la coherencia de la puerta (recogida/correccion.py) la
+       corrige antes de publicarla, y el candado (I8) la une si es de un suceso publicado.
+
+    Lo retirado se avisa por el tema privado (`avisar_retiradas`). Devuelve la nota de lo hecho
+    (empieza por NOTA_SALE si sale) o None si nada se pudo guardar (sigue retenida)."""
+    from recogida import entrada
+
+    id_ = str(incidente["id"])
+    mismas = suceso.del_mismo_suceso(incidente, [d for d in activos if d["id"] != id_])
+    if len(mismas) == 1:
+        otra, dicho = mismas[0]
+        conserva, une = suceso.queda(otra, incidente, ctx.almacen.sale_en_la_web)
+        motivo = f"retenida una recogida: el mismo suceso ({dicho.regla}): {dicho.motivo}"
+        if unir(ctx.almacen, conserva, une, motivo[:300], ctx.ahora, ctx.modelos) is not None:
+            ctx.resultado.unidos.append(f"{une['id']}→{conserva['id']}")
+            return f"unida tras una recogida: {une['id']}→{conserva['id']}"
+    if MOTIVO_RETROSPECTIVA in motivos:
+        nota = salir_de_la_retencion(ctx, incidente, activos, decisiones)
+        if nota is not None:
+            if nota.startswith("retirada"):
+                return _retirada(ctx, incidente, nota)
+            return f"{NOTA_SALE} tras una recogida, {nota}"
+    decision = decisiones.get(entrada.clave(id_)) or {}
+    dia = decision.get("otro_dia")
+    if isinstance(dia, dict) and entrada.vigente(decision, incidente):
+        nuevo = incidentes.aplicar_reglas(
+            entrada.con_dia(incidente, str(dia["dia"]), str(dia["fuente_id"]), str(dia["frase"]))
+        )
+        if _guardar(ctx, incidente, nuevo, f"retenida una recogida: día {dia['dia']}"):
+            ctx.resultado.corregidos.setdefault(id_, []).append("inicio")
+            frase = str(dia["frase"])[:80]
+            return f"{NOTA_SALE} tras una recogida con el día {dia['dia']} («{frase}»)"
+    if entrada.SIN_UNIR in str(decision.get("motivo") or ""):
+        otra_id = str(decision.get("mismo") or "otra ficha")
+        textos = (MOTIVO_DUPLICADO.format(otra=otra_id), MOTIVO_DUPLICADO_EN.format(otra=otra_id))
+        if resolver_sin_fecha(ctx, incidente, textos):
+            return _retirada(ctx, incidente, f"retirada como duplicada de {otra_id}")
+        return None
+    if MOTIVO_ENTRADA_SIN_FECHA in motivos:
+        if resolver_sin_fecha(ctx, incidente):
+            return _retirada(ctx, incidente, "retirada: ninguna frase da la fecha")
+        return None
+    return f"{NOTA_SALE} tras una recogida, con la corrección de la puerta ({'; '.join(motivos)})"[
+        :300
+    ]
+
+
+def _retirada(ctx: Contexto, incidente: Documento, nota: str) -> str:
+    """Apunta la retirada para el aviso privado y devuelve la nota."""
+    cursor = ctx.almacen.cursor(CURSOR_RETIRADAS) or {}
+    fichas = dict(cursor.get("fichas", {}))
+    fichas[str(incidente["id"])] = {"fecha": _iso(ctx.ahora), "nota": nota[:200]}
+    ctx.almacen.guardar_cursor(CURSOR_RETIRADAS, {**cursor, "fichas": fichas})
+    return nota
+
+
+def avisar_retiradas(
+    almacen: Almacen,
+    ahora: datetime,
+    avisador: Callable[[str], Callable[[str], None] | None] | None,
+) -> list[str]:
+    """El aviso privado de las fichas retiradas tras una recogida retenida, una vez cada una
+    (nunca desde un ensayo: allí `avisador` es None). Devuelve las avisadas."""
+    cursor = almacen.cursor(CURSOR_RETIRADAS) or {}
+    fichas = dict(cursor.get("fichas", {}))
+    nuevas = sorted(id_ for id_, f in fichas.items() if not f.get("avisada"))
+    if not nuevas or avisador is None:
+        return []
+    avisar = avisador(TITULO_RETIRADAS)
+    if avisar is None:
+        return []
+    avisar(
+        "Retiradas tras una recogida retenidas por el filtro de entrada (nunca salieron en la "
+        "web; el motivo va en su página): "
+        + "; ".join(f"{id_} ({fichas[id_].get('nota', '')})" for id_ in nuevas)
+    )
+    for id_ in nuevas:
+        fichas[id_] = {**fichas[id_], "avisada": _iso(ahora)}
+    almacen.guardar_cursor(CURSOR_RETIRADAS, {**cursor, "fichas": fichas})
+    return nuevas
 
 
 def retenidos(almacen: Almacen) -> frozenset[str]:

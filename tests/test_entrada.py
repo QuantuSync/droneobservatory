@@ -586,13 +586,67 @@ def test_lo_retenido_sin_fecha_se_retira_a_las_6_horas() -> None:
     almacen = _base(SULINA_582, SULINA_692)
     ctx = _contexto(almacen, Cliente([_respuesta(), _respuesta()]))
     entrada.filtrar(ctx, {"EODI-2026-00582"})
-    reciente = (AHORA - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    reciente = (AHORA - timedelta(minutes=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
     cursor = {"vistos": {"EODI-2026-00582": desde},
               "retenidos": {"EODI-2026-00692": {"desde": reciente}}}  # fmt: skip
     nuevo = control_fichas.retener(ctx, cursor, False, con_entrada=True)
     assert "EODI-2026-00692" in nuevo["retenidos"]
     queda = almacen.incidente("EODI-2026-00692")
     assert queda is not None and not queda.get("retirado")
+
+
+def _sulina_sola() -> dict[str, Any]:
+    """EODI-2026-00692 con un número que ninguna revisión conoce."""
+    return {**copy.deepcopy(SULINA_692), "id": "EODI-2026-09692"}
+
+
+def test_ninguna_ficha_queda_retenida_mas_de_una_recogida() -> None:
+    """Desde el 19 de noviembre de 2026 (EODI-2026-00844, retenida 87 horas): tras una recogida,
+    la que no tiene fecha se retira con su motivo y se avisa una vez por el tema privado; la que
+    espera otra cosa sale con lo que tiene (la corrige la coherencia de la puerta)."""
+    sulina = _sulina_sola()
+    almacen = _base(sulina)
+    ctx = _contexto(almacen, Cliente([_respuesta(), _respuesta()]))
+    entrada.filtrar(ctx, set())
+    assert ctx.nuevas[entrada.clave(sulina["id"])]["decision"] == entrada.RETENER
+    hace_una = (AHORA - timedelta(minutes=61)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cursor = {"vistos": {}, "retenidos": {sulina["id"]: {"desde": hace_una}}}
+    nuevo = control_fichas.retener(ctx, cursor, False, con_entrada=True)
+    assert sulina["id"] not in nuevo["retenidos"] and sulina["id"] not in nuevo["vistos"]
+    queda = almacen.incidente(sulina["id"])
+    assert queda is not None and queda["retirado"]["motivo"] == control_fichas.MOTIVO_SIN_FECHA
+    avisos: list[tuple[str, str]] = []
+
+    def avisador(titulo: str) -> Any:
+        return lambda texto: avisos.append((titulo, texto))
+
+    assert control_fichas.avisar_retiradas(almacen, AHORA, avisador) == [sulina["id"]]
+    assert avisos and avisos[0][0] == control_fichas.TITULO_RETIRADAS
+    assert sulina["id"] in avisos[0][1]
+    # Una sola vez, y nunca desde un ensayo (sin avisador).
+    assert control_fichas.avisar_retiradas(almacen, AHORA, avisador) == []
+    assert control_fichas.avisar_retiradas(almacen, AHORA, None) == []
+
+
+def test_la_que_espera_otra_cosa_sale_tras_una_recogida() -> None:
+    sulina = _sulina_sola()
+    almacen = _base(sulina)
+    espera = {"decision": entrada.ESPERA, "huella": entrada.huella(sulina),
+              "motivo": "sin servicio"}  # fmt: skip
+    almacen.guardar_controles({entrada.clave(sulina["id"]): espera}, "2026-10-27T20:00:00Z")
+    ctx = _contexto(almacen, Cliente([]))
+    hace_una = (AHORA - timedelta(minutes=61)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cursor = {"vistos": {}, "retenidos": {sulina["id"]: {"desde": hace_una}}}
+    nuevo = control_fichas.retener(ctx, cursor, False, con_entrada=True)
+    assert sulina["id"] in nuevo["vistos"] and sulina["id"] not in nuevo["retenidos"]
+    assert ctx.resultado.liberados[sulina["id"]].startswith(control_fichas.NOTA_SALE)
+    queda = almacen.incidente(sulina["id"])
+    assert queda is not None and not queda.get("retirado")
+    # Antes de una recogida sigue retenida.
+    ctx = _contexto(almacen, Cliente([]))
+    reciente = (AHORA - timedelta(minutes=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cursor = {"vistos": {}, "retenidos": {sulina["id"]: {"desde": reciente}}}
+    assert sulina["id"] in control_fichas.retener(ctx, cursor, False, con_entrada=True)["retenidos"]
 
 
 def test_una_frase_con_dos_dias_se_retiene_sin_preguntar() -> None:

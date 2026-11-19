@@ -573,8 +573,8 @@ def objetivo(datos: Documento | None, pais: str) -> Bilingue | None:
                 # «Liege Airport» → «Liège Airport», «Hannover Airport» → «Hanover Airport»: el
                 # nombre de la ciudad como en el resto de la página.
                 return {
-                    "es": corregir_texto(escrito["es"], {}, "es"),
-                    "en": corregir_texto(escrito["en"], {}, "en"),
+                    "es": corregir_texto(escrito["es"], {}, "es", pais or None),
+                    "en": corregir_texto(escrito["en"], {}, "en", pais or None),
                 }
     instalacion = _instalacion(nombre, pais)
     if instalacion is not None:
@@ -793,7 +793,7 @@ def _cambios(incidente: Documento, idioma: str) -> dict[str, str]:
         # También la forma a medio corregir que publicaba la versión anterior («Bruselas
         # Airport»: la ciudad cambiada y el resto no), para que vuelva a salir bien.
         a_medias = _patron_formas(idioma).sub(
-            _sustituir(_formas_ajenas()[idioma]), str(nombre_objetivo)
+            _sustituir(_formas_ajenas()[idioma], pais), str(nombre_objetivo)
         )
         for forma in dict.fromkeys((str(nombre_objetivo), a_medias)):
             if destino != escrito_objetivo[idioma]:
@@ -814,9 +814,37 @@ def _cambios(incidente: Documento, idioma: str) -> dict[str, str]:
     return cambios
 
 
-def _sustituir(tabla: dict[str, str]) -> Any:
+@cache
+def nombres_del_pais(pais: str) -> frozenset[str]:
+    """Los nombres normalizados (nombre, alias y ciudades) de todos los lugares del nomenclátor
+    de un país."""
+    from proceso.noticias import nomenclator, normalizar
+
+    salida: set[str] = set()
+    for sitio in nomenclator().lugares.values():
+        if sitio.pais == pais:
+            salida.update(normalizar(n) for n in (sitio.nombre, *sitio.alias, *sitio.ciudades))
+    return frozenset(salida)
+
+
+def de_otro_pais(forma: str, pais: str | None) -> bool:
+    """La forma ajena general es de una ciudad de otro país que `pais` (el de la ficha) y, a la
+    vez, el nombre de un lugar de `pais`: «Byala» es un nombre de Bielsko-Biała (PL) y una ciudad
+    búlgara. Una forma que solo es de la ciudad de fuera («Warszawa» en una ficha de España) sí se
+    cambia."""
+    if not pais or _DUENOS.get(forma, pais) == pais:
+        return False
+    from proceso.noticias import normalizar
+
+    return normalizar(forma) in nombres_del_pais(pais)
+
+
+def _sustituir(tabla: dict[str, str], pais: str | None = None) -> Any:
     """La sustitución de una forma por la que toca, salvo si el texto ya la dice bien ahí
-    («Palma de Mallorca» no pasa a «Palma de Mallorca de Mallorca»)."""
+    («Palma de Mallorca» no pasa a «Palma de Mallorca de Mallorca») o, con `pais`, si la forma es
+    de una ciudad de otro país: «Byala», en una ficha de Bulgaria, es la ciudad búlgara y no
+    Bielsko-Biała, aunque Wikidata dé «Byala» como uno de los nombres de la polaca
+    (EODI-2026-00862, «frente a Bielsko-Biała», publicada el 19 de noviembre de 2026)."""
 
     def sustituir(encontrado: re.Match[str]) -> str:
         destino = tabla[encontrado.group(0)]
@@ -824,6 +852,7 @@ def _sustituir(tabla: dict[str, str]) -> Any:
             encontrado.group(0)
             if _ya_dice(encontrado.string, encontrado.start(), destino)
             or dentro_de_nombre_propio(encontrado.string, encontrado.start(), encontrado.end())
+            or de_otro_pais(encontrado.group(0), pais)
             else destino
         )
 
@@ -873,15 +902,18 @@ def formas_de_sus_lugares(nombres: Documento, idioma: str) -> dict[str, str]:
     return cambios
 
 
-def corregir_texto(texto: str, cambios: dict[str, str], idioma: str | None = None) -> str:
+def corregir_texto(
+    texto: str, cambios: dict[str, str], idioma: str | None = None, pais: str | None = None
+) -> str:
     """El texto con cada forma ajena cambiada por la de la página (y, con `idioma`, también las
-    formas ajenas generales de las ciudades conocidas). Primero las del incidente, que son más
-    largas: con las generales antes, «Brussels Airport» pasaba a «Bruselas Airport» y ya no casaba
-    con el nombre del objetivo (EODI-2025-00136, 25 de octubre de 2026)."""
+    formas ajenas generales de las ciudades conocidas; con `pais`, solo las de ciudades de ese
+    país). Primero las del incidente, que son más largas: con las generales antes, «Brussels
+    Airport» pasaba a «Bruselas Airport» y ya no casaba con el nombre del objetivo
+    (EODI-2025-00136, 25 de octubre de 2026)."""
     if cambios:
         texto = _alternativas(cambios).sub(_sustituir(cambios), texto)
     if idioma is not None:
-        texto = _patron_formas(idioma).sub(_sustituir(_formas_ajenas()[idioma]), texto)
+        texto = _patron_formas(idioma).sub(_sustituir(_formas_ajenas()[idioma], pais), texto)
     return texto
 
 
@@ -896,14 +928,18 @@ _CATEGORIA_REPETIDA = re.compile(
 
 
 def titulo_corregido(incidente: Documento) -> Documento:
+    """El titular como lo enseña la web: los nombres de los lugares de la ficha con la forma de
+    cada versión y las formas ajenas generales de las ciudades del país de la ficha (no las de
+    otro país: ver `_sustituir`)."""
     incidente = _nfc_incidente(incidente)
     titulo = incidente.get("titulo") or {}
+    pais = str((incidente.get("lugar") or {}).get("pais") or "") or None
     return {
         i: _CATEGORIA_REPETIDA.sub(
             lambda m: f"{m.group(1)} de",
             _POSIBLE_REPETIDO.sub(
                 lambda m: m.group(0).split()[0],
-                corregir_texto(str(titulo[i]), _cambios(incidente, i), i),
+                corregir_texto(str(titulo[i]), _cambios(incidente, i), i, pais),
             ),
         )
         if i in IDIOMAS and isinstance(titulo.get(i), str)

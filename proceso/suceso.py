@@ -13,7 +13,8 @@ audita o comprueba fichas pregunta aquí:
 - `conjunto` y `previas_del_sitio`: con qué fichas se compara una nueva, y con cuáles una
   noticia sobre un suceso anterior.
 - `del_mismo_suceso`: las fichas que la definición da por el mismo suceso que una (el candado de
-  la publicación, I8, y el filtro de entrada antes de preguntar).
+  la publicación, I8, y el filtro de entrada antes de preguntar), también la anterior que cuenta
+  de nuevo una noticia fechada por su publicación (`relato_de`).
 - `varios_dias`: la ficha que cuenta dos días que no son una noche (dos sucesos en una ficha).
 - `queda`, `destino_de` y `toma_el_tiempo`: qué ficha queda de una unión y de dónde sale su
   fecha.
@@ -36,6 +37,11 @@ Las reglas firmes, en su orden (la primera que habla, decide):
    mientras las dos tengan la fecha con que lo decidió (`distintos_en`).
 6. Dos cierres del mismo sitio en noches distintas, o un cierre que las fuentes cuentan como
    repetido, son dos sucesos (`noches_del_cierre`).
+4b. El relato de un suceso anterior (`relato_de`): una ficha cuya fecha pone la publicación de
+   su nota (la de publicación, un pasado sin día, «durante la noche» sin día escrito) y que
+   comparte con una ficha anterior de su país (hasta 30 días antes) un hecho que ninguna otra
+   ficha de su país en esos días cuenta (un lugar concreto, «intentaron derribarlo dos veces»)
+   es el mismo suceso que esa, aunque el experto dijera otra cosa; su fecha es la de la anterior.
 7. El mismo sitio y la misma jornada sin nada de lo anterior es el mismo suceso sin preguntar
    (la regla de fusión): con hora, inicios a menos de 6 horas; con día, el mismo día. Dos días
    seguidos sin hora pueden ser una noche o dos sucesos: decide el experto. Y la regla no une
@@ -64,6 +70,7 @@ Quedan fuera, a propósito, otros que comparan pero no deciden sobre dos fichas:
 
 import json
 import math
+import re
 from collections import defaultdict
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -93,6 +100,7 @@ REGLA_EXPERTO = "experto"
 REGLA_CIERRES = "cierres_de_noches_distintas"
 REGLA_SITIO_Y_JORNADA = "mismo_sitio_y_jornada"
 REGLA_CANDIDATAS = "candidatas"
+REGLA_RELATO = "relato_de_un_suceso_anterior"
 MOTIVO_SITIO_Y_JORNADA = "mismo sitio y misma ventana"
 
 
@@ -400,6 +408,10 @@ def fechas_distintas(incidente: Documento, otra: Documento) -> str | None:
     que es el mismo, lo decide una revisión."""
     if not (fecha_firme(incidente) and fecha_firme(otra)):
         return None
+    if fecha_de_su_publicacion(incidente) or fecha_de_su_publicacion(otra):
+        # «Durante la noche» sin día escrito: la fecha la puso la publicación de la nota, no es
+        # firme frente a otra (EODI-2026-00888 frente a EODI-2026-00792).
+        return None
     a, b = instante(incidente), instante(otra)
     if abs((a - b).total_seconds()) <= DIAS_FIRMES * 86400:
         return None
@@ -408,10 +420,16 @@ def fechas_distintas(incidente: Documento, otra: Documento) -> str | None:
 
 def otro_dia_lejano(incidente: Documento, dia: str) -> bool:
     """El día que da una frase está a más de DIAS_FIRMES de la fecha firme de la ficha: un día
-    sacado de una frase no se cambia por otro lejano sin revisión."""
+    sacado de una frase no se cambia por otro lejano sin revisión. Un día que es el de la primera
+    noticia o el anterior no es lejano: lo lejano era la fecha de la ficha (EODI-2026-00844, «la
+    ora 15.02.» leída como el 15 de febrero en una nota del 15 de noviembre de 2026, retenida 87
+    horas porque el 15 de noviembre quedaba lejos de aquel febrero)."""
     nuevo = datetime.strptime(dia, "%Y-%m-%d").replace(tzinfo=UTC)
     distancia = abs((nuevo - instante(incidente)).total_seconds())
-    return fecha_firme(incidente) and distancia > DIAS_FIRMES * 86400
+    if not fecha_firme(incidente) or distancia <= DIAS_FIRMES * 86400:
+        return False
+    noticia = momento_primera_noticia(incidente).date()
+    return not timedelta(0) <= noticia - nuevo.date() <= timedelta(days=1)
 
 
 # --- Los cierres ------------------------------------------------------------------------------
@@ -1212,7 +1230,195 @@ def del_mismo_suceso(
         )  # fmt: skip
         if dicho.relacion == MISMO:
             salida.append((otra, dicho))
+    ya = {str(otra["id"]) for otra, _ in salida}
+    for otra, dicho in relato_de(ficha, otras):
+        if str(otra["id"]) not in ya:
+            salida.append((otra, dicho))
     return sorted(salida, key=lambda par: orden_registro(str(par[0]["id"])))
+
+
+# --- El relato de un suceso anterior ----------------------------------------------------------
+
+# Hasta cuántos días antes de la primera noticia de una ficha se busca el suceso que vuelve a
+# contar, y al menos cuánto después del inicio de ese suceso sale la noticia (un relato no es de
+# la misma jornada).
+DIAS_RELATO = 30
+HORAS_DESPUES_DEL_RELATO = 24
+# Un nombre de lugar que distingue un suceso: como mínimo estas letras.
+MIN_LETRAS_HECHO = 5
+# Palabras de un nombre de lugar que no lo distinguen (tipos de sitio y de división, orientación).
+_NO_DISTINGUEN = frozenset({
+    "aeropuerto", "airport", "lotnisko", "flughafen", "aeroport", "aeroporto", "lidosta",
+    "oro", "uostas", "uostu", "uosto", "base", "militar", "military", "puerto", "port",
+    "distrito", "district", "region", "county", "okrugu", "okrug", "okrugi", "raionul", "raion",
+    "judetul", "judet", "rajon", "rajonas", "rajono", "apylinkes", "kaime", "kaimas", "seniunija",
+    "novads", "novada", "powiat", "gmina", "wojewodztwo", "landkreis", "kreis", "provincia",
+    "province", "norte", "north", "nord", "northern", "sur", "south", "southern", "este", "east",
+    "eastern", "oeste", "west", "western", "centro", "center", "centre", "frontera", "border",
+    "cerca", "near", "zona", "area", "ciudad", "city", "pueblo", "village", "costa", "coast",
+})  # fmt: skip
+# «Dos veces» y «derribar» en las lenguas de las fuentes, en la misma frase: un intento de
+# derribo repetido es un hecho que distingue un suceso (Lituania, noche del 10 al 11 de noviembre
+# de 2026: «tried twice to shoot down», «zweimal vergeblich versucht … abzuschießen», «dva puta su
+# pokušali da obore»).
+_DOS_VECES = re.compile(
+    r"\b(?:twice|two times|zweimal|zwei mal|deux reprises|deux fois|du kartus|dukart|dva puta|"
+    r"dvaput|dvakrat|due volte|doua ori|dos veces|duas vezes|dwukrotnie|dwa razy|kaks korda|"
+    r"divreiz|divas reizes|tva ganger|to gange|twee keer|tweemaal|dyo fores|dvazhdy|dvichi|"
+    r"dva pyti|dva puti)\b"
+)
+_DERRIBAR = re.compile(
+    r"\b(?:shoot|shot|abschie|abzuschie|abgeschoss|abatt|numus|obor|sestrel|abbatt|dobor|"
+    r"derrib|abate|zestrzel|tulista|notriek|skjut|skyd|neerhal|kataripsi|sbit|zbit|svaly)"
+)
+HECHO_DERRIBO = "un intento de derribo repetido («dos veces»)"
+
+
+def fecha_de_su_publicacion(documento: Documento) -> bool:
+    """El día de la ficha lo pone la publicación de su noticia y no una frase con su día: la
+    fecha de publicación, un pasado sin día («la semana pasada») o una noche, un «ayer» o un
+    «hoy» sin día escrito («tokom noći», «in der Nacht»). Lo que fijó una revisión no."""
+    if str(documento.get("id")) in _fecha_revisada():
+        return False
+    origen = documento["tiempo"].get("origen_inicio") or {}
+    tipo = origen.get("tipo")
+    if tipo in (None, fechas.PUBLICACION):
+        return True
+    return tipo == fechas.RELATIVA and fechas.relativa_sin_dia(str(origen.get("motivo") or ""))
+
+
+def _plano(texto: str) -> str:
+    """El texto normalizado y en alfabeto latino (para comparar «Биржай» con «Biržai»)."""
+    from proceso.cita_titular import latino
+
+    return normalizar(latino(texto))
+
+
+def _raiz(palabra: str) -> str:
+    return palabra if len(palabra) <= MIN_LETRAS_HECHO else palabra[: max(4, len(palabra) - 3)]
+
+
+def _frases_publicas(documento: Documento) -> list[str]:
+    """Las frases y los titulares de las fuentes públicas de la ficha, normalizados."""
+    salida = []
+    for fuente in documento.get("fuentes", []):
+        if fuente.get("publica", True) is False or fuente.get("fiabilidad") in {"E", "F"}:
+            continue
+        for clave in ("frase_origen", "titular"):
+            texto = str(fuente.get(clave) or "").strip()
+            if texto:
+                salida.append(_plano(texto))
+    return salida
+
+
+def _palabras_del_pais(codigo: str) -> tuple[str, ...]:
+    return tuple(_plano(n)[:5] for n in fronteras.nombres_del_pais(codigo) if len(_plano(n)) >= 4)
+
+
+def hechos(documento: Documento) -> dict[str, str]:
+    """Los hechos que pueden distinguir el suceso de la ficha: la raíz de cada palabra propia de
+    su lugar si es una localidad o una región (no la del país, no un tipo de sitio ni una
+    orientación) y el intento de derribo repetido de sus frases. {clave: cómo se dice}."""
+    salida: dict[str, str] = {}
+    lugar = documento["lugar"]
+    if lugar.get("nivel") in ("localidad", "region"):
+        # Una instalación (un aeropuerto, un puerto) no distingue un suceso: allí se repiten. El
+        # barrido del 19 de noviembre de 2026 unía así el cierre de pistas de Múnich del 6 de
+        # septiembre (EODI-2026-00303) con los drones de aficionados de octubre (00261).
+        del_pais = _palabras_del_pais(pais(documento))
+        nombres = [lugar.get("suceso"), lugar.get("localidad"), lugar.get("region")]
+        for nombre in nombres:
+            for palabra in _plano(str(nombre or "")).split():
+                if (
+                    len(palabra) >= MIN_LETRAS_HECHO
+                    and palabra not in _NO_DISTINGUEN
+                    and not any(palabra.startswith(p) for p in del_pais)
+                ):
+                    salida[f"lugar:{_raiz(palabra)}"] = str(nombre)
+    if any(_DOS_VECES.search(f) and _DERRIBAR.search(f) for f in _frases_publicas(documento)):
+        salida["derribo:dos_veces"] = HECHO_DERRIBO
+    return salida
+
+
+def cuenta(documento: Documento, hecho: str) -> bool:
+    """Las frases de la ficha (o sus lugares) cuentan ese hecho (`hechos`)."""
+    if hecho == "derribo:dos_veces":
+        return "derribo:dos_veces" in hechos(documento)
+    raiz = hecho.removeprefix("lugar:")
+    lugar = documento["lugar"]
+    propios = [lugar.get("suceso"), lugar.get("localidad"), lugar.get("region")]
+    textos = [*_frases_publicas(documento), *(_plano(str(n)) for n in propios if n)]
+    return any(w.startswith(raiz) for t in textos for w in t.split())
+
+
+def _contradicen(a: Documento, b: Documento) -> bool:
+    """Lo que dicen las dos no puede ser el mismo episodio: números de drones que no se tocan, o
+    dos lugares precisos lejos."""
+    na, nb = (d.get("drones", {}).get("numero") for d in (a, b))
+    if (
+        isinstance(na, dict)
+        and isinstance(nb, dict)
+        and (int(na["max"]) < int(nb["min"]) or int(nb["max"]) < int(na["min"]))
+    ):
+        return True
+    niveles = {a["lugar"].get("nivel"), b["lugar"].get("nivel")}
+    if niveles <= PRECISOS and con_punto(a) and con_punto(b):
+        return _distancia_km(a, b) > DISTANCIA_MAX_KM
+    return False
+
+
+def relato_de(ficha: Documento, otras: Iterable[Documento]) -> list[tuple[Documento, Veredicto]]:
+    """La ficha anterior cuyo suceso vuelve a contar `ficha`, con su veredicto (regla 4b), o
+    nada.
+
+    `ficha` tiene que llevar la fecha que pone la publicación de su nota
+    (`fecha_de_su_publicacion`) y la anterior es de su país, empezó al menos
+    HORAS_DESPUES_DEL_RELATO antes de la primera noticia de `ficha` y como mucho DIAS_RELATO
+    días antes. Las dos comparten un hecho (`hechos`) que no cuenta ninguna otra ficha activa de
+    su país en esos días: si lo cuenta otra, ese hecho no distingue nada. Y nada de lo que dicen
+    se contradice (`_contradicen`) ni una revisión las separó.
+
+    Un artículo que vuelve días después sobre un suceso ya contado se fechaba por su publicación
+    y, como la fecha no coincidía, ni la definición ni el candado lo unían: EODI-2026-00815 (12/11,
+    «in der Nacht … zweimal … abzuschießen»), EODI-2026-00818 (13/11, «last week … tried twice to
+    shoot down») y EODI-2026-00888 (b92.net del 18/11, «tokom noći», el misil caído en Biržai),
+    las tres de la noche del 10 al 11 de noviembre de 2026 en Lituania, EODI-2026-00792.
+
+    Con varias anteriores posibles se dan todas (quien llama no une ninguna)."""
+    if not _activa(ficha) or not fecha_de_su_publicacion(ficha):
+        return []
+    propios = hechos(ficha)
+    if not propios:
+        return []
+    suyo = pais(ficha)
+    publicada = momento_primera_noticia(ficha)
+    desde = publicada - timedelta(days=DIAS_RELATO)
+    hasta = publicada - timedelta(hours=HORAS_DESPUES_DEL_RELATO)
+    ventana = [
+        o for o in otras
+        if o["id"] != ficha["id"] and _activa(o) and pais(o) == suyo
+        and desde <= instante(o) <= hasta
+    ]  # fmt: skip
+    quien: dict[str, list[Documento]] = {}
+    for hecho in propios:
+        quien[hecho] = [o for o in ventana if cuenta(o, hecho)]
+    elegidas: dict[str, tuple[Documento, list[str]]] = {}
+    for hecho, con_el in quien.items():
+        if len(con_el) != 1:
+            continue
+        otra = con_el[0]
+        if separados(ficha, otra) or _contradicen(ficha, otra):
+            continue
+        elegidas.setdefault(str(otra["id"]), (otra, []))[1].append(propios[hecho])
+    salida = []
+    for otra, dichos in elegidas.values():
+        motivo = (
+            f"relato de un suceso anterior: cuenta {', '.join(dict.fromkeys(dichos))}, como "
+            f"{otra['id']} y ninguna otra ficha de su país en los {DIAS_RELATO} días anteriores, "
+            "con la fecha de la publicación de su nota"
+        )
+        salida.append((otra, Veredicto(MISMO, REGLA_RELATO, motivo)))
+    return salida
 
 
 # --- La noticia sobre un suceso anterior ------------------------------------------------------

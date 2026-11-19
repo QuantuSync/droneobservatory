@@ -187,6 +187,29 @@ def _fecha(anio: int | None, mes: int, dia: int, referencia: date) -> date | Non
         return None
 
 
+# Lo que hace de «15.02» una hora y no el 15 de febrero: delante, «la ora», «um», «at», «godz.»…;
+# detrás, «Uhr», «h», «horas», «val.»… (EODI-2026-00844: «duminică, la ora 15.02.», ziare.com
+# del 15 de noviembre de 2026, se leyó como el 15 de febrero y la ficha quedó retenida 87 horas).
+_ANTES_DE_HORA = re.compile(
+    r"(?:\b(?:ora|orele|ore|at|um|gegen|godz|godzinie|kl|klo|kello|plkst|alle|a las|hacia las|"
+    r"hora|horas|à|vers|στις|около|oko|kell|val)\.?\s*)$",
+    re.IGNORECASE,
+)
+_DESPUES_DE_HORA = re.compile(
+    r"^\s*(?:uhr\b|h\b|hs?\b|horas?\b|hrs?\b|hod\b|val\b|óra|ora\b|hours?\b|ч\b|"
+    r"часов|a\.?m\.?|p\.?m\.?|utc\b|cet\b|cest\b|eet\b|eest\b|gmt\b)",
+    re.IGNORECASE,
+)
+
+
+def es_hora(frase: str, inicio: int, fin: int) -> bool:
+    """Un «dd.mm» sin año de la frase entre `inicio` y `fin` es una hora («la ora 15.02.»,
+    «um 15.02 Uhr»): lo dice la palabra de delante o la de detrás."""
+    antes = frase[max(0, inicio - 16) : inicio]
+    despues = frase[fin : fin + 10]
+    return bool(_ANTES_DE_HORA.search(antes) or _DESPUES_DE_HORA.match(despues))
+
+
 def _explicitas(frase: str, lexico: list[Lexico], referencia: date) -> list[tuple[date, str]]:
     """Fechas con el día escrito: con el mes por su nombre o con cifras."""
     halladas: list[tuple[date, str]] = []
@@ -196,6 +219,8 @@ def _explicitas(frase: str, lexico: list[Lexico], referencia: date) -> list[tupl
     sin_iso = _ISO.sub(" ", frase)
     for m in _NUMERICA.finditer(sin_iso):
         anio = int(m[3]) if m[3] else None
+        if anio is None and es_hora(sin_iso, m.start(), m.end()):
+            continue
         if anio is not None and anio < 100:
             anio += 2000
         if (f := _fecha(anio, int(m[2]), int(m[1]), referencia)) is not None:
@@ -639,6 +664,28 @@ def pasado_de(frase: str, publicacion: datetime, zona_medio: ZoneInfo
             return lunes - timedelta(days=1), hasta, expresion
         return hoy - timedelta(days=DIAS_PASADO), hoy - timedelta(days=1), expresion
     return None
+
+
+_EXPRESION = re.compile(r"«([^»]*)»")
+
+
+def relativa_sin_dia(motivo: str) -> bool:
+    """El motivo de un inicio «relativo» lo saca de una expresión que no escribe ningún día: una
+    noche, un «ayer» o un «hoy» («tokom noći», «in der Nacht», «overnight»), sin día de la semana
+    ni cifras. Esa fecha la pone la publicación de la nota: en un artículo de días después que
+    vuelve a contar un suceso, «durante la noche» no es la noche anterior a la nota
+    (EODI-2026-00888, b92.net del 18 de noviembre de 2026 sobre la noche del 10 al 11)."""
+    hallada = _EXPRESION.search(motivo)
+    if hallada is None:
+        return False
+    expresion = _normal(hallada.group(1))
+    if not expresion or re.search(r"\d", expresion):
+        return False
+    palabras = expresion.split()
+    for lx in lexicos().values():
+        if _dia_semana(palabras, expresion, lx) or any(p in lx.meses for p in palabras):
+            return False
+    return True
 
 
 def ventana_de_motivo(motivo: str) -> tuple[date, date] | None:
