@@ -959,8 +959,12 @@ def palabra_repetida(texto: str) -> str | None:
     return encontrado.group(1) if encontrado else None
 
 
-def problemas_texto(texto: str, idioma: str, pais: str | None = None) -> list[str]:
-    """Lo que está mal en un texto visible de la página en `idioma`."""
+def problemas_texto(
+    texto: str, idioma: str, pais: str | None = None, pais_ficha: str | None = None
+) -> list[str]:
+    """Lo que está mal en un texto visible de la página en `idioma`. Con `pais_ficha` (el
+    titular, que puede nombrar ciudades de otros países), la forma que también es el nombre de un
+    lugar de ese país no es un error: «frente a Byala» en una ficha búlgara (EODI-2026-00862)."""
     texto = nfc(texto)
     salida = []
     otras = _escrituras(texto) - {"LATIN"}
@@ -969,6 +973,8 @@ def problemas_texto(texto: str, idioma: str, pais: str | None = None) -> list[st
     for palabra in palabras_ajenas(texto, idioma):
         salida.append(f"palabra de otro idioma «{palabra}»")
     for forma in dict.fromkeys(formas_ajenas(texto, idioma, pais)):
+        if de_otro_pais(forma, pais_ficha):
+            continue
         salida.append(f"«{forma}» en vez de «{_formas_ajenas()[idioma][forma]}»")
     return salida
 
@@ -993,7 +999,8 @@ def problemas(propiedades: Documento) -> list[str]:
             if isinstance(valor.get(idioma), str):
                 pais = None if campo == "titulo" else lugar_.get("pais")
                 salida += [
-                    f"{campo}.{idioma}: {p}" for p in problemas_texto(valor[idioma], idioma, pais)
+                    f"{campo}.{idioma}: {p}"
+                    for p in problemas_texto(valor[idioma], idioma, pais, lugar_.get("pais"))
                 ]
     localidad = str(lugar_.get("localidad") or "")
     sabido = localidad[:1].isupper() or (propiedades.get("objetivo") or {}).get("oaci")

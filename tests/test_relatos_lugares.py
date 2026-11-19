@@ -236,3 +236,17 @@ def test_la_nota_sin_ficha_lleva_su_texto_al_extractor() -> None:
     peticion = extraccion.preparar(almacen, candidato, None)
     (fuente,) = [f for f in peticion.fuentes if f.url == nota.enlace]
     assert fuente.texto.startswith(nota.texto.strip())
+
+
+def test_la_revision_de_lo_publicado_acepta_byala_en_una_ficha_bulgara() -> None:
+    """La revisión de lo publicado (y la prueba de los datos publicados) aplica la misma regla que
+    el titular corregido: «Byala» en una ficha búlgara no es «Bielsko-Biała» mal escrito."""
+    from proceso import nombres_lugar
+
+    titulo = {
+        "es": "Hunde el buque GAS HUSKY frente a Byala, posible ataque con drones en el mar Negro",
+        "en": "GAS HUSKY sinks off Byala in a possible drone attack in the Black Sea",
+    }
+    assert nombres_lugar.problemas({"titulo": titulo, "lugar": {"pais": "BG"}}) == []
+    en_polonia = nombres_lugar.problemas({"titulo": titulo, "lugar": {"pais": "PL"}})
+    assert any("Bielsko-Biała" in p for p in en_polonia)
