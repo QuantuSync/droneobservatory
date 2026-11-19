@@ -83,6 +83,18 @@ filas publicadas. `unidos` sale de las filas unidas y `retirados` (campo nuevo, 
 retiradas: identificador, fecha y motivo. La web sirve la dirección de una retirada con esa
 explicación.
 
+### Ninguna ficha retenida más de una recogida
+
+Desde el 19 de noviembre de 2026 (EODI-2026-00844 llevaba 87 horas retenida), lo que el filtro de
+entrada retiene sale de la retención en la recogida siguiente (`control_fichas.salida_tras_una_recogida`):
+se une a la ficha activa que la definición da por su mismo suceso si es una sola; una noticia
+retrospectiva toma la fecha que da su fuente o se retira; si el filtro dio otro día que no aplicó,
+lo toma; la que es el mismo suceso que otra sin poder unirse se retira como duplicada; la que
+ninguna frase fecha se retira como no verificable; lo demás sale con lo que tiene y lo corrige la
+coherencia de la puerta. Nunca se retira por un fallo (sin servicio, sin respuesta del experto).
+Cada retirada lleva su motivo en su página y se avisa una vez por el tema privado («Retirada tras
+una recogida retenida»), nunca desde un ensayo.
+
 ### Coherencia en la puerta
 
 Desde el 14 de noviembre de 2026, cada hora, dentro del control de las fichas (después del filtro
@@ -95,7 +107,7 @@ frases no sostienen **se corrige, no se retiene** (`recogida/correccion.py`):
 | b) fecha | a más de un día de la noche de su episodio | el día que da una frase literal |
 | c) lugar | punto fuera del país, o ninguna frase nombra el sitio (ni el nomenclátor junto al punto ni una palabra propia del nombre) | el sitio si una frase lo da; si no, la región que nombra una frase o el país, con el titular a ese nivel |
 | d) drones | el número no lo da ninguna fuente pública (sin afirmación) | el que da una frase con la palabra dron; si no, «sin dato» |
-| f) titular | nombra otro país del alcance y no el suyo | se rehace con los datos de la ficha |
+| f) titular | nombra otro país del alcance y no el suyo, o una localidad de otro país que no nombra ninguna frase de sus fuentes | se rehace con los datos de la ficha |
 
 La relectura la hace el experto con el texto de las fuentes (`modelo/coherencia.py`), con cupo
 propio (modo `coherencia`, 1 USD al día), como mucho 40 fichas y 5 minutos por pasada. Solo vale

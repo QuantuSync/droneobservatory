@@ -210,6 +210,16 @@
    "titular": "El vuelo de seis minutos de un dron evidencia fallos de seguridad en la cárcel de Alhaurín: «Traerán armas»",
    "lugar": "loc:2521986",
    "motivo": "10 ago 2026 hacia las 04:00: un dron sobrevuela seis minutos los módulos 9 y 11 del centro penitenciario Málaga I. No llegó por GDELT."
+  },
+  {
+   "url": "https://www.radioconstanta.ro/2026/11/17/ro-alert-la-tulcea-11-tinte-aeriene-detectate-in-apropierea-frontierei-cu-romania/",
+   "medio": "radioconstanta.ro",
+   "fecha": "2026-11-16T23:00:00Z",
+   "idioma": "ro",
+   "pais": "RO",
+   "titular": "RO Alert la TULCEA: 11 ținte aeriene detectate în apropierea frontierei cu România",
+   "lugar": "loc:664518",
+   "motivo": "Noche del 16 al 17 nov 2026: el MApN detecta 11 objetivos aéreos en dos grupos (4 al este de Vâlcove, 7 al noreste de Ismail), RO-Alert en el norte de Tulcea a las 23:36, fin a las 00:07, dos F-16 de Fetești, sin entrada en el espacio aéreo. No llegó por GDELT: el titular no decía «dron» (desde el 19/11, «ținte aeriene» es palabra de dron). Hora de publicación aproximada (primera hora del 17/11, hora local)."
   }
  ]
 }

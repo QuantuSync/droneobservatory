@@ -564,12 +564,14 @@ def test_lo_distinto_no_se_une() -> None:
     assert griega is not None and "fusionado_en" not in griega
 
 
-def test_lo_nuevo_sin_decision_no_sale_por_tiempo(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_lo_nuevo_sin_decision_sale_tras_una_recogida(monkeypatch: pytest.MonkeyPatch) -> None:
     # El par de Núremberg es el mismo suceso por la definición (mismo sitio y jornada) y el filtro
     # lo uniría sin preguntar (entrada.unir_por_la_definicion); aquí se prueba la espera.
     monkeypatch.setattr(entrada, "unir_por_la_definicion", lambda *a: None)
-    # Hasta el 28 de octubre de 2026 salía a las 6 horas con lo que hubiera; ahora, sin decisión
-    # del filtro de entrada (aquí sin servicio), no sale nunca.
+    # Hasta el 28 de octubre de 2026 salía a las 6 horas con lo que hubiera; desde entonces y hasta
+    # el 19 de noviembre, sin decisión del filtro de entrada (aquí sin servicio), no salía nunca
+    # (EODI-2026-00844, 87 horas). Ahora, tras una recogida, se une a su suceso si la definición
+    # lo da por el mismo (aquí, el mismo sitio y la misma jornada) o sale con lo que tiene.
     almacen = _base(_nuremberg_alemana())
     _ejecutar(almacen, None)  # primera pasada: lo que había se da por visto
     almacen.guardar_incidente(_nuremberg_griega(), AHORA, VOCABULARIO_MODELOS)
@@ -578,10 +580,14 @@ def test_lo_nuevo_sin_decision_no_sale_por_tiempo(monkeypatch: pytest.MonkeyPatc
     assert control_fichas.retenidos(almacen) == frozenset({"EODI-2026-09516"})
     # Lo ya publicado no se retiene nunca.
     assert "EODI-2026-09515" not in resultado.retenidos
-    for horas in (7, 30, 24 * 8):
-        tarde = _ejecutar(almacen, None, AHORA + timedelta(hours=horas))
-        assert "EODI-2026-09516" in tarde.retenidos and not tarde.liberados
-        assert control_fichas.retenidos(almacen) == frozenset({"EODI-2026-09516"})
+    tarde = _ejecutar(almacen, None, AHORA + timedelta(hours=2))
+    assert "EODI-2026-09516" not in tarde.retenidos
+    assert "EODI-2026-09516" in tarde.liberados
+    assert control_fichas.retenidos(almacen) == frozenset()
+    # El experto las dio por distintas o no se sabe: sale con lo que tiene (la coherencia y el
+    # candado de la puerta la miran antes de publicarla), nunca retirada.
+    nota = tarde.liberados["EODI-2026-09516"]
+    assert nota.startswith((control_fichas.NOTA_SALE, "unida"))
 
 
 def test_dudoso_se_resuelve_a_las_seis_horas() -> None:

@@ -81,6 +81,19 @@ Las reglas firmes, en su orden (la primera que habla, decide):
    que empezó la víspera). Con el día a secas, la de ese día, y también la de la víspera si la
    primera noticia de la ficha salió antes de la tarde de ese día: entonces el cierre fue de
    madrugada.
+5b. **El relato de un suceso anterior** (desde el 19 de noviembre de 2026,
+   `suceso.relato_de`). Una ficha cuya fecha pone la publicación de su nota (la fecha de
+   publicación, un pasado sin día o una noche, un «ayer» o un «hoy» sin día escrito, como «tokom
+   noći») y que comparte con una ficha anterior de su país, de entre 1 y 30 días antes de su
+   primera noticia, un hecho que no cuenta ninguna otra ficha de su país en esos días (la palabra
+   propia de un lugar que es una localidad o una región, como Biržai, o «intentaron derribarlo
+   dos veces») es el mismo suceso que esa: se une a ella y queda la fecha de la anterior. Un
+   aeropuerto o un puerto no distingue nada (allí se repiten los sucesos), ni un hecho que
+   cuentan dos fichas. No se une si los números de drones no se tocan o los dos lugares precisos
+   están a más de 25 km. Esta regla manda sobre lo que dijo el experto. Y una fecha que pone la
+   publicación de la nota no es firme frente a otra: no impide la unión. Casos: EODI-2026-00815,
+   00818 y 00888, artículos del 12, 13 y 18 de noviembre sobre la noche del 10 al 11 en Lituania
+   (EODI-2026-00792).
 7. **El mismo sitio y la misma jornada**, sin nada de lo anterior, es el mismo suceso sin
    preguntar: con hora en las dos, inicios a menos de 6 horas; con día, el mismo día; con la
    fecha de publicación, ese día o la víspera. Una hora «aproximada» que escribe una fuente es

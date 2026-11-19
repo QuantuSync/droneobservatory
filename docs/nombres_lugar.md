@@ -99,6 +99,16 @@ hora no se toca. La prueba sobre los datos publicados comprueba además que el e
 último paso, que el fin no es anterior al inicio y que el primer aviso no es de más de un día antes
 de un inicio con hora.
 
+## Lugares de otro país en el titular
+
+Desde el 19 de noviembre de 2026, las formas ajenas generales (`formas_ajenas`, sacadas de
+Wikidata) no se cambian en el titular de una ficha si ese nombre es también el de un lugar del país
+de la ficha: «Byala», en una ficha de Bulgaria, es la ciudad búlgara y no Bielsko-Biała, aunque
+Wikidata dé «Byala» como uno de los nombres de la polaca (EODI-2026-00862 salía «frente a
+Bielsko-Biała»). Y la coherencia de la puerta (comprobación f) rehace el titular que, tal como lo
+enseña la web, nombra con su nombre propio una localidad que solo es de otro país y que ninguna
+frase de sus fuentes nombra (`correccion.localidad_de_otro_pais`).
+
 ## En la web
 
 La ficha (`web/src/componentes/FichaIncidente.tsx`) y las páginas de texto (`web/src/texto/paginas.ts`)
