@@ -127,6 +127,9 @@ ESPERA_LOTE_S = 60.0
 MAX_ESPERA_LOTE = timedelta(hours=24)
 # El cursor de los artículos dirigidos (recogida/articulos_dirigidos.FUENTE_ID).
 CURSOR_DIRIGIDOS = "articulos_dirigidos"
+# El cursor de las notas oficiales que entran sin ficha (recogida/oficiales.CURSOR_SIN_FICHA): por
+# enlace, con el texto que leyó de la nota el lector de su fuente oficial.
+CURSOR_NOTAS_SIN_FICHA = "oficiales_sin_ficha"
 VOCABULARIO_LUGARES = "lugar"
 VOCABULARIO_MODELOS = "modelo_dron"
 # Las peticiones de un lote se identifican con caracteres simples y 64 como mucho.
@@ -529,6 +532,7 @@ def preparar(
     articulos = [a for a in _articulos(almacen, candidato) if a.get("idioma")]
     # Los artículos dirigidos (recogida/articulos_dirigidos.py: su cursor, por dirección).
     dirigidos = almacen.cursor(CURSOR_DIRIGIDOS) or {}
+    notas = almacen.cursor(CURSOR_NOTAS_SIN_FICHA) or {}
     elegidas = elegir_fuentes(articulos, frozenset(dirigidos))
     fuentes = []
     for a in elegidas:
@@ -536,7 +540,14 @@ def preparar(
         texto = pagina.texto
         # La frase literal de la página que encontró la segunda lectura (una declaración más
         # abajo de las primeras frases): va delante para que la lea la extracción.
-        pista = str((dirigidos.get(a["url"]) or {}).get("frase") or "")
+        # Y el texto de una nota oficial que entró sin ficha, leído con el lector de su fuente:
+        # el lector de páginas genérico no sabe dónde empieza una nota del MApN y, en el ensayo
+        # del 19 de noviembre de 2026, la del 17/11 (11 objetivos aéreos) llegó sin su texto.
+        pista = str(
+            (dirigidos.get(a["url"]) or {}).get("frase")
+            or (notas.get(a["url"]) or {}).get("texto")
+            or ""
+        )
         if pista and normalizar(pista) not in normalizar(texto):
             texto = f"{pista} … {texto}".strip(" …")
         fuentes.append(no_es_suceso.con_aviso(ficha.FuenteTexto(

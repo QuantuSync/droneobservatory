@@ -211,3 +211,28 @@ def test_la_nota_sin_dron_no_se_enlaza_solo_por_el_dia() -> None:
     assert id_ in [i["id"] for i in oficiales.posibles(almacen, nota)]
     assert oficiales.posibles(almacen, radar) == []
     assert oficiales.suceso(radar)
+
+
+def test_la_nota_sin_ficha_lleva_su_texto_al_extractor() -> None:
+    """En el ensayo del 19/11, la nota del MApN del 17/11 entró sin ficha y el extractor solo vio
+    «Informație de presă»: el lector de páginas genérico no encuentra el texto de una nota del
+    MApN. El texto que leyó el lector oficial va con la nota y delante de lo que lea la página."""
+    from almacen.base import Almacen
+    from proceso import extraccion
+    from recogida import oficiales
+    from tests.test_oficiales import AHORA, FUENTE, NOTA_PAIS
+
+    assert oficiales.CURSOR_SIN_FICHA == extraccion.CURSOR_NOTAS_SIN_FICHA
+    almacen = Almacen.abrir()
+    (nota, _) = oficiales.leer_rss(NOTA_PAIS, FUENTE)
+    vieja = oficiales.Nota(nota.fuente, nota.id, nota.titulo, nota.enlace, nota.fecha, "")
+    assert oficiales.a_entrada(almacen, vieja, AHORA)
+    assert not (almacen.cursor(oficiales.CURSOR_SIN_FICHA) or {})[nota.enlace].get("texto")
+    # La que entró sin texto lo recibe la recogida siguiente, sin volver a entrar.
+    assert not oficiales.a_entrada(almacen, nota, AHORA)
+    entrada = (almacen.cursor(oficiales.CURSOR_SIN_FICHA) or {})[nota.enlace]
+    assert entrada["texto"] == nota.texto.strip()
+    (candidato,) = [c for c in almacen.candidatos() if nota.enlace in c["articulos"]]
+    peticion = extraccion.preparar(almacen, candidato, None)
+    (fuente,) = [f for f in peticion.fuentes if f.url == nota.enlace]
+    assert fuente.texto.startswith(nota.texto.strip())
