@@ -47,7 +47,7 @@ from esquema import Documento
 from proceso import atribucion, competencia
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
-from proceso.noticias import filtro, normalizar
+from proceso.noticias import normalizar, solo_dron
 
 MAX_PALABRAS_FRASE = 25
 RUTA_NO_AUTORIDADES = (
@@ -260,7 +260,7 @@ def _con_contenido(frase: str, texto: str) -> str | None:
 
 
 def habla_de_drones(frase: str) -> bool:
-    return bool(filtro().dron.search(frase) or _DRONES_DECLINADOS.search(frase))
+    return bool(solo_dron().search(frase) or _DRONES_DECLINADOS.search(frase))
 
 
 # La sospecha de una infracción («mistanke om ulovlig droneflyvning», «suspected of illegally
