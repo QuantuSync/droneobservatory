@@ -157,7 +157,9 @@ _AEROPUERTO = re.compile(
 )
 INTERRUPCION = "interrupcion_aeroportuaria"
 # Notas de un suceso que no encajaron con una sola ficha y entraron como artículo.
-CURSOR_SIN_FICHA = "oficiales_sin_ficha"
+CURSOR_SIN_FICHA = "oficiales_sin_ficha"  # proceso/extraccion.CURSOR_NOTAS_SIN_FICHA
+# Lo que se guarda del texto de la nota para el extractor (va delante de lo que lea de la página).
+MAX_TEXTO_NOTA = 2000
 MOTIVO_SIN_FICHA = (
     "nota oficial sin ficha: entra como artículo de su lugar para que el extractor y el filtro "
     "de entrada decidan si es un suceso nuevo o el de una ficha existente"
@@ -789,7 +791,12 @@ def a_entrada(almacen: Almacen, nota: Nota, ahora: datetime) -> bool:
     from recogida.calidad import situar_en_candidatos
 
     cursor: dict[str, Any] = dict(almacen.cursor(CURSOR_SIN_FICHA) or {})
+    texto = nota.texto.strip()[:MAX_TEXTO_NOTA]
     if nota.enlace in cursor:
+        # Las que entraron antes del 19 de noviembre de 2026 no guardaban su texto.
+        if texto and not cursor[nota.enlace].get("texto"):
+            cursor[nota.enlace] = {**cursor[nota.enlace], "texto": texto}
+            almacen.guardar_cursor(CURSOR_SIN_FICHA, cursor)
         return False
     sitio = lugar_de_candidato(nota)
     if sitio is None:
@@ -809,7 +816,7 @@ def a_entrada(almacen: Almacen, nota: Nota, ahora: datetime) -> bool:
     tocados = situar_en_candidatos(almacen, [(documento, [sitio])], MOTIVO_SIN_FICHA)
     cursor[nota.enlace] = {
         "entrado": ahora.strftime("%Y-%m-%dT%H:%MZ"), "fuente": nota.fuente["id"],
-        "candidatos": tocados,
+        "candidatos": tocados, "texto": texto,
     }  # fmt: skip
     almacen.guardar_cursor(CURSOR_SIN_FICHA, cursor)
     registro.info(
