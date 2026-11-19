@@ -551,7 +551,7 @@ def test_un_par_viejo_que_esperaba_vuelve_en_la_recogida_sin_esperar_a_la_madrug
     assert almacen.controles("par:")[clave]["decision"] == "mismo"
 
 
-def test_un_par_critico_sin_tope_ni_reserva_espera_y_retiene_la_ficha_nueva(
+def test_un_par_critico_sin_tope_ni_reserva_espera_y_la_ficha_sale_tras_una_recogida(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     # El par de Núremberg es el mismo suceso por la definición (mismo sitio y jornada) y el filtro
@@ -569,9 +569,12 @@ def test_un_par_critico_sin_tope_ni_reserva_espera_y_retiene_la_ficha_nueva(
     assert decision["decision"] == "dudoso" and decision["espera_experto"] == siguiente
     assert decision["critico"] and decision["tope_experto"] == coste.LIMITE_EXPERTO_DIARIO_USD
     assert clave in [c["clave"] for c in control_fichas.criticos_esperando(almacen)]
-    # Pasadas 7 horas sigue retenida (no se publica mal) y el par no se da por distinto.
+    # Tras una recogida ya no sigue retenida (desde el 19 de noviembre de 2026; antes esperaba al
+    # experto sin límite): sale con lo que tiene, sin retirarse, y el par no se da por distinto.
     tarde = tcf._ejecutar(almacen, None, tcf.AHORA + timedelta(hours=7))
-    assert "EODI-2026-09516" in tarde.retenidos
+    assert "EODI-2026-09516" not in tarde.retenidos
+    nueva = almacen.incidente("EODI-2026-09516")
+    assert nueva is not None and not nueva.get("retirado")
     assert almacen.controles("par:")[clave]["decision"] == "dudoso"
     # Al día siguiente decide el experto y la ficha se une.
     manana = tcf.AHORA + timedelta(days=1)
