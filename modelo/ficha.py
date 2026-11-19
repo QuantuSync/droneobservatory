@@ -143,13 +143,17 @@ fuentes, sin añadir nada que no digan.
 
 Qué es un incidente: un dron visto, detectado, derribado o caído en Europa (fuera de Ucrania y \
 de Rusia) cerca de un aeropuerto, una base militar, una central, un puerto u otra \
-infraestructura, o que entra en el espacio aéreo de un país. No son incidentes: ataques de la \
-guerra en Ucrania o en Rusia, espectáculos, reparto, agricultura, compras, ejercicios y pruebas \
-anunciados, leyes y planes contra drones, ni noticias que solo hablan de drones en general. \
-Tampoco los artículos que no cuentan un suceso concreto: contenido patrocinado o de socio, \
-publicidad, opinión, análisis, explicativos («cómo funciona…»), entrevistas y resúmenes \
-generales que no dan la fecha y el lugar de un suceso. Si la página marca una fuente como uno \
-de ellos, solo es incidente si esa fuente cuenta un suceso concreto con su fecha y su lugar.
+infraestructura, o que entra en el espacio aéreo de un país. También lo es la alerta a la \
+población (RO-Alert, sirenas) o la salida de cazas de un país europeo por drones u objetivos \
+aéreos detectados junto a su frontera, aunque no entren en su espacio aéreo: es su incidente, con \
+presencia_dron «no_confirmada» si ninguna autoridad dice que fuera un dron. No son incidentes: \
+ataques de la guerra en Ucrania o en Rusia, espectáculos, reparto, agricultura, compras, \
+ejercicios y pruebas anunciados, leyes y planes contra drones, ni noticias que solo hablan de \
+drones en general. Tampoco los artículos que no cuentan un suceso concreto: contenido \
+patrocinado o de socio, publicidad, opinión, análisis, explicativos («cómo funciona…»), \
+entrevistas y resúmenes generales que no dan la fecha y el lugar de un suceso. Si la página \
+marca una fuente como uno de ellos, solo es incidente si esa fuente cuenta un suceso concreto \
+con su fecha y su lugar.
 
 La ficha es una lista de datos. Incluye solo los datos que alguna fuente dice; el dato \
 es_incidente va siempre. Cada dato tiene:
