@@ -442,6 +442,32 @@ total por encima de 10 USD. Calidad en la prueba comparativa con las reglas nuev
   interno: exportacion_aegis).
 - Cada decisión del control (par, verificación) guarda `modelo` y, si se escaló, `escalado`.
 
+## Notas largas: la extracción en dos pasos
+
+Desde el 21 de noviembre de 2026 la extracción de una ficha tiene dos pasos:
+
+- **Paso 1** (`modelo/ficha.py`), como siempre: el principio de cada noticia (las 600 primeras
+  letras, `modelo/paginas.primeras_frases`). Decide si es un incidente, qué pasó, dónde, en qué
+  país y en qué día. La petición es idéntica a la de antes.
+- **Paso 2** (`modelo/detalles.py`, `proceso/detalles.py`), con el modelo base: la nota seguida
+  hasta 3.000 letras, sin los párrafos que son el titular enlazado de otra noticia
+  (`paginas.nota`). Solo saca detalles de ESE suceso, cada uno con su frase literal: el cierre y
+  su duración, los vuelos afectados, la hora, el número de drones y las declaraciones de las
+  autoridades.
+
+El paso 2 no puede cambiar el lugar, el país ni el día, ni crear sucesos, y eso no depende de que
+el modelo obedezca: su esquema no tiene esos campos, solo se llama si el paso 1 da un incidente y
+alguna nota pasa de su principio, solo añade lo que el paso 1 no dio, la hora solo si es del día
+que dio el paso 1, y cada dato necesita su frase literal en la nota (la validación la busca allí:
+`Contexto.notas`). Lo que añadió queda en la extracción (`paso2`). Cuenta en el tope del modo como
+cualquier llamada; sin margen, o si el servicio falla, la ficha sale con el paso 1.
+
+Por qué: con 600 letras se perdían cierres, vuelos, horas y declaraciones (358 de 399 fichas con
+alguna fuente cortada, 12/11/2026; EODI-2026-00792 tenía el cierre de Vilna y Kaunas puesto a
+mano). Leer la nota entera de una vez (PR #470) los recuperaba, pero colaba lugares demasiado
+precisos (Kotka, Druskininkai, Panevėžys), datos de otras noticias de la página (b92.net) y una
+ficha suelta de misiles en Moldavia. Prueba fija: `tests/test_notas_dos_pasos.py`.
+
 ## Resumen diario
 
 `control.json` guarda, por día de Madrid, las llamadas, las escaladas y el gasto de cada papel

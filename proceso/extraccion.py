@@ -70,6 +70,7 @@ from proceso import (
     decididos,
     declaraciones,
     detalle,
+    detalles,
     escalado,
     no_es_suceso,
     presencia,
@@ -804,6 +805,7 @@ def procesar_respuesta(
             palabras_objetivo=palabras_objetivo(peticion.candidato["lugar"]),
             prefijos_genericos=prefijos_genericos(),
             publicaciones=publicaciones(peticion.articulos, peticion.enviadas),
+            notas=notas_de(peticion),
         )
         # Lo que la ficha publicada tenía con la frase de una autoridad no lo borra una lectura
         # nueva que no lo trae (proceso/relectura.py), con cualquier modelo. También en la ficha
@@ -828,8 +830,12 @@ def procesar_respuesta(
             "campos": validada.campos,
             "ficha": leida,
             "enviadas": peticion.enviadas,
-            "declaraciones": declaraciones.validas(leida["declaraciones"], contexto.textos),
+            "declaraciones": declaraciones.validas(
+                leida["declaraciones"], contexto.notas or contexto.textos
+            ),
         }
+        if respuesta.get(detalles.CLAVE):
+            documento[detalles.CLAVE] = list(respuesta[detalles.CLAVE])
         if respuesta.get("model"):
             documento["modelo"] = str(respuesta["model"])
         if escalado_por:
@@ -927,6 +933,14 @@ class EsperaExperto(Exception):
 
 def textos_de(peticion: Peticion) -> tuple[str, ...]:
     return tuple(f"{f.titular}. {f.texto}" for f in peticion.fuentes)
+
+
+def notas_de(peticion: Peticion) -> tuple[str, ...]:
+    """Lo que leyó el paso 2 de cada fuente (el principio y la nota), o vacío si ninguna fuente
+    trae nota (proceso/detalles.py)."""
+    if not any(f.nota for f in peticion.fuentes):
+        return ()
+    return tuple(f"{f.titular}. {f.texto} {f.nota}" for f in peticion.fuentes)
 
 
 def con_fuente_oficial(peticion: Peticion) -> bool:
@@ -1875,6 +1889,7 @@ def extraer(
                     respuesta, escalado_por = escalar(
                         almacen, cliente, peticion, respuesta, ahora, modo
                     )
+                respuesta = paso_2(almacen, cliente, peticion, respuesta, ahora, modo)
             except EsperaExperto as espera:
                 # La ficha necesita al experto y no puede ser ahora: el candidato espera y los
                 # demás siguen (la llamada del base ya está anotada).
@@ -1916,6 +1931,30 @@ def extraer(
     if sin_tope is not None:
         return hechas.parar(Parada.LIMITE_GASTO, sin_tope)
     return hechas
+
+
+def paso_2(
+    almacen: Almacen, cliente: Servicio, peticion: Peticion, respuesta: dict[str, Any],
+    ahora: datetime, modo: coste.Modo,
+) -> dict[str, Any]:  # fmt: skip
+    """La respuesta completada con los detalles de la nota (proceso/detalles.py), con el modelo
+    base y dentro del tope del modo; marca en `detalles.CLAVE` lo que añadió."""
+    try:
+        completada, anadidos = detalles.completar(
+            cliente, respuesta, peticion.fuentes,
+            almacen.gastado(modo.value, coste.dia_del_gasto(modo, ahora)), modo,
+            coste.del_mes(almacen, ahora),
+            lambda segunda: anotar_llamada(almacen, peticion, segunda, ahora, modo, False),
+        )  # fmt: skip
+    except Exception:
+        # El paso 2 es prescindible: nunca para la tanda ni hace perder la respuesta del paso 1.
+        registro.exception("candidato %s: paso 2 fallido", peticion.candidato["id"])
+        return respuesta
+    if anadidos:
+        registro.info("candidato %s: el paso 2 añade %s", peticion.candidato["id"],
+                      ", ".join(anadidos))  # fmt: skip
+        completada[detalles.CLAVE] = anadidos
+    return completada
 
 
 def recortar_para_lote(

@@ -364,6 +364,9 @@ class FuenteTexto:
     marcas: tuple[str, ...] = ()
     # Lo que proceso/no_es_suceso.py lee en esas marcas, para el modelo.
     aviso: str = ""
+    # La nota hasta 3.000 letras (modelo/paginas.nota): no va en la petición del paso 1, que lee
+    # solo el principio (`texto`); la lee el paso 2 (modelo/detalles.py).
+    nota: str = ""
 
     def bloque(self, numero: int) -> str:
         cuerpo = f" Texto: {self.texto}" if self.texto else ""
@@ -532,6 +535,9 @@ def leer_respuesta(respuesta: dict[str, Any]) -> dict[str, Any]:
             "frase": dato.get("frase"),
             "confianza": dato.get("confianza"),
         }
+        if dato.get("paso"):
+            # Lo añadió el paso 2 (proceso/detalles.py): su frase está en la nota.
+            ficha[nombre]["paso"] = dato["paso"]
     ficha["declaraciones"] = [
         d for d in bruta.get("declaraciones", [])
         if isinstance(d, dict) and d.get("categoria") in AUTORIDADES

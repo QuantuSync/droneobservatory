@@ -44,7 +44,7 @@ def almacen(monkeypatch: pytest.MonkeyPatch) -> Iterator[Almacen]:
     for nombre, valor in CLAVES.items():
         monkeypatch.setenv(nombre, valor)
     monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
-    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    monkeypatch.setattr(paginas, "leer_con_nota", lambda _d, _u: (TEXTO, ""))
     a = Almacen.abrir()
     yield a
     a.cerrar()
@@ -234,7 +234,7 @@ def test_recogida_completa_con_articulos_rotos_publica(
     for nombre, valor in CLAVES.items():
         monkeypatch.setenv(nombre, valor)
     monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
-    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    monkeypatch.setattr(paginas, "leer_con_nota", lambda _d, _u: (TEXTO, ""))
     ahora = datetime.now(UTC)
     rotos = [Articulo(**{**a.__dict__, "fecha": ahora - (AHORA - a.fecha)}) for a in ROTOS.values()]
     monkeypatch.setattr(gdelt, "ejecutar", lambda almacen, *_: gdelt.incorporar(almacen, rotos))
