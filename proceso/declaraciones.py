@@ -79,7 +79,7 @@ _DRONES_DECLINADOS = re.compile(
 ABIERTO = re.compile(
     r"(?<!\w)(?:possibl\w*|posibl\w*|posibil\w*|possív\w*|mogelijk\w*|möglich\w*|eventuel\w*|"
     r"potenziel\w*|potential\w*|potencial\w*|potentiel\w*|"
-    r"mulig\w*|möjlig\w*|mahdollis\w*|możliw\w*|ewentualn\w*|pravděpodob\w*|tikėtin\w*|"
+    r"mulig\w*|möjlig\w*|mahdollis\w*|możliw\w*|ewentualn\w*|pravděpodob\w*|prawdopodobn\w*|tikėtin\w*|"
     r"galim\w*|iespējam\w*|võimalik\w*|πιθαν\w*|можлив\w*|возможн\w*|"
     r"mutma\w*|vermut\w*|vermoed\w*|presunt\w*|présum\w*|supuest\w*|alleged\w*|"
     r"suspect\w*|sospech\w*|verdacht\w*|podejrzan\w*|misstänk\w*|mistænk\w*|mistenk\w*|"
