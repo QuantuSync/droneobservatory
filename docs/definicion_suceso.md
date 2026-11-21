@@ -170,6 +170,7 @@ La batería está en `tests/test_definicion_suceso.py`, con las fichas reales
 | EODI-2026-00716 y 00728 (Moldavia, 31 de octubre de 2026) | el dron de las 16:24 hacia Plopi y «cea de-a doua dronă», que entró a las 17:50 y salió junto a Viișoara | dos sucesos, un episodio |
 | EODI-2025-00241 y 00263 (Rumanía, 25 de noviembre de 2025) | la alerta de Vrancea y el dron caído en Puiești: los dos drones que el Ministerio de Defensa contó juntos | un suceso, EODI-2025-00263 |
 | EODI-2026-00015 y 00075 (Rumanía, 8 de septiembre de 2026) | el cierre del aeropuerto de Iași y el mismo dron, que entró desde Moldavia, en otro sitio de Rumanía | un suceso, EODI-2026-00015 (la caída en Mihăileni Vechi es de Moldavia) |
+| EODI-2026-00899 y 00917 (Moldavia, 20 de noviembre de 2026) | el dron de la 01:19 en el norte, la noche del 19 al 20, y el de las 14:48 sobre Ștefan Vodă | dos sucesos; las dos notas del de la tarde que llevaba 00899 son de 00917 |
 
 ## Lo que queda fuera
 

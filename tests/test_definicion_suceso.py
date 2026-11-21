@@ -485,6 +485,27 @@ def test_el_mismo_dron_contado_en_otro_sitio_del_pais_es_el_mismo_suceso(
     assert "«" in grupo["motivo"] and "«" in grupo["motivo_en"]
 
 
+def test_moldavia_el_dron_de_la_noche_y_el_de_la_tarde_son_dos_sucesos() -> None:
+    """20 de noviembre de 2026 en Moldavia: el dron de la noche del 19 al 20, a la 01:19 en el
+    norte (EODI-2026-00899), y el de las 14:48 sobre Ștefan Vodă (EODI-2026-00917). Otra
+    jornada, otro sitio y otro dron: dos sucesos. Sin la revisión, la definición ya no los unía
+    sola; con ella, nadie los une, y las dos notas del dron de la tarde que llevaba 00899 pasan a
+    00917."""
+    noche, tarde = f("2026-00899"), f("2026-00917")
+    assert dicho(sin_revisar("2026-00899", "EODI-2026-99899"), tarde).relacion != suceso.MISMO
+    assert dicho(noche, tarde).relacion == suceso.DISTINTOS
+    (separacion,) = [
+        s for s in suceso.revisiones()["separar"] if s["incidente"] == "EODI-2026-00899"
+    ]
+    de_la_tarde = next(p for p in separacion["partes"] if p["coincide_con"] == "EODI-2026-00917")
+    frases = " ".join(
+        x["frase_origen"]
+        for x in noche["fuentes"]
+        if x["id"].partition("-declaracion-")[0] in de_la_tarde["fuentes"]
+    )
+    assert "14:48" in frases and "A doua dronă" in frases
+
+
 # --- La batería entera sobre una base ----------------------------------------------------------
 
 

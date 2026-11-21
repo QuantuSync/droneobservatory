@@ -8187,6 +8187,18 @@
         "es": "Dos drones distintos en Moldavia el sábado 31 de octubre de 2026, enlazados por su episodio: el primero entró a las 16:24 desde Semionovca hacia Plopi («la ora 16:24, a unei drone, din direcția localității Semionovca, regiunea Odesa, Ucraina, spre localitatea Plopi», zdg.md) y el segundo a las 17:50 desde Mihailovka y salió junto a Viișoara («cea de-a doua dronă a pătruns în spațiul aerian național la ora 17:50, din direcția localității Mihailovka», timpul.md). Revisado el 21 de noviembre de 2026.",
         "en": "Two different drones in Moldova on Saturday 31 October 2026, linked by their episode: the first entered at 16:24 from Semionovca towards Plopi («la ora 16:24, a unei drone, din direcția localității Semionovca, regiunea Odesa, Ucraina, spre localitatea Plopi», zdg.md) and the second at 17:50 from Mihailovka and left near Viișoara («cea de-a doua dronă a pătruns în spațiul aerian național la ora 17:50, din direcția localității Mihailovka», timpul.md). Reviewed on 21 November 2026."
       }
+    },
+    {
+      "incidentes": [
+        "EODI-2026-00899",
+        "EODI-2026-00917"
+      ],
+      "separado_de": "EODI-2026-00899",
+      "origen": "revisado",
+      "motivo": {
+        "es": "Dos drones distintos en Moldavia: el de la 01:19 del viernes 20 de noviembre de 2026 en el norte, la noche del 19 al 20, y el de las 14:48 sobre Ștefan Vodă, en el sureste («Două drone au traversat ilegal spațiul aerian al Republicii Moldova la interval de câteva ore, în nordul și sud-estul țării», antena3.ro). Otra jornada, otro sitio y otro dron: otro suceso. Revisado el 21 de noviembre de 2026.",
+        "en": "Two different drones in Moldova: the one at 01:19 on Friday 20 November 2026 in the north, on the night of 19 to 20, and the one at 14:48 over Ștefan Vodă, in the south-east («Două drone au traversat ilegal spațiul aerian al Republicii Moldova la interval de câteva ore, în nordul și sud-estul țării», antena3.ro). Another day, another place and another drone: another event. Reviewed on 21 November 2026."
+      }
     }
   ],
   "reponer": [
@@ -11124,6 +11136,39 @@
           ]
         }
       ]
+    },
+    {
+      "incidente": "EODI-2026-00899",
+      "motivo": {
+        "es": "Llevaba dos notas del dron de las 14:48 del 20 de noviembre de 2026 sobre Ștefan Vodă (EODI-2026-00917), que es otro suceso, junto a las del dron de la 01:19 en el norte: «Două drone au traversat ilegal spațiul aerian al Republicii Moldova la interval de câteva ore, în nordul și sud-estul țării» (antena3.ro). Revisado el 21 de noviembre de 2026.",
+        "en": "It carried two reports about the drone at 14:48 on 20 November 2026 over Ștefan Vodă (EODI-2026-00917), which is another event, together with those about the drone at 01:19 in the north: «Două drone au traversat ilegal spațiul aerian al Republicii Moldova la interval de câteva ore, în nordul și sud-estul țării» (antena3.ro). Reviewed on 21 November 2026."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-19",
+          "pais": "MD",
+          "descripcion": "La noche del 19 al 20 de noviembre de 2026, a la 01:19 hora de Moldavia, un dron entra desde Ucrania por Sadkivți y sobrevuela el norte de Moldavia",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-0871bcac8f985286",
+            "gdelt-65a95bc9dfb9eb04",
+            "gdelt-a44059e0f7b66603",
+            "gdelt-ea33cb7e36b6b5c0"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-20",
+          "pais": "MD",
+          "descripcion": "El viernes 20 de noviembre de 2026 a las 14:48 hora de Moldavia un dron entra desde Ucrania, sobrevuela Ștefan Vodă y vuelve a Ucrania",
+          "coincide_con": "EODI-2026-00917",
+          "fuentes": [
+            "gdelt-037f07cf60cbd280",
+            "gdelt-d9517f6153a79b4d"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
@@ -13246,6 +13291,37 @@
       "enlace": "https://news.yam.md/ro/story/78073758",
       "pais": "MD",
       "motivo": "barrido del 21 de noviembre de 2026: una fuente de la ficha dice que se cerró o se paralizó y el cierre se había quedado en «desconocido» (el espacio aéreo de Moldavia; sin aeropuerto como objetivo, el tipo no cambia)"
+    },
+    {
+      "incidente": "EODI-2026-00898",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "aeropuerto",
+        "nombre": "Aéroport de Paris-Charles-de-Gaulle",
+        "oaci": "LFPG"
+      },
+      "cita": "Paris Charles de Gaulle briefly held incoming flights Thursday evening after a suspected drone sighting.",
+      "enlace": "https://investmentwatchblog.com/drone-scare-briefly-disrupts-paris-cdg-arrivals-european-airports-face-repeated-incidents",
+      "pais": "FR",
+      "motivo": "el suceso es en el aeropuerto Charles de Gaulle, no en el centro de París: el nombre «Paris Charles de Gaulle» no casaba con ningún nombre del aeropuerto en el nomenclátor (ahora sí) y el punto se tomó de la ciudad, a 25 km; con ese punto, el objetivo que nombra el titular quedaba fuera de su radio (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00898",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "instalacion",
+        "suceso": "Paris Charles de Gaulle",
+        "region": "Île-de-France",
+        "punto": {
+          "lat": 49.0069,
+          "lon": 2.56256
+        },
+        "radio_km": 5.0
+      },
+      "cita": "Paris Charles de Gaulle briefly held incoming flights Thursday evening after a suspected drone sighting.",
+      "enlace": "https://investmentwatchblog.com/drone-scare-briefly-disrupts-paris-cdg-arrivals-european-airports-face-repeated-incidents",
+      "pais": "FR",
+      "motivo": "el suceso es en el aeropuerto Charles de Gaulle, no en el centro de París: el nombre «Paris Charles de Gaulle» no casaba con ningún nombre del aeropuerto en el nomenclátor (ahora sí) y el punto se tomó de la ciudad, a 25 km; con ese punto, el objetivo que nombra el titular quedaba fuera de su radio (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
     }
   ]
 }
