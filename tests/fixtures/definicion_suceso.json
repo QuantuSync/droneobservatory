@@ -1,5 +1,5 @@
 {
- "descripcion": "Las fichas reales de la batería de la definición de suceso (docs/definicion_suceso.md), de la base de producción del 11 de noviembre de 2026 a las 15:52 UTC, recortadas a lo que mira proceso/suceso.py. fuentes_en_la_base: cuántas tenía.",
+ "descripcion": "Las fichas reales de la batería de la definición de suceso (docs/definicion_suceso.md), de la base de producción del 11 de noviembre de 2026 a las 15:52 UTC, recortadas a lo que mira proceso/suceso.py. fuentes_en_la_base: cuántas tenía. Las ocho fichas de las cuatro parejas del 21 de noviembre de 2026 (EODI-2025-00016, 00072, 00241, 00263; EODI-2026-00015, 00075, 00716, 00728) son de la base de producción de ese día.",
  "fichas": {
   "EODI-2025-00049": {
    "id": "EODI-2025-00049",
@@ -7261,6 +7261,1352 @@
     }
    ],
    "fuentes_en_la_base": 2
+  },
+  "EODI-2025-00016": {
+   "id": "EODI-2025-00016",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Four drones spotted over Schaffen military base",
+    "es": "Cuatro drones avistados sobre la base militar de Schaffen"
+   },
+   "lugar": {
+    "geocodificacion": "candidato",
+    "nivel": "instalacion",
+    "pais": "BE",
+    "punto": {
+     "lat": 51.00038,
+     "lon": 5.06173
+    },
+    "radio_km": 5.0,
+    "region": "Vlaams-Brabant",
+    "suceso": "Schaffen"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "hora",
+     "valor": "2025-11-04T20:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-4ba1d21ac88d29c4",
+     "motivo": "«gisteravond» en una nota publicada el 2025-11-05 12:45 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-4ba1d21ac88d29c4",
+     "medio": "vrt.be",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-05T11:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "nl",
+     "frase_origen": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest)."
+    },
+    {
+     "id": "gdelt-4ba1d21ac88d29c4-declaracion-1",
+     "medio": "Burgemeester Geert Cluckers (declaración oficial citada en vrt.be)",
+     "enlace": "https://vrt.be/vrtnws/nl/2025/11/05/drones-boven-luchtmachtbasis-schaffen",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-05T11:45Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "nl",
+     "frase_origen": "Gisteravond zijn 4 drones gezien boven de militaire luchtmachtbasis van Schaffen (Diest)."
+    }
+   ],
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
+   },
+   "objetivo": {
+    "categoria": "aeropuerto",
+    "nombre": "Diest Schaffen Airfield",
+    "oaci": "EBDT"
+   },
+   "fuentes_en_la_base": 2
+  },
+  "EODI-2025-00072": {
+   "id": "EODI-2025-00072",
+   "tipo": "interrupcion_aeroportuaria",
+   "titulo": {
+    "en": "Airspace violation over Brussels Airport forces closure",
+    "es": "Violación del espacio aéreo sobre el aeropuerto de Bruselas obliga a su cierre"
+   },
+   "lugar": {
+    "geocodificacion": "nomenclator",
+    "nivel": "instalacion",
+    "pais": "BE",
+    "punto": {
+     "lat": 50.90093,
+     "lon": 4.4858
+    },
+    "radio_km": 5.0,
+    "region": "Bruxelles-Capitale",
+    "suceso": "Brussels Airport"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2025-11-04T19:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-8fc886351ca6fdb5",
+     "motivo": "«mardi» en una nota publicada el 2025-11-10 07:30 (hora local del medio); la hora la dice la frase de gdelt-e074f53bc99b81ea (20:00, hora local, Europe/Brussels): en UTC, 19:00",
+     "tipo": "relativa"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "si"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": false,
+    "evidencia": []
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-667649843d6b7af2",
+     "medio": "nieuwsblad.be",
+     "enlace": "https://nieuwsblad.be/binnenland/brussels-airport-gesloten-door-melding-van-drone-boven-luchthaven-ook-drones-gespot-boven-luchtmachtbasis-van-kleine-brogel/102527528.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T19:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "nl",
+     "frase_origen": "Brussels Airport gesloten door melding van drone boven luchthaven"
+    },
+    {
+     "id": "gdelt-30b1f770faae4c55",
+     "medio": "az-online.de",
+     "enlace": "https://az-online.de/welt/wegen-drohne-flugverkehr-in-bruessel-vorerst-eingestellt-zr-94021947.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "de",
+     "frase_origen": "Nach Drohnensichtungen ist der Flugverkehr am Brüsseler Flughafen innerhalb kürzester Zeit ein zweites Mal eingestellt worden."
+    },
+    {
+     "id": "gdelt-79df1766e414046e",
+     "medio": "tu.no",
+     "enlace": "https://tu.no/nyhetsstudio/flyplassen-i-brussel-stengt-etter-droneobservasjon/93914",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "no",
+     "frase_origen": "Flyplassen i Brussel stengt etter droneobservasjon - Teknisk Ukeblad"
+    },
+    {
+     "id": "gdelt-a98d0a064dae179a",
+     "medio": "rtl.be",
+     "enlace": "https://rtl.be/actu/belgique/societe/le-trafic-aerien-interrompu-brussels-airport-apres-un-signalement-de-drone-il-ny/2025-11-04/article/769339",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "fr",
+     "frase_origen": "Le trafic aérien interrompu à Brussels Airport après un signalement de drone : « Il n'y a plus aucun vol au départ ni à l'arrivée"
+    },
+    {
+     "id": "gdelt-1bf44b6a4e94b445",
+     "medio": "aol.co.uk",
+     "enlace": "https://aol.co.uk/articles/flights-grounded-brussels-airport-drone-195629211.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "All flights grounded at Brussels Airport after 'drone sighting'"
+    },
+    {
+     "id": "gdelt-5fdb747032496b31",
+     "medio": "telegraaf.nl",
+     "enlace": "https://telegraaf.nl/buitenland/vliegverkeer-brussels-airport-stilgelegd-na-dronemelding/102530440.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "nl",
+     "frase_origen": "Vliegverkeer Brussels Airport stilgelegd na dronemelding"
+    },
+    {
+     "id": "gdelt-62eb735470b9abc0",
+     "medio": "abc.es",
+     "enlace": "https://abc.es/internacional/cierran-aeropuerto-bruselas-tras-avistamiento-dron-20251104204229-nt.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "es",
+     "frase_origen": "Cierran el Aeropuerto de Bruselas tras el avistamiento de un dron"
+    },
+    {
+     "id": "gdelt-659652bc219b1922",
+     "medio": "ansa.it",
+     "enlace": "https://ansa.it/sito/notizie/mondo/2025/11/04/drone-sullo-scalo-di-bruxelles-sospeso-il-traffico-aereo_55b7a77f-4a4b-47c7-bc9e-e29b874179b7.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "it",
+     "frase_origen": "Drone sullo scalo di Bruxelles, sospeso il traffico aereo - Notizie"
+    },
+    {
+     "id": "gdelt-92bff760a73829ba",
+     "medio": "tanea.gr",
+     "enlace": "https://tanea.gr/2025/11/04/world/synagermos-stis-vrykselles-ekleise-to-aerodromio-meta-tin-emfanisi-drone",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "el",
+     "frase_origen": "Συναγερμός στις Βρυξέλλες: Έκλεισε το αεροδρόμιο μετά την εμφάνιση drone"
+    },
+    {
+     "id": "gdelt-92f252244ffea199",
+     "medio": "tvn24.pl",
+     "enlace": "https://tvn24.pl/biznes/ze-swiata/dron-nad-lotniskiem-w-brukseli-ruch-wstrzymany-st8735969",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T20:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "pl",
+     "frase_origen": "Dron nad lotniskiem w Brukseli. Ruch wstrzymany."
+    },
+    {
+     "id": "gdelt-c403b418bac1a736-declaracion-1",
+     "medio": "Brussels Airport (declaración oficial citada en lavenir.net)",
+     "enlace": "https://lavenir.net/regions/bruxelles/2025/11/04/que-se-passe-t-il-ce-mardi-soir-a-brussels-airport-le-trafic-aerien-interrompu-apres-un-signalement-de-drone-ZJHRUNKD5FBORNNEOXOUU6OEN4",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-04T21:45Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "fr",
+     "frase_origen": "Il n'y a actuellement pas de vols au départ de ou à l'arrivée à Brussels Airport en raison de signalements de drones"
+    },
+    {
+     "id": "gdelt-a7d870eebfb019e0-declaracion-1",
+     "medio": "serviciul belgian de control al traficului aerian (declaración oficial citada en europafm.ro)",
+     "enlace": "https://europafm.ro/aeroporturile-din-bruxelles-si-liege-au-fost-inchise-marti-seara-dupa-ce-in-apropierea-lor-au-fost-semnalate-drone-se-urmareste-destabilizarea-tarii-afirma-ministrul-apararii",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-05T07:45Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "în jurul orei locale 20:00, o dronă a fost observată în apropierea Aeroportului din Bruxelles"
+    },
+    {
+     "id": "revisada-f0dfe7f840296e87",
+     "medio": "Minister van Defensie",
+     "enlace": "https://www.dekamer.be/doc/PCRI/html/56/ip107x.html",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-04-16T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "A",
+     "idioma": "nl",
+     "frase_origen": "Later bleek dat het om een politiehelikopter ging die op zoek was naar de drone waarvoor de luchthaven eerder was gesloten."
+    }
+   ],
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
+   },
+   "objetivo": {
+    "categoria": "aeropuerto",
+    "nombre": "Brussels Airport",
+    "oaci": "EBBR"
+   },
+   "fuentes_en_la_base": 222
+  },
+  "EODI-2025-00241": {
+   "id": "EODI-2025-00241",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drones penetrate Romanian airspace near Ukraine border",
+    "es": "Drones penetran el espacio aéreo de Rumania cerca de la frontera con Ucrania"
+   },
+   "lugar": {
+    "geocodificacion": "frase_origen",
+    "nivel": "localidad",
+    "pais": "RO",
+    "punto": {
+     "lat": 45.91667,
+     "lon": 26.9
+    },
+    "radio_km": 3.0,
+    "region": "Vrancea",
+    "suceso": "Vrancea"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2025-11-25T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-36a12e418daf9957",
+     "motivo": "«marti» en una nota publicada el 2025-11-25 10:15 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-91922377cb8502f0",
+     "medio": "ziuaconstanta.ro",
+     "enlace": "https://ziuaconstanta.ro/stiri/actualitate/alerta-in-judetul-vrancea-dupa-ce-o-drona-ar-fi-patruns-in-spatiul-aerian-din-romania-918986.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă în județul Vrancea după ce o dronă ar fi pătruns în spațiul aerian din România"
+    },
+    {
+     "id": "gdelt-36a12e418daf9957",
+     "medio": "jurnalul.ro",
+     "enlace": "https://jurnalul.ro/stiri/locale/mesaj-ro-alert-emis-in-vrancea-din-cauza-dronelor-patrunse-in-spatiul-aerian-romanesc-1016289.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "marți dimineața două drone au pătruns în spațiul aerian românesc"
+    },
+    {
+     "id": "gdelt-421d6483202a2f44",
+     "medio": "mediafax.ro",
+     "enlace": "https://mediafax.ro/social/drone-patrunse-in-spatiul-aerian-al-romaniei-mesaj-ro-alert-emis-in-vrancea-23647586",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Drone pătrunse în spațiul aerian al României. Mesaj Ro-Alert emis în Vrancea"
+    },
+    {
+     "id": "gdelt-a285b09aacf1dca2",
+     "medio": "antena3.ro",
+     "enlace": "https://antena3.ro/actualitate/armata-a-detectat-drone-care-au-intrat-in-spatiul-aerian-national-in-tulcea-si-galati-si-a-ridicat-aeronave-militare-767919.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Situație fără precedent în România. Drone au intrat în spațiul aerian național, este alertă până în Vrancea. Una e urmărită pe radar"
+    },
+    {
+     "id": "gdelt-d1e98ce05810c0f6",
+     "medio": "euractiv.ro",
+     "enlace": "https://euractiv.ro/eveniment/fortele-aeriene-au-detectat-drone-in-spatiul-aerian-al-romaniei-ro-alert-emis-si-in-vrancea-76281",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T09:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Forțele Aeriene au detectat drone în spațiul aerian al României/ RO-Alert emis și în Vrancea"
+    },
+    {
+     "id": "gdelt-91922377cb8502f0-declaracion-1",
+     "medio": "ISU Vrancea (declaración oficial citada en ziuaconstanta.ro)",
+     "enlace": "https://ziuaconstanta.ro/stiri/actualitate/alerta-in-judetul-vrancea-dupa-ce-o-drona-ar-fi-patruns-in-spatiul-aerian-din-romania-918986.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Mesajele RO-Alert au avut rolul de a informa și atenționa preventiv populația cu privire la potențialul risc"
+    },
+    {
+     "id": "gdelt-36a12e418daf9957-declaracion-2",
+     "medio": "SMFA (declaración oficial citada en jurnalul.ro)",
+     "enlace": "https://jurnalul.ro/stiri/locale/mesaj-ro-alert-emis-in-vrancea-din-cauza-dronelor-patrunse-in-spatiul-aerian-romanesc-1016289.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:15Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "SMFA, care semnala prezența unor posibile ținte aeriene de mici dimensiuni în apropierea graniței"
+    },
+    {
+     "id": "revisada-953c98a011f89a92-declaracion-1",
+     "medio": "Ministerul Apărării Naționale (declaración oficial citada en jurnalul.ro)",
+     "enlace": "https://jurnalul.ro/stiri/locale/mesaj-ro-alert-emis-in-vrancea-din-cauza-dronelor-patrunse-in-spatiul-aerian-romanesc-1016289.html",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-11-25T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Două drone au păstruns în spațiul aerian românesc, una în județul Tulcea și una în Galați, a anunțat marți dimineața Ministerul Apărării Naționale."
+    }
+   ],
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   },
+   "objetivo": {
+    "categoria": "otra",
+    "nombre": "Vidra"
+   },
+   "fuentes_en_la_base": 8
+  },
+  "EODI-2025-00263": {
+   "id": "EODI-2025-00263",
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Romania scrambles fighter jets after drone incursions near Ukraine border",
+    "es": "Rumania despliega cazas tras incursiones de drones cerca de la frontera con Ucrania"
+   },
+   "lugar": {
+    "fuente_punto": "revisada-e6b23601e95a22bf-declaracion-1",
+    "geocodificacion": "oficial",
+    "localidad": "Puiești (distrito de Vaslui)",
+    "nivel": "localidad",
+    "otros_lugares": [
+     {
+      "nombre": "Chilia Veche (distrito de Tulcea)",
+      "punto": {
+       "lat": 45.4219,
+       "lon": 29.2897
+      }
+     }
+    ],
+    "pais": "RO",
+    "punto": {
+     "lat": 46.4244,
+     "lon": 27.5378
+    },
+    "radio_km": 3.0,
+    "region": "Vaslui",
+    "suceso": "Romania"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2025-11-25T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-dfdab3f052a4a285",
+     "motivo": "«tuesday» en una nota publicada el 2025-11-25 18:30 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "fuentes": [
+    {
+     "id": "revisada-cdb62e66a411bbfe",
+     "medio": "index.hr",
+     "enlace": "https://index.hr/vijesti/clanak/dronovi-u-zracnom-prostoru-clanice-natoa-u-jeku-ruskog-napada-dignuti-avioni/2733907.aspx",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-11-25T00:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "hr",
+     "frase_origen": "dva njemačka zrakoplova Eurofighter Typhoon poslana kako bi presreli dronove u okrugu Tulcea"
+    },
+    {
+     "id": "revisada-e6b23601e95a22bf-declaracion-1",
+     "medio": "Alcalde de Puiești, Vasile Cezar Ticu (declaración oficial citada en romania.europalibera.org)",
+     "enlace": "https://romania.europalibera.org/a/33603982.html",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-11-25T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Mai multe fragmente au căzut în centrul comunei Puiești, în curtea unui localnic"
+    },
+    {
+     "id": "gdelt-688d7fb2ad30c766",
+     "medio": "romania-insider.com",
+     "enlace": "https://romania-insider.com/romania-drone-incursions-november-2025",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T08:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "Romania scrambles fighter jets after drone incursions near Ukraine border"
+    },
+    {
+     "id": "gdelt-b40a82ae85c82746",
+     "medio": "united24media.com",
+     "enlace": "https://united24media.com/latest-news/russian-drones-may-have-entered-romanian-and-moldovan-airspace-during-overnight-attack-on-ukraine-13745",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T10:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "Russian Drones May Have Entered Romanian and Moldovan Airspace During Overnight Attack on Ukraine"
+    },
+    {
+     "id": "gdelt-56fa625d3ebc973b",
+     "medio": "index.hr",
+     "enlace": "https://index.hr/vijesti/clanak/dronovi-u-zracnom-prostoru-clanice-natoa-u-jeku-ruskog-napada-dignuti-avioni/2733907.aspx",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T10:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "hr",
+     "frase_origen": "tijekom masovnog ruskog napada dronovima i raketama na Ukrajinu"
+    },
+    {
+     "id": "gdelt-56fa625d3ebc973b-declaracion-1",
+     "medio": "Rumunjsko Ministarstvo nacionalne obrane (declaración oficial citada en index.hr)",
+     "enlace": "https://index.hr/vijesti/clanak/dronovi-u-zracnom-prostoru-clanice-natoa-u-jeku-ruskog-napada-dignuti-avioni/2733907.aspx",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T10:15Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "hr",
+     "frase_origen": "dva upada bespilotnih letjelica u svoj zračni prostor"
+    },
+    {
+     "id": "gdelt-56fa625d3ebc973b-declaracion-2",
+     "medio": "Rumunjsko ministarstvo obrane (declaración oficial citada en index.hr)",
+     "enlace": "https://index.hr/vijesti/clanak/dronovi-u-zracnom-prostoru-clanice-natoa-u-jeku-ruskog-napada-dignuti-avioni/2733907.aspx",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T10:15Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "hr",
+     "frase_origen": "tijekom jutra zabilježili dva upada bespilotnih letjelica u svoj zračni prostor"
+    },
+    {
+     "id": "gdelt-47a27a71d09dabad",
+     "medio": "estrepublicain.fr",
+     "enlace": "https://estrepublicain.fr/defense-guerre-conflit/2025/11/25/la-roumanie-deploie-de-nouveau-des-avions-de-chasses-face-a-des-incursions-de-drones",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T10:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "fr",
+     "frase_origen": "Guerre en Ukraine. La Roumanie déploie de nouveau des avions de chasses face à des incursions de drones"
+    },
+    {
+     "id": "gdelt-38adeefc3e1e8bd6",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/18184002",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T10:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Drona care a survolat spațiul aerian al României s-a prăbușit în județul Vaslui."
+    },
+    {
+     "id": "gdelt-3d52fcf8f3550eda",
+     "medio": "catavencii.ro",
+     "enlace": "https://catavencii.ro/drona-ruseasca-a-fost-gasita-cazuta-in-judetul-vaslui-criminalistii-urmeaza-sa-stabileasca-daca-a-fost-batuta-si-violata",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T11:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Drona rusească a fost găsită căzută în județul Vaslui."
+    },
+    {
+     "id": "gdelt-dfdab3f052a4a285-declaracion-1",
+     "medio": "Ministry of National Defence (declaración oficial citada en english.news.cn)",
+     "enlace": "https://english.news.cn/20251125/f8cf4210904f4b62bc74169005e5fd6b/c.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-25T16:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "en",
+     "frase_origen": "two drone intrusions were detected in its airspace near the border with Ukraine, the Ministry of National Defence (MApN) said"
+    }
+   ],
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   },
+   "fuentes_en_la_base": 19
+  },
+  "EODI-2026-00015": {
+   "id": "EODI-2026-00015",
+   "tipo": "interrupcion_aeroportuaria",
+   "titulo": {
+    "en": "Iasi International Airport closure due to drone alert",
+    "es": "Cierre del Aeropuerto Internacional de Iași por alerta de dron"
+   },
+   "lugar": {
+    "geocodificacion": "nomenclator",
+    "nivel": "instalacion",
+    "pais": "RO",
+    "punto": {
+     "lat": 47.17991,
+     "lon": 27.62082
+    },
+    "radio_km": 5.0,
+    "region": "Iași",
+    "suceso": "Aeroportul Internațional Iași"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-09-08T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-a5fb8882b994ef1b",
+     "motivo": "«marti» en una nota publicada el 2026-09-08 19:00 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "si"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-667a5ef1337b4da3",
+     "medio": "antena3.ro",
+     "enlace": "https://antena3.ro/actualitate/alerte-de-drone-in-vaslui-si-iasi-locuitorii-au-primit-mesaje-ro-alert-ca-sa-stea-la-adapost-802491.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T15:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă de drone în cinci judeţe. Aeroportul din Iași a fost închis"
+    },
+    {
+     "id": "gdelt-ba75048e90517059",
+     "medio": "ziarulevenimentul.ro",
+     "enlace": "https://ziarulevenimentul.ro/stiri/moldova/ro-alert-o-drona-se-apropie-de-ia-i-dinspre-republica-moldova-au-fost-suspendate-toate-zborurile-de-pe-aeroportul-ia-i--217601054.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T15:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "RO-ALERT - O dronă se apropie de Iași dinspre Republica Moldova. Au fost suspendate toate zborurile de pe Aeroportul Iași"
+    },
+    {
+     "id": "gdelt-f91ea0438e11f987",
+     "medio": "digi24.ro",
+     "enlace": "https://digi24.ro/stiri/actualitate/alerta-pentru-drona-in-trei-judete-din-moldova-aeroportul-din-iasi-a-suspendat-temporar-toate-zborurile-3939831",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T15:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă pentru dronă în cinci județe din Moldova. Aeroportul din Iași a suspendat temporar toate zborurile"
+    },
+    {
+     "id": "gdelt-a5fb8882b994ef1b",
+     "medio": "agerpres.ro",
+     "enlace": "https://agerpres.ro/social/2026/09/08/zborurile-de-pe-aeroportul-international-iasi-suspendate-dupa-mesajul-ro-alert-privind-detectarea-un--1591762",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T16:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Zborurile de pe Aeroportul Internațional Iași au fost suspendate marți"
+    },
+    {
+     "id": "gdelt-56bd635521648bd4",
+     "medio": "stiripesurse.ro",
+     "enlace": "https://stiripesurse.ro/flights-at-iasi-international-airport-suspended-after-ro-alert-incoming-drone-warning_3918347",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T16:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "en",
+     "frase_origen": "The drone entered Romanian territory from the Republic of Moldova"
+    },
+    {
+     "id": "gdelt-e0c93ef6d4d3a36f",
+     "medio": "capital.ro",
+     "enlace": "https://capital.ro/alerta-cu-drona-in-romania-zborurile-de-pe-aeroportul-iasi-suspendate-temporar-ro-alert-in-mai-multe-judete.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T16:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă cu dronă în România. Zborurile de pe Aeroportul Iași, suspendate temporar. RO-Alert în mai multe județe"
+    },
+    {
+     "id": "gdelt-3d7fe3762feaf4c1",
+     "medio": "romaniatv.net",
+     "enlace": "https://romaniatv.net/alerta-de-atac-cu-drone-in-cinci-judete-din-moldova-aeroportul-din-iasi-a-fost-inchis_9792700.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T17:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă de atac cu drone în cinci județe din Moldova! Aeroportul din Iași a fost închis"
+    },
+    {
+     "id": "gdelt-9260fbf98d84a3ac",
+     "medio": "atitudinea.ro",
+     "enlace": "https://atitudinea.ro/alerta-de-drone-in-vaslui-si-alte-patru-judete-aeroportul-din-iasi-a-suspendat-temporar-zborurile-doua-aeronave-f-18-spaniole-au-decolat-de-la-mihail-kogalniceanu-pentru-a-monitoriza-zona",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T17:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă de drone în Vaslui şi alte patru judeţe. Aeroportul din Iași a suspendat temporar zborurile. Două aeronave F-18 spaniole au decolat de la Mihail"
+    },
+    {
+     "id": "gdelt-456e986e6a7f3554",
+     "medio": "observatorulph.ro",
+     "enlace": "https://observatorulph.ro/national/2798193-alerta-de-drona-in-romania-aeroportul-iasi-a-suspendat-zborurile-f-18-ridicate-in-aer",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T18:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă de dronă în România. Aeroportul Iași a suspendat zborurile, F-18 ridicate în aer UPDATE"
+    },
+    {
+     "id": "gdelt-9ea5aa594017df1f",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/62366878",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Șapte avioane au fost afectate după ce o dronă a survolat spațiul aerian al R. Moldova. Unul a aterizat pe Aeroportul Internațional Iași"
+    },
+    {
+     "id": "gdelt-a5fb8882b994ef1b-declaracion-1",
+     "medio": "Directorul Aeroportului Internațional Iași (declaración oficial citada en agerpres.ro)",
+     "enlace": "https://agerpres.ro/social/2026/09/08/zborurile-de-pe-aeroportul-international-iasi-suspendate-dupa-mesajul-ro-alert-privind-detectarea-un--1591762",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T16:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Zborurile de pe Aeroportul Internațional Iași au fost suspendate marți"
+    },
+    {
+     "id": "gdelt-56bd635521648bd4-declaracion-2",
+     "medio": "Prefectul Iași (declaración oficial citada en stiripesurse.ro)",
+     "enlace": "https://stiripesurse.ro/flights-at-iasi-international-airport-suspended-after-ro-alert-incoming-drone-warning_3918347",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T16:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "en",
+     "frase_origen": "The drone entered Romanian territory from the Republic of Moldova"
+    }
+   ],
+   "zona": {
+    "distancia_km": 118,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
+   },
+   "objetivo": {
+    "categoria": "aeropuerto",
+    "nombre": "Aeroportul Internațional Iași",
+    "oaci": "LRIA"
+   },
+   "fuentes_en_la_base": 12
+  },
+  "EODI-2026-00075": {
+   "id": "EODI-2026-00075",
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone enters Romanian airspace from Moldova and crashes",
+    "es": "Dron entra en el espacio aéreo de Rumania desde Moldavia y se estrella"
+   },
+   "lugar": {
+    "localidad": "Roman",
+    "nivel": "localidad",
+    "pais": "RO",
+    "punto": {
+     "lat": 46.9236,
+     "lon": 26.9204
+    },
+    "radio_km": 20.0,
+    "region": "Neamț",
+    "suceso": "18 km al norte de Roman"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-09-08T00:00Z"
+    },
+    "origen_inicio": {
+     "fuente_id": "gdelt-2678548dc2262261",
+     "motivo": "«wtorek» en una nota publicada el 2026-09-08 21:30 (hora local del medio)",
+     "tipo": "relativa"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "caida"
+    ]
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-2678548dc2262261",
+     "medio": "bankier.pl",
+     "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "pl",
+     "frase_origen": "bezzałogowiec wleciał w rumuńską przestrzeń powietrzną z terytorium Mołdawii"
+    },
+    {
+     "id": "gdelt-2678548dc2262261-declaracion-1",
+     "medio": "Rumuński resort obrony (declaración oficial citada en bankier.pl)",
+     "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "pl",
+     "frase_origen": "bezzałogowiec wleciał w rumuńską przestrzeń powietrzną z terytorium Mołdawii i pozostawał w niej przez około 30 minut"
+    }
+   ],
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   },
+   "fuentes_en_la_base": 2
+  },
+  "EODI-2026-00716": {
+   "id": "EODI-2026-00716",
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone enters Moldovan airspace from Ukraine, prompting airspace closure",
+    "es": "Un dron entra desde Ucrania en el espacio aéreo de Moldavia y obliga a cerrarlo"
+   },
+   "lugar": {
+    "localidad": "Plopi",
+    "nivel": "localidad",
+    "pais": "MD",
+    "region": "Rîbnița",
+    "suceso": "Plopi"
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-31T14:24Z"
+    },
+    "origen_inicio": {
+     "corregido": true,
+     "fuente_id": "gdelt-d91bb70981dc0389",
+     "motivo": "«31 octombrie» en una nota publicada el 2026-10-31 17:15 (hora local del medio); la hora de la frase (16:24) es hora local (Europe/Chisinau): en UTC, 14:24",
+     "tipo": "explicita"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "si"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": true,
+    "entrada_exterior": true,
+    "evidencia": [
+     "rastreo"
+    ]
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-d91bb70981dc0389",
+     "medio": "zdg.md",
+     "enlace": "https://zdg.md/stiri/o-drona-a-fost-depistata-in-spatiul-aerian-al-r-moldova-sambata",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:15Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "zbor neautorizat în spațiul aerian național, sâmbătă, 31 octombrie, la ora 16:24, a unei drone, din direcția localității Semionovca, regiunea Odesa, Ucraina, spre localitatea Plopi,"
+    },
+    {
+     "id": "gdelt-d91bb70981dc0389-declaracion-1",
+     "medio": "Centrul Operații Aeriene al Armatei Naționale (declaración oficial citada en zdg.md)",
+     "enlace": "https://zdg.md/stiri/o-drona-a-fost-depistata-in-spatiul-aerian-al-r-moldova-sambata",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:15Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Centrul Operații Aeriene al Armatei Naționale informează despre un zbor neautorizat în spațiul aerian național, sâmbătă, 31 octombrie, la ora 16:24, a unei drone"
+    },
+    {
+     "id": "gdelt-d91bb70981dc0389-declaracion-2",
+     "medio": "Ministerul Apărării (declaración oficial citada en zdg.md)",
+     "enlace": "https://zdg.md/stiri/o-drona-a-fost-depistata-in-spatiul-aerian-al-r-moldova-sambata",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:15Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Potrivit datelor disponibile prezentate de Ministerul Apărării, drona a părăsit spațiul aerian național."
+    },
+    {
+     "id": "gdelt-4a874c0be7076089",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/80514981",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "O dronă a survolat neautorizat spațiul aerian al Republicii Moldova, în după-amiaza zilei de 31 octombrie."
+    },
+    {
+     "id": "gdelt-e0681f6f972e40e4",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/80513479",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:30Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "O dronă a survolat neautorizat spațiul aerian al Republicii Moldova, sâmbătă, 31 octombrie."
+    },
+    {
+     "id": "gdelt-e0681f6f972e40e4-declaracion-1",
+     "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
+     "enlace": "https://news.yam.md/ro/story/80513479",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:30Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Ministerul Apărării anunță că la ora 16:52 a fost restricționat spațiul aerian și în Centru a țării."
+    },
+    {
+     "id": "gdelt-69e13e9d84703a39",
+     "medio": "mediafax.ro",
+     "enlace": "https://mediafax.ro/externe/spatiul-aerian-restrictionat-in-nordul-si-centrul-republicii-moldova-o-drona-a-intrat-neautorizat-23835183",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:45Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Potrivit Ministerului Apărării, o dronă a intrat în spațiul aerian al Republicii Moldova la ora 16.24"
+    },
+    {
+     "id": "gdelt-69e13e9d84703a39-declaracion-1",
+     "medio": "Ministerul Apărării (declaración oficial citada en mediafax.ro)",
+     "enlace": "https://mediafax.ro/externe/spatiul-aerian-restrictionat-in-nordul-si-centrul-republicii-moldova-o-drona-a-intrat-neautorizat-23835183",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T15:45Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Potrivit Ministerului Apărării, o dronă a intrat în spațiul aerian al Republicii Moldova la ora 16.24"
+    },
+    {
+     "id": "gdelt-1a35e34a40cdd81e",
+     "medio": "news.yam.md",
+     "enlace": "https://news.yam.md/ro/story/80517311",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T16:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "O dronă a survolat neautorizat spațiul aerian al Republicii Moldova, în după-amiaza zilei de 31 octombrie, fiind detectată inițial în direcția localității Plopi, raionul Rîbnița."
+    },
+    {
+     "id": "gdelt-1a35e34a40cdd81e-declaracion-1",
+     "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
+     "enlace": "https://news.yam.md/ro/story/80517311",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T16:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Anunțul a fost făcut de Ministerul Apărării, care a precizat că, în contextul…"
+    },
+    {
+     "id": "gdelt-f4633d520283dc01-declaracion-1",
+     "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
+     "enlace": "https://news.yam.md/ro/story/80517985",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T16:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Informația a fost comunicată de Ministerul Apărării,…"
+    },
+    {
+     "id": "gdelt-3c85ea1640919c03-declaracion-2",
+     "medio": "Ministerul Apărării (declaración oficial citada en ziarulnational.md)",
+     "enlace": "https://ziarulnational.md/o-drona-a-intrat-in-spatiul-aerian-al-r-moldova-si-la-parasit-nordul-si-centrul-au-fost-redeschise",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T20:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Potrivit Ministerului Apărării de la Chișinău, drona a părăsit spațiul aerian al R. Moldova."
+    }
+   ],
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   },
+   "fuentes_en_la_base": 18
+  },
+  "EODI-2026-00728": {
+   "id": "EODI-2026-00728",
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drone overflies northern Moldova airspace near Viișoara",
+    "es": "Dron sobrevuela el espacio aéreo del norte de Moldavia cerca de Viișoara"
+   },
+   "lugar": {
+    "geocodificacion": "localidad_pequena",
+    "localidad": "Viișoara",
+    "nivel": "localidad",
+    "pais": "MD",
+    "punto": {
+     "lat": 48.09527,
+     "lon": 27.04498
+    },
+    "radio_km": 3.0,
+    "region": "Edineț",
+    "suceso": "Viișoara"
+   },
+   "tiempo": {
+    "duracion_min": 22,
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-31T16:12Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-31T15:50Z"
+    },
+    "origen_inicio": {
+     "corregido": true,
+     "fuente_id": "gdelt-6d7a568da0829a3b",
+     "motivo": "«31 octombrie» en una nota publicada el 2026-10-31 23:00 (hora local del medio); la hora de la frase (17:50) es hora local (Europe/Chisinau): en UTC, 15:50",
+     "tipo": "explicita"
+    }
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "pruebas": {
+    "dron_estatal": false,
+    "entrada_exterior": true,
+    "evidencia": []
+   },
+   "fuentes": [
+    {
+     "id": "gdelt-c0e1e549401d5b4d",
+     "medio": "moldpres.md",
+     "enlace": "https://moldpres.md/rom/societate/o-noua-drona-a-survolat-neautorizat-spatiul-aerian-al-republicii-moldova-in-zona-de-nord-a-tarii",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T18:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "O altă dronă a survolat neautorizat spațiul aerian al Republicii Moldova, în zona de nord a țării"
+    },
+    {
+     "id": "gdelt-c0e1e549401d5b4d-declaracion-1",
+     "medio": "Centrul Operații Aeriene al Armatei Naționale (declaración oficial citada en moldpres.md)",
+     "enlace": "https://moldpres.md/rom/societate/o-noua-drona-a-survolat-neautorizat-spatiul-aerian-al-republicii-moldova-in-zona-de-nord-a-tarii",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T18:00Z"
+     },
+     "es_autoridad": false,
+     "publica": false,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "la ora 18:12, drona a părăsit spațiul aerian al Republicii Moldova, în proximitatea localității Viișoara, raionul Edineț"
+    },
+    {
+     "id": "gdelt-18581caa2e93781d",
+     "medio": "click.ro",
+     "enlace": "https://click.ro/actualitate/national/alerta-aeriana-in-mai-multe-judete-din-moldova-2567983.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T19:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Alertă în mai multe județe din Moldova. Două drone au pătruns în spațiul aerian al României"
+    },
+    {
+     "id": "gdelt-6d7a568da0829a3b",
+     "medio": "timpul.md",
+     "enlace": "https://timpul.md/articol/cea-de-a-doua-drona-care-a-survolat-r-moldova-a-parasit-spatiul-aerian-al-tarii.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T21:00Z"
+     },
+     "es_autoridad": false,
+     "publica": true,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Cea de-a doua dronă care a pătruns neautorizat în spațiul aerian al Republicii Moldova, sâmbătă, 31 octombrie, a părăsit teritoriul aerian al țării"
+    },
+    {
+     "id": "gdelt-6d7a568da0829a3b-declaracion-1",
+     "medio": "Ministerul Apărării (declaración oficial citada en timpul.md)",
+     "enlace": "https://timpul.md/articol/cea-de-a-doua-drona-care-a-survolat-r-moldova-a-parasit-spatiul-aerian-al-tarii.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-31T21:00Z"
+     },
+     "es_autoridad": false,
+     "publica": false,
+     "fiabilidad": "C",
+     "idioma": "ro",
+     "frase_origen": "Potrivit Ministerului Apărării, cea de-a doua dronă a pătruns în spațiul aerian național la ora 17:50, din direcția localității Mihailovka"
+    },
+    {
+     "id": "revisada-bf38ca0a3f505197-declaracion-1",
+     "medio": "Ministerul Apărării (declaración oficial citada en timpul.md)",
+     "enlace": "https://timpul.md/articol/cea-de-a-doua-drona-care-a-survolat-r-moldova-a-parasit-spatiul-aerian-al-tarii.html",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-10-31T00:00Z"
+     },
+     "es_autoridad": true,
+     "publica": true,
+     "fiabilidad": "B",
+     "idioma": "ro",
+     "frase_origen": "Ministerul Apărării a anunțat că drona a părăsit spațiul aerian al Republicii Moldova la ora 18:12, în proximitatea localității Viișoara, raionul Edineț"
+    }
+   ],
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   },
+   "fuentes_en_la_base": 6
   }
  },
  "fusiones": [

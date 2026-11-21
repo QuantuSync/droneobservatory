@@ -442,6 +442,49 @@ def test_sulina_tres_sucesos_la_misma_tarde_y_noche() -> None:
     assert se_deshace("2026-00544", "2026-00698") is None
 
 
+@pytest.mark.parametrize(
+    ("una", "otra"),
+    [("2025-00016", "2025-00072"), ("2026-00716", "2026-00728")],
+)
+def test_otro_sitio_y_otros_drones_la_misma_noche_son_otro_suceso(una: str, otra: str) -> None:
+    """21 de noviembre de 2026, dos parejas publicadas del mismo país, día y episodio:
+    - los cuatro drones sobre la base de Schaffen (EODI-2025-00016) y el dron que cerró el
+      aeropuerto de Bruselas (EODI-2025-00072) la noche del 4 de noviembre de 2025: las noticias
+      los cuentan por separado, en sitios distintos;
+    - el dron de las 16:24 hacia Plopi (EODI-2026-00716) y «cea de-a doua dronă», que entró a las
+      17:50 y salió junto a Viișoara (EODI-2026-00728), en Moldavia el 31 de octubre de 2026.
+    Sucesos distintos, enlazados por su episodio: ni se unen ni se preguntan."""
+    a, b = f(una), f(otra)
+    assert a["lugar"]["pais"] == b["lugar"]["pais"]
+    assert dicho(a, b).relacion == suceso.DISTINTOS
+    assert dicho(a, b).regla == suceso.REGLA_REVISION
+    assert suceso.separados(a, b)
+
+
+@pytest.mark.parametrize(
+    ("una", "otra", "queda"),
+    [("2025-00241", "2025-00263", "2025-00263"), ("2026-00015", "2026-00075", "2026-00015")],
+)
+def test_el_mismo_dron_contado_en_otro_sitio_del_pais_es_el_mismo_suceso(
+    una: str, otra: str, queda: str
+) -> None:
+    """21 de noviembre de 2026, dos parejas publicadas que cuentan los mismos drones:
+    - la alerta de Vrancea (EODI-2025-00241) y el dron caído en Puiești (EODI-2025-00263): los dos
+      drones del 25 de noviembre de 2025 que el Ministerio de Defensa rumano contó juntos;
+    - el cierre del aeropuerto de Iași (EODI-2026-00015) y el mismo dron en Rumanía, al norte de
+      Roman (EODI-2026-00075), el 8 de septiembre de 2026.
+    El mismo suceso: se unen con su cita y queda la ficha que dice la revisión."""
+    a, b = f(una), f(otra)
+    assert dicho(a, b).relacion == suceso.MISMO
+    (grupo,) = [
+        g
+        for g in suceso.revisiones()["unir"]
+        if {f"EODI-{una}", f"EODI-{otra}"} <= set(g["registros"])
+    ]
+    assert grupo["conserva"] == f"EODI-{queda}"
+    assert "«" in grupo["motivo"] and "«" in grupo["motivo_en"]
+
+
 # --- La batería entera sobre una base ----------------------------------------------------------
 
 
