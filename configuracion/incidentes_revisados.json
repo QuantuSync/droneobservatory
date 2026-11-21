@@ -13362,6 +13362,19 @@
       "enlace": "https://agerpres.ro/social/2026/09/08/zborurile-de-pe-aeroportul-international-iasi-suspendate-dupa-mesajul-ro-alert-privind-detectarea-un--1591762",
       "pais": "RO",
       "motivo": "el suceso que cuenta la ficha es el cierre del aeropuerto de Iași por el dron, como dice su titular; al unirle EODI-2026-00075 (el mismo dron, caído 18 km al norte de Roman) el lugar pasaba a Roman, a 60 km del aeropuerto, y la auditoría H lo marcaba (ensayo del 21 de noviembre de 2026)"
+    },
+    {
+      "revisado_el": "2026-11-21",
+      "incidente": "EODI-2026-00889",
+      "campo": "objetivo",
+      "valor": {
+        "categoria": "puerto",
+        "nombre": "Port Gdynia"
+      },
+      "cita": "na terenie portu w rejonie Nabrzeża Francuskiego przy ul. Polskiej w Gdyni",
+      "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33140558,nielegalnie-latal-dronem-nad-infrastruktura-krytyczna-zostal.html",
+      "pais": "PL",
+      "motivo": "el dron voló sobre el puerto de Gdynia, en el muelle Francés, como dice el titular; el puerto no está en el nomenclátor y el objetivo quedaba vacío (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
     }
   ]
 }
