@@ -193,9 +193,12 @@ def test_lo_que_la_autoridad_investiga_va_a_la_ficha_sin_cambiar_el_estado(carpe
     )  # fmt: skip
     for clave in ("autor", "autor_tipo", "autor_pais"):
         entrada.pop(clave)
+    antes = _incidente(almacen, id_)["estado"]["actual"]
     oficiales.aplicar(almacen, DESPUES, MODELOS, (entrada,), carpeta)
     nuevo = _incidente(almacen, id_)
-    assert nuevo["estado"]["actual"] == "confirmado"
+    # Que la policía siga investigando no reconoce el suceso: el estado no cambia
+    # (declaraciones.reconoce, desde el 22 de noviembre de 2026; antes lo confirmaba).
+    assert antes == "notificado" and nuevo["estado"]["actual"] == "notificado"
     assert [i["cita"] for i in nuevo["investigacion"]] == [entrada["frase"]]
 
 

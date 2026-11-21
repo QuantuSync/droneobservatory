@@ -265,13 +265,18 @@ def test_la_autoridad_que_lo_deja_abierto_no_confirma_la_presencia() -> None:
         "Vi har ikke fået hverken be- eller afkræftet, om det var droner",
         "Policja potwierdziła, że pilot zgłosił obiekt przypominający drona",
         "Es handelte sich um ein nicht identifiziertes Flugobjekt",
-        "Se investiga si se trataba de un dron",
         "Possibly a drone was seen near the runway",
     ):
         resultado = aplicar(declaracion("incidente", frase, "policia"))
         assert resultado["estado"]["actual"] == "confirmado", frase
         assert resultado["presencia_dron"] == "no_confirmada", frase
         assert afirmaciones_de_presencia(resultado) == [], frase
+    # Que la autoridad investigue si era un dron no reconoce el suceso: ni lo confirma
+    # (declaraciones.reconoce, EODI-2026-00937).
+    investiga = declaracion("incidente", "Se investiga si se trataba de un dron", "policia")
+    resultado = aplicar(investiga)
+    assert resultado["estado"]["actual"] == "notificado"
+    assert resultado["presencia_dron"] == "no_confirmada"
 
 
 def test_la_noticia_que_cita_a_la_autoridad_tambien_puede_dejarlo_abierto() -> None:

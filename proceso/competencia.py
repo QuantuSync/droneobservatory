@@ -189,6 +189,11 @@ def corregir_desmentido(incidente: Documento) -> tuple[Documento, Documento] | N
         if p["estado"] in (Estado.CONFIRMADO, Estado.ATRIBUIDO)
         and str(p.get("fuente_id")) in fuentes
         and declaraciones.de_autoridad(fuentes[str(p.get("fuente_id"))])
+        # Lo confirmó si su frase reconoce el suceso (declaraciones.reconoce, EODI-2026-00937).
+        and (
+            p["estado"] == Estado.ATRIBUIDO
+            or declaraciones.reconoce(fuentes[str(p.get("fuente_id"))], incidente)
+        )
     ]  # fmt: skip
     if not confirmantes:
         return None

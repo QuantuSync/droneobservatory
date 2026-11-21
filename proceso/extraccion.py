@@ -1352,6 +1352,9 @@ def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:
     for fuente in oficiales:
         if resultado["estado"]["actual"] == Estado.CONFIRMADO:
             break
+        if not declaraciones.reconoce(fuente, resultado):
+            # La nota que solo cuenta que se investiga no confirma (EODI-2026-00937).
+            continue
         # Un desmentido de una autoridad más fiable no se revierte con esta nota.
         with contextlib.suppress(TransicionNoPermitida):
             resultado["estado"] = transitar(

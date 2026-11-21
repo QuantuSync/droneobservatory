@@ -128,6 +128,12 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   pruebas físicas que confirma una autoridad. EODI-2026-00821 (RAF Lakenheath, 13 de noviembre de
   2026): «responded to "suspected unauthorised drone activity"» y «responded to reports of
   unauthorised drone activity» la dejaban confirmada.
+- **AC, estado confirmado o atribuido sin frase de autoridad que reconozca el suceso**: el estado
+  es «confirmado» o «atribuido» y ninguna fuente de autoridad tiene una frase que reconozca el
+  suceso (proceso/declaraciones.reconoce): solo cuentan que la autoridad lo investiga o que la
+  avisaron, o la fuente dice que no está confirmado oficialmente. No cuenta el estado que da una
+  revisión a mano con su cita. EODI-2026-00937 (Sigonella, 20 de noviembre de 2026): «Zdarzenie
+  bada włoska żandarmeria wojskowa.», una frase del periódico, la dejaba confirmada.
 """
 
 import json
@@ -169,7 +175,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB",
+    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -200,6 +206,7 @@ NOMBRES = {
     "Z": "fuente anterior al suceso",
     "AA": "una frase con dos días",
     "AB": "presencia confirmada sin frase que afirme el dron",
+    "AC": "estado confirmado o atribuido sin frase de autoridad que reconozca el suceso",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -658,11 +665,28 @@ def confirmada_sin_frase_que_afirme(incidente: Documento) -> bool:
     )
 
 
+def estado_sin_frase_que_reconozca(incidente: Documento) -> bool:
+    """AC: estado confirmado o atribuido sin ninguna frase de autoridad que reconozca el suceso."""
+    estado = incidente["estado"]
+    if estado["actual"] not in ("confirmado", "atribuido"):
+        return False
+    revisado = any(
+        str(paso.get("fuente_id", "")).startswith(reglas_control.REVISADA)
+        for paso in estado["historial"]
+        if paso["estado"] == estado["actual"]
+    )
+    return not revisado and not any(
+        f.get("publica", True) is not False and declaraciones.reconoce(f, incidente)
+        for f in incidente.get("fuentes", [])
+    )
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
     "AA": suceso.dos_dias_sin_revisar,
     "AB": confirmada_sin_frase_que_afirme,
+    "AC": estado_sin_frase_que_reconozca,
 }  # fmt: skip
 
 
