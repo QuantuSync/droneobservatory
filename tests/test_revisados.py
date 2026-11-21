@@ -460,3 +460,19 @@ def test_sin_otros_lugares_en_la_revision_se_quedan(monkeypatch: pytest.MonkeyPa
 def test_otros_lugares_fija_la_lista_entera(monkeypatch: pytest.MonkeyPatch) -> None:
     lugar = _con_otros_lugares(monkeypatch, {"otros_lugares": [{"nombre": "Lunga"}]})
     assert lugar["otros_lugares"] == [{"nombre": "Lunga"}]
+
+
+def test_ninguna_union_revisada_tiene_revisiones_en_conflicto() -> None:
+    # EODI-2026-00015 ← 00075 (21/11/2026): las dos fichas tenían el lugar revisado con valores
+    # distintos y la unión revisada quedaba retenida, con el mismo suceso en dos fichas (I8).
+    from proceso import decidir
+
+    datos = revisados.cargar()
+    en_conflicto = []
+    for union in datos.get("unir", []):
+        ids = [str(i) for i in union.get("registros") or union.get("incidentes") or []]
+        conserva = str(union.get("conserva") or ids[0])
+        for otra in ids:
+            if otra != conserva and (campos := decidir.revisiones_en_conflicto(conserva, otra)):
+                en_conflicto.append((conserva, otra, campos))
+    assert en_conflicto == []
