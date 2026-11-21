@@ -13322,6 +13322,24 @@
       "enlace": "https://investmentwatchblog.com/drone-scare-briefly-disrupts-paris-cdg-arrivals-european-airports-face-repeated-incidents",
       "pais": "FR",
       "motivo": "el suceso es en el aeropuerto Charles de Gaulle, no en el centro de París: el nombre «Paris Charles de Gaulle» no casaba con ningún nombre del aeropuerto en el nomenclátor (ahora sí) y el punto se tomó de la ciudad, a 25 km; con ese punto, el objetivo que nombra el titular quedaba fuera de su radio (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00015",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "instalacion",
+        "suceso": "Aeroportul Internațional Iași",
+        "region": "Iași",
+        "punto": {
+          "lat": 47.17991,
+          "lon": 27.62082
+        },
+        "radio_km": 5.0
+      },
+      "cita": "Zborurile de pe Aeroportul Internațional Iași au fost suspendate marți",
+      "enlace": "https://agerpres.ro/social/2026/09/08/zborurile-de-pe-aeroportul-international-iasi-suspendate-dupa-mesajul-ro-alert-privind-detectarea-un--1591762",
+      "pais": "RO",
+      "motivo": "el suceso que cuenta la ficha es el cierre del aeropuerto de Iași por el dron, como dice su titular; al unirle EODI-2026-00075 (el mismo dron, caído 18 km al norte de Roman) el lugar pasaba a Roman, a 60 km del aeropuerto, y la auditoría H lo marcaba (ensayo del 21 de noviembre de 2026)"
     }
   ]
 }
