@@ -1089,6 +1089,78 @@
   ],
   "citas": [
     {
+      "incidente": "EODI-2025-00192",
+      "enlace": "https://mittelbayerische.de/nachrichten/bayern/mehrfach-drohnen-ueber-militaereinrichtungen-in-manching-und-neuburg-gesichtet-17796911",
+      "medio": "mittelbayerische.de",
+      "fecha": "2025-01-13",
+      "idioma": "de",
+      "frase": "„Die eingesetzten Polizeibeamten konnten bis zu zehn Drohnen feststellen, die den Bereich überflogen“, wird mitgeteilt.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "mittelbayerische.de, 13/01/2025: lo dice la nota de prensa conjunta del LKA de Baviera y la Fiscalía General de Múnich; la ficha solo guardó «Das Bayerische Landeskriminalamt (LKA) ermittelt.», que no reconoce el suceso"
+      },
+      "declaracion": {
+        "autoridad": "Bayerisches Landeskriminalamt",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00371",
+      "enlace": "https://vrt.be/vrtnws/nl/2025/11/28/illegale-drone-mechelen-onder-den-toren-school-politiezone-rivie",
+      "medio": "vrt.be",
+      "fecha": "2025-11-28",
+      "idioma": "nl",
+      "frase": "Volgens de politie is de meest flagrante inbreuk dat de vlucht niet voorafgaandelijk was aangevraagd bij luchtverkeersleider Skeyes.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "vrt.be, 28/11/2025: la policía (Dirk Van de Sande, politiezone Rivierenland) da por hecho el vuelo, identifica al piloto y levanta acta; la ficha solo guardó «L'appareil endommagé a été remis à la police, qui a ouvert une enquête.»"
+      },
+      "declaracion": {
+        "autoridad": "Politiezone Rivierenland",
+        "pais": "BE",
+        "categoria": "policia",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00278",
+      "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
+      "medio": "irishtimes.com",
+      "fecha": "2026-09-09",
+      "idioma": "en",
+      "frase": "AirNav, a State-owned company that provides air traffic control services to Irish airports, confirmed a report of a drone sighting had been made.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "irishtimes.com, 09/09/2026: el control aéreo del Estado confirma que se avisó de un dron (reconoce el suceso, no el dron); la ficha solo guardó la frase de «Garda sources» sobre la investigación"
+      },
+      "declaracion": {
+        "autoridad": "AirNav Ireland",
+        "pais": "IE",
+        "categoria": "navegacion_aerea",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00362",
+      "enlace": "https://se.pl/poznan/na-terenie-kopalni-znaleziono-drona-teren-zabezpieczaja-policjanci-aa-LXVy-CxKN-sh5V.html",
+      "medio": "se.pl",
+      "fecha": "2026-03-12",
+      "idioma": "pl",
+      "frase": "W czwartek, 12 marca Wielkopolska Policja poinformowała o odnalezieniu na terenie kopalni w miejscowości Galczyce (pow. koniński) drona.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "se.pl (PAP), 12/03/2026; lo confirma el comunicado de la policía de Wielkopolska en X citado por wnp.pl; la ficha guardó «O sprawie poinformowano prokuraturę oraz Ministerstwo Obrony Narodowej» como declaración del Ministerio, y no lo es"
+      },
+      "declaracion": {
+        "autoridad": "Wielkopolska Policja",
+        "pais": "PL",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
       "incidente": "EODI-2025-00051",
       "enlace": "https://hartvannederland.nl/112/crime/artikelen/noord-brabant-eindhoven-airport-drones-vliegveld-luchtruim-gesloten",
       "medio": "hartvannederland.nl",

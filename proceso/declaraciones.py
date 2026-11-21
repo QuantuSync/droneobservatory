@@ -180,6 +180,18 @@ def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> l
             if contenido is None:
                 continue
             palabras = contenido.split()
+        autoridad = str(declaracion.get("autoridad") or "")
+        if declaracion.get("afirma") in CONFIRMAN and not reconoce_suceso(
+            " ".join(palabras), autoridad
+        ):
+            # La frase débil: si el artículo trae otra de esa autoridad que reconoce el suceso,
+            # vale esa (EODI-2026-00362).
+            mejor = next(
+                (o for o in frases_que_reconocen(textos[numero - 1]) if _nombra(o, autoridad)),
+                None,
+            )
+            if mejor is not None:
+                palabras = mejor.split()[:MAX_PALABRAS_FRASE]
         resultado.append({**declaracion, "frase": " ".join(palabras)})
     return resultado
 
@@ -585,6 +597,67 @@ def por_que_no_reconoce(fuente: Documento, incidente: Documento | None = None) -
         ):
             return "no_oficial"
     return None
+
+
+# Una oración del artículo que atribuye a una autoridad lo que cuenta: la nombra y dice que lo dijo,
+# lo informó o lo confirmó, o lo cuenta «según» ella. Las palabras de una autoridad que cuenta el
+# periódico valen («W czwartek, 12 marca Wielkopolska Policja poinformowała o odnalezieniu na
+# terenie kopalni w miejscowości Galczyce (pow. koniński) drona», EODI-2026-00362); las de
+# fuentes sin nombre, no («Garda sources said», «fonti informate»).
+_AUTORIDAD_EN_TEXTO = re.compile(
+    r"(?<!\w)(?:polic\w*|politi\w*|polizei\w*|LKA|landeskriminalamt\w*|bundespolizei|"
+    r"garda(?:í)?|gendarm\w*|żandarm\w*|carabinier\w*|karabinier\w*|guardia\s+civil|"
+    r"guardia\s+di\s+finanza|marechaussee|ministr\w*|minister\w*|ministère|ministerio|"
+    r"ministero|ministerul|ministerie|ministerstw\w*|ministeri\w*|defensie|bundeswehr|"
+    r"armée|army|armia|wojsk\w*|armed\s+forces|forces?\s+armées|streitkräfte|"
+    r"försvarsmakten|forsvaret|prokurat\w*|staatsanwalt\w*|generalstaatsanwalt\w*|parquet|"
+    r"parket|fiscal\w*|procura|prosecutor\w*|airnav|skeyes|enaire|enav|nats|"
+    r"flugsicherung|luchtverkeersleid\w*|air\s+traffic\s+control\w*|"
+    r"kontrol\w*\s+ruchu\s+lotniczego|pażp|straż\s+graniczn\w*|grenzschutz|"
+    r"coast\s+guard|kustwacht|nato|otan)(?!\w)",
+    re.IGNORECASE,
+)
+# Sin las formas que son otras palabras («sa», el «said» noruego, es el
+# posesivo francés: «sa course», EODI-2025-00371; «reported» es casi siempre «reported sighting»).
+_DECIR_LARGOS = "|".join(v for v in _DECIR.split("|") if v not in {"sa", "reported"})
+_ATRIBUYE = re.compile(
+    rf"(?<!\w)(?:{_DECIR_LARGOS}|informed|informs|announced|poinformował\w*|przekazal\w*|"
+    r"przekazał\w*|podał\w*|podaje|podali|zaznaczy\w*|czytamy|teil\w*\s+(?:\S+\s+){0,6}?mit|"
+    r"mitgeteilt|heißt\s+es|indiqu\w*|communiqu\w*|zeg\w*|meld\w*|berichtet\w*|"
+    r"according\s+to|według|laut|volgens|selon|según|secondo|potrivit|szerint|zufolge)(?!\w)",
+    re.IGNORECASE,
+)
+_ANONIMA = re.compile(
+    r"(?<!\w)(?:sources?|źródł\w*|fonti|fonte|bronnen|quellen?|fuentes|surse|nieoficjalnie|"
+    r"anonym\w*|anonim\w*|unofficial\w*)(?!\w)",
+    re.IGNORECASE,
+)
+MAX_PALABRAS_ORACION = 60
+
+
+def frase_que_reconoce(texto: str) -> str | None:
+    """La primera oración del texto en que el periódico atribuye a una autoridad con nombre algo
+    que reconoce el suceso del dron (`habla_del_suceso` y `reconoce_suceso`), o None. Nada si el
+    texto dice que el suceso no está confirmado oficialmente."""
+    return next(iter(frases_que_reconocen(texto)), None)
+
+
+def frases_que_reconocen(texto: str) -> list[str]:
+    """Todas las oraciones de `frase_que_reconoce`, en orden."""
+    resultado: list[str] = []
+    if not texto or no_confirmado_oficialmente(texto):
+        return resultado
+    for oracion in re.split(r"(?<=[.!?])\s+(?=[^a-z])|\n", texto):
+        oracion = " ".join(oracion.split())
+        if not oracion or len(oracion.split()) > MAX_PALABRAS_ORACION:
+            continue
+        if not (_AUTORIDAD_EN_TEXTO.search(oracion) and _ATRIBUYE.search(oracion)):
+            continue
+        if _ANONIMA.search(oracion):
+            continue
+        if habla_del_suceso(oracion) and reconoce_suceso(oracion):
+            resultado.append(oracion)
+    return resultado
 
 
 def reconoce(fuente: Documento, incidente: Documento | None = None) -> bool:
