@@ -648,6 +648,7 @@ def estado_sin_respaldo(incidente: Documento) -> str | None:
     if actual not in {Estado.CONFIRMADO, Estado.ATRIBUIDO}:
         return None
     fuentes = {f["id"]: f for f in incidente.get("fuentes", [])}
+    sin_reconocer = False
     for paso in incidente["estado"]["historial"]:
         if paso["estado"] == actual.value:
             fuente = fuentes.get(paso.get("fuente_id", ""))
@@ -657,8 +658,21 @@ def estado_sin_respaldo(incidente: Documento) -> str | None:
                 return None
             if actual == Estado.CONFIRMADO and da_la_confirmacion(fuente, incidente):
                 return None
+            sin_reconocer = sin_reconocer or oficial(fuente)
     if actual == Estado.CONFIRMADO and any(
         sostiene_la_confirmacion(f, incidente) for f in fuentes.values()
+    ):
+        return None
+    # La autoridad del paso no reconoce el suceso: lo sostiene otra que sí lo reconozca, aunque no
+    # nombre el dron («Wie die Bundespolizei mitteilt, sorgte ein rätselhaftes Flugobjekt für
+    # Aufregung», EODI-2026-00515).
+    if (
+        actual == Estado.CONFIRMADO
+        and sin_reconocer
+        and any(
+            f.get("publica", True) is not False and declaraciones.reconoce(f, incidente)
+            for f in fuentes.values()
+        )
     ):
         return None
     return actual.value
