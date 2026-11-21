@@ -8,9 +8,12 @@ Dos valores para los incidentes vigentes (además de descartada, que no se toca)
   (proceso/declaraciones.atribuye_dron). No se piden restos, grabación ni detección por sensor;
 - no_confirmada: la propia autoridad lo deja abierto («posible dron», «objeto no
   identificado», «se investiga si era un dron»), actúa sin atribuirlo (un cierre, cazas o una
-  patrulla no son atribución: desde el 21 de octubre de 2026 la actuación ya no la confirma) o
-  solo lo cuentan la prensa o los testigos. La confirmada sin base pasa a no_confirmada
-  (quitar_sin_base), salvo las dudosas (dudosa_por), que van al experto.
+  patrulla no son atribución: desde el 21 de octubre de 2026 la actuación ya no la confirma),
+  solo habla de avisos, de una sospecha o de su respuesta a ellos («responded to reports of
+  unauthorised drone activity», EODI-2026-00821: desde el 22 de noviembre de 2026,
+  declaraciones.drones_afirmados) o solo lo cuentan la prensa o los testigos. La confirmada sin
+  base pasa a no_confirmada (quitar_sin_base), salvo las dudosas (dudosa_por), que van al
+  experto.
 
 Si una fuente cuenta que se buscó el dron y no se encontró («allerdings konnte eine Drohne nicht
 gefunden werden», «Politiet fandt ingen droner»), la presencia no puede quedar confirmada: ni
@@ -728,6 +731,12 @@ MOTIVO_SIN_BASE = (
 )
 
 
+MOTIVO_RESERVA = (
+    "criterio de presencia: la autoridad solo habla de avisos, de una sospecha o de su respuesta "
+    "a ellos, sin afirmar que hubiera un dron; la presencia no queda confirmada"
+)
+
+
 MOTIVO_PRUEBAS_PRENSA = (
     "criterio de presencia: los restos, el derribo o las fotos del dron solo los cuenta la "
     "prensa, sin una autoridad que diga que era un dron; la presencia no queda confirmada"
@@ -739,7 +748,24 @@ def motivo_sin_base(incidente: Documento) -> str:
     prensa (EODI-2025-00312, «Dronă militară de tip Gerbera a fost găsită pe un câmp») o, si no
     las hay, que ninguna autoridad lo atribuye."""
     evidencia = set((incidente.get("pruebas") or {}).get("evidencia", []))
-    return MOTIVO_PRUEBAS_PRENSA if evidencia & PRUEBAS_FISICAS else MOTIVO_SIN_BASE
+    if evidencia & PRUEBAS_FISICAS:
+        return MOTIVO_PRUEBAS_PRENSA
+    if reserva := con_reserva(incidente):
+        return f"{MOTIVO_RESERVA}: {reserva}"
+    return MOTIVO_SIN_BASE
+
+
+def con_reserva(incidente: Documento) -> str:
+    """Las frases de autoridad que hablan del dron sin afirmarlo (avisos, sospecha o respuesta:
+    declaraciones.habla_del_suceso sin atribuye_dron), con quién las dice, o «» si no hay
+    ninguna."""
+    return "; ".join(
+        f"{f.get('medio', '')}: «{f.get('frase_origen', '')}»"
+        for f in incidente["fuentes"]
+        if declaraciones.de_autoridad(f)
+        and declaraciones.habla_del_suceso(str(f.get("frase_origen") or ""))
+        and not declaraciones.atribuye_dron(str(f.get("frase_origen") or ""))
+    )
 
 
 def sin_base(incidente: Documento) -> bool:
@@ -781,7 +807,15 @@ def dudosa_por(incidente: Documento, conocidas: dict[str, dict[str, Any]]) -> bo
     físicas (restos, derribo, explosión) que solo cuenta la prensa no son dudosas: sin una
     autoridad no confirman (EODI-2025-00312, motivo_sin_base). `conocidas`: las declaraciones
     del incidente por el identificador de su fuente (_declaraciones_del_candidato)."""
-    autoridades = {f["id"] for f in incidente["fuentes"] if declaraciones.de_autoridad(f)}
+    # Una cita que nombra el dron como aviso, sospecha o respuesta no es dudosa: dice lo que dice
+    # y la regla decide (EODI-2026-00821, «responded to "suspected unauthorised drone
+    # activity"»). Solo lo es la cita que no lo nombra.
+    autoridades = {
+        f["id"]
+        for f in incidente["fuentes"]
+        if declaraciones.de_autoridad(f)
+        and not declaraciones.habla_de_drones(str(f.get("frase_origen") or ""))
+    }
     return any(d.get("afirma") == "drones" and id_ in autoridades for id_, d in conocidas.items())
 
 

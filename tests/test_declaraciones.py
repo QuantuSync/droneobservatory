@@ -98,15 +98,22 @@ def test_drones_afirmados_por_las_fuerzas_armadas_confirman_la_presencia() -> No
     assert resultado["presencia_dron"] == "confirmada"
 
 
-def test_el_aviso_de_dron_que_comunica_la_autoridad_confirma() -> None:
-    for frase in (
-        "Politiet har modtaget flere anmeldelser om droner i Kastrup",
-        "Buvo gauta informacija, kad pastebėtas dronas",
-    ):
-        resultado = aplicar(declaracion("drones", frase))
-        assert resultado["estado"]["actual"] == "confirmado", frase
-        assert resultado["presencia_dron"] == "confirmada", frase
-        assert any(f["id"].endswith("-declaracion-1") for f in resultado["fuentes"])
+def test_el_aviso_que_cuenta_lo_que_se_vio_confirma() -> None:
+    # La autoridad cuenta lo que se vio («que se vio un dron»): afirma el dron.
+    resultado = aplicar(declaracion("drones", "Buvo gauta informacija, kad pastebėtas dronas"))
+    assert resultado["estado"]["actual"] == "confirmado"
+    assert resultado["presencia_dron"] == "confirmada"
+    assert any(f["id"].endswith("-declaracion-1") for f in resultado["fuentes"])
+
+
+def test_los_avisos_de_drones_confirman_el_suceso_y_no_la_presencia() -> None:
+    # Desde el 22 de noviembre de 2026 (EODI-2026-00821): la autoridad que solo dice que recibió
+    # avisos de drones reconoce el suceso, pero no afirma que hubiera un dron.
+    resultado = aplicar(declaracion(
+        "drones", "Politiet har modtaget flere anmeldelser om droner i Kastrup"
+    ))  # fmt: skip
+    assert resultado["estado"]["actual"] == "confirmado"
+    assert resultado["presencia_dron"] == "no_confirmada"
 
 
 def test_sin_drones_descarta_la_presencia() -> None:
