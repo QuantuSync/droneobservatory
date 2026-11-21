@@ -31,6 +31,7 @@ De ahí sale todo lo demás:
 | El mismo dron a los dos lados de una frontera | dos sucesos, uno por país, enlazados por un `episodio` |
 | El mismo sitio en dos días o en dos noches («de nuevo», «otra vez», el sábado y el domingo) | dos sucesos |
 | En la misma jornada y el mismo país, drones distintos en sitios u horas distintos que las fuentes cuentan por separado (otro dron horas después, otro aeropuerto, otro barco) | sucesos distintos, enlazados por un `episodio` si son varios objetivos de una noche |
+| En la misma jornada y el mismo país, los mismos drones contados desde sitios distintos (la alerta de una provincia y la caída en otra, el aeropuerto que cierra por el dron y el sitio por donde pasa) | un suceso: el sitio no lo cambia |
 | Una noticia que cuenta varios de esos (un balance de varias noches, un resumen de dos países) | ningún suceso nuevo: cada uno de los que cuenta es el suyo. La ficha hecha con una noticia así es del suceso de su país y su jornada (el mismo que el de otra ficha de ese país y esa jornada); si no cuenta ninguno con su día, se une al suceso del que más habla; si junta dos de verdad, se separa o se retira |
 
 **La ficha que queda** de una unión toma sus datos del suceso, no de la ficha con más fuentes:
@@ -165,6 +166,10 @@ La batería está en `tests/test_definicion_suceso.py`, con las fichas reales
 | EODI-2026-00566 (Moldavia) | «on Thursday and Friday»: la noche del 15 al 16 de octubre | un suceso |
 | EODI-2026-00792 y las fichas lituanas dentro de 00778 (00779, 00783, 00785 a 00791) | la noche del 10 al 11 de noviembre en Lituania | un suceso, EODI-2026-00792; nunca dentro de una ficha de Letonia |
 | EODI-2026-00792, 00777, 00801 | el mismo dron en Lituania, Letonia y Estonia | tres sucesos, un episodio |
+| EODI-2025-00016 y 00072 (Bélgica, 4 de noviembre de 2025) | cuatro drones sobre la base de Schaffen y el dron que cerró el aeropuerto de Bruselas, contados por separado | dos sucesos, un episodio (otro sitio y otros drones) |
+| EODI-2026-00716 y 00728 (Moldavia, 31 de octubre de 2026) | el dron de las 16:24 hacia Plopi y «cea de-a doua dronă», que entró a las 17:50 y salió junto a Viișoara | dos sucesos, un episodio |
+| EODI-2025-00241 y 00263 (Rumanía, 25 de noviembre de 2025) | la alerta de Vrancea y el dron caído en Puiești: los dos drones que el Ministerio de Defensa contó juntos | un suceso, EODI-2025-00263 |
+| EODI-2026-00015 y 00075 (Rumanía, 8 de septiembre de 2026) | el cierre del aeropuerto de Iași y el mismo dron, que entró desde Moldavia, en otro sitio de Rumanía | un suceso, EODI-2026-00015 (la caída en Mihăileni Vechi es de Moldavia) |
 
 ## Lo que queda fuera
 
