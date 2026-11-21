@@ -260,6 +260,38 @@ def test_el_tipo_sigue_al_cierre_retenido(aplicar: None) -> None:
     assert not almacen.controles(protegido.PREFIJO_FALLO)
 
 
+def test_el_tipo_sigue_al_cierre_revisado(aplicar: None, monkeypatch: pytest.MonkeyPatch) -> None:
+    # EODI-2025-00335 y EODI-2026-00759 (ensayo del 21 de noviembre de 2026): el cierre revisado a
+    # mano pasaba, pero el tipo que sale de él (interrupción, con el aeropuerto de objetivo) se
+    # retenía; lo retenido no validaba («hay interrupción de aeropuerto: manda ese tipo») y la
+    # revisión no llegaba a la ficha. Como el titular, el tipo sigue a lo justificado.
+    monkeypatch.setattr(decidir, "aplicar", lambda incidente, *_: incidente)
+    # Una ficha revisada a mano: en ellas el tipo está protegido.
+    monkeypatch.setattr(protegido, "fichas_manuales", lambda: frozenset({"EODI-2026-09600"}))
+    uno = ficha()
+    uno["objetivo"] = {"categoria": "aeropuerto", "nombre": "Flughafen Nürnberg", "oaci": "EDDN"}
+    uno["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    uno["afirmaciones"] = [a for a in uno["afirmaciones"] if not a["campo"].startswith("cierre")]
+    uno["tipo"] = "sobrevuelo"
+    almacen = base(uno)
+    guardado = almacen.incidente("EODI-2026-09600")
+    assert guardado is not None and guardado["tipo"] == "sobrevuelo"
+    nuevo = copy.deepcopy(guardado)
+    nuevo["consecuencias"] = {"cierre": {"valor": "si"}}
+    nuevo["tipo"] = "interrupcion_aeroportuaria"
+    revisado = protegido._revisado
+    monkeypatch.setattr(
+        protegido, "_revisado", lambda d, dato: dato == "cierre" or revisado(d, dato)
+    )
+    guardar(almacen, nuevo)
+    actual = almacen.incidente("EODI-2026-09600")
+    assert actual is not None
+    assert actual["consecuencias"]["cierre"]["valor"] == "si"
+    assert actual["tipo"] == "interrupcion_aeroportuaria"
+    assert not almacen.controles(protegido.PREFIJO_FALLO)
+    assert any(c.startswith("permitido:EODI-2026-09600:tipo:") for c in almacen.controles())
+
+
 def test_la_atribucion_sigue_al_estado_retenido(
     aplicar: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
