@@ -18,7 +18,7 @@ import pytest
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import auditoria_fichas, decidir, incidentes, protegido
+from proceso import auditoria_fichas, decidir, incidentes, protegido, suceso
 from recogida import control_fichas, vigilancia, visitas
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
@@ -835,6 +835,57 @@ def test_x_cuenta_lo_guardado_sin_permiso_y_vale_0_en_aplicar(
     aplicado = base(ficha())
     guardar(aplicado, version_mala(guardado, "drones"))
     assert protegido.cambios_sin_permiso(_cambios(aplicado), frozenset()) == []
+
+
+def test_x_mira_el_cambio_con_el_nivel_que_tenia_la_ficha_entonces(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2026-00899 y 00917 (21/11/2026): separadas a mano, X contaba como «sin permiso» los
+    # cambios de tipo del día anterior, cuando aún no eran manuales, y la puerta las habría dejado
+    # 48 horas en la versión mezclada.
+    guardado = ficha()
+    nuevo = version_mala(guardado, "tipo")
+    cambio = {"tabla": "incidentes", "anterior": guardado, "nuevo": nuevo}
+    dia_antes, dia_despues = "2026-11-20T15:24:46Z", "2026-11-21T16:17:00Z"
+    antes: Documento = {**cambio, "fecha": dia_antes}
+    despues: Documento = {**cambio, "fecha": dia_despues}
+    monkeypatch.setattr(protegido, "fichas_manuales", lambda: frozenset({guardado["id"]}))
+    monkeypatch.setattr(protegido, "manuales_desde", lambda: {})
+    # Sin día de revisión, manual desde siempre: los dos cuentan.
+    assert protegido.cambios_sin_permiso([antes], frozenset()) == [f"{guardado['id']} tipo"]
+    monkeypatch.setattr(protegido, "manuales_desde", lambda: {guardado["id"]: "2026-11-21"})
+    assert [c.dato for c in protegido.candidatos(guardado, nuevo, True, dia_antes)] == []
+    assert protegido.cambios_sin_permiso([antes], frozenset()) == []
+    assert protegido.cambios_sin_permiso([despues], frozenset()) == [f"{guardado['id']} tipo"]
+    # El cerrojo, sin fecha, la protege como manual.
+    assert [c.dato for c in protegido.candidatos(guardado, nuevo)] == ["tipo"]
+
+
+def test_manual_desde_el_primer_dia_de_sus_revisiones(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    revisados = tmp_path / "incidentes_revisados.json"
+    revisados.write_text(
+        json.dumps({
+            "unir": [
+                {"revisado_el": "2026-11-21", "incidentes": ["EODI-2026-09001", "EODI-2026-09002"]}
+            ],
+            "datos": [
+                {"revisado_el": "2026-11-20", "incidente": "EODI-2026-09001", "campo": "cierre"},
+                {"incidente": "EODI-2026-09002", "campo": "cierre"},
+                {"revisado_el": "2026-11-22", "incidente": "EODI-2026-09003", "campo": "cierre"},
+            ],
+        }),
+        encoding="utf-8",
+    )  # fmt: skip
+    monkeypatch.setattr(suceso, "REVISADOS", revisados)
+    monkeypatch.setattr(protegido, "valores_de_referencia", lambda: {"EODI-2026-09003": {}})
+    protegido.manuales_desde.cache_clear()
+    try:
+        # 09002 tiene una revisión sin día (manual desde siempre); 09003 es de la referencia.
+        assert protegido.manuales_desde() == {"EODI-2026-09001": "2026-11-20"}
+    finally:
+        protegido.manuales_desde.cache_clear()
 
 
 def test_x_no_cuenta_lo_permitido(aplicar: None) -> None:

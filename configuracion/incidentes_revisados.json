@@ -814,6 +814,7 @@
       "motivo_en": "the same event: the drone that crossed Lithuania on the night of Tuesday 10 to Wednesday 11 November 2026, which NATO jets tried to shoot down twice near Biržai («Zwei Versuche, die Drohne nahe Biržai in Nordlitauen zu zerstören, scheiterten», euronews.com, in EODI-2026-00792). EODI-2026-00818 is an lrt.lt report of Friday 13th that calls it «last week»: «Last week, NATO fighter jets tried twice to shoot down a stray drone that entered Lithuanian airspace, unsuccessfully.» It came out as another event dated the 8th because «last week» was read as the previous calendar week (1 to 8) (reviewed on 14 November 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "registros": [
         "EODI-2025-00263",
         "EODI-2025-00241"
@@ -823,6 +824,7 @@
       "motivo_en": "the same event: the two drones that entered Romania on the morning of Tuesday 25 November 2025, which the Ministry of Defence reported together («Două drone au păstruns în spațiul aerian românesc, una în județul Tulcea și una în Galați», jurnalul.ro, in EODI-2025-00241). The RO-Alert warning in Vrancea in EODI-2025-00241 is the one for the drone that later fell in Puiești, Vaslui («Drona care a provocat alertă în România a survolat teritoriul țării timp de mai multe ore», realitatea.net, in EODI-2025-00263). EODI-2025-00263 stays, with the reviewed place of the crash and the merge of EODI-2025-00259 (reviewed on 21 November 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "registros": [
         "EODI-2026-00015",
         "EODI-2026-00075"
@@ -832,6 +834,7 @@
       "motivo_en": "the same event: the drone that entered Romania from Moldova on Tuesday 8 September 2026 and caused the suspension of flights at Iași airport («RO-ALERT - O dronă se apropie de Iași dinspre Republica Moldova. Au fost suspendate toate zborurile de pe Aeroportul Iași», ziarulevenimentul.ro, in EODI-2026-00015). EODI-2026-00075 reports the same drone in Romania («bezzałogowiec wleciał w rumuńską przestrzeń powietrzną z terytorium Mołdawii i pozostawał w niej przez około 30 minut», bankier.pl, with the airport in its headline: «Tajemniczy dron nad Rumunią. Myśliwce NATO poderwane do lotu, lotnisko sparaliżowane»). Its crash in Mihăileni Vechi belongs to Moldova. EODI-2026-00015 stays (reviewed on 21 November 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "registros": [
         "EODI-2026-00864",
         "EODI-2026-00884"
@@ -8165,6 +8168,7 @@
       }
     },
     {
+      "revisado_el": "2026-11-21",
       "incidentes": [
         "EODI-2025-00016",
         "EODI-2025-00072"
@@ -8177,6 +8181,7 @@
       }
     },
     {
+      "revisado_el": "2026-11-21",
       "incidentes": [
         "EODI-2026-00716",
         "EODI-2026-00728"
@@ -8189,6 +8194,7 @@
       }
     },
     {
+      "revisado_el": "2026-11-21",
       "incidentes": [
         "EODI-2026-00899",
         "EODI-2026-00917"
@@ -11138,6 +11144,7 @@
       ]
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00899",
       "motivo": {
         "es": "Llevaba dos notas del dron de las 14:48 del 20 de noviembre de 2026 sobre Ștefan Vodă (EODI-2026-00917), que es otro suceso, junto a las del dron de la 01:19 en el norte: «Două drone au traversat ilegal spațiul aerian al Republicii Moldova la interval de câteva ore, în nordul și sud-estul țării» (antena3.ro). Revisado el 21 de noviembre de 2026.",
@@ -13173,6 +13180,7 @@
       "motivo": "en Melilla no se canceló ningún vuelo ni hizo falta cerrar el espacio aéreo: hubo retrasos; la frase estaba más abajo de las 600 primeras letras de la nota, que era lo único que se leía (revisado el 12 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00112",
       "campo": "cierre",
       "valor": "si",
@@ -13182,6 +13190,7 @@
       "motivo": "el espacio aéreo de Moldavia se cerró por el dron; el cierre del espacio aéreo es un cierre (modelo/ficha.py) y, sin un aeropuerto como objetivo, la ficha sigue siendo una incursión (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00169",
       "campo": "cierre",
       "valor": "si",
@@ -13191,6 +13200,7 @@
       "motivo": "el espacio aéreo de Moldavia se cerró por el dron; el cierre del espacio aéreo es un cierre (modelo/ficha.py) y, sin un aeropuerto como objetivo, la ficha sigue siendo una incursión (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00263",
       "campo": "cierre",
       "valor": "si",
@@ -13200,6 +13210,7 @@
       "motivo": "el espacio aéreo de Moldavia se cerró por el dron; el cierre del espacio aéreo es un cierre (modelo/ficha.py) y, sin un aeropuerto como objetivo, la ficha sigue siendo una incursión (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00636",
       "campo": "cierre",
       "valor": "si",
@@ -13209,6 +13220,7 @@
       "motivo": "el espacio aéreo de Moldavia se cerró por el dron; el cierre del espacio aéreo es un cierre (modelo/ficha.py) y, sin un aeropuerto como objetivo, la ficha sigue siendo una incursión (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2025-00335",
       "campo": "cierre",
       "valor": {
@@ -13224,6 +13236,7 @@
       "motivo": "el jueves 6 de noviembre de 2025 las primeras notas de la tarde decían que el espacio aéreo seguía abierto por el momento («luchtruim blijft voorlopig open», hbvl.be); hacia las 21:20 el tráfico se interrumpió media hora («Le trafic aérien a été brièvement interrompu jeudi vers 21h20 à l'aéroport de Bruxelles», rtbf.be, según Skeyes; «Luchtruim boven Brussels Airport gesloten door drone», nieuwsblad.be). Las fuentes no se contradicen: cuentan dos momentos de la misma tarde, y el titular «sin cierre» era falso (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2025-00335",
       "campo": "titulo",
       "valor": {
@@ -13236,6 +13249,7 @@
       "motivo": "el jueves 6 de noviembre de 2025 las primeras notas de la tarde decían que el espacio aéreo seguía abierto por el momento («luchtruim blijft voorlopig open», hbvl.be); hacia las 21:20 el tráfico se interrumpió media hora («Le trafic aérien a été brièvement interrompu jeudi vers 21h20 à l'aéroport de Bruxelles», rtbf.be, según Skeyes; «Luchtruim boven Brussels Airport gesloten door drone», nieuwsblad.be). Las fuentes no se contradicen: cuentan dos momentos de la misma tarde, y el titular «sin cierre» era falso (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00759",
       "campo": "cierre",
       "valor": "si",
@@ -13245,6 +13259,7 @@
       "motivo": "la nota cuenta en presente el suceso del viernes 30 de octubre de 2026 («Am Freitagmittag vergangener Woche meldet sich ein Passagier aus einem Flugzeug…») y sigue «Daraufhin werden beide Start- und Landebahnen … für nahezu eine Stunde für Abflüge gesperrt»; los sucesos anteriores que recuerda (Leipzig, agosto) van en pasado. La frase estaba más allá de las 600 letras que leía la extracción (informe de lectura de fuentes del 12 de noviembre de 2026) (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00759",
       "campo": "titulo",
       "valor": {
@@ -13257,6 +13272,7 @@
       "motivo": "la nota cuenta en presente el suceso del viernes 30 de octubre de 2026 («Am Freitagmittag vergangener Woche meldet sich ein Passagier aus einem Flugzeug…») y sigue «Daraufhin werden beide Start- und Landebahnen … für nahezu eine Stunde für Abflüge gesperrt»; los sucesos anteriores que recuerda (Leipzig, agosto) van en pasado. La frase estaba más allá de las 600 letras que leía la extracción (informe de lectura de fuentes del 12 de noviembre de 2026) (revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2025-00382",
       "campo": "cierre",
       "valor": "si",
@@ -13266,6 +13282,7 @@
       "motivo": "barrido del 21 de noviembre de 2026: una fuente de la ficha dice que se cerró o se paralizó y el cierre se había quedado en «desconocido» (el aeropuerto de Fuerteventura paró las llegadas y salidas)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00725",
       "campo": "cierre",
       "valor": "si",
@@ -13275,6 +13292,7 @@
       "motivo": "barrido del 21 de noviembre de 2026: una fuente de la ficha dice que se cerró o se paralizó y el cierre se había quedado en «desconocido» (ROMATSA reabrió el espacio aéreo restringido; sin aeropuerto como objetivo, el tipo no cambia)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00360",
       "campo": "cierre",
       "valor": "si",
@@ -13284,6 +13302,7 @@
       "motivo": "barrido del 21 de noviembre de 2026: una fuente de la ficha dice que se cerró o se paralizó y el cierre se había quedado en «desconocido» (el espacio aéreo del norte de Moldavia; sin aeropuerto como objetivo, el tipo no cambia)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00672",
       "campo": "cierre",
       "valor": "si",
@@ -13293,6 +13312,7 @@
       "motivo": "barrido del 21 de noviembre de 2026: una fuente de la ficha dice que se cerró o se paralizó y el cierre se había quedado en «desconocido» (el espacio aéreo de Moldavia; sin aeropuerto como objetivo, el tipo no cambia)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00898",
       "campo": "objetivo",
       "valor": {
@@ -13306,6 +13326,7 @@
       "motivo": "el suceso es en el aeropuerto Charles de Gaulle, no en el centro de París: el nombre «Paris Charles de Gaulle» no casaba con ningún nombre del aeropuerto en el nomenclátor (ahora sí) y el punto se tomó de la ciudad, a 25 km; con ese punto, el objetivo que nombra el titular quedaba fuera de su radio (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00898",
       "campo": "lugar",
       "valor": {
@@ -13324,6 +13345,7 @@
       "motivo": "el suceso es en el aeropuerto Charles de Gaulle, no en el centro de París: el nombre «Paris Charles de Gaulle» no casaba con ningún nombre del aeropuerto en el nomenclátor (ahora sí) y el punto se tomó de la ciudad, a 25 km; con ese punto, el objetivo que nombra el titular quedaba fuera de su radio (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
     },
     {
+      "revisado_el": "2026-11-21",
       "incidente": "EODI-2026-00015",
       "campo": "lugar",
       "valor": {
