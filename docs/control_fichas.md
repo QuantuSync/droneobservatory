@@ -82,7 +82,11 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    `incidentes.objetivo_es_la_localidad`). La cabecera de la ficha en la web es el nombre de la
    instalación solo si tiene categoría propia; si no, el titular, una sola vez.
 3. **Estado.** Confirmado o atribuido solo con un paso de una fuente oficial (una autoridad, leída
-   o citada); si no, vuelve a notificado con el motivo en los dos idiomas. Una declaración cuya
+   o citada); si no, vuelve a notificado con el motivo en los dos idiomas. Desde el 22 de
+   noviembre de 2026, una autoridad cuya frase no reconoce el suceso no da la confirmación
+   (`declaraciones.reconoce`, «Criterios de cada dato», estado); la sostiene otra autoridad de la
+   ficha que sí lo reconozca, y si no hay ninguna vuelve a notificado con esas frases en el motivo
+   (EODI-2026-00937). Una declaración cuya
    cita solo dice quién habla y el verbo de decir («Podinsp. Marta Sulowska z Komendy Stołecznej
    Policji przekazała», EODI-2026-00648; `declaraciones.sin_afirmacion`, en las lenguas que lee
    el observatorio) no es una fuente oficial: ni da el estado ni confirma la presencia hasta que
@@ -356,7 +360,10 @@ su rectificación oficial, docs/rectificaciones.md); Y, autoridad o dato de otro
 (desde el 2/11/2026: una autoridad de un país distinto al de la ficha sin frase que lo nombre, o un
 dato de la última verificación cuya frase habla de otro país: docs/nombres_lugar.md); AB, presencia
 confirmada sin frase que afirme el dron (desde el 22/11/2026: ninguna fuente de autoridad afirma el
-dron, solo habla de avisos, de una sospecha o de su respuesta a ellos). Los recuentos del día y los
+dron, solo habla de avisos, de una sospecha o de su respuesta a ellos); AC, estado confirmado o
+atribuido sin frase de autoridad que reconozca el suceso (desde el 22/11/2026: las frases de
+autoridad solo cuentan que la investiga o que la avisaron, o el artículo dice que no está
+confirmado oficialmente; no cuenta el estado de una revisión a mano). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
@@ -895,7 +902,17 @@ Con ellos se decide el valor correcto de la referencia (y el que debe dar la fic
   descarta nada; una búsqueda sin resultado el mismo día tampoco es un cierre.
 - **estado:** `confirmado` si una autoridad u operador oficial declara que el suceso ocurrió (un
   portavoz que confirma los avisos, la OTAN que reconoce que saltó el detector); negar el dron
-  rectifica la presencia, no el estado. `atribuido` solo con una autoridad del país afectado.
+  rectifica la presencia, no el estado. Desde el 22 de noviembre de 2026 la frase tiene que
+  reconocer el suceso (`declaraciones.reconoce`): no basta la que solo cuenta que la autoridad lo
+  investiga, lo examina o lo comprueba («Zdarzenie bada włoska żandarmeria wojskowa.»,
+  EODI-2026-00937; «Das Bayerische Landeskriminalamt (LKA) ermittelt.»), salvo que diga lo que la
+  investigación encontró («an investigation showed … the object was likely a balloon»); ni la que
+  la pone como quien recibe el aviso («O sprawie poinformowano prokuraturę oraz Ministerstwo
+  Obrony Narodowej»); ni una declaración citada en un artículo que dice que el suceso no está
+  confirmado oficialmente («Incydent nie został oficjalnie potwierdzony przez władze bazy.»). Una
+  frase en la que el medio atribuye palabras a la autoridad («the ministry said», «według
+  policji», «a spokesperson told») sigue valiendo, y también la que reconoce el cierre o la
+  alerta sin nombrar el dron. `atribuido` solo con una autoridad del país afectado.
 - **tipo:** `incursion` solo si una autoridad, o una prueba física que confirma una autoridad,
   demuestra que un dron estatal entró desde fuera; las fuentes anónimas o la narración del
   periodista no bastan. Un buque alcanzado en el mar es `sobrevuelo` salvo que una autoridad diga
