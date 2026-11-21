@@ -276,7 +276,11 @@ def leer_rss(texto: str, fuente: Documento) -> list[Nota]:
     """Las notas de un canal RSS o Atom. Un enlace relativo se resuelve con la dirección del
     canal (el Atom del Ministerio de Defensa los da relativos)."""
     notas = []
-    for enlace, fecha, titulo, descripcion, atom in _entradas(ET.fromstring(texto)):
+    # Sin lo que va antes de la declaración XML: el canal de NATS empieza con una línea en blanco
+    # (fallo de su servidor) y el analizador lo rechaza; falló 31 recogidas seguidas hasta el 20
+    # de noviembre de 2026 («XML or text declaration not at start of entity: line 2»).
+    limpio = texto.lstrip("\ufeff \t\r\n")
+    for enlace, fecha, titulo, descripcion, atom in _entradas(ET.fromstring(limpio)):
         enlace = urljoin(fuente["url"], enlace) if enlace else enlace
         if not enlace or not fecha:
             continue
