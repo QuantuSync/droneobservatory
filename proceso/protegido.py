@@ -732,6 +732,16 @@ def juzgar(
             return "sin_publicar"
         if cambio.dato == "titulo" and justificados & set(TITULO_SIGUE_A):
             return "sigue_a_lo_justificado"
+        # El tipo sale del cierre, el lugar y el objetivo (incidentes.con_tipo): si uno de ellos
+        # cambia justificado y el tipo nuevo es el que dan las reglas, lo sigue (EODI-2025-00335 y
+        # EODI-2026-00759, 21/11/2026: con el cierre revisado y el tipo retenido, lo retenido no
+        # validaba y la revisión no llegaba a la ficha).
+        if (
+            cambio.dato == "tipo"
+            and justificados & set(DEDUCIDOS_DE["tipo"])
+            and incidentes.con_tipo(copy.deepcopy(nuevo)).get("tipo") == nuevo.get("tipo")
+        ):
+            return "sigue_a_lo_justificado"
         if cambio.nivel == CON_CITA and fuente_nueva_con_frase(
             cambio.dato, guardado, nuevo, texto_de
         ):
@@ -739,7 +749,9 @@ def juzgar(
         return None
 
     # El titular y el estado, los últimos: siguen a lo que se retiene o a lo que cambia justificado.
-    for cambio in sorted(pendientes, key=lambda c: (c.dato in SEGUIDORES, c.dato == "titulo")):
+    # El tipo, tras el cierre, el lugar y el objetivo, de los que sale.
+    orden = lambda c: (c.dato in SEGUIDORES, c.dato == "titulo", c.dato == "tipo")  # noqa: E731
+    for cambio in sorted(pendientes, key=orden):
         motivo = razon(cambio)
         arrastrado = cambio.dato in SEGUIDORES and motivo not in RESPALDO_FIRME and any(
             r.dato in SIGUEN_A for r in veredicto.retenidos
