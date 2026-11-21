@@ -314,6 +314,39 @@ def fichas_manuales() -> frozenset[str]:
     return frozenset(ids) | frozenset(valores_de_referencia())
 
 
+@cache
+def manuales_desde() -> dict[str, str]:
+    """{ficha: día desde el que es manual} de las fichas cuyas revisiones llevan todas el día en
+    que se hicieron («revisado_el», AAAA-MM-DD): el primero de ellos. Una ficha con alguna revisión
+    sin ese día, o del conjunto de referencia, es manual desde siempre.
+
+    X (`cambios_sin_permiso`) mira cada cambio con el nivel que tenía la ficha entonces: una
+    revisión nueva no vuelve «sin permiso» lo que el cerrojo dejó pasar antes de que existiera
+    (EODI-2026-00899 y 00917, 21/11/2026: separadas a mano, la puerta las habría dejado en la
+    versión mezclada 48 horas por cambios del día anterior)."""
+    revisadas = json.loads(suceso.REVISADOS.read_text(encoding="utf-8"))
+    dias: dict[str, str | None] = {}
+    for seccion in revisadas.values():
+        if not isinstance(seccion, list):
+            continue
+        for entrada in seccion:
+            dia = entrada.get("revisado_el") if isinstance(entrada, dict) else None
+            for id_ in _ids_de(entrada):
+                if not isinstance(dia, str) or dias.get(id_, dia) is None:
+                    dias[id_] = None
+                else:
+                    dias[id_] = min(dia, dias.get(id_) or dia)
+    referencia = valores_de_referencia()
+    return {i: d for i, d in dias.items() if d is not None and i not in referencia}
+
+
+def _manual(id_: str, fecha: str | None = None) -> bool:
+    """La ficha es manual (`fichas_manuales`); con `fecha`, solo si ya lo era ese día."""
+    if id_ not in fichas_manuales():
+        return False
+    return fecha is None or fecha >= manuales_desde().get(id_, "")
+
+
 def _autoridad(documento: Documento, fuente_id: str | None) -> bool:
     return any(
         f.get("id") == fuente_id and declaraciones.de_autoridad(f)
@@ -413,17 +446,22 @@ def _respaldado(guardado: Documento, dato: str) -> bool:
     return dato not in SEGUIDORES and _lo_dice_una_frase(guardado, dato)
 
 
-def candidatos(guardado: Documento, nuevo: Documento, publicada: bool = True) -> list[Cambio]:
+def candidatos(
+    guardado: Documento, nuevo: Documento, publicada: bool = True, fecha: str | None = None
+) -> list[Cambio]:
     """Los cambios de `nuevo` a lo protegido de `guardado`, antes de mirar si tienen
     justificación. El alta y lo ya retirado o fundido no entran.
 
     Con `publicada` falso (una ficha nueva que sigue en el filtro de entrada,
     `Almacen.en_el_filtro`) solo cuenta el nivel manual: lo que fija una revisión. Lo decidido
     «con cita» se protege cuando la ficha ha salido; antes, el filtro corregía el día o el lugar y
-    el cerrojo se lo devolvía (EODI-2026-00728 y 00765, noviembre de 2026)."""
+    el cerrojo se lo devolvía (EODI-2026-00728 y 00765, noviembre de 2026).
+
+    Con `fecha` (la del cambio, para X), la ficha cuenta como manual solo si ya lo era ese día
+    (`manuales_desde`)."""
     if not incidentes.activo(guardado):
         return []
-    manual = str(guardado["id"]) in fichas_manuales()
+    manual = _manual(str(guardado["id"]), fecha)
     cambios: dict[str, Cambio] = {}
     for dato in DATOS_MANUAL if manual else ():
         antes, despues = valor(guardado, dato), valor(nuevo, dato)
@@ -732,6 +770,16 @@ def juzgar(
             return "sin_publicar"
         if cambio.dato == "titulo" and justificados & set(TITULO_SIGUE_A):
             return "sigue_a_lo_justificado"
+        # El tipo sale del cierre, el lugar y el objetivo (incidentes.con_tipo): si uno de ellos
+        # cambia justificado y el tipo nuevo es el que dan las reglas, lo sigue (EODI-2025-00335 y
+        # EODI-2026-00759, 21/11/2026: con el cierre revisado y el tipo retenido, lo retenido no
+        # validaba y la revisión no llegaba a la ficha).
+        if (
+            cambio.dato == "tipo"
+            and justificados & set(DEDUCIDOS_DE["tipo"])
+            and incidentes.con_tipo(copy.deepcopy(nuevo)).get("tipo") == nuevo.get("tipo")
+        ):
+            return "sigue_a_lo_justificado"
         if cambio.nivel == CON_CITA and fuente_nueva_con_frase(
             cambio.dato, guardado, nuevo, texto_de
         ):
@@ -739,7 +787,9 @@ def juzgar(
         return None
 
     # El titular y el estado, los últimos: siguen a lo que se retiene o a lo que cambia justificado.
-    for cambio in sorted(pendientes, key=lambda c: (c.dato in SEGUIDORES, c.dato == "titulo")):
+    # El tipo, tras el cierre, el lugar y el objetivo, de los que sale.
+    orden = lambda c: (c.dato in SEGUIDORES, c.dato == "titulo", c.dato == "tipo")  # noqa: E731
+    for cambio in sorted(pendientes, key=orden):
         motivo = razon(cambio)
         arrastrado = cambio.dato in SEGUIDORES and motivo not in RESPALDO_FIRME and any(
             r.dato in SIGUEN_A for r in veredicto.retenidos
@@ -1104,7 +1154,8 @@ def cambios_sin_permiso(
         publicada = primeras is None or (
             id_ in primeras and str(cambio.get("fecha") or "9") >= primeras[id_]
         )
-        for propuesto in candidatos(anterior, nuevo, publicada):
+        fecha = str(cambio.get("fecha") or "") or None
+        for propuesto in candidatos(anterior, nuevo, publicada, fecha):
             marca = huella(propuesto.dato, nuevo)
             al_empezar.setdefault((id_, propuesto.dato), huella(propuesto.dato, anterior))
             if (id_, propuesto.dato, marca) in permitidos:

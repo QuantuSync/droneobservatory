@@ -24,6 +24,15 @@ Qué cuenta GoatCounter: cada página vista con su sesión, un número aleatorio
 lleva la dirección IP (servidor/goatcounter_ajustes.py). Visitas = páginas vistas; visitantes
 únicos = sesiones distintas del día (una persona que vuelve pasadas 8 horas cuenta dos veces).
 
+Tráfico automático (desde el 21 de noviembre de 2026): un navegador sin pantalla que recorre las
+fichas deja sesiones de una sola página, sin referente, con la misma huella (país, sistema,
+navegador con su versión mayor y ancho de pantalla). El 20 de noviembre fueron unas 590 de 606
+sesiones: Alemania, Linux, Chrome 156, 1920 px, en ráfagas. Una huella de sesiones así que se
+repite `UMBRAL_AUTOMATICO` veces o más en un día no es de personas: esas sesiones se apartan de
+todas las cifras (también de las del día anterior y de la media) y el resumen las cuenta aparte.
+Solo con lo que GoatCounter ya guarda; una persona de verdad con esa huella, en un día así, se
+aparta con ellas.
+
 Lo que se anota queda en `$SECRETOS/visitas.json`, que lee la vigilancia.
 
 Uso: python -m recogida.visitas pasada
@@ -167,6 +176,10 @@ PAISES_FUERA = {
 }
 MOVILES = frozenset({"Android", "iOS", "iPadOS"})
 ANCHO_MOVIL = 768
+# Sesiones de una página, sin referente y con la misma huella en un día a partir de las que son
+# tráfico automático (docstring). El 20 de noviembre de 2026 la huella del robot tuvo unas 590 y
+# la mayor de personas, 5.
+UMBRAL_AUTOMATICO = 20
 
 
 # --- Utilidades -------------------------------------------------------------------------------
@@ -241,20 +254,103 @@ class Visitas:
     paises: list[tuple[str, int]] = field(default_factory=list)
     movil: int = 0
     ordenador: int = 0
+    # Tráfico automático apartado: sesiones y, por huella, cuántas.
+    automaticas: int = 0
+    huellas: list[tuple[str, int]] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class Sesion:
+    """Una sesión de GoatCounter en un día: sus páginas vistas y los datos de su primera."""
+
+    clave: Any
+    paginas: int
+    ref: str
+    esquema: str
+    lugar: str
+    sistema: str
+    navegador: str
+    ancho: int | None
+
+    @property
+    def movil(self) -> bool:
+        return self.sistema in MOVILES or (self.ancho is not None and 0 < self.ancho < ANCHO_MOVIL)
+
+    @property
+    def huella(self) -> tuple[str, str, str, str]:
+        return (self.lugar.split("-", 1)[0], self.sistema, self.navegador, str(self.ancho or ""))
 
 
 def abrir_goatcounter(ruta: Path) -> sqlite3.Connection:
     return sqlite3.connect(f"{ruta.resolve().as_uri()}?mode=ro", uri=True)
 
 
-def totales(conexion: sqlite3.Connection, dia: date) -> tuple[int, int]:
+def _navegadores(conexion: sqlite3.Connection) -> dict[int, str]:
+    """{browser_id: «Chrome 156»} (nombre y versión mayor), si la base tiene la tabla."""
+    try:
+        filas = conexion.execute("select browser_id, name, version from browsers").fetchall()
+    except sqlite3.Error:
+        return {}
+    return {int(i): f"{n or ''} {str(v or '').split('.')[0]}".strip() for i, n, v in filas}
+
+
+def sesiones_del_dia(conexion: sqlite3.Connection, dia: date) -> list[Sesion]:
+    """Las sesiones del día de Madrid, con los datos de su primera página."""
     inicio, fin = limites_del_dia(dia)
-    fila = conexion.execute(
-        "select count(*), count(distinct session) from hits"
-        " where created_at >= ? and created_at < ?",
-        (_sql_utc(inicio), _sql_utc(fin)),
-    ).fetchone()
-    return int(fila[0]), int(fila[1])
+    rango = (_sql_utc(inicio), _sql_utc(fin))
+    paginas = dict(
+        conexion.execute(
+            "select session, count(*) from hits where created_at >= ? and created_at < ?"
+            " group by session",
+            rango,
+        ).fetchall()
+    )
+    navegadores = _navegadores(conexion)
+    sesiones = []
+    for clave, ref, esquema, lugar, sistema, ancho, navegador in conexion.execute(
+        "select h.session, r.ref, r.ref_scheme, h.location, coalesce(s.name, ''), h.width,"
+        " h.browser_id from hits h join refs r using (ref_id) left join systems s using (system_id)"
+        " where h.hit_id in (select min(hit_id) from hits"
+        "   where created_at >= ? and created_at < ? group by session)",
+        rango,
+    ):
+        sesiones.append(
+            Sesion(
+                clave,
+                int(paginas.get(clave, 1)),
+                str(ref or ""),
+                str(esquema or ""),
+                str(lugar or ""),
+                str(sistema or ""),
+                navegadores.get(int(navegador or 0), ""),
+                None if ancho is None else int(ancho),
+            )
+        )
+    return sesiones
+
+
+def huellas_automaticas(sesiones: Iterable[Sesion]) -> dict[tuple[str, str, str, str], int]:
+    """Cuántas sesiones tiene cada huella de tráfico automático en el día (docstring del módulo)."""
+    huellas = Counter(s.huella for s in sesiones if s.paginas == 1 and not s.ref and not s.movil)
+    return {h: n for h, n in huellas.items() if n >= UMBRAL_AUTOMATICO}
+
+
+def de_personas(
+    sesiones: list[Sesion],
+) -> tuple[list[Sesion], dict[tuple[str, str, str, str], int]]:
+    """Las sesiones sin las del tráfico automático, y las huellas apartadas."""
+    huellas = huellas_automaticas(sesiones)
+    quedan = [
+        s for s in sesiones
+        if not (s.huella in huellas and s.paginas == 1 and not s.ref and not s.movil)
+    ]  # fmt: skip
+    return quedan, huellas
+
+
+def totales(conexion: sqlite3.Connection, dia: date) -> tuple[int, int]:
+    """Páginas vistas y visitantes del día, sin el tráfico automático."""
+    personas, _ = de_personas(sesiones_del_dia(conexion, dia))
+    return sum(s.paginas for s in personas), len(personas)
 
 
 def procedencia(ref: str, esquema: str) -> str:
@@ -289,33 +385,48 @@ def visitas_del_dia(conexion: sqlite3.Connection, dia: date) -> Visitas:
     inicio, fin = limites_del_dia(dia)
     rango = (_sql_utc(inicio), _sql_utc(fin))
     resultado = Visitas()
-    resultado.visitas, resultado.visitantes = totales(conexion, dia)
-    resultado.paginas = [
-        (str(p), int(n))
-        for p, n in conexion.execute(
-            "select p.path, count(*) from hits h join paths p using (path_id)"
-            " where h.created_at >= ? and h.created_at < ? and p.event = 0"
-            " group by p.path order by 2 desc, 1 limit ?",
-            (*rango, LIMITE),
-        )
-    ]
-    # Procedencia y país de cada visitante: los de su primera página del día.
-    primeras = conexion.execute(
-        "select h.session, r.ref, r.ref_scheme, h.location, coalesce(s.name, ''), h.width"
-        " from hits h join refs r using (ref_id) left join systems s using (system_id)"
-        " where h.hit_id in (select min(hit_id) from hits"
-        "   where created_at >= ? and created_at < ? group by session)",
-        rango,
-    ).fetchall()
+    todas = sesiones_del_dia(conexion, dia)
+    personas, huellas = de_personas(todas)
+    claves = {s.clave for s in personas}
+    resultado.visitas = sum(s.paginas for s in personas)
+    resultado.visitantes = len(personas)
+    resultado.automaticas = len(todas) - len(personas)
     ingles = dict(conexion.execute("select country, country_name from locations where region = ''"))
     nombres = nombres_paises()
+    resultado.huellas = sorted(
+        (
+            (
+                ", ".join(
+                    (
+                        nombre_pais(h[0], nombres, str(ingles.get(h[0], ""))),
+                        h[1] or "sistema desconocido",
+                        h[2] or "navegador desconocido",
+                        f"{h[3]} px" if h[3] else "ancho desconocido",
+                    )
+                ),
+                n,
+            )
+            for h, n in huellas.items()
+        ),
+        key=lambda x: (-x[1], x[0]),
+    )
+    vistas: Counter[str] = Counter()
+    for sesion, camino in conexion.execute(
+        "select h.session, p.path from hits h join paths p using (path_id)"
+        " where h.created_at >= ? and h.created_at < ? and p.event = 0",
+        rango,
+    ):
+        if sesion in claves:
+            vistas[str(camino)] += 1
+    resultado.paginas = sorted(vistas.items(), key=lambda x: (-x[1], x[0]))[:LIMITE]
+    # Procedencia y país de cada visitante: los de su primera página del día.
     origenes: Counter[str] = Counter()
     paises: Counter[str] = Counter()
-    for _sesion, ref, esquema, lugar, sistema, ancho in primeras:
-        origenes[procedencia(str(ref or ""), str(esquema or ""))] += 1
-        codigo = str(lugar or "").split("-", 1)[0]
+    for s in personas:
+        origenes[procedencia(s.ref, s.esquema)] += 1
+        codigo = s.lugar.split("-", 1)[0]
         paises[nombre_pais(codigo, nombres, str(ingles.get(codigo, "")))] += 1
-        if sistema in MOVILES or (ancho is not None and 0 < int(ancho) < ANCHO_MOVIL):
+        if s.movil:
             resultado.movil += 1
         else:
             resultado.ordenador += 1
@@ -1003,6 +1114,15 @@ def texto_resumen(d: Datos) -> str:
             + "; "
             + comparacion("media de 7 días", v.visitantes, media[1] if media else None)
             + ")",
+            *(
+                [
+                    f"  Tráfico automático apartado: {numero(v.automaticas)} sesiones de una"
+                    " página, sin referente y con la misma huella (no cuentan en ninguna cifra)",
+                    *(f"    {huella}: {numero(n)}" for huella, n in v.huellas),
+                ]
+                if v.automaticas
+                else []
+            ),
             "",
             "Páginas más vistas",
             *_lista(v.paginas, "ninguna"),

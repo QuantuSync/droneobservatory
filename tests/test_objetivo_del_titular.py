@@ -68,3 +68,20 @@ def test_nada_sin_una_sola_instalacion_en_el_titular() -> None:
         ["Deux drones ont survolé les abords de l'aéroport du Bourget"],
     )
     assert objetivo_nombrado(paris) is None
+
+
+def test_el_nombre_corriente_de_charles_de_gaulle_es_el_aeropuerto() -> None:
+    """EODI-2026-00898 (20 de noviembre de 2026): el lugar «Paris Charles de Gaulle», sin la
+    palabra «aeropuerto», no casaba con ningún nombre de LFPG y el punto se tomó de París, a 25 km
+    del aeropuerto (auditoría B). Los nombres corrientes del aeropuerto son suyos; «Paris» solo,
+    no."""
+    from proceso import noticias
+
+    nomenclator = noticias.nomenclator()
+    for nombre in (
+        "Paris Charles de Gaulle",
+        "Paris-Charles-de-Gaulle",
+        "Roissy-Charles-de-Gaulle",
+    ):
+        assert noticias.lugares_en(nombre, nomenclator) == ("LFPG",), nombre
+    assert "LFPG" not in noticias.lugares_en("Paris", nomenclator)

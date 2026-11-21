@@ -442,6 +442,70 @@ def test_sulina_tres_sucesos_la_misma_tarde_y_noche() -> None:
     assert se_deshace("2026-00544", "2026-00698") is None
 
 
+@pytest.mark.parametrize(
+    ("una", "otra"),
+    [("2025-00016", "2025-00072"), ("2026-00716", "2026-00728")],
+)
+def test_otro_sitio_y_otros_drones_la_misma_noche_son_otro_suceso(una: str, otra: str) -> None:
+    """21 de noviembre de 2026, dos parejas publicadas del mismo país, día y episodio:
+    - los cuatro drones sobre la base de Schaffen (EODI-2025-00016) y el dron que cerró el
+      aeropuerto de Bruselas (EODI-2025-00072) la noche del 4 de noviembre de 2025: las noticias
+      los cuentan por separado, en sitios distintos;
+    - el dron de las 16:24 hacia Plopi (EODI-2026-00716) y «cea de-a doua dronă», que entró a las
+      17:50 y salió junto a Viișoara (EODI-2026-00728), en Moldavia el 31 de octubre de 2026.
+    Sucesos distintos, enlazados por su episodio: ni se unen ni se preguntan."""
+    a, b = f(una), f(otra)
+    assert a["lugar"]["pais"] == b["lugar"]["pais"]
+    assert dicho(a, b).relacion == suceso.DISTINTOS
+    assert dicho(a, b).regla == suceso.REGLA_REVISION
+    assert suceso.separados(a, b)
+
+
+@pytest.mark.parametrize(
+    ("una", "otra", "queda"),
+    [("2025-00241", "2025-00263", "2025-00263"), ("2026-00015", "2026-00075", "2026-00015")],
+)
+def test_el_mismo_dron_contado_en_otro_sitio_del_pais_es_el_mismo_suceso(
+    una: str, otra: str, queda: str
+) -> None:
+    """21 de noviembre de 2026, dos parejas publicadas que cuentan los mismos drones:
+    - la alerta de Vrancea (EODI-2025-00241) y el dron caído en Puiești (EODI-2025-00263): los dos
+      drones del 25 de noviembre de 2025 que el Ministerio de Defensa rumano contó juntos;
+    - el cierre del aeropuerto de Iași (EODI-2026-00015) y el mismo dron en Rumanía, al norte de
+      Roman (EODI-2026-00075), el 8 de septiembre de 2026.
+    El mismo suceso: se unen con su cita y queda la ficha que dice la revisión."""
+    a, b = f(una), f(otra)
+    assert dicho(a, b).relacion == suceso.MISMO
+    (grupo,) = [
+        g
+        for g in suceso.revisiones()["unir"]
+        if {f"EODI-{una}", f"EODI-{otra}"} <= set(g["registros"])
+    ]
+    assert grupo["conserva"] == f"EODI-{queda}"
+    assert "«" in grupo["motivo"] and "«" in grupo["motivo_en"]
+
+
+def test_moldavia_el_dron_de_la_noche_y_el_de_la_tarde_son_dos_sucesos() -> None:
+    """20 de noviembre de 2026 en Moldavia: el dron de la noche del 19 al 20, a la 01:19 en el
+    norte (EODI-2026-00899), y el de las 14:48 sobre Ștefan Vodă (EODI-2026-00917). Otra
+    jornada, otro sitio y otro dron: dos sucesos. Sin la revisión, la definición ya no los unía
+    sola; con ella, nadie los une, y las dos notas del dron de la tarde que llevaba 00899 pasan a
+    00917."""
+    noche, tarde = f("2026-00899"), f("2026-00917")
+    assert dicho(sin_revisar("2026-00899", "EODI-2026-99899"), tarde).relacion != suceso.MISMO
+    assert dicho(noche, tarde).relacion == suceso.DISTINTOS
+    (separacion,) = [
+        s for s in suceso.revisiones()["separar"] if s["incidente"] == "EODI-2026-00899"
+    ]
+    de_la_tarde = next(p for p in separacion["partes"] if p["coincide_con"] == "EODI-2026-00917")
+    frases = " ".join(
+        x["frase_origen"]
+        for x in noche["fuentes"]
+        if x["id"].partition("-declaracion-")[0] in de_la_tarde["fuentes"]
+    )
+    assert "14:48" in frases and "A doua dronă" in frases
+
+
 # --- La batería entera sobre una base ----------------------------------------------------------
 
 
