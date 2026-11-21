@@ -86,7 +86,15 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    noviembre de 2026, una autoridad cuya frase no reconoce el suceso no da la confirmación
    (`declaraciones.reconoce`, «Criterios de cada dato», estado); la sostiene otra autoridad de la
    ficha que sí lo reconozca, y si no hay ninguna vuelve a notificado con esas frases en el motivo
-   (EODI-2026-00937). Una declaración cuya
+   (EODI-2026-00937). Antes de bajarlo, el control vuelve a leer los artículos de la ficha: si uno
+   atribuye a una autoridad con nombre una oración que reconoce el suceso, la frase guardada era
+   la débil y el estado se queda (`declaraciones.frase_que_reconoce`; «Wielkopolska Policja
+   poinformowała o odnalezieniu … drona», EODI-2026-00362, cuando la ficha guardó «O sprawie
+   poinformowano prokuraturę oraz Ministerstwo Obrony Narodowej»). No valen las fuentes sin nombre
+   («Garda sources said», «fonti informate») ni un artículo que dice que no está confirmado
+   oficialmente; si un artículo no se puede leer, no se baja. Al extraer, si la frase de una
+   autoridad no reconoce el suceso y el artículo trae otra de la misma autoridad que sí, se guarda
+   esa. Una declaración cuya
    cita solo dice quién habla y el verbo de decir («Podinsp. Marta Sulowska z Komendy Stołecznej
    Policji przekazała», EODI-2026-00648; `declaraciones.sin_afirmacion`, en las lenguas que lee
    el observatorio) no es una fuente oficial: ni da el estado ni confirma la presencia hasta que

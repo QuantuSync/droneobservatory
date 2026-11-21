@@ -283,3 +283,101 @@ def test_la_rebaja_no_manda_aviso() -> None:
     assert bajado is not None
     # Notificada y sin fuente oficial leída directamente: no se avisa.
     assert avisos.clasificar(bajado, config, ahora) is None
+
+
+# --- Antes de bajar, el artículo original (revisión del 22/11/2026) ------------------------------
+#
+# Cuatro de las cinco fichas que la regla bajaba tenían en su artículo original una frase que el
+# periódico atribuye a una autoridad y que reconoce el suceso; la ficha había guardado la débil.
+# Oraciones literales de los artículos (leídos el 22/11/2026).
+ARTICULO_RECONOCE = [
+    ("EODI-2026-00362", "W czwartek, 12 marca Wielkopolska Policja poinformowała o odnalezieniu na "
+     "terenie kopalni w miejscowości Galczyce (pow. koniński) drona."),
+    ("EODI-2025-00371", "De Mechelaar is ook niet gebrevetteerd als dronepiloot, en dat is "
+     'verplicht voor het gebruik van een toestel met dat gewicht", zegt Dirk Van de Sande van '
+     "politiezone Rivierenland."),
+    ("EODI-2025-00192", "„Die eingesetzten Polizeibeamten konnten bis zu zehn Drohnen feststellen, "
+     "die den Bereich überflogen“, wird mitgeteilt."),
+    ("EODI-2025-00192", "„Auch dort wurden drei Drohnen gesehen, die Fahndung verlief ohne "
+     "Ergebnis“, teilen das LKA und die Generalstaatsanwaltschaft mit."),
+    ("EODI-2026-00278", "AirNav, a State-owned company that provides air traffic control services "
+     "to Irish airports, confirmed a report of a drone sighting had been made."),
+]  # fmt: skip
+# Oraciones que no valen: fuentes sin nombre, solo la investigación, el periódico que no cita a
+# nadie, o una palabra de otra lengua que parece un verbo de decir.
+ARTICULO_NO_RECONOCE = [
+    ("EODI-2026-00278", "Though the sighting is being taken seriously, Garda sources said the "
+     "primary goal of the inquiry was to test the accuracy of the report."),
+    ("EODI-2026-00278", "Garda headquarters said it was aware of the reported sighting and was "
+     "continuing to investigate it, alongside the Department of Defence and Defence Forces."),
+    ("EODI-2026-00937", "L'allarme alla base americana di Sigonella, a quanto si apprende da fonti "
+     "informate, è scattato ieri alle 17,50 dopo che droni quadricotteri a uso civile sono stati "
+     "avvistati nella zona degli alloggi."),
+    ("EODI-2026-00937", "Dochodzenie w sprawie incydentu prowadzą karabinierzy."),
+    ("EODI-2025-00371", "Le propriétaire d'un drone qui avait fini sa course dans la cour d'une "
+     "école secondaire de Malines a été retrouvé par la police locale."),
+]  # fmt: skip
+WP = (
+    "W piątek ogłoszono alarm w strategicznej bazie lotniczej Sigonella na Sycylii po wykryciu "
+    f"drona w jej przestrzeni. {BADA} {NO_CONFIRMADO} Według policji wojskowej dron przeleciał "
+    "nad kwaterami."
+)
+
+
+@pytest.mark.parametrize(("ficha", "oracion"), ARTICULO_RECONOCE)
+def test_la_frase_que_el_periodico_atribuye_a_la_autoridad_vale(ficha: str, oracion: str) -> None:
+    assert declaraciones.frase_que_reconoce(f"Texto del periódico. {oracion}") == oracion, ficha
+
+
+@pytest.mark.parametrize(("ficha", "oracion"), ARTICULO_NO_RECONOCE)
+def test_fuentes_sin_nombre_o_la_investigacion_no_valen(ficha: str, oracion: str) -> None:
+    assert declaraciones.frase_que_reconoce(oracion) is None, ficha
+
+
+def test_el_articulo_que_dice_que_no_esta_confirmado_no_sostiene_nada() -> None:
+    # Aunque traiga una frase atribuida: el artículo dice que nadie lo ha confirmado.
+    assert declaraciones.frase_que_reconoce(WP) is None
+
+
+def test_el_control_no_baja_si_el_articulo_lo_reconoce() -> None:
+    from recogida import control_fichas as control
+
+    documento = sigonella()
+    enlaces = {f["enlace"] for f in documento["fuentes"]}
+    # 00937: los artículos se leen y ninguno lo reconoce: se baja.
+    assert control.articulo_que_lo_reconoce(documento, lambda e: dict.fromkeys(e, WP)) is None
+    # Un artículo que no se pudo leer: no se baja (un fallo nunca baja nada).
+    leidos = {e: WP for e in enlaces}
+    leidos[ENLACE_WP] = ""
+    sin_leer = control.articulo_que_lo_reconoce(documento, lambda e: leidos)
+    assert sin_leer is not None and sin_leer.startswith("sin leer")
+    # 00362: el artículo trae la frase de la policía: el estado se queda, con esa frase.
+    policia = f"Na terenie kopalni znaleziono drona. {ARTICULO_RECONOCE[0][1]}"
+    sostiene = control.articulo_que_lo_reconoce(documento, lambda e: dict.fromkeys(e, policia))
+    assert sostiene is not None and "Wielkopolska Policja poinformowała" in sostiene
+
+
+def test_la_extraccion_se_queda_con_la_frase_que_reconoce() -> None:
+    # El extractor devolvió la frase débil de la policía; el artículo trae otra suya que reconoce
+    # el suceso: se guarda esa.
+    texto = (
+        "Na terenie kopalni znaleziono drona. Sprawę bada Wielkopolska Policja. "
+        f"{ARTICULO_RECONOCE[0][1]}"
+    )
+    declaracion = {"fuente": 1, "afirma": "drones", "autoridad": "Wielkopolska Policja",
+                   "frase": "Sprawę bada Wielkopolska Policja."}  # fmt: skip
+    [valida] = declaraciones.validas([declaracion], [texto])
+    assert valida["frase"] == ARTICULO_RECONOCE[0][1]
+    # Si la autoridad no es la de la frase que reconoce, no se cambia.
+    otra = {**declaracion, "autoridad": "Ministerstwo Obrony Narodowej"}
+    assert declaraciones.validas([otra], [texto])[0]["frase"] == otra["frase"]
+
+
+def test_las_cuatro_fichas_tienen_su_cita_revisada() -> None:
+    from recogida import revisados
+
+    citas = {c["incidente"]: c for c in revisados.cargar()["citas"]}
+    for ficha in ("EODI-2025-00192", "EODI-2025-00371", "EODI-2026-00278", "EODI-2026-00362"):
+        cita = citas[ficha]
+        assert declaraciones.reconoce_suceso(cita["frase"], cita["declaracion"]["autoridad"])
+    assert "EODI-2026-00937" not in citas

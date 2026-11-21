@@ -68,6 +68,7 @@ from proceso import (
     autoridades,
     buques,
     decidir,
+    declaraciones,
     escalado,
     fechas,
     incidentes,
@@ -1403,6 +1404,47 @@ def sin_autoridades_de_otro_pais(
     return nuevo, cambios
 
 
+def leer_articulos(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
+    """El principio y la nota de cada noticia, en memoria (nunca se guardan); vacío si no se pudo
+    leer."""
+    from recogida.descarga import Descargador
+
+    def uno(enlace: str) -> tuple[str, str]:
+        try:
+            pagina = paginas.leer_pagina(Descargador(plazo=plazo, reintentos=1), enlace, True)
+        except Exception:
+            return enlace, ""
+        return enlace, f"{pagina.texto}\n{pagina.nota}".strip()
+
+    if not enlaces:
+        return {}
+    with ThreadPoolExecutor(max_workers=6) as hilos:
+        return dict(hilos.map(uno, enlaces))
+
+
+def articulo_que_lo_reconoce(
+    incidente: Documento, leer: Callable[[list[str]], dict[str, str]]
+) -> str | None:
+    """Antes de bajar el estado porque la frase de autoridad guardada no reconoce el suceso, se
+    vuelven a leer los artículos de la ficha: si uno atribuye a una autoridad con nombre una
+    oración que lo reconoce, la frase guardada era la débil y el estado se queda
+    (`declaraciones.frase_que_reconoce`; EODI-2026-00362, «Wielkopolska Policja poinformowała o
+    odnalezieniu … drona», cuando la ficha guardó «O sprawie poinformowano prokuraturę oraz
+    Ministerstwo Obrony Narodowej»). Devuelve esa oración con su enlace; si algún artículo no se
+    pudo leer, «sin leer: <enlace>» (un fallo nunca baja nada); None si se leyeron todos y ninguno
+    lo reconoce."""
+    enlaces = list(dict.fromkeys(
+        str(f.get("enlace") or "") for f in _publicas(incidente) if f.get("enlace")
+    ))  # fmt: skip
+    textos = leer(enlaces)
+    for enlace in enlaces:
+        frase = declaraciones.frase_que_reconoce(textos.get(enlace, ""))
+        if frase:
+            return f"{enlace}: «{frase}»"
+    sin_leer = [e for e in enlaces if not textos.get(e)]
+    return f"sin leer: {sin_leer[0]}" if sin_leer else None
+
+
 def reglas_deterministas(ctx: Contexto) -> None:
     """El lugar que nombra el titular y el estado sin fuente oficial, sin llamar a nada."""
     for incidente in _activos(ctx.almacen):
@@ -1435,6 +1477,14 @@ def reglas_deterministas(ctx: Contexto) -> None:
             nuevo, de_otro_pais = sin_autoridades_de_otro_pais(nuevo, _instante(ctx.ahora))
             motivos += de_otro_pais
             bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
+            if bajado is not None and reglas.frases_que_no_reconocen(nuevo):
+                sostiene = articulo_que_lo_reconoce(
+                    nuevo, lambda enlaces: leer_articulos(enlaces, ctx.plazo)
+                )
+                if sostiene is not None:
+                    registro.warning("%s: el estado se queda, el artículo lo sostiene: %s",
+                                     nuevo["id"], sostiene)  # fmt: skip
+                    bajado = None
             if bajado is not None:
                 nuevo = bajado
                 motivos.append("estado sin fuente oficial: notificado")
