@@ -260,6 +260,35 @@ def test_el_tipo_sigue_al_cierre_retenido(aplicar: None) -> None:
     assert not almacen.controles(protegido.PREFIJO_FALLO)
 
 
+def test_la_atribucion_sigue_al_estado_retenido(
+    aplicar: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # EODI-2026-00889 (reproducción del 19 de noviembre de 2026): la nota entera traía la
+    # declaración del portavoz que nombra al operador detenido; el estado «atribuido» se retenía
+    # («confirmado», publicado), la atribución no, lo retenido no validaba («atribución con estado
+    # distinto de atribuido») y el cerrojo fallaba en cada recogida.
+    monkeypatch.setattr(decidir, "aplicar", lambda incidente, *_: incidente)
+    almacen = base(ficha())
+    guardado = almacen.incidente("EODI-2026-09600")
+    assert guardado is not None
+    nuevo = copy.deepcopy(guardado)
+    oficial = nuevo["fuentes"][1]
+    nuevo["estado"]["historial"].append(
+        {"estado": "atribuido", "fecha": oficial["fecha"], "fuente_id": oficial["id"]}
+    )
+    nuevo["estado"]["actual"] = "atribuido"
+    nuevo["atribucion"] = {
+        "actor": "persona sin nombre publicado", "autoridad": "Polizei Nürnberg",
+        "fecha": oficial["fecha"], "tipo": "persona",
+    }  # fmt: skip
+    guardar(almacen, nuevo)
+    actual = almacen.incidente("EODI-2026-09600")
+    assert actual is not None
+    assert actual["estado"]["actual"] == "confirmado" and "atribucion" not in actual
+    assert not almacen.controles(protegido.PREFIJO_FALLO)
+    assert any(c.startswith("retenido:EODI-2026-09600:estado:") for c in almacen.controles())
+
+
 # --- Cambios legítimos ------------------------------------------------------------------------
 
 

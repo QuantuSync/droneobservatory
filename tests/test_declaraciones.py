@@ -216,6 +216,13 @@ def test_atribuye_dron_sin_negarlo_ni_dejarlo_abierto() -> None:
     )
     # Abierto en rumano: «posibile ținte aeriene» (EODI-2025-00241, SMFA).
     assert declaraciones.abierto("SMFA, care semnala prezența unor posibile ținte aeriene")
+    # Abierto en polaco, como el checo «pravděpodobně»: «prawdopodobnie» (EODI-2026-00923, la
+    # policía de Rzeszów; con la nota entera el titular perdía el «posible»).
+    frase = (
+        "nad jednym z budynków uczelni wyższej prawdopodobnie został zauważony bezzałogowy "
+        "statek powietrzny"
+    )
+    assert declaraciones.abierto(frase) and not declaraciones.atribuye_dron(frase)
     # El modelo del dron (EODI-2026-00171, Ministerul Apărării) y el lituano (EODI-2026-00037).
     assert declaraciones.atribuye_dron(
         "Un obiect zburător de tip Shahed 138 (Geran 2) a survolat ilegal spațiul aerian"
