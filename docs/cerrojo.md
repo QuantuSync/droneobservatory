@@ -176,6 +176,11 @@ EODI-2026-00130 y EODI-2026-00302 el 1 de noviembre de 2026.
   que salen de datos revisados), ni los datos de una ficha retirada o fundida, salvo la retirada.
   Ejemplo: EODI-2026-00079, cuyo cierre revisado coincidía con el de un cambio malo del 2/11 y
   quedaba fuera de la web.
+  Cada cambio se mira con el nivel que tenía la ficha ese día. Una revisión puede llevar el día en
+  que se hizo (`revisado_el`). Si todas las revisiones de una ficha lo llevan, la ficha es manual
+  desde el primero de esos días. Desde el 21 de noviembre de 2026, una separación hecha a mano ya
+  no vuelve «sin permiso» los cambios del día anterior: la puerta habría dejado EODI-2026-00899 en
+  la versión mezclada durante 48 horas.
 - **Auditoría Z**: fichas publicadas con una fuente anterior al suceso, sin cambio de por medio.
 - **Vigilancia** (`recogida/vigilancia.py`): avisa si el cerrojo falla y, en `aplicar`, si una ficha
   aparece en una comprobación de protección de la auditoría (P, R, V, W, X).
