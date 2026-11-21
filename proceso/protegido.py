@@ -838,6 +838,12 @@ def conservar(nuevo: Documento, guardado: Documento, cambios: Iterable[Cambio]) 
                 _tipo_guardado(resultado, guardado)
         elif dato == "estado":
             resultado["estado"] = copy.deepcopy(guardado["estado"])
+            # La atribución va con el estado «atribuido»: se queda la guardada, o ninguna
+            # (EODI-2026-00889: con la nueva y el estado guardado, lo retenido no validaba).
+            if "atribucion" in guardado:
+                resultado["atribucion"] = copy.deepcopy(guardado["atribucion"])
+            else:
+                resultado.pop("atribucion", None)
             control = resultado["control"]
             control.pop("motivo_desmentido", None)
             if motivo := (guardado.get("control") or {}).get("motivo_desmentido"):
