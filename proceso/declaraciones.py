@@ -6,14 +6,16 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
 «declaración oficial citada», de fiabilidad B, con el enlace a la noticia. Reglas:
 
 - incidente o drones: pasa a confirmado (la autoridad dice que ocurrió).
-- Presencia del dron: si la autoridad competente lo da por hecho, está confirmada. Basta con
-  que actúe o declare atribuyendo el suceso a un dron (un cierre por dron, un aviso de dron
-  que comunica, una intervención por dron): drones, incidente o autoria de un gobierno,
-  ministerio, fuerzas armadas, policía, fiscalía, autoridad de aviación civil, gestor de
-  navegación aérea o gestor aeroportuario confirman la presencia. No se piden restos, grabación
-  ni detección por sensor. Solo queda sin confirmar si la propia autoridad lo deja abierto
-  («posible dron», «objeto no identificado», «se investiga si era un dron»). Cada confirmación
-  deja una afirmación de presencia_dron con la fuente que la provoca.
+- Presencia del dron: si la autoridad competente lo da por hecho, está confirmada: su frase
+  afirma el dron (un cierre por un dron, un dron que entró, se vio, se detectó, se derribó o se
+  recuperó): drones, incidente o autoria de un gobierno, ministerio, fuerzas armadas, policía,
+  fiscalía, autoridad de aviación civil, gestor de navegación aérea o gestor aeroportuario
+  confirman la presencia. No se piden restos, grabación ni detección por sensor. Queda sin
+  confirmar si la propia autoridad lo deja abierto («posible dron», «objeto no identificado», «se
+  investiga si era un dron») o si solo habla de avisos, de una sospecha o de su respuesta a ellos
+  («responded to reports of unauthorised drone activity», `drones_afirmados`, desde el 22 de
+  noviembre de 2026). Cada confirmación deja una afirmación de presencia_dron con la fuente que
+  la provoca.
 - sin_drones: presencia_dron descartada. niega_incidente: desmentido, salvo que lo niegue una
   autoridad que no es competente sobre el espacio aéreo ni la investigación (el gestor del
   aeropuerto) y lo haya confirmado una que sí lo es (el control aéreo): entonces prevalece la
@@ -343,11 +345,112 @@ def niega(frase: str) -> bool:
     return any(not _PELIGRO.match(frase[m.end() : m.end() + 60]) for m in _NEGACION.finditer(frase))
 
 
-def atribuye_dron(frase: str) -> bool:
-    """La frase de una autoridad atribuye lo que pasó a un dron: lo nombra sin negarlo y sin
-    dejarlo abierto. Una medida que no lo nombra («au fost suspendate temporar aterizările»,
-    EODI-2025-00049) o una confirmación sin contenido («bestätigte den Vorfall») no basta."""
+# El dron que la autoridad no afirma: lo nombra como aviso que recibió («reports of unauthorised
+# drone activity», «signalements de drones», «melding om droneflyvning»), como sospecha
+# («suspected unauthorised drone activity») o como aquello a lo que respondió («responded to
+# drone activity»). EODI-2026-00821 (RAF Lakenheath, 13/11/2026) quedó confirmada con esas dos
+# frases: ni la Fuerza Aérea de EE. UU. ni el Ministerio de Defensa dicen que hubiera un dron.
+# Los avisos son el nombre («reports», «Meldungen»), no el verbo pasivo («die Drohne wurde
+# gemeldet», «a fost semnalată o dronă»), que ya da el dron por visto.
+_AVISO = (
+    r"reports?|informes?|avisos?|denuncias?|llamadas?|alertas?\s+(?:de|sobre)|"
+    r"signalements?|appels?|segnalazion\w*|"
+    r"meldung\w*|hinweis\w*|melding\w*|meldinger\w*|anmeldels\w*|"
+    r"rapport\w*|uppgift\w*|oplysning\w*|opplysning\w*|"
+    r"zgłosze\w*|sygnał\w*|doniesie\w*|"
+    r"sesizăr\w*|sesizar\w*|semnalăr\w*|semnalar\w*|apeluri|"
+    r"pranešim\w*|ziņojum\w*|teated|teadet\w*|teade|"
+    r"сообщени\w*|повідомлен\w*|сигнал\w*"
+)
+_SOSPECHA = (
+    r"suspected|suspicious|alleged|sospechos\w*|presunt\w*|supuest\w*|présum\w*|suspect\w*|"
+    r"verdächtig\w*|mutmaßlich\w*|vermeintlich\w*|verdacht\w*|vermoedelijk\w*|verdacht|"
+    r"podejrzan\w*|įtartin\w*|įtariam\w*|aizdomīg\w*|kahtlas\w*|kahtlust\w*|"
+    r"mistænkelig\w*|misstänkt\w*|mistenkelig\w*|sospett\w*|suspicioas\w*|suspect\w*|"
+    r"possible|posible|possibile|possível|possibil\w*|posibil\w*|"
+    r"подозрит\w*|предполож\w*|підозріл\w*|ймовірн\w*"
+)
+_RESPUESTA = (
+    r"respond\w*\s+to|response\s+to|respondi\w*\s+a|"
+    r"reagi\w*\s+(?:auf|på|op|à|a|na|la|į|uz)|reageer\w*\s+op|réagi\w*\s+à|"
+    r"rispo\w*\s+a|zareagowa\w*\s+na|reacțion\w*\s+la|a\s+reacționat\s+la|"
+    r"reagavo\s+į|reaģēja\s+uz|reageeris\w*"
+)
+# El dron que sigue a la reserva: como mucho tres palabras en medio, sin pasar a otra oración
+# ni a lo que se dijo («a report that a drone was seen» cuenta lo que se vio: no es reserva).
+_MARCA = re.compile(
+    rf"(?<!\w)(?:(?P<aviso>{_AVISO})|(?P<sospecha>{_SOSPECHA})|(?P<respuesta>{_RESPUESTA}))(?!\w)",
+    re.IGNORECASE,
+)
+_HASTA_EL_DRON = re.compile(
+    r"(?P<medio>(?:[\s\"'„“”«»‘’‌-]+(?!(?:that|que|că|ca|dass|daß|że|at|att|kad|ka|et|dat|"
+    r"che|of\s+being|om\s+at)(?!\w))[\w’'-]+){0,3})[\s\"'„“”«»‘’‌-]+",
+    re.IGNORECASE,
+)
+# La sospecha sobre una persona («suspected of illegally flying a drone», «mistanke om ulovlig
+# droneflyvning»): lo sospechoso es quién o si era legal, no el dron.
+_SOBRE_PERSONA = re.compile(
+    r"^[\s\"'„“”«»‘’‌-]+(?:of|for|om|af|på|wegen|o|z|de|di|du)(?!\w)", re.IGNORECASE
+)
+_ANTES = 80
+
+
+# Lo que sigue al dron cuando la autoridad solo cuenta que respondió: una actividad o unos
+# avistamientos («responded to drone activity») no dicen que hubiera un dron; «in risposta a un
+# drone nello spazio aereo lituano» (EODI-2026-00593, la OTAN) sí lo dice.
+_ACTIVIDAD = re.compile(
+    r"^[\w-]*(?:activit\w*|aktivit\w*|activid\w*|attivit\w*|activitat\w*|aktywno\w*|"
+    r"sighting\w*|sichtung\w*|alarm\w*|alert\w*|scare\w*)"
+    r"|^[\w-]*\s+(?:activit\w*|aktivit\w*|activid\w*|attivit\w*|activitat\w*|aktywno\w*|"
+    r"veikl\w*|darbīb\w*|tegevus\w*|sighting\w*|sichtung\w*|alarm\w*|alert\w*|scare\w*)",
+    re.IGNORECASE,
+)
+
+
+def _con_reserva(frase: str, inicio: int) -> bool:
+    """El dron que empieza en `inicio` lo nombra la frase como aviso, sospecha o respuesta: una
+    marca (`_MARCA`) seguida del dron con como mucho tres palabras en medio (`_HASTA_EL_DRON`)."""
+    desde = max(0, inicio - _ANTES)
+    for marca in _MARCA.finditer(frase, desde, inicio):
+        tramo = _HASTA_EL_DRON.fullmatch(frase, marca.end(), inicio)
+        if tramo is None:
+            continue
+        if marca["sospecha"] and _SOBRE_PERSONA.match(tramo["medio"]):
+            continue
+        if marca["respuesta"] and not _ACTIVIDAD.match(frase[inicio:]):
+            continue
+        return True
+    return False
+
+
+def drones_afirmados(frase: str) -> list[str]:
+    """Los drones que la frase afirma: los que nombra sin negarlos ni darlos como aviso, sospecha
+    o respuesta de la autoridad (`_con_reserva`)."""
+    limpia = _DRON_NEGADO.sub(" ", frase)
+    resultado = []
+    for patron in (solo_dron(), _DRONES_DECLINADOS):
+        for dron in patron.finditer(limpia):
+            if not _con_reserva(limpia, dron.start()):
+                resultado.append(dron.group(0))
+    return resultado
+
+
+def habla_del_suceso(frase: str) -> bool:
+    """La frase de una autoridad cuenta el suceso del dron: lo nombra sin negarlo y sin dejarlo
+    abierto, aunque sea como aviso o como aquello a lo que respondió. Sostiene el estado
+    «confirmado» (una autoridad que reconoce el suceso lo confirma), no la presencia del dron
+    (`atribuye_dron`)."""
     return habla_de_drones(_DRON_NEGADO.sub(" ", frase)) and not abierto(frase)
+
+
+def atribuye_dron(frase: str) -> bool:
+    """La frase de una autoridad atribuye lo que pasó a un dron: lo afirma (lo nombra sin negarlo
+    y no como aviso, sospecha o respuesta: `drones_afirmados`) y no lo deja abierto. Una medida
+    que no lo nombra («au fost suspendate temporar aterizările», EODI-2025-00049), una
+    confirmación sin contenido («bestätigte den Vorfall») o una actuación ante avisos o una
+    sospecha («responded to "suspected unauthorised drone activity"», EODI-2026-00821) no
+    basta."""
+    return bool(drones_afirmados(frase)) and not abierto(frase)
 
 
 def confirma_dron(declaracion: dict[str, Any], contexto: str = "") -> bool:

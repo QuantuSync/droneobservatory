@@ -65,7 +65,7 @@ from urllib.robotparser import RobotFileParser
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import fechas, incidentes
+from proceso import declaraciones, fechas, incidentes
 from proceso import suceso as definicion
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
@@ -500,7 +500,11 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
                 {f["id"]: f for f in incidente["fuentes"]},
             )  # fmt: skip
     texto = f"{nota.titulo}. {nota.texto}"
-    if _AFIRMA.search(texto) and not _RESERVA.search(texto):
+    if (
+        _AFIRMA.search(texto)
+        and not _RESERVA.search(texto)
+        and declaraciones.drones_afirmados(texto)
+    ):
         incidente["presencia_dron"] = "confirmada"
     # La confirmación puede cambiar el tipo y la presencia del dron (proceso/incidentes.py).
     incidente = incidentes.aplicar_reglas(incidente)

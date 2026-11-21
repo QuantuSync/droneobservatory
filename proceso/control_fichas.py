@@ -610,12 +610,14 @@ def oficial(fuente: Documento) -> bool:
 
 
 def sostiene_la_confirmacion(fuente: Documento) -> bool:
-    """Una declaración vigente de una autoridad que atribuye el suceso a un dron: sostiene el estado
-    «confirmado» aunque no sea la del paso del historial."""
+    """Una declaración vigente de una autoridad que cuenta el suceso del dron: sostiene el estado
+    «confirmado» aunque no sea la del paso del historial. Basta con que lo reconozca: la que
+    responde a unos avisos de drones confirma el suceso aunque no afirme el dron
+    (declaraciones.habla_del_suceso; la presencia es otra cosa)."""
     return (
         fuente.get("publica", True) is not False
         and declaraciones.de_autoridad(fuente)
-        and declaraciones.atribuye_dron(str(fuente.get("frase_origen") or ""))
+        and declaraciones.habla_del_suceso(str(fuente.get("frase_origen") or ""))
     )
 
 

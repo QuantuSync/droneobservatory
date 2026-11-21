@@ -354,7 +354,9 @@ con 10 minutos de margen); P, presencia rebajada sin cierre (desde el 27/10/2026
 o «descartada» sin un paso del historial que diga qué autoridad la rebajó y cuándo; se completa con
 su rectificación oficial, docs/rectificaciones.md); Y, autoridad o dato de otro país sin frase
 (desde el 2/11/2026: una autoridad de un país distinto al de la ficha sin frase que lo nombre, o un
-dato de la última verificación cuya frase habla de otro país: docs/nombres_lugar.md). Los recuentos del día y los
+dato de la última verificación cuya frase habla de otro país: docs/nombres_lugar.md); AB, presencia
+confirmada sin frase que afirme el dron (desde el 22/11/2026: ninguna fuente de autoridad afirma el
+dron, solo habla de avisos, de una sospecha o de su respuesta a ellos). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
@@ -881,8 +883,14 @@ Con ellos se decide el valor correcto de la referencia (y el que debe dar la fic
   «más de N» → `{min: N+1, max: null}`; un número indefinido como «kilkanaście» → su rango. Las
   violaciones del espacio aéreo no son drones. Si la autoridad dice que no hubo dron →
   «desconocido».
-- **presencia:** `no_acreditada` si una autoridad cierra la investigación sin probarlo ni
-  descartarlo; `descartada` si la autoridad concluye que era otra cosa, aunque lo diga con «muy
+- **presencia:** `confirmada` solo si la frase de una autoridad afirma el dron (un dron que
+  entró, se vio, se detectó, se derribó o se recuperó; un aeropuerto que cierra «por un dron»).
+  Si la autoridad solo actúa, habla de una sospecha o de unos avisos, o cuenta que respondió a
+  ellos («responded to "suspected unauthorised drone activity"», «reports of unauthorised drone
+  activity», «signalements de drones», «melding om droneflyvning»), es `no_confirmada`, aunque el
+  suceso siga `confirmado` (desde el 22 de noviembre de 2026, `declaraciones.drones_afirmados`;
+  EODI-2026-00821, RAF Lakenheath). `no_acreditada` si una autoridad cierra la investigación sin
+  probarlo ni descartarlo; `descartada` si la autoridad concluye que era otra cosa, aunque lo diga con «muy
   probablemente» en su conclusión. Una «posible» otra causa de la prensa, o un aviso inicial, no
   descarta nada; una búsqueda sin resultado el mismo día tampoco es un cierre.
 - **estado:** `confirmado` si una autoridad u operador oficial declara que el suceso ocurrió (un

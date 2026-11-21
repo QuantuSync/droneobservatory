@@ -364,7 +364,7 @@ def aplicar(incidente: Documento, lista: list[Aportacion]) -> Documento:
         # sin dejarlo abierto lo da por hecho (proceso/declaraciones.py).
         for aportacion in sorted(lista, key=lambda a: (a.fuente["fecha"]["valor"], a.fuente["id"])):
             frase = str(aportacion.fuente.get("frase_origen", ""))
-            if declaraciones.habla_de_drones(frase) and not declaraciones.abierto(frase):
+            if declaraciones.atribuye_dron(frase):
                 declaraciones.confirmar_presencia(resultado, aportacion.fuente["id"])
                 break
     confirmante = min(lista, key=lambda a: (a.fuente["credibilidad"], a.fuente["id"])).fuente
@@ -596,11 +596,7 @@ def alta(
                           "motivo": f"día escrito en el documento de {documento['autoridad']}"},
     }  # fmt: skip
     # Criterio de presencia: el documento de la autoridad que atribuye el suceso a un dron.
-    if (
-        nuevo.get("presencia_dron") == "no_confirmada"
-        and declaraciones.habla_de_drones(frase)
-        and not declaraciones.abierto(frase)
-    ):
+    if nuevo.get("presencia_dron") == "no_confirmada" and declaraciones.atribuye_dron(frase):
         declaraciones.confirmar_presencia(nuevo, fuente["id"])
     return incidentes.aplicar_reglas(titulares.ajustar_incidente(nuevo))
 

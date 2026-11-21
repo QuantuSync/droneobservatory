@@ -121,6 +121,13 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   domingo con los drones de los dos días. Desde el 9 de noviembre de 2026 también dos días
   seguidos sin la noche junto a ellos: EODI-2026-00770, «am Samstag und Sonntag jeweils eine der
   beiden Landebahnen kurzzeitig gesperrt» (Leipzig/Halle).
+- **AB, presencia confirmada sin frase que afirme el dron**: la presencia es «confirmada» y
+  ninguna fuente de autoridad tiene una frase que afirme el dron (proceso/declaraciones.
+  atribuye_dron): solo hablan de avisos, de una sospecha o de su respuesta a ellos, o no lo
+  nombran. No cuentan la presencia revisada a mano, el documento propio de una autoridad ni las
+  pruebas físicas que confirma una autoridad. EODI-2026-00821 (RAF Lakenheath, 13 de noviembre de
+  2026): «responded to "suspected unauthorised drone activity"» y «responded to reports of
+  unauthorised drone activity» la dejaban confirmada.
 """
 
 import json
@@ -162,7 +169,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA",
+    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -192,6 +199,7 @@ NOMBRES = {
     "Y": "autoridad de otro país sin frase",
     "Z": "fuente anterior al suceso",
     "AA": "una frase con dos días",
+    "AB": "presencia confirmada sin frase que afirme el dron",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -635,10 +643,26 @@ def de_otro_pais(incidente: Documento, verificacion: Documento | None = None) ->
     )
 
 
+def confirmada_sin_frase_que_afirme(incidente: Documento) -> bool:
+    """AB: presencia confirmada sin ninguna frase de autoridad que afirme el dron."""
+    return (
+        incidente.get("presencia_dron") == "confirmada"
+        and incidente["id"] not in presencias_revisadas()
+        and not documento_oficial_decide(incidente)
+        and not pruebas_fisicas_confirmadas(incidente)
+        and not any(
+            declaraciones.de_autoridad(f)
+            and declaraciones.atribuye_dron(str(f.get("frase_origen") or ""))
+            for f in incidente.get("fuentes", [])
+        )
+    )
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
     "AA": suceso.dos_dias_sin_revisar,
+    "AB": confirmada_sin_frase_que_afirme,
 }  # fmt: skip
 
 
