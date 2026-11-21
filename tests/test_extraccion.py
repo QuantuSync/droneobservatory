@@ -622,7 +622,7 @@ def test_paso_horario_con_servicio(almacen: Almacen, monkeypatch: pytest.MonkeyP
     for nombre, valor in valores.items():
         monkeypatch.setenv(nombre, valor)
     monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
-    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    monkeypatch.setattr(paginas, "leer_con_nota", lambda _d, _u: (TEXTO, ""))
     candidato_con_articulos(almacen, horas=2)
     falso = ClienteFalso(ficha_ejemplo(inicio=campo("2025-09-23T08:30", "mandag aften")))
     resultado = extractor.horaria(almacen, AHORA, lambda _c: falso)
@@ -651,7 +651,7 @@ def candidato_pendiente(almacen: Almacen, monkeypatch: pytest.MonkeyPatch) -> di
     for nombre, valor in valores.items():
         monkeypatch.setenv(nombre, valor)
     monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
-    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    monkeypatch.setattr(paginas, "leer_con_nota", lambda _d, _u: (TEXTO, ""))
     candidato = candidato_con_articulos(almacen, horas=2)
     monkeypatch.setattr(extractor, "pendientes", lambda _a, _desde=None: [candidato] * PENDIENTES)
     return candidato
@@ -809,10 +809,10 @@ def test_sin_tiempo_el_extractor_deja_los_candidatos_pendientes(
 def test_sin_tiempo_para_descargar_las_paginas_no_se_llama_solo_con_titulares(
     almacen: Almacen, candidato_pendiente: dict[str, Any], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    def sin_tiempo(_descargador: object, _url: str) -> str:
+    def sin_tiempo(_descargador: object, _url: str) -> tuple[str, str]:
         raise TiempoAgotado("tope de 0 s agotado")
 
-    monkeypatch.setattr(paginas, "leer", sin_tiempo)
+    monkeypatch.setattr(paginas, "leer_con_nota", sin_tiempo)
     resultado, servicio = paso_horario(almacen, [bien()], plazo=Plazo(extractor.TOPE_S))
     assert servicio.pedidas == []
     assert resultado.parada is extraccion.Parada.TIEMPO
@@ -936,7 +936,7 @@ def test_un_candidato_sin_articulos_en_idioma_conocido_no_se_manda_ni_frena_a_lo
     }.items():  # fmt: skip
         monkeypatch.setenv(nombre, valor)
     monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
-    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    monkeypatch.setattr(paginas, "leer_con_nota", lambda _d, _u: (TEXTO, ""))
     caplog.set_level(logging.INFO, logger="recogida")
     bueno = candidato_con_articulos(almacen, horas=2)
     sin_idioma = [

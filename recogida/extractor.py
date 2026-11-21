@@ -163,14 +163,18 @@ def preparar_todas(
         fuentes = []
         for f, url in zip(peticion.fuentes, peticion.enviadas, strict=True):
             try:
-                texto = paginas.leer(propio, url)
+                # El principio, para el paso 1, y la nota, para el paso 2 (modelo/detalles.py).
+                texto, nota = paginas.leer_con_nota(propio, url)
             except TiempoAgotado:
                 raise
             except Exception as error:
                 # Sin la página, el titular basta para esa fuente.
                 registro.warning("página sin leer (%s): %r", url, error)
-                texto = ""
-            fuentes.append(replace(f, texto=extraccion.con_pista(f.texto, texto)))
+                texto = nota = ""
+            fuentes.append(replace(
+                f, texto=extraccion.con_pista(f.texto, texto),
+                nota=extraccion.con_pista(f.texto, nota) if nota else "",
+            ))  # fmt: skip
         return replace(peticion, fuentes=fuentes)
 
     with ThreadPoolExecutor(HILOS) as hilos:

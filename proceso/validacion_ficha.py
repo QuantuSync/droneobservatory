@@ -118,6 +118,9 @@ class Contexto:
     # Hora de publicación de cada fuente enviada, en su orden: el inicio se compara con la de
     # la nota que lo dice, no con la primera del candidato (que puede ser de otro día).
     publicaciones: tuple[datetime, ...] = ()
+    # Lo que leyó el paso 2 de cada fuente (el principio y la nota, proceso/detalles.py): la frase
+    # de un dato que añadió el paso 2 se busca ahí; la de los demás, en `textos`, como siempre.
+    notas: tuple[str, ...] = ()
 
     def publicacion(self, fuente: Any) -> datetime:
         if isinstance(fuente, int) and 1 <= fuente <= len(self.publicaciones):
@@ -340,7 +343,8 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         if isinstance(campo.get("frase"), str) and len(campo["frase"].split()) > MAX_PALABRAS_FRASE:
             # Una frase más larga se recorta a sus primeras 25 palabras: sigue siendo cita literal.
             campo = {**campo, "frase": " ".join(campo["frase"].split()[:MAX_PALABRAS_FRASE])}
-        motivo = _frase_valida(campo, contexto.textos) or _valor_valido(
+        textos = contexto.notas if campo.get("paso") and contexto.notas else contexto.textos
+        motivo = _frase_valida(campo, textos) or _valor_valido(
             nombre, campo["valor"], str(campo["frase"]), contexto, campo.get("fuente")
         )
         if motivo:
