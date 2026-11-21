@@ -13375,6 +13375,46 @@
       "enlace": "https://wiadomosci.gazeta.pl/polska/7,198073,33140558,nielegalnie-latal-dronem-nad-infrastruktura-krytyczna-zostal.html",
       "pais": "PL",
       "motivo": "el dron voló sobre el puerto de Gdynia, en el muelle Francés, como dice el titular; el puerto no está en el nomenclátor y el objetivo quedaba vacío (auditoría B del 20 de noviembre; revisado el 21 de noviembre de 2026)"
+    },
+    {
+      "revisado_el": "2026-11-21",
+      "incidente": "EODI-2026-00947",
+      "campo": "lugar",
+      "valor": {
+        "nivel": "region",
+        "suceso": "nordul județului Tulcea",
+        "region": "Tulcea"
+      },
+      "cita": "a notificat Inspectoratul General pentru Situații de Urgență în vederea instituirii măsurilor de alertare a populației din nordul județului Tulcea",
+      "enlace": "https://www.mapn.ro/cpresa/19480_informa%C8%9Bie-de-presa",
+      "pais": "RO",
+      "motivo": "el Ministerio de Defensa rumano pidió alertar a la población del norte del distrito de Tulcea; la ficha lo tenía y en la recogida de las 12:38 del 21 de noviembre de 2026 pasó a solo «Rumanía» porque ninguna frase guardada de sus fuentes nombraba Tulcea (auditoría X; revisado el 21 de noviembre de 2026)"
+    },
+    {
+      "revisado_el": "2026-11-21",
+      "incidente": "EODI-2026-00947",
+      "campo": "titulo",
+      "valor": {
+        "es": "Alerta en el norte de Tulcea y despegue de cazas F-16 por blancos aéreos junto a la frontera con Ucrania",
+        "en": "Alert in northern Tulcea and F-16s scrambled over air targets near the Ukrainian border"
+      },
+      "cita": "a notificat Inspectoratul General pentru Situații de Urgență în vederea instituirii măsurilor de alertare a populației din nordul județului Tulcea",
+      "enlace": "https://www.mapn.ro/cpresa/19480_informa%C8%9Bie-de-presa",
+      "pais": "RO",
+      "motivo": "el titular «Posible dron avistado en Rumanía» afirmaba más que la fuente: el radar detectó los blancos en Ucrania, unos 4 km al este de Vâlcove («a detectat patru ținte aeriene la aproximativ 4 kilometri est de localitatea Vâlcove, Ucraina», MApN), y en Rumanía se alertó a la población del norte de Tulcea (revisado el 21 de noviembre de 2026)"
+    },
+    {
+      "revisado_el": "2026-11-21",
+      "incidente": "EODI-2026-00952",
+      "campo": "zona",
+      "valor": {
+        "grupo": "frontera",
+        "motivo": "cerca_de_la_frontera"
+      },
+      "cita": "The vessel was damaged west of Russia's Gogland island on Saturday, caught fire and later drifted into Finnish territorial waters, Finland's Defence Forces said",
+      "enlace": "https://dailymail.com/news/article-16311227/Russian-ship-military-supplies-drones-Gulf-Finland-Nato.html",
+      "pais": "FI",
+      "motivo": "el buque fue alcanzado en el golfo de Finlandia, al oeste de la isla rusa de Gogland, a unas decenas de kilómetros de la frontera con Rusia; sin punto en tierra la zona caía en «interior», que solo se evita para los buques del mar Negro (auditoría F; revisado el 21 de noviembre de 2026)"
     }
   ]
 }
