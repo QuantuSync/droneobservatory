@@ -492,7 +492,11 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
     ]
     for otra in incidente["fuentes"]:
         otra["credibilidad"] = int(Credibilidad.CONFIRMADO)
-    if incidente["estado"]["actual"] != Estado.CONFIRMADO:
+    # Confirma la nota que reconoce el suceso, no la que solo cuenta que se investiga
+    # (declaraciones.reconoce, EODI-2026-00937).
+    if incidente["estado"]["actual"] != Estado.CONFIRMADO and declaraciones.reconoce(
+        fuente, incidente
+    ):
         # Un desmentido de una autoridad más fiable no se revierte con esta nota.
         with contextlib.suppress(TransicionNoPermitida):
             incidente["estado"] = transitar(

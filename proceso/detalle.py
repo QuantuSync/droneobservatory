@@ -367,7 +367,15 @@ def aplicar(incidente: Documento, lista: list[Aportacion]) -> Documento:
             if declaraciones.atribuye_dron(frase):
                 declaraciones.confirmar_presencia(resultado, aportacion.fuente["id"])
                 break
-    confirmante = min(lista, key=lambda a: (a.fuente["credibilidad"], a.fuente["id"])).fuente
+    # Confirma el documento cuya frase reconoce el suceso: no el que solo cuenta que la autoridad
+    # lo investiga (declaraciones.reconoce, EODI-2026-00937).
+    reconocen = [
+        a for a in lista
+        if not a.fuente.get("es_autoridad") or declaraciones.reconoce(a.fuente, resultado)
+    ]  # fmt: skip
+    if not reconocen:
+        return incidentes.aplicar_reglas(resultado)
+    confirmante = min(reconocen, key=lambda a: (a.fuente["credibilidad"], a.fuente["id"])).fuente
     if resultado["estado"]["actual"] not in incidentes.CONFIRMADOS:
         # Un desmentido de una autoridad más fiable no se revierte con esta fuente.
         with contextlib.suppress(TransicionNoPermitida):
@@ -584,9 +592,11 @@ def alta(
         for p in nuevo["estado"]["historial"]
     ]  # fmt: skip
     nuevo["control"]["huella_fuentes"] = incidentes.huella([enlace])
-    nuevo["estado"] = transitar(
-        nuevo["estado"], Estado.CONFIRMADO, fuente["fecha"], fuente["id"], {fuente["id"]: fuente}
-    )
+    if not fuente.get("es_autoridad") or declaraciones.reconoce(fuente, nuevo):
+        nuevo["estado"] = transitar(
+            nuevo["estado"], Estado.CONFIRMADO, fuente["fecha"], fuente["id"],
+            {fuente["id"]: fuente},
+        )  # fmt: skip
     # El día está escrito en el documento oficial (validacion_oficial.dia_en_frase).
     precision = ficha.valor("inicio_precision") if "T" in inicio else "dia"
     nuevo["tiempo"] = {

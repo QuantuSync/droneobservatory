@@ -354,9 +354,22 @@ def _autoridad(documento: Documento, fuente_id: str | None) -> bool:
     )
 
 
+def _reconocido(documento: Documento, fuente_id: str | None) -> bool:
+    """La fuente es de una autoridad cuya frase reconoce el suceso (declaraciones.reconoce)."""
+    return any(
+        f.get("id") == fuente_id and declaraciones.reconoce(f, documento)
+        for f in documento.get("fuentes", [])
+    )
+
+
 def _decidido_por_autoridad(guardado: Documento, dato: str) -> bool:
     if dato == "estado":
-        return _autoridad(guardado, decidir.decidir_estado(guardado).fuente_id)
+        fuente_id = decidir.decidir_estado(guardado).fuente_id
+        # Una confirmación cuya autoridad no reconoce el suceso (solo lo investiga o recibe el
+        # aviso) no la decide una autoridad: la corrige la regla (EODI-2026-00937, 22/11/2026).
+        if (guardado.get("estado") or {}).get("actual") == "confirmado":
+            return _reconocido(guardado, fuente_id)
+        return _autoridad(guardado, fuente_id)
     confirmada = guardado.get("presencia_dron") == "confirmada"
     decision = decidir.decidir_presencia(guardado, confirmada=confirmada)
     return decision.regla == "rectificacion" or _autoridad(guardado, decision.fuente_id)

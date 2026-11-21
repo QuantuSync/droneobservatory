@@ -117,10 +117,12 @@ def _historial_vigente(incidente: Documento) -> Documento:
 def _autoridad_que_lo_cuenta(incidente: Documento) -> Documento | None:
     """La primera autoridad u operador oficial que cuenta lo ocurrido (el portavoz del aeropuerto,
     el control aéreo, la policía o el ministerio), aunque diga que no encontró el dron o que era
-    otra cosa: el suceso queda confirmado (docs/control_fichas.md, «estado»)."""
+    otra cosa: el suceso queda confirmado (docs/control_fichas.md, «estado»). No la que solo lo
+    investiga o recibe el aviso, ni la de un artículo que dice que no está confirmado oficialmente
+    (declaraciones.reconoce, EODI-2026-00937)."""
     autoridades = [
         f for f in incidente.get("fuentes", [])
-        if declaraciones.de_autoridad(f) and str(f.get("frase_origen") or "").strip()
+        if str(f.get("frase_origen") or "").strip() and declaraciones.reconoce(f, incidente)
     ]  # fmt: skip
     return min(autoridades, key=lambda f: (f["fecha"]["valor"], f["id"]), default=None)
 

@@ -609,23 +609,41 @@ def oficial(fuente: Documento) -> bool:
     return bool(fuente.get("es_autoridad")) or fuente.get("fiabilidad") in {"A", "B"}
 
 
-def sostiene_la_confirmacion(fuente: Documento) -> bool:
+def sostiene_la_confirmacion(fuente: Documento, incidente: Documento | None = None) -> bool:
     """Una declaración vigente de una autoridad que cuenta el suceso del dron: sostiene el estado
     «confirmado» aunque no sea la del paso del historial. Basta con que lo reconozca: la que
     responde a unos avisos de drones confirma el suceso aunque no afirme el dron
-    (declaraciones.habla_del_suceso; la presencia es otra cosa)."""
+    (declaraciones.habla_del_suceso; la presencia es otra cosa). No la de un artículo que dice que
+    no está confirmado oficialmente (declaraciones.reconoce, EODI-2026-00937)."""
     return (
         fuente.get("publica", True) is not False
-        and declaraciones.de_autoridad(fuente)
         and declaraciones.habla_del_suceso(str(fuente.get("frase_origen") or ""))
+        and declaraciones.reconoce(fuente, incidente)
     )
+
+
+# Las fuentes de una revisión a mano (configuracion/incidentes_revisados.json): llevan su cita.
+REVISADA = "revisada-"
+
+
+def da_la_confirmacion(fuente: Documento, incidente: Documento) -> bool:
+    """La fuente del paso a «confirmado» lo sostiene: es oficial y, si es de una autoridad, su
+    frase reconoce el suceso (declaraciones.reconoce). Las de una revisión a mano, siempre."""
+    if str(fuente.get("id", "")).startswith(REVISADA):
+        return True
+    if not oficial(fuente):
+        return False
+    return not fuente.get("es_autoridad") or declaraciones.reconoce(fuente, incidente)
 
 
 def estado_sin_respaldo(incidente: Documento) -> str | None:
     """El paso de estado más alto sin una fuente oficial que lo dé, o None si está bien. El
     historial guarda solo la fuente del primer paso a confirmado: si esa deja de ser oficial, otra
     autoridad de la ficha que afirma lo mismo lo sigue sosteniendo (EODI-2026-00728, el Ministerio
-    de Defensa de Moldavia, sin paso propio porque la ficha ya estaba confirmada al unirse)."""
+    de Defensa de Moldavia, sin paso propio porque la ficha ya estaba confirmada al unirse). Desde
+    el 22 de noviembre de 2026, una autoridad cuya frase no reconoce el suceso (solo lo investiga
+    o recibe el aviso, o su artículo dice que no está confirmado oficialmente) no da la
+    confirmación (EODI-2026-00937). La atribución tiene su propia regla (proceso/atribucion.py)."""
     actual = Estado(incidente["estado"]["actual"])
     if actual not in {Estado.CONFIRMADO, Estado.ATRIBUIDO}:
         return None
@@ -633,26 +651,59 @@ def estado_sin_respaldo(incidente: Documento) -> str | None:
     for paso in incidente["estado"]["historial"]:
         if paso["estado"] == actual.value:
             fuente = fuentes.get(paso.get("fuente_id", ""))
-            if fuente is not None and oficial(fuente):
+            if fuente is None:
+                continue
+            if actual == Estado.ATRIBUIDO and oficial(fuente):
                 return None
-    if actual == Estado.CONFIRMADO and any(sostiene_la_confirmacion(f) for f in fuentes.values()):
+            if actual == Estado.CONFIRMADO and da_la_confirmacion(fuente, incidente):
+                return None
+    if actual == Estado.CONFIRMADO and any(
+        sostiene_la_confirmacion(f, incidente) for f in fuentes.values()
+    ):
         return None
     return actual.value
 
 
+def frases_que_no_reconocen(incidente: Documento) -> list[str]:
+    """Las frases de autoridad de la ficha que no reconocen el suceso, con quién las dice y por
+    qué («Żandarmeria wojskowa de Italia (…): «Zdarzenie bada…» (solo cuenta que…)»)."""
+    salida = []
+    for fuente in incidente.get("fuentes", []):
+        if not declaraciones.de_autoridad(fuente):
+            continue
+        motivo = declaraciones.por_que_no_reconoce(fuente, incidente)
+        if motivo is not None:
+            salida.append(
+                f"{fuente.get('medio')}: «{fuente.get('frase_origen')}» "
+                f"({declaraciones.MOTIVOS_NO_RECONOCE[motivo]})"
+            )
+    return salida
+
+
+# Lo que sigue al motivo de la bajada cuando hay frases de autoridad que no reconocen el suceso.
+SIN_RECONOCER = {
+    "es": "ninguna autoridad reconoce el suceso",
+    "en": "no authority acknowledges the event",
+}
+
+
 def bajar_estado(incidente: Documento, instante_: Documento) -> Documento | None:
-    """El incidente con el estado sin respaldo vuelto a notificado (una retirada permitida)."""
+    """El incidente con el estado sin respaldo vuelto a notificado (una retirada permitida). Si
+    la ficha tiene frases de autoridad que no reconocen el suceso, el motivo las cita."""
     sin = estado_sin_respaldo(incidente)
     if sin is None or (Estado(sin), Estado.NOTIFICADO) not in RETIRADAS:
         return None
     primera = incidente["estado"]["historial"][0]
+    frases = "; ".join(frases_que_no_reconocen(incidente))
     paso = {
         "estado": Estado.NOTIFICADO.value,
         "fecha": instante_,
         "fuente_id": primera["fuente_id"],
         "motivo": {
-            "es": f"Ninguna fuente oficial da el estado «{sin}» (control de fichas).",
-            "en": f"No official source gives the status «{sin}» (record check).",
+            "es": f"Ninguna fuente oficial da el estado «{sin}» (control de fichas)"
+            + (f": {SIN_RECONOCER['es']}: {frases}." if frases else "."),
+            "en": f"No official source gives the status «{sin}» (record check)"
+            + (f": {SIN_RECONOCER['en']}: {frases}." if frases else "."),
         },
     }
     historial = [*incidente["estado"]["historial"], paso]

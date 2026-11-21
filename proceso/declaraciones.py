@@ -5,7 +5,10 @@ webs. Cada declaración que el extractor encuentra en una noticia (con su frase
 literal, que tiene que estar en el texto enviado) se registra como fuente
 «declaración oficial citada», de fiabilidad B, con el enlace a la noticia. Reglas:
 
-- incidente o drones: pasa a confirmado (la autoridad dice que ocurrió).
+- incidente o drones: pasa a confirmado (la autoridad dice que ocurrió), si la frase reconoce el
+  suceso (`reconoce`, desde el 22 de noviembre de 2026): no la que solo cuenta que la autoridad
+  lo investiga o que la avisaron, ni la de un artículo que dice que no está confirmado
+  oficialmente.
 - Presencia del dron: si la autoridad competente lo da por hecho, está confirmada: su frase
   afirma el dron (un cierre por un dron, un dron que entró, se vio, se detectó, se derribó o se
   recuperó): drones, incidente o autoria de un gobierno, ministerio, fuerzas armadas, policía,
@@ -56,6 +59,8 @@ RUTA_NO_AUTORIDADES = (
     Path(__file__).resolve().parent.parent / "configuracion" / ("no_son_autoridades.json")
 )
 FIABILIDAD = "B"
+# Lo que lleva el identificador de la fuente de una declaración citada (`fuente`).
+MARCA_DECLARACION = "-declaracion-"
 # Autoridades competentes: si atribuyen el suceso a un dron, la presencia está confirmada.
 AUTORIDADES_DEL_DRON = frozenset(
     {
@@ -147,7 +152,10 @@ def cita_vacia(fuente: Documento) -> bool:
 def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> list[dict[str, Any]]:
     """Las declaraciones cuya frase está en el texto de su fuente, con la frase recortada. Una
     frase que solo dice quién habla («… przekazała») se cambia por lo que dijo, si el texto lo
-    trae detrás, o la declaración no vale."""
+    trae detrás, o la declaración no vale. Tampoco vale la que confirmaría el suceso en un texto
+    que dice que no está confirmado oficialmente (`no_confirmado_oficialmente`: «Incydent nie
+    został oficjalnie potwierdzony przez władze bazy.», EODI-2026-00937): el propio artículo dice
+    que ninguna autoridad lo ha confirmado."""
     resultado = []
     for declaracion in declaraciones:
         numero = declaracion.get("fuente")
@@ -155,6 +163,10 @@ def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> l
         if not isinstance(numero, int) or not 1 <= numero <= len(textos) or not frase.strip():
             continue
         if _normal(frase) not in _normal(textos[numero - 1]):
+            continue
+        if declaracion.get("afirma") in CONFIRMAN and no_confirmado_oficialmente(
+            textos[numero - 1]
+        ):
             continue
         palabras = frase.split()[:MAX_PALABRAS_FRASE]
         if remite(" ".join(palabras)) and not habla_de_drones(" ".join(palabras)):
@@ -443,6 +455,143 @@ def habla_del_suceso(frase: str) -> bool:
     return habla_de_drones(_DRON_NEGADO.sub(" ", frase)) and not abierto(frase)
 
 
+# --- El suceso reconocido (el estado) -------------------------------------------------------
+#
+# Una autoridad confirma el suceso si su frase lo reconoce: cuenta la alerta, el cierre, la
+# detección o lo ocurrido, aunque no nombre el dron o diga que era otra cosa. No lo reconoce la
+# frase que solo cuenta que la autoridad lo investiga, lo examina o lo comprueba, ni la que la
+# pone como quien recibe el aviso. EODI-2026-00937 (Sigonella, 20/11/2026) pasó a «confirmado»
+# con «Zdarzenie bada włoska żandarmeria wojskowa.» («el suceso lo investiga la policía militar
+# italiana»), una frase del periódico, que además decía «Incydent nie został oficjalnie
+# potwierdzony przez władze bazy.»
+_INVESTIGA = re.compile(
+    r"(?<!\w)(?:investigat\w*|inquir\w*|inquiry|probing|looking\s+into|investig\w*|indag\w*|"
+    r"averigu\w*|bada|badają|badał\w*|badani\w*|śledztw\w*|dochodzeni\w*|wyjaśnia\w*|"
+    r"sprawdza\w*|ermittel\w*|ermittlung\w*|untersuch\w*|überprüf\w*|prüft|prüfen|"
+    r"enquête\w*|enquêt\w*|accertament\w*|onderzo\w*|undersøg\w*|efterforsk\w*|etterforsk\w*|"
+    r"utred\w*|undersök\w*|anchet\w*|cercet\w*|tyri\w*|tiria\w*|izmeklē\w*|uurib\w*|"
+    r"uurimi\w*|разслед\w*|розслід\w*|расслед\w*|vizsgál\w*|nyomoz\w*|ερευν\w*|tutki\w*|"
+    r"vyšetř\w*)(?!\w)",
+    re.IGNORECASE,
+)
+# Lo que se sabe por la investigación sí lo reconoce: «an investigation showed no drone was
+# detected on radar and that the object was likely a balloon» (EODI-2025-00203), «A vizsgálatok
+# szerint a gép … robbanószerkezetet szállított» (EODI-2025-00246).
+_RESULTADO = re.compile(
+    r"(?<!\w)(?:showed|shows|found|revealed|concluded|determined|established|according\s+to|"
+    r"szerint|ergab\w*|zeigt\w*|wykazał\w*|ustalił\w*|ustalono|a\s+arătat|a\s+stabilit|"
+    r"au\s+stabilit|nustatė|nustatyta|konklusion\w*|konkluder\w*|bleek|blijkt|viste|visade|"
+    r"selon|según|potrivit|conform|laut|zufolge|demnach)(?!\w)",
+    re.IGNORECASE,
+)
+# La autoridad que recibe el aviso: «O sprawie poinformowano prokuraturę oraz Ministerstwo
+# Obrony Narodowej» (EODI-2026-00362). Solo si la frase nombra a quien declara: la autoridad que
+# cuenta que avisó a otras sí lo reconoce («Apie įvykį nedelsiant informuotos atsakingos
+# tarnybos», la VST en EODI-2026-00032).
+_RECEPTOR = re.compile(
+    r"(?<!\w)(?:poinformowano|powiadomiono|zawiadomiono|informuot\w*|"
+    r"(?:were|was|been)\s+(?:informed|notified|alerted|called)|"
+    r"fue(?:ron)?\s+(?:alertad|avisad|informad|notificad)\w*|"
+    r"(?:wurde|wurden)\s+(?:informiert|alarmiert|verständigt|benachrichtigt)|"
+    r"a(?:u)?\s+fost\s+(?:anunțat|anuntat|sesizat|informat|alertat|notificat)\w*|"
+    r"(?:ont|a)\s+été\s+(?:alerté|prévenu|informé|avisé)\w*|"
+    r"(?:è|sono)\s+stat[aoie]\s+(?:avvisat|allertat|informat)\w*)(?!\w)",
+    re.IGNORECASE,
+)
+# La fuente dice que el suceso no está confirmado oficialmente. No la causa («Cauza
+# incidentului nu a fost confirmată oficial», EODI-2026-00669) ni el dron («unconfirmed drone
+# sightings»): eso es la presencia.
+_NO_CONFIRMADO = re.compile(
+    r"(?<!\w)(?:not\s+(?:been\s+|yet\s+)?officially\s+confirmed|"
+    r"not\s+(?:been\s+|yet\s+)?confirmed\s+(?:officially|by\s+(?:the\s+)?(?:authorit|official|"
+    r"militar|police|base))|no\s+official\s+confirmation|"
+    r"nie\s+został\w*\s+(?:jeszcze\s+)?oficjalnie\s+potwierdzon\w*|"
+    r"nie\s+potwierdzi\w*\s+oficjalnie|brak\s+oficjalnego\s+potwierdzenia|"
+    r"no\s+(?:ha\s+sido\s+|fue\s+|se\s+ha\s+)?confirmad\w*\s+oficialmente|"
+    r"sin\s+confirmación\s+oficial|"
+    r"non\s+(?:è\s+stat[oa]\s+)?(?:ancora\s+)?confermat\w*\s+ufficialmente|"
+    r"nessuna\s+conferma\s+ufficiale|nicht\s+offiziell\s+bestätigt|"
+    r"keine\s+offizielle\s+bestätigung|niet\s+officieel\s+bevestigd|"
+    r"pas\s+(?:été\s+)?confirmé\w*\s+officiellement|aucune\s+confirmation\s+officielle|"
+    r"ikke\s+officielt\s+bekræftet|ikke\s+offisielt\s+bekreftet|inte\s+officiellt\s+bekräftat|"
+    r"nu\s+(?:a\s+fost\s+)?confirmat\w*\s+oficial|nu\s+confirmă\s+incidentul|"
+    r"oficialiai\s+nepatvirtint\w*|nav\s+oficiāli\s+apstiprināt\w*)(?!\w)",
+    re.IGNORECASE,
+)
+_CAUSA = re.compile(
+    r"(?<!\w)(?:cauz\w*|caus\w*|ursache\w*|przyczyn\w*|oorzaak|årsag\w*|orsak\w*|origen|"
+    r"origin\w*|motiv\w*)(?!\w)",
+    re.IGNORECASE,
+)
+_PALABRA_NOMBRE = re.compile(r"[^\W\d_]{4,}")
+_NO_NOMBRE = frozenset({"declaración", "oficial", "citada"})
+MOTIVOS_NO_RECONOCE = {
+    "investiga": "solo cuenta que la autoridad lo investiga, lo examina o lo comprueba",
+    "receptor": "la autoridad es quien recibe el aviso",
+    "no_oficial": "la fuente dice que no está confirmado oficialmente",
+}
+
+
+def no_confirmado_oficialmente(texto: str) -> str | None:
+    """La oración del texto que dice que el suceso no está confirmado oficialmente, o None."""
+    for oracion in re.split(r"(?<=[.!?])\s+|\n", texto or ""):
+        negacion = _NO_CONFIRMADO.search(oracion)
+        if negacion and not _CAUSA.search(oracion[: negacion.start()]):
+            return oracion.strip()
+    return None
+
+
+def _nombra(frase: str, autoridad: str) -> bool:
+    nombre = {p.casefold() for p in _PALABRA_NOMBRE.findall(autoridad)} - _NO_NOMBRE
+    return bool(nombre & {p.casefold() for p in _PALABRA_NOMBRE.findall(frase)})
+
+
+def no_reconoce(frase: str, autoridad: str = "") -> str | None:
+    """Por qué la frase de una autoridad no reconoce el suceso (una clave de
+    `MOTIVOS_NO_RECONOCE`), o None si lo reconoce. `autoridad`: quien declara."""
+    if no_confirmado_oficialmente(frase):
+        return "no_oficial"
+    if habla_del_suceso(frase) or remite(frase):
+        return None
+    if _INVESTIGA.search(frase) and not _RESULTADO.search(frase):
+        return "investiga"
+    if _RECEPTOR.search(frase) and (not autoridad or _nombra(frase, autoridad)):
+        return "receptor"
+    return None
+
+
+def reconoce_suceso(frase: str, autoridad: str = "") -> bool:
+    """La frase de una autoridad reconoce el suceso: sostiene el estado «confirmado»."""
+    return no_reconoce(frase, autoridad) is None
+
+
+def autoridad_de(fuente: Documento) -> str:
+    """Quien declara: el nombre antes de «(declaración oficial citada en …)», o el medio."""
+    medio = str(fuente.get("medio", ""))
+    citada = _CITADA.match(medio)
+    return citada["autoridad"] if citada else medio
+
+
+def por_que_no_reconoce(fuente: Documento, incidente: Documento | None = None) -> str | None:
+    """Por qué una fuente de autoridad no sostiene el estado (`MOTIVOS_NO_RECONOCE`), o None si
+    lo sostiene. Con `incidente`, tampoco lo sostiene la declaración citada en un artículo que dice
+    que el suceso no está confirmado oficialmente (la frase de otra fuente del mismo enlace)."""
+    motivo = no_reconoce(str(fuente.get("frase_origen") or ""), autoridad_de(fuente))
+    if motivo is not None or incidente is None or MARCA_DECLARACION not in str(fuente.get("id")):
+        return motivo
+    for otra in incidente.get("fuentes", []):
+        if otra.get("enlace") == fuente.get("enlace") and no_confirmado_oficialmente(
+            str(otra.get("frase_origen") or "")
+        ):
+            return "no_oficial"
+    return None
+
+
+def reconoce(fuente: Documento, incidente: Documento | None = None) -> bool:
+    """La fuente es de una autoridad y su frase reconoce el suceso (`no_reconoce`)."""
+    return de_autoridad(fuente) and por_que_no_reconoce(fuente, incidente) is None
+
+
 def atribuye_dron(frase: str) -> bool:
     """La frase de una autoridad atribuye lo que pasó a un dron: lo afirma (lo nombra sin negarlo
     y no como aviso, sospecha o respuesta: `drones_afirmados`) y no lo deja abierto. Una medida
@@ -593,7 +742,9 @@ def _aplicar_nuevas(
     por_frase: list[Documento] = []
     for declaracion, origen in sorted(nuevas, key=lambda n: orden[n[0]["afirma"]]):
         afirma = declaracion["afirma"]
-        if afirma in CONFIRMAN:
+        if afirma in CONFIRMAN and reconoce(origen, resultado):
+            # Solo si la frase reconoce el suceso: no si solo cuenta que la autoridad lo
+            # investiga o que la avisaron (EODI-2026-00937).
             _transitar(resultado, Estado.CONFIRMADO, origen)
         contexto = str(por_enlace.get(origen["enlace"], {}).get("frase_origen", ""))
         if afirma == "drones" and confirma_dron(declaracion, contexto):
