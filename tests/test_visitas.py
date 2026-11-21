@@ -36,6 +36,8 @@ def base_goatcounter(ruta: Path, paginas: list[tuple[str, str, str, str, str, in
         create table hits (hit_id integer primary key autoincrement, site_id int, path_id int,
                            ref_id int, session blob, first_visit int, browser_id int,
                            system_id int, width int, location text, created_at text);
+        create table browsers (browser_id integer primary key, name text, version text);
+        insert into browsers values (1, 'Chrome', '156.0.7390.54');
         insert into refs values (1, '', 'o');
         insert into locations values (1, '', '', '(unknown)', ''),
             (2, 'US', '', 'United States', ''), (3, 'ES', '', 'Spain', ''),
@@ -128,6 +130,43 @@ def test_visitas_del_dia(goatcounter: Path) -> None:
     assert v.paginas[0] == ("/", 3)
     assert dict(v.procedencias) == {"LinkedIn": 1, "Google": 1, "Directo": 1}
     assert dict(v.paises) == {"España": 1, "Estados Unidos": 1, "Seychelles": 1}
+    assert (v.movil, v.ordenador) == (1, 2)
+    assert visitas.totales(conexion, DIA - timedelta(days=1)) == (1, 1)
+    assert (v.automaticas, v.huellas) == (0, [])
+    conexion.close()
+
+
+def test_el_trafico_automatico_se_aparta_de_todas_las_cifras(tmp_path: Path) -> None:
+    """20 de noviembre de 2026: unas 590 de 606 sesiones eran de un navegador sin pantalla desde
+    Alemania (Linux, Chrome 156, 1920 px), una ficha cada una, sin referente. Una huella así que
+    se repite `UMBRAL_AUTOMATICO` veces en el día se aparta de todo y se cuenta aparte; las
+    personas con la misma huella pero que vienen de un enlace o ven varias páginas, no."""
+    robot = [
+        (en_madrid(DIA, 1, n % 60), f"r{n}", f"/en/EODI-2026-{n:05d}", "", "o", 1920, "Linux|DE")
+        for n in range(visitas.UMBRAL_AUTOMATICO + 5)
+    ]
+    personas = [
+        # La misma huella, pero con dos páginas.
+        (en_madrid(DIA, 9), "p1", "/", "", "o", 1920, "Linux|DE"),
+        (en_madrid(DIA, 9, 1), "p1", "/metodologia", "", "o", 1920, "Linux|DE"),
+        # La misma huella, desde Google.
+        (en_madrid(DIA, 10), "p2", "/", "www.google.com/", "h", 1920, "Linux|DE"),
+        # Una sola página directa con otra huella.
+        (en_madrid(DIA, 11), "p3", "/", "", "o", 390, "iOS|ES"),
+        # El día anterior, el mismo robot.
+        *(
+            (en_madrid(DIA - timedelta(days=1), 3), f"q{n}", "/en", "", "o", 1920, "Linux|DE")
+            for n in range(visitas.UMBRAL_AUTOMATICO)
+        ),
+        (en_madrid(DIA - timedelta(days=1), 4), "q-persona", "/", "", "o", 390, "iOS|ES"),
+    ]
+    base = base_goatcounter(tmp_path / "goatcounter.sqlite3", robot + personas)
+    conexion = visitas.abrir_goatcounter(base)
+    v = visitas.visitas_del_dia(conexion, DIA)
+    assert (v.visitas, v.visitantes) == (4, 3)
+    assert v.automaticas == visitas.UMBRAL_AUTOMATICO + 5
+    assert v.huellas == [("Alemania, Linux, Chrome 156, 1920 px", visitas.UMBRAL_AUTOMATICO + 5)]
+    assert all(not camino.startswith("/en/EODI") for camino, _ in v.paginas)
     assert (v.movil, v.ordenador) == (1, 2)
     assert visitas.totales(conexion, DIA - timedelta(days=1)) == (1, 1)
     conexion.close()

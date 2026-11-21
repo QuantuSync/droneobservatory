@@ -33,6 +33,18 @@ def test_leer_rss() -> None:
     assert notas[0].fecha == datetime(2025, 9, 23, 6, tzinfo=UTC)
 
 
+def test_un_canal_con_una_linea_en_blanco_antes_de_la_declaracion_se_lee() -> None:
+    """El canal de NATS (20 de noviembre de 2026) empieza con una línea en blanco antes de
+    `<?xml …?>`: falló 31 recogidas seguidas con «XML or text declaration not at start of
+    entity». Lo de antes de la declaración no cuenta."""
+    canal = '\n<?xml version="1.0" encoding="UTF-8"?>' + RSS
+    assert oficiales.es_canal(canal)
+    assert [n.id for n in oficiales.leer_rss(canal, FUENTE)] == [
+        "politi_kobenhavn-sm-11",
+        "politi_kobenhavn-sm-12",
+    ]
+
+
 # En «observar»: el caso se monta con una ficha del nivel manual (su identificador es el de una
 # ficha revisada) o con un estado que el cerrojo, en «aplicar», no deja crear.
 @pytest.mark.usefixtures("cerrojo_en_observar")
