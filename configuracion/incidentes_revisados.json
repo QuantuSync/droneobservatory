@@ -12687,25 +12687,6 @@
       "motivo": "la ficha es el dron detectado sobre Lunga; los «trei drone» del Ministerio de Exteriores son el total del 30 de septiembre, con EODI-2026-00527 y EODI-2026-00262"
     },
     {
-      "incidente": "EODI-2026-00075",
-      "campo": "lugar",
-      "valor": {
-        "localidad": "Roman",
-        "suceso": "18 km al norte de Roman",
-        "region": "Neamț",
-        "nivel": "localidad",
-        "punto": {
-          "lat": 46.9236,
-          "lon": 26.9204
-        },
-        "radio_km": 20.0
-      },
-      "cita": "w odległości 18 km na północ od miejscowości Roman we wschodniej Rumunii",
-      "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
-      "pais": "RO",
-      "motivo": "el dron se detectó en Rumanía a 18 km al norte de Roman (bankier.pl, con la agencia PAP y el Ministerio de Defensa rumano); Mihailenii Vechi (Rîșcani), donde cayó, está en Moldavia y no es el lugar de la ficha rumana (revisado el 2 de noviembre de 2026)"
-    },
-    {
       "incidente": "EODI-2026-00079",
       "campo": "inicio",
       "valor": "2026-02-17",
@@ -13361,7 +13342,7 @@
       "cita": "Zborurile de pe Aeroportul Internațional Iași au fost suspendate marți",
       "enlace": "https://agerpres.ro/social/2026/09/08/zborurile-de-pe-aeroportul-international-iasi-suspendate-dupa-mesajul-ro-alert-privind-detectarea-un--1591762",
       "pais": "RO",
-      "motivo": "el suceso que cuenta la ficha es el cierre del aeropuerto de Iași por el dron, como dice su titular; al unirle EODI-2026-00075 (el mismo dron, caído 18 km al norte de Roman) el lugar pasaba a Roman, a 60 km del aeropuerto, y la auditoría H lo marcaba (ensayo del 21 de noviembre de 2026)"
+      "motivo": "el suceso que cuenta la ficha es el cierre del aeropuerto de Iași por el dron, como dice su titular; al unirle EODI-2026-00075 (el mismo dron, detectado 18 km al norte de Roman) el lugar pasaba a Roman, a 60 km del aeropuerto, y la auditoría H lo marcaba (ensayo del 21 de noviembre de 2026); se quita la revisión de lugar de EODI-2026-00075 («18 km al norte de Roman»): con las dos, la unión quedaba retenida por revisiones en conflicto"
     },
     {
       "revisado_el": "2026-11-21",
