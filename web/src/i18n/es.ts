@@ -941,7 +941,9 @@ export const es: Textos = {
                 marca: { estado: "confirmado" },
                 texto: [
                   "Una autoridad afirma que el incidente ocurrió. En rojo. «Confirmado» significa " +
-                    "que una autoridad oficial lo ha declarado, no que exista una prueba física pública.",
+                    "que una autoridad oficial lo ha declarado, no que exista una prueba física pública. " +
+                    "No basta con que una autoridad lo investigue o reciba el aviso: tiene que reconocer " +
+                    "que ocurrió.",
                 ],
               },
               {

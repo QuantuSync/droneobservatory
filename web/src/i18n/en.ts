@@ -930,7 +930,9 @@ export const en: Textos = {
                 marca: { estado: "confirmado" },
                 texto: [
                   "An authority states that the incident happened. In red. “Confirmed” means " +
-                    "that an official authority has stated it, not that public physical evidence exists.",
+                    "that an official authority has stated it, not that public physical evidence exists. " +
+                    "An authority investigating it or being told about it is not enough: it has to " +
+                    "acknowledge that it happened.",
                 ],
               },
               {
