@@ -372,6 +372,10 @@ def _decidido_por_autoridad(guardado: Documento, dato: str) -> bool:
         return _autoridad(guardado, fuente_id)
     confirmada = guardado.get("presencia_dron") == "confirmada"
     decision = decidir.decidir_presencia(guardado, confirmada=confirmada)
+    if decision.regla == decidir.SIN_SUCESO_CONFIRMADO:
+        # Confirmada con el suceso sin confirmar: no la decide ninguna autoridad, la corrige la
+        # regla (EODI-2025-00278).
+        return False
     return decision.regla == "rectificacion" or _autoridad(guardado, decision.fuente_id)
 
 
@@ -558,7 +562,12 @@ def _hay_revision(nuevo: Documento, dato: str) -> bool:
     segundo, si trae el valor revisado."""
     id_ = str(nuevo["id"])
     if dato == "presencia_dron":
-        return id_ in decidir.presencias_revisadas()
+        # Una presencia revisada «confirmada» con el suceso sin confirmar no la fija: la regla la
+        # deja no confirmada (decidir.decidir_presencia, EODI-2025-00278).
+        return id_ in decidir.presencias_revisadas() and not (
+            decidir.presencias_revisadas()[id_] == "confirmada"
+            and (nuevo.get("estado") or {}).get("actual") not in incidentes.CONFIRMADOS
+        )
     if dato == "titulo":
         return id_ in decidir._titulos_revisados() or "titulo" in decidir.revisiones(nuevo)
     if dato == "objetivo":

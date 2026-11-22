@@ -4516,6 +4516,150 @@
         "categoria": "policia",
         "afirma": "drones"
       }
+    },
+    {
+      "incidente": "EODI-2025-00048",
+      "enlace": "https://kreiszeitung.de/lokales/bremen/drohnenflug-blockiert-kurzzeitig-flughafenbetrieb-in-bremen-94055749.html",
+      "medio": "kreiszeitung.de",
+      "fecha": "2025-11-26",
+      "idioma": "de",
+      "frase": "Wie die Bundespolizei mitteilt, wurde sie auf den Drohnenflug aufmerksam",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "kreiszeitung.de, 26/11/2025: la Bundespolizei cuenta que vio el vuelo del dron junto al aeropuerto de Bremen, encontró al piloto y se lo entregó a la Polizei Bremen; la presencia ya estaba revisada con la misma oración y el suceso seguía «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Bundespolizei",
+        "pais": "DE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00158",
+      "enlace": "https://agerpres.ro/economic/2025/09/19/incident-cu-o-drona-civila-la-aeroportul-international-henri-coanda-bucuresti-autoritatile-au-declan--1485871",
+      "medio": "agerpres.ro",
+      "fecha": "2025-09-19",
+      "idioma": "ro",
+      "frase": "Investigațiile desfășurate până în prezent au condus la identificarea dronei civile implicate și a locației de unde a fost operată', se arată în comunicatul CNAB.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "agerpres.ro, 19/09/2025: comunicado de la Compania Națională Aeroporturi București: la tripulación de un avión vio un dron civil a unos 3,5 km de la pista 26L y la investigación de la AACR, la CNAB y ROMATSA identificó el dron y el lugar desde el que se pilotó (ziare.com lo cita igual)"
+      },
+      "declaracion": {
+        "autoridad": "Compania Națională Aeroporturi București",
+        "pais": "RO",
+        "categoria": "aeropuerto",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00278",
+      "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/o-drona-a-cazut-in-republica-moldova-politia-2421467.html",
+      "medio": "adevarul.ro",
+      "fecha": "2025-02-12",
+      "idioma": "ro",
+      "frase": "După primele examinări s-a determinat că aceasta nu are atașat explozibil.Nu există riscuri sau pericole pentru siguranța cetățenilor din regiune”, au informat reprezentanții IGP.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "adevarul.ro, 12/02/2025: la Inspección General de la Policía de Moldavia (IGP) cuenta que aisló la zona del dron hallado en un campo de Salcia y que tras los primeros exámenes no lleva explosivos; la ficha confirmaba la presencia con la frase del periódico y dejaba el suceso «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Inspectoratul General al Poliției",
+        "pais": "MD",
+        "categoria": "policia",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00296",
+      "enlace": "https://dailybusiness.ro/actualitate/drona-militara-cazuta-in-judetul-tulcea-la-5-kilometri-de-granita-cu-ucraina-armata-nu-a-putut-ridica-avioanele-din-cauza-vremii-523041",
+      "medio": "dailybusiness.ro",
+      "fecha": "2025-11-11",
+      "idioma": "ro",
+      "frase": "O nouă dronă militară a căzut pe teritoriul României, în noaptea de luni spre marți, în apropierea localității Grindu din județul Tulcea",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "dailybusiness.ro, 11/11/2025: la oración sigue «…, aflată la doar 5 kilometri de granița cu Ucraina, potrivit unui comunicat transmis de Ministerul Apărării Naționale (MApN).»; la presencia ya estaba revisada con el comunicado y el suceso seguía «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00317",
+      "enlace": "https://t-online.de/nachrichten/deutschland/militaer-verteidigung/id_100685212/bundeswehr-drohne-ueber-kaserne-in-sachsen-anhalt-abgeschossen.html",
+      "medio": "t-online.de",
+      "fecha": "2025-04-18",
+      "idioma": "de",
+      "frase": "Der Vorfall ereignete sich bereits im Jahr 2023, wie das Bundesverteidigungsministerium jetzt mitteilte.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "t-online.de, 18/04/2025: el Ministerio de Defensa alemán comunica el derribo del dron sobre un terreno militar de Sajonia-Anhalt y una portavoz cita a los soldados que lo vieron; el suceso seguía «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Verteidigungsministerium",
+        "pais": "DE",
+        "categoria": "ministerio",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00359",
+      "enlace": "https://ziuaveche.ro/top-secret/armata-2/drona-militara-gasite-in-curtea-unui-localnic-din-vrancea-343686.html",
+      "medio": "ziuaveche.ro",
+      "fecha": "2026-01-18",
+      "idioma": "ro",
+      "frase": "MApN confirmă informaţia fără însă să ofere şi alte detalii.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "ziuaveche.ro, 18/01/2026: el MApN confirma los restos del dron militar hallados en un patio de Tănăsoaia (Vrancea); ziuaconstanta.ro titula «Oficial de la MApN»; el suceso seguía «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Ministerul Apărării Naționale",
+        "pais": "RO",
+        "categoria": "ministerio",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00390",
+      "enlace": "https://hotnews.ro/sindicat-din-politie-despre-drona-gasita-intr-o-padure-din-arges-are-montat-un-dispozitiv-artizanal-cert-este-ca-nu-a-fost-folosita-de-militarii-din-baza-nato-din-zona-2135789",
+      "medio": "hotnews.ro",
+      "fecha": "2025-12-21",
+      "idioma": "ro",
+      "frase": "Poliția din Argeș a anunțat anterior că drona a fost găsită de un bărbat, care era la o partidă de vânătoare.",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "hotnews.ro, 21/12/2025: la Policía de Argeș anunció el dron hallado por un cazador en el monte Strâmtu (Lerești) y aisló la zona; la presencia estaba revisada con la frase del sindicato Europol, que no es una autoridad, y el suceso seguía «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Poliția Județeană Argeș",
+        "pais": "RO",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00519",
+      "enlace": "https://kurier.at/politik/ausland/auvere-estland-kraftwerk-drohne-russland-lettland-ukraine/403144139",
+      "medio": "kurier.at",
+      "fecha": "2026-03-25",
+      "idioma": "de",
+      "frase": "In Lettland wurde nach Militärangaben um 2.19 Uhr (Ortszeit) ein unbekanntes Flugobjekt per Radar erfasst",
+      "comprobada": {
+        "fecha": "2026-11-22",
+        "en": "kurier.at, 25/03/2026: según las Fuerzas Armadas de Letonia, el aparato detectado por radar estalló unos 20 minutos después junto a Dobricina (Krāslava); los gobiernos de Tallin y Riga dicen que eran drones ucranianos desviados; el suceso seguía «notificado»"
+      },
+      "declaracion": {
+        "autoridad": "Nacionālie bruņotie spēki",
+        "pais": "LV",
+        "categoria": "fuerzas_armadas",
+        "afirma": "incidente"
+      }
     }
   ],
   "titulares": [
@@ -5636,7 +5780,6 @@
     },
     {
       "incidente": "EODI-2026-00056",
-      "presencia": {"valor": "confirmada", "cita": "denunciato alla Procura di Cuneo per una serie di violazioni del Codice della Navigazione e dei regolamenti dell’ENAC", "enlace": "https://tech.everyeye.it/notizie/drone-agricolo-paralizza-aeroporto-cuneo-rischi-ignorati-volo-abusivo-875815.html"},
       "titulo": {
         "es": "Dron agrícola bloquea el aeropuerto de Cuneo-Levaldigi",
         "en": "Agricultural drone blocks Cuneo-Levaldigi airport"
@@ -5699,18 +5842,6 @@
       "motivo": {
         "es": "El aeropuerto de Riga avisó a los servicios responsables de un posible dron a las 14:20 del martes 21 de octubre de 2025, hora de Letonia (11:20 UTC).",
         "en": "Riga Airport alerted the responsible services to a possible drone at 14:20 on Tuesday 21 October 2025, Latvian time (11:20 UTC)."
-      }
-    },
-    {
-      "incidente": "EODI-2026-00629",
-      "presencia": {
-        "valor": "confirmada",
-        "cita": "han interceptado el primer dron detectado en sus instalaciones que intentaba introducir material de contrabando",
-        "enlace": "https://officialpress.es/dron-carcel-picassent/"
-      },
-      "motivo": {
-        "es": "repaso de entrada con el experto: Suceso nuevo en la cárcel de Picassent; la ficha publicada afirma un dron «posible» no confirmado, pero la fuente 2 dice que los funcionarios lo interceptaron y recuperaron, lo que confirma su presencia.",
-        "en": "entry review: New incident at Picassent prison; the record lists the drone as unconfirmed, but source 2 says prison staff intercepted and recovered it, which confirms its presence."
       }
     },
     {
@@ -5879,18 +6010,6 @@
       "motivo": {
         "es": "repaso de entrada con el experto: Suceso distinto de la ficha de Dublín; las fuentes sitúan los hechos en la visita de Trump a principios de mes sin dar un día concreto para Shannon, y la presencia del dron queda confirmada por la incautación de los drones por la policía.",
         "en": "entry review: Different event from the Dublin Bay record; sources place it during Trump's visit earlier this month without a specific day for Shannon, and drone presence is confirmed by gardai seizing the drones."
-      }
-    },
-    {
-      "incidente": "EODI-2026-00080",
-      "presencia": {
-        "valor": "confirmada",
-        "cita": "qui ont été arrêtés et placés quelques heures en garde à vue par les gendarmes des transports aériens",
-        "enlace": "https://ladepeche.fr/2026/06/19/passion-ou-espionnage-un-drone-trop-curieux-repere-mercredi-au-dessus-des-usines-airbus-a-laeroport-de-toulouse-blagnac-13428022.php"
-      },
-      "motivo": {
-        "es": "repaso de entrada con el experto: Suceso único del miércoles 17 de junio de 2026, coincide con la ficha. Sin fichas previas. La presencia del dron está confirmada porque los gendarmes detuvieron a los pilotos.",
-        "en": "entry review: Single event on Wednesday 17 June 2026, matching the record. No prior records. Drone presence is confirmed because gendarmes arrested the pilots."
       }
     },
     {

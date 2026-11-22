@@ -359,6 +359,7 @@ class Corregidos:
     otros: list[str] = field(default_factory=list)
     sin_guardar: list[str] = field(default_factory=list)
     contradicen_rectificacion: list[str] = field(default_factory=list)
+    presencia_sin_suceso: list[str] = field(default_factory=list)
     repuestos: list[str] = field(default_factory=list)
     fuentes_quitadas: list[str] = field(default_factory=list)
     de_las_frases: list[str] = field(default_factory=list)
@@ -370,7 +371,8 @@ class Corregidos:
             f"{self.lugares}, inicios revisados {self.inicios}, daños revisados {self.danos}, "
             f"cierres, drones, tipos y objetivos revisados {self.otros}, sin guardar "
             f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
-            f"{self.contradicen_rectificacion}, repuestos {self.repuestos}, fuentes quitadas "
+            f"{self.contradicen_rectificacion}, presencias revisadas sin el suceso confirmado "
+            f"{self.presencia_sin_suceso}, repuestos {self.repuestos}, fuentes quitadas "
             f"{self.fuentes_quitadas}, con el sitio o la hora de sus frases {self.de_las_frases}"
         )
 
@@ -475,6 +477,14 @@ def con_citas(incidente: Documento, citas: list[Documento]) -> Documento:
     if pares:
         resultado = incidentes.aplicar_reglas(declaraciones.aplicar_fuentes(resultado, pares))
     return resultado
+
+
+def presencia_sin_suceso(revision: Documento, documento: Documento) -> bool:
+    """La revisión confirma la presencia del dron y el suceso de la ficha no está confirmado: la
+    regla no la deja confirmada (decidir.decidir_presencia, EODI-2025-00278)."""
+    return (revision.get("presencia") or {}).get("valor") == "confirmada" and documento["estado"][
+        "actual"
+    ] not in incidentes.CONFIRMADOS
 
 
 def reconfirmar(incidente: Documento, citas: list[Documento], instante: Documento) -> Documento:
@@ -908,6 +918,14 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
             registro.warning("%s: la presencia revisada a mano (%s) contradice la rectificación "
                              "oficial (%s); no se aplica", id_, revision["presencia"]["valor"],
                              rectificaciones.vigente(documento))  # fmt: skip
+            revision = {k: v for k, v in revision.items() if k != "presencia"}
+        elif presencia_sin_suceso(revision, documento):
+            # La presencia confirmada exige el suceso confirmado (decidir.decidir_presencia): sin
+            # una cita de autoridad que lo reconozca, la revisión no se aplica y queda en el
+            # registro para corregirla (EODI-2025-00278).
+            hechos.presencia_sin_suceso.append(id_)
+            registro.warning("%s: la presencia revisada a mano es «confirmada» y el suceso sigue "
+                             "«%s»; no se aplica", id_, documento["estado"]["actual"])  # fmt: skip
             revision = {k: v for k, v in revision.items() if k != "presencia"}
         nuevo = con_titular(documento, revision, _instante(ahora))
         if nuevo != documento and _guardar(

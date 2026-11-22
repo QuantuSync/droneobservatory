@@ -62,12 +62,13 @@ def test_la_declaracion_que_la_extraccion_nueva_no_trae_se_conserva() -> None:
     rehecha = extraccion.conservar_oficiales(nueva, anterior)
     ids = [f["id"] for f in rehecha["fuentes"]]
     assert f"{ARTICULO}-declaracion-2" in ids
-    # Con ella, la presencia sigue confirmada por la autoridad que nombra los drones.
-    decision = decidir.decidir_presencia(rehecha)
+    # Con ella, la presencia sigue confirmada por la autoridad que nombra los drones (y que
+    # confirma el suceso: al guardar, decidir.aplicar decide antes el estado).
+    decision = decidir.decidir_presencia(decidir.aplicar(rehecha))
     assert decision.valor == "confirmada"
     assert decision.regla == "autoridad_atribuye"
     # Sin conservarla, era lo que pasó el 2 de noviembre a las 05:23.
-    assert decidir.decidir_presencia(nueva).valor == "no_confirmada"
+    assert decidir.decidir_presencia(decidir.aplicar(nueva)).valor == "no_confirmada"
 
 
 def test_no_se_conserva_si_el_articulo_ya_no_esta_ni_si_viene_repetida() -> None:

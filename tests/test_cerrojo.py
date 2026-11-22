@@ -1135,7 +1135,11 @@ def test_un_cambio_contra_la_revision_no_cuenta_como_revision(
     monkeypatch.setattr(decidir, "presencias_revisadas",
                         lambda: {guardado["id"]: "confirmada"})  # fmt: skip
     malo = _presencia_mala(guardado)
-    assert protegido._hay_revision(malo, "presencia_dron")
+    # La revisión fija la presencia de la ficha guardada, con el suceso confirmado. En la mala el
+    # suceso baja a «notificado»: ahí la revisión no fija nada (EODI-2025-00278), y el cambio
+    # tampoco sale de ella.
+    assert protegido._hay_revision(guardado, "presencia_dron")
+    assert not protegido._hay_revision(malo, "presencia_dron")
     assert not protegido._revisado(malo, "presencia_dron")
     assert protegido._revisado(guardado, "presencia_dron")
 
