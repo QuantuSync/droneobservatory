@@ -1331,6 +1331,10 @@ def sin_fuentes(
         if pasos and pasos[0]["fecha"]["valor"] < inicial["fecha"]["valor"]:
             inicial["fecha"] = pasos[0]["fecha"]
         pasos = [inicial, *pasos]
+    # Sin el paso que daba la fuente quitada, dos pasos seguidos con el mismo estado quedan en el
+    # primero: «notificado → confirmado → notificado» sin el «confirmado» no es una transición
+    # válida (EODI-2026-00937, la declaración atribuida a la gendarmería italiana).
+    pasos = [p for i, p in enumerate(pasos) if i == 0 or p["estado"] != pasos[i - 1]["estado"]]
     resultado["estado"] = {"actual": pasos[-1]["estado"], "historial": pasos}
     if resultado["estado"]["actual"] != Estado.DESMENTIDO:
         resultado["control"].pop("motivo_desmentido", None)

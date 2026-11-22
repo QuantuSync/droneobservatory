@@ -20,7 +20,7 @@ import pytest
 
 from esquema import Documento
 from proceso import auditoria_fichas, decidir, declaraciones, protegido
-from recogida import revisados
+from recogida import control_fichas, revisados
 from tests import ejemplos
 from tests.test_calidad_datos_3 import inc
 
@@ -135,3 +135,15 @@ def test_cada_ficha_medida_tiene_una_cita_de_autoridad_que_reconoce_el_suceso(id
 @pytest.mark.parametrize("id_", SIN_AUTORIDAD)
 def test_sin_autoridad_no_queda_revision_que_confirme_la_presencia(id_: str) -> None:
     assert decidir.presencias_revisadas().get(id_) != "confirmada"
+
+
+def test_el_control_guarda_la_presencia_que_nada_volvia_a_guardar() -> None:
+    # EODI-2026-00056: sin la presencia revisada, la ficha guardada seguía «confirmada» porque
+    # ninguna regla la volvía a guardar; la regla del control la guarda con la que se decide.
+    documento = taraclia()
+    nuevo, cambios = control_fichas.sin_presencia_sin_suceso(documento)
+    assert nuevo["presencia_dron"] == "no_confirmada"
+    assert len(cambios) == 1 and "sin el suceso confirmado" in cambios[0]
+    assert control_fichas.sin_presencia_sin_suceso(nuevo) == (nuevo, [])
+    confirmado = {**documento, "estado": {**documento["estado"], "actual": "confirmado"}}
+    assert control_fichas.sin_presencia_sin_suceso(confirmado) == (confirmado, [])
