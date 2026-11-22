@@ -141,6 +141,21 @@ def de_autoridad(fuente: Documento) -> bool:
     )
 
 
+def validas_de_noticia(
+    declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]
+) -> list[dict[str, Any]]:
+    """Las declaraciones que el extractor saca de las noticias: las `validas`, sin las que ponen en
+    boca de la autoridad una frase del periódico que solo cuenta que la avisaron, le entregaron el
+    caso o investiga (`no_es_quien_habla`: «O sprawie poinformowano prokuraturę oraz Ministerstwo
+    Obrony Narodowej», EODI-2026-00362). Las declaraciones oficiales revisadas a mano
+    (recogida/declaraciones_oficiales.py) solo pasan por `validas`."""
+    return [
+        d
+        for d in validas(declaraciones, textos)
+        if not no_es_quien_habla(str(d.get("frase", "")), str(d.get("autoridad") or ""))
+    ]
+
+
 def cita_vacia(fuente: Documento) -> bool:
     """Una fuente de autoridad cuya cita no dice nada: solo quién habla y el verbo de decir
     (EODI-2026-00648). No vale como declaración: ni confirma el estado ni la presencia."""
@@ -502,10 +517,15 @@ _RESULTADO = re.compile(
 # tarnybos», la VST en EODI-2026-00032).
 _RECEPTOR = re.compile(
     r"(?<!\w)(?:poinformowano|powiadomiono|zawiadomiono|informuot\w*|"
-    r"(?:were|was|been)\s+(?:informed|notified|alerted|called)|"
+    r"(?:został|została|zostało|zostały|zostali)\s+(?:\w+\s+)?"
+    r"(?:poinformowan|powiadomion|zawiadomion)\w*|"
+    r"(?:were|was|been)\s+(?:\w+\s+)?(?:informed|notified|alerted|called)|"
     r"fue(?:ron)?\s+(?:alertad|avisad|informad|notificad)\w*|"
-    r"(?:wurde|wurden)\s+(?:informiert|alarmiert|verständigt|benachrichtigt)|"
-    r"a(?:u)?\s+fost\s+(?:anunțat|anuntat|sesizat|informat|alertat|notificat)\w*|"
+    r"se\s+(?:informó|avisó|alertó|notificó)\s+(?:a|al)|"
+    r"(?:wurde|wurden)\s+(?:\w+\s+)?(?:informiert|alarmiert|verständigt|benachrichtigt)|"
+    r"(?:werd|werden)\s+(?:\w+\s+)?(?:ingelicht|geïnformeerd|gewaarschuwd|gealarmeerd)|"
+    r"a(?:u)?\s+fost\s+(?:anunțat|anunţat|anuntat|sesizat|informat|alertat|notificat|"
+    r"înștiințat|înştiinţat)\w*|"
     r"(?:ont|a)\s+été\s+(?:alerté|prévenu|informé|avisé)\w*|"
     r"(?:è|sono)\s+stat[aoie]\s+(?:avvisat|allertat|informat)\w*)(?!\w)",
     re.IGNORECASE,
@@ -663,6 +683,71 @@ def frases_que_reconocen(texto: str) -> list[str]:
 def reconoce(fuente: Documento, incidente: Documento | None = None) -> bool:
     """La fuente es de una autoridad y su frase reconoce el suceso (`no_reconoce`)."""
     return de_autoridad(fuente) and por_que_no_reconoce(fuente, incidente) is None
+
+
+# A la autoridad le entregan el caso o el aparato: «Der Fall sei an die Euskirchener Polizei
+# übergeben worden» (EODI-2026-00144), «L'appareil endommagé a été remis à la police»
+# (EODI-2025-00371).
+_ENTREGA = re.compile(
+    r"(?<!\w)(?:übergeben\s+(?:worden|wurde|wurden)|an\s+die\s+(?:\w+\s+){1,3}übergeben|"
+    r"remis\w*\s+(?:à|aux)|handed\s+(?:over\s+)?to|turned\s+over\s+to|"
+    r"entregad\w*\s+(?:a|al)|consegnat\w*\s+(?:a|al|alla|ai|alle))(?!\w)",
+    re.IGNORECASE,
+)
+# La frase da la palabra a alguien: un verbo de decir, «según», unas comillas o la primera persona
+# («Poliția spune că a fost sesizată», EODI-2026-00263; «Ministerul Apărării Naționale a transmis
+# că a fost informat», EODI-2026-00118; «hat die Einleitung einer Untersuchung angekündigt»,
+# EODI-2025-00287).
+_DA_LA_PALABRA = re.compile(
+    r"(?<!\w)(?:spune|spun|transmite|a\s+transmis|anun[țţ]\w*|comunic\w*|angekündigt|"
+    r"kündigt\w*\s+an|announc\w*|quoting|citing|cytując|citând|we|wir|nous|noi|wij|"
+    r"nosotros)(?!\w)|[\"“”„«»]",
+    re.IGNORECASE,
+)
+# La policía nombrada con otra palabra en otra lengua («La policía fue alertada», con la
+# Bundespolizei, EODI-2026-00131). No «política», «politique», «Politik» ni «politisk».
+_POLICIA = re.compile(r"poli(?:zei|ce|c[ií]a|cj|cie|[țţ]i|sen|ti(?![cksq])|tie)", re.IGNORECASE)
+MOTIVOS_NO_HABLA = {
+    "receptor": "le avisan, le notifican o le entregan el caso",
+    "investiga": "solo se cuenta que investiga",
+}
+_REVISADA = "revisada-"
+
+
+def no_es_quien_habla(frase: str, autoridad: str) -> str | None:
+    """Por qué la autoridad nombrada en la frase no es quien la dice (una clave de
+    `MOTIVOS_NO_HABLA`), o None. Es el periódico quien cuenta que a la autoridad la avisaron, le
+    notificaron o le entregaron el caso («O sprawie poinformowano prokuraturę oraz Ministerstwo
+    Obrony Narodowej», EODI-2026-00362; «Poliția de Frontieră și Forțele Navale Române au fost
+    notificate oficial.», EODI-2026-00418), o solo que investiga («Das Bayerische
+    Landeskriminalamt (LKA) ermittelt.», EODI-2025-00192), sin darle la palabra. Solo si la frase
+    nombra a esa autoridad (o a la policía, si lo es): la autoridad que cuenta que avisó a otras sí
+    habla («Apie įvykį nedelsiant informuotos atsakingos tarnybos», la VST en EODI-2026-00032)."""
+    if not frase.strip() or _ATRIBUYE.search(frase) or _DA_LA_PALABRA.search(frase):
+        return None
+    if _RECEPTOR.search(frase) or _ENTREGA.search(frase):
+        motivo = "receptor"
+    elif _INVESTIGA.search(frase) and not _RESULTADO.search(frase) and not habla_del_suceso(frase):
+        motivo = "investiga"
+    else:
+        return None
+    if _nombra(frase, autoridad) or (_POLICIA.search(autoridad) and _POLICIA.search(frase)):
+        return motivo
+    return None
+
+
+def atribuida_a_quien_no_habla(fuente: Documento) -> str | None:
+    """La declaración citada en una noticia que pone en boca de una autoridad una frase que no es
+    suya (`no_es_quien_habla`), o None. No el documento propio de la autoridad ni la cita revisada
+    a mano."""
+    id_ = str(fuente.get("id") or "")
+    if (
+        MARCA_DECLARACION not in id_
+        or id_.startswith(("oficial-", _REVISADA))
+        or fuente.get("documento_oficial")
+    ):
+        return None
+    return no_es_quien_habla(str(fuente.get("frase_origen") or ""), autoridad_de(fuente))
 
 
 def atribuye_dron(frase: str) -> bool:
