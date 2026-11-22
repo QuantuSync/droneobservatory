@@ -175,7 +175,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC",
+    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -207,6 +207,8 @@ NOMBRES = {
     "AA": "una frase con dos días",
     "AB": "presencia confirmada sin frase que afirme el dron",
     "AC": "estado confirmado o atribuido sin frase de autoridad que reconozca el suceso",
+    "AD": "presencia confirmada con el suceso sin confirmar",
+    "AE": "declaración atribuida a una autoridad que no la dijo",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -681,12 +683,28 @@ def estado_sin_frase_que_reconozca(incidente: Documento) -> bool:
     )
 
 
+def confirmada_sin_suceso(incidente: Documento) -> bool:
+    """AD: presencia confirmada con el suceso sin confirmar (ni confirmado ni atribuido): la
+    autoridad que afirma el dron reconoce también el suceso (EODI-2025-00278)."""
+    return incidente.get("presencia_dron") == "confirmada" and incidente["estado"][
+        "actual"
+    ] not in ("confirmado", "atribuido")
+
+
+def declaracion_ajena(incidente: Documento) -> bool:
+    """AE: una declaración citada pone en boca de una autoridad una frase que no es suya: a ella
+    la avisaron, le entregaron el caso o solo se cuenta que investiga (EODI-2026-00362)."""
+    return any(declaraciones.atribuida_a_quien_no_habla(f) for f in incidente.get("fuentes", []))
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
     "AA": suceso.dos_dias_sin_revisar,
     "AB": confirmada_sin_frase_que_afirme,
     "AC": estado_sin_frase_que_reconozca,
+    "AD": confirmada_sin_suceso,
+    "AE": declaracion_ajena,
 }  # fmt: skip
 
 

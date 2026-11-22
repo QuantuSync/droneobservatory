@@ -371,7 +371,11 @@ confirmada sin frase que afirme el dron (desde el 22/11/2026: ninguna fuente de 
 dron, solo habla de avisos, de una sospecha o de su respuesta a ellos); AC, estado confirmado o
 atribuido sin frase de autoridad que reconozca el suceso (desde el 22/11/2026: las frases de
 autoridad solo cuentan que la investiga o que la avisaron, o el artículo dice que no está
-confirmado oficialmente; no cuenta el estado de una revisión a mano). Los recuentos del día y los
+confirmado oficialmente; no cuenta el estado de una revisión a mano); AD, presencia confirmada con
+el suceso sin confirmar (desde el 22/11/2026: la autoridad que afirma el dron reconoce también el
+suceso; EODI-2025-00278); AE, declaración atribuida a una autoridad que no la dijo (desde el
+22/11/2026: la frase es del periódico y cuenta que a la autoridad la avisaron, le notificaron o le
+entregaron el caso, o solo que investiga; EODI-2026-00362). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
@@ -904,7 +908,12 @@ Con ellos se decide el valor correcto de la referencia (y el que debe dar la fic
   ellos («responded to "suspected unauthorised drone activity"», «reports of unauthorised drone
   activity», «signalements de drones», «melding om droneflyvning»), es `no_confirmada`, aunque el
   suceso siga `confirmado` (desde el 22 de noviembre de 2026, `declaraciones.drones_afirmados`;
-  EODI-2026-00821, RAF Lakenheath). `no_acreditada` si una autoridad cierra la investigación sin
+  EODI-2026-00821, RAF Lakenheath). Y nunca `confirmada` con el suceso sin confirmar, por ningún
+  camino, tampoco por una revisión a mano: la autoridad que afirma el dron reconoce el suceso
+  (desde el 22 de noviembre de 2026, `decidir.decidir_presencia`, regla
+  `sin_suceso_confirmado`; EODI-2025-00278, donde la revisión confirmaba el dron con la frase del
+  periódico y el estado seguía «notificado»). Si la fuente original trae a la autoridad, la
+  revisión lleva su cita con la declaración y confirma los dos. `no_acreditada` si una autoridad cierra la investigación sin
   probarlo ni descartarlo; `descartada` si la autoridad concluye que era otra cosa, aunque lo diga con «muy
   probablemente» en su conclusión. Una «posible» otra causa de la prensa, o un aviso inicial, no
   descarta nada; una búsqueda sin resultado el mismo día tampoco es un cierre.
@@ -920,7 +929,16 @@ Con ellos se decide el valor correcto de la referencia (y el que debe dar la fic
   confirmado oficialmente («Incydent nie został oficjalnie potwierdzony przez władze bazy.»). Una
   frase en la que el medio atribuye palabras a la autoridad («the ministry said», «według
   policji», «a spokesperson told») sigue valiendo, y también la que reconoce el cierre o la
-  alerta sin nombrar el dron. `atribuido` solo con una autoridad del país afectado.
+  alerta sin nombrar el dron. `atribuido` solo con una autoridad del país afectado. Una
+  declaración citada solo es de la autoridad si la frase le da la palabra: la que cuenta que la
+  avisaron, le notificaron o le entregaron el caso («O sprawie poinformowano prokuraturę oraz
+  Ministerstwo Obrony Narodowej», EODI-2026-00362; «Poliția de Frontieră și Forțele Navale Române
+  au fost notificate oficial.»), o solo que investiga («Das Bayerische Landeskriminalamt (LKA)
+  ermittelt.»), sin verbo de decir, «según», comillas ni primera persona, no la guarda la
+  extracción (`declaraciones.validas_de_noticia`), y la que ya estaba la quita el control de las
+  fichas en la misma pasada en que el guardado vuelve a decidir el estado y la presencia
+  (`control_fichas.sin_declaraciones_ajenas`): si otra autoridad reconoce el suceso, sigue
+  confirmado (desde el 22 de noviembre de 2026).
 - **tipo:** `incursion` solo si una autoridad, o una prueba física que confirma una autoridad,
   demuestra que un dron estatal entró desde fuera; las fuentes anónimas o la narración del
   periodista no bastan. Un buque alcanzado en el mar es `sobrevuelo` salvo que una autoridad diga

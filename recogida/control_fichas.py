@@ -1404,6 +1404,29 @@ def sin_autoridades_de_otro_pais(
     return nuevo, cambios
 
 
+def sin_declaraciones_ajenas(incidente: Documento) -> tuple[Documento, list[str]]:
+    """La ficha sin las declaraciones que ponen en boca de una autoridad una frase que no es suya
+    (declaraciones.atribuida_a_quien_no_habla: «O sprawie poinformowano prokuraturę oraz
+    Ministerstwo Obrony Narodowej», EODI-2026-00362), y sin los pasos que solo ellas daban
+    (revisados.sin_fuentes). El estado y la presencia los vuelve a decidir el guardado en la misma
+    pasada (decidir.aplicar): si otra autoridad reconoce el suceso, sigue confirmado. Devuelve la
+    ficha y los cambios (vacío si no cambia)."""
+    ajenas = {
+        str(f["id"]): motivo
+        for f in incidente.get("fuentes", [])
+        if (motivo := declaraciones.atribuida_a_quien_no_habla(f))
+    }
+    quitada = revisados.sin_fuentes(incidente, set(), frozenset(ajenas)) if ajenas else None
+    if quitada is None or quitada == incidente:
+        return incidente, []
+    fuentes = {str(f["id"]): f for f in incidente["fuentes"]}
+    return quitada, [
+        f"declaración atribuida a quien no la dijo ({declaraciones.MOTIVOS_NO_HABLA[motivo]}): "
+        f"{declaraciones.autoridad_de(fuentes[id_])}: «{fuentes[id_].get('frase_origen')}»"
+        for id_, motivo in sorted(ajenas.items())
+    ]
+
+
 def leer_articulos(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
     """El principio y la nota de cada noticia, en memoria (nunca se guardan); vacío si no se pudo
     leer."""
@@ -1476,6 +1499,8 @@ def reglas_deterministas(ctx: Contexto) -> None:
                 motivos.append(f"lugar {sin_buque['suceso']}: el nombre de un buque no es un lugar")
             nuevo, de_otro_pais = sin_autoridades_de_otro_pais(nuevo, _instante(ctx.ahora))
             motivos += de_otro_pais
+            nuevo, ajenas = sin_declaraciones_ajenas(nuevo)
+            motivos += ajenas
             bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
             if bajado is not None and reglas.frases_que_no_reconocen(nuevo):
                 sostiene = articulo_que_lo_reconoce(

@@ -830,7 +830,7 @@ def procesar_respuesta(
             "campos": validada.campos,
             "ficha": leida,
             "enviadas": peticion.enviadas,
-            "declaraciones": declaraciones.validas(
+            "declaraciones": declaraciones.validas_de_noticia(
                 leida["declaraciones"], contexto.notas or contexto.textos
             ),
         }
