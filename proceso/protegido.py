@@ -745,6 +745,20 @@ def sin_publicar(pasos: Iterable[str]) -> bool:
     return any(paso.startswith(DECISIONES_SIN_PUBLICAR) for paso in pasos)
 
 
+def sin_suceso_confirmado(guardado: Documento, nuevo: Documento) -> bool:
+    """La presencia confirmada baja porque el suceso no está confirmado, ni antes ni ahora
+    (decidir.SIN_SUCESO_CONFIRMADO): la regla no tiene excepción y una frase que dice «dron» no la
+    sostiene. EODI-2026-00056 (Cuneo-Levaldigi): sin la presencia revisada, el cerrojo la retenía
+    por el titular revisado a mano y la frase de La Stampa."""
+    return (
+        guardado.get("presencia_dron") == "confirmada"
+        and nuevo.get("presencia_dron") != "confirmada"
+        and guardado["estado"]["actual"] not in incidentes.CONFIRMADOS
+        and nuevo["estado"]["actual"] not in incidentes.CONFIRMADOS
+        and decidir.decidir_presencia(nuevo).regla == decidir.SIN_SUCESO_CONFIRMADO
+    )
+
+
 def juzgar(
     guardado: Documento, nuevo: Documento, pasos: list[str],
     texto_de: Callable[[Documento], str], publicada: bool = True,
@@ -786,6 +800,8 @@ def juzgar(
             return "revision"
         if rectificada and cambio.dato in ("presencia_dron", "titulo"):
             return "rectificacion"
+        if cambio.dato == "presencia_dron" and sin_suceso_confirmado(guardado, nuevo):
+            return decidir.SIN_SUCESO_CONFIRMADO
         if cambio.nivel == PUBLICADA and por_decision(pasos):
             return "decision"
         if cambio.dato == "retirado" and sin_publicar(pasos):

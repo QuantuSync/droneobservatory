@@ -147,3 +147,15 @@ def test_el_control_guarda_la_presencia_que_nada_volvia_a_guardar() -> None:
     assert control_fichas.sin_presencia_sin_suceso(nuevo) == (nuevo, [])
     confirmado = {**documento, "estado": {**documento["estado"], "actual": "confirmado"}}
     assert control_fichas.sin_presencia_sin_suceso(confirmado) == (confirmado, [])
+
+
+def test_el_cerrojo_deja_bajar_la_presencia_sin_el_suceso_confirmado() -> None:
+    # EODI-2026-00056: la ficha con el titular revisado a mano y una frase que dice «dron».
+    guardado = taraclia()
+    nuevo = decidir.aplicar(copy.deepcopy(guardado))
+    assert protegido.sin_suceso_confirmado(guardado, nuevo)
+    # Con el suceso confirmado en la versión nueva, no: lo decide la regla de siempre.
+    confirmado = {**nuevo, "estado": {**nuevo["estado"], "actual": "confirmado"}}
+    assert not protegido.sin_suceso_confirmado(guardado, confirmado)
+    # Ni si la guardada no estaba confirmada.
+    assert not protegido.sin_suceso_confirmado(nuevo, nuevo)
