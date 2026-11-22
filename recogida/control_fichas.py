@@ -1427,6 +1427,25 @@ def sin_declaraciones_ajenas(incidente: Documento) -> tuple[Documento, list[str]
     ]
 
 
+def sin_presencia_sin_suceso(incidente: Documento) -> tuple[Documento, list[str]]:
+    """La letra AD de la auditoría corregida en vez de señalada: la presencia del dron guardada
+    como confirmada con el suceso sin confirmar (decidir.SIN_SUCESO_CONFIRMADO). El guardado ya no
+    la confirma, pero una ficha que nada vuelve a guardar la conservaba (EODI-2026-00056, cuya
+    presencia revisada a mano se quitó el 22/11/2026). Devuelve la ficha con la presencia que
+    decide `decidir_presencia` y el cambio (vacío si no cambia)."""
+    if incidente.get("presencia_dron") != "confirmada":
+        return incidente, []
+    if incidente["estado"]["actual"] in incidentes.CONFIRMADOS:
+        return incidente, []
+    decision = decidir.decidir_presencia(incidente)
+    if decision.valor == "confirmada":
+        return incidente, []
+    return {**incidente, "presencia_dron": decision.valor}, [
+        f"presencia {decision.valor}: confirmada sin el suceso confirmado "
+        f"(estado {incidente['estado']['actual']})"
+    ]
+
+
 def leer_articulos(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
     """El principio y la nota de cada noticia, en memoria (nunca se guardan); vacío si no se pudo
     leer."""
@@ -1501,6 +1520,10 @@ def reglas_deterministas(ctx: Contexto) -> None:
             motivos += de_otro_pais
             nuevo, ajenas = sin_declaraciones_ajenas(nuevo)
             motivos += ajenas
+            if not ajenas:
+                # Con declaraciones quitadas, el guardado vuelve a decidir el estado y la presencia.
+                nuevo, sin_suceso = sin_presencia_sin_suceso(nuevo)
+                motivos += sin_suceso
             bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
             if bajado is not None and reglas.frases_que_no_reconocen(nuevo):
                 sostiene = articulo_que_lo_reconoce(

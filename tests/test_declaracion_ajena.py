@@ -193,3 +193,28 @@ def test_galczyce_se_quita_y_se_reconfirma_en_la_misma_pasada() -> None:
     assert veredicto.retenidos == []
     # Una segunda pasada no cambia nada.
     assert control_fichas.sin_declaraciones_ajenas(nuevo) == (nuevo, [])
+
+
+def test_sigonella_el_historial_no_repite_el_estado() -> None:
+    # EODI-2026-00937: «notificado → confirmado (la declaración) → notificado (bajada)»; sin la
+    # declaración quedaba «notificado → notificado» y el guardado la rechazaba.
+    documento = inc("EODI-2026-00937", "2026-11-20T00:00Z", "dia", "Sigonella", (37.4, 14.9), "IT")
+    declaracion = _declaracion(
+        "gdelt-fa74838fa189dcc3-declaracion-1", "Żandarmeria wojskowa de Italia",
+        "Zdarzenie bada włoska żandarmeria wojskowa.", "wiadomosci.wp.pl",
+    )  # fmt: skip
+    documento["fuentes"].append(declaracion)
+    primera = documento["fuentes"][0]
+    documento["estado"] = {
+        "actual": "notificado",
+        "historial": [
+            {"estado": "notificado", "fecha": primera["fecha"], "fuente_id": primera["id"]},
+            {"estado": "confirmado", "fecha": declaracion["fecha"], "fuente_id": declaracion["id"]},
+            {"estado": "notificado", "fecha": ejemplos.instante("2026-11-22T01:17Z", "minuto"),
+             "fuente_id": primera["id"]},
+        ],
+    }  # fmt: skip
+    sin, cambios = control_fichas.sin_declaraciones_ajenas(documento)
+    assert len(cambios) == 1
+    assert [p["estado"] for p in sin["estado"]["historial"]] == ["notificado"]
+    assert not auditoria_fichas.declaracion_ajena(sin)
