@@ -243,7 +243,28 @@ def decidir_presencia(
        son las fuentes en que el control de las fichas lee que no se encontró el dron), o
        pruebas físicas con el suceso confirmado: confirmada;
     6. si no, no confirmada (lo dejan abierto o solo lo cuentan la prensa o los testigos).
+
+    Y en todos los casos, confirmada solo con el suceso confirmado: la autoridad que afirma el
+    dron reconoce también el suceso. Una presencia confirmada con el suceso «notificado» es no
+    confirmada (EODI-2025-00278: la revisión a mano confirmaba el dron con la frase del periódico y
+    el estado seguía «notificado»; la cita de la policía que lo cuenta confirma los dos).
     """
+    decision = _presencia_por_sus_pruebas(incidente, negadas, confirmada)
+    if decision.valor == "confirmada" and incidente["estado"]["actual"] not in (
+        incidentes.CONFIRMADOS
+    ):
+        return Decision("no_confirmada", decision.fuente_id, SIN_SUCESO_CONFIRMADO)
+    return decision
+
+
+# La regla de `decidir_presencia` cuando la presencia sería confirmada sin el suceso confirmado.
+SIN_SUCESO_CONFIRMADO = "sin_suceso_confirmado"
+
+
+def _presencia_por_sus_pruebas(
+    incidente: Documento, negadas: frozenset[str], confirmada: bool
+) -> Decision:
+    """`decidir_presencia` sin mirar el estado."""
     pasos = rectificaciones.pasos_de_valor(incidente)
     if pasos:
         return Decision(str(pasos[-1]["valor"]), pasos[-1].get("fuente_id"), "rectificacion")
