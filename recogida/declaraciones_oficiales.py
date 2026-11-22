@@ -221,12 +221,15 @@ _DECLARACION = re.compile(r"-declaracion-\d+$")
 def declaraciones_que_faltan(destino: Documento, absorbido: Documento) -> list[Documento]:
     """Las declaraciones de autoridad del registro unido que el que queda no tiene, cuya noticia sí
     tiene (la noticia pasó con la unión; la declaración se leyó después, al volver a extraer el
-    candidato del unido). Solo esas: una noticia que una separación quitó no vuelve."""
+    candidato del unido). Solo esas: una noticia que una separación quitó no vuelve, y tampoco la
+    que pone en boca de una autoridad una frase que no es suya (la quita el control: volvía cada
+    hora a EODI-2026-00144 desde su registro unido)."""
     tiene = {str(f["id"]) for f in destino["fuentes"]}
     return [
         f for f in absorbido["fuentes"]
         if f.get("es_autoridad") and str(f["id"]) not in tiene
         and _DECLARACION.sub("", str(f["id"])) in tiene
+        and not declaraciones.atribuida_a_quien_no_habla(f)
     ]  # fmt: skip
 
 

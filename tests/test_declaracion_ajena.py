@@ -19,7 +19,7 @@ import pytest
 
 from esquema import Documento
 from proceso import auditoria_fichas, decidir, declaraciones, protegido
-from recogida import control_fichas
+from recogida import control_fichas, declaraciones_oficiales
 from tests import ejemplos
 from tests.test_calidad_datos_3 import inc
 
@@ -218,3 +218,18 @@ def test_sigonella_el_historial_no_repite_el_estado() -> None:
     assert len(cambios) == 1
     assert [p["estado"] for p in sin["estado"]["historial"]] == ["notificado"]
     assert not auditoria_fichas.declaracion_ajena(sin)
+
+
+def test_euskirchen_el_registro_unido_no_la_devuelve() -> None:
+    # EODI-2026-00144: el control quitaba la declaración de la policía de Euskirchen y la
+    # recuperación de las declaraciones del registro unido la volvía a poner cada hora.
+    noticia = "gdelt-aee35b4aa97832c8"
+    suya = _declaracion(f"{noticia}-declaracion-1", "Operatives Führungskommando der Bundeswehr",
+                        "Ein Sprecher des operativen Führungskommandos der Bundeswehr bestätigte "
+                        "mehreren Nachrichtenagenturen den Fall.")  # fmt: skip
+    ajena = _declaracion(f"{noticia}-declaracion-2", "Polizeidienststelle Euskirchen",
+                         "Die Polizeidienststelle Euskirchen habe mittlerweile die Ermittlungen "
+                         "aufgenommen.")  # fmt: skip
+    destino = {"fuentes": [{"id": noticia}]}
+    absorbido = {"fuentes": [{"id": noticia}, suya, ajena]}
+    assert declaraciones_oficiales.declaraciones_que_faltan(destino, absorbido) == [suya]
