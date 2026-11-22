@@ -691,7 +691,7 @@ def reconoce(fuente: Documento, incidente: Documento | None = None) -> bool:
 _ENTREGA = re.compile(
     r"(?<!\w)(?:übergeben\s+(?:worden|wurde|wurden)|an\s+die\s+(?:\w+\s+){1,3}übergeben|"
     r"remis\w*\s+(?:à|aux)|handed\s+(?:over\s+)?to|turned\s+over\s+to|"
-    r"entregad\w*\s+(?:a|al)|consegnat\w*\s+(?:a|al|alla|ai|alle))(?!\w)",
+    r"entregad\w*\s+(?:a|al)|consegnat\w*\s+(?:a(?:i)?|al(?:la|le)?))(?!\w)",
     re.IGNORECASE,
 )
 # La frase da la palabra a alguien: un verbo de decir, «según», unas comillas o la primera persona
