@@ -151,3 +151,19 @@ def test_el_filtro_la_publica_con_el_dia_firme(monkeypatch: pytest.MonkeyPatch) 
     ctx = _contexto(almacen, Cliente([_respuesta(**lugar), _respuesta(**lugar)]))
     entrada.filtrar(ctx, {"EODI-2026-00582"})
     assert ctx.nuevas[entrada.clave(ID)]["decision"] == entrada.RETENER
+
+
+def test_la_retencion_sin_fecha_caduca_con_la_fecha_firme() -> None:
+    # EODI-2026-01000 repuesta el 25/11 con su inicio revisado (la misma hora, ya de minuto): la
+    # decisión del 24 tenía la misma huella y la seguía reteniendo.
+    retenida = galati()
+    decision = {"decision": entrada.RETENER, "motivo": entrada.SIN_FECHA,
+                "huella": entrada.huella(retenida)}  # fmt: skip
+    assert entrada.vigente(decision, retenida)
+    firme = copy.deepcopy(retenida)
+    firme["tiempo"]["inicio"]["precision"] = "minuto"
+    firme["tiempo"]["origen_inicio"]["tipo"] = fechas.EXPLICITA
+    assert entrada.huella(firme) == decision["huella"]
+    assert not entrada.vigente(decision, firme)
+    # Otra retención con la misma huella sigue valiendo.
+    assert entrada.vigente({**decision, "motivo": "otro motivo"}, firme)
