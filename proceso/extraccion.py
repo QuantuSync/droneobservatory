@@ -571,14 +571,19 @@ def preparar(
 # Messaggero del 21/11 sobre Sigonella (datePublished 2026-11-21T11:50:29+0100); con la fecha de
 # GDELT, su «ieri» fue el 23 y salió una ficha de otro día (EODI-2026-00997).
 ANTERIOR_A_GDELT = timedelta(hours=12)
+# Solo con un artículo que GDELT vio hace poco: semanas después la dirección puede servir otra
+# página (cedarnews.net/polski/1142481, de una ficha del 19/11 sobre Génova, servía el 25/11
+# otra noticia fechada el 13/11).
+MAX_DIAS_FECHA_DE_PAGINA = 3
 
 
 def con_fechas_de_pagina(
-    almacen: Almacen, peticion: Peticion, fechas: dict[str, datetime]
+    almacen: Almacen, peticion: Peticion, fechas: dict[str, datetime], ahora: datetime
 ) -> Peticion:
     """La petición con la fecha que da la propia página (`fechas`, por dirección:
     modelo/paginas.fecha_de_la_pagina) en los artículos que GDELT vio `ANTERIOR_A_GDELT` o más
-    después de publicarse. La corrección queda en la base (con la fecha de GDELT en el historial):
+    después de publicarse, si GDELT lo vio hace MAX_DIAS_FECHA_DE_PAGINA días o menos. La
+    corrección queda en la base (con la fecha de GDELT en el historial):
     las reconstrucciones, las fuentes de la ficha y su día la usan también."""
     corregidas: dict[str, str] = {}
     for articulo in peticion.articulos:
@@ -587,7 +592,8 @@ def con_fechas_de_pagina(
             vista = datetime.fromisoformat(str(articulo["fecha"]).replace("Z", "+00:00"))
         except (KeyError, ValueError):
             continue
-        if pagina is not None and vista.astimezone(UTC) - pagina >= ANTERIOR_A_GDELT:
+        reciente = ahora - vista.astimezone(UTC) <= timedelta(days=MAX_DIAS_FECHA_DE_PAGINA)
+        if pagina is not None and reciente and vista.astimezone(UTC) - pagina >= ANTERIOR_A_GDELT:
             corregidas[articulo["url"]] = _fecha(pagina)
     if not corregidas:
         return peticion

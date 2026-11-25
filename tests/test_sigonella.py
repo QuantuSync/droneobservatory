@@ -19,6 +19,7 @@ from proceso import auditoria_fichas, fechas
 from recogida import extractor
 from tests import ejemplos
 from tests.test_extraccion import TEXTO, almacen, candidato_con_articulos  # noqa: F401
+from tests.test_gdelt import AHORA
 
 LEGGO = """<html><head>
 <meta property="article:published_time" content="2026-11-21T11:50:29+01:00">
@@ -38,16 +39,23 @@ def test_la_fecha_de_la_pagina_es_la_ultima_que_declara() -> None:
 
 
 @pytest.mark.parametrize(
-    ("antes", "corrige"), [(timedelta(days=3), True), (timedelta(hours=8), False)]
+    ("antes", "despues", "corrige"),
+    [
+        (timedelta(days=3), timedelta(0), True),
+        (timedelta(hours=8), timedelta(0), False),
+        (timedelta(days=3), timedelta(days=10), False),
+    ],
 )
 def test_la_nota_vieja_que_gdelt_ve_tarde_toma_la_fecha_de_su_pagina(
     almacen: Almacen,  # noqa: F811
     monkeypatch: pytest.MonkeyPatch,
     antes: timedelta,
+    despues: timedelta,
     corrige: bool,
 ) -> None:
     # 3 días: la copia de leggo.it. 8 horas: lo más que tardó GDELT en ver una nota nueva en las
-    # fuentes de las fichas del 15/10 al 25/11.
+    # fuentes de las fichas del 15/10 al 25/11. Diez días después, la dirección puede servir otra
+    # página (cedarnews.net): no se corrige.
     candidato = candidato_con_articulos(almacen, horas=2)
     url = candidato["articulos"][0]
     (vista,) = [a["fecha"] for a in almacen.articulos_de([url])]
@@ -57,7 +65,12 @@ def test_la_nota_vieja_que_gdelt_ve_tarde_toma_la_fecha_de_su_pagina(
         return paginas.Pagina(TEXTO, fecha=de_la_pagina)
 
     monkeypatch.setattr(paginas, "leer_pagina", leer)
-    (peticion,) = extractor.preparar_todas(almacen, [candidato], lambda: None)  # type: ignore[arg-type,return-value]
+    (peticion,) = extractor.preparar_todas(
+        almacen,
+        [candidato],
+        lambda: None,  # type: ignore[arg-type,return-value]
+        AHORA + despues,
+    )
     esperada = de_la_pagina.strftime("%Y-%m-%dT%H:%M:%SZ") if corrige else vista
     assert {a["url"]: a["fecha"] for a in peticion.articulos}[url] == esperada
     assert {f.url: f.fecha for f in peticion.fuentes}[url] == esperada
