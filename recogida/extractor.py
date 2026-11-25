@@ -187,7 +187,7 @@ def preparar_todas(
         leidas = list(hilos.map(con_texto, sin_texto))
     # La fecha que da la propia página corrige la de GDELT en este hilo, el único que escribe en
     # la base (extraccion.con_fechas_de_pagina).
-    return [extraccion.con_fechas_de_pagina(almacen, p, fechas) for p, fechas in leidas]
+    return [extraccion.con_fechas_de_pagina(almacen, p, fechas, momento) for p, fechas in leidas]
 
 
 # Fichas antiguas que se rehacen como mucho en cada ejecución horaria: pocas, para no
