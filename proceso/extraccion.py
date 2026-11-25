@@ -564,6 +564,45 @@ def preparar(
     )
 
 
+# Una página que dice haberse publicado al menos estas horas antes de cuando la vio GDELT es una
+# nota antigua que GDELT encontró tarde (otra copia, otra sección): su fecha es la de la página.
+# Medido el 25 de noviembre de 2026 en las fuentes de las fichas desde el 15 de octubre: GDELT las
+# ve de 0 a 8 horas después de publicarse. leggo.it volvió a publicar el 24/11 la nota de Il
+# Messaggero del 21/11 sobre Sigonella (datePublished 2026-11-21T11:50:29+0100); con la fecha de
+# GDELT, su «ieri» fue el 23 y salió una ficha de otro día (EODI-2026-00997).
+ANTERIOR_A_GDELT = timedelta(hours=12)
+
+
+def con_fechas_de_pagina(
+    almacen: Almacen, peticion: Peticion, fechas: dict[str, datetime]
+) -> Peticion:
+    """La petición con la fecha que da la propia página (`fechas`, por dirección:
+    modelo/paginas.fecha_de_la_pagina) en los artículos que GDELT vio `ANTERIOR_A_GDELT` o más
+    después de publicarse. La corrección queda en la base (con la fecha de GDELT en el historial):
+    las reconstrucciones, las fuentes de la ficha y su día la usan también."""
+    corregidas: dict[str, str] = {}
+    for articulo in peticion.articulos:
+        pagina = fechas.get(articulo["url"])
+        try:
+            vista = datetime.fromisoformat(str(articulo["fecha"]).replace("Z", "+00:00"))
+        except (KeyError, ValueError):
+            continue
+        if pagina is not None and vista.astimezone(UTC) - pagina >= ANTERIOR_A_GDELT:
+            corregidas[articulo["url"]] = _fecha(pagina)
+    if not corregidas:
+        return peticion
+    for url, fecha in corregidas.items():
+        if almacen.corregir_fecha_articulo(url, fecha, "fecha de publicación de la propia página"):
+            registro.info("artículo %s: publicado el %s según su página", url, fecha)
+    return replace(
+        peticion,
+        articulos=[
+            {**a, "fecha": corregidas.get(a["url"], a["fecha"])} for a in peticion.articulos
+        ],
+        fuentes=[replace(f, fecha=corregidas.get(f.url, f.fecha)) for f in peticion.fuentes],
+    )
+
+
 def con_pista(pista: str, texto: str) -> str:
     """El texto de la página con la pista delante (la frase de un artículo dirigido o el texto
     de una nota oficial sin ficha), si la página no la trae ya."""

@@ -842,6 +842,16 @@
       "conserva": "EODI-2026-00864",
       "motivo": "el mismo suceso: los drones que entraron en Moldavia la tarde del martes 17 de noviembre de 2026, uno de ellos sobre Chișinău y tres veces («Drona care a survolat Chișinăul pe 17 noiembrie ar fi pătruns de trei ori în spațiul aerian al Republicii Moldova», news.yam.md, en EODI-2026-00864). EODI-2026-00884 es la condena del embajador de Rumanía publicada el miércoles 18 («condemned \"in the strongest possible terms\" the repeated violations of Moldovan airspace by Russian drones, recorded on Monday, including in the Chisinau area», stiripesurse.ro): ninguna fuente cuenta drones en Moldavia el lunes 16, y las violaciones repetidas cerca de Chișinău son las del martes. Una reacción posterior es del suceso que cuenta (docs/definicion_suceso.md) (revisado el 21 de noviembre de 2026)",
       "motivo_en": "the same event: the drones that entered Moldova on the afternoon of Tuesday 17 November 2026, one of them over Chișinău and three times («Drona care a survolat Chișinăul pe 17 noiembrie ar fi pătruns de trei ori în spațiul aerian al Republicii Moldova», news.yam.md, in EODI-2026-00864). EODI-2026-00884 is the condemnation by Romania's ambassador published on Wednesday 18th («condemned \"in the strongest possible terms\" the repeated violations of Moldovan airspace by Russian drones, recorded on Monday, including in the Chisinau area», stiripesurse.ro): no source reports drones in Moldova on Monday 16th, and the repeated violations near Chișinău are Tuesday's. A later reaction belongs to the event it reports (docs/definicion_suceso.md) (reviewed on 21 November 2026)"
+    },
+    {
+      "revisado_el": "2026-11-25",
+      "registros": [
+        "EODI-2026-00937",
+        "EODI-2026-00997"
+      ],
+      "conserva": "EODI-2026-00937",
+      "motivo": "el mismo suceso: la alerta por drones en la base de Sigonella del viernes 20 de noviembre de 2026 («Venerdì sera un drone non autorizzato è stato avvistato sopra la pista della base statunitense di Sigonella», zazoom.it, en EODI-2026-00937). EODI-2026-00997 es la misma nota de Il Messaggero del sábado 21 (número 9904344, mismo titular: «Sigonella, droni sulla base: l'allerta, gli aerei militari deviati e l'ipotesi bravata. Cosa è successo davvero») que leggo.it volvió a publicar y GDELT vio el martes 24; la página dice haberse publicado el 21 a las 11:50 (datePublished). Su «l'allerta è scattata nella serata di ieri» es el viernes 20, no el lunes 23. Queda EODI-2026-00937 (revisado el 25 de noviembre de 2026)",
+      "motivo_en": "the same event: the drone alert at Sigonella air base on Friday 20 November 2026 («Venerdì sera un drone non autorizzato è stato avvistato sopra la pista della base statunitense di Sigonella», zazoom.it, in EODI-2026-00937). EODI-2026-00997 is the same Il Messaggero article of Saturday 21 (number 9904344, same headline: «Sigonella, droni sulla base: l'allerta, gli aerei militari deviati e l'ipotesi bravata. Cosa è successo davvero») that leggo.it republished and GDELT saw on Tuesday 24; the page says it was published on the 21st at 11:50 (datePublished). Its «l'allerta è scattata nella serata di ieri» is Friday 20, not Monday 23. EODI-2026-00937 stays (reviewed on 25 November 2026)"
     }
   ],
   "reextraer": [
@@ -8417,6 +8427,13 @@
         "es": "Deshecho: la retirada del 1 de noviembre de 2026 fue un fallo técnico al guardar una extracción nueva, no una decisión sobre el suceso. Fuerzas Armadas de Letonia (https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas): «Incidenta laikā divi ārvalstu droni nogāzās Latvijas teritorijā, savukārt trešais šķērsoja valsts gaisa telpu un vēlāk to pameta.»",
         "en": "Undone: the 1 November 2026 withdrawal was a technical failure while saving a new extraction, not a decision about the event. Latvian armed forces (https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas): «Incidenta laikā divi ārvalstu droni nogāzās Latvijas teritorijā, savukārt trešais šķērsoja valsts gaisa telpu un vēlāk to pameta.»"
       }
+    },
+    {
+      "incidente": "EODI-2026-01000",
+      "motivo": {
+        "es": "Deshecho: la retirada del 24 de noviembre de 2026 («ninguna frase da la fecha») fue un fallo de lectura: el día lo escribe la nota tras el principio que leía el filtro. monitoruldegalati.ro (https://monitoruldegalati.ro/stirea-zilei/alerta-aeriana-in-galati-avioane-f-16-survoleaza-orasul-dupa-o-posibila-incursiune-de-drone.html): «Locuitorii din Galaţi au primit, marţi, la ora 14:53, un mesaj RO-ALERT de tip „Extreme Alert”, prin care sunt avertizaţi cu privire la o posibilă incursiune de drone.»",
+        "en": "Undone: the 24 November 2026 withdrawal («no sentence gives the date») was a reading failure: the article writes the day after the beginning the filter read. monitoruldegalati.ro (https://monitoruldegalati.ro/stirea-zilei/alerta-aeriana-in-galati-avioane-f-16-survoleaza-orasul-dupa-o-posibila-incursiune-de-drone.html): «Locuitorii din Galaţi au primit, marţi, la ora 14:53, un mesaj RO-ALERT de tip „Extreme Alert”, prin care sunt avertizaţi cu privire la o posibilă incursiune de drone.»"
+      }
     }
   ],
   "quitar_fuentes": [
@@ -13587,6 +13604,15 @@
       "enlace": "https://dailymail.com/news/article-16311227/Russian-ship-military-supplies-drones-Gulf-Finland-Nato.html",
       "pais": "FI",
       "motivo": "el buque fue alcanzado en el golfo de Finlandia, al oeste de la isla rusa de Gogland, a unas decenas de kilómetros de la frontera con Rusia; sin punto en tierra la zona caía en «interior», que solo se evita para los buques del mar Negro (auditoría F; revisado el 21 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-01000",
+      "campo": "inicio",
+      "valor": "2026-11-24T12:52Z",
+      "cita": "Locuitorii din Galaţi au primit, marţi, la ora 14:53, un mesaj RO-ALERT de tip „Extreme Alert”, prin care sunt avertizaţi cu privire la o posibilă incursiune de drone.",
+      "enlace": "https://monitoruldegalati.ro/stirea-zilei/alerta-aeriana-in-galati-avioane-f-16-survoleaza-orasul-dupa-o-posibila-incursiune-de-drone.html",
+      "pais": "RO",
+      "motivo": "alerta aérea en Galaţi desde las 14:52 hora de Rumanía (UTC+2) del martes 24 de noviembre de 2026 («a fost dispusă trecerea la faza de alertă aeriană începând cu ora 14:52», IGSU citado en monitoruldegalati.ro, nota publicada a las 15:03): 12:52 UTC; el día lo da «marţi» en la misma nota"
     }
   ]
 }

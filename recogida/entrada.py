@@ -31,6 +31,7 @@ import copy
 import logging
 import re
 import unicodedata
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -244,6 +245,19 @@ def con_dia(incidente: Documento, dia: str, fuente_id: str, frase: str) -> Docum
     return {**incidente, "tiempo": tiempo}
 
 
+def con_hora_del_dia(incidente: Documento, fuente_id: str, frase: str, origen: str) -> Documento:
+    """La ficha con la hora que ya tenía, firme: otra frase de la nota escribe su día
+    (fechas.dia_en_la_nota)."""
+    tiempo = dict(incidente["tiempo"])
+    tiempo["inicio"] = {**tiempo["inicio"], "precision": "minuto"}
+    tiempo["origen_inicio"] = {
+        "tipo": origen,
+        "fuente_id": fuente_id,
+        "motivo": f"filtro de entrada: «{frase}»"[:300],
+    }
+    return {**incidente, "tiempo": tiempo}
+
+
 def corregida(incidente: Documento, decision: dict[str, Any]) -> tuple[Documento, list[str]]:
     """La ficha sin lo que no tiene frase: el lugar, a nivel de país; las declaraciones de las
     autoridades fuera, no oficiales (y el estado que daban, de vuelta a notificado). Devuelve la
@@ -325,30 +339,58 @@ class Experto:
         return leida
 
 
-def _textos(incidente: Documento, plazo: Plazo) -> dict[str, str]:
+def _enlaces(incidente: Documento) -> list[str]:
     enlaces = [str(f["enlace"]) for f in control_fichas._publicas(incidente) if f.get("enlace")]
+    return list(dict.fromkeys(enlaces))[:6]
+
+
+def _textos(incidente: Documento, plazo: Plazo) -> dict[str, str]:
     if plazo.agotado():
         return {}
-    return control_fichas.descargar(list(dict.fromkeys(enlaces))[:6], plazo)
+    return control_fichas.descargar(_enlaces(incidente), plazo)
+
+
+@dataclass
+class Leidas:
+    """Las fuentes de la ficha como van al experto (el principio de cada nota) y las notas hasta
+    3.000 letras (modelo/paginas.nota), en que el filtro busca el día de una hora sin día
+    (fechas.dia_en_la_nota): la frase que lo da puede quedar tras el principio (EODI-2026-01000,
+    tras un «UPDATE» al principio de la página)."""
+
+    fuentes: control_fichas.FuentesDeFicha
+    notas: list[tuple[str, str]] = field(default_factory=list)
+
+
+def _leidas(almacen: Almacen, incidente: Documento, plazo: Plazo) -> Leidas:
+    if plazo.agotado():
+        return Leidas(control_fichas.fuentes_de_ficha(almacen, incidente, {}))
+    paginas_ = control_fichas.paginas_con_nota(_enlaces(incidente), plazo)
+    textos = {enlace: pagina.texto for enlace, pagina in paginas_.items()}
+    notas = {enlace: pagina.nota or pagina.texto for enlace, pagina in paginas_.items()}
+    return Leidas(
+        control_fichas.fuentes_de_ficha(almacen, incidente, textos),
+        control_fichas.fuentes_de_ficha(almacen, incidente, notas).comprobar,
+    )
 
 
 def preguntar(
     experto: Experto, incidente: Documento, activos: list[Documento], clave_: str
-) -> tuple[dict[str, Any] | None, list[Documento], control_fichas.FuentesDeFicha]:
+) -> tuple[dict[str, Any] | None, list[Documento], Leidas]:
     """La decisión comprobada del experto sobre la ficha (None si no respondió), el conjunto y
     sus fuentes. Si duda, o si no da frase para la fecha, el lugar o una autoridad, se le vuelve a
     preguntar con las fuentes de las candidatas más cercanas."""
     almacen = experto.ctx.almacen
     elegidas = suceso.conjunto(incidente, activos, suceso.distintos_del_experto(almacen))
     ids = [c["id"] for c in elegidas]
-    fuentes = control_fichas.fuentes_de_ficha(almacen, incidente, _textos(incidente, experto.plazo))
+    leidas = _leidas(almacen, incidente, experto.plazo)
+    fuentes = leidas.fuentes
     citadas = list(autoridades_de(incidente))
     vista = reglas.vista(incidente)
     resumenes = [resumen(c) for c in elegidas]
     cuerpo = peticiones.cuerpo_entrada(vista, fuentes.bloques, citadas, resumenes)
     leida = experto.llamar(cuerpo, peticiones.MAX_SALIDA_ENTRADA, clave_)
     if leida is None:
-        return None, elegidas, fuentes
+        return None, elegidas, leidas
     decision = decidir(leida, fuentes.comprobar, ids, incidente)
     por_id = {c["id"]: c for c in elegidas}
 
@@ -372,7 +414,7 @@ def preguntar(
         # publica; lo decide una revisión.
         mismo = decision.pop("mismo")
         decision["invalida"] = f"el mismo suceso que {mismo} con fechas firmes distintas ({fechas})"
-    return decision, elegidas, fuentes
+    return decision, elegidas, leidas
 
 
 def _activos(almacen: Almacen) -> list[Documento]:
@@ -425,7 +467,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
         por_la_definicion = unir_por_la_definicion(ctx, incidente, activos)
         if por_la_definicion is not None:
             return {**base, **por_la_definicion, "cambios": cambios}
-        decision, elegidas, _ = preguntar(experto, incidente, activos, clave_)
+        decision, elegidas, leidas = preguntar(experto, incidente, activos, clave_)
         base["huella"] = huella(incidente)
         base["conjunto"] = len(elegidas)
         if decision is None:
@@ -493,8 +535,21 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
             actual = ctx.almacen.incidente(incidente["id"])
             base["huella"] = huella(actual) if actual else base["huella"]
         if not decision.get("frase_fecha") and suceso.fecha_aproximada(incidente):
-            return {**base, **decision, "decision": RETENER, "cambios": cambios,
-                    "motivo": "ninguna frase da la fecha del suceso"}  # fmt: skip
+            # La hora sin día que otra frase de la misma nota escribe con su día (EODI-2026-01000):
+            # el día es firme y se publica.
+            en_la_nota = fechas.dia_en_la_nota(incidente, leidas.notas)
+            if en_la_nota is None:
+                return {**base, **decision, "decision": RETENER, "cambios": cambios,
+                        "motivo": "ninguna frase da la fecha del suceso"}  # fmt: skip
+            nuevo = incidentes.aplicar_reglas(con_hora_del_dia(incidente, *en_la_nota))
+            if not control_fichas._guardar(
+                ctx, incidente, nuevo, f"filtro de entrada: día de «{en_la_nota[1]}»"
+            ):
+                return {**base, **decision, "decision": RETENER, "cambios": cambios,
+                        "motivo": "el día que da la nota no se pudo guardar"}  # fmt: skip
+            cambios.append(f"día de la nota: «{en_la_nota[1]}»")
+            decision["frase_fecha"] = [en_la_nota[0], en_la_nota[1]]
+            base["huella"] = huella(ctx.almacen.incidente(incidente["id"]) or nuevo)
         return {**base, **decision, "decision": PUBLICAR, "cambios": cambios}
     return {**base, "decision": RETENER, "cambios": cambios,
             "motivo": "la fecha cambió dos veces"}  # fmt: skip

@@ -21,6 +21,7 @@ día salen solo del principio.
 import json
 import re
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from html.parser import HTMLParser
 
 from recogida.descarga import Descargador, DescargaFallida
@@ -181,12 +182,95 @@ def marcas(html: str) -> tuple[str, ...]:
     return tuple(unicas)[:MAX_MARCAS]
 
 
+# La fecha que la propia página da al artículo: la de publicación y la de su última modificación,
+# en las marcas de artículo y en los datos estructurados. Nunca la del texto ni la de la sección.
+_META_FECHA = frozenset({
+    "article:published_time", "article:modified_time", "og:updated_time", "datepublished",
+    "datemodified",
+})  # fmt: skip
+_CLAVES_FECHA_LD = ("datePublished", "dateModified")
+_FECHA_ISO = re.compile(
+    r"^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?\s*(Z|[+-]\d{2}:?\d{2})?$"
+)
+
+
+def _instante(texto: str) -> datetime | None:
+    """Un instante ISO con su zona («2026-11-21T11:50:29+0100»); None si no lo es o no la lleva."""
+    hallado = _FECHA_ISO.match(texto.strip())
+    if hallado is None or hallado[7] is None:
+        return None
+    zona = "+00:00" if hallado[7] == "Z" else hallado[7][:3] + ":" + hallado[7][-2:]
+    segundos = hallado[6] or "00"
+    try:
+        return datetime.fromisoformat(
+            f"{hallado[1]}-{hallado[2]}-{hallado[3]}T{hallado[4]}:{hallado[5]}:{segundos}{zona}"
+        ).astimezone(UTC)
+    except ValueError:
+        return None
+
+
+class _Fechas(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.fechas: list[datetime] = []
+        self._ld: list[str] | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        atributos = {k.lower(): v or "" for k, v in attrs}
+        if tag == "meta":
+            nombre = (
+                atributos.get("property") or atributos.get("name") or atributos.get("itemprop")
+                or ""
+            ).lower()  # fmt: skip
+            if nombre in _META_FECHA and (momento := _instante(atributos.get("content", ""))):
+                self.fechas.append(momento)
+        elif tag == "script" and atributos.get("type", "").lower() == "application/ld+json":
+            self._ld = []
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "script" and self._ld is not None:
+            self._datos_estructurados("".join(self._ld))
+            self._ld = None
+
+    def handle_data(self, data: str) -> None:
+        if self._ld is not None:
+            self._ld.append(data)
+
+    def _datos_estructurados(self, texto: str) -> None:
+        try:
+            datos = json.loads(texto)
+        except ValueError:
+            return
+        pendientes = [datos]
+        while pendientes:
+            dato = pendientes.pop()
+            if isinstance(dato, list):
+                pendientes.extend(dato)
+            elif isinstance(dato, dict):
+                pendientes.extend(dato.get("@graph") or [])
+                for clave in _CLAVES_FECHA_LD:
+                    valor = dato.get(clave)
+                    if isinstance(valor, str) and (momento := _instante(valor)):
+                        self.fechas.append(momento)
+
+
+def fecha_de_la_pagina(html: str) -> datetime | None:
+    """La fecha más reciente que la página da al artículo (publicación o última modificación), en
+    UTC; None si no da ninguna. La más reciente, para que una página que se actualiza (un directo)
+    nunca parezca más antigua de lo que es."""
+    lector = _Fechas()
+    lector.feed(html)
+    return max(lector.fechas, default=None)
+
+
 @dataclass(frozen=True)
 class Pagina:
     texto: str
     marcas: tuple[str, ...] = ()
     # La nota hasta 3.000 letras (para el paso 2); vacía si no se pidió.
     nota: str = ""
+    # La fecha que la propia página da al artículo (fecha_de_la_pagina), si da alguna.
+    fecha: datetime | None = None
 
 
 def leer_pagina(descargador: Descargador, url: str, con_nota: bool = False) -> Pagina:
@@ -196,7 +280,10 @@ def leer_pagina(descargador: Descargador, url: str, con_nota: bool = False) -> P
         html = descargador.texto(url, es_html)
     except DescargaFallida:
         return Pagina("")
-    return Pagina(primeras_frases(html), marcas(html), nota(html) if con_nota else "")
+    return Pagina(
+        primeras_frases(html), marcas(html), nota(html) if con_nota else "",
+        fecha_de_la_pagina(html),
+    )  # fmt: skip
 
 
 def leer_con_nota(descargador: Descargador, url: str) -> tuple[str, str]:

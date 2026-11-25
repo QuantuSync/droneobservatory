@@ -33,6 +33,22 @@ todas las cifras (también de las del día anterior y de la media) y el resumen 
 Solo con lo que GoatCounter ya guarda; una persona de verdad con esa huella, en un día así, se
 aparta con ellas.
 
+Ancho que cambia en cada visita (desde el 25 de noviembre de 2026): desde las 16:00 UTC del 24/11
+otro robot visita una ficha distinta cada pocos minutos con Chrome 148, 149 o 150 en macOS 10.15
+o Windows 10 y un ancho de pantalla distinto cada vez (139 anchos en 245 sesiones el 24/11, entre
+1.049 y 1.400 px), siempre de primera visita, una página y sin referente, desde China, Singapur,
+Hong Kong, EE. UU., México… La huella entera no se repite, así que la regla anterior no lo veía.
+Se aparta por su comportamiento, nunca por país: las sesiones de ordenador de una página, sin
+referente y de primera visita cuyo ancho no tiene ninguna otra sesión del día («ancho suelto»);
+si un mismo navegador junta `UMBRAL_ANCHOS_SUELTOS` o más en un día, todas esas son automáticas.
+Para no apartar a una persona sola con un ancho raro, solo cuentan el sistema y la versión del
+navegador que se repiten así ese día, y un ancho que tiene cualquier sesión de otra combinación es
+corriente. Medido del 15 al 25/11 (días de Madrid): las personas no pasan de 3 al día por
+navegador; el robot aparta 8 el 15/11 y 14 el 16/11 (ya pasaba despacio), 231 el 24/11 y 266 el
+25/11 hasta las 09:00, todas de Chrome 148–150 en Windows o macOS. Una persona con Chrome 148–150
+que llega de un enlace, ve dos páginas, vuelve o tiene un ancho corriente (1920, 1536…) sigue
+contando.
+
 Lo que se anota queda en `$SECRETOS/visitas.json`, que lee la vigilancia.
 
 Uso: python -m recogida.visitas pasada
@@ -180,6 +196,13 @@ ANCHO_MOVIL = 768
 # tráfico automático (docstring). El 20 de noviembre de 2026 la huella del robot tuvo unas 590 y
 # la mayor de personas, 5.
 UMBRAL_AUTOMATICO = 20
+# Sesiones con ancho suelto (docstring) del mismo navegador en un día a partir de las que son
+# tráfico automático. Del 15 al 23 de noviembre de 2026, las personas tuvieron como mucho 3.
+UMBRAL_ANCHOS_SUELTOS = 8
+# Sesiones de ancho suelto con el mismo sistema y la misma versión del navegador para contar.
+MIN_COMBINACION = 2
+# Lo que el resumen escribe en vez de la huella para las sesiones de ancho suelto.
+ANCHO_CAMBIANTE = "ancho distinto en cada visita"
 
 
 # --- Utilidades -------------------------------------------------------------------------------
@@ -271,6 +294,8 @@ class Sesion:
     sistema: str
     navegador: str
     ancho: int | None
+    # Primera visita del navegador al sitio (GoatCounter: first_visit).
+    primera: bool = True
 
     @property
     def movil(self) -> bool:
@@ -279,6 +304,12 @@ class Sesion:
     @property
     def huella(self) -> tuple[str, str, str, str]:
         return (self.lugar.split("-", 1)[0], self.sistema, self.navegador, str(self.ancho or ""))
+
+    @property
+    def suelta(self) -> bool:
+        """De ordenador, de primera visita, una sola página y sin referente: lo que deja un robot
+        que entra a una página y se va."""
+        return self.paginas == 1 and not self.ref and not self.movil and self.primera
 
 
 def abrir_goatcounter(ruta: Path) -> sqlite3.Connection:
@@ -307,9 +338,10 @@ def sesiones_del_dia(conexion: sqlite3.Connection, dia: date) -> list[Sesion]:
     )
     navegadores = _navegadores(conexion)
     sesiones = []
-    for clave, ref, esquema, lugar, sistema, ancho, navegador in conexion.execute(
+    for clave, ref, esquema, lugar, sistema, ancho, navegador, primera in conexion.execute(
         "select h.session, r.ref, r.ref_scheme, h.location, coalesce(s.name, ''), h.width,"
-        " h.browser_id from hits h join refs r using (ref_id) left join systems s using (system_id)"
+        " h.browser_id, h.first_visit from hits h join refs r using (ref_id)"
+        " left join systems s using (system_id)"
         " where h.hit_id in (select min(hit_id) from hits"
         "   where created_at >= ? and created_at < ? group by session)",
         rango,
@@ -324,6 +356,7 @@ def sesiones_del_dia(conexion: sqlite3.Connection, dia: date) -> list[Sesion]:
                 str(sistema or ""),
                 navegadores.get(int(navegador or 0), ""),
                 None if ancho is None else int(ancho),
+                primera is None or bool(primera),
             )
         )
     return sesiones
@@ -335,16 +368,53 @@ def huellas_automaticas(sesiones: Iterable[Sesion]) -> dict[tuple[str, str, str,
     return {h: n for h, n in huellas.items() if n >= UMBRAL_AUTOMATICO}
 
 
+def _nombre_navegador(navegador: str) -> str:
+    """«Chrome» de «Chrome 148»: el robot cambia de versión entre visitas."""
+    return navegador.rsplit(" ", 1)[0] if navegador[-1:].isdigit() else navegador
+
+
+def anchos_sueltos(sesiones: list[Sesion]) -> dict[str, list[Sesion]]:
+    """{navegador: sesiones} del tráfico automático de ancho cambiante (docstring del módulo): las
+    sesiones sueltas cuyo ancho no tiene ninguna sesión del día que no sea suelta, por nombre del
+    navegador, de los que juntan `UMBRAL_ANCHOS_SUELTOS` o más."""
+    corrientes = {s.ancho for s in sesiones if not s.suelta}
+    sueltas = [s for s in sesiones if s.suelta and s.ancho and s.ancho not in corrientes]
+    # Una persona sola con un ancho que nadie más tiene ese día no se aparta: solo las de un sistema
+    # y una versión del navegador que se repiten (el robot va cambiando entre seis; una persona con
+    # Chrome 155 en Windows a 2560 px, el 25 de noviembre de 2026, salía con ellas).
+    combinaciones = Counter((s.sistema, s.navegador) for s in sueltas)
+    repetidas = {c for c, n in combinaciones.items() if n >= MIN_COMBINACION}
+    # Un ancho que tiene alguna sesión de otro sistema o de otra versión es corriente (1920 px de
+    # una persona con Chrome 150 en Windows, aunque ese día el robot use Chrome 150 en Windows).
+    de_otras = {s.ancho for s in sesiones if (s.sistema, s.navegador) not in repetidas}
+    grupos: dict[str, list[Sesion]] = {}
+    for s in sueltas:
+        if (s.sistema, s.navegador) in repetidas and s.ancho not in de_otras:
+            grupos.setdefault(_nombre_navegador(s.navegador), []).append(s)
+    return {n: lista for n, lista in grupos.items() if len(lista) >= UMBRAL_ANCHOS_SUELTOS}
+
+
 def de_personas(
     sesiones: list[Sesion],
 ) -> tuple[list[Sesion], dict[tuple[str, str, str, str], int]]:
-    """Las sesiones sin las del tráfico automático, y las huellas apartadas."""
+    """Las sesiones sin las del tráfico automático, y lo apartado: por huella repetida y, con la
+    huella («», «», navegador, ANCHO_CAMBIANTE), las de ancho cambiante."""
     huellas = huellas_automaticas(sesiones)
-    quedan = [
-        s for s in sesiones
-        if not (s.huella in huellas and s.paginas == 1 and not s.ref and not s.movil)
-    ]  # fmt: skip
-    return quedan, huellas
+    cambiantes = anchos_sueltos(sesiones)
+    fuera = {id(s) for lista in cambiantes.values() for s in lista}
+    quedan = []
+    for s in sesiones:
+        if s.huella in huellas and s.paginas == 1 and not s.ref and not s.movil:
+            continue
+        if id(s) in fuera:
+            continue
+        quedan.append(s)
+    apartadas = dict(huellas)
+    for navegador, lista in cambiantes.items():
+        solo_aqui = sum(1 for s in lista if s.huella not in huellas)
+        if solo_aqui:
+            apartadas[("", "", navegador, ANCHO_CAMBIANTE)] = solo_aqui
+    return quedan, apartadas
 
 
 def totales(conexion: sqlite3.Connection, dia: date) -> tuple[int, int]:
@@ -396,7 +466,9 @@ def visitas_del_dia(conexion: sqlite3.Connection, dia: date) -> Visitas:
     resultado.huellas = sorted(
         (
             (
-                ", ".join(
+                f"{h[2] or 'navegador desconocido'}, {ANCHO_CAMBIANTE}"
+                if h[3] == ANCHO_CAMBIANTE
+                else ", ".join(
                     (
                         nombre_pais(h[0], nombres, str(ingles.get(h[0], ""))),
                         h[1] or "sistema desconocido",
@@ -1117,7 +1189,8 @@ def texto_resumen(d: Datos) -> str:
             *(
                 [
                     f"  Tráfico automático apartado: {numero(v.automaticas)} sesiones de una"
-                    " página, sin referente y con la misma huella (no cuentan en ninguna cifra)",
+                    " página, sin referente y con la misma huella o con un ancho distinto en cada"
+                    " visita (no cuentan en ninguna cifra)",
                     *(f"    {huella}: {numero(n)}" for huella, n in v.huellas),
                 ]
                 if v.automaticas

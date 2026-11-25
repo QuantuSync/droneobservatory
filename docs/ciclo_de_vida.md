@@ -39,7 +39,11 @@ así. Las reglas de qué está protegido no cambian: siguen en [`cerrojo.md`](ce
 - **Publicada.** Tiene fila en `publicado`: la entrada pública tal como sale y el documento
   interno de esa misma versión. Desde aquí el cerrojo protege lo decidido con cita. La tabla se
   llena una vez con lo que ya estaba publicado (`puerta.sembrar`), lo primero de la recogida:
-  antes de eso ninguna ficha se guarda, para que una ya publicada no parezca nueva.
+  antes de eso ninguna ficha se guarda, para que una ya publicada no parezca nueva. La primera
+  publicación (`primera`) es la hora en que se escribe la fila, no la del principio de la
+  recogida: lo que el filtro de entrada corrigió antes en esa misma recogida no cuenta como
+  hecho con la ficha en la web (desde el 25/11/2026; la bajada de estado de EODI-2026-00997 a
+  las 13:34 del 24/11 contaba como posterior a su publicación de las 13:17 y la retenía X).
 - **Unida.** Fundida en otra (`fusionado_en`). Su fila pasa a «unida» cuando la ficha que queda
   está publicada; hasta entonces sigue saliendo como estaba. Su dirección lleva siempre a la
   ficha de su unión vigente: la puerta vuelve a mirar las filas unidas en cada publicación y, si

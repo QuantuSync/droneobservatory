@@ -417,13 +417,17 @@ def fuentes_de_ficha(
     return FuentesDeFicha(bloques, comprobar)
 
 
-def paginas_de(enlaces: list[str], plazo: Plazo | None) -> dict[str, paginas.Pagina]:
-    """Las primeras frases y las marcas de cada noticia, en memoria (nunca se guardan)."""
+def paginas_de(
+    enlaces: list[str], plazo: Plazo | None, con_nota: bool = False
+) -> dict[str, paginas.Pagina]:
+    """Las primeras frases y las marcas de cada noticia (y, con `con_nota`, la nota), en memoria
+    (nunca se guardan)."""
     from recogida.descarga import Descargador
 
     def uno(enlace: str) -> tuple[str, paginas.Pagina]:
         try:
-            return enlace, paginas.leer_pagina(Descargador(plazo=plazo, reintentos=1), enlace)
+            descargador = Descargador(plazo=plazo, reintentos=1)
+            return enlace, paginas.leer_pagina(descargador, enlace, con_nota=con_nota)
         except Exception:
             return enlace, paginas.Pagina("")
 
@@ -431,6 +435,11 @@ def paginas_de(enlaces: list[str], plazo: Plazo | None) -> dict[str, paginas.Pag
         return {}
     with ThreadPoolExecutor(max_workers=6) as hilos:
         return dict(hilos.map(uno, enlaces))
+
+
+def paginas_con_nota(enlaces: list[str], plazo: Plazo | None) -> dict[str, paginas.Pagina]:
+    """Las páginas con su nota hasta 3.000 letras (recogida/entrada.py), en memoria."""
+    return paginas_de(enlaces, plazo, con_nota=True)
 
 
 def descargar(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
@@ -2062,13 +2071,37 @@ def salida_tras_una_recogida(
     ]
 
 
+# Lo que el aviso de una retirada cuenta de la ficha: una ficha que nunca salió en la web no
+# tiene página (la dirección da 404, EODI-2026-01000), así que el motivo, el titular y la fuente
+# van en el propio aviso.
+MAX_LETRAS_AVISO_RETIRADA = 400
+
+
 def _retirada(ctx: Contexto, incidente: Documento, nota: str) -> str:
-    """Apunta la retirada para el aviso privado y devuelve la nota."""
+    """Apunta la retirada para el aviso privado, con el motivo guardado en la ficha, su titular y
+    su primera fuente, y devuelve la nota."""
     cursor = ctx.almacen.cursor(CURSOR_RETIRADAS) or {}
     fichas = dict(cursor.get("fichas", {}))
-    fichas[str(incidente["id"])] = {"fecha": _iso(ctx.ahora), "nota": nota[:200]}
+    guardada = ctx.almacen.incidente(str(incidente["id"])) or incidente
+    retirado = guardada.get("retirado")
+    motivo = str(retirado.get("motivo") or "") if isinstance(retirado, dict) else ""
+    enlaces = [str(f.get("enlace")) for f in guardada.get("fuentes", []) if f.get("enlace")]
+    fichas[str(incidente["id"])] = {
+        "fecha": _iso(ctx.ahora), "nota": nota[:200],
+        "motivo": motivo[:MAX_LETRAS_AVISO_RETIRADA],
+        "titulo": str((guardada.get("titulo") or {}).get("es") or "")[:200],
+        "enlace": enlaces[0] if enlaces else "",
+    }  # fmt: skip
     ctx.almacen.guardar_cursor(CURSOR_RETIRADAS, {**cursor, "fichas": fichas})
     return nota
+
+
+def texto_retirada(id_: str, apunte: Documento) -> str:
+    """La línea del aviso de una retirada: identificador, titular, motivo y fuente."""
+    titulo = f" «{apunte['titulo']}»" if apunte.get("titulo") else ""
+    motivo = str(apunte.get("motivo") or apunte.get("nota") or "")
+    fuente = f" Fuente: {apunte['enlace']}" if apunte.get("enlace") else ""
+    return f"{id_}{titulo}: {motivo}.{fuente}".replace("..", ".")
 
 
 def avisar_retiradas(
@@ -2088,8 +2121,8 @@ def avisar_retiradas(
         return []
     avisar(
         "Retiradas tras una recogida retenidas por el filtro de entrada (nunca salieron en la "
-        "web; el motivo va en su página): "
-        + "; ".join(f"{id_} ({fichas[id_].get('nota', '')})" for id_ in nuevas)
+        "web y no tienen página; el motivo va aquí):\n"
+        + "\n".join(texto_retirada(id_, fichas[id_]) for id_ in nuevas)
     )
     for id_ in nuevas:
         fichas[id_] = {**fichas[id_], "avisada": _iso(ahora)}

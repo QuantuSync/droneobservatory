@@ -1610,6 +1610,23 @@ class Almacen:
             )  # fmt: skip
         return True
 
+    def corregir_fecha_articulo(self, url: str, fecha: str, motivo: str) -> bool:
+        """La fecha de publicación de un artículo, con la que conste (la anterior queda en el
+        historial). True si cambia."""
+        with self._conexion:
+            fila = self._conexion.execute(
+                "SELECT fecha FROM articulos WHERE url = ?", (url,)
+            ).fetchone()
+            if fila is None or fila[0] == fecha:
+                return False
+            self._conexion.execute("UPDATE articulos SET fecha = ? WHERE url = ?", (fecha, url))
+            self._conexion.execute(
+                "INSERT INTO historial (tabla, entidad_id, operacion, anterior, nuevo) "
+                "VALUES ('articulos', ?, 'cambio', ?, ?)",
+                (url, _json({"fecha": fila[0]}), _json({"fecha": fecha, "motivo": motivo})),
+            )
+        return True
+
     def candidatos_desde(self, fecha: str) -> list[Documento]:
         """Candidatos con actividad desde `fecha`: los que aún pueden crecer."""
         return self._documentos(
@@ -2012,11 +2029,17 @@ class Almacen:
         detalle: Documento, fecha: str,
     ) -> bool:  # fmt: skip
         """Pone la fila de la ficha en lo publicado. No toca una fila igual (la fecha es la del
-        último cambio) y conserva la fecha de la primera publicación. True si cambió algo."""
+        último cambio) y conserva la fecha de la primera publicación. True si cambió algo.
+
+        La primera publicación es la hora en que se guarda, no `fecha` (el principio de la
+        recogida): lo que el filtro de entrada cambió antes en la misma recogida no se hizo con la
+        ficha en la web. Con `fecha`, la bajada de estado de EODI-2026-00997 (13:34 del 24/11)
+        contó como hecha tras publicarse (13:17, principio de la recogida) y la retuvo el cerrojo
+        (X). Una `fecha` posterior (las pruebas) manda."""
         cursor = self._conexion.execute(
             "INSERT INTO publicado "
             "(id, estado, fichero, entrada, interno, detalle, primera, fecha) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+            "VALUES (?, ?, ?, ?, ?, ?, MAX(?, strftime('%Y-%m-%dT%H:%M:%SZ', 'now')), ?) "
             "ON CONFLICT (id) DO UPDATE SET estado = excluded.estado, "
             "fichero = excluded.fichero, "
             "entrada = excluded.entrada, interno = excluded.interno, detalle = excluded.detalle, "
