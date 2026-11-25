@@ -540,7 +540,7 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
             en_la_nota = fechas.dia_en_la_nota(incidente, leidas.notas)
             if en_la_nota is None:
                 return {**base, **decision, "decision": RETENER, "cambios": cambios,
-                        "motivo": "ninguna frase da la fecha del suceso"}  # fmt: skip
+                        "motivo": SIN_FECHA}  # fmt: skip
             nuevo = incidentes.aplicar_reglas(con_hora_del_dia(incidente, *en_la_nota))
             if not control_fichas._guardar(
                 ctx, incidente, nuevo, f"filtro de entrada: día de «{en_la_nota[1]}»"
@@ -555,9 +555,22 @@ def pasar(experto: Experto, incidente: Documento, previa: Documento | None) -> D
             "motivo": "la fecha cambió dos veces"}  # fmt: skip
 
 
+# El motivo de la retención sin fecha (control_fichas.MOTIVO_ENTRADA_SIN_FECHA).
+SIN_FECHA = "ninguna frase da la fecha del suceso"
+
+
 def vigente(decision: Documento | None, incidente: Documento) -> bool:
-    """La decisión sigue valiendo para la ficha tal como está."""
-    return decision is not None and decision.get("huella") == huella(incidente)
+    """La decisión sigue valiendo para la ficha tal como está. La retención sin fecha deja de
+    valer cuando la ficha ya tiene su fecha firme con la misma hora (la huella solo mira el
+    valor): EODI-2026-01000, repuesta el 25/11/2026 con su inicio revisado, seguía retenida por
+    la decisión del 24 y se habría vuelto a retirar."""
+    if decision is None or decision.get("huella") != huella(incidente):
+        return False
+    return not (
+        decision.get("decision") == RETENER
+        and decision.get("motivo") == SIN_FECHA
+        and not suceso.fecha_aproximada(incidente)
+    )
 
 
 def pendiente(decision: Documento | None, incidente: Documento, ahora: datetime) -> bool:

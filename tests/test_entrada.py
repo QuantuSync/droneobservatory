@@ -548,9 +548,11 @@ def test_el_filtro_compara_con_la_ficha_retenida_y_sin_publicar(
     (como 00742, el 1/11) la tiene en su conjunto aunque no esté publicada."""
     monkeypatch.setattr(sys.modules[__name__], "AHORA", datetime(2026, 11, 1, 17, 17, tzinfo=UTC))
     nombre = "Iași"
+    # Retenida sin fecha: la suya era aproximada (la de la publicación).
     iasi = _ficha(
-        "EODI-2026-00719", "RO", "2026-10-31T00:00Z", frase=f"RO-Alert în județul {nombre}"
-    )
+        "EODI-2026-00719", "RO", "2026-10-31T00:00Z", "aproximada",
+        frase=f"RO-Alert în județul {nombre}",
+    )  # fmt: skip
     iasi["lugar"] = {"pais": "RO", "nivel": "region", "region": nombre, "suceso": nombre}
     nueva = _ficha("EODI-2026-00742", "RO", "2026-10-31T00:00Z", publicada="2026-11-01T17:00Z",
                    frase="drone deasupra județului")  # fmt: skip
