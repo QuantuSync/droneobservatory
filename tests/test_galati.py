@@ -20,7 +20,9 @@ from recogida import control_fichas, entrada
 from tests import ejemplos, test_entrada
 from tests.test_entrada import SULINA_582, Cliente, _base, _contexto, _respuesta
 
-ID = "EODI-2026-01000"
+# Un número que ninguna revisión conoce: la de EODI-2026-01000 (reponer, con su inicio) ya le da
+# el día al guardarla.
+ID = "EODI-2026-09100"
 ENLACE = "https://monitoruldegalati.ro/alerta-aeriana-galati"
 NOTA = (
     "UPDATE: Inspectoratul General pentru Situații de Urgență (IGSU) a transmis un nou mesaj "

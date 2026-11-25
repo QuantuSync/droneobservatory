@@ -130,7 +130,10 @@ def sigonella() -> Documento:
     """EODI-2026-00937 como se publicó: confirmado por la frase de la żandarmeria."""
     documento = inc("EODI-2026-00937", "2026-11-20T00:00Z", "dia", "Sigonella",
                     (37.4, 14.92), "IT", fuentes=1)  # fmt: skip
-    documento["objetivo"] = {"categoria": "base_militar", "nombre": "Sigonella"}
+    # Como está publicada (la base, 25/11/2026): la revisión que le une EODI-2026-00997 la deja
+    # revisada a mano, y el cerrojo guarda su objetivo tal como es.
+    documento["objetivo"] = {"categoria": "aeropuerto", "nombre": "Base aerea di Sigonella",
+                             "oaci": "LICZ"}  # fmt: skip
     documento["tipo"] = "sobrevuelo"
     documento["fuentes"][0]["frase_origen"] = "«Droni sulla base di Sigonella in Sicilia»."
     documento["fuentes"].append({
