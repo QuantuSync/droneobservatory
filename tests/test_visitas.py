@@ -172,6 +172,95 @@ def test_el_trafico_automatico_se_aparta_de_todas_las_cifras(tmp_path: Path) -> 
     conexion.close()
 
 
+def _con_navegador(
+    ruta: Path, visitas_: list[tuple[str, str, int, str, str, str, int, str, bool, str]]
+) -> None:
+    """Páginas vistas con su navegador y su primera visita: (momento UTC, sesión, ancho, país,
+    sistema, versión del sistema, versión de Chrome, ruta, primera visita, referente)."""
+    conexion = sqlite3.connect(ruta)
+    for momento, sesion, ancho, pais, sistema, version, chrome, camino, primera, ref in visitas_:
+        navegador = _id(
+            conexion, "browsers", "version", f"{chrome}.0.0.0",
+            "insert into browsers (name, version) values ('Chrome', ?)",
+        )  # fmt: skip
+        fila = conexion.execute(
+            "select system_id from systems where name = ? and version = ?", (sistema, version)
+        ).fetchone()
+        sistema_id = int(fila[0]) if fila else int(
+            conexion.execute(
+                "insert into systems (name, version) values (?, ?)", (sistema, version)
+            ).lastrowid or 0
+        )  # fmt: skip
+        ruta_id = _id(
+            conexion, "paths", "path", camino,
+            "insert into paths (site_id, path, title) values (1, ?, '')",
+        )  # fmt: skip
+        ref_id = _id(
+            conexion, "refs", "ref", ref,
+            f"insert into refs (ref, ref_scheme) values (?, '{'h' if ref else 'o'}')",
+        )  # fmt: skip
+        conexion.execute(
+            "insert into hits (site_id, path_id, ref_id, session, first_visit, browser_id,"
+            " system_id, width, location, created_at) values (1, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (ruta_id, ref_id, sesion.encode(), int(primera), navegador, sistema_id, ancho, pais,
+             momento),
+        )  # fmt: skip
+    conexion.commit()
+    conexion.close()
+
+
+def test_el_robot_de_ancho_cambiante_se_aparta_sin_mirar_el_pais(tmp_path: Path) -> None:
+    """24 de noviembre de 2026, desde las 16:00 UTC: un robot visita una ficha distinta cada pocos
+    minutos con Chrome 148, 149 o 150 en macOS 10.15 o Windows 10 y un ancho de pantalla distinto
+    cada vez, de primera visita, una página y sin referente, desde China, Singapur, Hong Kong,
+    EE. UU. y México. Se aparta por ese comportamiento; las personas de esos mismos países, y las
+    que usan Chrome 148–150, siguen contando."""
+    combinaciones = [
+        ("macOS", "10.15", 148), ("macOS", "10.15", 149), ("macOS", "10.15", 150),
+        ("Windows", "10", 148), ("Windows", "10", 149), ("Windows", "10", 150),
+    ]  # fmt: skip
+    paises = ["CN", "SG", "HK", "US", "MX"]
+    robot = [
+        (
+            en_madrid(DIA, 17 + n // 12, (n * 5) % 60), f"r{n}", 1049 + 7 * n, paises[n % 5],
+            *combinaciones[n % 6], f"/en/EODI-2025-{n + 100:05d}", True, "",
+        )
+        for n in range(30)
+    ]  # fmt: skip
+    personas = [
+        # Chrome 150 en Windows desde China, directa y de una página, con un ancho corriente.
+        (en_madrid(DIA, 9), "p1", 1920, "CN", "Windows", "10", 150, "/en/EODI-1", True, ""),
+        (en_madrid(DIA, 9, 30), "p2", 1920, "CN", "Windows", "10", 156, "/", True, ""),
+        # Chrome 148 desde Rumanía, catorce páginas (aquí, dos) con un ancho que nadie más tiene.
+        (en_madrid(DIA, 10), "p3", 1536, "RO", "Windows", "10", 148, "/", True, ""),
+        (en_madrid(DIA, 10, 1), "p3", 1536, "RO", "Windows", "10", 148, "/incidentes", True, ""),
+        # Desde Singapur, con Chrome 149, llega de un enlace.
+        (en_madrid(DIA, 11), "p4", 1288, "SG", "macOS", "10.15", 149, "/en/EODI-2", True, "t.co/x"),
+        # Desde Hong Kong, Chrome 148, una página directa, pero vuelve (no es primera visita).
+        (en_madrid(DIA, 12), "p5", 1311, "HK", "Windows", "10", 148, "/en", False, ""),
+        # Una persona sola con un ancho que nadie más tiene ese día (25/11: Chrome 155, 2560 px).
+        (en_madrid(DIA, 13), "p6", 2560, "US", "Windows", "10", 155, "/en/EODI-3", True, ""),
+    ]
+    base = base_goatcounter(tmp_path / "goatcounter.sqlite3", [])
+    _con_navegador(base, robot + personas)
+    conexion = visitas.abrir_goatcounter(base)
+    v = visitas.visitas_del_dia(conexion, DIA)
+    assert v.automaticas == 30
+    assert v.huellas == [(f"Chrome, {visitas.ANCHO_CAMBIANTE}", 30)]
+    assert (v.visitas, v.visitantes) == (7, 6)
+    assert dict(v.paises) == {
+        "China": 2, "Rumanía": 1, "Singapur": 1, "Hong Kong": 1, "Estados Unidos": 1,
+    }  # fmt: skip
+    assert all(not camino.startswith("/en/EODI-2025") for camino, _ in v.paginas)
+    # Con menos de UMBRAL_ANCHOS_SUELTOS no se aparta nada: un día normal tiene como mucho 3.
+    pocas = base_goatcounter(tmp_path / "pocas.sqlite3", [])
+    _con_navegador(pocas, robot[: visitas.UMBRAL_ANCHOS_SUELTOS - 1] + personas)
+    otra = visitas.abrir_goatcounter(pocas)
+    assert visitas.visitas_del_dia(otra, DIA).automaticas == 0
+    conexion.close()
+    otra.close()
+
+
 @pytest.mark.parametrize(
     ("ref", "esquema", "nombre"),
     [

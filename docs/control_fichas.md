@@ -375,7 +375,11 @@ confirmado oficialmente; no cuenta el estado de una revisión a mano); AD, prese
 el suceso sin confirmar (desde el 22/11/2026: la autoridad que afirma el dron reconoce también el
 suceso; EODI-2025-00278); AE, declaración atribuida a una autoridad que no la dijo (desde el
 22/11/2026: la frase es del periódico y cuenta que a la autoridad la avisaron, le notificaron o le
-entregaron el caso, o solo que investiga; EODI-2026-00362). Los recuentos del día y los
+entregaron el caso, o solo que investiga; EODI-2026-00362); AF, el mismo sitio días antes y la
+fecha de un «ayer» de una nota de seguimiento (desde el 25/11/2026: una ficha en una instalación
+fechada por un «ayer» o un «anoche» sin día, con otra ficha de la misma instalación y el mismo
+país de 1 a 4 días antes que nadie dio por distinta; la nota suele ser una copia tardía de la del
+primer suceso: EODI-2026-00997 frente a EODI-2026-00937). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la
@@ -604,6 +608,16 @@ nueva (activa y aún no publicada) que no tiene una decisión vigente para sus f
      presencia de EODI-2026-00694 cambió cuatro veces en un día (auditoría K);
    - si duda, o falta una frase, se le vuelve a preguntar una vez con las fuentes de las
      candidatas más cercanas (`MAX_CANDIDATAS_CONTEXTO`);
+   - **la hora sin día** (desde el 25 de noviembre de 2026): si el experto no da frase de la fecha
+     y la ficha tiene la hora de una frase sin día (`fechas.HORA_SIN_DIA`), el filtro busca en la
+     nota entera (hasta 3.000 letras, no solo el principio que lee el experto) una frase con la
+     misma hora local (30 minutos de margen) que escriba un día, y si ese día es el de la ficha la
+     publica con el día firme (`fechas.dia_en_la_nota`, `entrada.con_hora_del_dia`). Nunca en una
+     nota retrospectiva (comprobación N) ni si otra de esas frases da otro día. EODI-2026-01000 (la
+     alerta de Galaţi del martes 24/11) se retuvo y retiró porque «marţi, la ora 14:53» quedaba
+     tras dos «UPDATE» al principio de la página; en las 49 fichas fechadas así hasta el 25/11 da
+     día en 2 (Galaţi y Aalborg, «klokken 21.44 onsdag aften», el día en que quedó al unirse) y en
+     ninguna lo da mal;
    - **fechas firmes** (`suceso.fecha_firme`: el día sale de una frase, no de la publicación): dos fichas
      con fechas firmes a más de 2 días (`DIAS_FIRMES`) no se unen; se le vuelve a preguntar con
      las fuentes de la otra y, si insiste, la ficha se retiene para una revisión. Tampoco se cambia

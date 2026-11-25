@@ -623,6 +623,10 @@ def test_ninguna_ficha_queda_retenida_mas_de_una_recogida() -> None:
     assert control_fichas.avisar_retiradas(almacen, AHORA, avisador) == [sulina["id"]]
     assert avisos and avisos[0][0] == control_fichas.TITULO_RETIRADAS
     assert sulina["id"] in avisos[0][1]
+    # La ficha no tiene página (nunca salió): el motivo, el titular y la fuente van en el aviso.
+    assert control_fichas.MOTIVO_SIN_FECHA in avisos[0][1]
+    assert sulina["fuentes"][0]["enlace"] in avisos[0][1]
+    assert "va en su página" not in avisos[0][1]
     # Una sola vez, y nunca desde un ensayo (sin avisador).
     assert control_fichas.avisar_retiradas(almacen, AHORA, avisador) == []
     assert control_fichas.avisar_retiradas(almacen, AHORA, None) == []

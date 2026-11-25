@@ -51,6 +51,12 @@ HORA_NOCHE_SIGUIENTE = 15
 # Una hora sin día se toma del día de publicación si cae en las 30 horas anteriores a la
 # nota (el día de la nota o la víspera): más atrás, la hora no es de ese día.
 MAX_HORA_SIN_DIA = timedelta(hours=30)
+# El principio del motivo de esa fecha (`resolver`).
+HORA_SIN_DIA = "la frase da la hora pero no el día"
+# La otra frase de la nota que da el día de esa hora la escribe con esta diferencia como mucho
+# («începând cu ora 14:52» y «marţi, la ora 14:53», EODI-2026-01000).
+MAX_MINUTOS_MISMA_HORA = 30
+_HORA_EN_FRASE = re.compile(r"(?<![\d:.])([01]?\d|2[0-3])[:.h]([0-5]\d)(?![\d])")
 # Hasta esta hora local, una hora del día siguiente es aún la noche que nombra la frase.
 HORA_FIN_MADRUGADA = 6
 ANIO_MIN, ANIO_MAX = 2014, 2099
@@ -619,7 +625,7 @@ def resolver(
         # y no está verificado. Se conserva la hora, con precisión aproximada.
         return Resolucion(
             valor, "aproximada", PUBLICACION,
-            f"la frase da la hora pero no el día: día de la publicación ({publicado}, hora "
+            f"{HORA_SIN_DIA}: día de la publicación ({publicado}, hora "
             "local del medio)",
             corregido=True,
         )  # fmt: skip
@@ -814,6 +820,58 @@ def inicio_de_ficha(
         motivo=f"{resolucion.motivo}; la hora de la frase ({local}) es hora local "
                f"({zona_suceso.key}): en UTC, {en_utc.strftime('%H:%M')}",
     )  # fmt: skip
+
+
+def dia_en_la_nota(
+    incidente: dict[str, Any], textos: list[tuple[str, str]]
+) -> tuple[str, str, str] | None:
+    """(fuente_id, frase, origen) de la frase de una nota de la ficha que escribe el día de la
+    hora que la fecha toma sin día (`HORA_SIN_DIA`): la misma hora local, con
+    MAX_MINUTOS_MISMA_HORA de diferencia como mucho, y un día que es el de la ficha. `textos` son
+    (id de la fuente, texto de su nota). None si no la hay, si la nota es retrospectiva
+    (`retrospectiva`, la comprobación N) o si una de esas frases da otro día.
+
+    La extracción lee el día solo en las frases que elige el modelo: en EODI-2026-01000 (la alerta
+    de Galaţi del martes 24 de noviembre de 2026, nota publicada a las 15:03, hora de Rumanía)
+    eligió «începând cu ora 14:52», sin día, y no «Locuitorii din Galaţi au primit, marţi, la ora
+    14:53, un mesaj RO-ALERT»; el filtro de entrada la retuvo sin fecha y la retiró a las 6 horas.
+    """
+    tiempo = incidente.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if origen.get("tipo") != PUBLICACION or not str(origen.get("motivo", "")).startswith(
+        HORA_SIN_DIA
+    ):
+        return None
+    if retrospectiva(incidente) is not None:
+        return None
+    lugar = incidente.get("lugar") or {}
+    punto = lugar.get("punto") or {}
+    zona_suceso = zona(lugar.get("pais"), punto.get("lat"), punto.get("lon")) or ZoneInfo("UTC")
+    local = _momento(str(tiempo["inicio"]["valor"])).astimezone(zona_suceso)
+    minuto = local.hour * 60 + local.minute
+    fuentes = {str(f.get("id")): f for f in incidente.get("fuentes", [])}
+    encontradas: list[tuple[str, str, str]] = []
+    dias: set[date] = set()
+    for fuente_id, texto in textos:
+        fuente = fuentes.get(fuente_id)
+        if fuente is None or not (fuente.get("fecha") or {}).get("valor"):
+            continue
+        publicacion = _momento(str(fuente["fecha"]["valor"]))
+        for frase in re.split(r"(?<=[.!?])\s+", texto):
+            horas = [int(h) * 60 + int(m) for h, m in _HORA_EN_FRASE.findall(frase)]
+            if not any(
+                min(abs(h - minuto), 1440 - abs(h - minuto)) <= MAX_MINUTOS_MISMA_HORA
+                for h in horas
+            ):
+                continue
+            lecturas = leer(frase, publicacion, zona_suceso, fuente.get("idioma"))
+            if not lecturas:
+                continue
+            dias |= {lectura.dia for lectura in lecturas}
+            encontradas.append((fuente_id, frase.strip()[:300], lecturas[0].origen))
+    if dias != {local.date()}:
+        return None
+    return encontradas[0]
 
 
 def dia_escrito(valor: str, frase: str, publicacion: datetime) -> bool:

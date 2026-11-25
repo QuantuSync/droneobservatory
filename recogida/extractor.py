@@ -158,13 +158,19 @@ def preparar_todas(
         extraccion.anotar_sin_idioma(almacen, vacias, momento)
     sin_texto = [p for p in sin_texto if p.enviadas]
 
-    def con_texto(peticion: extraccion.Peticion) -> extraccion.Peticion:
+    def con_texto(
+        peticion: extraccion.Peticion,
+    ) -> tuple[extraccion.Peticion, dict[str, datetime]]:
         propio = descargador()
         fuentes = []
+        fechas: dict[str, datetime] = {}
         for f, url in zip(peticion.fuentes, peticion.enviadas, strict=True):
             try:
                 # El principio, para el paso 1, y la nota, para el paso 2 (modelo/detalles.py).
-                texto, nota = paginas.leer_con_nota(propio, url)
+                pagina = paginas.leer_pagina(propio, url, con_nota=True)
+                texto, nota = pagina.texto, pagina.nota
+                if pagina.fecha is not None:
+                    fechas[url] = pagina.fecha
             except TiempoAgotado:
                 raise
             except Exception as error:
@@ -175,10 +181,13 @@ def preparar_todas(
                 f, texto=extraccion.con_pista(f.texto, texto),
                 nota=extraccion.con_pista(f.texto, nota) if nota else "",
             ))  # fmt: skip
-        return replace(peticion, fuentes=fuentes)
+        return replace(peticion, fuentes=fuentes), fechas
 
     with ThreadPoolExecutor(HILOS) as hilos:
-        return list(hilos.map(con_texto, sin_texto))
+        leidas = list(hilos.map(con_texto, sin_texto))
+    # La fecha que da la propia página corrige la de GDELT en este hilo, el único que escribe en
+    # la base (extraccion.con_fechas_de_pagina).
+    return [extraccion.con_fechas_de_pagina(almacen, p, fechas) for p, fechas in leidas]
 
 
 # Fichas antiguas que se rehacen como mucho en cada ejecución horaria: pocas, para no

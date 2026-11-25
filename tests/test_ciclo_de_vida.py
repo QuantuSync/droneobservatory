@@ -188,6 +188,25 @@ def test_las_publicadas_al_sembrar_cuentan_desde_siempre() -> None:
     assert almacen.primeras_publicaciones() == {ID: "", OTRA: "b"}
 
 
+def test_lo_que_cambia_el_filtro_antes_de_publicarse_no_cuenta_como_publicado() -> None:
+    # EODI-2026-00997: el filtro de entrada le bajó el estado a las 13:34 del 24/11 y la puerta la
+    # publicó después en la misma recogida, que empezó a las 13:17. La primera publicación es la
+    # hora del guardado, no la del principio de la recogida.
+    almacen = base(ficha())
+    cambio_del_filtro = almacen._conexion.execute(
+        "SELECT strftime('%Y-%m-%dT%H:%M:%SZ', 'now')"
+    ).fetchone()[0]
+    almacen.guardar_publicado(
+        ID, puerta.PUBLICADA, "incidentes.geojson", {"id": ID}, {}, {}, "2026-11-24T13:17:03Z"
+    )
+    assert almacen.publicado()[ID]["primera"] >= cambio_del_filtro
+    # Una fecha posterior a la hora del guardado (las pruebas) manda.
+    almacen.guardar_publicado(
+        OTRA, puerta.PUBLICADA, "incidentes.geojson", {"id": OTRA}, {}, {}, "2999-01-01T00:00:00Z"
+    )
+    assert almacen.publicado()[OTRA]["primera"] == "2999-01-01T00:00:00Z"
+
+
 # --- Unir y deshacer ----------------------------------------------------------------------
 
 

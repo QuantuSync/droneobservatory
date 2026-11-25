@@ -175,7 +175,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE",
+    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -209,6 +209,7 @@ NOMBRES = {
     "AC": "estado confirmado o atribuido sin frase de autoridad que reconozca el suceso",
     "AD": "presencia confirmada con el suceso sin confirmar",
     "AE": "declaración atribuida a una autoridad que no la dijo",
+    "AF": "el mismo sitio días antes y la fecha de un «ayer» de una nota de seguimiento",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -740,6 +741,82 @@ def autoridad_perdida(documentos: list[Documento]) -> list[str]:
 REGLAS_DE_V = frozenset({suceso.REGLA_REVISION, suceso.REGLA_EXPERTO, suceso.REGLA_PAISES})
 
 
+# AF: días entre una ficha y la del mismo sitio que la precede para que su «ayer» pueda ser el de
+# una nota de seguimiento.
+DIAS_SEGUIMIENTO = 4
+# AF: días entre la primera noticia de la otra ficha y la de la nota de seguimiento.
+DIAS_NOTA_TARDIA = 2
+
+
+def _sitio(documento: Documento) -> tuple[str, str] | None:
+    """(país, instalación) de una ficha situada en una instalación: el OACI o el nombre."""
+    lugar = documento.get("lugar") or {}
+    if lugar.get("nivel") != "instalacion":
+        return None
+    objetivo = documento.get("objetivo") or {}
+    nombre = objetivo.get("oaci") or _clave(
+        str(lugar.get("suceso") or objetivo.get("nombre") or "")
+    )
+    return (str(lugar.get("pais") or ""), str(nombre)) if nombre else None
+
+
+def _de_un_ayer(documento: Documento) -> bool:
+    """El día de la ficha sale de un «ayer», «anoche» o «esta noche» sin día escrito: lo pone la
+    publicación de la nota (fechas.relativa_sin_dia)."""
+    origen = documento["tiempo"].get("origen_inicio") or {}
+    return origen.get("tipo") == fechas.RELATIVA and fechas.relativa_sin_dia(
+        str(origen.get("motivo") or "")
+    )
+
+
+def seguimientos_de_otro_dia(
+    documentos: list[Documento], distintos: frozenset[frozenset[str]] = frozenset()
+) -> list[str]:
+    """AF: «posterior→anterior» de las fichas vigentes fechadas por un «ayer» sin día
+    (`_de_un_ayer`) en la misma instalación y el mismo país que otra vigente de 1 a
+    DIAS_SEGUIMIENTO días antes, cuando ninguna de sus fuentes es de su propio día y la primera
+    llega DIAS_NOTA_TARDIA días o más después de la primera de la otra: una nota que vuelve a
+    contar el suceso días después, cuyo «ayer» es el de su primera publicación y no el de la copia
+    (EODI-2026-00997: la nota de Il Messaggero del 21/11 sobre la alerta del 20/11 en Sigonella,
+    que leggo.it volvió a publicar y GDELT vio el 24/11, frente a EODI-2026-00937). No cuentan las
+    que el experto o una revisión dieron por distintas ni las que una revisión enlazó en la misma
+    serie (`relacionados`). No las marca un suceso nuevo contado el mismo día (Brønnøysund, 28 y
+    30/9/2025: «Nye meldinger» del 30) ni dos contados juntos («Afgelopen nacht en zaterdag»,
+    Marche-en-Famenne, 25 y 28/10/2025)."""
+    vigentes = [d for d in documentos if incidentes.activo(d) and _sitio(d) is not None]
+
+    def enlazadas(documento: Documento) -> set[str]:
+        return {str(r.get("id")) for r in documento.get("relacionados", [])}
+
+    salida = []
+    for posterior in vigentes:
+        if not _de_un_ayer(posterior):
+            continue
+        dia = fechas.dia_local(posterior["tiempo"]["inicio"], posterior)
+        publicadas = [
+            fechas.dia_local(f["fecha"], posterior) for f in posterior.get("fuentes", [])
+            if f.get("fecha")
+        ]  # fmt: skip
+        if not publicadas or min(publicadas) <= dia:
+            continue
+        primera = suceso.momento_primera_noticia(posterior)
+        for anterior in vigentes:
+            if anterior is posterior or _sitio(anterior) != _sitio(posterior):
+                continue
+            dias = (suceso.instante(posterior).date() - suceso.instante(anterior).date()).days
+            par = frozenset((str(posterior["id"]), str(anterior["id"])))
+            serie = enlazadas(posterior) & ({str(anterior["id"])} | enlazadas(anterior))
+            tarde = primera - suceso.momento_primera_noticia(anterior)
+            if (
+                1 <= dias <= DIAS_SEGUIMIENTO
+                and tarde >= timedelta(days=DIAS_NOTA_TARDIA)
+                and par not in distintos
+                and not serie
+            ):
+                salida.append(f"{posterior['id']}→{anterior['id']}")
+    return salida
+
+
 def uniones_marcadas(
     documentos: list[Documento],
     del_experto: frozenset[frozenset[str]] = frozenset(),
@@ -941,6 +1018,7 @@ def auditar(
                       if incidentes.activo(d) and _protegido.fuentes_anteriores(d)]  # fmt: skip
     resultado["L"] = autoridad_perdida(vistos)
     resultado["V"] = uniones_marcadas(vistos, del_experto, a_mano)
+    resultado["AF"] = seguimientos_de_otro_dia(vistos, del_experto)
     resultado["K"] = [f"{i} {'/'.join(datos)}" for i, datos in oscilan(cambios).items()
                       if i in vigentes]  # fmt: skip
     if extracciones:
