@@ -852,6 +852,16 @@
       "conserva": "EODI-2026-00937",
       "motivo": "el mismo suceso: la alerta por drones en la base de Sigonella del viernes 20 de noviembre de 2026 («Venerdì sera un drone non autorizzato è stato avvistato sopra la pista della base statunitense di Sigonella», zazoom.it, en EODI-2026-00937). EODI-2026-00997 es la misma nota de Il Messaggero del sábado 21 (número 9904344, mismo titular: «Sigonella, droni sulla base: l'allerta, gli aerei militari deviati e l'ipotesi bravata. Cosa è successo davvero») que leggo.it volvió a publicar y GDELT vio el martes 24; la página dice haberse publicado el 21 a las 11:50 (datePublished). Su «l'allerta è scattata nella serata di ieri» es el viernes 20, no el lunes 23. Queda EODI-2026-00937 (revisado el 25 de noviembre de 2026)",
       "motivo_en": "the same event: the drone alert at Sigonella air base on Friday 20 November 2026 («Venerdì sera un drone non autorizzato è stato avvistato sopra la pista della base statunitense di Sigonella», zazoom.it, in EODI-2026-00937). EODI-2026-00997 is the same Il Messaggero article of Saturday 21 (number 9904344, same headline: «Sigonella, droni sulla base: l'allerta, gli aerei militari deviati e l'ipotesi bravata. Cosa è successo davvero») that leggo.it republished and GDELT saw on Tuesday 24; the page says it was published on the 21st at 11:50 (datePublished). Its «l'allerta è scattata nella serata di ieri» is Friday 20, not Monday 23. EODI-2026-00937 stays (reviewed on 25 November 2026)"
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "registros": [
+        "EODI-2025-00176",
+        "EODI-2025-00191"
+      ],
+      "conserva": "EODI-2025-00176",
+      "motivo": "el mismo suceso: los drones del aeropuerto de Riga del 13 de enero de 2025 (EODI-2025-00176). EODI-2025-00191 estaba fechada el 29 de enero, el día en que el Consejo de Seguridad Nacional habló «par nesen notikušo bezpilota lidaparātu incidentu Rīgas lidostā» (nra.lv, 29 de enero de 2025) y pidió al Ministerio de Transporte que evaluara a los responsables: una reacción posterior es del suceso que cuenta (docs/definicion_suceso.md) (revisado el 27 de noviembre de 2026)",
+      "motivo_en": "the same event: the drones at Riga airport on 13 January 2025 (EODI-2025-00176). EODI-2025-00191 was dated 29 January, the day the National Security Council discussed «par nesen notikušo bezpilota lidaparātu incidentu Rīgas lidostā» (nra.lv, 29 January 2025) and asked the Ministry of Transport to assess those responsible: a later reaction belongs to the event it is about (docs/definicion_suceso.md) (reviewed on 27 November 2026)"
     }
   ],
   "reextraer": [
@@ -6234,6 +6244,22 @@
         "es": "El titular dec\u00eda \u00abposibles drones\u00bb; la alerta fue por la posible entrada de un dron: \u00abdespre posibilitatea p\u0103trunderii unei drone \u00een spa\u021biul aerian na\u021bional\u00bb (monitorulsv.ro, seg\u00fan el MApN) (revisado el 8 de noviembre de 2026).",
         "en": "The headline said \u00abpossible drones\u00bb; the alert was over the possible entry of one drone: \u00abdespre posibilitatea p\u0103trunderii unei drone \u00een spa\u021biul aerian na\u021bional\u00bb (monitorulsv.ro, citing the Defence Ministry) (reviewed on 8 November 2026)."
       }
+    },
+    {
+      "incidente": "EODI-2026-00271",
+      "titulo": {
+        "es": "Cae un objeto, posiblemente un dron, cerca de Plauru (Tulcea) y provoca un incendio",
+        "en": "An object, possibly a drone, falls near Plauru (Tulcea) and starts a fire"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "În jurul orei 5:00, a fost raportată căderea unui obiect, posibil o dronă aeriană, în zona localității Plauru, județul Tulcea, urmată de producerea unui incendiu, fără a produce victime sau pagube materiale",
+        "enlace": "https://radioresita.ro/national/drona-cazuta-in-zona-localitatii-plauru-echipele-mapn-fac-cercetari-la-fata-locului"
+      },
+      "motivo": {
+        "es": "El comunicado literal del Ministerio de Defensa rumano habla de un objeto, posiblemente un dron: «În jurul orei 5:00, a fost raportată căderea unui obiect, posibil o dronă aeriană, în zona localității Plauru, județul Tulcea, urmată de producerea unui incendiu, fără a produce victime sau pagube materiale», y añade que los radares no detectaron ninguna entrada no autorizada en el espacio aéreo esa noche. La frase que confirmaba el dron («informs on Friday morning that a drone had crashed», stiripesurse.ro) era el resumen del medio, no del ministerio (revisado el 27 de noviembre de 2026).",
+        "en": "The literal statement of the Romanian Ministry of Defence speaks of an object, possibly a drone: «În jurul orei 5:00, a fost raportată căderea unui obiect, posibil o dronă aeriană, în zona localității Plauru, județul Tulcea, urmată de producerea unui incendiu, fără a produce victime sau pagube materiale», and adds that the radars detected no unauthorised entry into the airspace that night. The sentence that confirmed the drone («informs on Friday morning that a drone had crashed», stiripesurse.ro) was the outlet's summary, not the ministry's (reviewed on 27 November 2026)."
+      }
     }
   ],
   "titular_justificado": [],
@@ -11384,6 +11410,144 @@
           ]
         }
       ]
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "incidente": "EODI-2026-00923",
+      "distintos": true,
+      "motivo": {
+        "es": "Juntaba el aviso a la policía de Rzeszów por un objeto sobre un edificio de una universidad («Do rzeszowskiej policji wpłynęło w piątek (20 listopada) po godzinie 10 zgłoszenie dotyczące niezidentyfikowanego obiektu», radio.rzeszow.pl) con los misiles y el dron rusos que entraron en Polonia esa mañana (EODI-2026-00903), unidos por la reapertura del aeropuerto de Rzeszów-Jasionka; la presencia confirmada era del otro suceso. Revisado el 27 de noviembre de 2026.",
+        "en": "It merged the report to the Rzeszów police about an object over a university building («Do rzeszowskiej policji wpłynęło w piątek (20 listopada) po godzinie 10 zgłoszenie dotyczące niezidentyfikowanego obiektu», radio.rzeszow.pl) with the Russian missiles and drone that entered Poland that morning (EODI-2026-00903), joined through the reopening of Rzeszów-Jasionka airport; the confirmed presence belonged to the other event. Reviewed on 27 November 2026."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-20",
+          "pais": "PL",
+          "descripcion": "El viernes 20 de noviembre de 2026, después de las 10:00, la policía de Rzeszów recibe el aviso de un objeto no identificado sobre un edificio de una universidad de la ciudad y lo comprueba",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-9bc6b48ec852ef73",
+            "gdelt-9bc6b48ec852ef73-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-20",
+          "pais": "PL",
+          "descripcion": "Los dos misiles y el dron a reacción rusos que entraron en Polonia la mañana del viernes 20 de noviembre de 2026 y lo que siguió: la reapertura de los aeropuertos de Rzeszów-Jasionka y Lublin, la reunión con la OTAN y la investigación de la fiscalía",
+          "coincide_con": "EODI-2026-00903",
+          "fuentes": [
+            "gdelt-7ebb634d04fadbee",
+            "gdelt-7ebb634d04fadbee-declaracion-1",
+            "gdelt-26a8238abb2421c1",
+            "gdelt-26a8238abb2421c1-declaracion-1",
+            "gdelt-26a8238abb2421c1-declaracion-2",
+            "gdelt-18f8b79f5e2b564a",
+            "gdelt-18f8b79f5e2b564a-declaracion-3",
+            "gdelt-0879f4a598dce45d",
+            "gdelt-8a9ca3b591614523",
+            "gdelt-8a9ca3b591614523-declaracion-1",
+            "gdelt-8a9ca3b591614523-declaracion-2",
+            "gdelt-d417a3809b799cc9",
+            "gdelt-d417a3809b799cc9-declaracion-2",
+            "gdelt-d417a3809b799cc9-declaracion-3",
+            "gdelt-d417a3809b799cc9-declaracion-4",
+            "gdelt-6f209eaf245c2875",
+            "gdelt-6f209eaf245c2875-declaracion-2"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-11-22",
+          "pais": "PL",
+          "descripcion": "No es un suceso de esta ficha: el directo de n-tv sobre las pruebas de drones del Ejército alemán en Lituania y el reportaje de Politico sobre el Ejército alemán",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1d58801db1b7f1f0",
+            "gdelt-b71388a72e66d19c"
+          ]
+        }
+      ]
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "incidente": "EODI-2026-01002",
+      "motivo": {
+        "es": "Repetía dos sucesos con ficha: odnako.org volvió a publicar el 25 de noviembre de 2026 la nota del 20 sobre los misiles y el dron rusos en Polonia (EODI-2026-00903) y su «last night» fechó la ficha el 24; las otras notas cuentan el dron ruso de la noche del 23 al 24 que volvió hacia el este («Polonia denunció el martes que un dron de origen ruso había violado brevemente su espacio aéreo», diariosigloxxi.com), EODI-2026-00984. Revisado el 27 de noviembre de 2026.",
+        "en": "It repeated two events that have a record: odnako.org republished on 25 November 2026 the report of the 20th on the Russian missiles and drone in Poland (EODI-2026-00903) and its «last night» dated the record the 24th; the other reports tell of the Russian drone of the night of 23 to 24 that turned back east («Polonia denunció el martes que un dron de origen ruso había violado brevemente su espacio aéreo», diariosigloxxi.com), EODI-2026-00984. Reviewed on 27 November 2026."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-20",
+          "pais": "PL",
+          "descripcion": "Los dos misiles y el dron a reacción rusos que entraron en Polonia la mañana del viernes 20 de noviembre de 2026 (la nota de aquel día, publicada de nuevo el 25)",
+          "coincide_con": "EODI-2026-00903",
+          "fuentes": [
+            "gdelt-a15d060f36126214",
+            "gdelt-a15d060f36126214-declaracion-1",
+            "gdelt-a15d060f36126214-declaracion-2"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-11-23",
+          "pais": "PL",
+          "descripcion": "El dron ruso que entró brevemente en el espacio aéreo de Polonia la noche del lunes 23 al martes 24 de noviembre de 2026 y volvió hacia el este",
+          "coincide_con": "EODI-2026-00984",
+          "fuentes": [
+            "gdelt-8c4b7fa99f4405e9",
+            "gdelt-8c4b7fa99f4405e9-declaracion-1",
+            "gdelt-8c4b7fa99f4405e9-declaracion-2",
+            "gdelt-8c4b7fa99f4405e9-declaracion-5",
+            "gdelt-fd93afc9f5418209",
+            "gdelt-fd93afc9f5418209-declaracion-1",
+            "gdelt-fd93afc9f5418209-declaracion-2",
+            "gdelt-fd93afc9f5418209-declaracion-3"
+          ]
+        }
+      ]
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "incidente": "EODI-2026-00316",
+      "distintos": true,
+      "motivo": {
+        "es": "Juntaba el dron derribado por un F-16 el domingo 26 de julio de 2026 a las 10:13 («o nouă dronă a fost doborâtă duminică dimineaţă, la ora 10:13, de o aeronavă F-16», europafm.ro) con las notas del dron que entró al este de Sulina el lunes 27 («Încă o dronă a Rusiei a intrat în spațiul aerian al României», antena3.ro), que es EODI-2026-00313 («Sistemul de supraveghere radar al MApN a detectat, luni, 27 iulie, o țintă aeriană la est de Sulina», ziarulnational.md). Las unió el 21 de octubre de 2026 la regla del mismo sitio de entonces; la de hoy no lo haría. Revisado el 27 de noviembre de 2026.",
+        "en": "It merged the drone shot down by an F-16 on Sunday 26 July 2026 at 10:13 («o nouă dronă a fost doborâtă duminică dimineaţă, la ora 10:13, de o aeronavă F-16», europafm.ro) with the reports on the drone that entered east of Sulina on Monday 27 («Încă o dronă a Rusiei a intrat în spațiul aerian al României», antena3.ro), which is EODI-2026-00313 («Sistemul de supraveghere radar al MApN a detectat, luni, 27 iulie, o țintă aeriană la est de Sulina», ziarulnational.md). The same-place rule of the time joined them on 21 October 2026; today's rule would not. Reviewed on 27 November 2026."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-07-26",
+          "pais": "RO",
+          "descripcion": "El domingo 26 de julio de 2026 a las 10:13 un F-16 rumano derriba un dron sobre las aguas territoriales de Rumanía, en la zona de Sulina-Chilia",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-24ef67a35c35e4c4",
+            "gdelt-24ef67a35c35e4c4-declaracion-1",
+            "gdelt-24ef67a35c35e4c4-declaracion-2",
+            "gdelt-68097737fbb76771",
+            "gdelt-821cdee59d3989d6",
+            "gdelt-c5ebb7cbe6d215c0",
+            "gdelt-e3ae0ad28d427d0b",
+            "gdelt-8860bfc5e7dfba35"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-07-27",
+          "pais": "RO",
+          "descripcion": "El lunes 27 de julio de 2026 por la mañana otro dron entra en el espacio aéreo de Rumanía al este de Sulina; despegan dos F-16 y se avisa a la población por RO-Alert",
+          "coincide_con": "EODI-2026-00313",
+          "fuentes": [
+            "gdelt-2c626bdf34a3f24f",
+            "gdelt-c9d9fc535db4666b",
+            "gdelt-791b8a515d0b1f9c"
+          ]
+        }
+      ]
     }
   ],
   "datos": [
@@ -13613,6 +13777,32 @@
       "enlace": "https://monitoruldegalati.ro/stirea-zilei/alerta-aeriana-in-galati-avioane-f-16-survoleaza-orasul-dupa-o-posibila-incursiune-de-drone.html",
       "pais": "RO",
       "motivo": "alerta aérea en Galaţi desde las 14:52 hora de Rumanía (UTC+2) del martes 24 de noviembre de 2026 («a fost dispusă trecerea la faza de alertă aeriană începând cu ora 14:52», IGSU citado en monitoruldegalati.ro, nota publicada a las 15:03): 12:52 UTC; el día lo da «marţi» en la misma nota"
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "incidente": "EODI-2025-00357",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2025-11-08T00:00Z",
+        "precision": "aproximada"
+      },
+      "cita": "a mené, le week-end dernier, des recherches à la suite de signalements de drones près du centre de commandement de l'Otan à Brunssum",
+      "enlace": "https://lavenir.net/actu/monde/2025/11/11/des-drones-signales-au-dessus-de-bases-de-lotan-dans-la-region-de-maastricht-dautres-appareils-auraient-egalement-ete-vus-en-allemagne-23SVJ4DWRVDOFA7A4GP6FKWP7U",
+      "pais": "NL",
+      "motivo": "los avisos de drones y la búsqueda de la Marechaussee fueron el fin de semana del 8 y 9 de noviembre de 2025 («le week-end dernier» en una nota del martes 11, según ANP); la ficha tenía el 11, la fecha de publicación (revisado el 27 de noviembre de 2026)"
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "incidente": "EODI-2026-00178",
+      "campo": "inicio",
+      "valor": {
+        "valor": "2026-07-16T00:00Z",
+        "precision": "aproximada"
+      },
+      "cita": "Am avut un asemenea incident la AIAIC acum trei săptămâni",
+      "enlace": "https://www.transilvaniabusiness.ro/2026/08/06/drona-care-a-blocat-aeroportul-cluj/",
+      "pais": "RO",
+      "motivo": "el dron que cortó casi una hora el tráfico del aeropuerto de Cluj-Napoca fue hacia mediados de julio de 2026: el director, David Ciceo, dijo el 6 de agosto «acum trei săptămâni» (transilvaniabusiness.ro) y «acum aproximativ două-trei săptămâni» (monitorulcj.ro), y la nota del 10 de agosto «la doar două săptămâni»; ninguna fuente da el día. La ficha tenía el 10 de agosto, el día en que el aeropuerto anunció sus defensas contra drones (revisado el 27 de noviembre de 2026)"
     }
   ]
 }

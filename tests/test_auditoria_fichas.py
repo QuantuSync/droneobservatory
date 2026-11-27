@@ -448,3 +448,80 @@ def test_u_el_dron_en_femenino() -> None:
     assert auditoria_fichas.auditar([documento])["U"] == [documento["id"]]
     documento["titulo"]["es"] = "Un dron entra en el espacio aéreo de Rumanía cerca de Sulina"
     assert auditoria_fichas.auditar([documento])["U"] == []
+
+
+def _con_fecha_de_su_nota(frase: str, idioma: str, pais: str, publicada: str, dia: str,
+                          tipo: str = "explicita") -> dict[str, Any]:  # fmt: skip
+    documento = ejemplos.incidente_minimo()
+    documento["lugar"]["pais"] = pais
+    fuente = {**documento["fuentes"][0], "idioma": idioma, "frase_origen": frase,
+              "fecha": ejemplos.instante(publicada)}  # fmt: skip
+    documento["fuentes"] = [fuente]
+    documento["tiempo"] = {
+        "inicio": ejemplos.instante(f"{dia}T00:00Z", "dia"),
+        "origen_inicio": {"tipo": tipo, "fuente_id": fuente["id"], "motivo": "la frase"},
+    }
+    return documento
+
+
+def test_ag_la_fecha_de_una_nota_que_dice_que_el_suceso_fue_antes() -> None:
+    # EODI-2026-00178: la compra de defensas del aeropuerto de Cluj del 10 de agosto de 2026, «la
+    # doar două săptămâni» del dron; EODI-2025-00191: el Consejo de Seguridad de Letonia del 29 de
+    # enero de 2025 sobre el dron «nesen notikušo» del 13.
+    cluj = _con_fecha_de_su_nota(
+        "o decizie ce vine la doar două săptămâni de când un astfel de aparat a perturbat grav "
+        "zborurile chiar pe terminalul clujean", "ro", "RO", "2026-08-10T12:00Z", "2026-08-10",
+    )  # fmt: skip
+    riga = _con_fecha_de_su_nota(
+        "par nesen notikušo bezpilota lidaparātu incidentu Rīgas lidostā", "lv", "LV",
+        "2025-01-29T21:00Z", "2025-01-29", "relativa",
+    )  # fmt: skip
+    assert auditoria_fichas.auditar([cluj])["AG"] == [cluj["id"]]
+    assert auditoria_fichas.auditar([riga])["AG"] == [riga["id"]]
+    # La nota del mismo día que escribe su día no cuenta; la fecha de publicación sin frase es N.
+    hoy = _con_fecha_de_su_nota(
+        "Duminică, 9 august, o dronă a perturbat zborurile pe aeroportul din Cluj", "ro", "RO",
+        "2026-08-10T12:00Z", "2026-08-09",
+    )  # fmt: skip
+    assert auditoria_fichas.auditar([hoy])["AG"] == []
+    publicacion = copy.deepcopy(cluj)
+    publicacion["tiempo"]["origen_inicio"] = {"tipo": "publicacion"}
+    assert auditoria_fichas.auditar([publicacion])["AG"] == []
+    # EODI-2026-00152: una nota del día que recuerda otro suceso «last month» no es la que dio
+    # la fecha; tampoco cuenta una fecha de días antes de la nota.
+    otra = copy.deepcopy(cluj)
+    otra["fuentes"].append({**cluj["fuentes"][0], "id": "otra", "frase_origen": "A naval drone "
+                            "exploded in the port of Constanța on Friday morning."})  # fmt: skip
+    otra["tiempo"]["origen_inicio"]["fuente_id"] = "otra"
+    assert auditoria_fichas.auditar([otra])["AG"] == []
+    antes = copy.deepcopy(cluj)
+    antes["tiempo"]["inicio"] = ejemplos.instante("2026-07-27T00:00Z", "dia")
+    assert auditoria_fichas.auditar([antes])["AG"] == []
+
+
+def test_ah_presencia_confirmada_por_el_resumen_del_medio_que_otra_fuente_pone_en_duda() -> None:
+    # EODI-2026-00271 (Plauru, 2 de octubre de 2026): stiripesurse.ro resume que el Ministerio
+    # «informs … that a drone had crashed»; el comunicado literal dice «posibil o dronă aeriană».
+    from tests.test_cerrojo import ficha
+
+    documento = ficha()
+    documento["lugar"]["pais"] = "RO"
+    principal, oficial = documento["fuentes"]
+    oficial["medio"] = "Ministerul Apărării Naționale (declaración oficial citada en ejemplo.eu)"
+    oficial["frase_origen"] = (
+        "The Ministry of National Defence (MApN) informs on Friday morning that a drone had "
+        "crashed in the area of Plauru, Tulcea County."
+    )
+    principal["frase_origen"] = (
+        "Incendiu în zona localității Plauru, vineri dimineață, după posibila prăbușire a unei "
+        "drone."
+    )
+    assert auditoria_fichas.auditar([documento])["AH"] == [documento["id"]]
+    # Sin ninguna fuente que lo ponga en duda (EODI-2026-00311, el dron hallado que anuncia el
+    # Ministerio), o con la frase de la autoridad, no cuenta.
+    sin_duda = copy.deepcopy(documento)
+    sin_duda["fuentes"][0]["frase_origen"] = "Incendiu în zona localității Plauru, vineri."
+    assert auditoria_fichas.auditar([sin_duda])["AH"] == []
+    literal = copy.deepcopy(documento)
+    literal["fuentes"][1]["frase_origen"] = "O dronă a căzut în zona localității Plauru."
+    assert auditoria_fichas.auditar([literal])["AH"] == []

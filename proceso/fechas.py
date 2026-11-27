@@ -911,6 +911,13 @@ def _anteriores() -> tuple[str, ...]:
     return tuple(sorted({_normal(f) for f in formas}, key=len, reverse=True))
 
 
+def pasado_anterior(frase: str) -> str | None:
+    """La expresión que sitúa el suceso antes de la nota sin decir el día («el mes pasado»,
+    «hace dos semanas», «nesen notikušo»), si la frase la lleva."""
+    normal = _normal(frase)
+    return next((e for e in _anteriores() if _contiene(normal, e) >= 0), None)
+
+
 def retrospectiva(incidente: dict[str, Any]) -> str | None:
     """La palabra que sitúa el suceso antes de la noticia, si la ficha tomó la fecha de
     publicación como inicio: un mes que no es el del inicio (ni el de la víspera en los
