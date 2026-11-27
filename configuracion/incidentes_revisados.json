@@ -6273,6 +6273,17 @@
         "es": "El comunicado literal del Ministerio de Defensa rumano habla de un objeto, posiblemente un dron: «În jurul orei 5:00, a fost raportată căderea unui obiect, posibil o dronă aeriană, în zona localității Plauru, județul Tulcea, urmată de producerea unui incendiu, fără a produce victime sau pagube materiale», y añade que los radares no detectaron ninguna entrada no autorizada en el espacio aéreo esa noche. La frase que confirmaba el dron («informs on Friday morning that a drone had crashed», stiripesurse.ro) era el resumen del medio, no del ministerio (revisado el 27 de noviembre de 2026).",
         "en": "The literal statement of the Romanian Ministry of Defence speaks of an object, possibly a drone: «În jurul orei 5:00, a fost raportată căderea unui obiect, posibil o dronă aeriană, în zona localității Plauru, județul Tulcea, urmată de producerea unui incendiu, fără a produce victime sau pagube materiale», and adds that the radars detected no unauthorised entry into the airspace that night. The sentence that confirmed the drone («informs on Friday morning that a drone had crashed», stiripesurse.ro) was the outlet's summary, not the ministry's (reviewed on 27 November 2026)."
       }
+    },
+    {
+      "incidente": "EODI-2026-00316",
+      "titulo": {
+        "es": "Rumanía derriba un dron que penetró en su espacio aéreo",
+        "en": "Romania shoots down drone that penetrated its airspace"
+      },
+      "motivo": {
+        "es": "El titular de la referencia, comprobado contra sus fuentes: «o nouă dronă a fost doborâtă duminică dimineaţă, la ora 10:13, de o aeronavă F-16» (europafm.ro). La reextracción tras separar el dron del 27 de julio lo cambiaba (revisado el 27 de noviembre de 2026).",
+        "en": "The reference headline, checked against its sources: «o nouă dronă a fost doborâtă duminică dimineaţă, la ora 10:13, de o aeronavă F-16» (europafm.ro). The re-extraction after separating the drone of 27 July changed it (reviewed on 27 November 2026)."
+      }
     }
   ],
   "titular_justificado": [],
@@ -8501,6 +8512,14 @@
       "motivo": {
         "es": "La declaración del Ministerio de Defensa citada por promptmedia.ro es el comunicado del 31 de octubre de 2026 sobre los dos drones del noreste (EODI-2026-00719), no la noche del 1 al 2 de noviembre.",
         "en": "The Ministry of Defence statement quoted by promptmedia.ro is the communiqué of 31 October 2026 about the two drones over the north-east (EODI-2026-00719), not the night of 1 to 2 November."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00316",
+      "fuente": "gdelt-24ef67a35c35e4c4-declaracion-3",
+      "motivo": {
+        "es": "La frase de la ministra de Exteriores Oana Ţoiu («Este inadmisibil şi intolerabil ca Federaţia Rusă să continue să încalce spaţiul aerian al României», europafm.ro) habla de las violaciones repetadas del espacio aéreo; el mismo comunicado dice que las investigaciones de los drones derribados el 25 y el 26 de julio de 2026 siguen en curso y que la protesta se basará en ellas: no atribuye este dron (revisado el 27 de noviembre de 2026).",
+        "en": "The sentence by Foreign Minister Oana Ţoiu («Este inadmisibil şi intolerabil ca Federaţia Rusă să continue să încalce spaţiul aerian al României», europafm.ro) is about the repeated airspace violations; the same communiqué says the investigations into the drones shot down on 25 and 26 July 2026 are still under way and that the protest will be based on them: it does not attribute this drone (reviewed on 27 November 2026)."
       }
     }
   ],
@@ -13816,6 +13835,18 @@
       "enlace": "https://www.transilvaniabusiness.ro/2026/08/06/drona-care-a-blocat-aeroportul-cluj/",
       "pais": "RO",
       "motivo": "el dron que cortó casi una hora el tráfico del aeropuerto de Cluj-Napoca fue hacia mediados de julio de 2026: el director, David Ciceo, dijo el 6 de agosto «acum trei săptămâni» (transilvaniabusiness.ro) y «acum aproximativ două-trei săptămâni» (monitorulcj.ro), y la nota del 10 de agosto «la doar două săptămâni»; ninguna fuente da el día. La ficha tenía el 10 de agosto, el día en que el aeropuerto anunció sus defensas contra drones (revisado el 27 de noviembre de 2026)"
+    },
+    {
+      "incidente": "EODI-2026-00923",
+      "campo": "drones",
+      "valor": {
+        "min": 1,
+        "max": 1
+      },
+      "cita": "prawdopodobnie został zauważony bezzałogowy statek powietrzny",
+      "enlace": "https://radio.rzeszow.pl/375677/podejrzany-dron-nad-uczelnia-w-rzeszowie-policja-sprawdza-zgloszenie",
+      "pais": "PL",
+      "motivo": "un objeto sobre un edificio de una universidad de Rzeszów, que según el aviso a la policía era probablemente un dron; la reextracción tras la separación del 27 de noviembre de 2026 lo dejó en «desconocido» (revisado el 27 de noviembre de 2026)"
     }
   ]
 }
