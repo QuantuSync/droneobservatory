@@ -862,6 +862,19 @@
       "conserva": "EODI-2025-00176",
       "motivo": "el mismo suceso: los drones del aeropuerto de Riga del 13 de enero de 2025 (EODI-2025-00176). EODI-2025-00191 estaba fechada el 29 de enero, el día en que el Consejo de Seguridad Nacional habló «par nesen notikušo bezpilota lidaparātu incidentu Rīgas lidostā» (nra.lv, 29 de enero de 2025) y pidió al Ministerio de Transporte que evaluara a los responsables: una reacción posterior es del suceso que cuenta (docs/definicion_suceso.md) (revisado el 27 de noviembre de 2026)",
       "motivo_en": "the same event: the drones at Riga airport on 13 January 2025 (EODI-2025-00176). EODI-2025-00191 was dated 29 January, the day the National Security Council discussed «par nesen notikušo bezpilota lidaparātu incidentu Rīgas lidostā» (nra.lv, 29 January 2025) and asked the Ministry of Transport to assess those responsible: a later reaction belongs to the event it is about (docs/definicion_suceso.md) (reviewed on 27 November 2026)"
+    },
+    {
+      "revisado_el": "2026-11-27",
+      "registros": [
+        "EODI-2026-00903",
+        "EODI-2026-00959",
+        "EODI-2026-00970",
+        "EODI-2026-00979"
+      ],
+      "conserva": "EODI-2026-00903",
+      "antes_en": "EODI-2026-00923",
+      "motivo": "el mismo suceso: los dos misiles Kh-101 y el dron rusos que entraron en Polonia la mañana del viernes 20 de noviembre de 2026 (EODI-2026-00903). El control de las fichas fundió EODI-2026-00959, 00970 y 00979 en EODI-2026-00923, el aviso a la policía por un objeto sobre una universidad de Rzeszów, cuando esa ficha ya llevaba por error las noticias de los misiles («At a press conference on Friday, Tusk said he had spoken with Mark Rutte after the morning incident», albeu.com, en EODI-2026-00959); salen de ella y van a su suceso (revisado el 27 de noviembre de 2026)",
+      "motivo_en": "the same event: the two Russian Kh-101 missiles and the drone that entered Poland on the morning of Friday 20 November 2026 (EODI-2026-00903). The record check merged EODI-2026-00959, 00970 and 00979 into EODI-2026-00923, the report to the police about an object over a university in Rzeszów, when that record already carried the missile reports by mistake («At a press conference on Friday, Tusk said he had spoken with Mark Rutte after the morning incident», albeu.com, in EODI-2026-00959); they leave it and go to their event (reviewed on 27 November 2026)"
     }
   ],
   "reextraer": [

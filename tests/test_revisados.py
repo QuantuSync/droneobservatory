@@ -109,22 +109,39 @@ def test_un_grupo_que_no_valida_no_corta_los_demas(
                         "atribución"]  # fmt: skip
 
 
+@pytest.mark.parametrize(
+    ("motivo", "sale"),
+    [
+        ("mismo sitio y misma ventana", True),
+        # EODI-2026-00959: el control de las fichas la fundió en el aviso de Rzeszów (00923).
+        ("revisión: control de fichas: Ambas fichas cuentan el mismo episodio", True),
+        # Una unión revisada a mano manda.
+        ("revisión: el mismo suceso", False),
+    ],
+)
 def test_un_registro_fundido_por_la_regla_en_otro_suceso_pasa_al_suyo(
-    leipzig: Almacen, monkeypatch: pytest.MonkeyPatch
+    leipzig: Almacen, monkeypatch: pytest.MonkeyPatch, motivo: str, sale: bool
 ) -> None:
     """EODI-2025-00302 (nota del 25/09/2025 sobre el cierre de Aalborg del 24) estaba fundida por
-    la regla de sitio y ventana en el cierre del 25 (00238): sale de él y se une al del 24."""
+    la regla de sitio y ventana en el cierre del 25 (00238): sale de él y se une al del 24. Lo
+    mismo con una fusión del control de las fichas; una revisada a mano no se deshace."""
     origen = leipzig.incidente("EODI-2026-00239")
     destino = leipzig.incidente("EODI-2026-00391")
     assert origen is not None and destino is not None
     nuevo, aportadas = incidentes.absorber(destino, origen, AHORA)
     leipzig.guardar_incidente(nuevo, AHORA, MODELOS)
     leipzig.guardar_incidente({**origen, "fusionado_en": destino["id"]}, AHORA, MODELOS)
-    leipzig.registrar_fusion("2026-10-04T16:17Z", origen["id"], destino["id"],
-                             "mismo sitio y misma ventana", aportadas)  # fmt: skip
+    leipzig.registrar_fusion("2026-10-04T16:17Z", origen["id"], destino["id"], motivo,
+                             aportadas)  # fmt: skip
     grupo = {"registros": ["EODI-2026-00134", "EODI-2026-00239"], "conserva": "EODI-2026-00134",
              "antes_en": "EODI-2026-00391", "motivo": "el suceso de la víspera"}  # fmt: skip
     monkeypatch.setattr(revisados, "cargar", lambda: {"unir": [grupo], "reextraer": []})
+    if not sale:
+        registros = ["EODI-2026-00134", "EODI-2026-00239"]
+        assert revisados.sacar_de(leipzig, registros, "EODI-2026-00391", AHORA, MODELOS) == []
+        quieto = leipzig.incidente("EODI-2026-00239")
+        assert quieto is not None and quieto["fusionado_en"] == "EODI-2026-00391"
+        return
     assert revisados.unir(leipzig, AHORA, MODELOS) == 1
     movido = leipzig.incidente("EODI-2026-00239")
     assert movido is not None and movido["fusionado_en"] == "EODI-2026-00134"
