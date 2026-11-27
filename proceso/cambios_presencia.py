@@ -134,15 +134,20 @@ def _publicable(fuente: Documento | None) -> bool:
 
 
 def _autoridad_que_habla_del_dron(documento: Documento) -> Documento | None:
-    """La primera fuente pública de autoridad cuya frase habla de drones."""
+    """La fuente pública que habla de drones con la palabra de una autoridad: primero una cita
+    revisada a mano («revisada-»), luego la declaración de una autoridad."""
     from proceso import declaraciones
 
-    for fuente in documento.get("fuentes", []):
-        if (
-            declaraciones.de_autoridad(fuente)
-            and declaraciones.habla_de_drones(str(fuente.get("frase_origen") or ""))
-            and _publicable(fuente)
-        ):
+    def habla(fuente: Documento) -> bool:
+        frase = str(fuente.get("frase_origen") or "")
+        return declaraciones.habla_de_drones(frase) and _publicable(fuente)
+
+    fuentes = documento.get("fuentes", [])
+    for fuente in fuentes:
+        if str(fuente.get("id", "")).startswith("revisada-") and habla(fuente):
+            return dict(fuente)
+    for fuente in fuentes:
+        if declaraciones.de_autoridad(fuente) and habla(fuente):
             return dict(fuente)
     return None
 
@@ -231,8 +236,8 @@ def describir(
         if regla == "sin_motivo":
             return Cambio(str(incidente), fecha, str(de), str(a), regla)
         fuente = _fuente_citada(motivo, nuevo, anterior)
-        if fuente is None and a == "confirmada":
-            fuente = _autoridad_que_habla_del_dron(nuevo)
+    if not _publicable(fuente) and a == "confirmada":
+        fuente = _autoridad_que_habla_del_dron(nuevo)
     previa = False
     if not _publicable(fuente) and de == "confirmada":
         # Una bajada sin frase propia: la frase en que se apoyaba la confirmación.
@@ -242,9 +247,9 @@ def describir(
             antes = None
         if antes is not None and antes.valor == "confirmada":
             fuente = _fuente(anterior, antes.fuente_id)
-        else:
-            # Con las reglas de hoy la versión de antes tampoco se confirmaría (la regla cambió,
-            # como en EODI-2026-00821): la frase de autoridad que nombra el dron.
+        if not _publicable(fuente):
+            # Sin ella (o con las reglas de hoy la versión de antes tampoco se confirmaría: la
+            # regla cambió, como en EODI-2026-00821): la frase de autoridad que habla del dron.
             fuente = _autoridad_que_habla_del_dron(anterior)
         previa = fuente is not None
     if not _publicable(fuente):
