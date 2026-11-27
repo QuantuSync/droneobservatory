@@ -197,6 +197,12 @@ export function conMayuscula(motivo: string): string {
  * a qué valor, por qué y la frase de la fuente). Los pasos de la presencia que solo
  * repiten lo que ya dice el estado (confirmada, no confirmada) no se añaden. A igual fecha, el
  * estado va antes: la rectificación siempre llega después de lo que rectifica.
+ *
+ * Una rectificación lleva la fecha de la autoridad, a menudo anterior a los cambios que hubo en la
+ * web hasta que se aplicó (EODI-2025-00154, Copenhague: la policía la da por no acreditada el
+ * 25/06/2026, la ficha pasó a «confirmada» el 1/10 y la web aplicó la rectificación el 16/10). Se
+ * enseña con su fecha, pero en el sitio del cambio de la web que la aplicó, que no se repite: el
+ * historial no puede acabar en «→ Dron confirmado» con la ficha no acreditada.
  */
 export function historialCompleto(
   t: Textos,
@@ -209,6 +215,10 @@ export function historialCompleto(
   },
 ): PasoDelHistorial[] {
   const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
+  const todosLosCambios: readonly CambioPresencia[] = Array.isArray(incidente.presencia_cambios) ? incidente.presencia_cambios : [];
+  // Dónde va en el orden cada paso: su fecha o, en una rectificación, la del último cambio de la
+  // web a su valor si es posterior.
+  const orden = new Map<PasoDelHistorial, string>();
   const estados: PasoDelHistorial[] = incidente.estado.historial.map((paso) => ({ clase: "estado", paso, fecha: paso.fecha.valor }));
   const presencia: PasoDelHistorial[] = historialDePresencia(incidente).flatMap((paso): PasoDelHistorial[] => {
     const cierre = paso.cierre === true;
@@ -216,8 +226,14 @@ export function historialCompleto(
     const marca = marcaDePresencia(paso.valor);
     if (!parcial && marca === null) return [];
     const quien = paso.quien?.[idioma];
-    return [
-      {
+    const aplicada = parcial
+      ? undefined
+      : todosLosCambios
+          .filter((cambio) => cambio.a === paso.valor && cambio.fecha.valor > paso.fecha.valor)
+          .map((cambio) => cambio.fecha.valor)
+          .sort()
+          .at(-1);
+    const entrada: PasoDelHistorial = {
         clase: "presencia",
         marca: parcial ? null : marca,
         rotulo: cierre
@@ -230,8 +246,9 @@ export function historialCompleto(
         fuente: porFuente.get(paso.fuente_id),
         paso,
         fecha: paso.fecha.valor,
-      },
-    ];
+    };
+    if (aplicada !== undefined) orden.set(entrada, aplicada);
+    return [entrada];
   });
   const cambios: PasoDelHistorial[] = cambiosDePresencia(incidente).map((paso) => ({
     clase: "cambio",
@@ -243,6 +260,6 @@ export function historialCompleto(
   // Orden estable: los del estado primero; luego, por fecha.
   return [...estados, ...presencia, ...cambios]
     .map((paso, i) => ({ paso, i }))
-    .sort((a, b) => a.paso.fecha.localeCompare(b.paso.fecha) || a.i - b.i)
+    .sort((a, b) => (orden.get(a.paso) ?? a.paso.fecha).localeCompare(orden.get(b.paso) ?? b.paso.fecha) || a.i - b.i)
     .map(({ paso }) => paso);
 }

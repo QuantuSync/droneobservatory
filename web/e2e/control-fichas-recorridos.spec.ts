@@ -165,7 +165,8 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       const nuremberg = await abrir(pagina, contexto, NUREMBERG, idioma, chromium, tactil);
       await expect(nuremberg).toContainText(idioma === "es" ? "Núremberg" : "Nuremberg");
       await expect(nuremberg).toContainText(idioma === "es" ? "Aeropuerto de Núremberg" : "Nuremberg Airport");
-      await expect(nuremberg).not.toContainText(idioma === "es" ? "Dron confirmado" : "Drone confirmed");
+      // La presencia en vigor (el historial de estados cuenta también las de antes).
+      await expect(nuremberg.locator("[data-presencia]")).not.toContainText(idioma === "es" ? "Dron confirmado" : "Drone confirmed");
       await expect(nuremberg).not.toContainText("2–10");
       expect(await enlacesInternos(pagina), "enlaces internos de Núremberg").toEqual([]);
       await capturar(pagina, errores, join(CAPTURAS, `${NUREMBERG}-${idioma}-${info.project.name}.png`));

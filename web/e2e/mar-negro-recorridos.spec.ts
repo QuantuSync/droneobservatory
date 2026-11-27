@@ -144,7 +144,8 @@ test.describe("Fichas del mar Negro y la 00248, como una persona", () => {
       const presencia = datos.fichas.get(destino(datos, MALINAS) ?? MALINAS)?.presencia_dron ?? "no_confirmada";
       const etiquetas = textos(idioma).presencia;
       await expect(ficha).toContainText(etiquetas[presencia]);
-      if (presencia !== "confirmada") await expect(ficha).not.toContainText(etiquetas.confirmada);
+      // La presencia en vigor (el historial de estados cuenta también las de antes).
+      if (presencia !== "confirmada") await expect(ficha.locator("[data-presencia]")).not.toContainText(etiquetas.confirmada);
       expect(await enlacesInternos(pagina), "enlaces internos de la 00248").toEqual([]);
       await pagina.screenshot({ path: join(CAPTURAS, `${MALINAS}-${idioma}-${info.project.name}.png`) });
       expect(errores).toEqual([]);
