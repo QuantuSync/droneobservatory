@@ -121,6 +121,7 @@ META_INCIDENTE = frozenset({
     "procedencia", "nivel_detalle", "indicadores", "fusionado_en", "retirado", "episodio",
     "encuentros",
     "deduccion", "tipo_dron", "recorrido", "nombres", "relacionados", "autoridades",
+    "presencia_cambios",
 })  # fmt: skip
 # relacionados: enlaces entre las fichas en que se separó un incidente que juntaba sucesos
 # distintos (recogida/revisados.separar); no son datos del suceso.
@@ -128,6 +129,9 @@ META_INCIDENTE = frozenset({
 # (proceso/nombres_lugar.py); no están en la base ni en la exportación.
 # autoridades: las autoridades fuera de la tabla, traducidas, que también añade solo la
 # publicación (exportacion/citas.con_autoridades).
+# presencia_cambios: el historial público de la presencia del dron, que añade solo la publicación
+# desde la tabla presencia_cambios (proceso/cambios_presencia.con_cambios); cada paso lleva su
+# frase y su fuente.
 # deduccion: lo deducido va aparte, con su propia procedencia (procedencia_deduccion); tipo_dron,
 # con la suya valor a valor (procedencia_tipo_dron), que falla si un valor no tiene regla.
 META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia", "deduccion"})
