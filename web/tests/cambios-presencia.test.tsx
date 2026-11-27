@@ -97,6 +97,42 @@ describe("historial de la presencia del dron", () => {
     expect(paso?.querySelector("[data-frase-cambio]")).toBeNull();
   });
 
+  it("la rectificación va donde la web la aplicó: el historial acaba en ella, no en «→ Dron confirmado»", () => {
+    // EODI-2025-00154 (Copenhague): la policía la da por no acreditada el 25/06/2026; la ficha
+    // pasó a «confirmada» el 1/10 y la web aplicó la rectificación el 16/10.
+    const subida: CambioPresencia = {
+      fecha: { valor: "2026-10-01T10:47Z", precision: "minuto" },
+      de: "no_confirmada",
+      a: "confirmada",
+      motivo: { es: "cambio anterior al registro de sus motivos: el motivo no se guardó", en: "change made before reasons were recorded: the reason was not saved" },
+    };
+    const aplicada: CambioPresencia = {
+      fecha: { valor: "2026-10-16T00:31Z", precision: "minuto" },
+      de: "confirmada",
+      a: "no_acreditada",
+      motivo: { es: "rectificación oficial de la autoridad", en: "official correction by the authority" },
+    };
+    const detalle = detalleIncidente(
+      incidente({
+        id: "EODI-2025-00154",
+        presencia_dron: "no_acreditada",
+        presencia_cambios: [subida, aplicada],
+        presencia_historial: [
+          { valor: "confirmada", fecha: { valor: "2025-09-22T20:15Z", precision: "minuto" }, fuente_id: "gdelt-0000000000000001" },
+          { valor: "no_acreditada", fecha: { valor: "2026-06-25T00:00Z", precision: "dia" }, fuente_id: "gdelt-0000000000000001" },
+        ],
+      }),
+    );
+    const pasos = historialCompleto(es, "es", detalle);
+    const ultimo = pasos.at(-1);
+    expect(ultimo?.clase).toBe("presencia");
+    expect(ultimo?.fecha).toBe("2026-06-25T00:00Z");
+    expect(pasos.filter((p) => p.clase === "cambio").map((p) => (p.clase === "cambio" ? p.paso.a : null))).toEqual(["confirmada"]);
+    const { container } = render(<FichaIncidente t={es} idioma="es" incidente={detalle} />);
+    const items = [...container.querySelectorAll("ol > li")];
+    expect(items.at(-1)?.getAttribute("data-historial-presencia")).toBe("no_acreditado");
+  });
+
   it("valida, y si viene roto la ficha se pinta igual sin él", () => {
     expect(CAMPOS_INCIDENTE).toContain("presencia_cambios");
     expect(validarColeccion(coleccion([ludza()])).ok).toBe(true);
