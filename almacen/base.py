@@ -5,7 +5,7 @@ import json
 import logging
 import sqlite3
 from collections.abc import Iterable, Iterator
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -2266,6 +2266,17 @@ class Almacen:
             "SELECT min(fecha) FROM presencia_cambios WHERE origen = 'guardado'"
         ).fetchone()
         return str(fila[0]) if fila and fila[0] else None
+
+    def motivos_guardados(self) -> dict[str, list[tuple[str, str]]]:
+        """{ficha: [(fecha, motivo)...]} de los motivos que dejaron las reglas en el historial
+        (`anotar_motivo`, tabla incidentes_motivos), por orden."""
+        resultado: dict[str, list[tuple[str, str]]] = {}
+        for entidad_id, fecha, motivo in self._conexion.execute(
+            "SELECT entidad_id, fecha, json_extract(nuevo, '$.motivo') FROM historial "
+            "WHERE tabla = 'incidentes_motivos' ORDER BY id"
+        ):
+            resultado.setdefault(str(entidad_id), []).append((str(fecha), str(motivo or "")))
+        return resultado
 
     def versiones_con_cambio_de_presencia(
         self, hasta: str | None

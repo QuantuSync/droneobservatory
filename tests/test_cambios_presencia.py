@@ -19,8 +19,8 @@ from almacen.base import Almacen
 from esquema import Documento, Esquema, Visibilidad, rutas_por_visibilidad, validador_definicion
 from exportacion.campos import CAMPOS_PUBLICOS_INCIDENTE, CAMPOS_PUBLICOS_SIN_UBICACION
 from proceso import cambios_presencia, presencia
-from tests.test_cerrojo import ENLACE, base, ficha, guardar
 from tests.ejemplos import VOCABULARIO_MODELOS
+from tests.test_cerrojo import ENLACE, base, ficha, guardar
 from tests.test_control_fichas import AHORA
 from tests.test_presencia_reserva import USAF
 
@@ -192,3 +192,56 @@ def test_el_paso_publicado_valida_contra_el_esquema() -> None:
     # Un paso con un campo interno (la regla) no valida.
     malo = [{**pasos[0], "regla": "autoridad_atribuye"}]
     assert list(validador_definicion("presencia_cambios").iter_errors(malo)) != []
+
+
+# Motivos reales que guardó la base (historial, incidentes_motivos) con cambios de presencia que
+# las reglas de hoy ya no explican: lo que decidía la regla de entonces.
+MOTIVOS_REALES = [
+    ("un solo sitio decide (proceso/decidir.py): estado por historial, presencia confirmada por "
+     "autoridad_atribuye", "confirmada", "autoridad_atribuye"),  # EODI-2026-00821, 14/11
+    ("criterio de presencia: la autoridad actúa por un dron (cierre o intervención) y lo cuenta la "
+     "fuente: «Police responding to drone threats near Prague airport»", "confirmada",
+     "actuacion"),  # EODI-2025-00037
+    ("criterio de presencia del dron (la autoridad competente que lo da por hecho lo confirma), "
+     "titular coherente con la presencia y un incidente por noche de cierre", "confirmada",
+     "autoridad_atribuye"),  # EODI-2025-00214
+    ("criterio de presencia: ninguna autoridad dice que fuera un dron (solo la prensa o los "
+     "testigos, o una medida de la autoridad sin atribuirlo); la presencia no queda confirmada",
+     "no_confirmada", "sin_autoridad"),  # EODI-2025-00059
+    ("control de fichas: presencia no confirmada: «De drones zijn volgens Defensie daarna "
+     "weggevlogen en niet teruggevonden.»", "no_confirmada", "abierta"),  # EODI-2025-00066
+    ("repaso de entrada con el experto: Suceso nuevo en la cárcel de Picassent; la ficha "
+     "publicada afirma un dron «posible» no confirmado…", "confirmada", "experto"),  # 00629
+    ("cita revisada a mano (configuracion/incidentes_revisados.json, citas)", "confirmada",
+     "revision"),  # EODI-2026-00146
+    ("Una portavoz de la Bundeswehr confirma que los soldados vieron el dron y que se derribó.",
+     "confirmada", "revision"),  # EODI-2025-00317
+    # No hablan de la presencia: el cambio queda sin motivo.
+    ("titular coherente con la presencia del dron (proceso/titulares.py)", "confirmada", None),
+    ("control de fichas: lugar en Aéroport de Luxembourg, que nombra el titular", "confirmada",
+     None),  # EODI-2026-00048
+]  # fmt: skip
+
+
+def test_la_regla_de_entonces_sale_del_motivo_guardado() -> None:
+    for motivo, a, regla in MOTIVOS_REALES:
+        assert cambios_presencia.regla_de_motivo(motivo, a) == regla, motivo
+
+
+def test_el_motivo_guardado_explica_el_cambio_y_cita_su_frase() -> None:
+    """Un cambio que las reglas de hoy no dan: lo explica el motivo guardado, y la frase es la
+    que cita entre comillas."""
+    antes = sin_autoridad()
+    despues = copy.deepcopy(antes)
+    despues["presencia_dron"] = "confirmada"
+    despues["fuentes"][0]["frase_origen"] = "Police responding to drone threats near the airport"
+    motivo = (
+        "criterio de presencia: la autoridad actúa por un dron (cierre o intervención) y lo "
+        "cuenta la fuente: «Police responding to drone threats near the airport»"
+    )
+    cambio = cambios_presencia.describir(ID, "2026-10-03T21:28:43Z", antes, despues, motivo=motivo)
+    assert cambio is not None
+    assert cambio.regla == "actuacion"
+    assert cambio.frase == "Police responding to drone threats near the airport"
+    sin = cambios_presencia.describir(ID, "2026-10-03T21:28:43Z", antes, despues)
+    assert sin is not None and sin.regla == "sin_motivo" and sin.frase is None
