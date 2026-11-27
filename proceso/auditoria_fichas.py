@@ -134,6 +134,15 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   avisaron, o la fuente dice que no está confirmado oficialmente. No cuenta el estado que da una
   revisión a mano con su cita. EODI-2026-00937 (Sigonella, 20 de noviembre de 2026): «Zdarzenie
   bada włoska żandarmeria wojskowa.», una frase del periódico, la dejaba confirmada.
+- **AJ, titular que dice del dron más o menos que la presencia**: en español o en inglés, el
+  titular duda del dron con la presencia confirmada, o lo afirma con la presencia no confirmada,
+  no acreditada o descartada (proceso/titulares.postura y POSTURAS_VALIDAS: la duda cuenta también
+  lejos del dron, «por sospecha de dron», «Posible caída de dron», «Suspected airspace violation
+  by drones»; «dron no identificado» lo afirma). Un titular que no nombra el dron vale con
+  cualquier presencia. EODI-2025-00095, 2025-00299, 2026-00041 y 2026-00903 (27 de noviembre de
+  2026): el inglés había perdido la duda con el dron confirmado y el español no, y la T, que solo
+  miraba el «posible» pegado al dron, no lo veía. La letra que sigue a AH no se usa: el gancho que
+  revisa los ficheros antes de subirlos no deja escribir esa sigla.
 """
 
 import json
@@ -176,6 +185,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
     "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
+    "AJ",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -212,6 +222,7 @@ NOMBRES = {
     "AF": "el mismo sitio días antes y la fecha de un «ayer» de una nota de seguimiento",
     "AG": "la fecha de una nota que dice que el suceso fue antes",
     "AH": "presencia confirmada por un resumen del medio que otra fuente pone en duda",
+    "AJ": "titular que dice del dron más o menos que la presencia",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -760,6 +771,19 @@ def confirmada_por_estilo_indirecto(incidente: Documento) -> bool:
     return any(_EN_DUDA.search(str(f.get("frase_origen") or "")) for f in fuentes)
 
 
+def titular_distinto_de_la_presencia(incidente: Documento) -> bool:
+    """AJ: el titular, en español o en inglés, dice del dron algo que la presencia no permite
+    (titulares.POSTURAS_VALIDAS): duda de él con la presencia confirmada o lo afirma sin ella."""
+    validas = titulares.POSTURAS_VALIDAS.get(str(incidente.get("presencia_dron")))
+    if validas is None:
+        return False
+    return any(
+        titulares.postura(str(texto), idioma) not in validas
+        for idioma, texto in (incidente.get("titulo") or {}).items()
+        if idioma in ("es", "en")
+    )
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
@@ -770,6 +794,7 @@ _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "AE": declaracion_ajena,
     "AG": fecha_de_una_nota_posterior,
     "AH": confirmada_por_estilo_indirecto,
+    "AJ": titular_distinto_de_la_presencia,
 }  # fmt: skip
 
 

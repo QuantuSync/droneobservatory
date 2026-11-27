@@ -25,12 +25,16 @@ Las alertas de alerts.in.ua no entran: sus condiciones piden no usar su API para
 crítica (docs/licencias_terceros.md) y AEGIS protege puertos.
 
 Las carpetas se leen de donde las deja cada servicio del servidor (las mismas variables de
-servidor/configuracion.sh); sin ellas, los ficheros salen vacíos.
+servidor/configuracion.sh); sin ellas, los ficheros salen vacíos. El archivo de NEPTUN está vivo
+(el servicio escribe la hora en curso y recogida/seguimiento_archivo.py comprime las cerradas): se
+lee de una copia coherente (`copia_coherente`), nunca de la carpeta mientras cambia.
 """
 
 import gzip
 import json
 import os
+import re
+import tempfile
 from collections import defaultdict
 from collections.abc import Iterator
 from datetime import datetime
@@ -126,11 +130,70 @@ def _punto_neptun(amenaza: dict[str, Any]) -> dict[str, Any] | None:
     return neptun._punto(amenaza.get("updatedAt"), amenaza.get("lat"), amenaza.get("lon"), extra)
 
 
+# La hora de un fichero del archivo, sin la parte ni la extensión («neptun-2026-11-27T17»).
+_HORA_DEL_FICHERO = re.compile(r"^(?P<hora>.+?T\d{2})(?:\.parte\d+)?\.jsonl(?:\.gz)?$")
+
+
+def _hora_de(ruta: Path) -> str:
+    m = _HORA_DEL_FICHERO.match(ruta.name)
+    return m.group("hora") if m else ruta.name
+
+
+def copia_coherente(carpeta: Path, destino: Path) -> list[Path]:
+    """Los ficheros del archivo de una fuente del seguimiento (`<carpeta>/<AAAA>/<MM>/…`) tal como
+    estaban en un instante, para leerlos sin que cambien debajo.
+
+    La carpeta está viva: el servicio de seguimiento añade líneas al `.jsonl` de la hora en curso
+    y recogida/seguimiento_archivo.py comprime cada hora cerrada a `.jsonl.gz` y entonces quita el
+    `.jsonl`. La exportación de un ensayo listaba `neptun-…T23.jsonl`, el compresor lo quitaba y al
+    leerlo daba FileNotFoundError (22 de noviembre de 2026, 00:03 UTC: código 1). Aquí:
+
+    - los `.jsonl.gz` no se reescriben nunca (las líneas que llegan tarde van a `.parteN`): se leen
+      donde están;
+    - cada `.jsonl` se copia a `destino` hasta su última línea completa (la línea que se está
+      escribiendo no entra);
+    - si un `.jsonl` desaparece entre el listado y la copia, se comprimió: entran los comprimidos
+      nuevos de su hora, que tienen exactamente sus bytes;
+    - si un `.jsonl` tiene los mismos bytes que un comprimido de su hora ya listado (el compresor
+      ya escribió el `.gz` y aún no quitó el `.jsonl`), no entra dos veces.
+    """
+    listados = sorted(carpeta.glob("*/*/*.jsonl*"))
+    comprimidos = [r for r in listados if r.name.endswith(".jsonl.gz")]
+    abiertos = [r for r in listados if r.name.endswith(".jsonl")]
+    por_hora: dict[str, list[Path]] = defaultdict(list)
+    for ruta in comprimidos:
+        por_hora[_hora_de(ruta)].append(ruta)
+    resultado = list(comprimidos)
+    for ruta in abiertos:
+        hora = _hora_de(ruta)
+        try:
+            datos = ruta.read_bytes()
+        except FileNotFoundError:
+            vistos = set(resultado)
+            resultado += [
+                r for r in sorted(ruta.parent.glob(f"{hora}*.jsonl.gz")) if r not in vistos
+            ]
+            continue
+        completo = datos[: datos.rfind(b"\n") + 1]
+        if not completo or any(gzip.decompress(r.read_bytes()) == completo for r in por_hora[hora]):
+            continue
+        copia = destino / ruta.relative_to(carpeta)
+        copia.parent.mkdir(parents=True, exist_ok=True)
+        copia.write_bytes(completo)
+        resultado.append(copia)
+    return sorted(resultado, key=lambda r: (r.parent.parent.name, r.parent.name, r.name))
+
+
 def neptun_pistas(seguimiento: Path) -> list[Documento]:
-    """Las pistas de dron de todo el archivo de NEPTUN, una por amenaza, con sus puntos en orden."""
+    """Las pistas de dron de todo el archivo de NEPTUN, una por amenaza, con sus puntos en orden,
+    leídas de una copia coherente del archivo (`copia_coherente`)."""
+    with tempfile.TemporaryDirectory(prefix="eodi-seguimiento-") as temporal:
+        return _neptun_pistas(copia_coherente(seguimiento / "neptun", Path(temporal)))
+
+
+def _neptun_pistas(rutas: list[Path]) -> list[Documento]:
     from proceso.rutas import neptun
 
-    rutas = sorted((seguimiento / "neptun").glob("*/*/neptun-*.jsonl*"))
     puntos: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
     datos: dict[str, dict[str, Any]] = {}
     for mensaje in neptun.mensajes(rutas):

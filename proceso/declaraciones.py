@@ -433,6 +433,45 @@ _SOBRE_PERSONA = re.compile(
 )
 _ANTES = 80
 
+# El dron como amenaza: la autoridad avisa de un peligro, no dice que hubiera un dron («NATO
+# allied fighter aircraft were also scrambled in response to the reported drone threat», el
+# ejército de Estonia, EODI-2026-01014; «alerta por amenaza de drones»). Delante del dron, como
+# las demás reservas, o pegada detrás («drone threat»).
+_AMENAZA = (
+    r"threats?|amenazas?|minacc\w*|menaces?|bedrohung\w*|gefahr\w*|zagrożeni\w*|"
+    r"amenințar\w*|ameninţar\w*|amenintar\w*|grėsm\w*|draudi|draudiem|draudu|ohu|oht|trussel\w*|"
+    r"загроз\w*|угроз\w*|заплах\w*|απειλ\w*|fenyeget\w*|uhka\w*"
+)
+_AMENAZA_DETRAS = re.compile(rf"^[\w-]*\s+(?:{_AMENAZA})(?!\w)", re.IGNORECASE)
+_AMENAZA_DELANTE = re.compile(rf"(?<!\w)(?:{_AMENAZA})(?!\w)", re.IGNORECASE)
+# El dron de una capacidad: lo que el país puede o no puede hacer con los drones, no un dron que
+# hubo («Bulgaria nu dispune în prezent de capacitatea tehnică și militară necesară pentru a detecta
+# eficient și a doborî dronele», EODI-2026-00862: el Gobierno búlgaro, sin decir que un dron
+# alcanzara al GAS HUSKY). En la misma oración y hasta `_ANTES_CAPACIDAD` caracteres antes.
+_CAPACIDAD = re.compile(
+    r"(?<!\w)(?:capacit\w*|capabilit\w*|capacidad\w*|capacità|capacidade\w*|fähigkeit\w*|"
+    r"kapazität\w*|zdolnoś\w*|możliwoś\w*|spējas?|võimekus\w*|gebėjim\w*|evne\w*|förmåga\w*|"
+    r"способност\w*|можливост\w*|възможност\w*|képesség\w*)(?!\w)",
+    re.IGNORECASE,
+)
+_ANTES_CAPACIDAD = 140
+
+
+def _reserva_de_amenaza_o_capacidad(frase: str, inicio: int) -> bool:
+    """El dron que empieza en `inicio` es una amenaza o lo que se puede hacer contra los drones
+    (`_AMENAZA`, `_CAPACIDAD`), no un dron que hubo."""
+    if _AMENAZA_DETRAS.match(frase[inicio:]):
+        return True
+    oracion = frase[:inicio]
+    oracion = oracion[max(oracion.rfind("."), oracion.rfind("!"), oracion.rfind("?")) + 1 :]
+    if _CAPACIDAD.search(oracion[-_ANTES_CAPACIDAD:]):
+        return True
+    for marca in _AMENAZA_DELANTE.finditer(frase, max(0, inicio - _ANTES), inicio):
+        tramo = _HASTA_EL_DRON.fullmatch(frase, marca.end(), inicio)
+        if tramo is not None:
+            return True
+    return False
+
 
 # Lo que sigue al dron cuando la autoridad solo cuenta que respondió: una actividad o unos
 # avistamientos («responded to drone activity») no dicen que hubiera un dron; «in risposta a un
@@ -448,7 +487,10 @@ _ACTIVIDAD = re.compile(
 
 def _con_reserva(frase: str, inicio: int) -> bool:
     """El dron que empieza en `inicio` lo nombra la frase como aviso, sospecha o respuesta: una
-    marca (`_MARCA`) seguida del dron con como mucho tres palabras en medio (`_HASTA_EL_DRON`)."""
+    marca (`_MARCA`) seguida del dron con como mucho tres palabras en medio (`_HASTA_EL_DRON`). O
+    como amenaza o capacidad (`_reserva_de_amenaza_o_capacidad`)."""
+    if _reserva_de_amenaza_o_capacidad(frase, inicio):
+        return True
     desde = max(0, inicio - _ANTES)
     for marca in _MARCA.finditer(frase, desde, inicio):
         tramo = _HASTA_EL_DRON.fullmatch(frase, marca.end(), inicio)

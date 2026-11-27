@@ -67,11 +67,16 @@ const APLICADAS: {
   },
   // Desde el 21 de octubre de 2026, con las citas revisadas de tests/referencia/fichas.json:
   // Varsovia (el primer ministro de Polonia), Rugāji (las Fuerzas Armadas de Letonia, dron
-  // ucraniano llegado desde Bielorrusia) y el puerto de Constanza (el MApN, dron marino de una
-  // operación ucraniana).
+  // ucraniano llegado desde Bielorrusia) y el puerto de Constanza (el presidente de Rumanía en X,
+  // dron marino de una operación ucraniana; hasta el 27 de noviembre de 2026 la cita se daba por
+  // del MApN).
   { id: "EODI-2025-00233" },
   { id: "EODI-2026-00140", pais: "UA", actor: "Ucrania" },
   { id: "EODI-2026-00152", pais: "UA", actor: "Ucrania" },
+  // Desde el 27 de noviembre de 2026 (incidencia 485): Chełm, el Mando Operativo polaco
+  // (Dowództwo Operacyjne RSZ) en su comunicado del 23 de noviembre de 2026, «naruszenia polskiej
+  // przestrzeni powietrznej przez rosyjski bezzałogowy statek powietrzny».
+  { id: "EODI-2026-00984" },
 ];
 /** Buzău, Lituania y Wunstorf: sin atribuir. */
 const SIN_ATRIBUIR = ["EODI-2026-00125", "EODI-2026-00090", "EODI-2026-00276"];

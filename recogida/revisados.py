@@ -465,7 +465,9 @@ def citas_de(almacen: Almacen, id_: str) -> list[Documento]:
 
 
 def con_citas(incidente: Documento, citas: list[Documento]) -> Documento:
-    """El incidente con las citas revisadas que aún no tiene."""
+    """El incidente con las citas revisadas que aún no tiene, y con la autoridad corregida en las
+    que ya tiene (`_con_autoridad_corregida`)."""
+    incidente = _con_autoridad_corregida(incidente, citas)
     tiene = {f["id"] for f in incidente["fuentes"]}
     simples, pares = [], []
     for cita in citas:
@@ -482,6 +484,38 @@ def con_citas(incidente: Documento, citas: list[Documento]) -> Documento:
     if pares:
         resultado = incidentes.aplicar_reglas(declaraciones.aplicar_fuentes(resultado, pares))
     return resultado
+
+
+def _con_autoridad_corregida(incidente: Documento, citas: list[Documento]) -> Documento:
+    """El incidente con la autoridad de una cita revisada que ya tiene puesta al día. El
+    identificador de la fuente sale del enlace y la frase, así que corregir en la revisión quién
+    habla no cambiaba nada: la fuente se saltaba por estar ya en la ficha y seguía con la
+    autoridad de antes (EODI-2026-00152: la frase de Constanza es del presidente de Rumanía en X,
+    no del Ministerio de Defensa). Cambian el nombre de la fuente y, si es la que lo atribuye, la
+    autoridad de la atribución; el historial y el estado no cambian."""
+    resultado: Documento | None = None
+    for cita in citas:
+        if not cita.get("declaracion"):
+            continue
+        nueva = fuente_de_cita(cita, incidente)
+        actual = next((f for f in incidente["fuentes"] if f["id"] == nueva["id"]), None)
+        if actual is None or actual.get("medio") == nueva["medio"]:
+            continue
+        if resultado is None:
+            resultado = copy.deepcopy(incidente)
+        for fuente in resultado["fuentes"]:
+            if fuente["id"] == nueva["id"]:
+                fuente["medio"] = nueva["medio"]
+        pasos = [p for p in resultado["estado"]["historial"] if p["estado"] == Estado.ATRIBUIDO]
+        atribucion_actual = resultado.get("atribucion")
+        if (
+            isinstance(atribucion_actual, dict)
+            and cita["declaracion"].get("afirma") == "autoria"
+            and pasos
+            and pasos[-1].get("fuente_id") == nueva["id"]
+        ):
+            atribucion_actual["autoridad"] = cita["declaracion"]["autoridad"]
+    return incidente if resultado is None else resultado
 
 
 def presencia_sin_suceso(revision: Documento, documento: Documento) -> bool:

@@ -386,7 +386,13 @@ su frase sitúa el suceso antes sin decir cuándo, con las expresiones «anterio
 dernier»; EODI-2025-00191 y EODI-2026-00178); AH, presencia confirmada por un resumen del medio
 que otra fuente pone en duda (desde el 27/11/2026: la declaración que confirma el dron está en
 estilo indirecto, «informs … that», «a anunțat că», y otra fuente de la ficha dice «posible»;
-EODI-2026-00271, Plauru). Los recuentos del día y los
+EODI-2026-00271, Plauru); AJ, titular que dice del dron más o menos que la presencia (desde el
+27/11/2026: duda del dron con la presencia confirmada, también lejos de él, «por sospecha de
+dron», «Posible caída de dron», o lo afirma con la presencia no confirmada, no acreditada o
+descartada; la misma lectura que la regla que ajusta el titular al guardar,
+`proceso/titulares.postura`; EODI-2025-00095, 2025-00299, 2026-00041 y 2026-00903; la letra que
+sigue a AH no se usa porque el gancho de antes de subir no deja escribir esa sigla). Los recuentos
+del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la

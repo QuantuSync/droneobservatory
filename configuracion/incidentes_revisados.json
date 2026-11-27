@@ -4125,13 +4125,13 @@
       "idioma": "ro",
       "frase": "care a explodat în această dimineață în Portul Constanța făcea parte, alături de alte mijloace similare de luptă, dintr-o operațiune militară condusă de Ucraina",
       "comprobada": {
-        "fecha": "2026-10-21",
-        "en": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html (original)"
+        "fecha": "2026-11-27",
+        "en": "https://adevarul.ro/stiri-interne/evenimente/o-drona-marina-a-explodat-in-portul-constanta-2534506.html (original: la frase es del mensaje del presidente Nicușor Dan en X que cita el artículo, no del MApN; el MApN solo dijo que el objeto no era del Ejército rumano)"
       },
       "declaracion": {
-        "autoridad": "Ministerul Apărării Naționale",
+        "autoridad": "Președintele României",
         "pais": "RO",
-        "categoria": "ministerio",
+        "categoria": "gobierno",
         "afirma": "autoria",
         "autor": "Ucraina",
         "autor_tipo": "estado",
@@ -4157,6 +4157,27 @@
         "autor": "Ukraina",
         "autor_tipo": "estado",
         "autor_pais": "UA"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00984",
+      "enlace": "https://niezalezna.pl/polska/rosyjskie-drony-w-okolicach-chelma-niepokojace-dane-z-ukrainy/584812",
+      "medio": "niezalezna.pl",
+      "fecha": "2026-11-23",
+      "idioma": "pl",
+      "frase": "doszło do krótkotrwałego naruszenia polskiej przestrzeni powietrznej przez rosyjski bezzałogowy statek powietrzny",
+      "comprobada": {
+        "fecha": "2026-11-27",
+        "en": "https://niezalezna.pl/polska/rosyjskie-drony-w-okolicach-chelma-niepokojace-dane-z-ukrainy/584812 (comunicado del Dowództwo Operacyjne RSZ, incrustado desde https://x.com/DowOperSZ/status/2124997357230071904)"
+      },
+      "declaracion": {
+        "autoridad": "Dowództwo Operacyjne Rodzajów Sił Zbrojnych",
+        "pais": "PL",
+        "categoria": "fuerzas_armadas",
+        "afirma": "autoria",
+        "autor": "Federacja Rosyjska",
+        "autor_tipo": "estado",
+        "autor_pais": "RU"
       }
     },
     {
@@ -6283,6 +6304,17 @@
       "motivo": {
         "es": "El titular de la referencia, comprobado contra sus fuentes: «o nouă dronă a fost doborâtă duminică dimineaţă, la ora 10:13, de o aeronavă F-16» (europafm.ro). La reextracción tras separar el dron del 27 de julio lo cambiaba (revisado el 27 de noviembre de 2026).",
         "en": "The reference headline, checked against its sources: «o nouă dronă a fost doborâtă duminică dimineaţă, la ora 10:13, de o aeronavă F-16» (europafm.ro). The re-extraction after separating the drone of 27 July changed it (reviewed on 27 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00903",
+      "titulo": {
+        "es": "Misiles y al menos un dron violan el espacio aéreo del este de Polonia",
+        "en": "Missiles and at least one drone violate airspace in eastern Poland"
+      },
+      "motivo": {
+        "es": "Comprobado contra sus fuentes el 27 de noviembre de 2026: «Two Russian missiles and a Russian drone have fallen in Poland», el ministro de Defensa Władysław Kosiniak-Kamysz (sofiaglobe.com); la gobernadora de Subcarpacia habló de un misil de crucero y dos drones (news.yam.md). El titular automático decía «posible» en español y «por drones» sin los misiles.",
+        "en": "Checked against its sources on 27 November 2026: «Two Russian missiles and a Russian drone have fallen in Poland», Defence Minister Władysław Kosiniak-Kamysz (sofiaglobe.com); the Subcarpathian governor spoke of a cruise missile and two drones (news.yam.md). The automatic headline said «possible» in Spanish and «by drones» without the missiles."
       }
     }
   ],
