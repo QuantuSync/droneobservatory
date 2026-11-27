@@ -534,7 +534,11 @@ def readme(
         "The GeoJSON files carry, in `properties`, the same data with its full structure: "
         "`fuentes` (each source with link, outlet, date, Admiralty reliability code and archived "
         "copy), `afirmaciones_publicas` (each fact by source, with the literal quote and its "
-        "translations), `estado.historial`, `presencia_historial`, `objetivo`, `respuesta`, "
+        "translations), `estado.historial`, `presencia_historial`, `presencia_cambios` (since "
+        "schema 1.21.0: every change of the drone presence since the record was first published, "
+        "at most one per hour, with its UTC time, previous and new value, the reason in Spanish "
+        "and English and, when there is one, the source sentence with its outlet and link), "
+        "`objetivo`, `respuesta`, "
         "`relacionados`, `zona` (border or interior) and the other blocks described in "
         "`METHODOLOGY.md`. The JSON Schema of the records is in the observatory's code "
         "repository (`esquema/`).",

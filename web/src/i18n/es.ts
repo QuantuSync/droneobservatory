@@ -598,6 +598,8 @@ export const es: Textos = {
         ? `Investigación cerrada el ${fecha}, sin cambio en la presencia del dron`
         : `Investigación cerrada el ${fecha} por ${quien}, sin cambio en la presencia del dron`,
     investigacionCerrada: "Investigación cerrada, sin cambio en la presencia",
+    cambio: (de, a) => `${de} → ${a}`,
+    frase: "Frase de la fuente",
   },
   precision: {
     minuto: "hora exacta",

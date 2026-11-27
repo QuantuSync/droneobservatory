@@ -150,7 +150,9 @@ export function Historial({ t, historial, fuentes, atribucion = null, idioma, pa
       <h3 className="rotulo">{t.ficha.historial}</h3>
       <ol className="mt-1">
         {todos.map((entrada, i) =>
-          entrada.clase === "presencia" ? (
+          entrada.clase === "cambio" ? (
+            <CambioDePresencia key={i} t={t} entrada={entrada} fuentes={fuentes} idioma={idioma} />
+          ) : entrada.clase === "presencia" ? (
             // Un cambio de la presencia de dron: su círculo (morado o gris relleno), su fecha y
             // quién lo declara, con el enlace a la fuente; el motivo, debajo.
             <li
@@ -184,6 +186,54 @@ export function Historial({ t, historial, fuentes, atribucion = null, idioma, pa
         )}
       </ol>
     </section>
+  );
+}
+
+/**
+ * Un cambio de la presencia de dron desde que la ficha salió en la web: «Dron no confirmado → Dron
+ * confirmado», su fecha y hora, el motivo y, si la hay, la frase de la fuente con su enlace.
+ */
+function CambioDePresencia({
+  t,
+  entrada,
+  fuentes,
+  idioma,
+}: {
+  t: Textos;
+  entrada: Extract<PasoDelHistorial, { clase: "cambio" }>;
+  fuentes: readonly Fuente[];
+  idioma: Idioma | undefined;
+}) {
+  const { paso } = entrada;
+  const fuente = fuentes.find((f) => f.id === paso.fuente_id);
+  const enlace = fuente ?? (paso.enlace === undefined ? undefined : { enlace: paso.enlace });
+  const medio = paso.medio ?? fuente?.medio;
+  return (
+    <li className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5" data-cambio-presencia={paso.a}>
+      <span>{entrada.rotulo}</span>
+      <span className="mono text-xs text-secundario">{instante(paso.fecha)}</span>
+      <span className="w-full text-xs text-texto" data-motivo-historial="">
+        {entrada.motivo}
+      </span>
+      {paso.frase !== undefined && (
+        <span className="w-full min-w-0 break-words text-xs text-secundario" data-frase-cambio="">
+          <span className="sr-only">{t.presenciaHistorial.frase}: </span>
+          <q lang="">{paso.frase}</q>
+          {medio !== undefined && (
+            <>
+              {" — "}
+              {enlace === undefined ? (
+                nombreDeFuente(t, medio, idioma)
+              ) : (
+                <EnlaceFuente t={t} fuente={enlace}>
+                  {nombreDeFuente(t, medio, idioma)}
+                </EnlaceFuente>
+              )}
+            </>
+          )}
+        </span>
+      )}
+    </li>
   );
 }
 

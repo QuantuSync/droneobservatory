@@ -218,7 +218,7 @@ describe("la ficha", () => {
 
   it("los pasos que solo repiten lo que dice el estado no se añaden; a igual fecha, el estado va antes", () => {
     const pasos = historialCompleto(es, "es", detalleIncidente(copenhague()));
-    expect(pasos.map((p) => (p.clase === "estado" ? p.paso.estado : p.marca))).toEqual(["notificado", "confirmado", "no_acreditado"]);
+    expect(pasos.map((p) => (p.clase === "estado" ? p.paso.estado : p.clase === "presencia" ? p.marca : p.paso.a))).toEqual(["notificado", "confirmado", "no_acreditado"]);
     const mismaFecha = historialCompleto(es, "es", {
       estado: { historial: [{ estado: "notificado", fecha: { valor: "2026-06-25T00:00Z", precision: "dia" } }] },
       presencia_historial: [{ valor: "no_acreditada", fecha: { valor: "2026-06-25T00:00Z", precision: "dia" }, fuente_id: "x" }],

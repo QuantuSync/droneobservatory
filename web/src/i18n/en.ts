@@ -591,6 +591,8 @@ export const en: Textos = {
         ? `Investigation closed on ${fecha}, with no change to the drone presence`
         : `Investigation closed on ${fecha} by ${quien}, with no change to the drone presence`,
     investigacionCerrada: "Investigation closed, presence unchanged",
+    cambio: (de, a) => `${de} → ${a}`,
+    frase: "Source sentence",
   },
   precision: {
     minuto: "exact time",

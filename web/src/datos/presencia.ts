@@ -8,7 +8,7 @@
 import { instante, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
-import type { AtribucionResumen, Estado, Fuente, MarcaIncidente, PasoHistorial, PasoPresencia, PresenciaDron } from "./tipos.ts";
+import type { AtribucionResumen, CambioPresencia, Estado, Fuente, MarcaIncidente, PasoHistorial, PasoPresencia, PresenciaDron } from "./tipos.ts";
 
 /** Las marcas en el orden de la leyenda, los filtros y las cifras por estado. */
 export const MARCAS: readonly MarcaIncidente[] = ["notificado", "confirmado", "atribuido", "no_acreditado", "descartado", "desmentido"];
@@ -145,7 +145,34 @@ export type PasoDelHistorial =
       fuente: Fuente | undefined;
       paso: PasoPresencia;
       fecha: string;
+    }
+  | {
+      /** Un cambio de la presencia desde que la ficha salió en la web (presencia_cambios). */
+      clase: "cambio";
+      /** «Dron no confirmado → Dron confirmado». */
+      rotulo: string;
+      /** Por qué, con la primera letra en mayúscula. */
+      motivo: string;
+      paso: CambioPresencia;
+      fecha: string;
     };
+
+/**
+ * Los cambios de la presencia desde la publicación, por orden de fecha; vacío si no hay o si no es
+ * una lista. Los que ya cuenta una rectificación oficial (presencia_historial, con quién lo declara)
+ * no se repiten.
+ */
+export function cambiosDePresencia(p: {
+  presencia_cambios?: CambioPresencia[] | undefined;
+  presencia_historial?: PasoPresencia[] | undefined;
+}): CambioPresencia[] {
+  const cambios: unknown = p.presencia_cambios;
+  if (!Array.isArray(cambios)) return [];
+  const rectificadas = new Set(historialDePresencia(p).filter((paso) => paso.parcial !== true && paso.cierre !== true && marcaDePresencia(paso.valor) !== null).map((paso) => paso.valor));
+  return (cambios as CambioPresencia[])
+    .filter((cambio) => !rectificadas.has(cambio.a))
+    .sort((a, b) => a.fecha.valor.localeCompare(b.fecha.valor));
+}
 
 /** «la policía de Dinamarca» → «Policía de Dinamarca»; «the Copenhagen Police» → «Copenhagen Police». */
 export function quienSinArticulo(quien: string): string {
@@ -163,9 +190,11 @@ export function conMayuscula(motivo: string): string {
 }
 
 /**
- * El «Historial de estados» entero, por orden de fecha: los cambios del estado del suceso y los
+ * El «Historial de estados» entero, por orden de fecha: los cambios del estado del suceso, los
  * de la presencia de dron cuando una autoridad la rectificó (no acreditada, descartada o una
- * corrección parcial), con su marca, su fecha y su fuente. Los pasos de la presencia que solo
+ * corrección parcial), con su marca, su fecha y su fuente, y desde el 27 de noviembre de 2026
+ * cada cambio de la presencia desde que la ficha salió en la web (presencia_cambios: de qué valor
+ * a qué valor, por qué y la frase de la fuente). Los pasos de la presencia que solo
  * repiten lo que ya dice el estado (confirmada, no confirmada) no se añaden. A igual fecha, el
  * estado va antes: la rectificación siempre llega después de lo que rectifica.
  */
@@ -175,6 +204,7 @@ export function historialCompleto(
   incidente: {
     estado: { historial: readonly PasoHistorial[] };
     presencia_historial?: PasoPresencia[] | undefined;
+    presencia_cambios?: CambioPresencia[] | undefined;
     fuentes: readonly Fuente[];
   },
 ): PasoDelHistorial[] {
@@ -203,8 +233,15 @@ export function historialCompleto(
       },
     ];
   });
+  const cambios: PasoDelHistorial[] = cambiosDePresencia(incidente).map((paso) => ({
+    clase: "cambio",
+    rotulo: t.presenciaHistorial.cambio(t.presencia[paso.de], t.presencia[paso.a]),
+    motivo: conMayuscula(paso.motivo[idioma]),
+    paso,
+    fecha: paso.fecha.valor,
+  }));
   // Orden estable: los del estado primero; luego, por fecha.
-  return [...estados, ...presencia]
+  return [...estados, ...presencia, ...cambios]
     .map((paso, i) => ({ paso, i }))
     .sort((a, b) => a.paso.fecha.localeCompare(b.paso.fecha) || a.i - b.i)
     .map(({ paso }) => paso);

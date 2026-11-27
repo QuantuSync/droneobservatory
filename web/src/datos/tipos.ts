@@ -69,6 +69,22 @@ export interface PasoPresencia {
   cierre?: true;
 }
 
+/**
+ * Un cambio de la presencia de dron desde que la ficha salió en la web (esquema 1.21.0,
+ * proceso/cambios_presencia.py): de qué valor a qué valor, cuándo, por qué y, si la hay, la frase
+ * de origen de una fuente pública que lo sostiene (o, en una bajada, en que se apoyaba).
+ */
+export interface CambioPresencia {
+  fecha: Instante;
+  de: PresenciaDron;
+  a: PresenciaDron;
+  motivo: Titulo;
+  frase?: string;
+  fuente_id?: string;
+  medio?: string;
+  enlace?: string;
+}
+
 /** Lo que una autoridad dice que investiga del incidente, con su cita literal. */
 export interface Investigacion {
   autoridad: string;
@@ -294,6 +310,8 @@ export interface PropiedadesIncidente {
   presencia_dron?: PresenciaDron;
   /** Los cambios de la presencia de dron por orden de fecha; solo si alguna autoridad la rectificó. */
   presencia_historial?: PasoPresencia[];
+  /** Cada cambio de la presencia de dron desde que la ficha salió en la web (esquema 1.21.0). */
+  presencia_cambios?: CambioPresencia[];
   tiempo: { inicio: Instante; fin?: Instante; duracion_min?: number };
   lugar: { radio_km: number; pais: string; localidad?: string } & LugarAmpliado;
   objetivo?: {
