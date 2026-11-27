@@ -9,6 +9,7 @@ import type { Cifras } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import { corredoresDelPeriodo } from "../datos/guerraSatelite.ts";
 import { conMayuscula, estadoEscrito, historialCompleto, pasosDePresencia } from "../datos/presencia.ts";
+import type { PasoDelHistorial } from "../datos/presencia.ts";
 import type {
   Atribucion,
   Fuente,
@@ -162,6 +163,38 @@ function externo(url: string, ...hijos: Hijo[]): Html {
 
 /** El enlace de una fuente, como en la ficha (componentes/EnlaceFuente.tsx): al lado del original,
  *  «copia archivada»; con el original caído, la copia como enlace principal y el original aparte. */
+/** Un cambio de la presencia de dron en el historial de la página de texto: «Dron no confirmado →
+ * Dron confirmado · fecha · motivo», y la frase de la fuente con su enlace. */
+function cambioDePresencia(
+  t: Textos,
+  idioma: Idioma,
+  entrada: Extract<PasoDelHistorial, { clase: "cambio" }>,
+  fuentes: readonly Fuente[],
+): Html {
+  const { paso } = entrada;
+  const fuente = fuentes.find((f) => f.id === paso.fuente_id);
+  const medio = paso.medio ?? fuente?.medio;
+  const nombre = medio === undefined ? undefined : medioEscrito(medio, idioma, t.ficha.declaracionCitada);
+  const enlazado =
+    nombre === undefined
+      ? null
+      : fuente !== undefined
+        ? enlaceDeFuente(t, fuente, nombre)
+        : paso.enlace !== undefined
+          ? externo(paso.enlace, nombre)
+          : nombre;
+  return e(
+    "li",
+    { "data-cambio-presencia": paso.a },
+    e("strong", null, entrada.rotulo),
+    " · ",
+    e("span", { class: "mono" }, instante(paso.fecha)),
+    " · ",
+    e("span", { "data-motivo-historial": "" }, entrada.motivo),
+    paso.frase !== undefined && html(": «", paso.frase, "»", enlazado !== null && html(" — ", enlazado)),
+  );
+}
+
 export function enlaceDeFuente(t: Textos, fuente: Fuente, ...hijos: Hijo[]): Html {
   const copia = fuente.copia_archivada;
   const del = copia === undefined ? "" : fecha(new Date(copia.fecha));
@@ -746,7 +779,9 @@ function incidente(d: IncidenteDetalle, idioma: Idioma, actualizado: string): Pa
       { class: "texto-historial" },
       // Los cambios del estado y, entre ellos por fecha, los de la presencia de dron rectificada.
       historialCompleto(t, idioma, d).map((entrada) =>
-        entrada.clase === "presencia"
+        entrada.clase === "cambio"
+          ? cambioDePresencia(t, idioma, entrada, d.fuentes)
+          : entrada.clase === "presencia"
           ? e(
               "li",
               { "data-historial-presencia": entrada.marca ?? (entrada.paso.cierre === true ? "cierre" : "parcial") },

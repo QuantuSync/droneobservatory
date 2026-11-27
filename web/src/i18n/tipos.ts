@@ -451,6 +451,10 @@ export interface Textos {
     cierre: (fecha: string, quien: string | null) => string;
     /** El nombre de una investigación cerrada sin cambio en el historial de estados. */
     investigacionCerrada: string;
+    /** Un cambio de la presencia en el historial de estados: «Dron no confirmado → Dron confirmado». */
+    cambio: (de: string, a: string) => string;
+    /** Lo que el lector de pantalla dice antes de la frase de la fuente. */
+    frase: string;
   };
   precision: Record<Precision, string>;
   categoria: Record<CategoriaObjetivo, string>;

@@ -84,6 +84,10 @@ MOTIVOS: dict[str, tuple[str, str]] = {
         "revisión del experto contra las fuentes de la ficha",
         "expert review against the record's sources",
     ),
+    "deshecho": (
+        "se deshace el cambio anterior: la unión con otra ficha que lo traía no se hizo",
+        "the previous change is undone: the merge with another record that brought it was not made",
+    ),
     "sin_motivo": (
         "cambio anterior al registro de sus motivos: el motivo no se guardó",
         "change made before reasons were recorded: the reason was not saved",
@@ -262,6 +266,14 @@ def describir(
         enlace=str(fuente.get("enlace") or "") or None,
         medio=str(fuente.get("medio") or "") or None,
         anterior=previa,
+    )  # fmt: skip
+
+
+def deshecho(actual: Documento, anterior: Documento) -> Cambio:
+    """La vuelta a la presencia de antes cuando el cerrojo deshace el último guardado."""
+    return Cambio(
+        str(anterior["id"]), ahora_utc(), str(actual.get("presencia_dron")),
+        str(anterior.get("presencia_dron")), "deshecho",
     )  # fmt: skip
 
 

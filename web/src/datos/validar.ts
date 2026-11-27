@@ -425,6 +425,21 @@ const historialPresencia = lista(
   1,
 );
 
+/** Los cambios de la presencia de dron desde la publicación (esquema: comun.presencia_cambios). */
+const cambiosPresencia = lista(
+  objeto(
+    { fecha: instante, de: enumerado(v.PRESENCIAS), a: enumerado(v.PRESENCIAS), motivo: titulo },
+    { frase: cadena(), fuente_id: cadena(), medio: cadena(), enlace: cadena() },
+  ),
+  1,
+);
+
+/** Los dos historiales de la presencia, que no deben impedir pintar el incidente. */
+const HISTORIALES_PRESENCIA: readonly [string, Comprobacion][] = [
+  ["presencia_historial", historialPresencia],
+  ["presencia_cambios", cambiosPresencia],
+];
+
 /**
  * El historial de la presencia de dron es una nota de la ficha: si no valida, el incidente se sigue
  * pintando sin él. En el navegador y en el build (tolerarCamposNuevos) se quita del incidente y se
@@ -433,12 +448,13 @@ const historialPresencia = lista(
  */
 function sinHistorialRoto(comprobar: Comprobacion): Comprobacion {
   return (valor, ruta, errores) => {
-    if (toleraCamposNuevos && esObjeto(valor) && "presencia_historial" in valor) {
+    for (const [campo, comprobarCampo] of HISTORIALES_PRESENCIA) {
+      if (!toleraCamposNuevos || !esObjeto(valor) || !(campo in valor)) continue;
       const propios: string[] = [];
-      historialPresencia(valor["presencia_historial"], `${ruta}.presencia_historial`, propios);
+      comprobarCampo(valor[campo], `${ruta}.${campo}`, propios);
       if (propios.length > 0) {
-        delete valor["presencia_historial"];
-        if (ignorados !== null && ignorados.length < 100_000) ignorados.push(`${ruta}.presencia_historial`);
+        Reflect.deleteProperty(valor, campo);
+        if (ignorados !== null && ignorados.length < 100_000) ignorados.push(`${ruta}.${campo}`);
       }
     }
     comprobar(valor, ruta, errores);
@@ -452,6 +468,7 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   episodio: cadena(v.PATRON_ID_EPISODIO),
   presencia_dron: enumerado(v.PRESENCIAS),
   presencia_historial: historialPresencia,
+  presencia_cambios: cambiosPresencia,
   objetivo: objeto(
     { categoria: enumerado(v.CATEGORIAS_OBJETIVO) },
     { nombre: cadena(), oaci: cadena(v.PATRON_OACI), uso: enumerado(v.USOS) },

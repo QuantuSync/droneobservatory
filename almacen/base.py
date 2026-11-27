@@ -677,6 +677,23 @@ class Almacen:
         self.guardar_incidente(queda, ahora, vocabulario_modelos)
         self._ultimo_guardado = ultimo
 
+    def _restaurar_incidente(self, anterior: Documento) -> None:
+        """Vuelve a escribir la versión anterior de una ficha recién guardada (el cerrojo deshace
+        una unión o una reapertura). Si con ello vuelve la presencia de antes, el cambio de vuelta
+        queda también en presencia_cambios (proceso/cambios_presencia.py)."""
+        from proceso import cambios_presencia
+
+        actual = self.incidente(str(anterior["id"]))
+        self._escribir_incidente(anterior)
+        if actual is None or actual.get("presencia_dron") == anterior.get("presencia_dron"):
+            return
+        try:
+            self.anotar_cambios_presencia(
+                [cambios_presencia.deshecho(actual, anterior)], origen="guardado"
+            )
+        except Exception:
+            registro.exception("%s: vuelta de la presencia sin anotar", anterior.get("id"))
+
     def _escribir_incidente(self, documento: Documento) -> None:
         id_ = str(documento["id"])
         if documento.get("fusionado_en") and "retirado" not in documento:
@@ -818,7 +835,7 @@ class Almacen:
             return documento
         self._uniones_retenidas.add((str(documento["id"]), str(destino)))
         if ultimo is not None and ultimo[0] == destino and ultimo[1] is not None:
-            self._escribir_incidente(ultimo[1])
+            self._restaurar_incidente(ultimo[1])
         resultado = {k: v for k, v in documento.items() if k != "fusionado_en"}
         if "fusionado_en" in guardado:
             resultado["fusionado_en"] = guardado["fusionado_en"]
@@ -852,7 +869,7 @@ class Almacen:
         self._reaperturas_retenidas.add(str(documento["id"]))
         ultimo = self._ultimo_guardado
         if ultimo is not None and ultimo[0] == destino and ultimo[1] is not None:
-            self._escribir_incidente(ultimo[1])
+            self._restaurar_incidente(ultimo[1])
         return {**documento, "fusionado_en": destino}
 
     def _apuntar_control(self, clave: str, documento: Documento, ahora: datetime) -> None:

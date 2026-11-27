@@ -77,6 +77,36 @@ El titular de una presencia no acreditada da el dron como posible, como el de un
 cuentan; el incidente sigue contando como incidente. El cambio no genera aviso
 (`recogida/avisos.clasificar`).
 
+## Los cambios de la presencia (presencia_cambios)
+
+Desde el 27 de noviembre de 2026 (esquema 1.21.0, `proceso/cambios_presencia.py`) cada ficha
+publica también **todos** los cambios de su presencia del dron, no solo las rectificaciones
+oficiales: `presencia_cambios`, una lista con la fecha y la hora (UTC, al minuto), el valor de
+antes (`de`) y el de después (`a`), el motivo en español y en inglés y, si la hay, la frase de
+origen de una fuente pública que lo sostiene (recortada a 300 letras) con su medio, su enlace y su
+`fuente_id`. En una bajada sin frase propia, la frase es la que sostenía la confirmación y el
+motivo lo dice («antes se apoyaba en esta frase»). Caso que lo pidió: EODI-2026-01008 (Ludza), que
+pasó de «no confirmada» a «confirmada» a las 07:32 UTC del 27/11 con la nota ampliada del ejército
+letón; la web solo enseñaba el historial del estado.
+
+- **De dónde sale.** `Almacen.guardar_incidente` guarda cada cambio de la presencia en la tabla
+  `presencia_cambios` (solo crece), con la regla de `proceso/decidir.py` que lo decide y la fuente
+  en que se apoya. Los cambios anteriores a la tabla se rellenan una vez desde el historial de la
+  base (`cambios_presencia.rellenar`, cursor `presencia_cambios:relleno`): la versión de antes y
+  la de después están guardadas; la regla sale de las reglas de hoy si dan ese valor y, si no, del
+  motivo que guardó la base en ese minuto (la regla de entonces). Sin ninguno de los dos, el paso
+  dice «motivo no guardado»: no se inventa.
+- **Qué se publica.** Los cambios desde que la ficha salió en la web (`publicado.primera`; las que
+  ya estaban al sembrar la tabla, desde siempre) y, dentro de cada hora, solo el resultado: lo que
+  va y vuelve en la misma recogida nunca se vio. Solo lo que ya es público: el motivo escrito para
+  la web (nunca el motivo interno), la frase de una fuente pública, su medio y su enlace. Un cambio
+  que ya cuenta una rectificación oficial (`presencia_historial`, con quién lo declara) la web no
+  lo repite.
+- **Compatibilidad.** Solo se añade un campo: ningún campo de los JSON, el GeoJSON ni el CSV
+  cambia de nombre ni desaparece (`tests/test_cambios_presencia.py` compara la lista de campos
+  públicos con la del esquema 1.20.0, `tests/fixtures/campos_publicos_1_20_0.json`). El CSV no
+  cambia.
+
 ## De dónde salen y quién decide
 
 Todo pasa por el **experto** antes de cambiar nada (`docs/modelos.md`: nada publicado se rebaja

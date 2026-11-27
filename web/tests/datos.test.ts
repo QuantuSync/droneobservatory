@@ -438,6 +438,18 @@ describe("listas cerradas iguales a las del esquema", () => {
           parcial: true,
         },
       ],
+      presencia_cambios: [
+        {
+          fecha: { valor: "2026-11-27T07:32Z", precision: "minuto" },
+          de: "no_confirmada",
+          a: "confirmada",
+          motivo: { es: "una autoridad afirma que hubo un dron", en: "an authority states there was a drone" },
+          frase: "La policía confirma el dron.",
+          fuente_id: "f",
+          medio: "Policía (declaración oficial citada en ejemplo.eu)",
+          enlace: "https://example.org/noticia",
+        },
+      ],
       relacionados: [
         {
           id: "EODI-2026-00179",
