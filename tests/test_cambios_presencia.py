@@ -160,7 +160,7 @@ def test_con_cambios_solo_en_las_fichas_que_los_tienen() -> None:
                 "fecha) VALUES (?, 'publicada', 'incidentes.geojson', '{}', '{}', '{}', ?, ?)",
                 (id_, "2000-01-01T00:00:00Z", "2000-01-01T00:00:00Z"),
             )
-    publicos = [{"id": ID}, {"id": "EODI-2026-09601"}]
+    publicos: list[Documento] = [{"id": ID}, {"id": "EODI-2026-09601"}]
     cambios_presencia.con_cambios(publicos, almacen)
     assert "presencia_cambios" not in publicos[1]
     [paso] = publicos[0]["presencia_cambios"]
