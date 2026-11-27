@@ -4,8 +4,8 @@ import copy
 import json
 import logging
 import sqlite3
-from collections.abc import Iterable
-from datetime import datetime
+from collections.abc import Iterable, Iterator
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -181,6 +181,29 @@ CREATE TABLE IF NOT EXISTS publicado (
 ) WITHOUT ROWID;
 CREATE TRIGGER IF NOT EXISTS publicado_sin_delete BEFORE DELETE ON publicado
 BEGIN SELECT RAISE(ABORT, 'publicado: una dirección publicada no se borra'); END;
+-- Los cambios de la presencia del dron de cada ficha (proceso/cambios_presencia.py): de qué valor
+-- a qué valor, cuándo, la regla de proceso/decidir.py que lo decide y la frase de la fuente en que
+-- se apoya. Los escribe el guardado de la ficha; los anteriores, una vez, el historial
+-- (origen «historial»). Solo crece. De aquí sale el historial público de la presencia.
+CREATE TABLE IF NOT EXISTS presencia_cambios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    incidente TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    de TEXT NOT NULL,
+    a TEXT NOT NULL,
+    regla TEXT NOT NULL,
+    fuente_id TEXT,
+    frase TEXT,
+    enlace TEXT,
+    medio TEXT,
+    anterior INTEGER NOT NULL DEFAULT 0,
+    origen TEXT NOT NULL CHECK (origen IN ('guardado', 'historial'))
+);
+CREATE INDEX IF NOT EXISTS presencia_cambios_incidente ON presencia_cambios (incidente);
+CREATE TRIGGER IF NOT EXISTS presencia_cambios_sin_update BEFORE UPDATE ON presencia_cambios
+BEGIN SELECT RAISE(ABORT, 'presencia_cambios: solo admite inserciones'); END;
+CREATE TRIGGER IF NOT EXISTS presencia_cambios_sin_delete BEFORE DELETE ON presencia_cambios
+BEGIN SELECT RAISE(ABORT, 'presencia_cambios: nada se borra'); END;
 -- Focos térmicos de NASA FIRMS (proceso/focos_termicos.py). La evaluación de cada impacto
 -- (id del incidente, o del ataque y la región: «EODI-UA-2025-0201/UA-30») es un documento
 -- con historial; los focos que han casado con un impacto, una fila por foco que no cambia.
@@ -597,7 +620,27 @@ class Almacen:
             from proceso import presencia
 
             presencia.anotar(self, entrada, documento, decidir.motivo(entrada, negadas, confirmada))
+        if guardado is not None and guardado.get("presencia_dron") != documento.get(
+            "presencia_dron"
+        ):
+            self._anotar_cambio_de_presencia(guardado, documento, negadas)
         return True
+
+    def _anotar_cambio_de_presencia(
+        self, guardado: Documento, documento: Documento, negadas: frozenset[str]
+    ) -> None:
+        """El cambio de presencia que acaba de guardarse, con su regla y su frase
+        (proceso/cambios_presencia.py). Si falla, la ficha queda guardada igual."""
+        from proceso import cambios_presencia
+
+        try:
+            cambio = cambios_presencia.describir(
+                str(documento["id"]), cambios_presencia.ahora_utc(), guardado, documento, negadas
+            )
+            if cambio is not None:
+                self.anotar_cambios_presencia([cambio], origen="guardado")
+        except Exception:
+            registro.exception("%s: cambio de presencia sin anotar", documento.get("id"))
 
     def en_el_filtro(self, id_: str) -> bool:
         """La ficha es nueva y sigue en el filtro de entrada: el control ya lleva la cuenta de las
@@ -2184,6 +2227,60 @@ class Almacen:
                 "VALUES (?, ?, 'cambio', ?, ?)",
                 (tabla, entidad_id, _json(anterior), _json({**nuevo, "motivo": motivo})),
             )
+
+    def anotar_cambios_presencia(self, cambios: Iterable[Any], origen: str) -> None:
+        """Guarda cambios de presencia (proceso/cambios_presencia.Cambio)."""
+        with self._conexion:
+            self._conexion.executemany(
+                "INSERT INTO presencia_cambios (incidente, fecha, de, a, regla, fuente_id, frase, "
+                "enlace, medio, anterior, origen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    (c.incidente, c.fecha, c.de, c.a, c.regla, c.fuente_id, c.frase, c.enlace,
+                     c.medio, int(c.anterior), origen)
+                    for c in cambios
+                ],
+            )  # fmt: skip
+
+    def cambios_presencia(self, ids: Iterable[str] | None = None) -> dict[str, list[Documento]]:
+        """{ficha: [cambio...]} de la tabla presencia_cambios, por orden."""
+        filas = self._conexion.execute(
+            "SELECT id, incidente, fecha, de, a, regla, fuente_id, frase, enlace, medio, anterior "
+            "FROM presencia_cambios ORDER BY fecha, id"
+        ).fetchall()
+        quiero = None if ids is None else set(ids)
+        resultado: dict[str, list[Documento]] = {}
+        for id_, incidente, fecha, de, a, regla, fuente_id, frase, enlace, medio, anterior in filas:
+            if quiero is not None and incidente not in quiero:
+                continue
+            resultado.setdefault(str(incidente), []).append(
+                {"id": id_, "fecha": fecha, "de": de, "a": a, "regla": regla,
+                 "fuente_id": fuente_id, "frase": frase, "enlace": enlace, "medio": medio,
+                 "anterior": bool(anterior)}
+            )  # fmt: skip
+        return resultado
+
+    def primer_cambio_de_presencia(self) -> str | None:
+        """La fecha del primer cambio guardado en la tabla presencia_cambios por el guardado
+        (los anteriores salen del historial); None si no hay ninguno."""
+        fila = self._conexion.execute(
+            "SELECT min(fecha) FROM presencia_cambios WHERE origen = 'guardado'"
+        ).fetchone()
+        return str(fila[0]) if fila and fila[0] else None
+
+    def versiones_con_cambio_de_presencia(
+        self, hasta: str | None
+    ) -> Iterator[tuple[str, str, Documento, Documento]]:
+        """(ficha, fecha, versión anterior, versión nueva) de cada cambio de la presencia del dron
+        que guardó el historial antes de `hasta` (sin él, todos), por orden."""
+        cursor = self._conexion.execute(
+            "SELECT entidad_id, fecha, anterior, nuevo FROM historial "
+            "WHERE tabla = 'incidentes' AND operacion = 'cambio' AND (? IS NULL OR fecha < ?) "
+            "AND json_extract(anterior, '$.presencia_dron') IS NOT "
+            "json_extract(nuevo, '$.presencia_dron') ORDER BY id",
+            (hasta, hasta),
+        )
+        for entidad_id, fecha, anterior, nuevo in cursor:
+            yield str(entidad_id), str(fecha), json.loads(anterior), json.loads(nuevo)
 
     def cambios_desde(self, fecha: str) -> list[Documento]:
         """Los cambios de los incidentes y de sus motivos desde `fecha` (ISO UTC), por orden: lo

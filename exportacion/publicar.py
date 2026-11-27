@@ -38,7 +38,7 @@ from exportacion.citas import (
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
-from proceso import autoridades, impactos_guerra, rectificaciones, suceso
+from proceso import autoridades, cambios_presencia, impactos_guerra, rectificaciones, suceso
 from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.focos_termicos import con_focos
 from proceso.luces import con_luces
@@ -174,13 +174,37 @@ def publicar(
                 con_traducciones(elemento, traducciones, pendientes.ucrania)
         return documento
 
+    # Los cambios de la presencia del dron que guardó el historial antes de su tabla, una vez.
+    try:
+        cambios_presencia.rellenar(almacen)
+    except Exception:
+        registro.exception("cambios de presencia sin rellenar desde el historial")
+
+    def con_presencia(documento: Documento, clave: str) -> Documento:
+        """El historial público de la presencia del dron (proceso/cambios_presencia.py). Si
+        falla, se publica sin él."""
+        try:
+            lista = (
+                [f["properties"] for f in documento.get("features", [])]
+                if clave == "features"
+                else documento.get("incidentes", [])
+            )
+            cambios_presencia.con_cambios(lista, almacen)
+        except Exception:
+            registro.exception("%s sin el historial de la presencia del dron", clave)
+        return documento
+
     documentos: dict[str, Callable[[], Documento]] = {
         UCRANIA: lambda: con_citas(exportar_ucrania(ataques, ahora, impactos), "ucrania"),
-        INCIDENTES: lambda: con_citas(
-            exportar(incidentes, ahora, vocabulario, apartados), "features"
+        INCIDENTES: lambda: con_presencia(
+            con_citas(exportar(incidentes, ahora, vocabulario, apartados), "features"),
+            "features",
         ),
-        SIN_UBICACION: lambda: con_citas(
-            exportar_sin_ubicacion(incidentes, ahora, vocabulario, apartados), "incidentes"
+        SIN_UBICACION: lambda: con_presencia(
+            con_citas(
+                exportar_sin_ubicacion(incidentes, ahora, vocabulario, apartados), "incidentes"
+            ),
+            "incidentes",
         ),
     }
     cambiados = []

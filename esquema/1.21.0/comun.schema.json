@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.20.0:comun",
+  "$id": "urn:eodi:esquema:1.21.0:comun",
   "title": "Definiciones comunes",
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
-  "x-version": "1.20.0",
+  "x-version": "1.21.0",
   "$defs": {
     "jornada": {
       "description": "Noche o día a que pertenece un parte, con la regla única de proceso/ataques.jornada (la misma que la web): noche si el periodo acaba un día UTC después del que empieza («noche del 3 al 4 de octubre»: desde el 3, hasta el 4); día si empieza y acaba el mismo día UTC (desde y hasta iguales). Un periodo que acaba más de un día después cuenta en la noche de su comienzo.",
@@ -1093,6 +1093,36 @@
           "parcial": {"x-visibilidad": "publico", "description": "Corrección parcial: se anota y no cambia el valor.", "const": true},
           "cierre": {"x-visibilidad": "publico", "description": "Investigación cerrada sin cambiar la presencia (desde el 26 de octubre de 2026): la autoridad cierra o archiva su investigación sin retirar lo dicho del dron ni decir que fuera otra cosa. Se anota y no cambia el valor ni el estado.", "const": true},
           "revision": {"x-visibilidad": "interno", "description": "De dónde sale el paso: la entrada revisada de configuracion/rectificaciones_oficiales.json o la detección de la recogida, con la decisión del experto.", "type": "string", "minLength": 1}
+        }
+      }
+    },
+    "presencia_cambios": {
+      "description": "Historial público de la presencia del dron (desde el esquema 1.21.0, 27 de noviembre de 2026; proceso/cambios_presencia.py): cada cambio de valor desde que la ficha salió en la web, como mucho uno por hora, con su fecha, el valor de antes y el de después, el motivo en español y en inglés y, si la hay, la frase de origen de una fuente pública que lo sostiene (recortada a 300 letras), con su medio y su enlace. No lo guarda la ficha: se añade al publicar desde la tabla presencia_cambios de la base. Sin cambios, no está.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fecha", "de", "a", "motivo"],
+        "properties": {
+          "fecha": {"x-visibilidad": "publico", "$ref": "#/$defs/instante"},
+          "de": {"x-visibilidad": "publico", "enum": ["confirmada", "no_confirmada", "no_acreditada", "descartada"]},
+          "a": {"x-visibilidad": "publico", "enum": ["confirmada", "no_confirmada", "no_acreditada", "descartada"]},
+          "motivo": {
+            "x-visibilidad": "publico",
+            "description": "Por qué cambia, en español y en inglés («una autoridad afirma que hubo un dron»).",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["es", "en"],
+            "properties": {
+              "es": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+              "en": {"x-visibilidad": "publico", "type": "string", "minLength": 1}
+            }
+          },
+          "frase": {"x-visibilidad": "publico", "description": "La frase de origen de la fuente que lo sostiene (o, en una bajada, en que se apoyaba), tal como la publica la fuente.", "type": "string", "minLength": 1, "maxLength": 300},
+          "fuente_id": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "medio": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "enlace": {"x-visibilidad": "publico", "type": "string", "minLength": 1}
         }
       }
     },
