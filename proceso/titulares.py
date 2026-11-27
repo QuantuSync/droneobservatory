@@ -7,10 +7,17 @@ El titular de un incidente y su campo presencia_dron dicen lo mismo:
 - dron no confirmado o no acreditado (una autoridad cerró la investigación sin pruebas del dron,
   proceso/rectificaciones.py): el titular lo da como posible («Posibles drones sobre…», «Un
   posible dron obliga a…»); un titular que no nombra el dron («Cierre del aeropuerto de X») vale
-  tal cual.
+  tal cual;
+- dron descartado (la autoridad dijo que era otra cosa): el titular no lo afirma; dice que no lo
+  era («Falsa alarma de dron…») o lo da como posible.
+
+La duda cuenta también lejos del dron, en la misma frase («por sospecha de dron», «Posible caída
+de dron», «Suspected airspace violation by drones»), y «dron no identificado» afirma un dron. La
+misma lectura (`postura`) decide la regla y la auditoría AJ (proceso/auditoria_fichas.py).
 
 Los titulares los escribe el extractor; esta regla los ajusta al guardar el incidente y al
-revisar los ya guardados. Solo cambia el calificativo del dron: el resto del titular queda igual.
+revisar los ya guardados (proceso/decidir.decidir_titulo, cada vez que se guarda la ficha, con la
+presencia ya decidida). Solo cambia el calificativo del dron: el resto del titular queda igual.
 """
 
 import re
@@ -18,6 +25,7 @@ import re
 from esquema import Documento
 
 CONFIRMADA, NO_CONFIRMADA, NO_ACREDITADA = "confirmada", "no_confirmada", "no_acreditada"
+DESCARTADA = "descartada"
 
 _DRON = {
     "es": re.compile(r"\b(drones|dron)\b", re.IGNORECASE),
@@ -48,13 +56,13 @@ _OBJETO = {
 # avistamiento de posible dron», EODI-2026-00515).
 _DUDA = {
     "es": re.compile(
-        r"\b(?:posiblemente|probablemente|presunt\w*|supuest\w*|sospech\w*|no identificad\w*|"
-        r"posibles?\s+(?!(?:drones|dron)\b)\w+)",
+        r"\b(?:posiblemente|probablemente|presunt\w*|supuest\w*|sospech\w*|"
+        r"(?<!\bdron )(?<!\bdrones )no identificad\w*|posibles?\s+(?!(?:drones|dron)\b)\w+)",
         re.IGNORECASE,
     ),
     "en": re.compile(
-        r"\b(?:possibly|probably|suspected|suspicious|alleged|presumed|unidentified|"
-        r"possible\s+(?!(?:drones|drone)\b)\w+)\b",
+        r"\b(?:possibly|probably|suspected|suspicious|alleged|presumed|"
+        r"unidentified(?!\s+drones?\b)|possible\s+(?!(?:drones|drone)\b)\w+)\b",
         re.IGNORECASE,
     ),
 }
@@ -63,6 +71,36 @@ _AÑADIDO = {
     "en": re.compile(r"\bpossible\s+(?=(?:drones|drone)\b)", re.IGNORECASE),
 }
 DISTANCIA_DUDA = 40
+
+# La duda sobre el dron que no va pegada a él, en la misma frase del titular y hasta
+# `DISTANCIA_DUDA_LEJOS` caracteres antes: «Cierre del espacio aéreo de Aalborg por sospecha de
+# dron» (EODI-2025-00095), «Posible caída de dron» (EODI-2025-00299), «Suspected airspace
+# violation by drones» (EODI-2026-00903). La regla solo miraba el «posible» pegado al dron: el
+# inglés perdía la duda con el dron confirmado y el español no, y la auditoría T no lo veía.
+DISTANCIA_DUDA_LEJOS = 60
+_DUDA_LEJOS = {
+    "es": re.compile(
+        r"\b(?P<duda>(?:posibles?|presunt[oa]s?|supuest[oa]s?)\s+|sospechas?\s+de\s+|"
+        r"posiblemente\s+|probablemente\s+)"
+        rf"(?P<medio>[^,;:.()«»\"“”]{{0,{DISTANCIA_DUDA_LEJOS}}}?)\b(?:drones|dron)\b",
+        re.IGNORECASE,
+    ),
+    "en": re.compile(
+        r"\b(?P<duda>(?:possible|suspected|alleged|presumed|potential|possibly|probably)\s+)"
+        rf"(?P<medio>[^,;:.()\"“”]{{0,{DISTANCIA_DUDA_LEJOS}}}?)\b(?:drones|drone)\b",
+        re.IGNORECASE,
+    ),
+}
+# Lo que dice que no era un dron: con la presencia descartada, el titular que lo dice no duda del
+# dron, lo niega («Falsa alarma de dron…», «…que la policía descarta», EODI-2025-00225 y
+# EODI-2026-00064).
+_DESCARTE = {
+    "es": re.compile(r"\b(?:falsa alarma|descart\w*|no era un dron|resultó ser|era un globo)\b",
+                     re.IGNORECASE),
+    "en": re.compile(r"\b(?:false (?:drone )?alarm|ruled out|not a drone|turned out|"
+                     r"was a balloon)\b", re.IGNORECASE),
+}  # fmt: skip
+AFIRMA, DUDA, NIEGA, NO_LO_NOMBRA = "afirma", "duda", "niega", "no_lo_nombra"
 
 
 def _sin_doble(titulo: str, idioma: str) -> str:
@@ -79,8 +117,40 @@ def _mayuscula(texto: str, como: str) -> str:
 
 
 def da_por_posible(titulo: str, idioma: str) -> bool:
-    """El titular presenta el dron como posible u objeto no identificado."""
-    return bool(_POSIBLE[idioma].search(titulo) or _OBJETO[idioma].search(titulo))
+    """El titular presenta el dron como posible u objeto no identificado, con la duda pegada al
+    dron o antes en la misma frase («por sospecha de dron», «Posible caída de dron»)."""
+    return bool(
+        _POSIBLE[idioma].search(titulo)
+        or _OBJETO[idioma].search(titulo)
+        or _DUDA_LEJOS[idioma].search(titulo)
+    )
+
+
+def postura(titulo: str, idioma: str) -> str:
+    """Lo que el titular dice del dron: lo niega (`NIEGA`), duda de él (`DUDA`), lo afirma
+    (`AFIRMA`) o no lo nombra (`NO_LO_NOMBRA`). La misma lectura para la regla que ajusta el
+    titular al guardar (`coherente`) y para la auditoría AJ (proceso/auditoria_fichas.py)."""
+    if idioma not in _DRON:
+        return NO_LO_NOMBRA
+    if _DESCARTE[idioma].search(titulo):
+        return NIEGA
+    # Solo la duda sobre el dron: «despiertan sospechas de espionaje» (EODI-2025-00388) o «with
+    # owner unidentified» (EODI-2025-00034) no dudan de él.
+    if da_por_posible(titulo, idioma):
+        return DUDA
+    if _DRON[idioma].search(titulo):
+        return AFIRMA
+    return NO_LO_NOMBRA
+
+
+# Lo que puede decir del dron el titular según la presencia: confirmada, el dron (o nada);
+# descartada, que no lo era, que es posible o nada; si no, que es posible o nada.
+POSTURAS_VALIDAS = {
+    CONFIRMADA: frozenset({AFIRMA, NO_LO_NOMBRA}),
+    NO_CONFIRMADA: frozenset({DUDA, NO_LO_NOMBRA}),
+    NO_ACREDITADA: frozenset({DUDA, NO_LO_NOMBRA}),
+    DESCARTADA: frozenset({NIEGA, DUDA, NO_LO_NOMBRA}),
+}
 
 
 def afirma_dron(titulo: str, idioma: str) -> bool:
@@ -91,17 +161,36 @@ def afirma_dron(titulo: str, idioma: str) -> bool:
 
 
 def coherente(titulo: str, presencia: str | None, idioma: str) -> bool:
+    """El titular dice del dron lo mismo que la presencia (`POSTURAS_VALIDAS`), sin un «posible»
+    repetido."""
     if idioma in _DUDA and _sin_doble(titulo, idioma) != titulo:
         return False
-    if presencia == CONFIRMADA:
-        return not da_por_posible(titulo, idioma)
-    if presencia in (NO_CONFIRMADA, NO_ACREDITADA):
-        return not afirma_dron(titulo, idioma) or bool(_DUDA[idioma].search(titulo))
-    return True
+    validas = POSTURAS_VALIDAS.get(str(presencia))
+    return validas is None or postura(titulo, idioma) in validas
+
+
+def _sin_duda_lejos(titulo: str, idioma: str) -> str:
+    """El titular sin la duda que va antes del dron en la misma frase: «por sospecha de dron» →
+    «por un dron», «por sospecha de actividad de drones» → «por actividad de drones», «Posible
+    caída de dron» → «Caída de dron», «Suspected airspace violation by drones» → «Airspace
+    violation by drones»."""
+
+    def sin(m: re.Match[str]) -> str:
+        duda, medio = m.group("duda"), m.group("medio")
+        resto = m.group(0)[len(duda) :]
+        if (
+            duda.lower().startswith("sospecha")
+            and not medio
+            and not resto.lower().startswith("drones")
+        ):
+            resto = "un " + resto
+        return _mayuscula(resto, duda) if m.start() == 0 else resto
+
+    return _DUDA_LEJOS[idioma].sub(sin, titulo)
 
 
 def _afirmar(titulo: str, idioma: str) -> str:
-    resultado = _POSIBLE[idioma].sub("", titulo)
+    resultado = _sin_duda_lejos(_POSIBLE[idioma].sub("", titulo), idioma)
 
     def objeto(m: re.Match[str]) -> str:
         plural = m.group("obj").lower().endswith("s")
@@ -121,6 +210,7 @@ def _afirmar(titulo: str, idioma: str) -> str:
 # «Narco-possible drones», 20 de octubre de 2026). No se salta un determinante, un número ni una
 # preposición.
 _COMPUESTO_EN = re.compile(r"(?:[\w’']+-)+$")
+_DESCONOCIDO_EN = re.compile(r"\b(?:unidentified|unknown)\s+$", re.IGNORECASE)
 _PALABRA_ANTES_EN = re.compile(r"([A-Za-z][\w’']*)\s+$")
 _GENTILICIOS_EN = ("ian", "ish", "ese", "an", "ch", "i")
 _NO_MODIFICA_EN = frozenset({
@@ -141,6 +231,10 @@ def _inicio_del_grupo(titulo: str, inicio: int) -> int:
     compuesto = _COMPUESTO_EN.search(titulo[:inicio])
     if compuesto is not None:
         inicio = compuesto.start()
+    # «over unidentified drone» → «over possible unidentified drone» (EODI-2026-00819).
+    desconocido = _DESCONOCIDO_EN.search(titulo[:inicio])
+    if desconocido is not None:
+        inicio = desconocido.start()
     anterior = _PALABRA_ANTES_EN.search(titulo[:inicio])
     if (
         anterior is not None

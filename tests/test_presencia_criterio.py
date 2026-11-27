@@ -80,10 +80,18 @@ def test_el_titular_se_ajusta_a_la_presencia() -> None:
         assert not titulares.coherente(titulo, "no_confirmada", "es")
         assert titulares.ajustar(titulo, "no_confirmada", "es") == limpio
         assert titulares.coherente(limpio, "no_confirmada", "es")
-    assert titulares.ajustar("Unidentified possible drones near Dublin Airport", "no_confirmada",
-                             "en") == "Unidentified drones near Dublin Airport"  # fmt: skip
-    # Descartada: el titular no se toca.
-    assert titulares.ajustar("Drones sobre X", "descartada", "es") == "Drones sobre X"
+    # «Unidentified drones» afirma los drones (de dueño desconocido): sin la presencia, posibles
+    # (desde el 27 de noviembre de 2026, EODI-2026-00819).
+    dublin = titulares.ajustar(
+        "Unidentified possible drones near Dublin Airport", "no_confirmada", "en"
+    )
+    assert dublin == "Possible unidentified drones near Dublin Airport"
+    # Descartada: el titular no afirma el dron (desde el 27 de noviembre de 2026; antes no se
+    # tocaba y «Drone sightings at RAF Lakenheath», EODI-2025-00164, lo afirmaba).
+    assert titulares.ajustar("Drones sobre X", "descartada", "es") == "Posibles drones sobre X"
+    assert titulares.ajustar("Falsa alarma de dron en X", "descartada", "es") == (
+        "Falsa alarma de dron en X"
+    )
 
 
 # --- Criterio de presencia ----------------------------------------------------------------
@@ -399,8 +407,9 @@ def test_la_presencia_publicada_lleva_la_cita_de_la_fuente_que_la_justifica() ->
          "Hallazgo del dron cerca de la base"),
         ("Las drones misteriosas sobre Kleine-Brogel", "confirmada",
          "Los drones misteriosos sobre Kleine-Brogel"),
-        # Lo que no acompaña al dron no cambia.
-        ("Una posible incursión de dron en la base aérea", "confirmada",
+        # Lo que no acompaña al dron no cambia (sin la presencia confirmada: con ella, la duda
+        # lejos del dron sale, EODI-2026-00719).
+        ("Una posible incursión de dron en la base aérea", "no_confirmada",
          "Una posible incursión de dron en la base aérea"),
         ("Drones sobre la planta de la Armada", "confirmada",
          "Drones sobre la planta de la Armada"),

@@ -176,3 +176,67 @@ def test_la_barrera_da_el_veredicto_de_cada_incidente_activo() -> None:
     datos = seguimiento.barrera_titulares(almacen, almacen.incidentes())
     semanal._comprobar("b", [datos], semanal.validador_propio("barrera_titulares"))
     assert [v["incidente"] for v in datos["veredictos"]] == [i["id"] for i in almacen.incidentes()]
+
+
+def _linea(n: int) -> bytes:
+    return json.dumps({"via": "ws", "n": n}).encode() + b"\n"
+
+
+def test_la_copia_coherente_aguanta_la_compresion_de_la_hora_mientras_lee(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # 22 de noviembre de 2026, 00:03 UTC: la exportación del ensayo listó neptun-…T23.jsonl, el
+    # compresor del archivo lo pasó a .jsonl.gz y quitó el .jsonl, y la lectura dio
+    # FileNotFoundError. Aquí el compresor de verdad actúa entre el listado y la lectura.
+    from recogida import seguimiento_archivo
+
+    mes = tmp_path / "neptun" / "2026" / "11"
+    mes.mkdir(parents=True)
+    cerrada = mes / "neptun-2026-11-21T23.jsonl"
+    cerrada.write_bytes(_linea(1) + _linea(2))
+    anterior = mes / "neptun-2026-11-21T22.jsonl.gz"
+    anterior.write_bytes(gzip.compress(_linea(0)))
+    en_curso = mes / "neptun-2026-11-22T00.jsonl"
+    en_curso.write_bytes(_linea(3) + b'{"via": "ws", "n"')  # la línea que se está escribiendo
+    leer = Path.read_bytes
+    comprimida: list[Path] = []
+
+    def leer_mientras_comprime(ruta: Path) -> bytes:
+        if ruta == cerrada and not comprimida:
+            comprimida.append(ruta)
+            seguimiento_archivo.comprimir(ruta)
+        return leer(ruta)
+
+    monkeypatch.setattr(Path, "read_bytes", leer_mientras_comprime)
+    rutas_ = seguimiento.copia_coherente(tmp_path / "neptun", tmp_path / "copia")
+    monkeypatch.undo()
+    assert not cerrada.exists()
+    assert [r.name for r in rutas_] == [
+        "neptun-2026-11-21T22.jsonl.gz", "neptun-2026-11-21T23.jsonl.gz",
+        "neptun-2026-11-22T00.jsonl",
+    ]  # fmt: skip
+    leidas = [json.loads(x)["n"] for r in rutas_ for x in (
+        gzip.decompress(r.read_bytes()) if r.suffix == ".gz" else r.read_bytes()
+    ).splitlines()]  # fmt: skip
+    assert leidas == [0, 1, 2, 3]
+    # El original de la hora en curso no se toca: la copia está fuera.
+    assert en_curso.read_bytes().endswith(b'"n"')
+    assert all(tmp_path / "copia" in r.parents for r in rutas_ if r.suffix == ".jsonl")
+
+
+def test_la_copia_coherente_no_lee_dos_veces_la_hora_que_se_esta_comprimiendo(
+    tmp_path: Path,
+) -> None:
+    # El compresor ya dejó el .jsonl.gz y aún no quitó el .jsonl: los mismos bytes, una vez.
+    mes = tmp_path / "neptun" / "2026" / "11"
+    mes.mkdir(parents=True)
+    (mes / "neptun-2026-11-21T23.jsonl").write_bytes(_linea(1))
+    (mes / "neptun-2026-11-21T23.jsonl.gz").write_bytes(gzip.compress(_linea(1)))
+    # Las líneas que llegaron tarde a una hora ya comprimida sí entran (irán a .parte2).
+    (mes / "neptun-2026-11-21T22.jsonl.gz").write_bytes(gzip.compress(_linea(0)))
+    (mes / "neptun-2026-11-21T22.jsonl").write_bytes(_linea(5))
+    rutas_ = seguimiento.copia_coherente(tmp_path / "neptun", tmp_path / "copia")
+    assert [r.name for r in rutas_] == [
+        "neptun-2026-11-21T22.jsonl", "neptun-2026-11-21T22.jsonl.gz",
+        "neptun-2026-11-21T23.jsonl.gz",
+    ]  # fmt: skip

@@ -1455,6 +1455,32 @@ def sin_presencia_sin_suceso(incidente: Documento) -> tuple[Documento, list[str]
     ]
 
 
+def con_titulo_y_presencia_decididos(incidente: Documento) -> tuple[Documento, list[str]]:
+    """El titular y la presencia que decide hoy el guardado (decidir.decidir_presencia y
+    decidir.decidir_titulo), en una ficha que nada vuelve a guardar. Cuando cambia la regla del
+    titular o la de la presencia, la ficha guardada antes se quedaba con los de entonces:
+    EODI-2025-00095 seguía «por sospecha de dron» con el dron confirmado, y EODI-2026-00862
+    confirmada por una frase sobre lo que Bulgaria no puede hacer contra los drones (27/11/2026;
+    la auditoría AJ). Solo baja una presencia confirmada (nunca la sube: eso lo decide la
+    recogida con sus fuentes) y el titular se decide con la presencia ya decidida. Devuelve la
+    ficha y los cambios (vacío si no cambia)."""
+    motivos = []
+    nuevo = incidente
+    if incidente.get("presencia_dron") == "confirmada":
+        decision = decidir.decidir_presencia(incidente, confirmada=True)
+        if decision.valor != "confirmada":
+            nuevo = {**nuevo, "presencia_dron": decision.valor}
+            motivos.append(
+                f"presencia {decision.valor}: ninguna fuente la confirma con la regla de hoy "
+                f"({decision.regla})"
+            )
+    titulo = decidir.decidir_titulo(nuevo)
+    if titulo and titulo != nuevo.get("titulo"):
+        nuevo = {**nuevo, "titulo": titulo}
+        motivos.append("titular según la presencia y la revisión a mano")
+    return nuevo, motivos
+
+
 def leer_articulos(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
     """El principio y la nota de cada noticia, en memoria (nunca se guardan); vacío si no se pudo
     leer."""
@@ -1533,6 +1559,8 @@ def reglas_deterministas(ctx: Contexto) -> None:
                 # Con declaraciones quitadas, el guardado vuelve a decidir el estado y la presencia.
                 nuevo, sin_suceso = sin_presencia_sin_suceso(nuevo)
                 motivos += sin_suceso
+                nuevo, decididos = con_titulo_y_presencia_decididos(nuevo)
+                motivos += decididos
             bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
             if bajado is not None and reglas.frases_que_no_reconocen(nuevo):
                 sostiene = articulo_que_lo_reconoce(

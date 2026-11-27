@@ -498,3 +498,34 @@ def test_ninguna_union_revisada_tiene_revisiones_en_conflicto() -> None:
             if otra != conserva and (campos := decidir.revisiones_en_conflicto(conserva, otra)):
                 en_conflicto.append((conserva, otra, campos))
     assert en_conflicto == []
+
+
+def test_la_autoridad_corregida_de_una_cita_ya_aplicada_llega_a_la_ficha() -> None:
+    # EODI-2026-00152 (Constanza): la frase que atribuye el dron a una operación ucraniana es del
+    # mensaje del presidente de Rumanía en X, no del MApN. La fuente tiene el mismo identificador
+    # (sale del enlace y la frase) y antes se saltaba: seguía con la autoridad de antes.
+    import json
+
+    from proceso import referencia
+
+    ruta = referencia.DIRECTORIO / "fichas" / "EODI-2026-00152.json"
+    ficha = json.loads(ruta.read_text(encoding="utf-8"))
+    citas = [c for c in revisados.cargar()["citas"] if c["incidente"] == "EODI-2026-00152"]
+    cita = next(c for c in citas if (c.get("declaracion") or {}).get("afirma") == "autoria")
+    fuente_id = revisados.fuente_de_cita(cita, ficha)["id"]
+    antes = copy.deepcopy(ficha)
+    for fuente in antes["fuentes"]:
+        if fuente["id"] == fuente_id:
+            fuente["medio"] = (
+                "Ministerul Apărării Naționale (declaración oficial citada en adevarul.ro)"
+            )
+    antes["atribucion"] = {"actor": "Ucraina", "autoridad": "Ministerul Apărării Naționale",
+                           "fecha": {"valor": "2026-06-05T00:00Z", "precision": "dia"},
+                           "pais": "UA", "tipo": "estado"}  # fmt: skip
+    despues = revisados.con_citas(antes, citas)
+    medio = next(f["medio"] for f in despues["fuentes"] if f["id"] == fuente_id)
+    assert medio == "Președintele României (declaración oficial citada en adevarul.ro)"
+    assert despues["atribucion"]["autoridad"] == "Președintele României"
+    assert despues["estado"] == antes["estado"]
+    # Sin nada que corregir, la ficha no cambia.
+    assert revisados.con_citas(despues, citas)["fuentes"] == despues["fuentes"]
