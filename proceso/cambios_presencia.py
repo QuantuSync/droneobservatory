@@ -18,6 +18,7 @@ de la misma hora nunca se vio publicado): `pasos_publicos`.
 """
 
 import logging
+import re
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -69,6 +70,19 @@ MOTIVOS: dict[str, tuple[str, str]] = {
     "sin_suceso_confirmado": (
         "ninguna autoridad confirma el suceso",
         "no authority confirms the event",
+    ),
+    "actuacion": (
+        "la autoridad actúa por un dron (un cierre o una intervención) y lo cuenta la fuente",
+        "the authority acts because of a drone (a closure or an intervention) and the source "
+        "reports it",
+    ),
+    "abierta": (
+        "una fuente cuenta que el dron no se encontró o lo pone en duda",
+        "a source reports that the drone was not found or casts doubt on it",
+    ),
+    "experto": (
+        "revisión del experto contra las fuentes de la ficha",
+        "expert review against the record's sources",
     ),
     "sin_motivo": (
         "cambio anterior al registro de sus motivos: el motivo no se guardó",
@@ -140,15 +154,64 @@ def _frase(texto: str) -> str:
     return texto[: MAX_FRASE - 1].rsplit(" ", 1)[0] + "…"
 
 
+def regla_de_motivo(motivo: str, a: str) -> str | None:
+    """La regla que dice el motivo que guardó la base con el cambio (historial,
+    incidentes_motivos), para los cambios que las reglas de hoy no explican: lo que decidía la
+    regla de entonces. None si el motivo no habla de la presencia (un titular, un lugar)."""
+    texto = motivo.strip()
+    if not texto:
+        return None
+    if texto.startswith("un solo sitio decide"):
+        encontrado = _POR_REGLA.search(texto)
+        regla = encontrado["regla"] if encontrado else None
+        return regla if regla in MOTIVOS else None
+    if texto.startswith("criterio de presencia"):
+        if a == "confirmada":
+            actua = "la autoridad actúa por un dron" in texto
+            return "actuacion" if actua else "autoridad_atribuye"
+        return "sin_autoridad"
+    if texto.startswith("control de fichas: presencia no confirmada"):
+        return "abierta"
+    if texto.startswith("rectificación oficial"):
+        return "rectificacion"
+    if texto.startswith("repaso de entrada con el experto"):
+        return "experto"
+    if texto.startswith(_SIN_PRESENCIA):
+        return None
+    # Lo demás es el motivo de una revisión a mano (configuracion/incidentes_revisados.json:
+    # citas, separaciones, titulares y presencias revisadas, con su texto).
+    return "revision"
+
+
+_POR_REGLA = re.compile(r"presencia \w+ por (?P<regla>\w+)")
+# Motivos de cambios que no son de la presencia: lo que la cambió en ese momento no se sabe.
+_SIN_PRESENCIA = ("titular coherente", "control de fichas:", "cerrojo", "unión", "unido")
+_CITA = re.compile(r"«([^«»]{12,})»")
+
+
+def _fuente_citada(motivo: str, *documentos: Documento) -> Documento | None:
+    """La fuente pública cuya frase cita el motivo entre comillas."""
+    for cita in _CITA.findall(motivo):
+        trozo = cita.strip(" .…")[:80]
+        for documento in documentos:
+            for fuente in documento.get("fuentes", []):
+                if trozo and trozo in str(fuente.get("frase_origen") or "") and _publicable(fuente):
+                    return dict(fuente)
+    return None
+
+
 def describir(
     incidente: str,
     fecha: str,
     anterior: Documento,
     nuevo: Documento,
     negadas: frozenset[str] = frozenset(),
+    motivo: str = "",
 ) -> Cambio | None:
     """El cambio de presencia entre dos versiones guardadas de la ficha, con la regla que lo decide
-    y la frase en que se apoya; None si la presencia no cambia o no es un valor conocido."""
+    y la frase en que se apoya; None si la presencia no cambia o no es un valor conocido. Si las
+    reglas de hoy no dan ese valor, manda el motivo que guardó la base con el cambio (`motivo`);
+    sin él, el cambio sale sin motivo."""
     from proceso import decidir
 
     de, a = anterior.get("presencia_dron"), nuevo.get("presencia_dron")
@@ -159,10 +222,17 @@ def describir(
     except Exception:
         registro.exception("%s: sin regla para el cambio de presencia", incidente)
         decision = None
-    if decision is None or decision.valor != a:
-        return Cambio(str(incidente), fecha, str(de), str(a), "sin_motivo")
-    regla = decision.regla if decision.regla in MOTIVOS else "sin_motivo"
-    fuente = _fuente(nuevo, decision.fuente_id)
+    fuente: Documento | None
+    if decision is not None and decision.valor == a and decision.regla in MOTIVOS:
+        regla = decision.regla
+        fuente = _fuente(nuevo, decision.fuente_id)
+    else:
+        regla = regla_de_motivo(motivo, str(a)) or "sin_motivo"
+        if regla == "sin_motivo":
+            return Cambio(str(incidente), fecha, str(de), str(a), regla)
+        fuente = _fuente_citada(motivo, nuevo, anterior)
+        if fuente is None and a == "confirmada":
+            fuente = _autoridad_que_habla_del_dron(nuevo)
     previa = False
     if not _publicable(fuente) and de == "confirmada":
         # Una bajada sin frase propia: la frase en que se apoyaba la confirmación.
@@ -201,15 +271,27 @@ def rellenar(almacen: Any) -> int:
     if almacen.cursor(CURSOR_RELLENO) is not None:
         return 0
     desde = almacen.primer_cambio_de_presencia()
-    cambios = [
-        cambio
-        for incidente, fecha, anterior, nuevo in almacen.versiones_con_cambio_de_presencia(desde)
-        if (cambio := describir(incidente, fecha, anterior, nuevo)) is not None
-    ]
+    motivos = almacen.motivos_guardados()
+    cambios = []
+    for incidente, fecha, anterior, nuevo in almacen.versiones_con_cambio_de_presencia(desde):
+        motivo = _motivo_del_momento(motivos.get(incidente, []), fecha)
+        cambio = describir(incidente, fecha, anterior, nuevo, motivo=motivo)
+        if cambio is not None:
+            cambios.append(cambio)
     almacen.anotar_cambios_presencia(cambios, origen="historial")
     almacen.guardar_cursor(CURSOR_RELLENO, {"rellenados": len(cambios), "hasta": desde})
     registro.info("cambios de presencia rellenados desde el historial: %d", len(cambios))
     return len(cambios)
+
+
+def _motivo_del_momento(motivos: list[tuple[str, str]], fecha: str) -> str:
+    """El motivo que guardó la base con el cambio: de los del mismo minuto, el que dice una regla
+    de la presencia; si no, el primero de ese minuto."""
+    del_minuto = [m for f, m in motivos if f[:16] == fecha[:16]]
+    for motivo in del_minuto:
+        if regla_de_motivo(motivo, "confirmada") not in (None, "revision"):
+            return motivo
+    return del_minuto[0] if del_minuto else ""
 
 
 def _hora(fecha: str) -> str:
