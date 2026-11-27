@@ -379,7 +379,14 @@ entregaron el caso, o solo que investiga; EODI-2026-00362); AF, el mismo sitio d
 fecha de un «ayer» de una nota de seguimiento (desde el 25/11/2026: una ficha en una instalación
 fechada por un «ayer» o un «anoche» sin día, con otra ficha de la misma instalación y el mismo
 país de 1 a 4 días antes que nadie dio por distinta; la nota suele ser una copia tardía de la del
-primer suceso: EODI-2026-00997 frente a EODI-2026-00937). Los recuentos del día y los
+primer suceso: EODI-2026-00997 frente a EODI-2026-00937); AG, la fecha de una nota que dice que
+el suceso fue antes (desde el 27/11/2026: la fuente que dio el día es de ese día o del siguiente y
+su frase sitúa el suceso antes sin decir cuándo, con las expresiones «anterior» de
+`configuracion/fechas.json`: «nesen notikušo», «la doar două săptămâni de când», «le week-end
+dernier»; EODI-2025-00191 y EODI-2026-00178); AH, presencia confirmada por un resumen del medio
+que otra fuente pone en duda (desde el 27/11/2026: la declaración que confirma el dron está en
+estilo indirecto, «informs … that», «a anunțat că», y otra fuente de la ficha dice «posible»;
+EODI-2026-00271, Plauru). Los recuentos del día y los
 identificadores quedan en `control.json` («auditoria»), el resumen diario los da con lo que
 cambian respecto al día anterior y, si una comprobación sube, el aviso de silencio lo cuenta una
 vez (`recogida/silencio.py`, caso «auditoria»). A mano, en solo lectura sobre una copia de la

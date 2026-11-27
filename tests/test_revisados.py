@@ -222,6 +222,11 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             # Leipzig/Halle: el cierre de pista del sábado 7/11/2026 y el del domingo 8/11, «am
             # Samstag und Sonntag jeweils» en una sola frase (AA con días seguidos, 9/11/2026).
             "EODI-2026-00770",
+            # Rumanía: el derribo del domingo 26/7/2026 y el dron del lunes 27 (EODI-2026-00313), y
+            # Rzeszów: el aviso a la policía del 20/11/2026 y los misiles de ese día (control del
+            # 27/11/2026).
+            "EODI-2026-00316",
+            "EODI-2026-00923",
         }
     )
     # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.

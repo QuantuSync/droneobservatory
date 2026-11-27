@@ -175,7 +175,7 @@ from proceso.ubicacion import CATEGORIA_LUGAR
 
 COMPROBACIONES = (
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF",
+    "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
 )  # fmt: skip
 NOMBRES = {
     "A": "cabecera de una palabra",
@@ -210,6 +210,8 @@ NOMBRES = {
     "AD": "presencia confirmada con el suceso sin confirmar",
     "AE": "declaración atribuida a una autoridad que no la dijo",
     "AF": "el mismo sitio días antes y la fecha de un «ayer» de una nota de seguimiento",
+    "AG": "la fecha de una nota que dice que el suceso fue antes",
+    "AH": "presencia confirmada por un resumen del medio que otra fuente pone en duda",
 }
 MIN_PALABRAS_CABECERA = 3
 # Lo que nombra una instalación en un titular (en español o en inglés, las dos versiones).
@@ -698,6 +700,66 @@ def declaracion_ajena(incidente: Documento) -> bool:
     return any(declaraciones.atribuida_a_quien_no_habla(f) for f in incidente.get("fuentes", []))
 
 
+def fecha_de_una_nota_posterior(incidente: Documento) -> bool:
+    """AG: el día de la ficha lo da una nota de ese día (o del siguiente) cuya frase dice que el
+    suceso fue antes, sin decir cuándo («nesen notikušo», «la doar două săptămâni de când»): es
+    el día de la noticia (una reunión, una decisión, una compra), no el del suceso. EODI-2025-00191
+    tenía el 29 de enero de 2025, el día en que el Consejo de Seguridad habló del dron del
+    aeropuerto de Riga del 13 (EODI-2025-00176), y EODI-2026-00178 el 10 de agosto de 2026, el día
+    en que el aeropuerto de Cluj compró defensas contra el dron de dos semanas antes. La fecha de
+    publicación sin frase es N; un pasado sin día con su ventana o una fecha revisada, no cuentan.
+    Solo mira la fuente que dio el día: una nota del mismo día que recuerda otro suceso de antes
+    («last month», EODI-2026-00152) no lo es."""
+    tiempo = incidente.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if origen.get("tipo") in (None, fechas.PUBLICACION) or not origen.get("fuente_id"):
+        return False
+    if decidir.inicio_revisado(incidente) or fechas.retrospectiva_revisada(incidente):
+        return False
+    if fechas.ventana_de_motivo(str(origen.get("motivo") or "")) is not None:
+        return False
+    dia = date.fromisoformat(str(tiempo["inicio"]["valor"])[:10])
+    fuente = next(
+        (f for f in incidente.get("fuentes", []) if f.get("id") == origen["fuente_id"]), None
+    )
+    if fuente is None or fechas.pasado_anterior(str(fuente.get("frase_origen") or "")) is None:
+        return False
+    publicacion = datetime.fromisoformat(str(fuente["fecha"]["valor"]).replace("Z", "+00:00"))
+    zona = fechas.zona(fuente.get("pais") or incidente["lugar"].get("pais")) or ZoneInfo("UTC")
+    propia = publicacion.astimezone(zona).date()
+    return dia in (propia, propia - timedelta(days=1))
+
+
+# El medio cuenta lo que dijo la autoridad («informs … that», «a anunțat că»): la frase no es suya.
+_ESTILO_INDIRECTO = re.compile(
+    r"\b(?:informs?|informed|announced|announces|a anunțat|a anuntat|anunță|informează|"
+    r"a informat|anunció|informó|informa|ha informado)\b[^\"«“„']{0,80}\b(?:that|că|ca|que)\b",
+    re.IGNORECASE,
+)
+# Una fuente que pone en duda que fuera un dron.
+_EN_DUDA = re.compile(
+    r"\b(?:posibil\w*|possibl\w*|probabl\w*|presum\w*|posible|posiblemente|"
+    r"prawdopodobn\w*|möglicherweise|mutmaßlich|feltételez\w*|valószínűleg)\b",
+    re.IGNORECASE,
+)
+
+
+def confirmada_por_estilo_indirecto(incidente: Documento) -> bool:
+    """AH: la presencia confirmada la sostiene una declaración que es el resumen del medio en
+    estilo indirecto («The Ministry … informs on Friday morning that a drone had crashed») y otra
+    fuente de la ficha dice que el dron es posible. El comunicado literal del Ministerio de
+    Defensa rumano sobre Plauru (EODI-2026-00271, 2 de octubre de 2026) decía «căderea unui
+    obiect, posibil o dronă aeriană» y que los radares no vieron ninguna entrada."""
+    decision = decidir.decidir_presencia(incidente)
+    if decision.valor != "confirmada" or decision.regla != "autoridad_atribuye":
+        return False
+    fuentes = incidente.get("fuentes", [])
+    sostiene = next((f for f in fuentes if f.get("id") == decision.fuente_id), None)
+    if sostiene is None or not _ESTILO_INDIRECTO.search(str(sostiene.get("frase_origen") or "")):
+        return False
+    return any(_EN_DUDA.search(str(f.get("frase_origen") or "")) for f in fuentes)
+
+
 _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "A": _a, "B": _b, "C": _c, "D": _d, "E": _e, "F": _f, "G": _g, "H": _h, "I": _i, "J": _j,
     "M": _m, "N": _n, "O": _o, "P": _p, "S": _s, "T": _t, "U": _u,
@@ -706,6 +768,8 @@ _REGLAS: dict[str, Callable[[Documento], bool]] = {
     "AC": estado_sin_frase_que_reconozca,
     "AD": confirmada_sin_suceso,
     "AE": declaracion_ajena,
+    "AG": fecha_de_una_nota_posterior,
+    "AH": confirmada_por_estilo_indirecto,
 }  # fmt: skip
 
 
