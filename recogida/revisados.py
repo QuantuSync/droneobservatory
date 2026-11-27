@@ -112,8 +112,10 @@ def sacar_de(almacen: Almacen, registros: list[str], antes_en: str, ahora: datet
              modelos: frozenset[str]) -> list[str]:  # fmt: skip
     """Deshace la fusión que una regla hizo de un registro del grupo en `antes_en`, otra ficha
     que no es su suceso, para que la unión revisada lo lleve al suyo (EODI-2025-00302, la nota
-    del 25/09/2025 sobre el cierre de Aalborg de la víspera, fundida en el del día 25, 00238).
-    Las fusiones revisadas a mano no se deshacen. Devuelve los registros que vuelven."""
+    del 25/09/2025 sobre el cierre de Aalborg de la víspera, fundida en el del día 25, 00238), o
+    que hizo el control de las fichas (EODI-2026-00959, 00970 y 00979: los misiles del 20/11/2026
+    en Polonia, que el control fundió en el aviso de Rzeszów, 00923, cuando ya llevaba sus
+    noticias). Las fusiones revisadas a mano no se deshacen. Devuelve los registros que vuelven."""
     vueltos = []
     for id_ in registros:
         documento = almacen.incidente(id_)
@@ -123,7 +125,10 @@ def sacar_de(almacen: Almacen, registros: list[str], antes_en: str, ahora: datet
             (f for f in reversed(almacen.fusiones())
              if f["absorbido"] == id_ and not f["revertida"]), None,
         )  # fmt: skip
-        if fusion is None or fusion["motivo"].startswith(suceso.PREFIJO_REVISADA):
+        if fusion is None or (
+            fusion["motivo"].startswith(suceso.PREFIJO_REVISADA)
+            and not fusion["motivo"].startswith(suceso.PREFIJO_CONTROL)
+        ):
             continue
         incidentes.revertir(almacen, id_, ahora, modelos)
         vueltos.append(id_)
