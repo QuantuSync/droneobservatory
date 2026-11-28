@@ -3156,11 +3156,12 @@ def traducir_pendientes(base: Base, fabrica: Callable[[], Any],
 # --- Estado para el resumen diario y la vigilancia ------------------------------------------
 
 
-def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
-                    ahora: datetime, segunda: Documento | None = None) -> None:  # fmt: skip
+def escribir_estado(
+    ruta: Path, resultado: Resultado | None, almacen: Almacen, ahora: datetime
+) -> None:
     """~/.eodi/control.json: lo que hizo el control en cada pasada del día, para el resumen de
-    las 08:00 y para la vigilancia. Con `segunda`, también la segunda lectura
-    (recogida/segunda_lectura.estado_para_control), que nadie vigila: no es vital."""
+    las 08:00 y para la vigilancia. Sin la segunda lectura desde el 28 de noviembre de 2026
+    (retirada: docs/segunda_lectura.md)."""
     anterior: Documento = {}
     if ruta.exists():
         try:
@@ -3207,10 +3208,6 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "cerrojo": cerrojo_del_dia(almacen, ahora, auditoria),
         "entrada": _estado_entrada(almacen, ahora, anterior.get("entrada") or {}),
     }
-    if segunda is not None:
-        datos["segunda_lectura"] = segunda
-    elif "segunda_lectura" in anterior:
-        datos["segunda_lectura"] = anterior["segunda_lectura"]
     ruta.parent.mkdir(parents=True, exist_ok=True)
     temporal = ruta.with_suffix(".tmp")
     temporal.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")

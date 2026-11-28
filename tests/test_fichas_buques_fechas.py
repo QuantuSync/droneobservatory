@@ -3,13 +3,12 @@ sobrevuelo, «interior» en el mar, la fecha de publicación de una nota que dic
 y un nombre de instalación traducido (proceso/buques.py, proceso/fechas.py, proceso/zona.py,
 proceso/control_fichas.fallos_de_ficha, proceso/nombres_lugar.traduccion_inventada)."""
 
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, date, datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
 from proceso import buques, fechas, incidentes, nombres_lugar, suceso, titulares, zona
 from proceso import control_fichas as reglas
-from recogida import segunda_busqueda
 
 TITULAR = "Debris Found on Drone-Struck Chelsea 3 as Bulgaria Opens Investigation"
 FRASE = (
@@ -168,32 +167,6 @@ def test_los_nombres_de_instalaciones_no_se_traducen() -> None:
     assert not nombres_lugar.traduccion_inventada(
         "Nürnberg", {"es": "Núremberg", "en": "Nuremberg"}
     )
-
-
-class _Almacen:
-    def __init__(self, extraccion: dict[str, Any]) -> None:
-        self._extraccion = extraccion
-
-    def candidatos(self) -> list[dict[str, Any]]:
-        return [{"id": "CAND-1", "articulos": ["https://a", "https://b"]}]
-
-    def extracciones(self, candidato: str) -> list[dict[str, Any]]:
-        return [self._extraccion]
-
-
-def test_el_experto_no_repite_el_mismo_candidato_la_misma_noche() -> None:
-    ahora = datetime(2026, 10, 20, 3, 17, tzinfo=UTC)
-    hecha = {
-        "fecha": "2026-10-20T00:17:03Z", "escalado": ["critico: cierre de aeropuerto"],
-        "huella": incidentes.huella(["https://a", "https://b"]),
-    }  # fmt: skip
-    almacen: Any = _Almacen(hecha)
-    assert segunda_busqueda.ya_con_experto(almacen, "CAND-1", ahora)
-    assert not segunda_busqueda.ya_con_experto(almacen, "CAND-1", ahora + timedelta(hours=10))
-    almacen = _Almacen({**hecha, "huella": "otra"})
-    assert not segunda_busqueda.ya_con_experto(almacen, "CAND-1", ahora)
-    almacen = _Almacen({**hecha, "escalado": []})
-    assert not segunda_busqueda.ya_con_experto(almacen, "CAND-1", ahora)
 
 
 def test_posible_va_delante_del_grupo_del_dron_en_ingles() -> None:

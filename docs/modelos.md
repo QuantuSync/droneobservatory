@@ -299,7 +299,7 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   (`control_fichas.espera_vigente`): el 20 de octubre de 2026 el par EODI-2025-00438|00444 siguió
   esperando después de que la regla de fusión uniera 00438 a 00444, retuvo 00444 y abrió la
   incidencia del experto. La decisión no se borra.
-- **Segunda lectura** (desde el 18 de octubre de 2026): lo que marca la capa secundaria
+- **Segunda lectura** (del 18 de octubre al 28 de noviembre de 2026, retirada): lo que marcaba la capa secundaria
   ([`docs/segunda_lectura.md`](segunda_lectura.md)) lo revisa el experto con el modo
   `segunda_lectura`, como mucho 0,30 USD al día desde el 25 de octubre de 2026 (0,30 hasta el 19
   de octubre: de 30 candidatos revisados, 2 cambiaron algo; 0,10 del 19 al 25, con el experto

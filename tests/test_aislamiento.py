@@ -16,7 +16,7 @@ from typing import Any
 import pytest
 
 from almacen import buckets, casa, cifrado, copias, sitio
-from modelo import cliente, secundario
+from modelo import cliente
 from proceso import nombres_lugar
 from recogida import avisos, control_fichas, directo, firms, gasto_api, horaria, silencio, visitas
 from tests.conftest import RUTAS_REALES
@@ -149,7 +149,6 @@ def test_la_casa_de_cada_prueba_esta_vacia() -> None:
     [
         cliente.RUTA_SALDO,
         cliente.RUTA_LOCAL,
-        secundario.RUTA_LOCAL,
         gasto_api.RUTA_ESTADO,
         silencio.RUTA_ESTADO,
         control_fichas.RUTA_ESTADO_DEFECTO,

@@ -26,10 +26,6 @@ resultado de la recogida.
 Igual con las pérdidas de luz nocturna tras los ataques contra la red eléctrica que dejó medidas
 el servicio de luces (`recogida/luces.py`).
 
-Antes de las rectificaciones, los candidatos que dejó la segunda lectura (`recogida/
-segunda_lectura.py`, su propio temporizador y su propia base): solo se leen, con un tope de 30 s,
-y unos pocos van al experto; si la base de la capa falta o está rota, no pasa nada.
-
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
@@ -103,7 +99,6 @@ from recogida import (
     revisados,
     rutas,
     satelite,
-    segunda_lectura,
     silencio,
     suelo_europeo,
     tipo_atribucion,
@@ -680,10 +675,6 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.warning(
                     "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
                 )
-        # Segunda lectura (recogida/segunda_lectura.py): solo lee los candidatos que dejó su
-        # temporizador (tope de 30 s; sin su base, nada) y manda unos pocos al experto, con su
-        # modo de gasto. Nunca falla hacia fuera ni cambia el código de salida.
-        segunda = segunda_lectura.paso_horario(almacen, ahora, modelos(almacen))
         # Rectificaciones oficiales de la presencia del dron (recogida/rectificaciones.py): las
         # revisadas a mano, las fuentes que suenan a cierre de una investigación y la búsqueda del
         # mes, siempre con el experto. Aislado: nunca impide publicar.
@@ -801,9 +792,8 @@ def principal(argumentos: list[str] | None = None) -> int:
                 control_fichas.RUTA_ESTADO_DEFECTO if args.ensayo is None
                 else args.ensayo / "control.json"
             )  # fmt: skip
-            capa = segunda_lectura.estado_para_control(almacen, ahora, segunda)
             paso("estado del control", control_fichas.escribir_estado, destino_control, control,
-                 almacen, ahora, capa)  # fmt: skip
+                 almacen, ahora)  # fmt: skip
             # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
             paso("previsión", prevision.paso_horario, almacen, ahora, directorio)
         if args.ensayo is not None:

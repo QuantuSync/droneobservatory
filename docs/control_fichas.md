@@ -173,7 +173,7 @@ Todo es idempotente: una pasada sin nada nuevo no llama al servicio ni cambia na
 es una fila nueva de la tabla `control_fichas` (nada se borra); cada corrección, una versión nueva
 del incidente con el motivo en el historial («control de fichas: …»).
 
-La segunda lectura ([`docs/segunda_lectura.md`](segunda_lectura.md)) puede mandar, como mucho dos
+Hasta el 28 de noviembre de 2026 (retirada), la segunda lectura ([`docs/segunda_lectura.md`](segunda_lectura.md)) podía mandar, como mucho dos
 por recogida, fichas publicadas a la verificación y pares a la comparación de este control,
 hechas directamente por el experto; lo que decide se aplica con estas mismas reglas.
 
