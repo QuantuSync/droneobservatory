@@ -21,6 +21,7 @@ import logging
 import os
 import re
 import sys
+import tempfile
 import time
 from collections import defaultdict
 from collections.abc import Callable
@@ -30,6 +31,7 @@ from typing import Any
 
 from almacen.casa import casa
 from exportacion.proyeccion import escribir_atomico
+from exportacion.seguimiento import vista_coherente
 from proceso.rutas import noches
 from recogida import seguimiento
 
@@ -140,7 +142,21 @@ def ruta_noche(salida: Path, noche: str) -> Path:
 def estructurar(
     seguimiento_datos: Path, salida: Path, todo: bool, ahora: datetime, tope_s: float = 1500.0
 ) -> dict[str, Any]:
-    """Cada noche a su fichero, de una en una (la memoria no crece con el archivo)."""
+    """Cada noche a su fichero, de una en una (la memoria no crece con el archivo).
+
+    El archivo del seguimiento está vivo (el servicio escribe la hora en curso y el compresor quita
+    cada `.jsonl` cerrado): se lee de una vista coherente, la misma copia que usa la exportación
+    desde el PR 491 (exportacion/seguimiento.vista_coherente), nunca de la carpeta mientras
+    cambia."""
+    salida.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="vista-seguimiento-", dir=salida) as temporal:
+        vista = vista_coherente(seguimiento_datos, Path(temporal))
+        return _estructurar(vista, salida, todo, ahora, tope_s)
+
+
+def _estructurar(
+    seguimiento_datos: Path, salida: Path, todo: bool, ahora: datetime, tope_s: float
+) -> dict[str, Any]:
     inicio = time.monotonic()
     recientes = {noches.noche_de(ahora - timedelta(days=d)) for d in range(3)}
     hechas = cuentas = 0

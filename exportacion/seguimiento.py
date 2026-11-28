@@ -34,6 +34,7 @@ import gzip
 import json
 import os
 import re
+import shutil
 import tempfile
 from collections import defaultdict
 from collections.abc import Iterator
@@ -182,6 +183,42 @@ def copia_coherente(carpeta: Path, destino: Path) -> list[Path]:
         copia.write_bytes(completo)
         resultado.append(copia)
     return sorted(resultado, key=lambda r: (r.parent.parent.name, r.parent.name, r.name))
+
+
+FUENTES_SEGUIMIENTO = ("kpszsu", "neptun")
+
+
+def _enlazar(origen: Path, destino: Path) -> None:
+    """El fichero en la vista con el mismo contenido: un enlace duro (no ocupa ni cambia el
+    original y sigue entero aunque el original se quite) o, si no se puede, una copia."""
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        os.link(origen, destino)
+    except OSError:
+        shutil.copyfile(origen, destino)
+
+
+def vista_coherente(
+    datos: Path, destino: Path, fuentes: tuple[str, ...] = FUENTES_SEGUIMIENTO
+) -> Path:
+    """Una carpeta con la misma forma que la del seguimiento (`<fuente>/<AAAA>/<MM>/…` y
+    `kpszsu/historico/…`) tal como estaba en un instante, para leerla por noches sin que cambie
+    debajo. La usa el servicio de rutas (recogida/rutas.py) desde el 28 de noviembre de 2026, con
+    la misma copia coherente que la exportación (`copia_coherente`): antes leía la carpeta viva y
+    tenía la misma carrera con el compresor del archivo (un `.jsonl` listado que desaparece al
+    leerlo, la misma hora leída dos veces) y además leía la línea a medio escribir de la hora en
+    curso. Los comprimidos y el histórico entran con un enlace duro; los `.jsonl`, copiados hasta
+    su última línea completa. Devuelve la carpeta de la vista (dentro de `destino`)."""
+    vista = destino / "vista"
+    for fuente in fuentes:
+        carpeta, propia = datos / fuente, vista / fuente
+        for ruta in copia_coherente(carpeta, propia):
+            if propia not in ruta.parents:
+                _enlazar(ruta, propia / ruta.relative_to(carpeta))
+        for ruta in sorted((carpeta / "historico").glob("*.jsonl.gz")):
+            _enlazar(ruta, propia / "historico" / ruta.name)
+    vista.mkdir(parents=True, exist_ok=True)
+    return vista
 
 
 def neptun_pistas(seguimiento: Path) -> list[Documento]:
