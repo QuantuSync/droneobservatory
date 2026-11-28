@@ -17,11 +17,14 @@ Se añade al publicar, sobre lo ya proyectado: la base no cambia.
 """
 
 import hashlib
+import logging
 from dataclasses import dataclass, field
 from typing import Any
 
 from esquema import Documento
 from proceso import atribucion, autoridades, nombres_lugar
+
+registro = logging.getLogger(__name__)
 
 # Dato de la verificación -> campo público de «Qué dice la fuente».
 CAMPO_PUBLICO = {
@@ -221,6 +224,16 @@ def con_sus_lugares(publico: Documento) -> None:
         }
 
 
+def autoridad_bien_escrita(hecha: Documento) -> bool:
+    """Si la traducción de una autoridad está escrita en español y en inglés: letras latinas y
+    ninguna palabra de otra lengua (la regla de la web, web/tests/fichas.test.tsx)."""
+    return all(
+        nombres_lugar.latino_puro(str(hecha.get(idioma) or ""))
+        and not nombres_lugar.palabras_ajenas(str(hecha.get(idioma) or ""), idioma)
+        for idioma in ("es", "en")
+    )
+
+
 def con_autoridades(
     publico: Documento, traducciones: dict[str, Documento], faltan: dict[str, tuple[str, str]]
 ) -> None:
@@ -230,7 +243,14 @@ def con_autoridades(
     escritas: dict[str, Documento] = {}
     for nombre, idioma in autoridades.por_traducir(publico):
         hecha = traduccion(nombre, traducciones)
-        if hecha is not None:
+        if hecha is not None and not autoridad_bien_escrita(hecha):
+            # «Flughafen Köln/Bonn» como inglés (EODI-2026-01027, 28/11/2026): el modelo deja a
+            # veces el nombre en su lengua. Mejor «una autoridad» que una palabra de otro idioma.
+            registro.warning(
+                "%s: traducción de la autoridad %r descartada, no es español e inglés: %s",
+                publico.get("id"), nombre, hecha,
+            )  # fmt: skip
+        elif hecha is not None:
             escritas[nombre] = hecha
         else:
             faltan.setdefault(huella_texto(nombre), (idioma, autoridades.MARCA + nombre))
