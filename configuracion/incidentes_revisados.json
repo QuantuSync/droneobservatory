@@ -4725,9 +4725,18 @@
         "cita": "De ringer til os klokken 00.45 og siger, at de har valgt at lukke luftrummet",
         "motivo": "tv2nord.dk: el aeropuerto avisó a la policía «klokken 00.45» de la noche del lunes 29 al martes 30 de septiembre de 2025, hora de Dinamarca (UTC+2), de que cerraba el espacio aéreo"
       },
+      "titulo": {
+        "es": "Cierre del espacio aéreo de Aalborg por un posible dron",
+        "en": "Aalborg airspace closure due to a possible drone"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Han fortæller desuden, at man på intet tidspunkt har set en drone, men at man selvfølgelig reagerer ud fra det, som radaren viste på tidspunktet.",
+        "enlace": "https://tv2nord.dk/aalborg/aalborg-lufthavn-lukkede-luftrummet-i-otte-minutter-i-nat-pa-grund-af-mistanke-om-droner-5f77"
+      },
       "motivo": {
-        "es": "El aeropuerto de Aalborg cerró el espacio aéreo ocho minutos a las 00:45 del martes 30 de septiembre de 2025, hora de Dinamarca (22:45 UTC del lunes 29), según el jefe de guardia de la policía de Jutlandia del Norte.",
-        "en": "Aalborg Airport closed its airspace for eight minutes at 00:45 on Tuesday 30 September 2025, Danish time (22:45 UTC on Monday 29), according to the North Jutland Police duty officer."
+        "es": "El aeropuerto de Aalborg cerró el espacio aéreo ocho minutos a las 00:45 del martes 30 de septiembre de 2025, hora de Dinamarca (22:45 UTC del lunes 29), según el jefe de guardia de la policía de Jutlandia del Norte. El mismo policía dice que nadie vio ningún dron: «man på intet tidspunkt har set en drone, men at man selvfølgelig reagerer ud fra det, som radaren viste» («en ningún momento se ha visto un dron, pero se reacciona a lo que enseñaba el radar»), y que hay que averiguar si lo hubo. La frase que lo confirmaba, «da man kan se en drone på radaren», es el motivo del cierre, no un dron visto (revisado el 28 de noviembre de 2026).",
+        "en": "Aalborg Airport closed its airspace for eight minutes at 00:45 on Tuesday 30 September 2025, Danish time (22:45 UTC on Monday 29), according to the North Jutland Police duty officer. The same officer says nobody saw a drone: «man på intet tidspunkt har set en drone, men at man selvfølgelig reagerer ud fra det, som radaren viste» («at no point has a drone been seen, but of course one reacts to what the radar showed»), and that it must be established whether there was one. The sentence that confirmed it, «da man kan se en drone på radaren», is the reason for the closure, not a drone seen (reviewed on 28 November 2026)."
       }
     },
     {
@@ -6320,6 +6329,54 @@
       "motivo": {
         "es": "Comprobado contra sus fuentes el 27 de noviembre de 2026: «Two Russian missiles and a Russian drone have fallen in Poland», el ministro de Defensa Władysław Kosiniak-Kamysz (sofiaglobe.com); la gobernadora de Subcarpacia habló de un misil de crucero y dos drones (news.yam.md). El titular automático decía «posible» en español y «por drones» sin los misiles.",
         "en": "Checked against its sources on 27 November 2026: «Two Russian missiles and a Russian drone have fallen in Poland», Defence Minister Władysław Kosiniak-Kamysz (sofiaglobe.com); the Subcarpathian governor spoke of a cruise missile and two drones (news.yam.md). The automatic headline said «possible» in Spanish and «by drones» without the missiles."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00030",
+      "titulo": {
+        "es": "Posibles drones cierran el aeropuerto de Copenhague durante dos horas",
+        "en": "Possible drones close Copenhagen Airport for two hours"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Men Trafikstyrelsen oplyser tirsdag eftermiddag til Ritzau, at det ikke var en drone fra Niras, der lukkede luftrummet over Københavns Lufthavn",
+        "enlace": "https://ekstrabladet.dk/nyheder/samfund/drone-mystik-ved-koebenhavns-lufthavn-nu-er-det-maaske-opklaret/10533222"
+      },
+      "motivo": {
+        "es": "Ninguna autoridad dice que hubiera un dron el 31 de enero de 2025: la Autoridad del Transporte (Trafikstyrelsen) solo dice que el dron de la empresa Niras no fue el que cerró el espacio aéreo («det ikke var en drone fra Niras, der lukkede luftrummet over Københavns Lufthavn», ekstrabladet.dk), y la prensa habla de avisos («der var meldinger om, at der var observeret en drone»). Niras es una empresa, no una autoridad (revisado el 28 de noviembre de 2026).",
+        "en": "No authority says there was a drone on 31 January 2025: the Danish Civil Aviation and Railway Authority (Trafikstyrelsen) only says that the drone of the company Niras was not the one that closed the airspace («det ikke var en drone fra Niras, der lukkede luftrummet over Københavns Lufthavn», ekstrabladet.dk), and the press speaks of reports («der var meldinger om, at der var observeret en drone»). Niras is a company, not an authority (reviewed on 28 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00073",
+      "titulo": {
+        "es": "Un posible dron obliga a desviarse al avión del presidente de Lituania en Vilna",
+        "en": "Possible drone forces Lithuanian president's aircraft to circle over Vilnius airport"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Dėl galimai pastebėto drono Vilniaus oro uoste kurį laiką negalėjo nusileisti prezidentą Gitaną Nausėdą skraidinęs lėktuvas „Spartan“.",
+        "enlace": "https://m.kauno.diena.lt/naujienos/vilnius/miesto-pulsas/del-galimai-pastebeto-drono-vilniaus-oro-uoste-negalejo-nusilei"
+      },
+      "motivo": {
+        "es": "Las dos autoridades solo cuentan el aviso que recibieron: el representante del presidente, «buvo gauta informacija, kad yra pastebėtas dronas» («se recibió información de que se había visto un dron»), y Oro navigacija, «gautas pranešimas, kad Liepkalnyje pastebėtas dronas» («se recibió un aviso de que se había visto un dron en Liepkalnis»); la noticia de BNS habla de un dron «galimai pastebėto» («posiblemente visto», kauno.diena.lt) (revisado el 28 de noviembre de 2026).",
+        "en": "Both authorities only tell of the report they received: the president's representative, «buvo gauta informacija, kad yra pastebėtas dronas» («information was received that a drone had been spotted»), and Oro navigacija, «gautas pranešimas, kad Liepkalnyje pastebėtas dronas» («a report was received that a drone had been spotted in Liepkalnis»); the BNS report speaks of a drone «galimai pastebėto» («possibly spotted», kauno.diena.lt) (reviewed on 28 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00077",
+      "titulo": {
+        "es": "Posibles drones cerca del aeropuerto de Dublín durante la visita de Zelensky",
+        "en": "Possible drones near Dublin Airport during Zelensky visit"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Secondo alcune fonti, i droni sarebbero decollati da nord-est di Dublino, probabilmente nei pressi di Howth, e avrebbero volato per circa due ore.",
+        "enlace": "https://ilmessaggero.it:443/mondo/droni_aereo_zelensky_aeroporto_dublino_attacco_ibrido_cosa_e_successo-9226703.html"
+      },
+      "motivo": {
+        "es": "Los drones los cuenta la prensa con sus fuentes («Secondo alcune fonti, i droni sarebbero decollati…», ilmessaggero.it). La única autoridad citada, la Irish Aviation Authority, solo creó una zona de exclusión para drones durante la visita («ha istituito una no-fly zone per i droni su Dublino»): una medida, no un dron (revisado el 28 de noviembre de 2026).",
+        "en": "The drones are reported by the press citing its sources («Secondo alcune fonti, i droni sarebbero decollati…», ilmessaggero.it). The only authority cited, the Irish Aviation Authority, only set up a no-fly zone for drones during the visit («ha istituito una no-fly zone per i droni su Dublino»): a measure, not a drone (reviewed on 28 November 2026)."
       }
     },
     {
