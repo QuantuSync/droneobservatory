@@ -127,7 +127,12 @@ el resumen diario y, si alguno sube respecto al día anterior, el aviso de silen
   nombran. No cuentan la presencia revisada a mano, el documento propio de una autoridad ni las
   pruebas físicas que confirma una autoridad. EODI-2026-00821 (RAF Lakenheath, 13 de noviembre de
   2026): «responded to "suspected unauthorised drone activity"» y «responded to reports of
-  unauthorised drone activity» la dejaban confirmada.
+  unauthorised drone activity» la dejaban confirmada. Desde el 28 de noviembre de 2026, en
+  cualquier lengua: la frase que no está en inglés solo afirma el dron si también lo afirma su
+  traducción inglesa guardada (declaraciones.afirma_el_dron), y sin traducción no lo afirma.
+  EODI-2026-00821 volvió a confirmada el 28/11 con «καταγράφηκαν αναφορές για μη
+  εξουσιοδοτημένη δραστηριότητα drones» («reports of unauthorised drone activity were
+  recorded»).
 - **AC, estado confirmado o atribuido sin frase de autoridad que reconozca el suceso**: el estado
   es «confirmado» o «atribuido» y ninguna fuente de autoridad tiene una frase que reconozca el
   suceso (proceso/declaraciones.reconoce): solo cuentan que la autoridad lo investiga o que la
@@ -674,8 +679,7 @@ def confirmada_sin_frase_que_afirme(incidente: Documento) -> bool:
         and not documento_oficial_decide(incidente)
         and not pruebas_fisicas_confirmadas(incidente)
         and not any(
-            declaraciones.de_autoridad(f)
-            and declaraciones.atribuye_dron(str(f.get("frase_origen") or ""))
+            declaraciones.de_autoridad(f) and declaraciones.afirma_el_dron(f)
             for f in incidente.get("fuentes", [])
         )
     )

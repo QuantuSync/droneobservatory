@@ -132,6 +132,32 @@ def cerrojo_como_en_produccion(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(protegido, "modo", modo)
 
 
+@pytest.fixture(autouse=True)
+def traduccion_de_prueba(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Desde el 28 de noviembre de 2026 una frase de autoridad que no está en inglés solo afirma el
+    dron si su traducción inglesa guardada también lo afirma, y sin traducción espera
+    (proceso/declaraciones.afirma_el_dron). Las fichas de ejemplo no traen traducciones: en las
+    pruebas, la frase sin traducción cuenta como su propia traducción, y la regla se queda en lo
+    que dice la frase original. La prueba de la traducción la pide con `traducciones_reales`."""
+    from proceso import declaraciones
+
+    # Las del almacén de otra prueba no pasan a esta.
+    monkeypatch.setattr(declaraciones, "_TRADUCCIONES", dict)
+    if "traducciones_reales" in request.fixturenames:
+        return
+    real = declaraciones.traduccion_inglesa
+
+    def traduccion(fuente: dict[str, Any]) -> str | None:
+        return real(fuente) or str(fuente.get("frase_origen") or "") or None
+
+    monkeypatch.setattr(declaraciones, "traduccion_inglesa", traduccion)
+
+
+@pytest.fixture
+def traducciones_reales() -> None:
+    """Las traducciones como en producción: las publicadas o las de la tabla traducciones."""
+
+
 @pytest.fixture
 def cerrojo_en_observar(monkeypatch: pytest.MonkeyPatch) -> None:
     """El cerrojo en «observar»: apunta lo que retendría y deja pasar la escritura."""

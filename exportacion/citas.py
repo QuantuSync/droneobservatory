@@ -16,13 +16,12 @@
 Se añade al publicar, sobre lo ya proyectado: la base no cambia.
 """
 
-import hashlib
 import logging
 from dataclasses import dataclass, field
 from typing import Any
 
 from esquema import Documento
-from proceso import atribucion, autoridades, nombres_lugar
+from proceso import atribucion, autoridades, declaraciones, nombres_lugar
 
 registro = logging.getLogger(__name__)
 
@@ -45,8 +44,9 @@ PRESENCIA_CASA = {
 MAX_LETRAS_CITA = 600
 
 
-def huella_texto(texto: str) -> str:
-    return hashlib.sha256(" ".join(texto.split()).encode("utf-8")).hexdigest()
+# La clave de una cita en la tabla traducciones: la misma con que la regla de presencia busca la
+# traducción inglesa de una frase de autoridad (proceso/declaraciones.traduccion_inglesa).
+huella_texto = declaraciones.huella_texto
 
 
 @dataclass

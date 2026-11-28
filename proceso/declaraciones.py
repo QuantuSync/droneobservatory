@@ -41,9 +41,10 @@ autoridad: sus declaraciones valen como antes.
 
 import contextlib
 import copy
+import hashlib
 import json
 import re
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -399,7 +400,15 @@ _AVISO = (
     r"zgłosze\w*|sygnał\w*|doniesie\w*|"
     r"sesizăr\w*|sesizar\w*|semnalăr\w*|semnalar\w*|apeluri|"
     r"pranešim\w*|ziņojum\w*|teated|teadet\w*|teade|"
-    r"сообщени\w*|повідомлен\w*|сигнал\w*"
+    r"сообщени\w*|повідомлен\w*|сигнал\w*|"
+    # Las lenguas que faltaban (28/11/2026, EODI-2026-00821: «αναφορές για … drones»; EODI-2025-
+    # 00094: «Primili smo prijave o dronu»): griego, serbio, croata y bosnio, checo y eslovaco,
+    # esloveno, húngaro, finés, búlgaro, portugués, albanés y catalán.
+    r"αναφορ\w*|καταγγελ\w*|ειδοποιήσ\w*|"
+    r"prijav\w*|dojav\w*|hlášen\w*|hlásen\w*|oznámen\w*|ohlásen\w*|"
+    r"bejelentés\w*|jelentés\w*|ilmoitu\w*|ilmoituks\w*|"
+    r"съобщени\w*|relatos?|denúnci\w*|njoftim\w*|raportim\w*|"
+    r"trucades|avís"
 )
 _SOSPECHA = (
     r"suspected|suspicious|alleged|sospechos\w*|presunt\w*|supuest\w*|présum\w*|suspect\w*|"
@@ -407,13 +416,21 @@ _SOSPECHA = (
     r"podejrzan\w*|įtartin\w*|įtariam\w*|aizdomīg\w*|kahtlas\w*|kahtlust\w*|"
     r"mistænkelig\w*|misstänkt\w*|mistenkelig\w*|sospett\w*|suspicioas\w*|suspect\w*|"
     r"possible|posible|possibile|possível|possibil\w*|posibil\w*|"
-    r"подозрит\w*|предполож\w*|підозріл\w*|ймовірн\w*"
+    r"подозрит\w*|предполож\w*|підозріл\w*|ймовірн\w*|"
+    r"ύποπτ\w*|υποπτ\w*|φερόμεν\w*|sumnjiv\w*|navodn\w*|moguć\w*|mogoč\w*|"
+    r"podezřel\w*|podozriv\w*|údajn\w*|možn\w*|domnevn\w*|sumljiv\w*|"
+    r"gyanús\w*|feltételez\w*|lehetséges|epäil\w*|предполага\w*|възможн\w*|"
+    r"suspeit\w*|dyshim\w*|dyshuar|sospitós\w*|sospitos\w*|presumpt\w*"
 )
 _RESPUESTA = (
     r"respond\w*\s+to|response\s+to|respondi\w*\s+a|"
     r"reagi\w*\s+(?:auf|på|op|à|a|na|la|į|uz)|reageer\w*\s+op|réagi\w*\s+à|"
     r"rispo\w*\s+a|zareagowa\w*\s+na|reacțion\w*\s+la|a\s+reacționat\s+la|"
-    r"reagavo\s+į|reaģēja\s+uz|reageeris\w*"
+    r"reagavo\s+į|reaģēja\s+uz|reageeris\w*|"
+    r"ανταποκρί\w*\s+σε|αντέδρασ\w*\s+σε|απάντησ\w*\s+σε|"
+    r"reagova\w*\s+na|reagira\w*\s+na|odgovori\w*\s+na|odreagova\w*\s+na|"
+    r"reagál\w*|reagoi\w*\s+|отговори\w*\s+на|реагира\w*\s+на|"
+    r"respondeu\s+a|reagiu\s+a|reagoi\s+ndaj|va\s+respondre\s+a"
 )
 # El dron que sigue a la reserva: como mucho tres palabras en medio, sin pasar a otra oración
 # ni a lo que se dijo («a report that a drone was seen» cuenta lo que se vio: no es reserva).
@@ -424,6 +441,26 @@ _MARCA = re.compile(
 _HASTA_EL_DRON = re.compile(
     r"(?P<medio>(?:[\s\"'„“”«»‘’‌-]+(?!(?:that|que|că|ca|dass|daß|że|at|att|kad|ka|et|dat|"
     r"che|of\s+being|om\s+at)(?!\w))[\w’'-]+){0,3})[\s\"'„“”«»‘’‌-]+",
+    re.IGNORECASE,
+)
+# Las lenguas que ponen la actividad delante del dron («αναφορές για μη εξουσιοδοτημένη
+# δραστηριότητα drones», «hlášení o neoprávněné činnosti dronů», «prijave o aktivnosti
+# dronova»): la reserva llega al dron a través de la actividad, con como mucho tres palabras
+# entre la reserva y la actividad.
+_ACTIVIDAD_DELANTE = (
+    r"δραστηριότητ\w*|δραστηριοτήτ\w*|πτήσ\w*|činnost\w*|aktivit\w*|aktivnost\w*|"
+    r"tevékenység\w*|toimin\w*|дейност\w*|діяльн\w*|деятельн\w*|активност\w*|"
+    r"activit\w*|activid\w*|attivit\w*|actividad\w*|atividad\w*|activitat\w*|aktywno\w*|"
+    r"veikl\w*|darbīb\w*|tegevus\w*|veprimtari\w*|prelet\w*|přelet\w*"
+)
+_ACTIVIDAD_AL_FINAL = re.compile(
+    rf"(?:{_ACTIVIDAD_DELANTE})(?:\s+(?:de|of|di|des|du|von|z|ze|od|o|na))?$", re.IGNORECASE
+)
+_HASTA_LA_ACTIVIDAD = re.compile(
+    r"(?P<medio>(?:[\s\"'„“”«»‘’‌-]+(?!(?:that|que|că|ca|dass|daß|že|at|att|kad|ka|et|dat|"
+    r"che|ότι|πως|da|hogy|että|че|що|что|of\s+being|om\s+at)(?!\w))[\w’'-]+){0,3})"
+    rf"[\s\"'„“”«»‘’‌-]+(?:{_ACTIVIDAD_DELANTE})(?:\s+(?:de|of|di|des|du|von|z|ze|od|o|na))?"
+    r"[\s\"'„“”«»‘’‌-]+",
     re.IGNORECASE,
 )
 # La sospecha sobre una persona («suspected of illegally flying a drone», «mistanke om ulovlig
@@ -495,10 +532,17 @@ def _con_reserva(frase: str, inicio: int) -> bool:
     for marca in _MARCA.finditer(frase, desde, inicio):
         tramo = _HASTA_EL_DRON.fullmatch(frase, marca.end(), inicio)
         if tramo is None:
+            # La actividad delante del dron: «αναφορές για … δραστηριότητα drones».
+            if _HASTA_LA_ACTIVIDAD.fullmatch(frase, marca.end(), inicio) is not None:
+                return True
             continue
         if marca["sospecha"] and _SOBRE_PERSONA.match(tramo["medio"]):
             continue
-        if marca["respuesta"] and not _ACTIVIDAD.match(frase[inicio:]):
+        # La actividad delante del dron cuenta como detrás: «ανταποκρίθηκε σε δραστηριότητα
+        # drones», «reagovala na aktivnost dronova».
+        if marca["respuesta"] and not (
+            _ACTIVIDAD.match(frase[inicio:]) or _ACTIVIDAD_AL_FINAL.search(tramo["medio"])
+        ):
             continue
         return True
     return False
@@ -800,6 +844,106 @@ def atribuye_dron(frase: str) -> bool:
     sospecha («responded to "suspected unauthorised drone activity"», EODI-2026-00821) no
     basta."""
     return bool(drones_afirmados(frase)) and not abierto(frase)
+
+
+# --- La frase en otra lengua: con su traducción ----------------------------------------------
+#
+# Las listas de avisos, sospechas y respuestas no pueden cubrir todas las lenguas que entran en el
+# observatorio. EODI-2026-00821 (RAF Lakenheath) volvió a «dron confirmado» el 28/11/2026 con
+# una frase griega de inewsgr.com, «καταγράφηκαν αναφορές για μη εξουσιοδοτημένη δραστηριότητα
+# drones» («se registraron avisos de actividad no autorizada de drones»): «αναφορές» no estaba en
+# la lista de avisos y, además, entre el aviso y el dron había cuatro palabras. Su traducción
+# inglesa, guardada desde la primera publicación, decía «reports of unauthorised drone activity
+# were recorded», que la regla ya no aceptaba en inglés. Desde entonces la frase en otra lengua
+# confirma el dron solo si su traducción inglesa (la de la tabla traducciones, la misma que
+# enseña la web) también lo afirma sin reserva; sin traducción todavía, espera a tenerla (el
+# control de las fichas la pide y vuelve a decidir: recogida/control_fichas.py).
+
+# Las traducciones guardadas por la huella de su texto, que fija el almacén al abrirse
+# (almacen/base.Almacen), como las fusiones de proceso/decidir.fijar_fusiones.
+_TRADUCCIONES: Callable[[], dict[str, Documento]] = dict
+
+
+def fijar_traducciones(traducciones: Callable[[], dict[str, Documento]]) -> None:
+    """El almacén abierto da sus traducciones vigentes (una función: las lee al pedirlas)."""
+    global _TRADUCCIONES
+    _TRADUCCIONES = traducciones
+
+
+def huella_texto(texto: str) -> str:
+    """La clave de una cita en la tabla traducciones (la de exportacion/citas.huella_texto)."""
+    return hashlib.sha256(" ".join(texto.split()).encode("utf-8")).hexdigest()
+
+
+def en_otra_lengua(fuente: Documento) -> bool:
+    """La frase de la fuente no está en inglés (lo dice su idioma; sin idioma, como antes)."""
+    idioma = str(fuente.get("idioma") or "").strip().lower()
+    return bool(idioma) and idioma != "en"
+
+
+def traduccion_inglesa(fuente: Documento) -> str | None:
+    """La traducción inglesa de la frase de la fuente: la publicada junto a ella o la guardada en
+    la tabla traducciones; None si aún no la hay."""
+    publicada = fuente.get("traduccion")
+    if isinstance(publicada, dict) and str(publicada.get("en") or "").strip():
+        return str(publicada["en"])
+    frase = str(fuente.get("frase_origen") or "")
+    if not frase.strip():
+        return None
+    guardada = _TRADUCCIONES().get(huella_texto(frase)) or {}
+    return str(guardada["en"]) if str(guardada.get("en") or "").strip() else None
+
+
+# En la traducción, el dron sin identificar sigue siendo un dron («as a result of the observation
+# of an unidentified drone», la traducción de «ca urmare a observării unei drone neidentificate»
+# del IGSU, EODI-2026-01000): lo que no se sabe es de quién es, no si era un dron.
+_SIN_IDENTIFICAR_DRON = re.compile(r"^unidentified$", re.IGNORECASE)
+# Ni lo posible que es otra cosa: «It has not yet been possible to determine who it belonged to»
+# (la traducción de lo que dijo la policía lituana en EODI-2025-00034): posible es averiguar de
+# quién era el dron, no el dron.
+_POSIBLE_HACER = re.compile(r"^\s+(?:to|for\s+\w+\s+to)\s", re.IGNORECASE)
+
+
+def reserva_en_ingles(texto: str) -> bool:
+    """La traducción inglesa deja el dron con reserva: lo deja abierto («possible», «suspected»,
+    «not confirmed»), o lo nombra solo como aviso, sospecha, respuesta, amenaza o capacidad
+    (`drones_afirmados`). Que la traducción no nombre el dron con una palabra que la regla conozca
+    («unmanned aerial vehicles»), o lo niegue («not a Russian drone, but a training machine»,
+    EODI-2026-00648), no es una reserva: eso lo decide la frase original."""
+    for duda in ABIERTO.finditer(texto):
+        if _SIN_IDENTIFICAR_DRON.match(duda.group(0)) and habla_de_drones(
+            texto[duda.end() : duda.end() + 30]
+        ):
+            continue
+        despues = texto[duda.end() : duda.end() + 40]
+        if _POSIBLE_HACER.match(despues):
+            continue
+        if not any(r.search(despues) for r in (_INFRACCION, _AUTOR, _PROCEDENCIA)):
+            return True
+    limpia = _DRON_NEGADO.sub(" ", texto)
+    return habla_de_drones(limpia) and not drones_afirmados(texto)
+
+
+def espera_traduccion(fuente: Documento) -> bool:
+    """Una frase en otra lengua que afirmaría el dron y aún no tiene traducción inglesa."""
+    return (
+        en_otra_lengua(fuente)
+        and atribuye_dron(str(fuente.get("frase_origen") or ""))
+        and traduccion_inglesa(fuente) is None
+    )
+
+
+def afirma_el_dron(fuente: Documento) -> bool:
+    """La frase de la fuente atribuye lo que pasó a un dron (`atribuye_dron`) en cualquier lengua:
+    la original lo afirma y, si no está en inglés, también su traducción inglesa
+    (`reserva_en_ingles`). Avisos, sospechas, respuestas, lo posible y lo que cuenta la prensa
+    no confirman un dron en ninguna lengua."""
+    if not atribuye_dron(str(fuente.get("frase_origen") or "")):
+        return False
+    if not en_otra_lengua(fuente):
+        return True
+    traducida = traduccion_inglesa(fuente)
+    return traducida is not None and not reserva_en_ingles(traducida)
 
 
 def confirma_dron(declaracion: dict[str, Any], contexto: str = "") -> bool:
