@@ -351,6 +351,103 @@ button[aria-pressed="true"] {
   cursor: pointer;
 }
 
+/* Ventana de los avisos del observatorio (public/anuncio.js, datos en public/anuncios.json). Abajo,
+   en una esquina y sin fondo que bloquee: el mapa sigue usándose alrededor. Por debajo de los
+   paneles y las hojas del mapa (z-30 y más), que la tapan al abrirse; encima del mapa. En el
+   teléfono, a lo ancho y sobre los créditos del mapa; en el escritorio, a la izquierda, encima de
+   la nota sobre «confirmado». */
+.anuncio {
+  position: fixed;
+  z-index: 25;
+  left: max(0.75rem, env(safe-area-inset-left));
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: calc(2rem + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 0.625rem 0.25rem 0.625rem 0.875rem;
+  border: 1px solid var(--color-linea);
+  border-left: 3px solid var(--color-notificado);
+  border-radius: var(--radius-md);
+  background-color: var(--color-panel-solido);
+  box-shadow: var(--shadow-panel);
+  color: var(--color-texto);
+  font-family: var(--font-texto);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+@media (min-width: 768px) {
+  .anuncio {
+    right: auto;
+    left: 0.75rem;
+    bottom: 5.5rem;
+    width: 24rem;
+    margin: 0;
+  }
+}
+
+.anuncio-texto {
+  flex: 1;
+  margin: 0;
+}
+
+.anuncio a {
+  color: var(--color-texto);
+  text-decoration: underline;
+  text-decoration-color: var(--acento);
+  text-underline-offset: 3px;
+}
+
+.anuncio a:hover {
+  color: var(--acento);
+}
+
+.anuncio a:focus-visible,
+.anuncio-cerrar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.anuncio-cerrar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-secundario);
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .anuncio-cerrar:hover {
+    color: var(--color-texto);
+    background-color: var(--color-elevado);
+  }
+}
+
+@media (pointer: coarse) {
+  .anuncio-cerrar {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
+@media print {
+  .anuncio {
+    display: none;
+  }
+}
+
 /* El lienzo del mapa hereda el fondo para que no parpadee al cargar. */
 .maplibregl-map {
   font-family: var(--font-texto);
@@ -439,6 +536,18 @@ body.pagina-texto {
    canales en cuadrícula, cada uno con su código QR (se puede imprimir). */
 .texto-pagina .texto-pasos {
   padding-left: 1.5rem;
+}
+
+/* Avisos del observatorio, arriba de la página «Avisos»: cada uno con su ancla (src/anuncios.ts). */
+.texto-pagina .texto-anuncio {
+  margin-block: 1rem 1.5rem;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 3px solid var(--color-notificado);
+  scroll-margin-top: 1rem;
+}
+
+.texto-pagina .texto-anuncio:target {
+  background-color: var(--color-panel-solido);
 }
 
 .texto-pagina .texto-pasos > li::marker {

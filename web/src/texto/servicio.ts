@@ -151,7 +151,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
           {
             parrafo: [
               "Un dato, en el almacenamiento local de tu navegador, con la clave «eodi.ultima-visita»: la fecha y la hora de tu última visita al mapa.",
-              " Si eliges un canal en «Avisos», también se guarda allí, con la clave «eodi.avisos.canal», el último canal elegido, para que aparezca ya seleccionado al volver; el botón de abajo también lo borra.",
+              " Si eliges un canal en «Avisos», también se guarda allí, con la clave «eodi.avisos.canal», el último canal elegido, para que aparezca ya seleccionado al volver; el botón de abajo también lo borra. Si cierras la ventana de un aviso del observatorio, se guarda allí, con la clave «eodi.anuncios.cerrados», el nombre de ese aviso, para que no vuelva a salir; el botón de abajo también lo borra.",
               " Para abrirse rápido y sin conexión, la web (y la app, si la instalas) guarda en la caché del navegador una copia de sus páginas, de su código, de los datos generales del mapa y de las fichas que abras: son los mismos ficheros públicos que se descargan al visitarla, no dicen nada de ti y el botón de abajo también los borra.",
             ],
           },
@@ -404,7 +404,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
           {
             parrafo: [
               "One item, in your browser’s local storage, under the key “eodi.ultima-visita”: the date and time of your last visit to the map.",
-              " If you choose a channel in “Alerts”, the last channel chosen is also stored there, under the key “eodi.avisos.canal”, so that it is already selected when you come back; the button below deletes it too.",
+              " If you choose a channel in “Alerts”, the last channel chosen is also stored there, under the key “eodi.avisos.canal”, so that it is already selected when you come back; the button below deletes it too. If you close the window of an observatory notice, the name of that notice is stored there, under the key “eodi.anuncios.cerrados”, so that it does not show again; the button below deletes it too.",
               " To open quickly and offline, the site (and the app, if you install it) keeps in the browser cache a copy of its pages, its code, the general map data and the records you open: they are the same public files downloaded when you visit it, they say nothing about you and the button below deletes them too.",
             ],
           },

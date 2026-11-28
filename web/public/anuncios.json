@@ -1,0 +1,38 @@
+{
+  "anuncios": [
+    {
+      "id": "paron-2026-11-27",
+      "fecha": "2026-11-28",
+      "titulo": {
+        "es": "Parón en la publicación de sucesos del 27 al 28 de noviembre de 2026",
+        "en": "Pause in incident publication from 27 to 28 November 2026"
+      },
+      "parrafos": {
+        "es": [
+          "Entre las 23:17 UTC del 27 de noviembre y las 08:41 UTC del 28 de noviembre de 2026 el observatorio no publicó sucesos nuevos.",
+          "Qué pasó. Un medio de noticias empezó a limitar nuestras consultas y nuestro sistema se quedaba esperando su respuesta. Esa espera bloqueaba el tratamiento de todas las noticias pendientes, no solo las de ese medio. No fue un ataque ni un fallo de la web.",
+          "Qué se retrasó. Las noticias pendientes se procesaron a las 08:17 UTC del 28 de noviembre y se publicaron a las 08:41 UTC. Entre ellas estaba el cierre del aeropuerto de Colonia/Bonn por un posible dron la noche del 27, que se publicó con casi doce horas de retraso. No se perdió ningún dato.",
+          "Qué hemos cambiado. Cada página que consultamos tiene ahora su propio límite de tiempo. Si un medio no responde, se aparta y se vuelve a intentar más tarde, y el resto de noticias sigue adelante. Además, cada fallo queda registrado para detectarlo antes."
+        ],
+        "en": [
+          "Between 23:17 UTC on 27 November and 08:41 UTC on 28 November 2026 the observatory did not publish new incidents.",
+          "What happened. A news outlet began limiting our requests and our system kept waiting for its reply. That wait blocked the processing of all pending news, not only that outlet's. It was not an attack or a fault in the website.",
+          "What was delayed. The pending news was processed at 08:17 UTC on 28 November and published at 08:41 UTC. It included the closure of Cologne Bonn Airport over a possible drone on the night of the 27th, which was published almost twelve hours late. No data was lost.",
+          "What we have changed. Each page we check now has its own time limit. If an outlet does not respond, it is set aside and retried later, and the rest of the news moves on. Every failure is also logged so we can spot it sooner."
+        ]
+      },
+      "ventana": {
+        "desde": "2026-11-28T08:41:00Z",
+        "hasta": "2026-11-29T18:45:00Z",
+        "texto": {
+          "es": "Entre la noche del 27 y la mañana del 28 de noviembre el observatorio estuvo casi diez horas sin publicar sucesos nuevos por un fallo técnico. Ya está resuelto y no se perdió ningún dato. Más información en Avisos.",
+          "en": "Between the night of 27 November and the morning of 28 November the observatory went almost ten hours without publishing new incidents because of a technical fault. It has been fixed and no data was lost. More information in Notices."
+        },
+        "enlace": {
+          "texto": { "es": "Avisos", "en": "Notices" },
+          "ruta": { "es": "/avisos#paron-2026-11-27", "en": "/en/alerts#paron-2026-11-27" }
+        }
+      }
+    }
+  ]
+}
