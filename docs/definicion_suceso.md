@@ -180,6 +180,6 @@ La batería está en `tests/test_definicion_suceso.py`, con las fichas reales
 - **Agrupar artículos en candidatos**, antes de que haya ficha (`proceso/noticias.py`), y enlazar
   una nota oficial a su ficha (`recogida/oficiales.posibles`): deciden a qué candidato o a qué
   ficha va un texto con el sitio y el día, y lo que sale de ahí pasa después por la definición.
-- **La segunda lectura** (`docs/segunda_lectura.md`) no decide nada: marca candidatos.
+- **La segunda lectura** (`docs/segunda_lectura.md`, retirada el 28 de noviembre de 2026) no decidía nada: marcaba candidatos.
 - **Separar sola** una ficha que cuenta dos sucesos: la marca la definición (dos días, dos
   países) y la separa una revisión (`docs/sucesos_mezclados.md`).

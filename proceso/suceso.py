@@ -52,10 +52,9 @@ deshacerla (proceso/incidentes.py, recogida/control_fichas.py, recogida/revisado
 artículos en candidatos antes de que haya ficha (proceso/noticias.py).
 
 También viven aquí, desde el 14 de noviembre de 2026, los comparadores de fichas que estaban en
-otros módulos: `cercanos` y `pares_amplios` (los márgenes amplios de la segunda lectura),
-`dia_de_otro_suceso` y `salida_retrospectiva` (del control de las fichas), `nombran_el_lugar`
-(los titulares posteriores que nombran el sitio de una ficha: las rectificaciones y la segunda
-búsqueda) y `coincidentes` (las fichas con las que encaja un encuentro: proceso/detalle.py).
+otros módulos: `dia_de_otro_suceso` y `salida_retrospectiva` (del control de las fichas),
+`nombran_el_lugar` (los titulares posteriores que nombran el sitio de una ficha: las
+rectificaciones) y `coincidentes` (las fichas con las que encaja un encuentro: proceso/detalle.py).
 
 Quedan fuera, a propósito, otros que comparan pero no deciden sobre dos fichas:
 
@@ -1131,8 +1130,7 @@ def pares_candidatos(
     criterio: Callable[[Documento, Documento], bool] = candidatos,
 ) -> list[tuple[Documento, Documento]]:  # fmt: skip
     """Los pares de candidatos con al menos uno del foco, primero los más cercanos en el
-    tiempo. Con otro `criterio`, los pares que cumplen ese (la segunda lectura, con márgenes más
-    amplios: proceso/segunda_lectura.py)."""
+    tiempo. Con otro `criterio`, los pares que cumplen ese."""
     pares: dict[str, tuple[Documento, Documento]] = {}
     por_pais: dict[str, list[Documento]] = {}
     for d in activos:
@@ -1816,40 +1814,6 @@ def episodios_calculados(incidentes_: list[Documento]) -> list[tuple[str, list[D
 # suceso es la definición.
 
 
-def cercanos(a: Documento, b: Documento, horas: float, km: float) -> bool:
-    """Del mismo país, a `horas` como mucho (el suceso o la primera noticia), a `km` más los
-    radios (sin punto, solo el país), del mismo tipo de sitio y que ninguna revisión separó; sin
-    los que ya compara el control (`candidatos`). Los márgenes amplios de la segunda lectura
-    (proceso/segunda_lectura.py).
-
-    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
-    if a["id"] == b["id"] or a["lugar"]["pais"] != b["lugar"]["pais"]:
-        return False
-    ventana = timedelta(hours=horas)
-    if (
-        abs(instante(a) - instante(b)) > ventana
-        and abs(momento_primera_noticia(a) - momento_primera_noticia(b)) > ventana
-    ):
-        return False
-    if a["lugar"].get("punto") and b["lugar"].get("punto"):
-        radios = float(a["lugar"].get("radio_km", 0)) + float(b["lugar"].get("radio_km", 0))
-        if _distancia_km(a, b) > radios + km:
-            return False
-    return _mismo_tipo_de_sitio(a, b) and not separados(a, b) and not candidatos(a, b)
-
-
-def pares_amplios(activos: list[Documento], horas: float, km: float,
-                  ya_comparados: set[str]) -> list[tuple[Documento, Documento]]:  # fmt: skip
-    """Los pares de posibles duplicados con márgenes más amplios, sin los que el control ya
-    comparó (`ya_comparados`: claves `par:…`).
-
-    Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
-    pares = pares_candidatos(
-        activos, {d["id"] for d in activos}, lambda a, b: cercanos(a, b, horas, km)
-    )
-    return [p for p in pares if clave_par(p[0]["id"], p[1]["id"]) not in ya_comparados]
-
-
 def dia_de_otro_suceso(incidente: Documento, fuente_id: str) -> str | None:
     """El día que esa fuente da al suceso que cuenta, si es otro que el de la ficha (su
     afirmación «inicio»); None si coincide o no lo da. Una nota sobre otro suceso del mismo país
@@ -1943,8 +1907,7 @@ def nombran_el_lugar(incidente: Documento, articulos: list[Documento],
                      dias_desde_el_suceso: int) -> list[Documento]:  # fmt: skip
     """Los artículos posteriores al suceso (desde `dias_desde_el_suceso` días después) que no son
     fuentes del incidente y nombran su lugar en el titular (la selección del barrido de
-    rectificaciones, recogida/rectificaciones.py; la reutiliza la búsqueda de declaraciones de la
-    segunda lectura).
+    rectificaciones, recogida/rectificaciones.py).
 
     Desde el 14 de noviembre de 2026 vive en la definición de suceso."""
     inicio = datetime.fromisoformat(incidente["tiempo"]["inicio"]["valor"].replace("Z", "+00:00"))

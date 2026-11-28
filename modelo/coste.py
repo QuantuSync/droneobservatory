@@ -62,10 +62,11 @@ solo con el experto y con su cupo propio: no cuenta contra el tope diario del ex
 reserva crítica, ni contra el control; sí dentro de su parte del mes (90 de los 150). Lo que no
 cabe espera a la recogida siguiente, sin publicarse.
 
-La segunda lectura (docs/segunda_lectura.md) usa un servicio secundario gratuito; lo único que
-cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,30 dólares al
-día (LIMITE_SEGUNDA_EXPERTO_DIARIO_USD), dentro del tope normal del experto y nunca de la reserva
-crítica. Lo que no cabe espera al día siguiente.
+La segunda lectura (docs/segunda_lectura.md) está retirada desde el 28 de noviembre de 2026. Sus
+modos («segunda_lectura» y «segunda_busqueda») se quedan para lo que ya dejó en las colas (las
+rectificaciones que marcó, los candidatos que esperan al experto con su cupo) y para el historial
+del gasto: como mucho 0,30 dólares al día (LIMITE_SEGUNDA_EXPERTO_DIARIO_USD), dentro del tope
+normal del experto y nunca de la reserva crítica.
 
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se

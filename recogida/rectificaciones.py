@@ -12,10 +12,9 @@ decide (docs/rectificaciones.md):
 - **Una vez al mes**: los titulares guardados de después de cada incidente con la presencia
   confirmada de más de un mes que nombran su lugar y suenan a rectificación; el modelo base dice
   cuáles merecen la pregunta, con un tope de `TOPE_MENSUAL_USD` por pasada.
-- **Cada día, desde la segunda lectura** (docs/segunda_lectura.md): lo mismo sobre todo lo
-  publicado con la presencia confirmada, no confirmada o no acreditada de al menos un día, con el
-  modelo secundario. Lo que elige entra en la misma cola que lo de la búsqueda mensual (`encolar`)
-  y el experto lo paga con el modo «segunda_lectura» (0,30 dólares al día, nunca de la reserva).
+- **Cada día, desde la segunda lectura**, hasta el 28 de noviembre de 2026 (retirada:
+  docs/segunda_lectura.md): lo que eligió y sigue en la cola (origen «segunda_lectura») lo paga
+  el experto con el modo «segunda_lectura» (0,30 dólares al día, nunca de la reserva).
 
 Todo pasa por el experto antes de cambiar nada (nunca se rebaja una presencia sin él): sin experto
 configurado, o con su tope del día agotado, se espera a la recogida siguiente y la ficha sigue como
@@ -63,7 +62,7 @@ DIAS_DESDE_EL_SUCESO = 1
 DIAS_MENSUAL = 30
 TOPE_MENSUAL_USD = 0.30
 MOTIVO_ESCALADO = "publicada: rectificación oficial de la presencia"
-# Lo que entra en la cola desde el barrido diario de la segunda lectura.
+# Lo que entró en la cola desde el barrido diario de la segunda lectura (retirada el 28/11/2026).
 ORIGEN_SEGUNDA = "segunda_lectura"
 # Lo que desmiente una autoridad en una ficha atribuida por otra, desde la verificación de las
 # fichas (recogida/control_fichas.py): lo paga el modo de las rectificaciones.

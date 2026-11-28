@@ -51,7 +51,7 @@ def test_una_revision_de_distintos_impide_la_union_y_la_deja_como_propuesta(
     assert propuestas[f"par:{VIEJO}|{NUEVO}"]["une"] == NUEVO
 
 
-def test_la_revision_vale_para_el_control_el_filtro_y_la_segunda_lectura(
+def test_la_revision_vale_para_el_control_y_el_filtro(
     revisados_distintos: None,
 ) -> None:
     viejo, nuevo = _nuremberg_alemana(), _nuremberg_griega()

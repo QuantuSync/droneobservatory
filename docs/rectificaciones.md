@@ -148,7 +148,7 @@ seguridad llega a 0,7 y, si la rectificación estaba revisada a mano, el tipo co
    pasada** con el modelo base (modo `rectificaciones` de `modelo/coste.py`); la pasada que no
    termina por el tope o por el tiempo se repite en la recogida siguiente.
 
-4. **Cada día, desde la segunda lectura** (desde el 18 de octubre de 2026,
+4. **Cada día, desde la segunda lectura** (del 18 de octubre al 28 de noviembre de 2026, retirada;
    [`docs/segunda_lectura.md`](segunda_lectura.md)): la misma selección de titulares que el punto 3,
    pero sobre todos los incidentes publicados con la presencia confirmada, no confirmada o no
    acreditada y al menos un día de antigüedad, con el servicio secundario de modelos (gratuito).
