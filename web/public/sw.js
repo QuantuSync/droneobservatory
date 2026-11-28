@@ -59,8 +59,8 @@ const ESTATICOS_SUELTOS = [
   "/favicon.svg",
   "/apple-touch-icon.png",
 ];
-/** Scripts sin huella de public/: primero de la red, como los datos. */
-const SCRIPTS_SIN_HUELLA = ["/arranque.js", "/visitas.js", "/borrar-visita.js"];
+/** Scripts sin huella de public/ y los datos de sus avisos: primero de la red, como los datos. */
+const SCRIPTS_SIN_HUELLA = ["/arranque.js", "/visitas.js", "/borrar-visita.js", "/anuncio.js", "/anuncios.json"];
 
 /**
  * Una navegación a un fichero (una descarga de /datos/, /sitemap.xml, /llms.txt, una imagen) no es

@@ -7,6 +7,8 @@
 
 import { RUTAS_AVISOS, TEXTO_AVISOS, TIENDAS, canales, enlaceAndroid, enlaceWeb, rutaQr } from "../avisos.ts";
 import type { Canal, Dispositivo } from "../avisos.ts";
+import { ANUNCIOS, fallosDeAnuncios, fechaDeAnuncio } from "../anuncios.ts";
+import type { Anuncio } from "../anuncios.ts";
 import { NOMBRE } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { e, html } from "./html.ts";
@@ -122,6 +124,35 @@ function canal(c: Canal, idioma: Idioma): Html {
   );
 }
 
+/** El título de la lista de avisos del observatorio, arriba de la página. */
+export const TITULO_ANUNCIOS: Record<Idioma, string> = { es: "Avisos del observatorio", en: "Observatory notices" };
+
+/** Un aviso del observatorio entero, con su ancla (#<id>), su fecha y sus párrafos tal cual. */
+function anuncio(a: Anuncio, idioma: Idioma): Html {
+  return e(
+    "article",
+    { class: "texto-anuncio", id: a.id },
+    e("h3", null, a.titulo[idioma]),
+    e("p", { class: "texto-nota" }, e("time", { datetime: a.fecha }, fechaDeAnuncio(a.fecha))),
+    a.parrafos[idioma].map((p) => e("p", null, p)),
+  );
+}
+
+/** Los avisos del observatorio (public/anuncios.json), el más reciente primero; nada si no hay. */
+function anuncios(idioma: Idioma, lista: readonly Anuncio[]): Html | null {
+  const fallos = fallosDeAnuncios(lista);
+  if (fallos.length > 0) throw new Error(`public/anuncios.json: ${fallos.join("; ")}`);
+  if (lista.length === 0) return null;
+  return e("section", { id: "avisos-del-observatorio" }, e("h2", null, TITULO_ANUNCIOS[idioma]), lista.map((a) => anuncio(a, idioma)));
+}
+
+/** La fecha de revisión de la página: la suya o la del aviso más reciente, la que sea posterior. */
+export function revisionAvisos(lista: readonly Anuncio[]): string {
+  const ultimo = lista[0]?.fecha;
+  const deAnuncio = ultimo === undefined ? "" : `${ultimo}T00:00:00Z`;
+  return deAnuncio > REVISION_AVISOS ? deAnuncio : REVISION_AVISOS;
+}
+
 export interface PaginaAvisos {
   idioma: Idioma;
   rutas: Record<Idioma, string>;
@@ -131,7 +162,7 @@ export interface PaginaAvisos {
   modificada: string;
 }
 
-export function paginaAvisos(idioma: Idioma): PaginaAvisos {
+export function paginaAvisos(idioma: Idioma, delObservatorio: readonly Anuncio[] = ANUNCIOS): PaginaAvisos {
   const t = TEXTO_AVISOS[idioma];
   const lista = canales(idioma);
   const europa = lista[0];
@@ -143,6 +174,7 @@ export function paginaAvisos(idioma: Idioma): PaginaAvisos {
     descripcion: t.descripcion,
     cuerpo: html(
       e("h1", null, t.titulo),
+      anuncios(idioma, delObservatorio),
       pasos(idioma, europa),
       detalle(idioma),
       e("section", { id: "que-se-avisa" }, e("h2", null, t.queSeAvisa), e("ul", null, t.avisa.map((a) => e("li", null, a))), e("p", null, t.queNo)),
@@ -154,6 +186,6 @@ export function paginaAvisos(idioma: Idioma): PaginaAvisos {
         e("ul", { class: "texto-canales" }, lista.map((c) => canal(c, idioma))),
       ),
     ),
-    modificada: REVISION_AVISOS,
+    modificada: revisionAvisos(delObservatorio),
   };
 }

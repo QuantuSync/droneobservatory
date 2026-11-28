@@ -123,6 +123,8 @@ export function paginaConMapa(plantilla: string, pagina: PaginaTexto, actualizad
 
 /** El contador de visitas propio (public/visitas.js), en todas las páginas. */
 export const CONTADOR_DE_VISITAS = "/visitas.js";
+/** La ventana de los avisos del observatorio (public/anuncio.js), en todas las páginas. */
+export const VENTANA_DE_AVISOS = "/anuncio.js";
 
 /** Página solo de texto: la misma cabecera y la misma hoja de estilos, sin la aplicación. */
 export function paginaSoloTexto(plantilla: string, pagina: PaginaTexto, actualizado: string): string {
@@ -132,9 +134,9 @@ export function paginaSoloTexto(plantilla: string, pagina: PaginaTexto, actualiz
     .slice(0, finCabecera)
     .replace(/<script\b[^>]*\bsrc="[^"]*"[^>]*><\/script>/g, "")
     .replace(/<link rel="modulepreload"[^>]*>/g, "");
-  // Solo los scripts propios: el contador de visitas (interno: visitas) y los que pide la página
-  // (el botón de privacidad), nunca la aplicación.
-  const scripts = [CONTADOR_DE_VISITAS, ...(pagina.scripts ?? [])]
+  // Solo los scripts propios: el contador de visitas (interno: visitas), la ventana de los avisos y
+  // los que pide la página (el botón de privacidad), nunca la aplicación.
+  const scripts = [CONTADOR_DE_VISITAS, VENTANA_DE_AVISOS, ...(pagina.scripts ?? [])]
     .map((ruta) => `<script src="${ruta}" defer></script>`)
     .join("");
   return `${cabecera}${scripts}</head>\n  <body class="pagina-texto">${bloqueDeTexto(pagina, actualizado)}</body>\n</html>\n`;

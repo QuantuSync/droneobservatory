@@ -274,15 +274,37 @@ async function enrutar(ruta: Route): Promise<void> {
   else await servir(ruta);
 }
 
+/**
+ * La ventana de los avisos del observatorio (public/anuncio.js) sale en todas las páginas mientras
+ * un aviso está vigente: en los recorridos se apaga (eodi.anuncios.ninguno) para que no tape lo que
+ * se toca. La prueban las pruebas con test.use({ anuncios: true }) (e2e/anuncio-recorridos.spec.ts):
+ * su contexto lleva después otro script que quita la clave (los del contexto van en el orden en que
+ * se ponen).
+ */
+const sinAnuncios = new WeakSet<BrowserContext>();
+async function apagarAnuncios(contexto: BrowserContext): Promise<void> {
+  if (sinAnuncios.has(contexto)) return;
+  sinAnuncios.add(contexto);
+  await contexto.addInitScript(() => {
+    try {
+      window.localStorage.setItem("eodi.anuncios.ninguno", "1");
+    } catch {
+      // Sin almacenamiento local (about:blank): no hay ventana que apagar.
+    }
+  });
+}
+
 async function instalar(contexto: BrowserContext): Promise<void> {
+  await apagarAnuncios(contexto);
   contar(contexto);
   if (sinRuta || instalados.has(contexto)) return;
   instalados.add(contexto);
   await contexto.route((url) => trozoDe(url.href, "bytes=0-0") !== null || fijoDe(url.href, SITIO) !== null, enrutar);
 }
 
-export const test = base.extend<{ teselasReales: boolean; _teselas: undefined }, { _cacheTeselas: undefined }>({
+export const test = base.extend<{ teselasReales: boolean; anuncios: boolean; _teselas: undefined }, { _cacheTeselas: undefined }>({
   teselasReales: [false, { option: true }],
+  anuncios: [false, { option: true }],
   // Una vez por proceso: recortar la caché y poner la ruta también en los contextos que las
   // pruebas abren por su cuenta (browser.newContext).
   _cacheTeselas: [
@@ -321,9 +343,18 @@ export const test = base.extend<{ teselasReales: boolean; _teselas: undefined },
     { auto: true },
   ],
   // Después de _teselas, que decide si esta prueba va sin interceptación.
-  context: async ({ context, _teselas: antes }, usar) => {
+  context: async ({ context, _teselas: antes, anuncios }, usar) => {
     void antes;
     await instalar(context);
+    if (anuncios) {
+      await context.addInitScript(() => {
+        try {
+          window.localStorage.removeItem("eodi.anuncios.ninguno");
+        } catch {
+          // Sin almacenamiento local: nada que quitar.
+        }
+      });
+    }
     await usar(context);
   },
 });
