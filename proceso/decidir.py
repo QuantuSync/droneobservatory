@@ -259,6 +259,8 @@ def decidir_presencia(
 
 # La regla de `decidir_presencia` cuando la presencia sería confirmada sin el suceso confirmado.
 SIN_SUCESO_CONFIRMADO = "sin_suceso_confirmado"
+# La de la frase de autoridad en otra lengua que aún no tiene traducción inglesa.
+ESPERA_TRADUCCION = "espera_traduccion"
 
 
 def _presencia_por_sus_pruebas(
@@ -294,16 +296,20 @@ def _presencia_por_sus_pruebas(
     # Lo que la deja abierta impide confirmarla de nuevo, pero no baja la que ya estaba confirmada
     # (`confirmada`, lo guardado): eso lo hacen las rectificaciones y el criterio de presencia.
     for fuente in fuentes if confirmada or not _abierta(incidente, negadas) else []:
-        # Una autoridad lo atribuye a un dron sin dejarlo abierto.
-        if declaraciones.de_autoridad(fuente) and declaraciones.atribuye_dron(
-            str(fuente.get("frase_origen") or "")
-        ):
+        # Una autoridad lo atribuye a un dron sin dejarlo abierto, en cualquier lengua: la frase
+        # en otra lengua, también en su traducción inglesa (declaraciones.afirma_el_dron).
+        if declaraciones.de_autoridad(fuente) and declaraciones.afirma_el_dron(fuente):
             return Decision("confirmada", str(fuente["id"]), "autoridad_atribuye")
     fisicas = set((incidente.get("pruebas") or {}).get("evidencia", [])) & (
         incidentes.PRUEBAS_FISICAS
     )
     if fisicas and incidente["estado"]["actual"] in incidentes.CONFIRMADOS:
         return Decision("confirmada", None, "pruebas_fisicas")
+    # La frase en otra lengua que lo afirmaría espera a su traducción inglesa: el control de las
+    # fichas la pide y, con ella, vuelve a decidir (control_fichas.subida_con_su_traduccion).
+    for fuente in fuentes if confirmada or not _abierta(incidente, negadas) else []:
+        if declaraciones.de_autoridad(fuente) and declaraciones.espera_traduccion(fuente):
+            return Decision("no_confirmada", str(fuente["id"]), ESPERA_TRADUCCION)
     return Decision("no_confirmada", None, "sin_autoridad")
 
 

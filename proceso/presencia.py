@@ -85,8 +85,7 @@ def atribuida_por_autoridad(incidente: Documento) -> bool:
     encontrados») no lo cambia: no encontrar pruebas no demuestra que no hubiera dron. Una
     declaración que no nombra el dron («un objeto misterioso», EODI-2026-00515) no basta."""
     return any(
-        declaraciones.de_autoridad(f)
-        and declaraciones.atribuye_dron(str(f.get("frase_origen") or ""))
+        declaraciones.de_autoridad(f) and declaraciones.afirma_el_dron(f)
         for f in incidente["fuentes"]
     )
 
@@ -633,8 +632,9 @@ def revisar(
         if corregido is None:
             continue
         documento, prevalece = corregido
-        frase = str(prevalece.get("frase_origen") or "")
-        if declaraciones.atribuye_dron(frase) and incidente["id"] not in presencias_revisadas():
+        if declaraciones.afirma_el_dron(prevalece) and incidente["id"] not in (
+            presencias_revisadas()
+        ):
             declaraciones.confirmar_presencia(documento, prevalece["id"], expresa=True)
         documento = titulares.ajustar_incidente(incidentes.aplicar_reglas(documento))
         documento = {**documento, "control": {**documento["control"],
@@ -764,7 +764,7 @@ def con_reserva(incidente: Documento) -> str:
         for f in incidente["fuentes"]
         if declaraciones.de_autoridad(f)
         and declaraciones.habla_del_suceso(str(f.get("frase_origen") or ""))
-        and not declaraciones.atribuye_dron(str(f.get("frase_origen") or ""))
+        and not declaraciones.afirma_el_dron(f)
     )
 
 

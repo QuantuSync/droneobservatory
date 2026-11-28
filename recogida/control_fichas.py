@@ -1455,6 +1455,23 @@ def sin_presencia_sin_suceso(incidente: Documento) -> tuple[Documento, list[str]
     ]
 
 
+def subida_con_su_traduccion(incidente: Documento) -> str | None:
+    """La autoridad que confirma hoy el dron con una frase en otra lengua, en una ficha con la
+    presencia «no_confirmada»: la frase esperaba su traducción inglesa (decidir.ESPERA_TRADUCCION)
+    y ya la tiene, y la traducción también lo afirma (declaraciones.afirma_el_dron). Lo mismo que
+    decidiría el guardado; sin esto, la ficha se quedaba sin confirmar hasta que llegara otra
+    fuente. None si no."""
+    if incidente.get("presencia_dron") != "no_confirmada":
+        return None
+    decision = decidir.decidir_presencia(incidente)
+    if decision.valor != "confirmada" or decision.regla != "autoridad_atribuye":
+        return None
+    fuente = next((f for f in incidente["fuentes"] if f["id"] == decision.fuente_id), None)
+    if fuente is None or not declaraciones.en_otra_lengua(fuente):
+        return None
+    return declaraciones.autoridad_de(fuente)
+
+
 def con_titulo_y_presencia_decididos(incidente: Documento) -> tuple[Documento, list[str]]:
     """El titular y la presencia que decide hoy el guardado (decidir.decidir_presencia y
     decidir.decidir_titulo), en una ficha que nada vuelve a guardar. Cuando cambia la regla del
@@ -1462,11 +1479,19 @@ def con_titulo_y_presencia_decididos(incidente: Documento) -> tuple[Documento, l
     EODI-2025-00095 seguía «por sospecha de dron» con el dron confirmado, y EODI-2026-00862
     confirmada por una frase sobre lo que Bulgaria no puede hacer contra los drones (27/11/2026;
     la auditoría AJ). Solo baja una presencia confirmada (nunca la sube: eso lo decide la
-    recogida con sus fuentes) y el titular se decide con la presencia ya decidida. Devuelve la
-    ficha y los cambios (vacío si no cambia)."""
+    recogida con sus fuentes), salvo la que esperaba la traducción inglesa de una frase de
+    autoridad en otra lengua (`subida_con_su_traduccion`), y el titular se decide con la presencia
+    ya decidida. Devuelve la ficha y los cambios (vacío si no cambia)."""
     motivos = []
     nuevo = incidente
-    if incidente.get("presencia_dron") == "confirmada":
+    subida = subida_con_su_traduccion(incidente)
+    if subida is not None:
+        nuevo = {**nuevo, "presencia_dron": "confirmada"}
+        motivos.append(
+            f"presencia confirmada: la traducción inglesa de la frase de {subida} también afirma "
+            "el dron"
+        )
+    elif incidente.get("presencia_dron") == "confirmada":
         decision = decidir.decidir_presencia(incidente, confirmada=True)
         if decision.valor != "confirmada":
             nuevo = {**nuevo, "presencia_dron": decision.valor}

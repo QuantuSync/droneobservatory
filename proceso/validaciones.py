@@ -289,11 +289,10 @@ def errores_presencia(documento: Documento) -> list[Error]:
         if not f.get("es_autoridad")
     }
     for fuente in fuentes:
-        frase = str(fuente.get("frase_origen", ""))
         if (
             fuente.get("id") in confirmantes
             and declaraciones.de_autoridad(fuente)
-            and declaraciones.atribuye_dron(frase)
+            and declaraciones.afirma_el_dron(fuente)
             and not declaraciones.abierto(contexto.get(fuente.get("enlace"), ""))
         ):
             return [Error("presencia_dron", f"la fuente oficial {fuente.get('id')} atribuye el "

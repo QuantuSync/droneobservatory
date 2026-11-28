@@ -4945,9 +4945,14 @@
         "localidad": "Brønnøysund",
         "nivel": "localidad"
       },
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Vi har også gjort observasjon en drone, men vi har ikke funnet den eller den eller de som styrer den",
+        "enlace": "https://www.vg.no/nyheter/i/dR6WQ1/broennoeysunds-avis-nye-meldinger-til-politiet-om-droner-naer-broennoeysund-lufthavn"
+      },
       "motivo": {
-        "es": "Ninguna fuente habla de Geilenkirchen: todas tratan del aeropuerto de Brønnøysund (Noruega) la noche del 30-09-2025. El desvío de un vuelo de Widerøe fue el domingo anterior, otro suceso.",
-        "en": "No source mentions Geilenkirchen: all are about Brønnøysund airport (Norway) on the night of 30-09-2025. The diversion of a Widerøe flight happened the previous Sunday, a different event."
+        "es": "Ninguna fuente habla de Geilenkirchen: todas tratan del aeropuerto de Brønnøysund (Noruega) la noche del 30-09-2025. El desvío de un vuelo de Widerøe fue el domingo anterior, otro suceso. La presencia la confirma la policía de Nordland: «Vi har også gjort observasjon en drone, men vi har ikke funnet den eller den eller de som styrer den» («también hemos observado un dron, pero no lo hemos encontrado ni a quien lo maneja»), el jefe de operaciones Kai Eriksen a VG; la frase que la sostenía, «Primili smo prijave o dronu u vazduhu» (novosti.rs), solo cuenta los avisos que recibió (revisado el 28 de noviembre de 2026).",
+        "en": "No source mentions Geilenkirchen: all are about Brønnøysund airport (Norway) on the night of 30-09-2025. The diversion of a Widerøe flight happened the previous Sunday, a different event. The presence is confirmed by Nordland police: «Vi har også gjort observasjon en drone, men vi har ikke funnet den eller den eller de som styrer den» («we have also observed a drone, but we have not found it or whoever is operating it»), operations manager Kai Eriksen to VG; the sentence that supported it, «Primili smo prijave o dronu u vazduhu» (novosti.rs), only tells of the reports it received (reviewed on 28 November 2026)."
       }
     },
     {
@@ -6315,6 +6320,38 @@
       "motivo": {
         "es": "Comprobado contra sus fuentes el 27 de noviembre de 2026: «Two Russian missiles and a Russian drone have fallen in Poland», el ministro de Defensa Władysław Kosiniak-Kamysz (sofiaglobe.com); la gobernadora de Subcarpacia habló de un misil de crucero y dos drones (news.yam.md). El titular automático decía «posible» en español y «por drones» sin los misiles.",
         "en": "Checked against its sources on 27 November 2026: «Two Russian missiles and a Russian drone have fallen in Poland», Defence Minister Władysław Kosiniak-Kamysz (sofiaglobe.com); the Subcarpathian governor spoke of a cruise missile and two drones (news.yam.md). The automatic headline said «possible» in Spanish and «by drones» without the missiles."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00040",
+      "titulo": {
+        "es": "Dron sobrevuela la central nuclear de Loviisa en zona prohibida",
+        "en": "Drone flies over Loviisa nuclear power plant in restricted airspace"
+      },
+      "presencia": {
+        "valor": "confirmada",
+        "cita": "Lennättäjää puhutettaessa kävi ilmi, ettei lennon tarkoitus ollut kohdistunut ydinvoimalaitokseen, ja käsityksemme mukaan siitä ei myöskään aiheutunut vaaraa ydinvoimalaitokselle",
+        "enlace": "https://is.fi/kotimaa/art-2000012278007.html"
+      },
+      "motivo": {
+        "es": "La policía de Itä-Uusimaa encontró el dron y a quien lo volaba («Myöhemmin päivällä poliisi löysi droonin ja sen lennättäjän alueelta») y lo cuenta ella misma: «Lennättäjää puhutettaessa kävi ilmi, ettei lennon tarkoitus ollut kohdistunut ydinvoimalaitokseen» («al hablar con el piloto se vio que el vuelo no iba dirigido a la central») y «kyse oli droneharrastajasta» («era un aficionado a los drones»), is.fi. La frase que la sostenía, «sai … ilmoituksen droonista» («recibió un aviso de un dron»), solo cuenta el aviso (revisado el 28 de noviembre de 2026).",
+        "en": "Itä-Uusimaa police found the drone and the person flying it («Myöhemmin päivällä poliisi löysi droonin ja sen lennättäjän alueelta») and say so themselves: «Lennättäjää puhutettaessa kävi ilmi, ettei lennon tarkoitus ollut kohdistunut ydinvoimalaitokseen» («when the pilot was questioned it emerged that the flight was not aimed at the plant») and «kyse oli droneharrastajasta» («it was a drone hobbyist»), is.fi. The sentence that supported it, «sai … ilmoituksen droonista» («received a report of a drone»), only tells of the report (reviewed on 28 November 2026)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-01027",
+      "titulo": {
+        "es": "Un posible dron paraliza durante dos horas y media el aeropuerto de Colonia/Bonn",
+        "en": "Possible drone halts air traffic at Cologne Bonn Airport for two and a half hours"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Wie eine Flughafensprecherin mitteilte, wurde das Objekt am Freitagabend um kurz vor 22.00 Uhr am Himmel über dem Gelände entdeckt.",
+        "enlace": "https://www.ariva.de/news/flugbetrieb-in-koeln-bonn-nach-drohnensichtung-gestoppt-12223374"
+      },
+      "motivo": {
+        "es": "El aeropuerto no dice que fuera un dron. En la nota original de la dpa (dpa-AFX, 28/11/2026) la portavoz habla de «el objeto»: «Wie eine Flughafensprecherin mitteilte, wurde das Objekt am Freitagabend um kurz vor 22.00 Uhr am Himmel über dem Gelände entdeckt.», y el aeropuerto dijo después a aeroTELEGRAPH que la DFS le había avisado de «Verdacht einer Drohnensichtung» («sospecha de que se había visto un dron»). La frase que la confirmó, «помітили невідомий дрон» (dw.com en ucraniano), es el resumen del periódico, no lo que dijo el aeropuerto; la cita del portavoz en inglés dice lo mismo que la dpa: «The object was spotted» (bgnes.com). Revisado el 28 de noviembre de 2026.",
+        "en": "The airport does not say it was a drone. In the original dpa report (dpa-AFX, 28/11/2026) the spokeswoman speaks of «the object»: «Wie eine Flughafensprecherin mitteilte, wurde das Objekt am Freitagabend um kurz vor 22.00 Uhr am Himmel über dem Gelände entdeckt.», and the airport later told aeroTELEGRAPH that DFS had informed it of «Verdacht einer Drohnensichtung» («suspicion that a drone had been sighted»). The sentence that confirmed it, «помітили невідомий дрон» (dw.com in Ukrainian), is the outlet's summary, not what the airport said; the spokesperson's quote in English says the same as dpa: «The object was spotted» (bgnes.com). Reviewed on 28 November 2026."
       }
     }
   ],

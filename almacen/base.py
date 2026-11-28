@@ -530,9 +530,13 @@ class Almacen:
                 "AND json_extract(documento, '$.retirado') IS NULL"
             )
         }
-        from proceso import decidir
+        from proceso import decidir, declaraciones
 
         decidir.fijar_fusiones(self._fundido_en)
+        # Las traducciones guardadas: la frase de autoridad en otra lengua solo confirma el dron si
+        # su traducción inglesa también lo afirma (proceso/declaraciones.afirma_el_dron).
+        self._traducciones_leidas: dict[str, Documento] | None = None
+        declaraciones.fijar_traducciones(self._traducciones_vigentes)
 
     @classmethod
     def abrir(cls, ruta: Path | str = ":memory:") -> "Almacen":
@@ -1431,6 +1435,12 @@ class Almacen:
                 resultado[huella] = traduccion
         return resultado
 
+    def _traducciones_vigentes(self) -> dict[str, Documento]:
+        """`traducciones`, leídas una vez hasta que se guarda una nueva."""
+        if self._traducciones_leidas is None:
+            self._traducciones_leidas = self.traducciones()
+        return self._traducciones_leidas
+
     def guardar_traducciones(self, traducciones: dict[str, Documento], fecha: str) -> int:
         """Guarda las traducciones nuevas (una cita traducida no cambia; si la guardada no vale,
         la nueva va en otra fila); devuelve cuántas."""
@@ -1455,6 +1465,8 @@ class Almacen:
                     (clave, fecha, _json(documento)),
                 )
                 nuevas += cursor.rowcount
+        if nuevas:
+            self._traducciones_leidas = None
         return nuevas
 
     def previsiones(self) -> list[Documento]:
