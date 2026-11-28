@@ -19,9 +19,10 @@ import argparse
 import logging
 import random
 import sys
+import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -36,7 +37,7 @@ from modelo import coste, ficha, paginas
 from proceso import extraccion, incidentes
 from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.noticias import TIPO_APARENTE, nomenclator
-from recogida.descarga import Descargador
+from recogida.descarga import Descargador, transporte_con_tope_total
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("recogida")
@@ -62,6 +63,16 @@ HORA = timedelta(hours=1)
 # del 28 al 30 de septiembre de 2026: como mucho 165 s (29 candidatos). 420 s son dos
 # veces y media; los candidatos que no quepan quedan pendientes para la siguiente.
 TOPE_S = 420.0
+# La descarga de las páginas tiene su propio plazo dentro del del paso (desde el 28 de noviembre de
+# 2026): como mucho TOPE_PREPARACION_S y dejando siempre RESERVA_LLAMADAS_S para las llamadas. Del
+# 28/11 de 01:17 a 07:17 UTC una sola página (newsmonkey.be, un 429 que pedía esperar) se comió el
+# tope entero siete horas seguidas y ningún candidato llegó al modelo.
+TOPE_PREPARACION_S = 180.0
+RESERVA_LLAMADAS_S = 180.0
+# Cada página: dos reintentos como mucho, 20 s por petición (el tiempo de la respuesta entera,
+# no de cada lectura) y su límite total (modelo/paginas.TOPE_PAGINA_S).
+REINTENTOS_PAGINA = 2
+LIMITE_PETICION_PAGINA_S = 20.0
 
 
 @dataclass
@@ -123,11 +134,100 @@ def pendientes(almacen: Almacen, desde: datetime | None = None) -> list[Document
     )
 
 
+@dataclass
+class Preparacion:
+    """Lo que pasó al preparar las peticiones de la ejecución horaria (para el registro y para
+    decir por qué una ejecución acaba sin llamadas)."""
+
+    segundos: float = 0.0
+    paginas: int = 0
+    # «dirección: motivo» de cada página que no se leyó.
+    fallidas: list[str] = field(default_factory=list)
+    # Candidatos apartados en esta ejecución por una página que falló y se reintenta en la
+    # siguiente, con el motivo.
+    apartados: dict[str, str] = field(default_factory=dict)
+    # Candidatos que no se llegaron a preparar porque se acabó el tiempo de la preparación.
+    sin_tiempo: list[str] = field(default_factory=list)
+    motivo_tiempo: str = ""
+
+
+@dataclass
+class _Leida:
+    peticion: extraccion.Peticion
+    fechas: dict[str, datetime]
+    # (dirección, motivo, transitorio) de cada página que no se leyó.
+    fallos: list[tuple[str, str, bool]]
+    leidas: list[str]
+    # El motivo si se acabó el tiempo antes de leer todas sus páginas.
+    sin_tiempo: str = ""
+
+
+# Páginas apartadas: la dirección de cada página que falló con un fallo transitorio y las
+# recogidas en que falló. Su candidato espera a la recogida siguiente (como mucho
+# MAX_RECOGIDAS_APARTADA veces); después va con el titular de esa fuente, como antes.
+PAGINAS_APARTADAS = "paginas_apartadas"
+MAX_RECOGIDAS_APARTADA = 2
+# Una página que tarda esto o más en leerse queda en el registro aunque se lea.
+PAGINA_LENTA_S = 10.0
+
+
+def _reintentos_de(descargador: object) -> int:
+    recuentos = getattr(descargador, "recuentos", None)
+    return int(recuentos.get("reintentos", 0)) if recuentos is not None else 0
+
+
+def _apartar_por_paginas(almacen: Almacen, leida: _Leida, momento: datetime) -> str:
+    """Anota las páginas de un candidato que fallaron con un fallo transitorio (y olvida las que
+    ya se leen). Devuelve el motivo si el candidato espera a la recogida siguiente; vacío si va
+    al modelo (sin fallos transitorios, o con una página que ya falló en MAX_RECOGIDAS_APARTADA
+    recogidas: entonces va con su titular)."""
+    documento = almacen.cursor(PAGINAS_APARTADAS) or {}
+    if not isinstance(documento, dict):
+        documento = {}
+    fecha = momento.strftime("%Y-%m-%dT%H:%M:%SZ")
+    corte = (momento - VENTANA_HORARIA).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cambiado = False
+    for url in leida.leidas:
+        cambiado |= documento.pop(url, None) is not None
+    for url in [u for u, e in documento.items() if max(e.get("recogidas") or [""]) < corte]:
+        documento.pop(url)
+        cambiado = True
+    candidato_id = leida.peticion.candidato["id"]
+    motivo = ""
+    for url, fallo, transitorio in leida.fallos:
+        if not transitorio:
+            continue
+        entrada = documento.setdefault(url, {"recogidas": []})
+        anteriores = [r for r in entrada["recogidas"] if r != fecha]
+        if len(anteriores) >= MAX_RECOGIDAS_APARTADA:
+            registro.warning(
+                "candidato %s: la página %s sigue sin leerse tras %d recogidas; va con el "
+                "titular de esa fuente", candidato_id, url, len(anteriores) + 1,
+            )  # fmt: skip
+            continue
+        if fecha not in entrada["recogidas"]:
+            entrada["recogidas"].append(fecha)
+            entrada["motivo"] = fallo[:300]
+            cambiado = True
+        if not motivo:
+            motivo = (
+                f"la página {url} no se leyó ({fallo[:200]}); se reintenta en la recogida "
+                f"siguiente (vez {len(anteriores) + 1} de {MAX_RECOGIDAS_APARTADA})"
+            )
+    if cambiado:
+        almacen.guardar_cursor(PAGINAS_APARTADAS, documento)
+    if motivo:
+        registro.warning("candidato %s apartado en esta recogida: %s", candidato_id, motivo)
+    return motivo
+
+
 def preparar_todas(
     almacen: Almacen,
     candidatos: list[Documento],
     descargador: Callable[[], Descargador],
     ahora: datetime | None = None,
+    informe: Preparacion | None = None,
+    tope_pagina_s: float = paginas.TOPE_PAGINA_S,
 ) -> list[extraccion.Peticion]:
     """Peticiones con las páginas descargadas en paralelo; el orden se conserva.
 
@@ -136,6 +236,14 @@ def preparar_todas(
     es la pista de la fuente (la frase de un artículo dirigido, el texto de una nota oficial sin
     ficha): va delante de la página descargada. Hasta el 19 de noviembre de 2026 la página la
     sustituía y la nota del MApN del 17/11 llegaba al extractor sin su texto.
+
+    Cada página tiene su límite (`tope_pagina_s`, con sus reintentos y esperas) y cada una que
+    falla, se reintenta o tarda queda en el registro con su dirección y lo que tardó. Con
+    `informe` (la ejecución horaria, desde el 28 de noviembre de 2026): un candidato con una página
+    que falló con un fallo transitorio espera a la recogida siguiente (_apartar_por_paginas) y uno
+    que no se llegó a preparar porque se acabó el tiempo queda pendiente; los demás siguen y llegan
+    al modelo. Antes, el primer TiempoAgotado de cualquier página tiraba la preparación entera y
+    ningún candidato llegaba al modelo. Sin `informe`, un TiempoAgotado sale como siempre.
     """
     momento = ahora or datetime.now(UTC)
     sin_texto = []
@@ -158,36 +266,79 @@ def preparar_todas(
         extraccion.anotar_sin_idioma(almacen, vacias, momento)
     sin_texto = [p for p in sin_texto if p.enviadas]
 
-    def con_texto(
-        peticion: extraccion.Peticion,
-    ) -> tuple[extraccion.Peticion, dict[str, datetime]]:
+    def con_texto(peticion: extraccion.Peticion) -> _Leida:
         propio = descargador()
         fuentes = []
         fechas: dict[str, datetime] = {}
+        fallos: list[tuple[str, str, bool]] = []
+        leidas: list[str] = []
         for f, url in zip(peticion.fuentes, peticion.enviadas, strict=True):
+            inicio = time.monotonic()
+            antes = _reintentos_de(propio)
             try:
                 # El principio, para el paso 1, y la nota, para el paso 2 (modelo/detalles.py).
-                pagina = paginas.leer_pagina(propio, url, con_nota=True)
-                texto, nota = pagina.texto, pagina.nota
-                if pagina.fecha is not None:
-                    fechas[url] = pagina.fecha
-            except TiempoAgotado:
-                raise
+                pagina = paginas.leer_pagina(propio, url, con_nota=True, tope_s=tope_pagina_s)
+            except TiempoAgotado as error:
+                registro.info(
+                    "página %s: sin tiempo para leerla tras %.1f s (%s); el candidato %s queda "
+                    "para la ejecución siguiente",
+                    url, time.monotonic() - inicio, error, peticion.candidato["id"],
+                )  # fmt: skip
+                return _Leida(peticion, fechas, fallos, leidas, str(error))
             except Exception as error:
+                pagina = paginas.Pagina("", fallo=f"{url}: {error!r}")
+            segundos = time.monotonic() - inicio
+            hechos = _reintentos_de(propio) - antes
+            if pagina.fallo:
                 # Sin la página, el titular basta para esa fuente.
-                registro.warning("página sin leer (%s): %r", url, error)
-                texto = nota = ""
+                registro.warning(
+                    "página sin leer en %.1f s tras %d reintentos: %s",
+                    segundos, hechos, pagina.fallo,
+                )  # fmt: skip
+                fallos.append((url, pagina.fallo, pagina.transitorio))
+            else:
+                leidas.append(url)
+                if hechos:
+                    registro.info(
+                        "página %s leída tras %d reintentos en %.1f s", url, hechos, segundos
+                    )
+                elif segundos >= PAGINA_LENTA_S:
+                    registro.info("página %s lenta: leída en %.1f s", url, segundos)
+            if pagina.fecha is not None:
+                fechas[url] = pagina.fecha
+            texto, nota = pagina.texto, pagina.nota
             fuentes.append(replace(
                 f, texto=extraccion.con_pista(f.texto, texto),
                 nota=extraccion.con_pista(f.texto, nota) if nota else "",
             ))  # fmt: skip
-        return replace(peticion, fuentes=fuentes), fechas
+        return _Leida(replace(peticion, fuentes=fuentes), fechas, fallos, leidas)
 
+    inicio = time.monotonic()
     with ThreadPoolExecutor(HILOS) as hilos:
         leidas = list(hilos.map(con_texto, sin_texto))
-    # La fecha que da la propia página corrige la de GDELT en este hilo, el único que escribe en
-    # la base (extraccion.con_fechas_de_pagina).
-    return [extraccion.con_fechas_de_pagina(almacen, p, fechas, momento) for p, fechas in leidas]
+    preparadas = []
+    for leida in leidas:
+        candidato_id = leida.peticion.candidato["id"]
+        if informe is not None:
+            informe.paginas += len(leida.leidas) + len(leida.fallos)
+            informe.fallidas += [f for _, f, _ in leida.fallos]
+        if leida.sin_tiempo:
+            if informe is None:
+                raise TiempoAgotado(leida.sin_tiempo)
+            informe.sin_tiempo.append(candidato_id)
+            informe.motivo_tiempo = leida.sin_tiempo
+            continue
+        if informe is not None and (motivo := _apartar_por_paginas(almacen, leida, momento)):
+            informe.apartados[candidato_id] = motivo
+            continue
+        # La fecha que da la propia página corrige la de GDELT en este hilo, el único que escribe
+        # en la base (extraccion.con_fechas_de_pagina).
+        preparadas.append(
+            extraccion.con_fechas_de_pagina(almacen, leida.peticion, leida.fechas, momento)
+        )
+    if informe is not None:
+        informe.segundos = time.monotonic() - inicio
+    return preparadas
 
 
 # Fichas antiguas que se rehacen como mucho en cada ejecución horaria: pocas, para no
@@ -317,6 +468,42 @@ def avisar(
     return False
 
 
+def plazo_de_preparacion(plazo: Plazo | None) -> Plazo | None:
+    """El plazo de la descarga de las páginas: como mucho TOPE_PREPARACION_S y siempre dejando
+    RESERVA_LLAMADAS_S del plazo del paso para las llamadas."""
+    if plazo is None:
+        return None
+    return Plazo(max(0.0, min(TOPE_PREPARACION_S, plazo.restante() - RESERVA_LLAMADAS_S)))
+
+
+def por_que_sin_llamadas(
+    informe: Preparacion, extraidas: extraccion.Extraidas, peticiones: list[extraccion.Peticion]
+) -> str:
+    """Por qué una ejecución con candidatos no hizo ninguna llamada, para el registro."""
+    motivos = []
+    if informe.sin_tiempo:
+        motivos.append(
+            f"{len(informe.sin_tiempo)} sin preparar por falta de tiempo ({informe.motivo_tiempo})"
+        )
+    if informe.apartados:
+        primero = next(iter(informe.apartados.items()))
+        motivos.append(
+            f"{len(informe.apartados)} apartados por una página que falló (el primero, "
+            f"{primero[0]}: {primero[1][:200]})"
+        )
+    if extraidas.esperan:
+        motivos.append(f"{len(extraidas.esperan)} esperan al experto")
+    if extraidas.parada is not None and (peticiones or not informe.sin_tiempo):
+        motivos.append(f"parada: {extraidas.parada} ({extraidas.motivo[:200]})")
+    if peticiones and not motivos:
+        motivos.append(f"{len(peticiones)} preparados que esperan al experto o a su turno")
+    if not peticiones and not motivos:
+        motivos.append("ningún candidato quedó preparado")
+    if informe.fallidas:
+        motivos.append(f"páginas sin leer: {'; '.join(f[:160] for f in informe.fallidas[:3])}")
+    return "; ".join(motivos)
+
+
 def horaria(
     almacen: Almacen,
     ahora: datetime,
@@ -326,6 +513,7 @@ def horaria(
 ) -> Resultado:
     """Paso del extractor en la ejecución horaria. Sin configuración no hace nada. Con
     `episodios` falso no calcula los episodios: lo hace quien llama, después del control."""
+    comienzo = time.monotonic()
     try:
         configuracion = servicio.configuracion()
     except servicio.ClienteNoConfigurado as error:
@@ -380,18 +568,43 @@ def horaria(
     ):
         historicos = []
     candidatos = [*nuevos, *historicos]
-    try:
-        peticiones = preparar_todas(almacen, candidatos, lambda: Descargador(plazo=plazo), ahora)
-    except TiempoAgotado as error:
+    eleccion_s = time.monotonic() - comienzo
+    # La preparación tiene su propio plazo, dentro del del paso y dejando siempre tiempo para las
+    # llamadas: ninguna página ni paso previo puede gastar el tope entero. Un candidato que no se
+    # llega a preparar queda pendiente; los preparados van al modelo.
+    preparacion = plazo_de_preparacion(plazo)
+    informe = Preparacion()
+    peticiones = preparar_todas(
+        almacen, candidatos,
+        lambda: Descargador(
+            transporte=transporte_con_tope_total, reintentos=REINTENTOS_PAGINA,
+            limite_s=LIMITE_PETICION_PAGINA_S, plazo=preparacion,
+        ),
+        ahora, informe,
+    )  # fmt: skip
+    registro.info(
+        "extractor: %d candidatos elegidos en %.1f s; %d preparados en %.1f s (páginas=%d "
+        "sin_leer=%d apartados=%d sin_tiempo=%d)",
+        len(candidatos), eleccion_s, len(peticiones), informe.segundos, informe.paginas,
+        len(informe.fallidas), len(informe.apartados), len(informe.sin_tiempo),
+    )  # fmt: skip
+    extraidas = extraccion.extraer(
+        almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO,
+        modelos_base(), plazo,
+    )  # fmt: skip
+    if informe.sin_tiempo and extraidas.parada is None:
         # Sin el texto de las páginas no se llama: solo con titulares la ficha sale peor.
-        extraidas = extraccion.Extraidas().parar(extraccion.Parada.TIEMPO, error)
-    else:
-        extraidas = extraccion.extraer(
-            almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO,
-            modelos_base(), plazo,
-        )  # fmt: skip
+        extraidas.parar(extraccion.Parada.TIEMPO, TiempoAgotado(
+            f"{informe.motivo_tiempo} al preparar las páginas; sin preparar: "
+            f"{len(informe.sin_tiempo)} ({', '.join(informe.sin_tiempo[:5])})"
+        ))  # fmt: skip
     fusiones, cambios_de_episodio = ordenar(almacen, ahora, episodios)
     sin_llamada = len(candidatos) - len(extraidas.incidentes)
+    # Con una parada, `avisar` ya dice por qué (con el motivo); sin ella, se dice aquí.
+    if candidatos and not extraidas.incidentes and extraidas.parada is None:
+        registro.warning(
+            "extractor sin llamadas: %s", por_que_sin_llamadas(informe, extraidas, peticiones)
+        )
     return Resultado(
         candidatos=len(candidatos),
         llamadas=len(extraidas.incidentes),

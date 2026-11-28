@@ -10,6 +10,14 @@ Los reintentos de cada sitio tienen además un tope diario que dura entre ejecuc
 Con un plazo, el descargador no empieza una petición ni una espera que no quepa
 en él: lanza TiempoAgotado, que no es un fallo de descarga, y quien lo usa
 decide qué deja para la siguiente ejecución.
+
+Con un límite propio de la descarga (`tope_s`, desde el 28 de noviembre de 2026), una sola
+dirección no puede gastar más de ese tiempo entre peticiones, reintentos y esperas: la espera
+que no cabe (un Retry-After de 300 s) no se duerme y la descarga falla en el acto, como fallo
+transitorio (`DescargaFallida.transitoria`) que se puede intentar en la ejecución siguiente.
+El 28/11, de 01:17 a 07:17 UTC, una página de newsmonkey.be pidió esperar con un 429 y el
+extractor horario durmió 300 s de su tope de 420 s cada hora, sin dejar rastro y sin llamar al
+modelo.
 """
 
 import time
@@ -56,7 +64,11 @@ Validador = Callable[[str], bool]
 
 
 class DescargaFallida(RuntimeError):
-    pass
+    """La descarga no salió. `transitoria`: un fallo que puede arreglarse solo (red, tiempo de
+    espera, 429 o 5xx, el límite de la descarga agotado); un 404, un 403 o una página de bloqueo
+    no lo son."""
+
+    transitoria = False
 
 
 class PaginaBloqueada(DescargaFallida):
@@ -72,6 +84,25 @@ def transporte_urllib(url: str, cabeceras: dict[str, str], limite_s: float) -> R
     try:
         with urllib.request.urlopen(peticion, timeout=limite_s) as respuesta:
             return respuesta.status, dict(respuesta.headers), respuesta.read()
+    except urllib.error.HTTPError as error:
+        return error.code, dict(error.headers or {}), b""
+
+
+def transporte_con_tope_total(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+    """Como transporte_urllib, pero la respuesta entera tiene que llegar en `limite_s` (más lo que
+    tarde la última lectura, que también tiene `limite_s`). El tiempo de espera de urllib es de
+    cada operación del socket: un servidor que manda la página a goteo no lo agota nunca. Para las
+    páginas de noticias, que son pequeñas; no para ficheros grandes (GDELT, FIRMS)."""
+    fin = time.monotonic() + limite_s
+    peticion = urllib.request.Request(url, headers=cabeceras)
+    try:
+        with urllib.request.urlopen(peticion, timeout=limite_s) as respuesta:
+            trozos = []
+            while trozo := respuesta.read1(1 << 16):
+                trozos.append(trozo)
+                if time.monotonic() > fin:
+                    raise TimeoutError(f"la respuesta no terminó en {limite_s:.0f} s (timed out)")
+            return respuesta.status, dict(respuesta.headers), b"".join(trozos)
     except urllib.error.HTTPError as error:
         return error.code, dict(error.headers or {}), b""
 
@@ -186,16 +217,27 @@ class Descargador:
                 self._dormir(falta)
         self._ultima[sitio] = self._reloj()
 
-    def texto(self, url: str, valido: Validador) -> str:
+    def texto(self, url: str, valido: Validador, tope_s: float | None = None) -> str:
         """Descarga una página y comprueba con `valido` que es el contenido esperado."""
-        cuerpo = self.contenido(url, lambda c: valido(c.decode("utf-8", errors="replace")))
+        cuerpo = self.contenido(url, lambda c: valido(c.decode("utf-8", errors="replace")), tope_s)
         return cuerpo.decode("utf-8", errors="replace")
 
-    def contenido(self, url: str, valido: Callable[[bytes], bool]) -> bytes:
-        """Descarga en bruto y comprueba con `valido` que es el contenido esperado."""
+    def contenido(
+        self, url: str, valido: Callable[[bytes], bool], tope_s: float | None = None
+    ) -> bytes:
+        """Descarga en bruto y comprueba con `valido` que es el contenido esperado.
+
+        Con `tope_s`, la descarga entera (peticiones, reintentos y esperas) no pasa de ese tiempo:
+        lo que no cabe no se empieza y la descarga falla como transitoria."""
         sitio = urlsplit(url).netloc
+        fin = None if tope_s is None else self._reloj() + tope_s
+
+        def no_cabe(espera_s: float = 0.0) -> bool:
+            return fin is not None and self._reloj() + espera_s >= fin
+
         motivo = ""
         hechos = 0
+        transitoria = False
         for intento in range(self._reintentos + 1):
             if intento:
                 self.recuentos["reintentos"] += 1
@@ -204,25 +246,39 @@ class Descargador:
             hechos = intento
             self._dentro_del_plazo()
             self._esperar_turno(sitio)
+            if no_cabe():
+                motivo += f" (agotó su límite de {tope_s:.0f} s)"
+                transitoria = True
+                break
             self.recuentos["peticiones"] += 1
             espera = self._espera_inicial_s * 2**intento
-            # Una petición no pasa del plazo (le queda al menos un segundo).
+            # Una petición no pasa del plazo ni del límite de la descarga (le queda al menos un
+            # segundo).
             limite = self._limite_s
             if self.plazo is not None:
-                limite = max(1.0, min(limite, self.plazo.restante()))
+                limite = min(limite, self.plazo.restante())
+            if fin is not None:
+                limite = min(limite, fin - self._reloj())
+            limite = max(1.0, limite)
             try:
                 codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, limite)
             except (OSError, TimeoutError) as error:
                 motivo = motivo_de_red(error, limite)
+                transitoria = True
             else:
                 if codigo == 200:
                     if valido(cuerpo):
                         return cuerpo
                     self.recuentos["bloqueos"] += 1
                     motivo = "contenido inesperado con código 200"
+                    transitoria = False
                 elif codigo in CODIGOS_REINTENTABLES:
                     motivo = f"código {codigo}"
-                    espera = max(espera, _retry_after(cabeceras) or 0)
+                    transitoria = True
+                    pedida = _retry_after(cabeceras)
+                    if pedida is not None:
+                        motivo += f", pide esperar {pedida:.0f} s"
+                    espera = max(espera, pedida or 0)
                 elif codigo == HTTP_NO_ENCONTRADO:
                     raise NoEncontrado(f"{url}: código {codigo}")
                 else:
@@ -234,8 +290,15 @@ class Descargador:
                 motivo += " (tope diario de reintentos del sitio)"
                 break
             if intento < self._reintentos:
+                if no_cabe(espera):
+                    # La espera no se duerme: la descarga acaba aquí y lo demás sigue.
+                    motivo += f" (la espera de {espera:.0f} s no cabe en el límite de la página)"
+                    break
                 self._dentro_del_plazo(espera)
                 self._dormir(espera)
         self.recuentos["fallos"] += 1
-        tipo = PaginaBloqueada if motivo.startswith("contenido") else DescargaFallida
-        raise tipo(f"{url}: {motivo} tras {hechos} reintentos")
+        if motivo.startswith("contenido"):
+            raise PaginaBloqueada(f"{url}: {motivo} tras {hechos} reintentos")
+        fallo = DescargaFallida(f"{url}: {motivo} tras {hechos} reintentos")
+        fallo.transitoria = transitoria
+        raise fallo

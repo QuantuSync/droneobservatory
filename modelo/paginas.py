@@ -271,15 +271,28 @@ class Pagina:
     nota: str = ""
     # La fecha que la propia página da al artículo (fecha_de_la_pagina), si da alguna.
     fecha: datetime | None = None
+    # Si no se pudo descargar: por qué (con la dirección) y si el fallo puede arreglarse solo
+    # (DescargaFallida.transitoria). Vacío si se leyó.
+    fallo: str = ""
+    transitorio: bool = False
 
 
-def leer_pagina(descargador: Descargador, url: str, con_nota: bool = False) -> Pagina:
+# Lo más que puede gastar la descarga de una página, con sus reintentos y esperas (desde el 28 de
+# noviembre de 2026). Una página sana baja en menos de 2 s; con 45 s caben la primera petición y
+# dos reintentos con su espera. Antes no había límite por página: una espera de 300 s pedida con
+# un 429 se dormía entera dentro del tope de 420 s del extractor horario.
+TOPE_PAGINA_S = 45.0
+
+
+def leer_pagina(
+    descargador: Descargador, url: str, con_nota: bool = False, tope_s: float = TOPE_PAGINA_S
+) -> Pagina:
     """Primeras frases y marcas de la noticia (y, con `con_nota`, la nota); vacías si no se
-    puede descargar."""
+    puede descargar en `tope_s` (con el motivo en `fallo`)."""
     try:
-        html = descargador.texto(url, es_html)
-    except DescargaFallida:
-        return Pagina("")
+        html = descargador.texto(url, es_html, tope_s)
+    except DescargaFallida as error:
+        return Pagina("", fallo=str(error), transitorio=error.transitoria)
     return Pagina(
         primeras_frases(html), marcas(html), nota(html) if con_nota else "",
         fecha_de_la_pagina(html),
