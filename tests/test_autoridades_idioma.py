@@ -74,6 +74,26 @@ def test_la_ficha_lleva_la_traduccion_o_queda_pendiente() -> None:
     assert all(citas.huella_texto(n) not in faltan for n in autoridades.tabla())
 
 
+def test_una_traduccion_con_palabras_de_otra_lengua_no_se_publica() -> None:
+    # EODI-2026-01027 (28/11/2026): el modelo dio «Flughafen Köln/Bonn» como inglés.
+    publico = _incidente()
+    traducciones = {
+        citas.huella_texto("Канал обласної адміністрації"): {
+            "es": "el canal de la administración regional",
+            "en": "Flughafen channel",
+        },
+        citas.huella_texto("Fiscalía de Constanța"): {
+            "es": "la Fiscalía de Constanza",
+            "en": "the Constanța Prosecutor's Office",
+        },
+    }
+    citas.con_autoridades(publico, traducciones, {})
+    assert list(publico["autoridades"]) == ["Fiscalía de Constanța"]
+    # El aeropuerto, en la tabla revisada: en inglés, sin la palabra alemana.
+    assert autoridades.escrita("Flughafen Köln/Bonn", "en") == "Cologne Bonn Airport"
+    assert autoridades.escrita("Flughafen Köln/Bonn", "es") == "el aeropuerto de Colonia/Bonn"
+
+
 def test_el_control_las_traduce_con_la_marca_y_las_guarda_sin_ella() -> None:
     incidente = {**_incidente(), "id": "EODI-2026-09999"}
     pedidas = control_fichas.citas_de([incidente], {})
